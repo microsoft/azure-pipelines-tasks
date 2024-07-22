@@ -58,11 +58,14 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
     if ($isArm)
     {
         $storageAccountResource = Get-AzureRmResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        
         if (!$storageAccountResource)
         {
             Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
         }
+
         $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        
         if(!$storageAccountKeys)
         {
             Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"

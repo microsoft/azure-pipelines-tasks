@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Publish code coverage results",
+  "loc.friendlyName": "[To be deprecated] Publish code coverage",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
-  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "Summary file",
   "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "Path to Source files",
@@ -22,5 +22,6 @@
   "loc.messages.FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
   "loc.messages.IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "Generated code coverage html report: %s"
+  "loc.messages.GeneratedHtmlReport": "Generated code coverage html report: %s",
+  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
 }

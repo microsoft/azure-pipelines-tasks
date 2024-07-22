@@ -1,4 +1,8 @@
-﻿function Add-Certificate {
+﻿$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+function Add-Certificate {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)] $Endpoint,
@@ -157,7 +161,6 @@ function Get-MsiAccessToken {
     while ($trialCount -le $retryLimit)
 }
 
-
 function Get-VstsFederatedToken {
     param(
         [Parameter(Mandatory=$true)]
@@ -242,20 +245,29 @@ function Get-VstsFederatedToken {
     $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
     $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
-    $tokenResponse = $taskHttpClient.CreateOidcTokenAsync(
-        $projectId,
-        $hub,
-        $planId,
-        $jobId,
-        $connectedServiceNameARM,
-        $null
-    ).Result
-    $federatedToken = $tokenResponse.OidcToken
-    if ($null -eq $federatedToken) {
-        Write-Verbose "Failed to create OIDC token."
-        throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
+    $timeToWait = 4000
+    for (($retryAttempt = 1), ($retryLimit = 3); $retryAttempt -le $retryLimit; $retryAttempt++) {
+        $tokenResponse = $taskHttpClient.CreateOidcTokenAsync(
+            $projectId,
+            $hub,
+            $planId,
+            $jobId,
+            $connectedServiceNameARM,
+            $null
+        ).Result
+        $federatedToken = $tokenResponse.OidcToken
+        if ($null -ne $federatedToken) {
+            return $federatedToken
+        }
+
+        if ($retryAttempt -lt $retryLimit) {
+            Write-Verbose "Failed to fetch federated token. Remaining retries count = '$($retryLimit - $retryAttempt)'"
+            Start-Sleep -m $timeToWait * $retryAttempt
+        }
     }
-    return $federatedToken
+
+    Write-Verbose "Failed to create OIDC token."
+    throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
 }
 
 function Set-UserAgent {
@@ -355,9 +367,8 @@ function ConvertTo-Pfx {
     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
     $env:RANDFILE=".rnd"
 
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
-
-    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+    $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
 }
@@ -585,29 +596,63 @@ function Add-AzureStackAzureRmEnvironment {
         GalleryEndpoint                          = $galleryEndpoint
         GraphEndpoint                            = $graphEndpoint
         GraphAudience                            = $graphAudience
-        StorageEndpointSuffix                    = $StorageEndpointSuffix
         AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
         AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
         EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
     }
 
-    $armEnv = Get-AzureRmEnvironment -Name $name
-    if($armEnv -ne $null) {
-        Write-Verbose "Updating AzureRm environment $name" -Verbose
+    if ($featureFlags.retireAzureRM)
+    {
+        $azureEnvironmentParams.StorageEndpoint = $StorageEndpointSuffix
+    }
+    else
+    {
+        $azureEnvironmentParams.StorageEndpointSuffix = $StorageEndpointSuffix
+    }
 
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
-            Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+    if ($featureFlags.retireAzureRM)
+    {
+        $armEnv = Get-AzEnvironment -Name $name
+
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating Az environment $name" -Verbose
+
+            if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
+                Remove-AzEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzEnvironment -Name $name | Out-Null
+            }
         }
         else {
-            Remove-AzureRmEnvironment -Name $name | Out-Null
+            Write-Verbose "Adding Az environment $name" -Verbose
         }
     }
-    else {
-        Write-Verbose "Adding AzureRm environment $name" -Verbose
+    else
+    {
+        $armEnv = Get-AzureRmEnvironment -Name $name
+
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating AzureRm environment $name" -Verbose
+
+            if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
+                Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzureRmEnvironment -Name $name | Out-Null
+            }
+        }
+        else {
+            Write-Verbose "Adding AzureRm environment $name" -Verbose
+        }
     }
 
     try {
-        return Add-AzureRmEnvironment @azureEnvironmentParams
+        if ($featureFlags.retireAzureRM) {
+            return Add-AzEnvironment @azureEnvironmentParams
+        } else {
+            return Add-AzureRmEnvironment @azureEnvironmentParams
+        }
     }
     catch {
         Assert-TlsError -exception $_.Exception
@@ -630,7 +675,11 @@ function Disconnect-AzureAndClearContext {
                 Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
-                Disconnect-UsingARMModule
+                if ($featureFlags.retireAzureRM) {
+                    Write-Error "Unable to get Az.Accounts module in Disconnect-AzureAndClearContext"
+                } else {
+                    Disconnect-UsingARMModule
+                }
             }
         }
     } catch {
@@ -683,3 +732,4 @@ function Disconnect-UsingARMModule {
         $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
     }
 }
+

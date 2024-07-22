@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 238,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -35,7 +35,8 @@
       "helpMarkDown": "Select the node version to install.",
       "options": {
         "6": "Node.js 6.17.1",
-        "10": "Node.js 10.24.1"
+        "10": "Node.js 10.24.1",
+        "16": "Node.js 16.20.2"
       }
     }
   ],
@@ -62,7 +63,7 @@
     "RunnerAlreadyInstalled": "%s version of node runner already installed on the agent. Skipping installation."
   },
   "_buildConfigMapping": {
-    "Default": "0.231.2",
-    "Node20-225": "0.231.3"
+    "Default": "0.238.0",
+    "Node20-225": "0.238.1"
   }
 }

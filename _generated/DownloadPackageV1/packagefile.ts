@@ -1,9 +1,11 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
+var DecompressZip = require('decompress-zip');
+
 var tar = require("tar-fs");
 var zlib = require("zlib");
-var DecompressZip = require('decompress-zip');
+
 
 export class PackageFile {
     public readonly win: boolean;
@@ -62,7 +64,6 @@ export class PackageFile {
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
         return new Promise<void>(function(resolve, reject) {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-
             var unzipper = new DecompressZip(zipLocation);
             unzipper.on("error", err => {
                 return reject(tl.loc("ExtractionFailed", err));

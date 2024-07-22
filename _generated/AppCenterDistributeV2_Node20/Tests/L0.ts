@@ -6,6 +6,10 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+function getEnvVariable(envName) {
+    return process.env[envName] || null
+}
+
 describe('AppCenterDistribute L0 Suite', function () {
     const timeout = 20000;
 
@@ -32,7 +36,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0OneIpaPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Negative path: can not upload multiple files', function () {
@@ -64,7 +73,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Negative path: mobile center api rejects fail the task', function () {
@@ -120,7 +134,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0SymPDBs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Positive path: multiple PDBs', function () {
@@ -136,7 +155,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishCommitInfo_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Positive path: publish commit info (excluding commit message)', function () {
@@ -144,7 +168,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishCommitInfo_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Positive path: publish commit info for feature branch', function () {
@@ -152,7 +181,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishCommitInfo_3.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Positive path: publish commit info for tfvc branch', function () {
@@ -160,7 +194,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishCommitInfo_4.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 
     it('Positive path: publish mandatory update', function () {
@@ -168,7 +207,12 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
     
     it('Positive path: publish multiple destinations', function () {
@@ -176,6 +220,11 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tp = path.join(__dirname, 'L0PublishMultipleDestinations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
+        
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+        } else {
+            assert(tr.succeeded, 'task should have succeeded');
+        }
     });
 });

@@ -27,7 +27,6 @@ var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
-var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 var genTaskPath = path.join(__dirname, '..', '_generated');
 var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
 
@@ -49,7 +48,6 @@ exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
 exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
-exports.publishPushCmdPath = publishPushCmdPath;
 exports.genTaskPath = genTaskPath;
 exports.makeOptionPath = makeOptionPath;
 
@@ -190,19 +188,47 @@ var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly
                 return;
             }
 
-            // create a junction point for directories, hardlink files
             var itemSourcePath = path.join(taskSourcePath, itemName);
             var itemDestPath = path.join(taskDestPath, itemName);
-            if (fs.statSync(itemSourcePath).isDirectory()) {
-                if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
-                else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
-            }
-            else {
-                if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
-                else fs.linkSync(itemSourcePath, itemDestPath);
+
+            if (itemName === "node_modules") {
+                // copy node modules with excluded mockery
+                fs.mkdirSync(itemDestPath);
+                copyNodeModules(itemSourcePath, itemDestPath, copyFiles);
+            } else {
+                // create a junction point for directories, hardlink files
+                if (fs.statSync(itemSourcePath).isDirectory()) {
+                    if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+                    else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+                }
+                else {
+                    if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+                    else fs.linkSync(itemSourcePath, itemDestPath);
+                }
             }
         });
     });
+}
+
+var copyNodeModules = function ( sourcePath, desPath, copyFiles ) {
+    fs.readdirSync(sourcePath).forEach(function (itemName) {
+        // skip mockery
+        if (itemName == 'mockery') {
+            return;
+        }
+
+        var itemSourcePath = path.join(sourcePath, itemName);
+        var itemDestPath = path.join(desPath, itemName);
+
+        if (fs.statSync(itemSourcePath).isDirectory()) {
+            if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+            else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+        }
+        else {
+            if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+            else fs.linkSync(itemSourcePath, itemDestPath);
+        }
+    })
 }
 
 var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit, taskDestMap) {
@@ -385,7 +411,6 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     var nestedZipsLayoutPath = path.join(packagePath, 'nested-zips-layout');
     fs.mkdirSync(nestedZipsLayoutPath);
     linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false,  /*copyFiles*/false);
-
     // create the nested task zips (part of the tasks layout)
     console.log();
     console.log('> Creating nested task zips (content for tasks)');
@@ -495,6 +520,34 @@ var resolveTaskList = function(taskPattern) {
     return taskList;
 }
 exports.resolveTaskList = resolveTaskList;
+
+/**
+ * The function recieves task list and return the tasks including generated names
+ * @param {Array<string>} taskList - tasks to check
+ * @returns {Array<string>} - array of tasks with generated names
+ */
+function getAllTaskList(taskList) {
+    let tasksToBuild = taskList;
+
+    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
+
+    const generatedTaskFolders = fs.readdirSync(genTaskPath)
+        .filter((taskName) => {
+            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+        });
+
+    taskList.forEach((taskName) => {
+        generatedTaskFolders.forEach((generatedTaskName) => {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
+                tasksToBuild.push(generatedTaskName);
+            }
+        });
+    });
+
+    return tasksToBuild.sort();
+}
+exports.getAllTaskList = getAllTaskList;
+
 
 /**
  * @param {string} type - log type

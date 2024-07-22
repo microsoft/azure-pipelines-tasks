@@ -13,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "Der angegebene AzureRM-Endpunkt ist ungültig.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Identität für die VM, siehe https://aka.ms/azure-msi-docs. Statuscode: {0}, Fehlermeldung: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Statuscode: {0}, Fehlermeldung: {1}",
-  "loc.messages.AZ_MsiFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. {0}"
+  "loc.messages.AZ_MsiFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter {0}. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.AZ_ModuleInitFailWarning": "Fehler beim Initialisieren vorhandener Az-Module, Fallback auf Installation",
+  "loc.messages.AZ_ModuleInstallFail": "Fehler beim Installieren von Az-Modulen.",
+  "loc.messages.AZ_RMDeprecationMessage": "Sie verwenden AzureRM, das in Kürze eingestellt wird. Planen Sie also ein Update."
 }

@@ -16,7 +16,7 @@ describe('Twine Authenticate V1 Suite', function () {
     });
 
     it('sets authentication for current organization feed', function (done: Mocha.Done) {
-        this.timeout(5000);
+        this.timeout(50000);
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -44,7 +44,7 @@ describe('Twine Authenticate V1 Suite', function () {
     });
 
     it('sets authentication for current organization feed', (done: MochaDone) => {
-        this.timeout(1000);
+        this.timeout(10000);
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

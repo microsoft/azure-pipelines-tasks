@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
@@ -92,10 +96,18 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsEndpoint { $variableSet.Endpoint } -- -Name 'Some service name' -Require
     Register-Mock Get-VstsInput { $variableSet.StorageAccount } -- -Name StorageAccount
 
+    if ($featureFlags.retireAzureRM) {
+        Register-Mock Initialize-AzModule
+    }
+
     # Act.
     Initialize-Azure
 
     # Assert.
-    Assert-WasCalled Import-AzureModule -- -PreferredModule $variableSet.ExpectedPreferredModule -azurePsVersion "" -strict:$false
+    if ($featureFlags.retireAzureRM) {
+        Assert-WasCalled Initialize-AzModule
+    } else {
+        Assert-WasCalled Import-AzureModule -- -PreferredModule $variableSet.ExpectedPreferredModule -azurePsVersion "" -strict:$false
+    }
     Assert-WasCalled Initialize-AzureSubscription -- -Endpoint $variableSet.Endpoint -StorageAccount $variableSet.StorageAccount
 }

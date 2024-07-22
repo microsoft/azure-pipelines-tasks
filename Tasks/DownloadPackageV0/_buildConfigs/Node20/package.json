@@ -22,7 +22,8 @@
     "azure-pipelines-task-lib": "^4.1.0",
     "azure-pipelines-tasks-packaging-common": "^3.206.0",
     "azure-pipelines-tasks-utility-common": "^3.210.0",
-    "decompress-zip": "0.3.3"
+    "decompress-zip": "0.3.3",
+    "extract-zip": "2.0.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"

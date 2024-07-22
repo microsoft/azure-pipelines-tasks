@@ -1,8 +1,8 @@
 {
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
-  "friendlyName": "Publish code coverage results",
-  "description": "Publish Cobertura or JaCoCo code coverage results from a build",
+  "friendlyName": "[To be deprecated] Publish code coverage",
+  "description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "category": "Test",
@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 241,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -29,7 +29,7 @@
       "label": "Code coverage tool",
       "required": true,
       "defaultValue": "JaCoCo",
-      "helpMarkDown": "The tool with which code coverage results are generated.",
+      "helpMarkDown": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
       "options": {
         "Cobertura": "Cobertura",
         "JaCoCo": "JaCoCo"
@@ -103,10 +103,11 @@
     "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
     "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
     "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
-    "GeneratedHtmlReport": "Generated code coverage html report: %s"
+    "GeneratedHtmlReport": "Generated code coverage html report: %s",
+    "V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
   },
   "_buildConfigMapping": {
-    "Default": "1.228.0",
-    "Node20_229_4": "1.231.0"
+    "Default": "1.241.0",
+    "Node20_229_4": "1.241.1"
   }
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 1
   },
   "satisfies": [
     "DotNetCore"
@@ -82,7 +82,7 @@
     "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.220.0",
-    "Node20_229_3": "0.231.0"
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
   }
 }

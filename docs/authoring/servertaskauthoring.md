@@ -66,13 +66,15 @@ This enables you to post a message to azure service bus queue. It has 3 sections
 
     **Execute:** This section specifies what should happen when the task is executed. You can define the endpoint on which message should be published, the message body/properties that should be sent etc. Here are the complete list of  properties that are supported.
 
-    - EndpointId: - EndpointId details used while publishing the message.
-    - ConnectionString: - Azure service bus connection string.
+    - EndpointId: - EndpointId can be either a Service Bus service connection or an AzureRM service connection. If it is a Service Bus connection, EndpointId details used while publishing the message.
+    - ConnectionString: - Azure service bus connection string. Requered if the EndpointId is a Service Bus connection.
     - ServiceBusQueueName: - Queue name on which the message should be published.
+    - Namespace: - Azure Service Bus namespace.
     - MessageBody: - Message body. It should be JSON format.
     - MessageProperties: - Message properties. It should be JSON format.
     - CertificateString: -  Certificate that can be used to encrypt the message. This input is optional.
     - SignaturePropertyKey: - Key of the service bus message properties in which the signed payload should be kept. Default is signature.
+    - SessionId: - Session id with which message is published.
 
     **Cancel**:  This section specifies what should happen when the task is canceled. Here also you can define the endpoint on which message should be sent on cancellation, the message body/properties that should be sent etc. All the properties that we support in execute section are supported. This is an optional section and if you dont specify this section, then Azure Pipelines/TFS will not send you cancellation request but will cancel the task in its layer.
 

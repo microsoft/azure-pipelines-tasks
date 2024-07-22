@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 243,
+    "Patch": 3
   },
   "demands": [],
   "groups": [
@@ -510,12 +510,12 @@
     }
   ],
   "prejobexecution": {
-    "Node10": {
-      "target": "src//downloadsecurefiles.js"
-    },
     "Node16": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//downloadsecurefiles.js"
     },
     "Node20_1": {
       "target": "src//downloadsecurefiles.js",
@@ -523,12 +523,12 @@
     }
   },
   "execution": {
-    "Node10": {
-      "target": "src//helm.js"
-    },
     "Node16": {
       "target": "src//helm.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//helm.js"
     },
     "Node20_1": {
       "target": "src//helm.js",
@@ -536,12 +536,12 @@
     }
   },
   "postjobexecution": {
-    "Node10": {
-      "target": "src//deletesecurefiles.js"
-    },
     "Node16": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//deletesecurefiles.js"
     },
     "Node20_1": {
       "target": "src//deletesecurefiles.js",
@@ -573,7 +573,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.228.0",
-    "Node20_229_3": "0.231.0"
+    "Default": "0.243.2",
+    "Node20_229_3": "0.243.3"
   }
 }

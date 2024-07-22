@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 233,
-    "Patch": 1
+    "Minor": 243,
+    "Patch": 5
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -285,12 +285,12 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "azureappservicemanage.js"
-    },
     "Node16": {
       "target": "azureappservicemanage.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azureappservicemanage.js"
     },
     "Node20_1": {
       "target": "azureappservicemanage.js",
@@ -442,7 +442,7 @@
     "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20_229_2": "0.233.1"
+    "Default": "0.243.4",
+    "Node20_229_2": "0.243.5"
   }
 }

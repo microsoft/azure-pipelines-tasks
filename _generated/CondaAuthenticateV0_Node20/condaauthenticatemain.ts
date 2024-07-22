@@ -8,6 +8,7 @@ async function main(): Promise<void> {
         const localAccesstoken = tl.getVariable('System.AccessToken');
         tl.debug(tl.loc('AddingAuthChannel', 'ARTIFACTS_CONDA_TOKEN'));
         tl.setVariable('ARTIFACTS_CONDA_TOKEN', localAccesstoken);
+        tl.setSecret(localAccesstoken);
     }
     catch (error) {
         tl.error(error);

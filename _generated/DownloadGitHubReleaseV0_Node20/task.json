@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -116,7 +116,7 @@
     "InvalidRelease": "The release version/tag input '%s' is not valid"
   },
   "_buildConfigMapping": {
-    "Default": "0.215.0",
-    "Node20_229_3": "0.231.0"
+    "Default": "0.240.0",
+    "Node20_229_3": "0.240.1"
   }
 }

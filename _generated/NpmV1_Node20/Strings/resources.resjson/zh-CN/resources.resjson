@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "正在重写项目 .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "正在还原项目 .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "请将工作目录更改为有效目录",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "无法定位“%s”[%s] 区域。你所在的地区可能无法使用包含该区域的服务。"
+  "loc.messages.NGCommon_AreaNotFoundInSps": "无法定位“%s”[%s] 区域。你所在的地区可能无法使用包含该区域的服务。",
+  "loc.messages.UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。"
 }

@@ -39,5 +39,6 @@
   "loc.messages.CannotFindAnyFile": "No se puede encontrar ningún archivo basado en %s.",
   "loc.messages.FoundMultipleFiles": "Se encontraron varios archivos que coinciden con %s.",
   "loc.messages.FailedToCreateFile": "Error al crear %s: %s.",
-  "loc.messages.FailedToFindFile": "No se encuentra %s en %s."
+  "loc.messages.FailedToFindFile": "No se encuentra %s en %s.",
+  "loc.messages.DeprecatedTask": "La tarea AppCenterDistribute@2 (distribución de App Center) está en desuso desde el 14 de noviembre de 2022 y pronto se retirará. En su lugar, use la tarea AppCenterDistribute@3. Visite https://aka.ms/azdo-deprecated-tasks para obtener más información sobre las tareas en desuso."
 }

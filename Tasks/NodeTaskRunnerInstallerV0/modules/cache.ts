@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as taskLib from 'azure-pipelines-task-lib';
 
-import { RunnerVersion } from '../constants';
+import { RunnerVersion, RunnerFolder } from '../constants';
 import { NodeOsPlatform } from '../interfaces/os-types';
 import { getAgentExternalsPath } from '../utils/getAgentExternalsPath';
 
@@ -12,7 +12,8 @@ export function isRunnerInstalled(targetRunner: RunnerVersion, osPlatform: NodeO
     const agentExternals = getAgentExternalsPath();
 
     const nodeBinName = osPlatform === 'win32' ? 'node.exe' : 'node';
-    const nodeFolder = targetRunner === RunnerVersion.node6 ? 'node' : 'node10';
+    
+    const nodeFolder = RunnerFolder[targetRunner];
 
     const nodePath = path.join(agentExternals, nodeFolder, 'bin', nodeBinName);
 

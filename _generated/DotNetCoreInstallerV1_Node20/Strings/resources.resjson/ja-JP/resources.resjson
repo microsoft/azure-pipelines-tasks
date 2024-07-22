@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "リリース %s (バージョン %s) のファイル データが正しくありません (name、rid、および url などの必須フィールドが存在していない可能性があります): %s",
   "loc.messages.VersionFilesDataIncorrect": "バージョンのファイル データがないか、必須フィールドがありません。",
   "loc.messages.VersionInformationNotComplete": "バージョン: %s で必要な情報が releases.json ファイルで不足しています。エラー: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "ダウンロードされたパッケージの抽出中、次のエラーで失敗しました: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "ダウンロードされたパッケージの抽出中、次のエラーで失敗しました: %s",
+  "loc.messages.DeprecatedTask": "DotNetCoreInstaller@1 (.NET Core SDK/ランタイム インストーラー) タスクは 2019 年 8 月 22 日以降非推奨になっており、間もなく廃止されます。代わりに UseDotNet@2 タスクを使用してください。非推奨のタスクの詳細については、https://aka.ms/azdo-deprecated-tasks を参照してください。"
 }

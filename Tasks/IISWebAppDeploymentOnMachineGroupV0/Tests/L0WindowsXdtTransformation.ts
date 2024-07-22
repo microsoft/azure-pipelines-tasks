@@ -96,7 +96,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
+tr.registerMock('./ziputility', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [

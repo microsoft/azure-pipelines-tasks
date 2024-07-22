@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 0
   },
   "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
   "inputs": [

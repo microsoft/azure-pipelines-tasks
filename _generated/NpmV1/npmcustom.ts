@@ -26,12 +26,13 @@ export async function run(packagingLocation: PackagingLocation, command?: string
     const npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
     npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
 
-    npm.execSync();
+    await npm.exec();
 
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());
 }
 
+/** Return Custom NpmRegistry with masked auth*/
 export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);

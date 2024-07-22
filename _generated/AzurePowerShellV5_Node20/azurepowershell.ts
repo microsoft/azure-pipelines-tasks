@@ -12,6 +12,9 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 }
 
 async function run() {
+    let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+    let tempDirectory = tl.getVariable('agent.tempDirectory');
+    tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -35,7 +38,6 @@ async function run() {
         let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
-        let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
@@ -81,7 +83,7 @@ async function run() {
         }
         if (endpointObject.scheme === 'WorkloadIdentityFederation') {
             const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
-            initAzCommand += ` -clientAssertionJwt  ${oidc_token}`;
+            initAzCommand += ` -clientAssertionJwt ${oidc_token} -serviceConnectionId ${serviceName}`;
         }
         contents.push(initAzCommand);
 
@@ -99,8 +101,6 @@ async function run() {
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
-        let tempDirectory = tl.getVariable('agent.tempDirectory');
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
         await fs.writeFile(
@@ -159,6 +159,30 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+    }
+    finally {
+        try {
+            const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+                .arg('-NoLogo')
+                .arg('-NoProfile')
+                .arg('-NonInteractive')
+                .arg('-ExecutionPolicy')
+                .arg('Unrestricted')
+                .arg('-Command')
+                .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
+
+            let options = <tr.IExecOptions>{
+                    cwd: input_workingDirectory,
+                    failOnStdErr: false,
+                    errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+                    outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+                    ignoreReturnCode: true
+                };
+            await powershell.exec(options);
+        }
+        catch (err) {
+            tl.debug("Az-clearContext not completed due to an error");
+        }
     }
 }
 

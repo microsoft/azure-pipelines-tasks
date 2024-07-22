@@ -10,18 +10,26 @@ if (!taskPattern) {
     process.exit(0);
 };
 
-taskList = util.resolveTaskList(taskPattern);
+var taskList = util.resolveTaskList(taskPattern);
+var allTasks = util.getAllTaskList(taskList);
 
 var totalDiffList = [];
 
 console.log(`Checking tasks sources for uncommitted changes...`);
 console.log(``);
-taskList.forEach(function(taskName) {
+console.log(taskList)
+allTasks.forEach(function(taskName) {
     console.log(`====================${taskName}====================`);
 
     var taskSourcePath = path.join(util.tasksSourcePath, taskName);
-    // If the task source folder doesn't exist then it's generated task so we don't need to check it
-    if (!fs.existsSync(taskSourcePath)) return
+    console.log(taskSourcePath)
+
+    // If the task source folder doesn't exist then it's generated task so need to check it
+    if (!fs.existsSync(taskSourcePath)) {
+        if (!fs.existsSync(util.genTaskPath, taskName)) return;
+
+        taskSourcePath = path.join(util.genTaskPath, taskName);
+    }
 
     var diffString = util.run(`git diff --name-only ${taskSourcePath}`);
     var diffList = diffString.split("\n").filter(Boolean);
@@ -51,7 +59,7 @@ if (totalDiffList.length) {
         });
 
         console.log(``);
-        console.log(`Make sure you are using Node 10 and NPM 6. For more details check our contribution guide - https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md`);
+        console.log(`Make sure you are using Node 20 and NPM 9. For more details check our contribution guide - https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md`);
         console.log(``);
 
         process.exit(1);

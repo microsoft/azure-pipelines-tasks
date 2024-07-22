@@ -159,7 +159,7 @@ try
                         $message = $errorLines.ToString().Trim()
                         $null = $errorLines.Clear()
                         if ($message) {
-                            Write-VstsTaskError -Message $message
+                            Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                         }
                     }
 
@@ -173,7 +173,7 @@ try
             $message = $errorLines.ToString().Trim()
             $null = $errorLines.Clear()
             if ($message) {
-                Write-VstsTaskError -Message $message
+                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
             }
         }
     }
@@ -192,8 +192,15 @@ finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    . "$PSScriptRoot\Utility.ps1"
+    Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+    Update-PSModulePathForHostedAgent
+    Disconnect-AzureAndClearContext -restrictContext 'True' -ErrorAction SilentlyContinue
+
+    if ($env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID) {
+        $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = ""
+        $env:AZURESUBSCRIPTION_CLIENT_ID = ""
+        $env:AZURESUBSCRIPTION_TENANT_ID = ""
+    }
 }

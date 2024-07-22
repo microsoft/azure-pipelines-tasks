@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
@@ -120,7 +120,7 @@
     "ParameterRequired": "ms-resource:loc.messages.ParameterRequired"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20-225": "0.231.1"
+    "Default": "0.237.0",
+    "Node20-225": "0.237.1"
   }
 }

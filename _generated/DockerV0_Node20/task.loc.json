@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 243,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -341,10 +341,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "container.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "container.js"
     },
     "Node20_1": {
@@ -366,7 +366,7 @@
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   },
   "_buildConfigMapping": {
-    "Default": "0.225.1",
-    "Node20_229_2": "0.231.0"
+    "Default": "0.243.0",
+    "Node20_229_2": "0.243.1"
   }
 }

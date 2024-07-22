@@ -13,8 +13,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 238,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -84,7 +84,7 @@
     "NoOp": "ms-resource:loc.messages.NoOp"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.1",
-    "Node20_229_12": "0.231.2"
+    "Default": "0.238.0",
+    "Node20_229_12": "0.238.1"
   }
 }

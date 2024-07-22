@@ -9,6 +9,10 @@ function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
+function getEnvVariable(envName) {
+    return process.env[envName] || null
+}
+
 function runValidations(validator: () => void, tr, done) {
     try {
         validator();
@@ -420,11 +424,17 @@ describe('DotNetCoreInstaller', function () {
         let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
         tr.run();
         runValidations(() => {
+        if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+            assert(tr.succeeded == false, ("Should failed when FF is on."));
+            assert(tr.stdout.indexOf("DeprecatedTask") > -1, "Should throw DeprecatedTask error.");
+
+        } else {
             assert(tr.succeeded == true, ("Should have passed."));
             assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
             assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
             assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
             assert(tr.stdout.indexOf("DownloadAndInstallCalled") == -1, "Should not have printed this message as DownloadAndInstall function should not have been called.");
+        }
         }, tr, done);
     });
 
@@ -433,11 +443,17 @@ describe('DotNetCoreInstaller', function () {
         let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
         tr.run();
         runValidations(() => {
-            assert(tr.succeeded == true, ("Should have passed."));
-            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
-            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
-            assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
-            assert(tr.stdout.indexOf("DownloadAndInstallCalled") > -1, "Should have printed this message as DownloadAndInstall function should have been called.");
+            if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+                assert(tr.succeeded == false, ("Should failed when FF is on."));
+                assert(tr.stdout.indexOf("DeprecatedTask") > -1, "Should throw DeprecatedTask error.");
+
+            } else {
+                assert(tr.succeeded == true, ("Should have passed."));
+                assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+                assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+                assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
+                assert(tr.stdout.indexOf("DownloadAndInstallCalled") > -1, "Should have printed this message as DownloadAndInstall function should have been called.");
+            }    
         }, tr, done);
     });
 
@@ -446,10 +462,16 @@ describe('DotNetCoreInstaller', function () {
         let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
         tr.run();
         runValidations(() => {
-            assert(tr.succeeded == true, ("Should have passed."));
-            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
-            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
-            assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
+            if (Boolean(getEnvVariable('FAIL_DEPRECATED_BUILD_TASK'))) {
+                assert(tr.succeeded == false, ("Should failed when FF is on."));
+                assert(tr.stdout.indexOf("DeprecatedTask") > -1, "Should throw DeprecatedTask error.");
+
+            } else {
+                assert(tr.succeeded == true, ("Should have passed."));
+                assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+                assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+                assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
+            }
         }, tr, done);
     });
 });

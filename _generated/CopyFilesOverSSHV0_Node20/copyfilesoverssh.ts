@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as minimatch from 'minimatch';
 import * as utils from './utils';
 import { SshHelper } from './sshhelper';
+import Queue, { QueueEvents } from './queue';
 
 // This method will find the list of matching files for the specified contents
 // This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
@@ -97,6 +98,235 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     }
 
     return files;
+}
+
+function prepareFiles(filesToCopy: string[], sourceFolder: string, targetFolder: string, flattenFolders: boolean) {
+    return filesToCopy.map(x => {
+        let targetPath = path.posix.join(
+            targetFolder,
+            flattenFolders
+                ? path.basename(x)
+                : x.substring(sourceFolder.length).replace(/^\\/g, "").replace(/^\//g, "")
+        );
+
+        if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
+            targetPath = `./${targetPath}`;
+        }
+
+        return [ x, utils.unixyPath(targetPath) ];
+    });
+}
+
+function getUniqueFolders(filesToCopy: string[]) {
+    const foldersSet = new Set<string>();
+
+    for (const filePath of filesToCopy) {
+        const folderPath = path.dirname(filePath);
+
+        if (foldersSet.has(folderPath)) {
+            continue;
+        }
+
+        foldersSet.add(folderPath);
+    }
+
+    return Array.from(foldersSet.values());
+}
+
+async function newRun() {
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
+
+    // Read SSH endpoint input
+    const sshEndpoint = tl.getInput('sshEndpoint', true);
+    const username = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
+    // Passphrase is optional
+    const password = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true);
+    // Private key is optional, password can be used for connecting
+    const privateKey = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY'];
+    const hostname = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
+    // Port is optional, will use 22 as default port if not specified
+    let port = tl.getEndpointDataParameter(sshEndpoint, 'port', true);
+
+    if (!port) {
+        console.log(tl.loc('UseDefaultPort'));
+        port = '22';
+    }
+
+    const readyTimeout = parseInt(tl.getInput('readyTimeout', true), 10);
+    const useFastPut = !(process.env['USE_FAST_PUT'] === 'false');
+    const concurrentUploads = parseInt(tl.getInput('concurrentUploads'));
+
+    // Set up the SSH connection configuration based on endpoint details
+    let sshConfig: Object = {
+        host: hostname,
+        port: port,
+        username: username,
+        readyTimeout: readyTimeout,
+        useFastPut: useFastPut,
+        promiseLimit: isNaN(concurrentUploads) ? 10 : concurrentUploads
+    };
+
+    if (privateKey) {
+        tl.debug('Using private key for ssh connection.');
+
+        sshConfig = {
+            ...sshConfig,
+            privateKey,
+            passphrase: password
+        }
+    } else {
+        // Use password
+        tl.debug('Using username and password for ssh connection.');
+
+        sshConfig = {
+            ...sshConfig,
+            password,
+        }
+    }
+
+    // Contents is a multiline input containing glob patterns
+    const contents = tl.getDelimitedInput('contents', '\n', true);
+    const sourceFolder = tl.getPathInput('sourceFolder', true, true);
+    let targetFolder = tl.getInput('targetFolder');
+
+    if (!targetFolder) {
+        targetFolder = "./";
+    } else {
+        // '~/' is unsupported
+        targetFolder = targetFolder.replace(/^~\//, "./");
+    }
+
+    // Read the copy options
+    const cleanTargetFolder = tl.getBoolInput('cleanTargetFolder', false);
+    const overwrite = tl.getBoolInput('overwrite', false);
+    const failOnEmptySource = tl.getBoolInput('failOnEmptySource', false);
+    const flattenFolders = tl.getBoolInput('flattenFolders', false);
+
+    if (!tl.stats(sourceFolder).isDirectory()) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('SourceNotFolder'));
+        return;
+    }
+
+    // Initialize the SSH helpers, set up the connection
+    const sshHelper = new SshHelper(sshConfig);
+    await sshHelper.setupConnection();
+
+    if (cleanTargetFolder && await sshHelper.checkRemotePathExists(targetFolder)) {
+        console.log(tl.loc('CleanTargetFolder', targetFolder));
+        const isWindowsOnTarget = tl.getBoolInput('isWindowsOnTarget', false);
+        const cleanHiddenFilesInTarget = tl.getBoolInput('cleanHiddenFilesInTarget', false);
+        const cleanTargetFolderCmd = utils.getCleanTargetFolderCmd(targetFolder, isWindowsOnTarget, cleanHiddenFilesInTarget);
+
+        try {
+            await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('CleanTargetFolderFailed', error));
+            tl.debug('Closing the client connection');
+            await sshHelper.closeConnection();
+            return;
+        }
+    }
+
+    // If the contents were parsed into an array and the first element was set as default "**",
+    // then upload the entire directory
+    if (contents.length === 1 && contents[0] === "**") {
+        tl.debug("Upload a directory to a remote machine");
+
+        try {
+            const completedDirectory = await sshHelper.uploadFolder(sourceFolder, targetFolder);
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('CopyDirectoryCompleted', completedDirectory));
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("CopyDirectoryFailed", sourceFolder, error));
+        }
+
+        tl.debug('Closing the client connection');
+        await sshHelper.closeConnection();
+        return;
+    }
+
+    // Identify the files to copy
+    const filesToCopy = getFilesToCopy(sourceFolder, contents);
+
+    // Copy files to remote machine
+    if (filesToCopy.length === 0) {
+        if (failOnEmptySource) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('NothingToCopy'));
+            return;
+        } else {
+            tl.warning(tl.loc('NothingToCopy'));
+            return;
+        }
+    }
+
+    const preparedFiles = prepareFiles(filesToCopy, sourceFolder, targetFolder, flattenFolders);
+
+    tl.debug(`Number of files to copy = ${preparedFiles.length}`);
+    tl.debug(`filesToCopy = ${preparedFiles}`);
+
+    console.log(tl.loc('CopyingFiles', preparedFiles.length));
+
+    // Create remote folders structure
+    const folderStructure = getUniqueFolders(preparedFiles.map(x => x[1]).sort());
+
+    for (const foldersPath of folderStructure) {
+        try {
+            await sshHelper.createRemoteDirectory(foldersPath);
+            console.log(tl.loc("FolderCreated", foldersPath));
+        } catch (error) {
+            await sshHelper.closeConnection();
+            tl.setResult(tl.TaskResult.Failed, tl.loc('TargetNotCreated', foldersPath, error));
+            return;
+        }
+    }
+
+    console.log(tl.loc("FoldersCreated", folderStructure.length));
+
+    const delayBetweenUploads = parseInt(tl.getInput('delayBetweenUploads'));
+
+    // Upload files to remote machine
+    const q = new Queue({
+        concurrent: isNaN(concurrentUploads) ? 10 : concurrentUploads,
+        delay: isNaN(delayBetweenUploads) ? 50 : delayBetweenUploads,
+    });
+
+    q.enqueue(preparedFiles.map((pathTuple) => {
+        const [ filepath, targetPath ] = pathTuple;
+
+        return {
+            filepath,
+            job: async () => {
+                tl.debug(`Filepath = ${filepath}`);
+                console.log(tl.loc('StartedFileCopy', filepath, targetPath));
+
+                if (!overwrite && await sshHelper.checkRemotePathExists(targetPath)) {
+                    throw new Error(tl.loc('FileExists', targetPath));
+                }
+
+                return await sshHelper.uploadFile(filepath, targetPath);
+            }
+        };
+    }));
+
+    const errors = [];
+    let successfullyCopiedFilesCount = 0;
+
+    q.on(QueueEvents.PROCESSED, () => successfullyCopiedFilesCount++);
+    q.on(QueueEvents.EMPTY, () => tl.debug('Queue is empty'));
+    q.on(QueueEvents.END, async () => {
+        tl.debug('End of the queue processing');
+        await sshHelper.closeConnection();
+
+        if (errors.length === 0) {
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('CopyCompleted', successfullyCopiedFilesCount));
+        } else {
+            tl.debug(`Errors count ${errors.length}`);
+            errors.forEach(tl.error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', errors.length));
+        }
+    });
+    q.on(QueueEvents.ERROR, (error, filepath) => {
+        errors.push(tl.loc('FailedOnFile', filepath, error.message));
+    });
 }
 
 async function run() {
@@ -248,12 +478,16 @@ async function run() {
     }
 }
 
-run().then(() => {
+if (tl.getBoolFeatureFlag('COPYFILESOVERSSHV0_USE_QUEUE')) {
+    newRun();
+} else {
+    run().then(() => {
         tl.debug('Task successfully accomplished');
     })
     .catch(err => {
         tl.debug('Run was unexpectedly failed due to: ' + err);
     });
+}
 
 function getReadyTimeoutVariable(): number {
     let readyTimeoutString: string = tl.getInput('readyTimeout', true);

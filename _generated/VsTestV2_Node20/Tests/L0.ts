@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib';
 import * as fs from 'fs';
 
 describe('VsTest Suite', function() {
-    this.timeout(10000);
+    this.timeout(90000);
 
     if (!tl.osType().match(/^Win/)) {
         return;

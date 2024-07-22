@@ -122,13 +122,13 @@ try {
         Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
 
         # Getting storage key for the storage account
-        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsAccessToken
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -203,7 +203,7 @@ try {
         Write-Verbose "Feature flag sanitizer is active (for sas token)"
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
     }
-    
+
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
@@ -218,21 +218,21 @@ try {
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
                                 -containerSasToken $containerSasToken `
                                 -useSanitizerActivate $useSanitizerActivate
-    
+
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
     {
         # Get URI and SaSToken for output variable
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
         Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
-        
-        
+
+
         $storageContainerSaSToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
         Write-Host "##vso[task.setvariable variable=StorageContainerSasToken]$storageContainerSasToken"
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
-        
+
         return
     }
 
@@ -247,7 +247,7 @@ try {
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
             -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
-            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
+            -connectedServiceName $connectedServiceName
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
@@ -259,7 +259,7 @@ try {
         # generate container sas token with full permissions
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
 
-        # Copies files on azureVMs 
+        # Copies files on azureVMs
         Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
                                                 -credential $invokeRemoteScriptParams.credential `
                                                 -protocol $invokeRemoteScriptParams.protocol `

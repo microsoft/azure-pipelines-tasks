@@ -159,6 +159,7 @@ get_legacy_os_name() {
 get_machine_architecture() {
 
     if command -v uname > /dev/null; then
+        local osn=$(get_current_os_name || echo "")
         CPUName=$(uname -m)
         case $CPUName in
         armv7l)
@@ -168,6 +169,20 @@ get_machine_architecture() {
         aarch64)
             echo "arm64"
             return 0
+            ;;
+        arm64)
+            echo "arm64"
+            return 0
+            ;;
+        x86_64)
+            if [ "$osn" = "osx" ]; then
+                if [ "$(sysctl -in sysctl.proc_translated)" = "1" ]; then
+                    echo "arm64"
+                else
+                    echo "x64"
+                fi
+                return 0
+            fi
             ;;
         esac
     fi

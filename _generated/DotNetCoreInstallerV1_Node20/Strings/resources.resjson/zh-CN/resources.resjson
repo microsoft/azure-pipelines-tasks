@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "在发布 %s 中(针对版本 %s)，文件数据不正确(可能缺少必填字段，如 name、rid 和 url): %s",
   "loc.messages.VersionFilesDataIncorrect": "版本的文件数据缺失或缺少必填字段。",
   "loc.messages.VersionInformationNotComplete": "版本 %s 所需的信息在 releases.json 文件中不完整。错误: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "提取下载的包时失败，出现错误: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "提取下载的包时失败，出现错误: %s",
+  "loc.messages.DeprecatedTask": "DotNetCoreInstaller@1（.NET Core SDK/runtime 安装程序）任务自 2019 年 8 月 22 日起已弃用，即将停用。改用 UseDotNet@2 任务。请访问 https://aka.ms/azdo-deprecated-tasks 了解有关已弃用任务的详细信息。"
 }

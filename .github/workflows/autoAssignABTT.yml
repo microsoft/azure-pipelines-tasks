@@ -9,6 +9,8 @@ on:
 jobs:
   assign_one_project:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     name: Assign to ABTT Project
     steps:
     - name: "Assign issues with 'Area: ABTT' label to project board"

@@ -1,7 +1,7 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
-var mockery = require('mockery');
+import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
 
 // provide answers for task mock
 let a: any = <any>{
@@ -18,10 +18,10 @@ let a: any = <any>{
     }
 };
 
-mockery.enable({warnOnUnregistered: false});
+libMocker.enable({warnOnUnregistered: false});
 var tlm = require('azure-pipelines-task-lib/mock-task');
 tlm.setAnswers(a);
-mockery.registerMock('azure-pipelines-task-lib/task', tlm);
+libMocker.registerMock('azure-pipelines-task-lib/task', tlm);
 var ut = require('../src/utilities.js');
 
 ut.copyFile(".\\DefaultTemplates\\default.windows.template.json", "F:\\somedir\\tempdir\\100");

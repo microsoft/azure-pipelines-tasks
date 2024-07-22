@@ -24,5 +24,6 @@
   "loc.messages.ReactivateExistingEnvironment": "Environnement existant trouvé : %s. Le paramètre \"Nettoyer l'environnement\" de la tâche n'est pas défini. Réactivation...",
   "loc.messages.ParameterRequired": "Le paramètre '%s' est obligatoire",
   "loc.messages.PlatformNotRecognized": "Plateforme non reconnue",
-  "loc.messages.PrependPath": "Ajout du répertoire %s au début de la variable d'environnement PATH"
+  "loc.messages.PrependPath": "Ajout du répertoire %s au début de la variable d'environnement PATH",
+  "loc.messages.DeprecatedTask": "La tâche CondaEnvironment@1 (environnement Conda) est déconseillée depuis le 13 février 2019 et sera bientôt mise hors service. Utilisez l’interface de ligne de commande Conda (« conda ») directement à partir d’une tâche bash/pwsh/script. Veuillez visiter https://aka.ms/azdo-deprecated-tasks pour en savoir plus sur les tâches déconseillées."
 }

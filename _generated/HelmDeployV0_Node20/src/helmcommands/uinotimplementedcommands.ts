@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import {addHelmTlsSettings} from "./../tlssetting";
 
-export function addArguments(helmCli: helmcli) : void {
+export async function addArguments(helmCli: helmcli) : Promise<void> {
     var namespace = tl.getInput("namespace", false);
     var argumentsInput = tl.getInput("arguments", false)
     var enableTls = tl.getBoolInput("enableTls", false);

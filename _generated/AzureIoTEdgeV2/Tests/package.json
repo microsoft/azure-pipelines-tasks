@@ -1,0 +1,26 @@
+{
+  "name": "azure-iot-edge-tests",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Azure IOT Edge V2 Task Tests",
+  "main": "L0.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "^1.0.7",
+    "azure-pipelines-task-lib": "^3.3.1",
+    "minimatch": "^3.1.2"
+  }
+}

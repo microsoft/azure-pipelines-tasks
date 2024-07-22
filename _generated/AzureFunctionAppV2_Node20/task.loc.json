@@ -144,6 +144,22 @@
         "PYTHON|3.9": "PYTHON|3.9",
         "PYTHON|3.10": "PYTHON|3.10",
         "PYTHON|3.11": "PYTHON|3.11"
+        "DOTNET|6.0": "DOTNET|6.0",
+        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
+        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
+        "JAVA|8": "JAVA|8",
+        "JAVA|11": "JAVA|11",
+        "JAVA|17": "JAVA|17",
+        "JAVA|21": "JAVA|21",
+        "NODE|14": "NODE|14",
+        "NODE|16": "NODE|16",
+        "NODE|18": "NODE|18",
+        "NODE|20": "NODE|20",
+        "PYTHON|3.8": "PYTHON|3.8",
+        "PYTHON|3.9": "PYTHON|3.9",
+        "PYTHON|3.10": "PYTHON|3.10",
+        "PYTHON|3.11": "PYTHON|3.11"
       },
       "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
@@ -212,12 +228,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azurermwebappdeployment.js"
-    },
     "Node16": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurermwebappdeployment.js"
     },
     "Node20_1": {
       "target": "azurermwebappdeployment.js",

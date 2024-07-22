@@ -206,7 +206,12 @@ async function run() {
 
         // Fail on exit code.
         if (exitCode !== 0) {
-            tl.error(tl.loc('JS_ExitCode', exitCode));
+            if (exitCode == 137) {
+                tl.error(tl.loc('JS_ExitCode_137'));
+            } 
+            else {
+                tl.error(tl.loc('JS_ExitCode', exitCode));
+            }
             result = tl.TaskResult.Failed;
         }
 
@@ -214,7 +219,7 @@ async function run() {
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
-                tl.error(err);
+                tl.error(err, tl.IssueSource.CustomerScript);
             });
             result = tl.TaskResult.Failed;
         }

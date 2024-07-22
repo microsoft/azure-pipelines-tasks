@@ -43,6 +43,6 @@ jobs:
 
   - script: |
       echo "Tasks to test: $(tasks)"
-      node ./ci/ci-test-tasks/test-and-verify-v2 $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true

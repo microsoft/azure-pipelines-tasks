@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "目标计算机上的 PowerShell",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "在远程计算机上执行 PowerShell 脚本",
   "loc.instanceNameFormat": "在 $(EnvironmentName) 上运行 PowerShell",
   "loc.releaseNotes": "版本 2.0 中的新增功能: <br/>&nbsp;&nbsp;已删除对旧 DTL 计算机的支持。",

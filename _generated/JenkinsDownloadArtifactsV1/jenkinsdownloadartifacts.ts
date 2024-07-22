@@ -15,7 +15,6 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-
 var DecompressZip = require('decompress-zip');
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
@@ -97,7 +96,6 @@ function publishEvent(feature, properties: any): void {
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
     await new Promise<void>(function (resolve, reject) {
         tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-
         var unzipper = new DecompressZip(zipLocation);
         unzipper.on('error', err => {
             return reject(tl.loc("ExtractionFailed", err))

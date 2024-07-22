@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 5
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -161,10 +161,11 @@
     "ErrorInSettingUpSubscription": "Error in setting up subscription",
     "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",
-    "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
+    "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
+    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
   },
   "_buildConfigMapping": {
-    "Default": "1.225.0",
-    "Node20_229_2": "1.231.0"
+    "Default": "1.238.4",
+    "Node20_229_2": "1.238.5"
   }
 }
