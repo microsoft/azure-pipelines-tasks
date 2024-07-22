@@ -131,26 +131,22 @@
             "description": "The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
         },
         {
+            "name": "certificateSha1Hash",
+            "description": "The SHA1 hash (thumbprint) of the signing certificate.  Parsed from the P12 certificate file."
+        },
+        {
             "name": "keychainPath",
             "description": "The path for the keychain file with the certificate."
         }
     ],
     "prejobexecution": {
-        "Node10": {
-            "target": "preinstallcert.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
+        "Node20": {
             "target": "preinstallcert.js",
             "argumentFormat": ""
         }
     },
     "postjobexecution": {
-        "Node10": {
-            "target": "postinstallcert.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
+        "Node20": {
             "target": "postinstallcert.js",
             "argumentFormat": ""
         }
@@ -162,10 +158,12 @@
         "settableVariables": {
             "allowed": [
                 "signingIdentity",
+                "certificateSha1Hash",
                 "keychainPassword",
                 "keychainPath",
                 "APPLE_CERTIFICATE_SIGNING_IDENTITY",
-                "APPLE_CERTIFICATE_KEYCHAIN"
+                "APPLE_CERTIFICATE_KEYCHAIN",
+                "APPLE_CERTIFICATE_SHA1HASH"
             ]
         }
     },
