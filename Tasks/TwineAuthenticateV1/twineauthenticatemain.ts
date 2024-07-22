@@ -41,14 +41,16 @@ async function main(): Promise<void> {
         let pypircPath = utils.getPypircPath();
 
         // create new file. We do not merge existing files and always create a fresh file
-        if (!tl.getVariable("PYPIRC_PATH")) {
+        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH"))) {
             fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
             tl.setVariable("PYPIRC_PATH", pypircPath, false);
             tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
         }
         else {
             const pypirc = fs.readFileSync(tl.getVariable("PYPIRC_PATH"), 'utf8');
-            let fileContent = ini.parse(fs.readFileSync(pypircPath, "utf-8"));
+            let fileContent = ini.parse(pypirc);
+
+            let dotRepos: string[] = [];
 
             for (let entry of newEndpointsToAdd) {
 
@@ -64,17 +66,27 @@ async function main(): Promise<void> {
                     continue;
                 }
 
-                fileContent[entry.packageSource.feedName] = new Repository(
-                    entry.packageSource.feedUri,
-                    entry.username,
-                    entry.password
-                );
+                if (entry.packageSource.feedName.includes('.')) {
+                    let repo = `${os.EOL}[${entry.packageSource.feedName}]${os.EOL}repository=${entry.packageSource.feedUri}${os.EOL}username=${entry.username}${os.EOL}password=${entry.password}`;
+                    dotRepos.push(repo);
+                }
+                else {
+                    fileContent[entry.packageSource.feedName] = new Repository(
+                        entry.packageSource.feedUri,
+                        entry.username,
+                        entry.password
+                    );
+                }
 
                 fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
             }
 
             let encodedStr = ini.encode(fileContent);
             fs.writeFileSync(pypircPath, encodedStr);
+
+            for (let repo of dotRepos) {
+                fs.appendFileSync(tl.getVariable("PYPIRC_PATH"), repo, 'utf8');
+            }
         }
 
         // Configuring the pypirc file

@@ -57,14 +57,15 @@ describe('Twine Authenticate V1 Suite', function () {
         let lines = fileContent.split(/\r?\n/);
 
         assert.strictEqual(lines[0], "[distutils]");
-        assert.strictEqual(lines[1], "index-servers=Test.Feed",
-            "Test Feed should be added to auth list.");
-        assert.strictEqual(lines[2], "[Test.Feed]");
-        assert.strictEqual(lines[3], "repository=https://vsts/packagesource/Test.Feed",
+        assert((lines[1] === "index-servers=Test.Feed") 
+                || (lines[1].startsWith('index-servers=') && lines[1].endsWith('Test.Feed')),
+                    "Test Feed should be added to auth list.");
+        assert.strictEqual(lines.at(-4), "[Test.Feed]");
+        assert.strictEqual(lines.at(-3), "repository=https://vsts/packagesource/Test.Feed",
             "Test Feed repository should be correct.");
-        assert.strictEqual(lines[4], "username=build",
+        assert.strictEqual(lines.at(-2), "username=build",
             "Default username should be correct.");
-        assert.strictEqual(lines[5], "password=token",
+        assert.strictEqual(lines.at(-1), "password=token",
             "Default password from environment variable should be correct.");
 
         done();
