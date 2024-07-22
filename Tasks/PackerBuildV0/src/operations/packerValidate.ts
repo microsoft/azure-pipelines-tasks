@@ -23,9 +23,16 @@ export async function run(packerHost: packerHost): Promise<void> {
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
 
     console.log(tl.loc("ExecutingPackerValidate"));
-    var result = command.execSync();
+    let result = command.execSync();
 
-    if(result.code != 0) {
+    if (result.code != 0 && result.stdout.includes('Failed to initialize build "azure-arm"')) {
+        const installPluginCommand = packerHost.createPackerTool();
+        installPluginCommand.arg('plugins').arg('install').arg('github.com/hashicorp/azure');
+        installPluginCommand.execSync();
+        result = command.execSync();
+    }
+
+    if (result.code != 0) {
         throw tl.loc("PackerValidateFailed");
     }
 }
