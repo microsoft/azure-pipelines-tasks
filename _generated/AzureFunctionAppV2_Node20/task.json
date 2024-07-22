@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 243,
-    "Patch": 1
+    "Patch": 7
   },
   "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
   "minimumAgentVersion": "2.104.1",
@@ -128,22 +128,6 @@
         "EditableOptions": "True"
       },
       "options": {
-        "DOTNET|6.0": "DOTNET|6.0",
-        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
-        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
-        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
-        "JAVA|8": "JAVA|8",
-        "JAVA|11": "JAVA|11",
-        "JAVA|17": "JAVA|17",
-        "JAVA|21": "JAVA|21",
-        "NODE|14": "NODE|14",
-        "NODE|16": "NODE|16",
-        "NODE|18": "NODE|18",
-        "NODE|20": "NODE|20",
-        "PYTHON|3.8": "PYTHON|3.8",
-        "PYTHON|3.9": "PYTHON|3.9",
-        "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
         "DOTNET|6.0": "DOTNET|6.0",
         "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
         "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
@@ -395,7 +379,7 @@
     "DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
   },
   "_buildConfigMapping": {
-    "Default": "2.243.0",
-    "Node20_229_9": "2.243.1"
+    "Default": "2.243.6",
+    "Node20_229_9": "2.243.7"
   }
 }
