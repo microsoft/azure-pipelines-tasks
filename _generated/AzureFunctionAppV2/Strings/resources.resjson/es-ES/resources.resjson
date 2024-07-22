@@ -176,5 +176,7 @@
   "loc.messages.SyncingFunctionTriggers": "Sincronizando los desencadenadores para la aplicación de funciones",
   "loc.messages.SyncFunctionTriggersSuccess": "La sincronización de los desencadenadores de la aplicación de funciones se ha completado correctamente.",
   "loc.messages.UpdatedRunFromPackageSettings": "Se ha actualizado la configuración de aplicación de WEBSITE_RUN_FROM_PACKAGE a %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "La opción de Tipo de implementación no se aplica para el Consumo para Linux."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "La opción de Tipo de implementación no se aplica para el Consumo para Linux.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption" : "La opción de Tipo de implementación no se aplica para el Consumo para Flex."
+
 }

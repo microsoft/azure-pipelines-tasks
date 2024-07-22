@@ -385,4 +385,85 @@ export class KuduServiceUtility {
             }
         }
     }
+
+    public async oneDeployFlex(webPackage: string, queryParameters?: Array<string>): Promise<any> {
+        
+        var stats = fs.statSync(webPackage);
+        var fileSizeInBytes = stats.size;
+            
+        let httpRequest: webClient.WebRequest = {
+            method: 'POST',
+            uri: this._appServiceKuduService.client.getRequestUri(`/api/publish`, queryParameters),
+            body: fs.createReadStream(webPackage),
+            headers: {
+                'Content-Length': fileSizeInBytes
+            },
+
+        };
+
+        try {
+            let response = await this._appServiceKuduService.client.beginRequest(httpRequest, null, 'application/zip');
+            tl.debug(`One Deploy response: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                tl.debug('Deployment passed');
+                return null;
+            }
+            else if(response.statusCode == 202) {
+                let deploymentId: string = response.body;
+                if(!!deploymentId) {
+                    tl.debug(`Polling for deployment ID: ${deploymentId}`);
+                    return await this._getDeploymentDetailsFromDeploymentID(deploymentId);
+                }
+                else {
+                    tl.debug('one deploy returned 202 without deployment ID.');
+                    return null;
+                }
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            const deploymentError = new Error("Failed to deploy web package to Function App.\n" + this._getFormattedError(error));
+            (deploymentError as any).statusCode = error.statusCode;
+            throw deploymentError;
+        }
+    }
+
+
+    public async _getDeploymentDetailsFromDeploymentID(deploymentID: string): Promise<any> {
+        try {
+            var httpRequest: webClient.WebRequest = {
+                method: 'GET',
+                uri: this._appServiceKuduService.client.getRequestUri(`/api/deployments/${deploymentID}`),
+                body: null,
+                headers: {},
+            };
+            var response = await this._appServiceKuduService.client.beginRequest(httpRequest);
+            tl.debug(`getDeploymentDetails. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error("Failed to gte deployment logs.\n" + this._getFormattedError(error));
+        }
+    }
+
+
+    private _getFormattedError(error: any) {
+        if(error && error.statusCode) {
+            return `${error.statusMessage} (CODE: ${error.statusCode})`;
+        }
+        else if(error && error.message) {
+            if(error.statusCode) {
+                error.message = `${typeof error.message.valueOf() == 'string' ? error.message : error.message.Code + " - " + error.message.Message } (CODE: ${error.statusCode})`
+            }
+
+            return error.message;
+        }
+    }
+
 }
