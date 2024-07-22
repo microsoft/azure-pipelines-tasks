@@ -80,7 +80,7 @@ async function main(): Promise<void> {
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.length;
         externalFeedSuccessCount = externalEndpoints.length;
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
