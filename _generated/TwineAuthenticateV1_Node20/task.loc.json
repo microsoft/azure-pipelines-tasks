@@ -78,6 +78,10 @@
     "Node16": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -106,6 +110,14 @@
     "Node16": {
       "target": "authcleanup.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "1.243.0",
+    "Node20_229_1": "1.243.1"
   }
 }
