@@ -5,26 +5,20 @@ import * as tl from "azure-pipelines-task-lib";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import * as auth from "./authentication";
 import * as utils from "./utilities";
+import * as ini from "ini";
 
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
 {
-    public feedName: string;
     public repository: string;
     public username: string;
     public password: string;
 
-    constructor(feedName: string, repository: string, username: string, password: string)
+    constructor(repository: string, username: string, password: string)
     {
-        this.feedName = feedName
         this.repository = repository;
         this.username = username;
         this.password = password;
-    }
-
-    toString()
-    {
-        return `[${this.feedName}]${os.EOL}repository=${this.repository}${os.EOL}username=${this.username}${os.EOL}password=${this.password}`;
     }
 }
 
@@ -47,9 +41,41 @@ async function main(): Promise<void> {
         let pypircPath = utils.getPypircPath();
 
         // create new file. We do not merge existing files and always create a fresh file
-        fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
-        tl.setVariable("PYPIRC_PATH", pypircPath, false);
-        tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
+        if (!tl.getVariable("PYPIRC_PATH")) {
+            fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
+            tl.setVariable("PYPIRC_PATH", pypircPath, false);
+            tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
+        }
+        else {
+            const pypirc = fs.readFileSync(tl.getVariable("PYPIRC_PATH"), 'utf8');
+            let fileContent = ini.parse(fs.readFileSync(pypircPath, "utf-8"));
+
+            for (let entry of newEndpointsToAdd) {
+
+                tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
+                if (entry.packageSource.feedName in fileContent){
+                    tl.debug(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
+                    if (internalFeed.includes(entry)) {
+                        internalFeed.pop();
+                        continue;
+                    }
+                    externalEndpoints.pop();
+                    continue;
+                }
+
+                fileContent[entry.packageSource.feedName] = new Repository(
+                    entry.packageSource.feedUri,
+                    entry.username,
+                    entry.password
+                );
+
+                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
+            }
+
+            let encodedStr = ini.encode(fileContent);
+            fs.writeFileSync(pypircPath, encodedStr);
+        }
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.length;
@@ -85,11 +111,17 @@ function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
         console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
     let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
 
-    let repositories = authInfo.map(entry =>
-        new Repository(entry.packageSource.feedName, entry.packageSource.feedUri,
-            entry.username, entry.password));
+    let entries = {}
 
-    let repositoriesEncodedStr = repositories.map(repo => repo.toString()).join(os.EOL);
+    authInfo.forEach(entry => 
+        { entries[entry.packageSource.feedName] = new Repository(
+            entry.packageSource.feedUri, 
+            entry.username, 
+            entry.password) 
+        }
+    );
+
+    const repositoriesEncodedStr = ini.encode(entries);
 
     return header + os.EOL + repositoriesEncodedStr;
 }
