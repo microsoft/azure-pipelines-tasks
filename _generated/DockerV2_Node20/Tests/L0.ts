@@ -47,14 +47,14 @@ describe("DockerV2 Suite", function () {
   });
 
   // Docker build tests begin
-  it('Runs successfully for docker build', (done: Mocha.Done) => {
+  it('Runs successfully for docker build', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -68,10 +68,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker build with release labels', (done: Mocha.Done) => {
+  it('Runs successfully for docker build with release labels', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -79,7 +78,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.hostType] = shared.HostTypes.release;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -93,17 +92,16 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker build when registry other than Docker hub is used', (done: Mocha.Done) => {
+  it('Runs successfully for docker build when registry other than Docker hub is used', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'acrendpoint';
     process.env[shared.TestEnvVars.repository] = 'testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -117,17 +115,16 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done: Mocha.Done) => {
+  it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'acrendpoint2';
     process.env[shared.TestEnvVars.repository] = 'testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -141,7 +138,6 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
   /*
@@ -149,28 +145,27 @@ describe("DockerV2 Suite", function () {
     Disabled temporarily and created an issue to track the resolution of this:
     https://github.com/microsoft/azure-pipelines-tasks/issues/19881
     */
-  xit('Log in with Managed Identity', function (done: Mocha.Done) {
+  xit('Log in with Managed Identity', async function () {
     this.timeout(100000);
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'acrendpoint3';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.login;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    tr.run();
+    await tr.runAsync();
     assert.equal(tr.succeeded, true, 'should have passed');
     assert.equal(tr.warningIssues.length, 0, 'should have no warnings');
     assert.equal(tr.errorIssues.length, 0, 'should have no error issue');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker build with repository input but without containerRegistry input', (done: Mocha.Done) => {
+  it('Runs successfully for docker build with repository input but without containerRegistry input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -184,15 +179,14 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker build without containerRegistry and repository inputs', (done: Mocha.Done) => {
+  it('Runs successfully for docker build without containerRegistry and repository inputs', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -204,10 +198,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should honour Dockerfile input', (done: Mocha.Done) => {
+  it('Docker build should honour Dockerfile input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -215,7 +208,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.dockerFile] = shared.formatPath('a/w/meta/Dockerfile');
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -229,10 +222,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should honour buildContext input', (done: Mocha.Done) => {
+  it('Docker build should honour buildContext input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -240,7 +232,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.buildContext] = shared.formatPath('a/w/context');
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -254,10 +246,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should work correctly with multiple tags', (done: Mocha.Done) => {
+  it('Docker build should work correctly with multiple tags', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -265,7 +256,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.tags] = 'tag1,tag2\ntag3';
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -279,10 +270,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should honour arguments input', (done: Mocha.Done) => {
+  it('Docker build should honour arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -290,7 +280,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.arguments] = '--rm --queit';
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -304,10 +294,9 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should honour multiline arguments input', (done: Mocha.Done) => {
+  it('Docker build should honour multiline arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -315,7 +304,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.arguments] = '--rm\n--queit';
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -329,17 +318,16 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should ensure that the image name follows the Docker naming conventions', (done: Mocha.Done) => {
+  it('Docker build should ensure that the image name follows the Docker naming conventions', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'Test User/TEST repo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -353,49 +341,46 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should store the id of the image that was built.', (done: Mocha.Done) => {
+  it('Docker build should store the id of the image that was built.', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/standardbuild';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf('set DOCKER_TASK_BUILT_IMAGES=c834e0094587') != -1, 'docker build should have stored the image id.');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should store the id of the image that was built with builkit.', (done: Mocha.Done) => {
+  it('Docker build should store the id of the image that was built with builkit.', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/buildkit';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf('set DOCKER_TASK_BUILT_IMAGES=6c3ada3eb420') != -1, 'docker build should have stored the image id.');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should add labels with base image info', (done: Mocha.Done) => {
+  it('Docker build should add labels with base image info', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.repository] = 'testuser/imagewithannotations';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -409,16 +394,15 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker build should add labels with base image info for multistage builds', (done: Mocha.Done) => {
+  it('Docker build should add labels with base image info for multistage builds', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.repository] = 'testuser/dockermultistage';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
     process.env[shared.TestEnvVars.dockerFile] = shared.formatPath('a/w/multistage/Dockerfile');
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -432,19 +416,18 @@ describe("DockerV2 Suite", function () {
       'docker build should run with expected arguments'
     );
     console.log(tr.stderr);
-    done();
   });
 
   // // Docker build tests end
 
   // // Docker push tests begin
-  it('Runs successfully for docker push', (done: Mocha.Done) => {
+  it('Runs successfully for docker push', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -457,16 +440,15 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker push when registry other than Docker hub is used', (done: Mocha.Done) => {
+  it('Runs successfully for docker push when registry other than Docker hub is used', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'acrendpoint';
     process.env[shared.TestEnvVars.repository] = 'testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -479,17 +461,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should work with multiple tags', (done: Mocha.Done) => {
+  it('Docker push should work with multiple tags', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     process.env[shared.TestEnvVars.tags] = 'tag1\ntag2,tag3';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 7, 'should have invoked tool seven times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -516,17 +497,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should work with multiple ill formed tags', (done: Mocha.Done) => {
+  it('Docker push should work with multiple ill formed tags', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     process.env[shared.TestEnvVars.tags] = 'tag1,\ntag2,,tag3';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 7, 'should have invoked tool seven times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -553,17 +533,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should honour arguments input', (done: Mocha.Done) => {
+  it('Docker push should honour arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     process.env[shared.TestEnvVars.arguments] = '--disable-content-trust --arg2';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -579,17 +558,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should honour multiline arguments input', (done: Mocha.Done) => {
+  it('Docker push should honour multiline arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     process.env[shared.TestEnvVars.arguments] = '--disable-content-trust\n--arg2';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -605,10 +583,9 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should work with multiple tags and honour multiline arguments input', (done: Mocha.Done) => {
+  it('Docker push should work with multiple tags and honour multiline arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
@@ -616,7 +593,7 @@ describe("DockerV2 Suite", function () {
     process.env[shared.TestEnvVars.tags] = 'tag1\ntag2\ntag3';
     process.env[shared.TestEnvVars.arguments] = '--disable-content-trust\n--arg2';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 7, 'should have invoked tool seven times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -652,16 +629,15 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker push should ensure that the image name follows the Docker naming conventions', (done: Mocha.Done) => {
+  it('Docker push should ensure that the image name follows the Docker naming conventions', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'Test User/TEST repo';
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.push;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -674,18 +650,17 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
   // // Docker push tests end
 
   // // Docker buildAndPush tests begin
-  it('Runs successfully for docker buildAndPush', (done: Mocha.Done) => {
+  it('Runs successfully for docker buildAndPush', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -706,17 +681,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker buildAndPush should honour Dockerfile input', (done: Mocha.Done) => {
+  it('Docker buildAndPush should honour Dockerfile input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.dockerFile] = shared.formatPath('a/w/meta/Dockerfile');
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -737,17 +711,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker buildAndPush should honour buildContext input', (done: Mocha.Done) => {
+  it('Docker buildAndPush should honour buildContext input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.buildContext] = shared.formatPath('a/w/context');
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -768,17 +741,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker buildAndPush should work correctly with multiple tags', (done: Mocha.Done) => {
+  it('Docker buildAndPush should work correctly with multiple tags', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.tags] = 'tag1\ntag2,tag3';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 8, 'should have invoked tool eight times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -813,17 +785,16 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker buildAndPush should ignore arguments input', (done: Mocha.Done) => {
+  it('Docker buildAndPush should ignore arguments input', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.containerRegistry] = 'dockerhubendpoint';
     process.env[shared.TestEnvVars.repository] = 'testuser/testrepo';
     process.env[shared.TestEnvVars.arguments] = '--rm --queit';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
     process.env[shared.TestEnvVars.addBaseImageData] = 'false';
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -844,103 +815,96 @@ describe("DockerV2 Suite", function () {
       'docker history should be invoked for the image'
     );
     console.log(tr.stderr);
-    done();
   });
   // // Docker buildAndPush tests end
 
   // // Docker general command tests begin
-  it('Runs successfully for docker images', (done: Mocha.Done) => {
+  it('Runs successfully for docker images', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker images`) != -1, 'docker should be invoked');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker images with arguments', (done: Mocha.Done) => {
+  it('Runs successfully for docker images with arguments', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
     process.env[shared.TestEnvVars.arguments] = '--all --digests';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker images --all --digests`) != -1, 'docker should be invoked with the correct arguments');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Runs successfully for docker images with multiline arguments', (done: Mocha.Done) => {
+  it('Runs successfully for docker images with multiline arguments', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
     process.env[shared.TestEnvVars.arguments] = '--all\n--digests';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker images --all --digests`) != -1, 'docker should be invoked with the correct arguments');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker start should start container', (done: Mocha.Done) => {
+  it('Docker start should start container', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
     process.env[shared.TestEnvVars.container] = 'test_container';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker start some_container_id`) != -1, 'docker should be invoked with the correct arguments');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker start should start unregistered container', (done: Mocha.Done) => {
+  it('Docker start should start unregistered container', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.start;
     process.env[shared.TestEnvVars.container] = 'unregistered_container';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker start unregistered_container`) != -1, 'docker should be invoked with the correct arguments');
     console.log(tr.stderr);
-    done();
   });
 
-  it('Docker stop should stop container', (done: Mocha.Done) => {
+  it('Docker stop should stop container', async () => {
     let tp = path.join(__dirname, 'TestSetup.js');
     process.env[shared.TestEnvVars.command] = shared.CommandTypes.stop;
     process.env[shared.TestEnvVars.container] = 'test_container';
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
     assert(tr.succeeded, 'task should have succeeded');
     assert(tr.stdout.indexOf(`[command]docker stop some_container_id`) != -1, 'docker should be invoked with the correct arguments');
     console.log(tr.stderr);
-    done();
   });
   // Docker general command tests end
 
   // Other tests
-  it('extractSizeInBytes should return correctly', (done: Mocha.Done) => {
+  it('extractSizeInBytes should return correctly', async () => {
     console.log('TestCaseName: extractSizeInBytes should return correctly');
 
     console.log('\n');
@@ -965,11 +929,9 @@ describe("DockerV2 Suite", function () {
 
     extractedSizeInBytes = dockerCommandUtils.extractSizeInBytes(tbSize);
     assert.equal(extractedSizeInBytes, 1 * 1024 * 1024 * 1024 * 1024, 'extractSizeInBytes should return correctly for input in terabytes');
-
-    done();
   });
 
-  it('getImageSize should return correctly for given layers', (done: Mocha.Done) => {
+  it('getImageSize should return correctly for given layers', async () => {
     console.log('TestCaseName: getImageSize should return correctly for given layers');
 
     console.log('\n');
@@ -987,10 +949,9 @@ describe("DockerV2 Suite", function () {
     const actualImageSize = dockerCommandUtils.getImageSize(layers);
     assert.equal(actualImageSize.indexOf(expectedSizeString), 0, 'getImageSize should return correctly for given layers');
     assert.equal(actualImageSize.length, expectedSizeString.length, 'getImageSize should return correctly for given layers');
-    done();
   });
 
-  it('getDefaultLabels returns all labels when addPipelineData is true', (done: Mocha.Done) => {
+  it('getDefaultLabels returns all labels when addPipelineData is true', async () => {
     console.log('TestCaseName: getDefaultLabels returns all labels when addPipelineData is true');
     console.log('\n');
 
@@ -1000,7 +961,6 @@ describe("DockerV2 Suite", function () {
 
     // update the label count in assert when newer labels are added
     assert.equal(labels.length, 9, 'All labels are returned by default');
-    done();
   });
 
   // it("Runs successfully for docker build selected labels when addPipelineData is false", (done: Mocha.Done) => {
