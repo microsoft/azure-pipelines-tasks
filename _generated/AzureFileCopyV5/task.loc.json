@@ -301,7 +301,7 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "5.236.2",
-    "Node20_229_2": "5.236.3"
+    "Default": "5.243.2",
+    "Node20_229_2": "5.243.3"
   }
 }
