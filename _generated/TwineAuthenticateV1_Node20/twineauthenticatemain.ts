@@ -10,15 +10,22 @@ import * as ini from "ini";
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
 {
+    public feedName: string;
     public repository: string;
     public username: string;
     public password: string;
 
-    constructor(repository: string, username: string, password: string)
+    constructor(feedName: string, repository: string, username: string, password: string)
     {
+        this.feedName = feedName;
         this.repository = repository;
         this.username = username;
         this.password = password;
+    }
+
+    toString()
+    {
+        return `[${this.feedName}]${os.EOL}repository=${this.repository}${os.EOL}username=${this.username}${os.EOL}password=${this.password}${os.EOL}`;
     }
 }
 
@@ -47,17 +54,18 @@ async function main(): Promise<void> {
             tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
         }
         else {
-            const pypirc = fs.readFileSync(tl.getVariable("PYPIRC_PATH"), 'utf8');
+            pypircPath = tl.getVariable("PYPIRC_PATH");
+            const pypirc = fs.readFileSync(pypircPath, 'utf8');
             let fileContent = ini.parse(pypirc);
 
-            let dotRepos: string[] = [];
+            let reposList: string[] = [];
 
             for (let entry of newEndpointsToAdd) {
 
                 tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
 
                 if (entry.packageSource.feedName in fileContent){
-                    tl.debug(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
+                    tl.warning(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
                     if (internalFeed.includes(entry)) {
                         internalFeed.pop();
                         continue;
@@ -66,17 +74,14 @@ async function main(): Promise<void> {
                     continue;
                 }
 
-                if (entry.packageSource.feedName.includes('.')) {
-                    let repo = `${os.EOL}[${entry.packageSource.feedName}]${os.EOL}repository=${entry.packageSource.feedUri}${os.EOL}username=${entry.username}${os.EOL}password=${entry.password}`;
-                    dotRepos.push(repo);
-                }
-                else {
-                    fileContent[entry.packageSource.feedName] = new Repository(
-                        entry.packageSource.feedUri,
-                        entry.username,
-                        entry.password
-                    );
-                }
+                let repo = new Repository(
+                    entry.packageSource.feedName,
+                    entry.packageSource.feedUri,
+                    entry.username,
+                    entry.password
+                );
+
+                reposList.push(repo.toString() + `${os.EOL}`);
 
                 fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
             }
@@ -84,15 +89,17 @@ async function main(): Promise<void> {
             let encodedStr = ini.encode(fileContent);
             fs.writeFileSync(pypircPath, encodedStr);
 
-            for (let repo of dotRepos) {
-                fs.appendFileSync(tl.getVariable("PYPIRC_PATH"), repo, 'utf8');
+            fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
+
+            for (let repo of reposList) {
+                fs.appendFileSync(pypircPath, repo, 'utf8');
             }
         }
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.length;
         externalFeedSuccessCount = externalEndpoints.length;
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
+        tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount);
     }
     catch (error) {
         tl.error(error);
@@ -122,18 +129,12 @@ function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
     feedNames.forEach(feedName =>
         console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
     let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
+    header += `${os.EOL}`
 
-    let entries = {}
-
-    authInfo.forEach(entry => 
-        { entries[entry.packageSource.feedName] = new Repository(
-            entry.packageSource.feedUri, 
-            entry.username, 
-            entry.password) 
-        }
-    );
-
-    const repositoriesEncodedStr = ini.encode(entries);
+    let repositories = authInfo.map(entry => 
+        new Repository(entry.packageSource.feedName, entry.packageSource.feedUri, 
+            entry.username, entry.password));
+    let repositoriesEncodedStr = repositories.map(repo => repo.toString()).join(os.EOL);
 
     return header + os.EOL + repositoriesEncodedStr;
 }
