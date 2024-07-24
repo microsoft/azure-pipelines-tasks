@@ -13,13 +13,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 238,
+        "Minor": 243,
         "Patch": 0
     },
     "satisfies": [
         "DotNetCore"
     ],
     "demands": [],
+    "deprecated": true,
+    "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
     "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
     "inputs": [
         {
