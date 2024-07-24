@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 231,
-        "Patch": 2
+        "Minor": 243,
+        "Patch": 0
     },
     "demands": [
         "MSBuild",
@@ -32,6 +32,8 @@
             "isExpanded": true
         }
     ],
+    "deprecated": true,
+    "deprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin",
     "inputs": [
         {
             "name": "project",
