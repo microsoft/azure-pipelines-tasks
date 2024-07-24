@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 243,
     "Patch": 0
   },
   "demands": [
@@ -31,6 +31,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AndroidSigning@2 task is deprecated, please use the latest version of the AndroidSigning task",
   "inputs": [
     {
       "name": "files",
@@ -185,7 +187,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20-225": "2.231.1"
+    "Default": "2.243.0",
+    "Node20-225": "2.243.1"
   }
 }
