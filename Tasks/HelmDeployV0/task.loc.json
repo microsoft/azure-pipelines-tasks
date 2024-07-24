@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [],
   "groups": [
@@ -476,9 +476,9 @@
       "target": "azureResourceGroup",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?$skipToken={{{skipToken}}}&api-version=2017-08-31",
-      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackContextTemplate": "{\"skipToken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skipToken}}{{/getTokenValue}}\"}",
       "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
-      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "initialContextTemplate": "{\"skipToken\": \"\"}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
