@@ -1,11 +1,12 @@
 const util = require('./ci-util');
 const fs = require('fs');
 const path = require('path');
-var crypto = require('crypto');
+const semver = require('semver');
 
 const fileToJson = util.fileToJson;
 const buildTasksPath = util.buildTasksPath;
-const GITHUB_LINK = 'https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/migrateNode16.md';
+const logToPipeline = util.logToPipeline;
+const GITHUB_LINK = 'https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/validation-errors.md';
 
 /**
  * Function walking through directories and looking for 
@@ -41,7 +42,7 @@ function findLib(dirPath, libRegExp) {
  * @param {Array} scanningTask 
  * @returns Array<Object>
  */
-function findWithFsFromPaths(scanningTask) {
+function findTaskLibWithFsFromPaths(scanningTask) {
     const foundedTasks = [];
     for (let task of scanningTask) {
         const taskPath = task.taskPath
@@ -54,6 +55,27 @@ function findWithFsFromPaths(scanningTask) {
                 locations: foundedPaths
             })
         }
+    }
+
+    return foundedTasks;
+}
+
+/**
+ * Function iterates over the given array to find 
+ * which tasks have agent-base in node_modules
+ * @param {Array} scanningTask 
+ * @returns Array<Object>
+ */
+function findAgentBaseTasks(scanningTask) {
+    const foundedTasks = [];
+    for (let task of scanningTask) {
+        const taskPath = task.taskPath
+        const reg = new RegExp('agent-base')
+        const result = findLib(path.join(taskPath, 'node_modules'), reg);
+        foundedTasks.push({
+            task: task.taskName,
+            locations: result
+        })
     }
 
     return foundedTasks;
@@ -75,11 +97,10 @@ function isNodeHandlerExists(taskDefinition) {
 }
 
 /**
- * Function looking for multiple azure-pipelines-task-lib versions
- * in builded tasks, in case if package found multiple times throw error
- * Note: now function compares only for tasks which have Node10 and Node16 in their task.json
+ * Function to get all built tasks
+ * @returns {Array<Tasks>} - array of tasks with path and versions
  */
-function findNonUniqueTaskLib() {
+function getBuiltTasks() {
     const taskPaths = fs.readdirSync(buildTasksPath, { encoding: 'utf-8' })
     const scanningTasks = [];
     for (let taskName of taskPaths) {
@@ -105,22 +126,32 @@ function findNonUniqueTaskLib() {
         });
     }
 
-    const haveDependencies = findWithFsFromPaths(scanningTasks);
+    return scanningTasks;
+}
+
+/**
+ * Function looking for multiple azure-pipelines-task-lib versions
+ * in builded tasks, in case if package found multiple times throw error
+ * Note: now function compares only for tasks which have Node10 and Node16 in their task.json
+ */
+function findNonUniqueTaskLib() {
+    const taskLibSection = "#findnonuniquetasklib-section"
+    const scanningTasks = getBuiltTasks();
+    const haveDependencies = findTaskLibWithFsFromPaths(scanningTasks);
     if (haveDependencies.length > 0) {
-        console.log(`##vso[task.logissue type=error;sourcepath=ci/check-tasks.js;linenumber=109;]The following tasks have duplicate azure-pipelines-task-lib: 
-            ${JSON.stringify(haveDependencies, null, 2)}
-            Please examine the following link: ${GITHUB_LINK}`);
+        logToPipeline('error', `The following tasks have duplicate azure-pipelines-task-lib:\n${JSON.stringify(haveDependencies, null, 2)}`);
+    logToPipeline('error', `Please examine the following link: ${GITHUB_LINK + taskLibSection}`);
         process.exit(1);
     }
 
-    console.log('No duplicates found.');
+    logToPipeline('info', 'No duplicates found');
     return null;
 }
 
 function analyzePowershellTasks() {
     let output = '';
     if (process.platform !== 'win32') {
-        console.log('The powershell check is only supported on Windows. Skipping...');
+        logToPipeline('info', 'The powershell check is only supported on Windows. Skipping...');
         return;
     }
 
@@ -128,10 +159,41 @@ function analyzePowershellTasks() {
         const pwshScriptPath = path.join(__dirname, 'check-powershell-syntax.ps1');
         output = util.run(`powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted ${pwshScriptPath} ${buildTasksPath}`, true);
     } catch (e) {
-        console.log(`##vso[task.logissue type=error;sourcepath=ci/check-tasks.js;linenumber=123;]Please check the tasks, seems like they have invalid PowerShell syntax.`)
+        logToPipeline('error', 'Please check the tasks, seems like they have invalid PowerShell syntax.');
         process.exit(1);
     }
 }
 
-// findNonUniqueTaskLib();
+function findIncompatibleAgentBase() {
+    const minAgentBaseVersion = '6.0.2';
+    const agentBaseSection = "#findincompatibleagentbase-section"
+    const scanningTasks = getBuiltTasks();
+    const agentBaseTasks = findAgentBaseTasks(scanningTasks);
+    const errors = [];
+
+    for (const { task, locations } of agentBaseTasks) {
+        if (!locations.length) continue;
+        
+        for (const agentBasePath of locations) {
+            const agentBaseVersion = fileToJson(path.join(agentBasePath, 'package.json')).version;
+            if (semver.lt(agentBaseVersion, minAgentBaseVersion)) {
+                errors.push({ task, agentBasePath, agentBaseVersion });
+            }
+        }
+    }
+
+    if (errors.length) {
+        logToPipeline('warning', `The following tasks have incompatible agent-base versions, please use agent-base >= ${minAgentBaseVersion}:\n${JSON.stringify(errors, null, 2)}`);
+        logToPipeline('error', `Please examine the following link: ${GITHUB_LINK + agentBaseSection}`);
+        process.exit(1);
+    }
+}
+
+
+
+logToPipeline("section", "Start findNonUniqueTaskLib")
+findNonUniqueTaskLib();
+logToPipeline("section", "Start analyzePowershellTasks")
 analyzePowershellTasks();
+logToPipeline("section", "Start findIncompatibleAgentBase")
+findIncompatibleAgentBase();
