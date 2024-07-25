@@ -112,6 +112,8 @@ Add a new `Node20_1` execution handler in the `task.json` file.
 
 ## Specify `minimumAgentVersion`
 
+If several handlers are specified in the `task.json` file, the highest one will be selected from handlers that are available on the certain agent. For example, if `Node10`, `Node16`, and `Node20_1` handlers are specified in the `task.json` file, and an old version of the agent (that is going to execute the task) has `Node` (version 6), `Node10`, and `Node16` handlers, then the `Node16` handler will be used. At the same time, the same agent will fail to execute the task if the `Node20_1` handler only is specified in the `task.json` file. Therefore you should specify `minimumAgentVersion`.
+
 `minimumAgentVersion` specified in the `task.json` file will trigger [an automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) for agents less than the specified version.
 
 * [Agent version `2.144.0`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.144.0) is the first version that supports `Node10` handler. So set `minimumAgentVersion` at least to `2.144.0`.
@@ -120,10 +122,10 @@ Add a new `Node20_1` execution handler in the `task.json` file.
 "minimumAgentVersion": "2.144.0"
 ```
 
-* [Agent version `2.208.0`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.208.0) is the first version that supports `Node16` handler. If you want to run the task using `Node16` handler for sure, set `minimumAgentVersion` to `2.208.0`.
+* [Agent version `2.209.0`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.209.0) is the first version that supports `Node16` handler. If you want to run the task using at least `Node16` handler, set `minimumAgentVersion` to `2.209.0`.
 
 ```json
-"minimumAgentVersion": "2.208.0"
+"minimumAgentVersion": "2.209.0"
 ```
 
 * [Agent version `3.232.1`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v3.232.1) is the first version that supports `Node20_1` handler. If you want to run the task using `Node20_1` handler for sure, set `minimumAgentVersion` to `3.232.1`.
