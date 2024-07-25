@@ -20,9 +20,9 @@
     "DotNetCore"
   ],
   "demands": [],
+  "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
   "deprecated": true,
   "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
-  "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
   "inputs": [
     {
       "name": "packageType",
