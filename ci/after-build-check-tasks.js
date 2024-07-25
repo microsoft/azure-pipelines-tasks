@@ -38,44 +38,24 @@ function findLib(dirPath, libRegExp) {
 
 /**
  * Function iterates over the given array to find 
- * which tasks have multiple task lib packages
- * @param {Array} scanningTask 
+ * which tasks have package in node_modules
+ * @param {Array} scanningTask - array of tasks
+ * @param {RegExp} regExp - regular expression to find package 
+ * @param {Boolean} includeAll - flag to include all founded packages
  * @returns Array<Object>
  */
-function findTaskLibWithFsFromPaths(scanningTask) {
+function findPackageUsingRegExp(scanningTask, regExp, includeAll = false) {
     const foundedTasks = [];
     for (let task of scanningTask) {
         const taskPath = task.taskPath
-        const reg = new RegExp('azure-pipelines-task-lib')
-        const result = findLib(path.join(taskPath, 'node_modules'), reg);
-        if (result.length > 1) {
+        const result = findLib(path.join(taskPath, 'node_modules'), regExp);
+        if ((!includeAll && result.length > 1) || includeAll) {
             const foundedPaths = result.map((path) => path.replace(buildTasksPath, ''));
             foundedTasks.push({
                 task: task.taskName,
                 locations: foundedPaths
             })
         }
-    }
-
-    return foundedTasks;
-}
-
-/**
- * Function iterates over the given array to find 
- * which tasks have agent-base in node_modules
- * @param {Array} scanningTask 
- * @returns Array<Object>
- */
-function findAgentBaseTasks(scanningTask) {
-    const foundedTasks = [];
-    for (let task of scanningTask) {
-        const taskPath = task.taskPath
-        const reg = new RegExp('agent-base')
-        const result = findLib(path.join(taskPath, 'node_modules'), reg);
-        foundedTasks.push({
-            task: task.taskName,
-            locations: result
-        })
     }
 
     return foundedTasks;
@@ -137,7 +117,8 @@ function getBuiltTasks() {
 function findNonUniqueTaskLib() {
     const taskLibSection = "#findnonuniquetasklib-section"
     const scanningTasks = getBuiltTasks();
-    const haveDependencies = findTaskLibWithFsFromPaths(scanningTasks);
+    const reg = new RegExp('azure-pipelines-task-lib')
+    const haveDependencies = findPackageUsingRegExp(scanningTasks, reg, false);
     if (haveDependencies.length > 0) {
         logToPipeline('error', `The following tasks have duplicate azure-pipelines-task-lib:\n${JSON.stringify(haveDependencies, null, 2)}`);
     logToPipeline('error', `Please examine the following link: ${GITHUB_LINK + taskLibSection}`);
@@ -168,14 +149,21 @@ function findIncompatibleAgentBase() {
     const minAgentBaseVersion = '6.0.2';
     const agentBaseSection = "#findincompatibleagentbase-section"
     const scanningTasks = getBuiltTasks();
-    const agentBaseTasks = findAgentBaseTasks(scanningTasks);
+    const reg = new RegExp('agent-base')
+    const agentBaseTasks = findPackageUsingRegExp(scanningTasks, reg, true);
     const errors = [];
 
     for (const { task, locations } of agentBaseTasks) {
         if (!locations.length) continue;
-        
+
         for (const agentBasePath of locations) {
-            const agentBaseVersion = fileToJson(path.join(agentBasePath, 'package.json')).version;
+            const packagePath = path.join(buildTasksPath, agentBasePath, 'package.json');
+            if (!fs.existsSync(packagePath)) {
+                logToPipeline('warning', `The following task has no package.json file: ${task}`);
+                continue;
+            }
+            
+            const agentBaseVersion = fileToJson(packagePath).version;
             if (semver.lt(agentBaseVersion, minAgentBaseVersion)) {
                 errors.push({ task, agentBasePath, agentBaseVersion });
             }
@@ -191,9 +179,9 @@ function findIncompatibleAgentBase() {
 
 
 
-logToPipeline("section", "Start findNonUniqueTaskLib")
-findNonUniqueTaskLib();
-logToPipeline("section", "Start analyzePowershellTasks")
-analyzePowershellTasks();
+// logToPipeline("section", "Start findNonUniqueTaskLib")
+// findNonUniqueTaskLib();
+// logToPipeline("section", "Start analyzePowershellTasks")
+// analyzePowershellTasks();
 logToPipeline("section", "Start findIncompatibleAgentBase")
 findIncompatibleAgentBase();
