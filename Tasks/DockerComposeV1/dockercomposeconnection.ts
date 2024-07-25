@@ -70,7 +70,6 @@ export default class DockerComposeConnection extends ContainerConnection {
                 };
             }
             Utils.writeFileSync(this.finalComposeFile, yaml.safeDump({
-                version: this.dockerComposeVersion,
                 services: services
             }, { lineWidth: -1 } as any));
         });
