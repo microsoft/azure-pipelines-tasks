@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 243,
-    "Patch": 2
+    "Patch": 4
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -296,7 +296,7 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "2.243.2",
-    "Node20_229_11": "2.243.3"
+    "Default": "2.243.4",
+    "Node20_229_11": "2.243.5"
   }
 }

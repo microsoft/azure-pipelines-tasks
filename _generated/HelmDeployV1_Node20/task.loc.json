@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 1
+    "Patch": 9
   },
   "demands": [],
   "groups": [
@@ -475,10 +475,10 @@
     {
       "target": "azureResourceGroup",
       "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
-      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?$skipToken={{{skipToken}}}&api-version=2017-08-31",
+      "callbackContextTemplate": "{\"skipToken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skipToken}}{{/getTokenValue}}\"}",
       "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
-      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "initialContextTemplate": "{\"skipToken\": \"\"}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
@@ -574,7 +574,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.0",
-    "Node20_229_3": "1.243.1"
+    "Default": "1.243.8",
+    "Node20_229_3": "1.243.9"
   }
 }

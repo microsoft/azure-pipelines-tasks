@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 3
+    "Patch": 5
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -188,7 +188,7 @@
     "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
   },
   "_buildConfigMapping": {
-    "Default": "1.243.2",
-    "Node20_229_2": "1.243.3"
+    "Default": "1.243.4",
+    "Node20_229_2": "1.243.5"
   }
 }
