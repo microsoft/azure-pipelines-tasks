@@ -40,7 +40,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         var isNewValueUpdated: boolean = await this.appServiceUtilityExt.updateAndMonitorAppSettings(null, deleteApplicationSetting);
         // add Output for isNewValueUpdated  
-        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
+        tl.debug(" Output the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();

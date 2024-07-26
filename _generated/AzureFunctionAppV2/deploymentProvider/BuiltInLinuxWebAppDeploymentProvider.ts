@@ -65,7 +65,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         isNewValueUpdated = await this.appServiceUtilityExt.updateAndMonitorAppSettings(customApplicationSetting);
 
         // add Output for isNewValueUpdated  
-        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
+        tl.debug(" Output the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
