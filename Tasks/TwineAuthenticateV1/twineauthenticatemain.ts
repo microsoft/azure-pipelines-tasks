@@ -58,6 +58,27 @@ async function main(): Promise<void> {
             const pypirc = fs.readFileSync(pypircPath, 'utf8');
             let fileContent = ini.parse(pypirc);
 
+            let usedRepos = new Set<string>();
+
+            for (let connection in fileContent) {
+
+                const connectionObj: object = fileContent[connection];
+
+                if (!connectionObj.hasOwnProperty('repository')) {
+                    const authenticatedRepo = getNestedRepoProperty(connectionObj);
+
+                    if (authenticatedRepo === tl.loc("NoRepoFound")) {
+                        tl.warning(tl.loc("NoRepoFound") + ` under ${connection}`);
+                        continue;
+                    }
+
+                    usedRepos.add(authenticatedRepo);
+                    continue;
+                }
+
+                usedRepos.add(connectionObj['repository']);
+            }
+
             let reposList: string[] = [];
 
             for (let entry of newEndpointsToAdd) {
@@ -66,12 +87,7 @@ async function main(): Promise<void> {
 
                 if (entry.packageSource.feedName in fileContent){
                     tl.warning(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
-                    if (internalFeed.includes(entry)) {
-                        internalFeed.pop();
-                        continue;
-                    }
-                    externalEndpoints.pop();
-                    continue;
+                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
                 }
 
                 let repo = new Repository(
@@ -80,6 +96,12 @@ async function main(): Promise<void> {
                     entry.username,
                     entry.password
                 );
+
+                if (usedRepos.has(repo.repository)) {
+                    tl.warning(tl.loc("DuplicateRepoUrl", repo.repository));
+                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
+                    continue;
+                }
 
                 reposList.push(repo.toString() + `${os.EOL}`);
 
@@ -115,6 +137,26 @@ async function main(): Promise<void> {
 
 function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
     return array.filter((e, i, a) => a.indexOf(e) !== i);
+}
+
+function removeFromFeedCount(internalFeed: auth.AuthInfo[], externalEndpoints: auth.AuthInfo[], entry: auth.AuthInfo): void {
+    if (internalFeed.includes(entry)) {
+        internalFeed.pop();
+        return;
+    }
+    externalEndpoints.pop();
+}
+
+function getNestedRepoProperty(connection: object): string {
+    for (const key in  connection) {
+        if (typeof connection[key] === 'object') {
+            return getNestedRepoProperty(connection[key]);
+        }
+        else if (key === 'repository') {
+            return connection[key];
+        }
+    }
+    return tl.loc("NoRepoFound");
 }
 
 // only used for new file writes.

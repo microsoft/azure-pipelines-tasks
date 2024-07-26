@@ -96,7 +96,9 @@
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry"
+    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry",
+    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound",
+    "DuplicateRepoUrl": "ms-resource:loc.messages.DuplicateRepoUrl"
   },
   "postjobexecution": {
     "Node10": {
