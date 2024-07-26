@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 232,
+    "Patch": 0
   },
   "demands": [
     "MSBuild",
@@ -192,6 +192,7 @@
       "visibleRule": "jdkSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
         "1.9": "JDK 9 (out of support)",
