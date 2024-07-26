@@ -1,7 +1,9 @@
 import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
+#if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -17,6 +19,7 @@ async function main(): Promise<void> {
     let federatedFeedAuthSuccessCount: number = 0;
 
     try {
+#if WIF
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
@@ -39,6 +42,7 @@ async function main(): Promise<void> {
             }
             return;
         }
+#endif
 
         let internalAndExternalEndpoints: string[] = [];
         const feedList  = tl.getDelimitedInput("artifactFeeds", ",");

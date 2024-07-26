@@ -1,7 +1,6 @@
 import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -17,28 +16,6 @@ async function main(): Promise<void> {
     let federatedFeedAuthSuccessCount: number = 0;
 
     try {
-        const feedUrl = tl.getInput("feedUrl");
-        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-
-        // If using feed Url and wif service connection, set the pip index url
-        if (feedUrl && entraWifServiceConnectionName)
-        {
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(feedUrl);
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-            if(token)
-            {
-                var indexUrl = utils.addCredentialsToUri(entraWifServiceConnectionName, token, feedUrl) ;
-                tl.setVariable("PIP_INDEX_URL", indexUrl, false);
-                federatedFeedAuthSuccessCount++;
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-            } 
-            else
-            {
-                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
-            }
-            return;
-        }
 
         let internalAndExternalEndpoints: string[] = [];
         const feedList  = tl.getDelimitedInput("artifactFeeds", ",");

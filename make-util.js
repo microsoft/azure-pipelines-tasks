@@ -1774,49 +1774,32 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-    const validatingTasks = {};
+    var tasks = taskList.join('|')
+    const programPath = getBuildConfigGenerator(baseConfigToolPath);
+    const args = [
+        "--task",
+        tasks
+    ];
+
+    if (sprintNumber) {
+        args.push("--current-sprint");
+        args.push(sprintNumber);
+    }
     
-    for (const key in makeOptions) {
-        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-
-        makeOptions[key].forEach((taskName) => {
-            if (taskList.indexOf(taskName) ===  -1) return;
-            if (validatingTasks[key]) {
-                validatingTasks[key].push(taskName);
-            } else {
-                validatingTasks[key] = [taskName];
-            }
-        });
+    var writeUpdateArg = "";
+    if(writeUpdates)
+    {
+        writeUpdateArg += " --write-updates";
     }
-    for (const config in validatingTasks) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const args = [
-            "--configs",
-            config,
-            "--task",
-            `"${validatingTasks[config].join('|')}"`
-        ];
 
-        if (sprintNumber) {
-            args.push("--current-sprint");
-            args.push(sprintNumber);
-        }
-        
-        var writeUpdateArg = "";
-        if(writeUpdates)
-        {
-            writeUpdateArg += " --write-updates";
-        }
-
-        var debugAgentDirArg = "";
-        if(debugAgentDir) {
-            debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
-        }
-
-        banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
-        run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+    var debugAgentDirArg = "";
+    if(debugAgentDir) {
+        debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
     }
+
+    banner(`Validating: tasks ${tasks} \n`);
+    run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+
 }
 exports.processGeneratedTasks = processGeneratedTasks;
 

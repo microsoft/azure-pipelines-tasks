@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 21
+    "Patch": 29
   },
   "runsOn": [
     "Agent",
@@ -107,6 +107,7 @@
   },
   "_buildConfigMapping": {
     "Default": "1.243.0",
-    "Node20_229_1": "1.243.21"
+    "Node20_229_1": "1.243.29",
+    "wif_242": "1.243.28"
   }
 }

@@ -99,7 +99,6 @@ namespace BuildConfigGen
             else
             {
                 NotNullOrThrow(task, "Task is required");
-                NotNullOrThrow(configs, "Configs is required");
             }
 
             string currentDir = Environment.CurrentDirectory;
@@ -143,6 +142,13 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
+                    if (configs == null)
+                    {
+                        var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                        var taskMakeOptions = tasks[t];
+                        configs = string.Join('|', taskMakeOptions.Configs);
+                    }
+
                     MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
                 }
             }
