@@ -36,7 +36,6 @@ function writeImageDigestComposeFile(version: string, imageDigests: any, imageDi
         };
     });
     fs.writeFileSync(imageDigestComposeFile, yaml.safeDump({
-        version: version,
         services: services
     }, { lineWidth: -1 } as any));
 }
