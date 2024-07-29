@@ -32,7 +32,7 @@
     }
   ],
   "deprecated": true,
-  "deprecationMessage": "The AndroidSigning@2 task is deprecated, please use the latest version of the AndroidSigning task",
+  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
   "inputs": [
     {
       "name": "files",
@@ -176,7 +176,8 @@
     "CouldNotFindZipalignInAndroidHome": "ms-resource:loc.messages.CouldNotFindZipalignInAndroidHome",
     "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
-    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
+    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   },
   "restrictions": {
     "commands": {

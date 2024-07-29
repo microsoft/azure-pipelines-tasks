@@ -188,7 +188,8 @@
     "CouldNotFindZipalignInAndroidHome": "Could not find the zipalign tool inside ANDROID_HOME: %s",
     "JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
     "NoMatchingFiles": "No matching files were found with search pattern: %s",
-    "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+    "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s",
+    "DeprecationMessage": "The AndroidSigning@2 task is deprecated, please use the latest version of the AndroidSigning task"
   },
   "restrictions": {
     "commands": {
