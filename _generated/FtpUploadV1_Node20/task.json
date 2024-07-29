@@ -196,7 +196,8 @@
     "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
     "UploadRemoteDir": "uploading files to remote directory: %s",
     "UploadSucceedMsg": "FTP upload successful %s",
-    "UploadSucceedRes": "FTP upload successful"
+    "UploadSucceedRes": "FTP upload successful",
+    "DeprecationMessage": "The FtpUpload@1 task is deprecated, please use a newer version of the FtpUpload task"
   },
   "_buildConfigMapping": {
     "Default": "1.243.0",
