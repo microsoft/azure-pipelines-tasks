@@ -12,10 +12,10 @@ async function run() {
             console.log(tl.loc('InstallRequiresMac'));
         } else {
             let keychain: string = tl.getInput('keychain');
-            let keychainPath: string = tl.getTaskVariable('APPLE_CERTIFICATE_KEYCHAIN');
+            let keychainPath: string = tl.getTaskVariable('keychainPath');
 
             let deleteCert: boolean = tl.getBoolInput('deleteCert');
-            let hash: string = tl.getTaskVariable('APPLE_CERTIFICATE_SHA1HASH');
+            let hash: string = tl.getTaskVariable('certificateSha1Hash');
             if (deleteCert && hash) {
                 await sign.deleteCert(keychainPath, hash);
             }

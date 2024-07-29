@@ -44,10 +44,12 @@ async function run() {
         if (!fingerprint || !commonName) {
             throw new Error(tl.loc('INVALID_P12'));
         }
-        tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', fingerprint);
+
+        // set the signing identity SHA1 hash output variable
+        tl.setTaskVariable('certificateSha1Hash', fingerprint);
 
         // set the signing identity output variable.
-        tl.setVariable('signingIdentity', commonName);
+        tl.setTaskVariable('signingIdentity', commonName);
 
         // Warn if the certificate is not yet valid or expired. If the dates are undefined or invalid, the comparisons below will return false.
         const now: Date = new Date();
@@ -69,25 +71,25 @@ async function run() {
             keychainPwd = Math.random().toString(36);
 
             // tl.setSecret would work too, except it's not available in mock-task yet.
-            tl.setVariable('keychainPassword', keychainPwd, true);
+            tl.setTaskVariable('keychainPassword', keychainPwd, true);
         } else if (keychain === 'default') {
             keychainPath = await sign.getDefaultKeychainPath();
         } else if (keychain === 'custom') {
             keychainPath = tl.getInput('customKeychainPath', true);
         }
-        tl.setTaskVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
 
         const setUpPartitionIdACLForPrivateKey: boolean = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
         const useKeychainIfExists: boolean = true;
         await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey, opensslArgs);
 
         // set the keychain output variable.
-        tl.setVariable('keychainPath', keychainPath);
+        tl.setTaskVariable('keychainPath', keychainPath);
 
         // Set the legacy variables that doesn't use the task's refName, unlike our output variables.
         // If there are multiple InstallAppleCertificate tasks, the last one wins.
         tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', commonName);
         tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
+        tl.setVariable('APPLE_CERTIFICATE_SHA1HASH', fingerprint);
     } catch (err) {
         if (err instanceof OpenSSlError) {
             tl.warning(tl.loc('OpenSSLError'));

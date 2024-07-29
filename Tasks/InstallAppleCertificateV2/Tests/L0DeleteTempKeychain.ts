@@ -10,7 +10,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('keychain', 'temp');
 
 process.env['AGENT_VERSION'] = '2.116.0';
-process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/build/temp/ios_signing_temp.keychain';
+process.env['VSTS_TASKVARIABLE_KEYCHAINPATH'] = '/build/temp/ios_signing_temp.keychain';
 process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
