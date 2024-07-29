@@ -47,7 +47,7 @@
     }
   ],
   "deprecated": true,
-  "deprecationMessage": "ms-resource:loc.DeprecationMessage",
+  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
   "inputs": [
     {
       "name": "wrapperScript",
