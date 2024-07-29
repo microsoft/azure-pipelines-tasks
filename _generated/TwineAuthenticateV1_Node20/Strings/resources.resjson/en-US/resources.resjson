@@ -25,6 +25,6 @@
   "loc.messages.VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
   "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s",
   "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
-  "loc.messages.NoRepoFound": "No repo url found",
+  "loc.messages.NoRepoFound": "No repo url found under %s",
   "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
 }

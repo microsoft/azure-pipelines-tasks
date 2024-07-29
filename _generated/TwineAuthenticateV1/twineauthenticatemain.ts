@@ -43,7 +43,7 @@ async function main(): Promise<void> {
         const externalEndpoints = await auth.getExternalAuthInfoArray("pythonUploadServiceConnection");
 
         // combination of both internal and external
-        const newEndpointsToAdd = internalFeed.concat(externalEndpoints);
+        const newEndpointsToAdd = new Set([...internalFeed, ...externalEndpoints]);
 
         let pypircPath = utils.getPypircPath();
 
@@ -67,8 +67,8 @@ async function main(): Promise<void> {
                 if (!connectionObj.hasOwnProperty('repository')) {
                     const authenticatedRepo = getNestedRepoProperty(connectionObj);
 
-                    if (authenticatedRepo === tl.loc("NoRepoFound")) {
-                        tl.warning(tl.loc("NoRepoFound") + ` under ${connection}`);
+                    if (authenticatedRepo === undefined) {
+                        tl.warning(tl.loc("NoRepoFound", connection));
                         continue;
                     }
 
@@ -88,6 +88,7 @@ async function main(): Promise<void> {
                 if (entry.packageSource.feedName in fileContent){
                     tl.warning(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
                     removeFromFeedCount(internalFeed, externalEndpoints, entry);
+                    continue;
                 }
 
                 let repo = new Repository(
@@ -119,8 +120,8 @@ async function main(): Promise<void> {
         }
 
         // Configuring the pypirc file
-        internalFeedSuccessCount = internalFeed.length;
-        externalFeedSuccessCount = externalEndpoints.length;
+        internalFeedSuccessCount = internalFeed.size;
+        externalFeedSuccessCount = externalEndpoints.size;
         console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
@@ -139,12 +140,12 @@ function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
     return array.filter((e, i, a) => a.indexOf(e) !== i);
 }
 
-function removeFromFeedCount(internalFeed: auth.AuthInfo[], externalEndpoints: auth.AuthInfo[], entry: auth.AuthInfo): void {
-    if (internalFeed.includes(entry)) {
-        internalFeed.pop();
+function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints: Set<auth.AuthInfo>, entry: auth.AuthInfo): void {
+    if (internalFeed.has(entry)) {
+        internalFeed.delete(entry);
         return;
     }
-    externalEndpoints.pop();
+    externalEndpoints.delete(entry);
 }
 
 function getNestedRepoProperty(connection: object): string {
@@ -160,7 +161,8 @@ function getNestedRepoProperty(connection: object): string {
 }
 
 // only used for new file writes.
-function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
+function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string{
+    const authInfo = Array.from(authInfoSet);
     let feedNames = authInfo.map(entry => entry.packageSource.feedName);
     let duplicateFeeds = findDuplicatesInArray<string>(feedNames);
 

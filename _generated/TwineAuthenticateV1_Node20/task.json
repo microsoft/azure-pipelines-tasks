@@ -101,7 +101,7 @@
     "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
     "Info_RemovingPypircFile": "Removing .pypirc file from %s",
     "DuplicateRegistry": "%s registry is already authenticated",
-    "NoRepoFound": "No repo url found",
+    "NoRepoFound": "No repo url found under %s",
     "DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
   },
   "postjobexecution": {
