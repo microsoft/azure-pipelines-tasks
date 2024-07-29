@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 242,
+    "Minor": 243,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -46,6 +46,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "ms-resource:loc.DeprecationMessage",
   "inputs": [
     {
       "name": "wrapperScript",
@@ -424,6 +426,7 @@
     "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   }
 }
