@@ -10,7 +10,6 @@
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.appType": "App type",
   "loc.input.help.appType": "Select the Azure Function App type for the deployment.",
-  "loc.input.label.isFlexConsumption": "Is Function App on Flex Consumption Plan",
   "loc.input.label.appName": "Azure Functions App name",
   "loc.input.help.appName": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type.",
   "loc.input.label.deployToSlotOrASE": "Deploy to Slot or App Service Environment",
@@ -26,7 +25,7 @@
   "loc.input.label.appSettings": "App settings",
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "Deployment method",
-  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.",
+  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
@@ -178,5 +177,6 @@
   "loc.messages.SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
   "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
   "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption.",
-  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption" : "The Deployment Type option does not apply for Flex Consumption"
+
 }
