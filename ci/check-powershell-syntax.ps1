@@ -115,6 +115,11 @@ function main() {
       (Check-PowershellHandler $_.FullName) -eq $true
     }
 
+  if ($tasks.Count -eq 0) {
+    Write-Host "No PowerShell handler found in the tasks."
+    exit 0;
+  }
+
   $analyzerResults = Check-Tasks -taskPaths $tasks.FullName;
 
   return $analyzerResults;
