@@ -152,7 +152,7 @@ function getNestedRepoProperty(connection: object): string {
         if (typeof connection[key] === 'object') {
             return getNestedRepoProperty(connection[key]);
         }
-        else if (key === 'repository') {
+        else if (key.toLowerCase() === 'repository') {
             return connection[key];
         }
     }
