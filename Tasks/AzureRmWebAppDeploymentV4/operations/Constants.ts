@@ -7,7 +7,7 @@ export const SiteRoot: string = '/site/wwwroot';
 
 export const PublishProfileXml = {
     ExcludeApp_Data: "ExcludeApp_Data",
-    EnableMSDeployAppOffline: "EnableMSDeployAppOffline",
+    EnableMSDeployAppOffline: "EnableMsDeployAppOffline",
     SkipExtraFilesOnServer: "SkipExtraFilesOnServer",
     SiteUrlToLaunchAfterPublish: "SiteUrlToLaunchAfterPublish",
     MSDeployServiceURL: "MSDeployServiceURL",
