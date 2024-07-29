@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "satisfies": [
@@ -22,7 +22,7 @@
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "deprecated": true,
-  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
+  "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
   "inputs": [
     {
       "name": "packageType",
@@ -77,7 +77,6 @@
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
     "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
-    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
   }
 }

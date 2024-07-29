@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 243,
+        "Minor": 244,
         "Patch": 0
     },
     "satisfies": [
@@ -77,7 +77,6 @@
         "FailedToDownloadPackage": "Failed to download package for installation",
         "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
         "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
-        "UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops.",
-        "DeprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task"	
+        "UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
     }
 }
