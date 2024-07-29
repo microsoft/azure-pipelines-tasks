@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 243,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -49,7 +49,7 @@
     }
   ],
   "deprecated": true,
-  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
+  "deprecationMessage": "ms-resource:loc.messages.Deprecation",
   "inputs": [
     {
       "name": "mavenPOMFile",
@@ -517,6 +517,6 @@
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
     "NoTestResults": "ms-resource:loc.messages.NoTestResults",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "Deprecation": "ms-resource:loc.messages.Deprecation"
   }
 }
