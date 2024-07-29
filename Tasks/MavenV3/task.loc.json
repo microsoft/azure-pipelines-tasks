@@ -49,7 +49,7 @@
     }
   ],
   "deprecated": true,
-  "deprecationMessage": "The Maven@3 task is deprecated, please use a newer version of the Maven task",
+  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
   "inputs": [
     {
       "name": "mavenPOMFile",
@@ -516,6 +516,7 @@
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   }
 }

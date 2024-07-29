@@ -454,6 +454,7 @@
     "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
     "EffectivePomInvalid": "Could not parse the effective POM.",
     "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
-    "UsingAuthFeed": "Using Artifacts feed: "
+    "UsingAuthFeed": "Using Artifacts feed: ",
+    "DeprecationMessage": "The Maven@2 task is deprecated, please use a newer version of the Maven task"
   }
 }
