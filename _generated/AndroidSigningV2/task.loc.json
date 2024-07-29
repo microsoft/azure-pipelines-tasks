@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [
@@ -176,8 +176,7 @@
     "CouldNotFindZipalignInAndroidHome": "ms-resource:loc.messages.CouldNotFindZipalignInAndroidHome",
     "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
-    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
   },
   "restrictions": {
     "commands": {
@@ -188,7 +187,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "2.243.0",
-    "Node20-225": "2.243.1"
+    "Default": "2.244.0",
+    "Node20-225": "2.244.1"
   }
 }
