@@ -81,7 +81,8 @@
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
     "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
-    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",

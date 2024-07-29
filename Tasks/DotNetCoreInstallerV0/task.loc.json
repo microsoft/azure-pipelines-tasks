@@ -22,7 +22,7 @@
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "deprecated": true,
-  "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
+  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
   "inputs": [
     {
       "name": "packageType",
@@ -77,6 +77,7 @@
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
     "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
-    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   }
 }
