@@ -257,7 +257,8 @@
     "NoMatchingProjects": "ms-resource:loc.messages.NoMatchingProjects",
     "XamarinAndroidBuildFailed": "ms-resource:loc.messages.XamarinAndroidBuildFailed",
     "XamarinAndroidSucceeded": "ms-resource:loc.messages.XamarinAndroidSucceeded",
-    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
   },
   "_buildConfigMapping": {
     "Default": "1.243.0",

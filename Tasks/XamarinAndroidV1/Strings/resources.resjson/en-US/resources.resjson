@@ -39,5 +39,6 @@
   "loc.messages.NoMatchingProjects": "No files were found matching: %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
+  "loc.messages.DeprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin"
 }

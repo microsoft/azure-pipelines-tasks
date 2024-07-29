@@ -261,7 +261,8 @@
     "NoMatchingProjects": "No files were found matching: %s.",
     "XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
     "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",
-    "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+    "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
+    "DeprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin"
   },
   "_buildConfigMapping": {
     "Default": "1.243.0",
