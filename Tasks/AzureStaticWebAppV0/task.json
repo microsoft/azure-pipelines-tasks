@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 239,
     "Patch": 0
   },
   "preview": true,
@@ -160,6 +160,12 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "AZURESTATICWEBAPP_STATIC_WEB_APP_URL",
+      "description": "URL of the Static Web App after a successful deployment."
     }
   ],
   "execution": {
