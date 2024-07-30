@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 1
   },
   "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
@@ -172,11 +172,10 @@
     "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
     "MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
     "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
-    "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Apple does not support iOS builds on a Linux or Windows agent.",
-    "DeprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin"
+    "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Apple does not support iOS builds on a Linux or Windows agent."
   },
   "_buildConfigMapping": {
-    "Default": "2.243.0",
-    "Node20_229_2": "2.243.1"
+    "Default": "2.244.0",
+    "Node20_229_2": "2.244.1"
   }
 }
