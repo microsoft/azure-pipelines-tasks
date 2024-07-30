@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -426,11 +426,10 @@
     "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "2.243.0",
-    "Node20_229_2": "2.243.1"
+    "Default": "2.244.0",
+    "Node20_229_2": "2.244.1"
   }
 }

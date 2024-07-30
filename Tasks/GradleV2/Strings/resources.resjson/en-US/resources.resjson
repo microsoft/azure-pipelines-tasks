@@ -93,6 +93,5 @@
   "loc.messages.InvalidBuildFile": "Invalid or unsupported build file",
   "loc.messages.FileNotFound": "File or folder doesn't exist: %s",
   "loc.messages.FailedToAppendCC": "Unable to append code coverage data: %s",
-  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-  "loc.messages.DeprecationMessage": "The Gradle@2 task is deprecated, please use a newer version of the Gradle task"
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
 }

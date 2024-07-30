@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 1
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -430,11 +430,10 @@
     "InvalidBuildFile": "Invalid or unsupported build file",
     "FileNotFound": "File or folder doesn't exist: %s",
     "FailedToAppendCC": "Unable to append code coverage data: %s",
-    "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-    "DeprecationMessage": "The Gradle@2 task is deprecated, please use a newer version of the Gradle task"
+    "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
   },
   "_buildConfigMapping": {
-    "Default": "2.243.0",
-    "Node20_229_2": "2.243.1"
+    "Default": "2.244.0",
+    "Node20_229_2": "2.244.1"
   }
 }
