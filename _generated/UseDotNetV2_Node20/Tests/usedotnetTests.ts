@@ -6,7 +6,7 @@ import { VersionInfo } from '../models';
 import { setFlagsFromString } from 'v8';
 import fs = require('fs');
 
-let mockery = require('mockery');
+let mockery = require('azure-pipelines-task-lib/lib-mocker');
 let osType = "win";
 
 //setup mocks

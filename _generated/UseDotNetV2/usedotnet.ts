@@ -113,7 +113,7 @@ function addDotNetCoreToolPath() {
         tl.prependPath(globalToolPath);
     } catch (error) {
         //nop
-        console.log(tl.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
+        console.log(tl.loc("ErrorWhileSettingDotNetToolPath", error.message));
     }
 }
 

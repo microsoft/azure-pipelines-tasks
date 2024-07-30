@@ -16,7 +16,7 @@ export class VersionInstaller {
             tl.exist(installationPath) || tl.mkdirP(installationPath);
         }
         catch (ex) {
-            throw tl.loc("UnableToAccessPath", installationPath, JSON.stringify(ex));
+            throw tl.loc("UnableToAccessPath", installationPath, ex.message);
         }
 
         this.packageType = packageType;
