@@ -24,7 +24,7 @@
       "label": ".npmrc file to authenticate",
       "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
       "type": "filePath",
-      "required": true
+      "required": false
     },
     {
       "name": "customEndpoint",
@@ -74,10 +74,14 @@
     "RevertedChangesToNpmrc": "Reverted changes made to %s.",
     "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
     "SuccessfulPush": "Successfully pushed .npmrc",
-    "SuccessfulAppend": "Successfully appended .npmrc"
+    "SuccessfulAppend": "Successfully appended .npmrc",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",
-    "Node20_229_1": "0.243.1"
+    "Node20_229_1": "0.243.1",
+    "wif_242": "0.243.2"
   }
 }

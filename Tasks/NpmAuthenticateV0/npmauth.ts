@@ -9,21 +9,13 @@ import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as os from 'os';
 import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+#if WIF
+import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
-    let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
-    let workingDirectory = path.dirname(npmrc);
-    if (!(npmrc.endsWith('.npmrc'))) {
-        throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
-    }
-    else if (!tl.exist(npmrc)) {
-        throw new Error(tl.loc('NpmrcDoesNotExist', npmrc));
-    }
-    else {
-        console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
-    }
 
     if (tl.getVariable("SAVE_NPMRC_PATH")) {
         saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
@@ -36,6 +28,43 @@ async function main(): Promise<void> {
         tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
     }
+
+#if WIF
+    const feedUrl = tl.getInput("feedUrl");
+    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+
+    // we will skip npmrc parsing if we are using feed url and wif service connection
+    if (feedUrl && entraWifServiceConnectionName) {
+        tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+        const feedTenant = await getFeedTenantId(feedUrl);
+        let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+        if(token)
+        {
+            // Generate a new temporary npmrc and append the url with token into it.
+            
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+        } 
+        else
+        {
+            throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
+        }
+        return;
+    }
+#endif
+
+    let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
+    let workingDirectory = path.dirname(npmrc);
+    if (!(npmrc.endsWith('.npmrc'))) {
+        throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
+    }
+    else if (!tl.exist(npmrc)) {
+        throw new Error(tl.loc('NpmrcDoesNotExist', npmrc));
+    }
+    else {
+        console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
+    }
+
+
     let npmrcTable: Object;
 
     //The index file is a json object that keeps track of where .npmrc files are saved.
@@ -109,9 +138,9 @@ async function main(): Promise<void> {
         }
         if (registry) {
             tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
+            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL); //need this
             tl.debug(tl.loc('SuccessfulAppend'));
-            npmrcFile.push(os.EOL + registry.auth + os.EOL);
+            npmrcFile.push(os.EOL + registry.auth + os.EOL); //need this
             tl.debug(tl.loc('SuccessfulPush'));
         }
         else {

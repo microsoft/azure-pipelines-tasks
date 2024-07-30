@@ -13,17 +13,6 @@ import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locati
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
-    let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
-    let workingDirectory = path.dirname(npmrc);
-    if (!(npmrc.endsWith('.npmrc'))) {
-        throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
-    }
-    else if (!tl.exist(npmrc)) {
-        throw new Error(tl.loc('NpmrcDoesNotExist', npmrc));
-    }
-    else {
-        console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
-    }
 
     if (tl.getVariable("SAVE_NPMRC_PATH")) {
         saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
@@ -36,6 +25,21 @@ async function main(): Promise<void> {
         tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
     }
+
+
+    let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
+    let workingDirectory = path.dirname(npmrc);
+    if (!(npmrc.endsWith('.npmrc'))) {
+        throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
+    }
+    else if (!tl.exist(npmrc)) {
+        throw new Error(tl.loc('NpmrcDoesNotExist', npmrc));
+    }
+    else {
+        console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
+    }
+
+
     let npmrcTable: Object;
 
     //The index file is a json object that keeps track of where .npmrc files are saved.
@@ -109,9 +113,9 @@ async function main(): Promise<void> {
         }
         if (registry) {
             tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
+            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL); //need this
             tl.debug(tl.loc('SuccessfulAppend'));
-            npmrcFile.push(os.EOL + registry.auth + os.EOL);
+            npmrcFile.push(os.EOL + registry.auth + os.EOL); //need this
             tl.debug(tl.loc('SuccessfulPush'));
         }
         else {

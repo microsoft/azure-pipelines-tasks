@@ -26,5 +26,8 @@
   "loc.messages.RevertedChangesToNpmrc": "Reverted changes made to %s.",
   "loc.messages.NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
   "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
 }
