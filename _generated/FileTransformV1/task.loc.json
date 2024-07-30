@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 242,
+    "Minor": 244,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -28,6 +28,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The FileTransform@1 task is deprecated, please use a newer version of the FileTransform task",
   "inputs": [
     {
       "name": "folderPath",
@@ -116,7 +118,7 @@
     "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_3": "1.242.1"
+    "Default": "1.244.0",
+    "Node20_229_3": "1.244.1"
   }
 }
