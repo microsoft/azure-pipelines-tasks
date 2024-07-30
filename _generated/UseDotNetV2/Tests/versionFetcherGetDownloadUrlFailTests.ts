@@ -2,7 +2,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 
 mockery.enable({
     useCleanCache: true,
