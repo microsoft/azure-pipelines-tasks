@@ -39,7 +39,11 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
 
         var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
         var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
-        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
+        var isNewValueUpdated: boolean = await this.appServiceUtilityExt.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
+        
+        // add Output for isNewValueUpdated  
+        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
+
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();

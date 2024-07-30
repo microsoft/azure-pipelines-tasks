@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "함수 앱의 트리거를 동기화하는 중",
   "loc.messages.SyncFunctionTriggersSuccess": "함수 앱의 트리거 동기화를 완료했습니다.",
   "loc.messages.UpdatedRunFromPackageSettings": "WEBSITE_RUN_FROM_PACKAGE 애플리케이션 설정을 %s(으)로 업데이트했습니다.",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "배포 유형 옵션은 Linux 사용에 적용되지 않습니다."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "배포 유형 옵션은 Linux 사용에 적용되지 않습니다.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "배포 유형 옵션은 Flex 사용에 적용되지 않습니다."
 }
