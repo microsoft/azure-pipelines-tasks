@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 243,
-    "Patch": 1
+    "Minor": 244,
+    "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [
@@ -454,7 +454,6 @@
     "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
     "EffectivePomInvalid": "Could not parse the effective POM.",
     "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
-    "UsingAuthFeed": "Using Artifacts feed: ",
-    "DeprecationMessage": "The Maven@2 task is deprecated, please use a newer version of the Maven task"
+    "UsingAuthFeed": "Using Artifacts feed: "
   }
 }

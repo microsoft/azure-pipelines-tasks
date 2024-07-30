@@ -97,6 +97,5 @@
   "loc.messages.EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
   "loc.messages.EffectivePomInvalid": "Could not parse the effective POM.",
   "loc.messages.AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
-  "loc.messages.UsingAuthFeed": "Using Artifacts feed: ",
-  "loc.messages.DeprecationMessage": "The Maven@2 task is deprecated, please use a newer version of the Maven task"
+  "loc.messages.UsingAuthFeed": "Using Artifacts feed: "
 }
