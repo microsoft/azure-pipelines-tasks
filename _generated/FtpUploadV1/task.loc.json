@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
@@ -192,11 +192,10 @@
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
-    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.0",
-    "Node20-225": "1.243.1"
+    "Default": "1.244.0",
+    "Node20-225": "1.244.1"
   }
 }

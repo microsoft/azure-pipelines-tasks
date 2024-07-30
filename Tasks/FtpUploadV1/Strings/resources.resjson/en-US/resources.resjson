@@ -38,6 +38,5 @@
   "loc.messages.FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
   "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
   "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
-  "loc.messages.UploadSucceedRes": "FTP upload successful",
-  "loc.messages.DeprecationMessage": "The FtpUpload@1 task is deprecated, please use a newer version of the FtpUpload task"
+  "loc.messages.UploadSucceedRes": "FTP upload successful"
 }

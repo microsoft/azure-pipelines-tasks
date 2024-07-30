@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 1
   },
   "minimumAgentVersion": "2.182.1",
@@ -196,11 +196,10 @@
     "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
     "UploadRemoteDir": "uploading files to remote directory: %s",
     "UploadSucceedMsg": "FTP upload successful %s",
-    "UploadSucceedRes": "FTP upload successful",
-    "DeprecationMessage": "The FtpUpload@1 task is deprecated, please use a newer version of the FtpUpload task"
+    "UploadSucceedRes": "FTP upload successful"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.0",
-    "Node20-225": "1.243.1"
+    "Default": "1.244.0",
+    "Node20-225": "1.244.1"
   }
 }
