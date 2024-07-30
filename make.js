@@ -229,14 +229,14 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         await util.installNodeAsync('20');
         ensureTool('node', '--version', `v${node20Version}`);
         for (const taskName of allTasksNode20) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 20);
+            await buildTaskWrapped(taskName, allTasksNode20.length, 20, !writeUpdatedsFromGenTasks);
         }
     } 
     if (allTasksDefault.length > 0) {
        await util.installNodeAsync('10');
         ensureTool('node', '--version', `v${node10Version}`);
         for (const taskName of allTasksDefault) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 10);
+            await buildTaskWrapped(taskName, allTasksNode20.length, 10, !writeUpdatedsFromGenTasks);
         }
     }
 
@@ -263,7 +263,7 @@ function getNodeVersion (taskName) {
 
 }
 
-async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
+async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBuild = false) {
     let isGeneratedTask = false;
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
@@ -348,7 +348,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir);
+                    buildNodeTask(modPath, modOutDir, isServerBuild);
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -410,7 +410,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
 
     // build Node task
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir);
+        buildNodeTask(taskPath, outDir, isServerBuild);
     }
 
     // remove the hashes for the common packages, they change every build

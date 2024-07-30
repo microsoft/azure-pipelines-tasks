@@ -5,7 +5,7 @@ import { Buffer } from "buffer";
 import { VersionInfo } from '../models';
 import { Promise } from 'q';
 import fs = require('fs');
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 
 const workingDir: string = "work/";
 const validRootGlobalJson = workingDir + "global.json";

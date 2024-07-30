@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "正在同步函數應用程式的觸發程序",
   "loc.messages.SyncFunctionTriggersSuccess": "已成功完成函數應用程式的同步處理觸發程序",
   "loc.messages.UpdatedRunFromPackageSettings": "已將 WEBSITE_RUN_FROM_PACKAGE 應用程式設定更新為 %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署類型選項不適用於 Linux 使用量。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署類型選項不適用於 Linux 使用量。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "部署類型選項不適用於 Flex 使用量。"
 }
