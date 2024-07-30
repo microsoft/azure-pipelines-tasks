@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -173,13 +173,20 @@ var buildNodeTask = function (taskPath, outDir) {
         } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
-
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
         cd(taskPath);
     }
 
