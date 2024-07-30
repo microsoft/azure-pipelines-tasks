@@ -113,14 +113,14 @@ export class DotNetCoreVersionFetcher {
                             this.channels.push(new Channel(channelRelease));
                         }
                         catch (ex) {
-                            tl.debug("Channel information in releases-index.json was not proper. Error: " + JSON.stringify(ex));
+                            tl.debug("Channel information in releases-index.json was not proper. Error: " + ex.message);
                             // do not fail, try to find version in the available channels.
                         }
                     }
                 });
             })
             .catch((ex) => {
-                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", JSON.stringify(ex));
+                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", ex.message);
             });
     }
 
@@ -200,7 +200,7 @@ export class DotNetCoreVersionFetcher {
                     return utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
                 })
                 .catch((ex) => {
-                    tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, JSON.stringify(ex)));
+                    tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, ex.message));
                     return null;
                 });
         }
@@ -288,7 +288,7 @@ export class DotNetCoreVersionFetcher {
                 }
             }
             catch (ex) {
-                throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
+                throw tl.loc("FailedInDetectingMachineArch", ex.message);
             }
 
             this.machineOsSuffixes = osSuffix;

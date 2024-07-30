@@ -4,7 +4,7 @@ import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 import { Constants } from "../versionutilities";
 import fs = require('fs');
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 var osType = "win";
 
 const installationPath: string = "installationPath"
