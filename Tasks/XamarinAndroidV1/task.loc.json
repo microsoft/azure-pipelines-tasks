@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [
@@ -33,7 +33,7 @@
     }
   ],
   "deprecated": true,
-  "deprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
+  "deprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin",
   "inputs": [
     {
       "name": "project",
@@ -257,7 +257,6 @@
     "NoMatchingProjects": "ms-resource:loc.messages.NoMatchingProjects",
     "XamarinAndroidBuildFailed": "ms-resource:loc.messages.XamarinAndroidBuildFailed",
     "XamarinAndroidSucceeded": "ms-resource:loc.messages.XamarinAndroidSucceeded",
-    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound",
-    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage"
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
   }
 }
