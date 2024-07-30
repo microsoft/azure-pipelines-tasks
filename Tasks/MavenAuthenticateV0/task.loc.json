@@ -21,8 +21,8 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required.",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -33,8 +33,8 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -97,9 +97,9 @@
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
     "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
     "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
+    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
-    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
     "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
     "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2",
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
