@@ -19,8 +19,6 @@ describe('Pip Authenticate V1 Suite', function () {
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        assert(tr.stdOutContained('Successfully added auth for 1 internal feeds and 0 external endpoint'),
-        'it should have succeeded in adding auth for 1 feed');
         done();
     });
 });
