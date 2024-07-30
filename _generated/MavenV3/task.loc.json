@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 243,
-    "Patch": 2
+    "Minor": 244,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -516,11 +516,10 @@
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
-    "NoTestResults": "ms-resource:loc.messages.NoTestResults",
-    "Deprecation": "ms-resource:loc.messages.Deprecation"
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "3.243.2",
-    "Node20-225": "3.243.3"
+    "Default": "3.244.0",
+    "Node20-225": "3.244.1"
   }
 }

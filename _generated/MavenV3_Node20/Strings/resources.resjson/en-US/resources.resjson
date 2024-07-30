@@ -108,6 +108,5 @@
   "loc.messages.EffectivePomInvalid": "Could not parse the effective POM.",
   "loc.messages.AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
   "loc.messages.UsingAuthFeed": "Using Artifacts feed: ",
-  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-  "loc.messages.Deprecation": "ms-resource:loc.messages.Deprecation"
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
 }
