@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 2
+    "Patch": 8
   },
   "runsOn": [
     "Agent",
@@ -19,6 +19,27 @@
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Maven Authenticate",
   "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    },
     {
       "name": "artifactsFeeds",
       "type": "pickList",
@@ -70,13 +91,17 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+    "Warning_MustUseBothFederatedInputs": "If trying to authenticate with a Entra Workload ID-backed Azure Devops User service connection, must use both workloadIdentityServiceConnection and feedUrl inputs",
     "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
     "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
     "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
     "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
     "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
     "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+    "Info_AddingFederatedFeedAuth":  "Adding auth information from federated service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
-    "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
+    "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   }
 }

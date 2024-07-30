@@ -44,7 +44,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -71,7 +71,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsOtherFeedName, settingsXmlPath);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -99,7 +99,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsFeedName1, settingsXmlPath);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -125,7 +125,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -162,7 +162,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 0, "Settings.xml file should not be created.");
 
