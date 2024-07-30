@@ -428,8 +428,8 @@ namespace BuildConfigGen
 
                     HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
 
-                    WriteWIFInputTaskJson(taskOutput, config, "task.json");
-                    WriteWIFInputTaskJson(taskOutput, config, "task.loc.json");
+                    WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
+                    WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
                 }
@@ -662,14 +662,14 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteWIFInputTaskJson(string taskPath, Config.ConfigRecord config, string fileName)
+        private static void WriteWIFInputTaskJson(string taskPath, Config.ConfigRecord config, string fileName, bool isLoc)
         {
             if (!config.isWif)
             {
                 return;
             }
 
-            string taskJsonOverridePath = Path.Combine(taskPath, "taskJsonOverride.json");
+            string taskJsonOverridePath = Path.Combine(taskPath, isLoc ? "taskJsonOverride.loc.json" : "taskJsonOverride.json");
             JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskJsonOverridePath))!;
             var clonedArray = JsonNode.Parse(inputTaskNode["inputs"]!.ToJsonString())!.AsArray();
 

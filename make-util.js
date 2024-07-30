@@ -724,6 +724,8 @@ var fileToJson = function (file) {
 exports.fileToJson = fileToJson;
 
 var createResjson = function (task, taskPath) {
+    console.log(`createResjson ${taskPath}`);
+
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
         resources['loc.friendlyName'] = task.friendlyName;
