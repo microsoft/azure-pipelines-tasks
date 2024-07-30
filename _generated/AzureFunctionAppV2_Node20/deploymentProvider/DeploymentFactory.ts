@@ -6,6 +6,7 @@ import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
+import { FlexConsumptionWebAppDeploymentProvider } from './FlexConsumptionWebAppDeploymentProvider';
 
 export class DeploymentFactory {
 
@@ -20,7 +21,11 @@ export class DeploymentFactory {
             tl.debug("Deployment started for linux app service");
             if(this._taskParams.isConsumption) {
                 return new ConsumptionWebAppDeploymentProvider(this._taskParams);
-            } else {
+            } 
+            else if(this._taskParams.isFlexConsumption) {
+                    return new FlexConsumptionWebAppDeploymentProvider(this._taskParams);
+            }
+            else {
                 return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
             }
         } else {

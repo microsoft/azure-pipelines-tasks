@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "Die Trigger für die Funktions-App werden synchronisiert.",
   "loc.messages.SyncFunctionTriggersSuccess": "Die Triggersynchronisierung für die Funktions-App wurde erfolgreich abgeschlossen.",
   "loc.messages.UpdatedRunFromPackageSettings": "Die WEBSITE_RUN_FROM_PACKAGE-Anwendungseinstellung wurde auf \"%s\" aktualisiert.",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "Die Option \"Bereitstellungstyp\" gilt nicht für Linux-Verbrauch."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "Die Option \"Bereitstellungstyp\" gilt nicht für Linux-Verbrauch.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption" : "Die Option \"Bereitstellungstyp\" gilt nicht für Flex-Verbrauch."
 }
