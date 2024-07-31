@@ -1,0 +1,168 @@
+{
+  "id": "13c41dcf-7d2a-49ac-8065-04692c4ab356",
+  "name": "AzureAppConfigurationSnapshot",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-snapshots",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "minimumAgentVersion": "2.144.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AppConfiguration"
+    },
+    {
+      "name": "AppConfigurationEndpoint",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppConfigurationEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.AppConfigurationEndpoint",
+      "groupName": "AppConfiguration",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "validation": {
+        "expression": "isUrl(value)",
+        "message": "Provide a valid app configuration endpoint."
+      }
+    },
+    {
+      "name": "SnapshotName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SnapshotName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "Options",
+      "helpMarkDown": "ms-resource:loc.input.help.SnapshotName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "CompositionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.CompositionType",
+      "defaultValue": "key",
+      "required": true,
+      "groupName": "Options",
+      "helpMarkDown": "ms-resource:loc.input.help.CompositionType",
+      "options": {
+        "key": "Key (default)",
+        "key_label": "Key-Label"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "Filters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Filters",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "Options",
+      "helpMarkDown": "ms-resource:loc.input.help.Filters"
+    },
+    {
+      "name": "RetentionPeriod",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.RetentionPeriod",
+      "defaultValue": "30",
+      "required": false,
+      "groupName": "Options",
+      "helpMarkDown": "ms-resource:loc.input.help.RetentionPeriod",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "validation": {
+        "expression": "isInRange(value, 0, 90)",
+        "message": "Allowed range for the retention period is from 0 days (minimum) to 90 days (maximum)"
+      }
+    },
+    {
+      "name": "Tags",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Tags",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Tags",
+      "groupName": "Options",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "AppConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.AppConfiguration",
+      "isExpanded": true
+    },
+    {
+      "name": "Options",
+      "displayName": "ms-resource:loc.group.displayName.Options",
+      "isExpanded": true
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "AppConfigurationEndpoint",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2020-06-01",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{properties.endpoint}}}\", \"DisplayValue\" : \"{{{properties.endpoint}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "index.js"
+    },
+    "Node20_1": {
+      "target": "index.js"
+    }
+  },
+  "messages": {
+    "AccessDenied": "ms-resource:loc.messages.AccessDenied",
+    "SnapshotAlreadyExists": "ms-resource:loc.messages.SnapshotAlreadyExists",
+    "MaxRetentionDaysforFreeStore": "ms-resource:loc.messages.MaxRetentionDaysforFreeStore",
+    "InvalidCompositionTypeValue": "ms-resource:loc.messages.InvalidCompositionTypeValue",
+    "InvalidFilterFormatJSONObjectExpected": "ms-resource:loc.messages.InvalidFilterFormatJSONObjectExpected",
+    "InvalidFilterFormat": "ms-resource:loc.messages.InvalidFilterFormat",
+    "InvalidFilterFormatKeyIsRequired": "ms-resource:loc.messages.InvalidFilterFormatKeyIsRequired",
+    "InvalidFilterFormatExpectedAllowedProperties": "ms-resource:loc.messages.InvalidFilterFormatExpectedAllowedProperties",
+    "MaxAndMinFiltersRequired": "ms-resource:loc.messages.MaxAndMinFiltersRequired",
+    "RetentionPeriodNonNegativeIntegerValue": "ms-resource:loc.messages.RetentionPeriodNonNegativeIntegerValue",
+    "MaxAndMinRetentionPeriodStandardStore": "ms-resource:loc.messages.MaxAndMinRetentionPeriodStandardStore",
+    "MinRetentionAfterArchiveSnapshot": "ms-resource:loc.messages.MinRetentionAfterArchiveSnapshot",
+    "InvalidTagFormatValidJSONStringExpected": "ms-resource:loc.messages.InvalidTagFormatValidJSONStringExpected",
+    "InvalidTagFormat": "ms-resource:loc.messages.InvalidTagFormat",
+    "InvalidTagFormatOnlyStringsSupported": "ms-resource:loc.messages.InvalidTagFormatOnlyStringsSupported",
+    "SnapshotCreatedSuccessfully": "ms-resource:loc.messages.SnapshotCreatedSuccessfully",
+    "SnapshotTaskIsStartingUp": "ms-resource:loc.messages.SnapshotTaskIsStartingUp",
+    "AzureSubscriptionTitle": "ms-resource:loc.messages.AzureSubscriptionTitle",
+    "AzureAppConfigurationEndpointTitle": "ms-resource:loc.messages.AzureAppConfigurationEndpointTitle",
+    "SnapshotNameTitle": "ms-resource:loc.messages.SnapshotNameTitle",
+    "CompositionTypeTitle": "ms-resource:loc.messages.CompositionTypeTitle",
+    "FiltersTitle": "ms-resource:loc.messages.FiltersTitle",
+    "UnexpectedError": "ms-resource:loc.messages.UnexpectedError",
+    "HttpError": "ms-resource:loc.messages.HttpError",
+    "UnauthenticatedRestError": "ms-resource:loc.messages.UnauthenticatedRestError",
+    "AuthenticationError": "ms-resource:loc.messages.AuthenticationError"
+  }
+}
