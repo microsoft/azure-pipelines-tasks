@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
-    "Patch": 13
+    "Minor": 244,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -326,7 +326,7 @@
     "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.12",
-    "Node20_229_2": "1.243.13"
+    "Default": "1.244.0",
+    "Node20_229_2": "1.244.1"
   }
 }

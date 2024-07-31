@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 243,
-    "Patch": 3
+    "Minor": 244,
+    "Patch": 1
   },
   "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -114,7 +114,7 @@
     "FileTranformationNotEnabled": "ms-resource:loc.messages.FileTranformationNotEnabled"
   },
   "_buildConfigMapping": {
-    "Default": "2.243.2",
-    "Node20_229_3": "2.243.3"
+    "Default": "2.244.0",
+    "Node20_229_3": "2.244.1"
   }
 }
