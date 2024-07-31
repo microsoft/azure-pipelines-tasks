@@ -1787,7 +1787,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     const programPath = getBuildConfigGenerator(baseConfigToolPath);
     const args = [
         "--task",
-        tasks
+        `"${tasks}"`
     ];
 
     if (sprintNumber) {
