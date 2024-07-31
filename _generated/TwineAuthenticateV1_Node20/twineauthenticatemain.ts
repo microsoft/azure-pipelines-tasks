@@ -148,8 +148,8 @@ function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints
     externalEndpoints.delete(entry);
 }
 
-function getNestedRepoProperty(connection: object): string {
-    for (const key in  connection) {
+function getNestedRepoProperty(connection: object): string | undefined {
+    for (const key in connection) {
         if (typeof connection[key] === 'object') {
             return getNestedRepoProperty(connection[key]);
         }
@@ -157,7 +157,7 @@ function getNestedRepoProperty(connection: object): string {
             return connection[key];
         }
     }
-    return tl.loc("NoRepoFound");
+    return undefined;
 }
 
 // only used for new file writes.
