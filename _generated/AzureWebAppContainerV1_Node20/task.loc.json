@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 5
+    "Patch": 7
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -338,7 +338,7 @@
     "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.4",
-    "Node20_229_2": "1.243.5"
+    "Default": "1.243.6",
+    "Node20_229_2": "1.243.7"
   }
 }

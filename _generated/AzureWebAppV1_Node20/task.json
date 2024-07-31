@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 7
+    "Patch": 9
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -392,7 +392,7 @@
     "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
   },
   "_buildConfigMapping": {
-    "Default": "1.243.6",
-    "Node20_229_2": "1.243.7"
+    "Default": "1.243.8",
+    "Node20_229_2": "1.243.9"
   }
 }
