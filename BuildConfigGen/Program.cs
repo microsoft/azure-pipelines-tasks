@@ -145,11 +145,21 @@ namespace BuildConfigGen
                     if (configs == null)
                     {
                         var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
-                        var taskMakeOptions = tasks[t];
-                        configs = string.Join('|', taskMakeOptions.Configs);
+                        if (tasks.ContainsKey(t))
+                        {
+                            var taskMakeOptions = tasks[t];
+                            configs = string.Join('|', taskMakeOptions.Configs);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Config was not found for the task: {t}, skipping");
+                        }
                     }
 
-                    MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                    if (configs != null)
+                    {
+                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                    }
                 }
             }
 
