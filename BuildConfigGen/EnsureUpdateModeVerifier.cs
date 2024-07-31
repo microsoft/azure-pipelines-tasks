@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.IO;
 using System.Security.AccessControl;
 
 namespace BuildConfigGen
@@ -105,6 +106,11 @@ namespace BuildConfigGen
                         // we might check the content here, but we defer it in cause the content gets updated in WriteAllText
                         string normalizedDestFileName = NormalizeFile(destFileName);
                         string normalizedSourceFileName = NormalizeFile(sourceFileName);
+
+                        RuntimeTests.Instance(normalizedDestFileName).ResolveFile_EnsureRedirectedTempFileReturnedForFinalFile.NegativePrecondition();
+                        RuntimeTests.Instance(normalizedDestFileName).ResolveFile_EnsureRedirectedTempFileOfFileWithCopyIsReturned.Precondition();
+                        RuntimeTests.Instance(normalizedDestFileName).ResolveFile_EnsureNonTempFileReturnedForCopiedFileNotWrittenTo.Precondition();
+
                         if (!CopiedFilesToCheck.TryAdd(normalizedDestFileName, normalizedSourceFileName))
                         {
                             CopiedFilesToCheck[normalizedDestFileName] = normalizedSourceFileName;
@@ -155,6 +161,10 @@ namespace BuildConfigGen
             {
                 if (File.Exists(path))
                 {
+                    RuntimeTests.Instance(path).ResolveFile_EnsureRedirectedTempFileReturnedForFinalFile.Precondition();
+                    RuntimeTests.Instance(path).ResolveFile_EnsureRedirectedTempFileOfFileWithCopyIsReturned.Precondition();
+                    RuntimeTests.Instance(path).ResolveFile_EnsureNonTempFileReturnedForCopiedFileNotWrittenTo.NegativePrecondition();
+
                     string? tempFilePath;
 
                     string normalizedPath = NormalizeFile(path);
@@ -265,17 +275,26 @@ namespace BuildConfigGen
 
             if (RedirectedToTempl.TryGetValue(filePath, out tempFile))
             {
-                // We'll get here if we're reading a file that was written to in WriteAllText
+                // We'll get here if we're resolving a file that was written to in WriteAllText, and the file path specifed doesn't have a copy (though it maybe a copy itself)
+
+                //RuntimeTests.Instance(filePath).ResolveFile_After_WriteAllText_WithCopy.AssertFailed().Done();
+                RuntimeTests.Instance(filePath).ResolveFile_EnsureRedirectedTempFileReturnedForFinalFile.AssertPassed().Done();
             }
             else
             {
                 if (CopiedFilesToCheck.TryGetValue(filePath, out sourceFile))
                 {
-                    // We'll get here if we're reading a file that was copied
-
                     if (RedirectedToTempl.TryGetValue(sourceFile, out tempFile))
                     {
-                        // We'll get here if we're reading a file that was copied and then written to in WriteAllText
+                        // We'll get here if we're resolving a file that was copied and then written to using WriteAllText
+                        RuntimeTests.Instance(filePath).ResolveFile_EnsureRedirectedTempFileOfFileWithCopyIsReturned.AssertPassed().Done();
+                    }
+                    else
+                    {
+                        // We'll get here if we're resolving a file that was copied
+                        //RuntimeTests.Instance(filePath).ResolveFile_After_WriteAllText_WithCopy.AssertPassed().Done();
+                        //RuntimeTests.Instance(filePath).ResolveFile_EnsureTempFileReturnedForFinalFile.AssertFailed().Done();
+                        RuntimeTests.Instance(filePath).ResolveFile_EnsureNonTempFileReturnedForCopiedFileNotWrittenTo.AssertPassed().Done();
                     }
                 }
             }

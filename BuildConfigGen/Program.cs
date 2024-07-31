@@ -84,8 +84,13 @@ namespace BuildConfigGen
                 Console.WriteLine();
                 Console.WriteLine("An exception occured generating configs. Exception message below: (full callstack above)");
                 Console.WriteLine(e2.Message);
+                RuntimeTests.Evaluate();
 
                 Environment.Exit(1);
+            }
+            finally
+            {
+                RuntimeTests.Evaluate();
             }
         }
 
@@ -976,18 +981,18 @@ namespace BuildConfigGen
             string inputTaskPath = Path.Combine(taskTarget, fileName);
             JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
-            if (
-                ((int)inputTaskNode["version"]!["Major"]!) != configTaskVersion[Config.Default].Major
-                || ((int)inputTaskNode["version"]!["Minor"]!) != configTaskVersion[Config.Default].Minor
-                || ((int)inputTaskNode["version"]!["Patch"]!) != configTaskVersion[Config.Default].Patch
-                )
-            {
+            //if (
+            //    ((int)inputTaskNode["version"]!["Major"]!) != configTaskVersion[Config.Default].Major
+            //    || ((int)inputTaskNode["version"]!["Minor"]!) != configTaskVersion[Config.Default].Minor
+            //    || ((int)inputTaskNode["version"]!["Patch"]!) != configTaskVersion[Config.Default].Patch
+            //    )
+            //{
                 inputTaskNode["version"]!["Major"] = configTaskVersion[Config.Default].Major;
                 inputTaskNode["version"]!["Minor"] = configTaskVersion[Config.Default].Minor;
                 inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
                 ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
-            }
+            //}
         }
 
         private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
