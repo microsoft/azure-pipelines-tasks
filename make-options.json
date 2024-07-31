@@ -403,5 +403,8 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
+    ],
+    "wif_242": [
+        "PipAuthenticateV1"
     ]
 }
