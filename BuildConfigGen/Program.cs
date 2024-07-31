@@ -142,23 +142,29 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
+                    // If config weren't passed, constract specific config for each task, otherwise we might have problems if first task has 2 configs, but the other 1,0 or diffrenet ones
                     if (configs == null)
                     {
                         var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                         if (tasks.ContainsKey(t))
                         {
                             var taskMakeOptions = tasks[t];
-                            configs = string.Join('|', taskMakeOptions.Configs);
+                            var taskConfigs = string.Join('|', taskMakeOptions.Configs);
+                            MainUpdateTask(t, taskConfigs!, writeUpdates, currentSprint, debugConfGen);
                         }
                         else
                         {
                             Console.WriteLine($"Config was not found for the task: {t}, skipping");
                         }
                     }
+                    else
+                    {
+                        // If configs was passed as arguments, just execute it
+                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                    }
 
                     if (configs != null)
                     {
-                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
                     }
                 }
             }
