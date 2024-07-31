@@ -149,7 +149,7 @@ function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints
 }
 
 function getNestedRepoProperty(connection: object): string {
-    for (const key in  connection) {
+    for (const key in connection) {
         if (typeof connection[key] === 'object') {
             return getNestedRepoProperty(connection[key]);
         }
