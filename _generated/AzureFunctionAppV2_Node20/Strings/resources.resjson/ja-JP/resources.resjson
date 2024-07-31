@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "関数アプリのトリガーを同期しています",
   "loc.messages.SyncFunctionTriggersSuccess": "関数アプリの同期トリガーが正常に完了しました",
   "loc.messages.UpdatedRunFromPackageSettings": "WEBSITE_RUN_FROM_PACKAGE アプリケーション設定が %s に更新されました",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "[展開の種類] オプションは、Linux 従量課金プランには適用されません。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "[展開の種類] オプションは、Linux 従量課金プランには適用されません。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "[展開の種類] オプションは、Flex 従量課金プランには適用されません。"
 }

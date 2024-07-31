@@ -177,11 +177,9 @@ function findIncompatibleAgentBase() {
     }
 }
 
-
-
-// logToPipeline("section", "Start findNonUniqueTaskLib")
-// findNonUniqueTaskLib();
-// logToPipeline("section", "Start analyzePowershellTasks")
-// analyzePowershellTasks();
+logToPipeline("section", "Start findNonUniqueTaskLib")
+findNonUniqueTaskLib();
+logToPipeline("section", "Start analyzePowershellTasks")
+analyzePowershellTasks();
 logToPipeline("section", "Start findIncompatibleAgentBase")
 findIncompatibleAgentBase();
