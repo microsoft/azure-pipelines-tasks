@@ -275,42 +275,20 @@
       }
     },
     "azure-pipelines-tasks-docker-common": {
-      "version": "2.226.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.226.0.tgz",
-      "integrity": "sha512-gk8XJGYviqQrt9OUVX4YhD3JjuowsvLNYJZSalNdFPIVM9ZgEaSohuGL/DoXZFF7x+fgSS8UawsQ5dg+87Ktig==",
+      "version": "2.242.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.242.0.tgz",
+      "integrity": "sha512-GkXAljKFJoHOp6sH4Jqii5btzAcJfRnck8UleT868iND64nX8o1zzbLbknAJGvduBS7bE+nEppb+Km5fAdBoYg==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.5.4",
         "@types/uuid": "^8.3.0",
-        "azure-pipelines-task-lib": "^3.1.0",
-        "azure-pipelines-tasks-azure-arm-rest": "3.226.0",
+        "azure-pipelines-task-lib": "^4.13.0",
+        "azure-pipelines-tasks-azure-arm-rest": "^3.242.2",
         "del": "2.2.0",
         "q": "1.4.1"
       },
       "dependencies": {
-        "@azure/msal-common": {
-          "version": "9.1.1",
-          "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.1.1.tgz",
-          "integrity": "sha512-we9xR8lvu47fF0h+J8KyXoRy9+G/fPzm3QEa2TrdR3jaVS3LKAyE2qyMuUkNdbVkvzl8Zr9f7l+IUSP22HeqXw=="
-        },
-        "@azure/msal-node": {
-          "version": "1.14.5",
-          "resolved": "https://registry.npmjs.org/@azure/msal-node/-/msal-node-1.14.5.tgz",
-          "integrity": "sha512-NcVdMfn8Z3ogN+9RjOSF7uwf2Gki5DEJl0BdDSL83KUAgVAobtkZi5W8EqxbJLrTO/ET0jv5DregrcR5qg2pEA==",
-          "requires": {
-            "@azure/msal-common": "^9.0.1",
-            "jsonwebtoken": "^8.5.1",
-            "uuid": "^8.3.0"
-          },
-          "dependencies": {
-            "uuid": {
-              "version": "8.3.2",
-              "resolved": "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz",
-              "integrity": "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
-            }
-          }
-        },
         "@types/node": {
           "version": "10.17.60",
           "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
@@ -320,78 +298,6 @@
           "version": "1.5.4",
           "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
           "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
-        },
-        "azure-pipelines-task-lib": {
-          "version": "3.4.0",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.4.0.tgz",
-          "integrity": "sha512-3eC4OTFw+7xD7A2aUhxR/j+jRlTI+vVfS0CGxt1pCLs4c/KmY0tQWgbqjD3157kmiucWxELBvgZHaD2gCBe9fg==",
-          "requires": {
-            "minimatch": "3.0.5",
-            "mockery": "^2.1.0",
-            "q": "^1.5.1",
-            "semver": "^5.1.0",
-            "shelljs": "^0.8.5",
-            "sync-request": "6.1.0",
-            "uuid": "^3.0.1"
-          },
-          "dependencies": {
-            "q": {
-              "version": "1.5.1",
-              "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
-              "integrity": "sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw=="
-            }
-          }
-        },
-        "azure-pipelines-tasks-azure-arm-rest": {
-          "version": "3.226.0",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.226.0.tgz",
-          "integrity": "sha512-yHibJejhY8GL+sN/zvrjLkcGzHE6QT9FX6LXNZkBd1dcn0MEBKdgGEM5I841Yaj7RxY+EhSfUJSpBCaJrlfkSQ==",
-          "requires": {
-            "@azure/msal-node": "1.14.5",
-            "@types/jsonwebtoken": "^8.5.8",
-            "@types/mocha": "^5.2.7",
-            "@types/node": "^10.17.0",
-            "@types/q": "1.5.4",
-            "async-mutex": "^0.4.0",
-            "azure-devops-node-api": "^12.0.0",
-            "azure-pipelines-task-lib": "^3.4.0",
-            "https-proxy-agent": "^4.0.0",
-            "jsonwebtoken": "^8.5.1",
-            "node-fetch": "^2.6.7",
-            "q": "1.5.1",
-            "typed-rest-client": "1.8.4",
-            "xml2js": "0.6.2"
-          },
-          "dependencies": {
-            "q": {
-              "version": "1.5.1",
-              "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
-              "integrity": "sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw=="
-            }
-          }
-        },
-        "minimatch": {
-          "version": "3.0.5",
-          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz",
-          "integrity": "sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==",
-          "requires": {
-            "brace-expansion": "^1.1.7"
-          }
-        },
-        "mockery": {
-          "version": "2.1.0",
-          "resolved": "https://registry.npmjs.org/mockery/-/mockery-2.1.0.tgz",
-          "integrity": "sha512-9VkOmxKlWXoDO/h1jDZaS4lH33aWfRiJiNT/tKj+8OGzrcFDLo8d0syGdbsc3Bc4GvRXPb+NMMvojotmuGJTvA=="
-        },
-        "typed-rest-client": {
-          "version": "1.8.4",
-          "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.8.4.tgz",
-          "integrity": "sha512-MyfKKYzk3I6/QQp6e1T50py4qg+c+9BzOEl2rBmQIpStwNUoqQ73An+Tkfy9YuV7O+o2mpVVJpe+fH//POZkbg==",
-          "requires": {
-            "qs": "^6.9.1",
-            "tunnel": "0.0.6",
-            "underscore": "^1.12.1"
-          }
         }
       }
     },
@@ -980,23 +886,6 @@
       "requires": {
         "argparse": "^1.0.7",
         "esprima": "^4.0.0"
-      }
-    },
-    "jsonwebtoken": {
-      "version": "8.5.1",
-      "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz",
-      "integrity": "sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==",
-      "requires": {
-        "jws": "^3.2.2",
-        "lodash.includes": "^4.3.0",
-        "lodash.isboolean": "^3.0.3",
-        "lodash.isinteger": "^4.0.4",
-        "lodash.isnumber": "^3.0.3",
-        "lodash.isplainobject": "^4.0.6",
-        "lodash.isstring": "^4.0.1",
-        "lodash.once": "^4.0.0",
-        "ms": "^2.1.1",
-        "semver": "^5.6.0"
       }
     },
     "jwa": {

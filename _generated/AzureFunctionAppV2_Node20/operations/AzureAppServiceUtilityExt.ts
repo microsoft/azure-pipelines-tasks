@@ -3,6 +3,10 @@ var glob = require("glob");
 import * as os from "os";
 import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest/constants';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppServiceUtility as AzureAppServiceUtilityCommon } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
+
 
 export class AzureAppServiceUtilityExt {
     private _appService: AzureAppService;
@@ -55,6 +59,67 @@ export class AzureAppServiceUtilityExt {
         catch (error) {
             tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
         }
+    }
+
+    public async getKuduService(): Promise<Kudu> {
+        
+        const utility = new AzureAppServiceUtilityCommon(this._appService);
+        return await utility.getKuduService();
+
+    }
+
+    // Adding checking for property to be updated in Kudu first and then in App Service
+    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
+        for(var property in addProperties) {
+            if(!!addProperties[property] && addProperties[property].value !== undefined) {
+                addProperties[property] = addProperties[property].value;
+            }
+        }
+        
+        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
+        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
+        
+        if(!!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+        }
+        else {
+            console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
+            return isNewValueUpdated;
+        }
+
+        var kuduService = await this.getKuduService();
+        var noOftimesToIterate: number = 12;
+        tl.debug('retrieving values from Kudu service to check if new values are updated');
+        while(noOftimesToIterate > 0) {
+            var kuduServiceAppSettings = await kuduService.getAppSettings();
+            var propertiesChanged: boolean = true;
+            for(var property in addProperties) {
+                if(kuduServiceAppSettings[property] != addProperties[property]) {
+                    tl.debug('New properties are not updated in Kudu service :(');
+                    propertiesChanged = false;
+                    break;
+                }
+            }
+            for(var property in deleteProperties) {
+                if(kuduServiceAppSettings[property]) {
+                    tl.debug('Deleted properties are not reflected in Kudu service :(');
+                    propertiesChanged = false;
+                    break;
+                }
+            }
+
+            if(propertiesChanged) {
+                tl.debug('New properties are updated in Kudu service.');
+                console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+                return isNewValueUpdated;
+            }
+
+            noOftimesToIterate -= 1;
+            await webClient.sleepFor(5);
+        }
+
+        tl.debug('Timing out from app settings check');
+        return isNewValueUpdated;
     }
 
     public async updateConnectionStrings(addProperties: any): Promise<boolean>  {

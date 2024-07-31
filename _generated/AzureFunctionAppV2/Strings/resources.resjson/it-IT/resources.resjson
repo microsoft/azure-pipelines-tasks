@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "Sincronizzazione dei trigger per l'app per le funzioni",
   "loc.messages.SyncFunctionTriggersSuccess": "La sincronizzazione dei trigger per l'app per le funzioni è stata completata",
   "loc.messages.UpdatedRunFromPackageSettings": "L'impostazione applicazione WEBSITE_RUN_FROM_PACKAGE è stata aggiornata in %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "L'opzione Tipo di distribuzione non è valida per a consumo per Linux."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "L'opzione Tipo di distribuzione non è valida per a consumo per Linux.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "L'opzione Tipo di distribuzione non è valida per a consumo per Flex."
 }

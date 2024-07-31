@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 243,
-    "Patch": 2
+    "Patch": 8
   },
   "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
   "minimumAgentVersion": "2.104.1",
@@ -60,6 +60,13 @@
       "helpMarkDown": "Select the Azure Function App type for the deployment."
     },
     {
+      "name": "isFlexConsumption",
+      "type": "boolean",
+      "label": "Is Function App on Flex Consumption Plan",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "appName",
       "type": "pickList",
       "label": "Azure Functions App name",
@@ -77,7 +84,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Select the option to deploy to an existing deployment slot or Azure App Service Environment.<br />For both the targets, the task needs Resource group name.<br />In case the deployment target is a slot, by default the deployment is done to the production slot. Any other existing slot name can also be provided.<br />In case the deployment target is an Azure App Service environment, leave the slot name as ‘production’ and just specify the Resource group name.",
-      "visibleRule": "appType != \"\""
+      "visibleRule": "appType != \"\" && isFlexConsumption = false"
     },
     {
       "name": "resourceGroupName",
@@ -138,7 +145,7 @@
         "PYTHON|3.10": "PYTHON|3.10",
         "PYTHON|3.11": "PYTHON|3.11"
       },
-      "visibleRule": "appType = functionAppLinux",
+      "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
       "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
     },
     {
@@ -165,7 +172,8 @@
         "zipDeploy": "Zip Deploy",
         "runFromPackage": "Zip Deploy with Run From Package"
       },
-      "helpMarkDown": "Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration."
+      "visibleRule": "appType != \"\" && isFlexConsumption = false",
+      "helpMarkDown": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration."
     }
   ],
   "outputVariables": [
@@ -363,6 +371,7 @@
     "SyncingFunctionTriggers": "Syncing triggers for function app",
     "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
-    "DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption."
+    "DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption.",
+    "DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
   }
 }
