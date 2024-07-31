@@ -16,12 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 242,
+    "Minor": 244,
     "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "The MysqlDeploymentOnMachineGroup@1 task is deprecated",
   "inputs": [
     {
       "name": "TaskNameSelector",
@@ -129,7 +131,7 @@
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_3": "1.242.1"
+    "Default": "1.244.0",
+    "Node20_229_3": "1.244.1"
   }
 }
