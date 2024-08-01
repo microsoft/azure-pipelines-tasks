@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
-    "Patch": 5
+    "Minor": 244,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -392,7 +392,7 @@
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.4",
-    "Node20_229_2": "1.243.5"
+    "Default": "1.244.0",
+    "Node20_229_2": "1.244.1"
   }
 }
