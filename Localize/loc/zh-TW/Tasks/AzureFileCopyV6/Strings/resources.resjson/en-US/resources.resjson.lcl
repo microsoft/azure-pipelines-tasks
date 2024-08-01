@@ -813,12 +813,12 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+          <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) with version 10.24.0, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[6.0 版的新增功能: <br/>&nbsp;&nbsp; 支援工作負載識別身分同盟和 [Azure RBAC]5D;(https://learn.microsoft.com/zh-tw/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)，亦會使用 10.25.1 版的 [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1)。如需詳細資訊，請參閱 [此處]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+            <Val><![CDATA[6.0 版的新功能： <br/>&nbsp;&nbsp; 支援工作負載身分識別同盟 [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)，亦會使用 10.24.0 版的 [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0)。如需詳細資訊：[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) with version 10.24.0, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+            <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
