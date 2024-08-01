@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 3
+    "Patch": 5
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -36,6 +36,27 @@
       "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
     }
   ],
   "execution": {
@@ -46,7 +67,16 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {},
+  "_buildConfigMapping": {
+    "Default": "1.238.3",
+    "Node20_229_1": "1.238.4",
+    "wif_242": "1.238.5"
+  }
 }

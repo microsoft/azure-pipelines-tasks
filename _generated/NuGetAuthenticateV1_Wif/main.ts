@@ -1,8 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-#if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-#endif
 import { installCredProviderToUserProfile, configureCredProvider, configureEntraCredProvider } from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'

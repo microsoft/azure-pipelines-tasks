@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -54,7 +54,8 @@
   },
   "messages": {},
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Default": "1.238.3",
+    "Node20_229_1": "1.238.4",
+    "wif_242": "1.238.5"
   }
 }
