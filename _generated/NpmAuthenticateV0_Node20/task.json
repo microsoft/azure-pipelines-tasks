@@ -85,7 +85,8 @@
     "SuccessfulAppend": "Successfully appended .npmrc",
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
-    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "SkippingParsingNpmrc": "Skipping parsing npmrc"
   },
   "_buildConfigMapping": {
     "Default": "0.243.1",

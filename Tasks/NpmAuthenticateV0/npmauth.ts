@@ -77,14 +77,14 @@ async function main(): Promise<void> {
         {
             const nerfed = util.toNerfDart(feedUrl);
             const auth = `${nerfed}:_authToken=${token}`;
-            tl.setSecret(token);
+            tl.setSecret(token); // Mask the secret in the log
             tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
             npmutil.appendToNpmrc(npmrc, os.EOL + auth + os.EOL);
             tl.debug(tl.loc('SuccessfulAppend'));
             npmrcFile.push(os.EOL + auth + os.EOL);
             tl.debug(tl.loc('SuccessfulPush'));    
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-            console.log("Skipping parsing npmrc.");
+            console.log(tl.loc("SkippingParsingNpmrc"));
         } 
         else
         {

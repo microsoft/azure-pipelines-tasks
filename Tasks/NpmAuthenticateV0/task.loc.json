@@ -77,6 +77,7 @@
     "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
-    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc"
   }
 }
