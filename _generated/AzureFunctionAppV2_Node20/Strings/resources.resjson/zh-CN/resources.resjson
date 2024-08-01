@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "正在同步函数应用的触发器",
   "loc.messages.SyncFunctionTriggersSuccess": "已成功完成函数应用的触发器同步",
   "loc.messages.UpdatedRunFromPackageSettings": "已将 WEBSITE_RUN_FROM_PACKAGE 应用程序设置更新为 %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署类型选项不适用于 Linux 消耗计划。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署类型选项不适用于 Linux 消耗计划。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "部署类型选项不适用于 Flex 消耗计划。"
 }
