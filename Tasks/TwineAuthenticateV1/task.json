@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 238,
+        "Minor": 243,
         "Patch": 0
     },
     "runsOn": [
@@ -95,7 +95,10 @@
         "FailedToAddAuthentication": "Failed to add authentication.",
         "NoPypircFile": "No .pypirc file to clean up.",
         "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-        "Info_RemovingPypircFile": "Removing .pypirc file from %s"
+        "Info_RemovingPypircFile": "Removing .pypirc file from %s",
+        "DuplicateRegistry": "%s registry is already authenticated",
+        "NoRepoFound": "No repo url found under %s",
+        "DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
     },
     "postjobexecution": {
         "Node10": {
