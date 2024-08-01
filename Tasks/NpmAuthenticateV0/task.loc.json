@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -24,7 +24,7 @@
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
       "type": "filePath",
-      "required": false
+      "required": true
     },
     {
       "name": "customEndpoint",

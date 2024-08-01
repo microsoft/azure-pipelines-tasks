@@ -13,20 +13,6 @@ import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locati
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
-
-    if (tl.getVariable("SAVE_NPMRC_PATH")) {
-        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
-    }
-    else {
-        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
-        tempPath = path.join(tempPath, 'npmAuthenticate');
-        tl.mkdirP(tempPath);
-        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
-        tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
-        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
-    }
-
-
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
     if (!(npmrc.endsWith('.npmrc'))) {
@@ -39,7 +25,17 @@ async function main(): Promise<void> {
         console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
     }
 
-
+    if (tl.getVariable("SAVE_NPMRC_PATH")) {
+        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+    }
+    else {
+        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
+        tempPath = path.join(tempPath, 'npmAuthenticate');
+        tl.mkdirP(tempPath);
+        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
+        tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
+        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
+    }
     let npmrcTable: Object;
 
     //The index file is a json object that keeps track of where .npmrc files are saved.
@@ -63,6 +59,9 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
+    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+
+
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -81,7 +80,6 @@ async function main(): Promise<void> {
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
-    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);

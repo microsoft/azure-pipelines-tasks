@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 1
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -24,7 +24,7 @@
       "label": ".npmrc file to authenticate",
       "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
       "type": "filePath",
-      "required": false
+      "required": true
     },
     {
       "name": "customEndpoint",
@@ -88,8 +88,8 @@
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.243.0",
-    "Node20_229_1": "0.243.1",
-    "wif_242": "0.243.2"
+    "Default": "0.243.1",
+    "Node20_229_1": "0.243.2",
+    "wif_242": "0.243.3"
   }
 }

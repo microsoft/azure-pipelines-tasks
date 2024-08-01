@@ -26,7 +26,7 @@
       "label": ".npmrc file to authenticate",
       "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
       "type": "filePath",
-      "required": false
+      "required": true
     },
     {
         "name": "customEndpoint",

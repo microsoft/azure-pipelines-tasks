@@ -16,42 +16,6 @@ import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
-
-    if (tl.getVariable("SAVE_NPMRC_PATH")) {
-        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
-    }
-    else {
-        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
-        tempPath = path.join(tempPath, 'npmAuthenticate');
-        tl.mkdirP(tempPath);
-        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
-        tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
-        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
-    }
-
-#if WIF
-    const feedUrl = tl.getInput("feedUrl");
-    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-
-    // we will skip npmrc parsing if we are using feed url and wif service connection
-    if (feedUrl && entraWifServiceConnectionName) {
-        tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-        const feedTenant = await getFeedTenantId(feedUrl);
-        let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-        if(token)
-        {
-            // Generate a new temporary npmrc and append the url with token into it.
-            
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-        } 
-        else
-        {
-            throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
-        }
-        return;
-    }
-#endif
-
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
     if (!(npmrc.endsWith('.npmrc'))) {
@@ -64,7 +28,17 @@ async function main(): Promise<void> {
         console.log(tl.loc("AuthenticatingThisNpmrc", npmrc));
     }
 
-
+    if (tl.getVariable("SAVE_NPMRC_PATH")) {
+        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+    }
+    else {
+        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
+        tempPath = path.join(tempPath, 'npmAuthenticate');
+        tl.mkdirP(tempPath);
+        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
+        tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
+        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
+    }
     let npmrcTable: Object;
 
     //The index file is a json object that keeps track of where .npmrc files are saved.
@@ -88,6 +62,38 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
+    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+
+#if WIF
+    const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
+    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+
+    // Skip npmrc parsing if we are using feed url and wif service connection
+    if (feedUrl && entraWifServiceConnectionName) {
+        tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+        const feedTenant = await getFeedTenantId(feedUrl);
+        let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+        if(token)
+        {
+            const nerfed = util.toNerfDart(feedUrl);
+            const auth = `${nerfed}:_authToken=${token}`;
+            tl.setSecret(token);
+            tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
+            npmutil.appendToNpmrc(npmrc, os.EOL + auth + os.EOL);
+            tl.debug(tl.loc('SuccessfulAppend'));
+            npmrcFile.push(os.EOL + auth + os.EOL);
+            tl.debug(tl.loc('SuccessfulPush'));    
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+            console.log("Skipping parsing npmrc.");
+        } 
+        else
+        {
+            throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
+        }
+        return;
+    }
+#endif
+
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -106,7 +112,6 @@ async function main(): Promise<void> {
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
-    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
