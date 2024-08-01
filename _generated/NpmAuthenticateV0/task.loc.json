@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 2
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -81,8 +81,8 @@
     "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20_229_1": "0.243.3",
-    "wif_242": "0.243.4"
+    "Default": "0.243.3",
+    "Node20_229_1": "0.243.4",
+    "wif_242": "0.243.5"
   }
 }
