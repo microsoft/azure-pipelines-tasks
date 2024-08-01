@@ -731,12 +731,12 @@
       </Item>
       <Item ItemId=";loc.messages.InvalidProjectName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1]]></Val>
+          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[プロジェクト名 "%s" は、有効な Docker Compose プロジェクト名である必要があります。詳細については、次のリンクをクリックしてください: https://aka.ms/azdo-docker-compose-v1]]></Val>
+            <Val><![CDATA[プロジェクト名 "%s" は、有効な Docker Compose プロジェクト名である必要があります。詳細については、次のリンクを参照してください。 https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+            <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

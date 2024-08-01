@@ -12,12 +12,12 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+          <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[暫停管線執行以待手動互動。僅適用於 YAML 管線。]]></Val>
+            <Val><![CDATA[[預覽]5D; 暫停管線執行以待手動互動。僅適用於 YAML 管線。]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+            <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

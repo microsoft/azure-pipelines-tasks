@@ -11,12 +11,12 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+          <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Sospendere l'esecuzione di una pipeline in attesa dell'interazione manuale. Funziona solo con pipeline YAML.]]></Val>
+            <Val><![CDATA[[ANTEPRIMA]5D; Sospende l'esecuzione di una pipeline in attesa dell'interazione manuale. Funziona solo con pipeline YAML.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+            <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
