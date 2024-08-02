@@ -20,27 +20,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "workloadIdentityServiceConnection",
-      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
-      "type": "connectedService:workloadidentityuser",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
-    },
-    {
-      "name": "feedUrl",
-      "label": "ms-resource:loc.input.label.feedUrl",
-      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
-      "type": "string",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
-    },
-    {
       "name": "artifactsFeeds",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
@@ -106,6 +85,7 @@
   },
   "_buildConfigMapping": {
     "Default": "0.243.8",
-    "Node20_229_1": "0.243.9"
+    "Node20_229_1": "0.243.9",
+    "wif_242": "0.243.10"
   }
 }

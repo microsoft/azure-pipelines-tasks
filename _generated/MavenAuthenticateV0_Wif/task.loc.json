@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 8
+    "Patch": 10
   },
   "runsOn": [
     "Agent",
@@ -21,8 +21,8 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required.",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -33,8 +33,8 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -76,6 +76,10 @@
     },
     "Node16": {
       "target": "mavenauth.js"
+    },
+    "Node20_1": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -84,6 +88,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }
@@ -97,11 +105,16 @@
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
     "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
     "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
+    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
-    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
     "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
     "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2",
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.243.8",
+    "Node20_229_1": "0.243.9",
+    "wif_242": "0.243.10"
   }
 }

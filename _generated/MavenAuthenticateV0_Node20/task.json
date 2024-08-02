@@ -20,27 +20,6 @@
   "instanceNameFormat": "Maven Authenticate",
   "inputs": [
     {
-      "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required.",
-      "type": "connectedService:workloadidentityuser",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
-    },
-    {
-      "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
-      "type": "string",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
-    },
-    {
       "name": "artifactsFeeds",
       "type": "pickList",
       "label": "Feeds",
@@ -114,6 +93,7 @@
   },
   "_buildConfigMapping": {
     "Default": "0.243.8",
-    "Node20_229_1": "0.243.9"
+    "Node20_229_1": "0.243.9",
+    "wif_242": "0.243.10"
   }
 }

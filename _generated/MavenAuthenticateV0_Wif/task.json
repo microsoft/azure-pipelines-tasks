@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 8
+    "Patch": 10
   },
   "runsOn": [
     "Agent",
@@ -22,7 +22,7 @@
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "helpMarkDown": "If this is set, feedUrl is required.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -34,7 +34,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -76,6 +76,10 @@
     },
     "Node16": {
       "target": "mavenauth.js"
+    },
+    "Node20_1": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -84,6 +88,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }
@@ -98,10 +106,15 @@
     "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
     "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
     "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
-    "Info_AddingFederatedFeedAuth":  "Adding auth information from federated service connection %s for feed %s",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from federated service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.243.8",
+    "Node20_229_1": "0.243.9",
+    "wif_242": "0.243.10"
   }
 }

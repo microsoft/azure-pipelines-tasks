@@ -4,7 +4,7 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
-import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
@@ -64,7 +64,8 @@ async function run(): Promise<void> {
         if (feedUrl && entraWifServiceConnectionName) {
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
+            const feedTenant = await getFeedTenantId(feedUrl);
+            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
             
             if (token) {
 

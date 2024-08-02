@@ -405,6 +405,7 @@
         "PublishSymbolsV2"
     ],
     "wif_242": [
-        "PipAuthenticateV1"
+        "PipAuthenticateV1",
+        "MavenAuthenticateV0"
     ]
 }
