@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 244,
+    "Minor": 243,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -379,7 +379,7 @@
     "DeploymentTypeNotSupportedForFlexConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForFlexConsumption"
   },
   "_buildConfigMapping": {
-    "Default": "2.244.0",
-    "Node20_229_9": "2.244.1"
+    "Default": "2.243.0",
+    "Node20_229_9": "2.243.1"
   }
 }
