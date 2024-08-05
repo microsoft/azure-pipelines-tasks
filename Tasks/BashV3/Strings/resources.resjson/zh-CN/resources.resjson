@@ -19,10 +19,12 @@
   "loc.input.help.bashEnvValue": "如果指定了输入，则会展开该值，并将其用作运行脚本之前要执行的启动文件的路径。如果已定义环境变量“BASH_ENV”，则该任务将仅针对当前任务重写此变量。可以通过 [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html)查找更多详细信息。",
   "loc.messages.GeneratingScript": "正在生成脚本。",
   "loc.messages.JS_ExitCode": "Bash 已退出，代码为“%s”。",
+  "loc.messages.JS_ExitCode_137": "Bash 已退出，代码为 137，这意味着内存不足。确保代理(容器)主机配置了足够的内存。",
   "loc.messages.JS_FormattedCommand": "已设置格式的命令: %s",
   "loc.messages.JS_InvalidFilePath": "文件路径“%s”无效。",
   "loc.messages.JS_ScriptContents": "脚本内容:",
   "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
   "loc.messages.JS_TranslatePathFailed": "无法将路径“%s”转换到 Linux 文件系统。",
-  "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它"
+  "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它",
+  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反斜杠 (\\) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
 }

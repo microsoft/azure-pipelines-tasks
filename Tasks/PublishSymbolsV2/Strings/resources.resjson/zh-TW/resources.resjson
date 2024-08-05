@@ -70,5 +70,6 @@
   "loc.messages.UnableToIndexSources": "無法編製來源的索引。",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已從未預期的路徑載入程式庫 dbghelp.dll。預期為 '{0}'。實際為 '{0}'。",
   "loc.messages.UnsupportedSourceProvider0": "來源索引編製作業不支援來源提供者 '{0}'。",
-  "loc.messages.Win32Error0FromMethod1": "方法 '{1}' 遇到 Win32 錯誤 '{0}'。"
+  "loc.messages.Win32Error0FromMethod1": "方法 '{1}' 遇到 Win32 錯誤 '{0}'。",
+  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
 }

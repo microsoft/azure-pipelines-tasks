@@ -4,7 +4,7 @@
   "loc.description": "Pubblica i risultati del code coverage restituiti da una compilazione",
   "loc.instanceNameFormat": "Pubblica risultati di code coverage",
   "loc.input.label.summaryFileLocation": "Percorso dei file di riepilogo",
-  "loc.input.help.summaryFileLocation": "Percorsi dei file di riepilogo contenenti le statistiche di code coverage, ad esempio a livello di riga, metodo e classe. In un singolo report verranno uniti più file di riepilogo. Supporta più righe di criteri di corrispondenza minima. [Altre informazioni] (https://aka.ms/minimatchexamples)",
+  "loc.input.help.summaryFileLocation": "Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
   "loc.input.label.pathToSources": "Percorso dei file di origine",
   "loc.input.help.pathToSources": "Il percorso dei file di origine è obbligatorio quando i report XML di code coverage non contengono il percorso assoluto dei file di origine. Ad esempio, i report JaCoCo non usano percorsi assoluti e quando si pubblicano le informazioni di code coverage JaCoCo per le app Java, il percorso sarà simile a `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />Questo valore di input è necessario anche se i test vengono eseguiti in un contenitore Docker e deve puntare al percorso assoluto dei file di origine nell'host, ad esempio `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.failIfCoverageEmpty": "Non eseguire se mancano i risultati del code coverage",

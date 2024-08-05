@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "特徵標記在 [訊息屬性] 中會出現的索引鍵位置。若留空，訊息屬性中的預設即為 'signature'",
   "loc.input.label.waitForCompletion": "等候工作完成",
   "loc.input.help.waitForCompletion": "如果這為 true，此工作會在指定的工作逾時內等候 TaskCompleted 事件。",
-  "loc.input.label.useDataContractSerializer": "使用 .NET 資料合約彙總器",
+  "loc.input.label.useDataContractSerializer": "使用 .NET 資料合約序列化程式",
   "loc.input.help.useDataContractSerializer": "如需詳細資料，請移至工作文件"
 }

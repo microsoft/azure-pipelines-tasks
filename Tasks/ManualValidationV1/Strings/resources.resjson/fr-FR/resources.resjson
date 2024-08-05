@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Validation manuelle",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/manual-validation)",
-  "loc.description": "[PRÉVERSION] Interrompt l'exécution de pipeline dans l'attente d'une interaction manuelle. Fonctionne uniquement avec les pipelines YAML.",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "Validation manuelle",
   "loc.input.label.notifyUsers": "Notifier les utilisateurs",
   "loc.input.help.notifyUsers": "Envoyez un e-mail relatif à une validation manuelle en attente à des utilisateurs (ou groupes) spécifiques. Seuls les utilisateurs spécifiés dans les approbateurs peuvent agir sur une validation manuelle.",

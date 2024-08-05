@@ -19,10 +19,12 @@
   "loc.input.help.bashEnvValue": "Se si specifica l'input, il valore viene espanso e usato come percorso di un file di avvio da eseguire prima di eseguire lo script. Se la variabile di ambiente 'BASH_ENV' è già stata definita, l'attività eseguirà l'override di questa variabile solo per l'attività corrente. Per altre informazioni, vedere [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Generazione dello script.",
   "loc.messages.JS_ExitCode": "Bash terminato con codice '%s'.",
+  "loc.messages.JS_ExitCode_137": "Il bash ha restituito il codice 137, pertanto la memoria è esaurita. Verificare che nell'host dell'agente (contenitore) sia configurata memoria sufficiente.",
   "loc.messages.JS_FormattedCommand": "Comando formattato: %s",
   "loc.messages.JS_InvalidFilePath": "Il percorso file '%s' non è valido.",
   "loc.messages.JS_ScriptContents": "Contenuto dello script:",
   "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
   "loc.messages.JS_TranslatePathFailed": "Non è possibile convertire il percorso '%s' per il file system Linux.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "La variabile di ambiente BASH_ENV è già stata impostata su '%s'. L'attività la sostituirà con '%s'"
+  "loc.messages.JS_BashEnvAlreadyDefined": "La variabile di ambiente BASH_ENV è già stata impostata su '%s'. L'attività la sostituirà con '%s'",
+  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando la barra rovesciata (\\). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
 }

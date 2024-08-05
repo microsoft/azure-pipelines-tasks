@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "Fehler beim Hinzufügen der Authentifizierung.",
   "loc.messages.NoPypircFile": "Es ist keine PYPIRC-Datei zum Bereinigen vorhanden.",
   "loc.messages.VariableSetForPypirc": "Die Umgebungsvariable für die PYPIRC-Datei unter \"%s\" wurde festgelegt.",
-  "loc.messages.Info_RemovingPypircFile": "Die PYPIRC-Datei wird aus \"%s\" entfernt."
+  "loc.messages.Info_RemovingPypircFile": "Die PYPIRC-Datei wird aus \"%s\" entfernt.",
+  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
+  "loc.messages.NoRepoFound": "No repo url found under %s",
+  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
 }
