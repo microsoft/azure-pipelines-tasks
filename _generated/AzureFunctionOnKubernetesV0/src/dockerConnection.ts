@@ -9,9 +9,9 @@ export class DockerConnection {
     private connection: ContainerConnection;
     private registryAuthenticationToken: RegistryAuthenticationToken;
 
-    public open() {      
+    public async open() {      
         const endpointId = tl.getInput("dockerRegistryServiceConnection", true);
-        this.registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);        
+        this.registryAuthenticationToken = await getDockerRegistryEndpointAuthenticationToken(endpointId);        
         this.connection = new ContainerConnection();
         this.connection.open(null, this.registryAuthenticationToken);
     }

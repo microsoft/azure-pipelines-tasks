@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 244,
     "Patch": 1
   },
   "demands": [],
@@ -27,6 +27,8 @@
       "visibleRule": "addChangeLog = true"
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The GitHubRelease@0 task is deprecated, please use a newer version of the GitHubRelease task",
   "inputs": [
     {
       "name": "gitHubConnection",
@@ -350,7 +352,7 @@
     "SeeMoreText": "See More"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_3": "0.238.1"
+    "Default": "0.244.0",
+    "Node20_229_3": "0.244.1"
   }
 }
