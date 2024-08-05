@@ -13,9 +13,11 @@ async function main(): Promise<void> {
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;
-    try {
-        let internalAndExternalEndpoints: string[] = [];
+    let federatedFeedAuthSuccessCount: number = 0;
 
+    try {
+
+        let internalAndExternalEndpoints: string[] = [];
         const feedList  = tl.getDelimitedInput("artifactFeeds", ",");
         const onlyAddExtraIndex = tl.getBoolInput("onlyAddExtraIndex");
 
@@ -79,6 +81,7 @@ async function main(): Promise<void> {
         emitTelemetry("Packaging", "PipAuthenticateV1", {
             "InternalFeedAuthCount": internalFeedSuccessCount,
             "ExternalFeedAuthCount": externalFeedSuccessCount,
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
         });
     }
 }

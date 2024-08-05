@@ -176,5 +176,6 @@
   "loc.messages.SyncingFunctionTriggers": "Synchronisation des déclencheurs pour l'application de fonction",
   "loc.messages.SyncFunctionTriggersSuccess": "Synchronisation réussie des déclencheurs de l'application de fonction",
   "loc.messages.UpdatedRunFromPackageSettings": "Mise à jour effectuée du paramètre d'application WEBSITE_RUN_FROM_PACKAGE vers %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "L’option Type de déploiement ne s’applique pas à consommation Linux."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "L’option Type de déploiement ne s’applique pas à consommation Linux.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "L’option Type de déploiement ne s’applique pas à consommation Flex."
 }
