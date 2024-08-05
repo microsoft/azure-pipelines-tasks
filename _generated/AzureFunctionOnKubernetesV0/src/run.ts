@@ -22,7 +22,7 @@ async function run() {
     const commandHelper = new CommandHelper();
     const dockerConnection = new DockerConnection();
     const kubernetesConnection = utils.getKubernetesConnection();
-    dockerConnection.open();
+    await dockerConnection.open();
     kubernetesConnection.open();
 
     try {
