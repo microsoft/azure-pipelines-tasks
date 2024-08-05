@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { installCredProviderToUserProfile, configureCredProvider, configureEntraCredProvider } from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
+import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
@@ -14,28 +14,13 @@ async function main(): Promise<void> {
         forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
         await installCredProviderToUserProfile(forceReinstallCredentialProvider);
 
-        var serviceConnections = [];
 
-        const feedUrl = tl.getInput("feedUrl");
-        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        // Configure the credential provider for both same-organization feeds and service connections
+        var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
+        await configureCredProvider(ProtocolType.NuGet, serviceConnections);
 
-        if (feedUrl && entraWifServiceConnectionName)
-        {
-            // Is there a better way to enforce this? 
-            if (feedUrl.includes(",") || entraWifServiceConnectionName.includes(",")) {
-                throw new Error(tl.loc("MultipleValuesInSingleInput"));
-            }
-
-            await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
-        }
-        else
-        {
-            // Configure the credential provider for both same-organization feeds and service connections
-            serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
-            await configureCredProvider(ProtocolType.NuGet, serviceConnections);
-        }
     } catch (error) {
-        if (error.message.includes("existing service connection"))
+        if (error.message.includes(tl.loc("Error_ServiceConnectionExists")))
             tl.setResult(tl.TaskResult.SucceededWithIssues, error.message);
         else
             tl.setResult(tl.TaskResult.Failed, error);

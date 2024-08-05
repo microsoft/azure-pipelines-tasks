@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 5
+    "Patch": 8
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -52,7 +52,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections.",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -73,10 +73,15 @@
       "argumentFormat": ""
     }
   },
-  "messages": {},
+  "messages": {
+    "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
+  },
   "_buildConfigMapping": {
-    "Default": "1.238.3",
-    "Node20_229_1": "1.238.4",
-    "wif_242": "1.238.5"
+    "Default": "1.238.6",
+    "Node20_229_1": "1.238.7",
+    "wif_242": "1.238.8"
   }
 }

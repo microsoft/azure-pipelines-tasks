@@ -33,7 +33,7 @@
         {
             "name": "feedUrl",
             "label": "Azure Artifacts Feeds url.",
-            "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.",
+            "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections.",
             "type": "string",
             "defaultValue": "",
             "required": false,
