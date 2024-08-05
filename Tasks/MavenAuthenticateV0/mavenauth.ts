@@ -71,7 +71,7 @@ async function run(): Promise<void> {
 
                 const wifServerElement = {
                     id: entraWifServiceConnectionName,
-                    username: 'WIFbuild',
+                    username: entraWifServiceConnectionName,
                     password: token
                 };
 
