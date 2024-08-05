@@ -70,5 +70,6 @@
   "loc.messages.UnableToIndexSources": "无法为源编制索引。",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已从异常路径加载库 dbghelp.dll。应为“{0}”。实际为“{0}”。",
   "loc.messages.UnsupportedSourceProvider0": "不受源索引编制支持的源提供程序“{0}”。",
-  "loc.messages.Win32Error0FromMethod1": "在方法“{1}”中遇到 Win32 错误“{0}”。"
+  "loc.messages.Win32Error0FromMethod1": "在方法“{1}”中遇到 Win32 错误“{0}”。",
+  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
 }
