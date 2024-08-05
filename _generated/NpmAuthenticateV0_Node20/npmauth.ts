@@ -15,7 +15,7 @@ async function main(): Promise<void> {
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
-    let existingEndpoints = tl.getInput('ExistingEndpoints', false);
+    let existingEndpoints = tl.getVariable('ExistingEndpoints');
     let endpointsArray = [];
     if(existingEndpoints){
         endpointsArray = existingEndpoints.split(',');
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
-                    if (!existingEndpoints || existingEndpoints.indexOf(localRegistry.url) != -1) {
+                    if (existingEndpoints.length === 0  || existingEndpoints.indexOf(localRegistry.url) != -1) {
                         if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                             let localURL = URL.parse(localRegistry.url);
                             console.log(tl.loc("AddingLocalCredentials"));
