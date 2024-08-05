@@ -564,6 +564,8 @@ function logToPipeline(type, payload) {
         case 'debug':
             console.log(`##vso[task.debug]${payload}`);
             break;
+        case 'section':
+            console.log(`##[section]${payload}`);
         default: 
             console.log(payload);
     }

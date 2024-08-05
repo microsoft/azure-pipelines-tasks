@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Manual validation",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
-  "loc.description": "[PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "Manual Validation",
   "loc.input.label.notifyUsers": "Notify users",
   "loc.input.help.notifyUsers": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.",

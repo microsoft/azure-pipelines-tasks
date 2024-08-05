@@ -929,10 +929,6 @@ function Get-AzureSqlDatabaseServerResourceId {
     $serverType = "Microsoft.Sql/servers"
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
-    if ($serverName -ne $null -and $serverName -ne '') {
-        $serverName = $serverName.ToLower()
-} 
-
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
@@ -943,6 +939,8 @@ function Get-AzureSqlDatabaseServerResourceId {
         $ResourceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
         foreach ($resourceDetail in $ResourceDetails.Value) {
             if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType) {
+                $serverNameLower = $serverName.ToLower() 
+                $resourcedetail.id = $resourcedetail.id.Replace($serverName, $serverNameLower)
                 return $resourceDetail.id
             }
         }

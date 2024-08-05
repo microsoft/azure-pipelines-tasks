@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -427,7 +427,7 @@
     "UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
   },
   "_buildConfigMapping": {
-    "Default": "3.238.0",
-    "Node20_229_2": "3.238.1"
+    "Default": "3.242.0",
+    "Node20_229_2": "3.242.1"
   }
 }

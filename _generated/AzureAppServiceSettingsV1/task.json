@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 243,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -184,7 +184,7 @@
     "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_2": "1.241.1"
+    "Default": "1.243.4",
+    "Node20_229_2": "1.243.5"
   }
 }

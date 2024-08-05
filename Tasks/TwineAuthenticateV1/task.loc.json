@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 243,
     "Patch": 0
   },
   "runsOn": [
@@ -95,7 +95,10 @@
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
+    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry",
+    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound",
+    "DuplicateRepoUrl": "ms-resource:loc.messages.DuplicateRepoUrl"
   },
   "postjobexecution": {
     "Node10": {
