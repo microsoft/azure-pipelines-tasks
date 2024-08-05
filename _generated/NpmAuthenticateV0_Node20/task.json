@@ -82,7 +82,8 @@
     "RevertedChangesToNpmrc": "Reverted changes made to %s.",
     "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
     "SuccessfulPush": "Successfully pushed .npmrc",
-    "SuccessfulAppend": "Successfully appended .npmrc"
+    "SuccessfulAppend": "Successfully appended .npmrc",
+    "OverwriteSetCredentials": "Auth for the registry '%s' was previously set. Overriding previous configuration."
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",

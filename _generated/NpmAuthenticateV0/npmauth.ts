@@ -76,7 +76,7 @@ async function main(): Promise<void> {
                 tl.setVariable('ExistingEndpoints', endpointsArray.join(','), false);
             }
             else {
-                tl.debug("Auth for the registry '%s' was previously set. Overriding previous configuration");
+                tl.debug(tl.loc('OverwriteSetCredentials', registry.url));
             }
 
             endpointRegistries.push(registry);
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
-                    if (existingEndpoints.indexOf(localRegistry.url) != -1) {
+                    if (!existingEndpoints || existingEndpoints.indexOf(localRegistry.url) != -1) {
                         if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                             let localURL = URL.parse(localRegistry.url);
                             console.log(tl.loc("AddingLocalCredentials"));

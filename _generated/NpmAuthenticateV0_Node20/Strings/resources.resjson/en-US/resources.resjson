@@ -26,5 +26,6 @@
   "loc.messages.RevertedChangesToNpmrc": "Reverted changes made to %s.",
   "loc.messages.NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
   "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc",
+  "loc.messages.OverwriteSetCredentials": "Auth for the registry '%s' was previously set. Overriding previous configuration."
 }
