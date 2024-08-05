@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 5
+    "Minor": 244,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -108,8 +108,8 @@
     "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.3",
-    "Node20_229_1": "0.243.4",
-    "wif_242": "0.243.5"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1",
+    "wif_242": "0.244.2"
   }
 }
