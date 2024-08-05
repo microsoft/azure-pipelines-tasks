@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Проверка вручную",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/manual-validation)",
-  "loc.description": "[Предварительная версия] Приостановка конвейера для ожидания взаимодействия вручную. Работает только с конвейерами YAML.",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "Проверка вручную",
   "loc.input.label.notifyUsers": "Уведомить пользователей",
   "loc.input.help.notifyUsers": "Отправка отдельным пользователям или группам электронного письма об ожидаемой проверке вручную. Только пользователи, указанные в списке утверждающих, могут выполнять проверку вручную.",
