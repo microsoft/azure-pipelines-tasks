@@ -13,5 +13,6 @@
   "loc.messages.ConfigTomlMissingRegistry": "El archivo config.toml seleccionado debe contener una tabla de registros",
   "loc.messages.AuthenticatingThisConfigToml": "Agregando autenticación para el Registro que aparece en este archivo config.toml en %s",
   "loc.messages.AddingAuthRegistry": "Agregando autenticación para el registro: %s con nombre de token: %s",
-  "loc.messages.AddingAuthExternalRegistry": "Agregando autenticación para el registro externo: %s con nombre de token: %s"
+  "loc.messages.AddingAuthExternalRegistry": "Agregando autenticación para el registro externo: %s con nombre de token: %s",
+  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
 }

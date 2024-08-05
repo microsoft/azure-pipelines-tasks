@@ -10,6 +10,7 @@
   "loc.input.help.azureSubscription": "Seleccione la suscripción de Azure Resource Manager para la implementación.",
   "loc.input.label.appType": "Tipo de aplicación",
   "loc.input.help.appType": "Seleccione el tipo de aplicación de funciones de Azure para la implementación.",
+  "loc.input.label.isFlexConsumption": "Is Function App on Flex Consumption Plan",
   "loc.input.label.appName": "Nombre de la aplicación de Azure Functions",
   "loc.input.help.appName": "Introduzca o seleccione el nombre de una Azure Functions App existente. Las aplicaciones de funciones enumeradas se basarán en el tipo de aplicación seleccionado.",
   "loc.input.label.deployToSlotOrASE": "Implementar en la ranura o en App Service Environment",
@@ -25,7 +26,7 @@
   "loc.input.label.appSettings": "Configuración de la aplicación",
   "loc.input.help.appSettings": "Edite la configuración de la aplicación web siguiendo la sintaxis -valor clave . Los valores que contienen espacios deben ir entre comillas dobles.<br /> <b>Ejemplo</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Hora estándar del este\"",
   "loc.input.label.deploymentMethod": "Método de implementación",
-  "loc.input.help.deploymentMethod": "Elija el método de implementación para su aplicación Function. Tenga en cuenta que las aplicaciones de Consumo para Linux no admiten esta configuración.",
+  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Paquete App Service o ruta de acceso de carpeta proporcionados no válidos: %s",
   "loc.messages.SetParamFilenotfound0": "No se ha encontrado el archivo de parámetros establecido: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Las transformaciones XML se aplicaron correctamente",
@@ -177,6 +178,5 @@
   "loc.messages.SyncFunctionTriggersSuccess": "La sincronización de los desencadenadores de la aplicación de funciones se ha completado correctamente.",
   "loc.messages.UpdatedRunFromPackageSettings": "Se ha actualizado la configuración de aplicación de WEBSITE_RUN_FROM_PACKAGE a %s",
   "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "La opción de Tipo de implementación no se aplica para el Consumo para Linux.",
-  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption" : "La opción de Tipo de implementación no se aplica para el Consumo para Flex."
-
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
 }

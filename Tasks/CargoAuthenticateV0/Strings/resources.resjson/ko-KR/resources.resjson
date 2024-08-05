@@ -13,5 +13,6 @@
   "loc.messages.ConfigTomlMissingRegistry": "선택한 config.toml 파일에는 레지스트리 테이블이 있어야 합니다.",
   "loc.messages.AuthenticatingThisConfigToml": "%s에서 이 config.toml 파일에 나열된 레지스트리에 대한 인증을 추가하는 중",
   "loc.messages.AddingAuthRegistry": "레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)",
-  "loc.messages.AddingAuthExternalRegistry": "외부 레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)"
+  "loc.messages.AddingAuthExternalRegistry": "외부 레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)",
+  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
 }
