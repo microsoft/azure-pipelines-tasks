@@ -70,5 +70,6 @@
   "loc.messages.UnableToIndexSources": "Не удалось проиндексировать источники.",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Библиотека dbghelp.dll уже загружена из непредвиденного пути. Ожидается — \"{0}\". Фактический — \"{0}\".",
   "loc.messages.UnsupportedSourceProvider0": "Неподдерживаемый поставщик источника \"{0}\" для индексации источника.",
-  "loc.messages.Win32Error0FromMethod1": "Произошла ошибка Win32 \"{0}\" из метода \"{1}\"."
+  "loc.messages.Win32Error0FromMethod1": "Произошла ошибка Win32 \"{0}\" из метода \"{1}\".",
+  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
 }
