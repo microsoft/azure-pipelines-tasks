@@ -36,6 +36,7 @@ variables:
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
   system.debug: true
+  weekly_run: ${{and(ne(variables['COURTESY_PUSH'], 'true'), eq(variables['build.reason'], 'Schedule'))}}
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -80,7 +81,8 @@ extends:
                 and(
                   succeeded(),
                   ne(variables['build.reason'], 'PullRequest'),
-                  ne(variables['numTasks'], 0)
+                  ne(variables['numTasks'], 0),
+                  ne(variables['weekly_run'], True)
                 )
               PathtoPublish: _package/tasks.zip
               ArtifactName: package
@@ -94,7 +96,7 @@ extends:
         displayName: Publish
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'),ne(variables['weekly_run'], True))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
