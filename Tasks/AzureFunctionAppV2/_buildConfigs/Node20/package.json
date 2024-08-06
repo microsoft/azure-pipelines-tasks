@@ -27,7 +27,6 @@
     "azure-pipelines-tasks-webdeployment-common": "^4.243.1",
     "azure-storage": "2.10.7",
     "moment": "^2.29.4",
-    "package.json": "^2.0.1",
     "q": "1.4.1",
     "uuid": "3.1.0",
     "xml2js": "^0.6.2"
