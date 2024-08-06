@@ -934,13 +934,17 @@ function Get-AzureSqlDatabaseServerResourceId {
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token) }
 
+    Write-Host "Servername:$serverName"
     do {
         Write-Verbose "Fetching Resources from $uri"
         $ResourceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
         foreach ($resourceDetail in $ResourceDetails.Value) {
             if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType) {
                 $serverNameLower = $serverName.ToLower() 
-                $resourcedetail.id = $resourcedetail.id.Replace($serverName, $serverNameLower)
+                $ServerNameUpper = $serverName.ToUpper()
+                $resourcedetail.id = $resourcedetail.id.Replace($ServerNameUpper, $serverNameLower)
+                Write-Host "Servername upper:$ServerNameUpper"
+                Write-Host "Servername lower:$serverNameLower"
                 return $resourceDetail.id
             }
         }
