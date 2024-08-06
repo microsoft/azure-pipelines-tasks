@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "Non è stato possibile aggiungere l'autenticazione.",
   "loc.messages.NoPypircFile": "Non è stato trovato alcun file con estensione pypirc da pulire.",
   "loc.messages.VariableSetForPypirc": "La variabile di ambiente per il file con estensione pypirc in %s è stata impostata.",
-  "loc.messages.Info_RemovingPypircFile": "Rimozione del file con estensione pypirc da %s"
+  "loc.messages.Info_RemovingPypircFile": "Rimozione del file con estensione pypirc da %s",
+  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
+  "loc.messages.NoRepoFound": "No repo url found under %s",
+  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
 }

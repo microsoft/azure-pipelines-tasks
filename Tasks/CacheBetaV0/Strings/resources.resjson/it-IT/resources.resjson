@@ -6,7 +6,7 @@
   "loc.input.label.key": "Chiave",
   "loc.input.help.key": "Chiave (identificatore univoco) per la cache. Deve essere un elenco di stringhe o percorsi di file delimitati da caratteri di nuova riga. I percorsi di file possono essere assoluti o relativi a $(System.DefaultWorkingDirectory).",
   "loc.input.label.path": "Percorso",
-  "loc.input.help.path": "Percorso della cartella da memorizzare nella cache. Può essere completo o relativo a $(System.DefaultWorkingDirectory). I caratteri jolly non sono supportati. Le [variabili] (https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate.",
+  "loc.input.help.path": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
   "loc.input.label.cacheHitVar": "Variabile per riscontro nella cache",
   "loc.input.help.cacheHitVar": "Variabile da impostare su 'true' quando viene ripristinata la cache, ovvero un riscontro nella cache; in caso contrario deve essere impostata su 'false'."
 }

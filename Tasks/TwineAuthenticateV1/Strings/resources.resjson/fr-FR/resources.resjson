@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "Échec de l'ajout de l'authentification.",
   "loc.messages.NoPypircFile": "Aucun fichier .pypirc à nettoyer.",
   "loc.messages.VariableSetForPypirc": "La variable d'environnement de .pypirc sur %s est définie.",
-  "loc.messages.Info_RemovingPypircFile": "Suppression du fichier .pypirc de %s"
+  "loc.messages.Info_RemovingPypircFile": "Suppression du fichier .pypirc de %s",
+  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
+  "loc.messages.NoRepoFound": "No repo url found under %s",
+  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
 }

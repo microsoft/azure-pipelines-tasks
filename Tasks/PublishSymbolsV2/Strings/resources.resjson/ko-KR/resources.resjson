@@ -70,5 +70,6 @@
   "loc.messages.UnableToIndexSources": "소스를 인덱싱할 수 없습니다.",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "라이브러리 dbghelp.dll이 예기치 않은 경로에서 이미 로드되었습니다. 예상된 경로: '{0}'. 실제 경로: '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "소스 인덱싱에 대해 지원되지 않는 원본 공급자 '{0}'입니다.",
-  "loc.messages.Win32Error0FromMethod1": "메서드 '{1}'에서 Win32 오류 '{0}'이(가) 발생했습니다."
+  "loc.messages.Win32Error0FromMethod1": "메서드 '{1}'에서 Win32 오류 '{0}'이(가) 발생했습니다.",
+  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
 }

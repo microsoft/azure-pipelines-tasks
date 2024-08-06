@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/armtaskreadme)",
   "loc.description": "すべてのデプロイ スコープに Azure Resource Manager (ARM) テンプレートをデプロイします",
   "loc.instanceNameFormat": "ARM テンプレートのデプロイ: $(deploymentScope) スコープ",
-  "loc.releaseNotes": "- すべてのデプロイ スコープでデプロイのサポートが追加されました。\n- すべての VM 関連アクションが削除されました。",
+  "loc.releaseNotes": "- bicepparam のサポートが追加されました。",
   "loc.group.displayName.AzureDetails": "Azure の詳細",
   "loc.group.displayName.Template": "テンプレート",
   "loc.group.displayName.Advanced": "詳細設定",
@@ -38,6 +38,8 @@
   "loc.input.help.deploymentOutputs": "出力変数の変数の名前を指定します。これには、現在のデプロイ オブジェクトの出力セクションが文字列形式で含まれます。\"ConvertFrom-Json\" PowerShell コマンドレットを使用して JSON オブジェクトを解析し、個々の出力値にアクセスできます。詳細については、[こちら](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs) を参照してください",
   "loc.input.label.addSpnToEnvironment": "オーバーライド パラメーターでサービス プリンシパルの詳細にアクセスする",
   "loc.input.help.addSpnToEnvironment": "選択した Azure エンドポイントのサービス プリンシパル ID とキーを、スクリプトの実行環境に追加します。オーバーライド パラメーターで `-key $servicePrincipalKey` のように、`$servicePrincipalId` と `$servicePrincipalKey` の変数を使用できます",
+  "loc.input.label.useWithoutJSON": "個々の出力値を JSON.Stringify の適用なしで使用する",
+  "loc.input.help.useWithoutJSON": "個々の出力値は、既定では JSON.Stringify によって変換されます。JSON.Stringify による変換を経由しない元のままの出力値を使用したい場合は、このオプションを有効にします。詳細については、[こちら](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)を参照してください。",
   "loc.messages.CheckResourceGroupExistence": "次のリソース グループが存在するかどうか確認しています: %s。",
   "loc.messages.ResourceGroupStatusFetchFailed": "リソース グループの状態を確認できませんでした。エラー: %s。",
   "loc.messages.ResourceGroupStatus": "リソース グループが存在しています: %s。",
@@ -93,5 +95,11 @@
   "loc.messages.AzureCLINotFound": "Azure CLI がエージェントに見つかりません。",
   "loc.messages.FailedToFetchAzureCLIVersion": "エージェントから az cli バージョンをフェッチできませんでした。エラー: %s",
   "loc.messages.BicepBuildFailed": "\"az bicep build\" が失敗しました。エラー: %s",
-  "loc.messages.BicepFileCleanupFailed": "Bicep ファイルを削除できませんでした。エラー: %s"
+  "loc.messages.BicepFileCleanupFailed": "Bicep ファイルを削除できませんでした。エラー: %s",
+  "loc.messages.LoginFailed": "Azure ログインに失敗しました: %s",
+  "loc.messages.MSILoginFailed": "マネージド サービス ID を使用する Azure ログインに失敗しました: %s",
+  "loc.messages.AuthSchemeNotSupported": "認証スキーム %s はサポートされていません",
+  "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定中にエラーが発生しました: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" が失敗しました。エラー: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります"
 }

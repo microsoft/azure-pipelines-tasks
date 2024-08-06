@@ -13,5 +13,6 @@
   "loc.messages.ConfigTomlMissingRegistry": "Le fichier config.toml que vous avez sélectionné doit contenir la table des registres",
   "loc.messages.AuthenticatingThisConfigToml": "Ajout de l’authentification pour le Registre répertorié dans ce fichier config.toml au %s",
   "loc.messages.AddingAuthRegistry": "Ajout de l’authentification pour le Registre : %s avec le nom de jeton : %s",
-  "loc.messages.AddingAuthExternalRegistry": "Ajout de l’authentification pour le Registre externe : %s avec le nom de jeton : %s"
+  "loc.messages.AddingAuthExternalRegistry": "Ajout de l’authentification pour le Registre externe : %s avec le nom de jeton : %s",
+  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
 }

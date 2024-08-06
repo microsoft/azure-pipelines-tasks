@@ -23,6 +23,8 @@
   "loc.input.help.signingIdentity": "Der allgemeine Name der Person im Signaturzertifikat. Wenn keine Angabe erfolgt, wird versucht, den allgemeinen Namen zu analysieren.",
   "loc.input.label.setUpPartitionIdACLForPrivateKey": "Partition_id-ACL für den importierten privaten Schlüssel einrichten",
   "loc.input.help.setUpPartitionIdACLForPrivateKey": "Bei „true“ wird die partition_id-ACL für den importierten privaten Schlüssel festgelegt, sodass codesign nicht zur Verwendung des Schlüssels zum Signieren auffordert. Dies ist für temporäre Keychains mindestens unter MacOS High Sierra nicht erforderlich. Weitere Informationen finden Sie im [link](http://www.openradar.me/28524119).",
+  "loc.input.label.opensslPkcsArgs": "OpenSSL-Argumente für PKCS12",
+  "loc.input.help.opensslPkcsArgs": "Argumente für Extraktionszertifikatinformationen mit OpenSSL.",
   "loc.messages.INVALID_P12": "Der Zertifikat-SHA1-Hash und der allgemeine Name (CN) wurden nicht gefunden. Das Zertifikat muss eine gültige P12-Datei sein.",
   "loc.messages.NoP12PwdWarning": "Es wurde kein P12-Kennwort angegeben. Wenn für die P12-Datei ein Kennwort erforderlich ist, wird empfohlen, dieses als Pipelinevariable anzugeben und durch Aktivieren des Schlosssymbols als geheim zu markieren.",
   "loc.messages.P12PrivateKeyNameNotFound": "Fehler beim Identifizieren des Namens für den privaten Schlüssel: %s ",
@@ -30,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "Fehler beim Festlegen der partition_id-ACL für den privaten Schlüssel. Überprüfen Sie, ob \"Kennwort für Schlüsselbund\" richtig ist, oder verwenden Sie stattdessen \"Temporärer Schlüsselbund\".",
   "loc.messages.InstallRequiresMac": "Für die Installation eines Apple-Zertifikats wird ein macOS-Agent benötigt. Das Installieren von Apple-Zertifikaten auf Linux oder Windows wird von Apple nicht unterstützt.",
   "loc.messages.CertNotValidYetError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist erst ab dem %s gültig.",
-  "loc.messages.CertExpiredError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist am %s abgelaufen."
+  "loc.messages.CertExpiredError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist am %s abgelaufen.",
+  "loc.messages.OpenSSLError": "Fehler beim Parsen des Zertifikats. Dies kann auf einen nicht unterstützten Algorithmus zurückzuführen sein. Wenn Sie ein altes Zertifikat mit einer neuen OpenSSL-Version verwenden, legen Sie das -legacy-Flag in der opensslPkcsArgs-Eingabe fest."
 }

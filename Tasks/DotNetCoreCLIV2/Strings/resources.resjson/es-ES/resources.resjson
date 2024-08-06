@@ -14,8 +14,8 @@
   "loc.input.help.command": "Comando dotnet para ejecutar. Seleccione \"Personalizado\" para agregar argumentos o usar un comando que no figure aquí.",
   "loc.input.label.publishWebProjects": "Publicar proyectos web",
   "loc.input.help.publishWebProjects": "Si es verdadero, la tarea intentará encontrar los proyectos web en el repositorio y ejecutará el comando de publicación en ellos. Los proyectos web se identifican por la presencia de un archivo web.config o una carpeta wwwroot en el directorio.",
-  "loc.input.label.projects": "Ruta de acceso a los proyectos",
-  "loc.input.help.projects": "Ruta de acceso a los archivos csproj que se van a usar. Puede usar caracteres comodín (por ejemplo, **/*.csproj para todos los archivos .csproj de todas las subcarpetas). **Este campo sigue patrones globales y se ejecuta siempre en la raíz del repositorio, independientemente del directorio de trabajo**.",
+  "loc.input.label.projects": "Ruta de acceso a proyectos o soluciones",
+  "loc.input.help.projects": "Ruta de acceso a los archivos csproj o sln que se van a usar. Puede usar caracteres comodín (por ejemplo, **/*.csproj para todos los archivos .csproj de todas las subcarpetas). **Este campo sigue patrones globales y se ejecuta siempre en la raíz del repositorio, independientemente del directorio de trabajo**.",
   "loc.input.label.custom": "Comando personalizado",
   "loc.input.help.custom": "Comando para pasar a dotnet.exe para ejecutarlo.",
   "loc.input.label.arguments": "Argumentos",
@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 tiene algunos problemas de compatibilidad con las versiones anteriores de NuGet (<=5.7) por lo que, si usa una versión anterior de NuGet (y no la CLI de DotNet) para restaurar, puede que los comandos de la CLI de DotNet (por ejemplo, dotnet build) que se basan en estos paquetes restaurados no se ejecuten correctamente. Para mitigar este error, puede: (1) - Usar la CLI de DotNet para restaurar. (2) - Usar la versión 5.8 de NuGet para restaurar. (3) - Usar global.json con una versión anterior del SDK (<=3) para compilar.",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "Información: El SDK de .NET Core o el runtime 2.2 y 3.0 han llegado al final de su duración (EOL) y se han quitado de todos los agentes hospedados. Si está usando estos SDK o entornos de ejecución en agentes hospedados, actualice a versiones más recientes que no estén al final de su duración o bien use la tarea UseDotNet para instalar la versión requerida.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg está habilitado actualmente para esta tarea. Para resolver esta advertencia, edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La conexión de servicio no usa un método de autenticación compatible. Use una conexión de servicio con autenticación basada en token de acceso personal."
 }
