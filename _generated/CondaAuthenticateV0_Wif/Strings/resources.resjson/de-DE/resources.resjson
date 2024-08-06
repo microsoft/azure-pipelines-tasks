@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Conda-Authentifizierung (für Aufgabenausführungen)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Authentifizierungsaufgabe für den Conda-Client",
+  "loc.instanceNameFormat": "Conda-Authentifizierung",
+  "loc.messages.FailedToAddAuthentication": "Fehler beim Hinzufügen der Authentifizierung.",
+  "loc.messages.AddingAuthChannel": "Die Authentifizierung für das Token „%s“ wird hinzugefügt"
+}

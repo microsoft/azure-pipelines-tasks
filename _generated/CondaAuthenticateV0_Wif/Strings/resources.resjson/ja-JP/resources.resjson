@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Conda 認証 (タスク ランナー用)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Conda クライアントの認証タスク",
+  "loc.instanceNameFormat": "Conda 認証",
+  "loc.messages.FailedToAddAuthentication": "認証を追加できませんでした。",
+  "loc.messages.AddingAuthChannel": "トークン %s の認証を追加しています"
+}

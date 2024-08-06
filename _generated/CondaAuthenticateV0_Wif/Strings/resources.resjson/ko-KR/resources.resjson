@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Conda 인증(작업 실행기용)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Conda 클라이언트에 대한 인증 작업",
+  "loc.instanceNameFormat": "Conda 인증",
+  "loc.messages.FailedToAddAuthentication": "인증을 추가하지 못했습니다.",
+  "loc.messages.AddingAuthChannel": "토큰 %s에 대한 인증을 추가하는 중"
+}
