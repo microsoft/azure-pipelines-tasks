@@ -177,7 +177,7 @@ main().catch(error => {
     tl.setResult(tl.TaskResult.Failed, error);
 });
 main().finally(() => {
-    emitTelemetry("Packaging", "PipAuthenticateV1", {
+    emitTelemetry("Packaging", "NpmAuthenticateV0", {
         "InternalFeedAuthCount": internalFeedSuccessCount,
         "ExternalFeedAuthCount": externalFeedSuccessCount,
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
