@@ -2,16 +2,13 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as url from 'url';
-#if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-#endif
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let federatedFeedAuthSuccessCount: number = 0;
     try {
 
-#if WIF
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
@@ -37,7 +34,6 @@ async function main(): Promise<void> {
                 throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
             }
         }
-#endif
 
         const localAccesstoken = tl.getVariable('System.AccessToken');
         tl.debug(tl.loc('AddingAuthChannel', 'ARTIFACTS_CONDA_TOKEN'));

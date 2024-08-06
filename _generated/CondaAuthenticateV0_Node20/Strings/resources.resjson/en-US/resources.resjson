@@ -4,5 +4,10 @@
   "loc.description": "Authentication task for the conda client",
   "loc.instanceNameFormat": "Conda Authenticate",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
-  "loc.messages.AddingAuthChannel": "Adding auth for the token %s"
+  "loc.messages.AddingAuthChannel": "Adding auth for the token %s",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc",
+  "loc.messages.Error_FailedToParseFeedUrl": "Failed to parse feed URL %s"
 }

@@ -1,0 +1,23 @@
+{
+    "inputs": [
+      {
+        "name": "workloadIdentityServiceConnection",
+        "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+        "helpMarkDown": "If this is set, feedUrl is required. Credentials for registries outside this organization/collection and registries in npmrc are ignored.",
+        "type": "connectedService:workloadidentityuser",
+        "required": false,
+        "properties": {
+          "EditableOptions": "False",
+          "MultiSelectFlatList": "False"
+        }
+      },
+      {
+        "name": "feedUrl",
+        "label": "Azure Artifacts Feeds url",
+        "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+        "type": "string",
+        "defaultValue": "",
+        "required": false
+      }
+    ]
+  }

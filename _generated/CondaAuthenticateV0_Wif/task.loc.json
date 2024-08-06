@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 242,
-    "Patch": 1
+    "Minor": 244,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -39,6 +39,27 @@
     "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc",
     "Error_FailedToParseFeedUrl": "ms-resource:loc.messages.Error_FailedToParseFeedUrl"
   },
+  "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
+    }
+  ],
   "_buildConfigMapping": {
     "Default": "0.242.0",
     "Node20_229_1": "0.242.1",
