@@ -10,14 +10,6 @@
           "EditableOptions": "False",
           "MultiSelectFlatList": "False"
         }
-      },
-      {
-        "name": "feedUrl",
-        "label": "ms-resource:loc.input.label.feedUrl",
-        "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
-        "type": "string",
-        "defaultValue": "",
-        "required": false
       }
     ]
   }

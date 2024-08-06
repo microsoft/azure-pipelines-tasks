@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -33,36 +33,26 @@
   "messages": {
     "FailedToAddAuthentication": "Failed to add authentication.",
     "AddingAuthChannel": "Adding auth for the token %s",
-    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
-    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
-    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-    "SkippingParsingNpmrc": "Skipping parsing npmrc",
-    "Error_FailedToParseFeedUrl": "Failed to parse feed URL %s"
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. Credentials for registries outside this organization/collection and registries in npmrc are ignored.",
+      "helpMarkDown": "If this is set, it will generate credentials using service connection tenant ID.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
       }
-    },
-    {
-      "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
-      "type": "string",
-      "defaultValue": "",
-      "required": false
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.242.0",
-    "Node20_229_1": "0.242.1",
-    "wif_242": "0.244.0"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1",
+    "wif_242": "0.244.2"
   }
 }

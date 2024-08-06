@@ -9,30 +9,21 @@ async function main(): Promise<void> {
     let federatedFeedAuthSuccessCount: number = 0;
     try {
 
-        const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-
-        if (feedUrl && entraWifServiceConnectionName) {
-            if (url.parse(feedUrl))
+        if (entraWifServiceConnectionName) {
+            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
+            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
+            if (token)
             {
-                tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-                const feedTenant = await getFeedTenantId(feedUrl);
-                let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-                if (token)
-                {
-                    tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
-                    tl.setVariable('ARTIFACTS_CONDA_TOKEN', token);
-                    federatedFeedAuthSuccessCount++;
-                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-                } 
-                else
-                {
-                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
-                }
-                return;
-            } else {
-                throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
+                tl.setVariable('ARTIFACTS_CONDA_TOKEN', token);
+                federatedFeedAuthSuccessCount++;
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", entraWifServiceConnectionName));
+            } 
+            else
+            {
+                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
             }
+            return;
         }
 
         const localAccesstoken = tl.getVariable('System.AccessToken');
