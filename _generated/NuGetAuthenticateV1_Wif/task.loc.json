@@ -46,8 +46,7 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
+      }
     },
     {
       "name": "feedUrl",
@@ -55,8 +54,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
+      "required": false
     }
   ],
   "execution": {

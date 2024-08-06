@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as url from 'url';
 import { configureEntraCredProvider } from "azure-pipelines-tasks-artifacts-common/credentialProviderUtils";
 import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
@@ -18,9 +19,8 @@ async function main(): Promise<void> {
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
-        // Skip configuring service connectoins if we are using feed url and wif service connection
-        if (feedUrl && entraWifServiceConnectionName) 
-        {
+        if (feedUrl && entraWifServiceConnectionName) {
+            const parsedUrl = url.parse(feedUrl);
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
             await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
@@ -30,12 +30,8 @@ async function main(): Promise<void> {
         // Configure the credential provider for both same-organization feeds and service connections
         var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
-
     } catch (error) {
-        if (error.message.includes(tl.loc("Error_ServiceConnectionExists")))
-            tl.setResult(tl.TaskResult.SucceededWithIssues, error.message);
-        else
-            tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider

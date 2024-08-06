@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as url from 'url';
 import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
@@ -18,12 +19,8 @@ async function main(): Promise<void> {
         // Configure the credential provider for both same-organization feeds and service connections
         var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
-
     } catch (error) {
-        if (error.message.includes(tl.loc("Error_ServiceConnectionExists")))
-            tl.setResult(tl.TaskResult.SucceededWithIssues, error.message);
-        else
-            tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider

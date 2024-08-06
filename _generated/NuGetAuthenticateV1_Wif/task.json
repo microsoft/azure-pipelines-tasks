@@ -46,8 +46,7 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
+      }
     },
     {
       "name": "feedUrl",
@@ -55,8 +54,7 @@
       "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections.",
       "type": "string",
       "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
+      "required": false
     }
   ],
   "execution": {

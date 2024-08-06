@@ -22,30 +22,20 @@ async function main(): Promise<void> {
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
-        // Skip configuring service connections if we are using feed url and wif service connection
-        if (feedUrl && entraWifServiceConnectionName) 
-        {
-            try {
-                const parsedUrl = url.parse(feedUrl);
-                tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, parsedUrl));
-                await configureEntraCredProvider(ProtocolType.NuGet, parsedUrl, entraWifServiceConnectionName);
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", parsedUrl));
-                return;
-            } catch (error) {
-                console.log(error); // => TypeError, "Failed to construct URL: Invalid URL"
-            }
+        if (feedUrl && entraWifServiceConnectionName) {
+            const parsedUrl = url.parse(feedUrl);
+            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+            await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+            return;
         }
 #endif
 
         // Configure the credential provider for both same-organization feeds and service connections
         var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
-
     } catch (error) {
-        if (error.message.includes(tl.loc("Error_ServiceConnectionExists")))
-            tl.setResult(tl.TaskResult.SucceededWithIssues, error.message);
-        else
-            tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
