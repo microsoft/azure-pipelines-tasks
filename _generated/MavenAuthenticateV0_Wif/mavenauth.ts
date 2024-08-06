@@ -17,14 +17,16 @@ async function run(): Promise<void> {
     let externalServiceEndpointsServerElements: any[] = [];
     let federatedFeedAuthSuccessCount: number = 0;
     try {
+        let noFederatedConnection = true;
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        noFederatedConnection = !feedUrl || !entraWifServiceConnectionName
 
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
-        if(newServerElements.length === 0 && (!feedUrl || !entraWifServiceConnectionName)) {
+        if(newServerElements.length === 0 && noFederatedConnection) {
             tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
             return;
         }
@@ -71,7 +73,7 @@ async function run(): Promise<void> {
 
                 const wifServerElement = {
                     id: entraWifServiceConnectionName,
-                    username: entraWifServiceConnectionName,
+                    username: 'WIFbuild',
                     password: token
                 };
 

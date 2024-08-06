@@ -4,7 +4,6 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
@@ -17,14 +16,13 @@ async function run(): Promise<void> {
     let externalServiceEndpointsServerElements: any[] = [];
     let federatedFeedAuthSuccessCount: number = 0;
     try {
-        const feedUrl = tl.getInput("feedUrl");
-        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        let noFederatedConnection = true;
 
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
-        if(newServerElements.length === 0 && (!feedUrl || !entraWifServiceConnectionName)) {
+        if(newServerElements.length === 0 && noFederatedConnection) {
             tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
             return;
         }
@@ -61,32 +59,6 @@ async function run(): Promise<void> {
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
         
-        if (feedUrl && entraWifServiceConnectionName) {
-            
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(feedUrl);
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-            
-            if (token) {
-
-                const wifServerElement = {
-                    id: entraWifServiceConnectionName,
-                    username: entraWifServiceConnectionName,
-                    password: token
-                };
-
-                settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
-                federatedFeedAuthSuccessCount++;
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-
-            }
-            else {
-                throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-            }
-        }
-        else if ((feedUrl && !entraWifServiceConnectionName) || (!feedUrl && entraWifServiceConnectionName)) {
-            tl.warning(tl.loc("Warning_MustUseBothFederatedInputs"));
-        }
 
         for (let serverElement of newServerElements) {
             settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);

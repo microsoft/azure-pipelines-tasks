@@ -22,23 +22,21 @@
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required.",
+      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
+      }
     },
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required.",
+      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection is required.",
       "type": "string",
       "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
+      "required": false
     },
     {
       "name": "artifactsFeeds",

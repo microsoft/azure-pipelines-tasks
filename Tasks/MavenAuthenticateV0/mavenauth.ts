@@ -4,7 +4,9 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
+#if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
@@ -17,14 +19,18 @@ async function run(): Promise<void> {
     let externalServiceEndpointsServerElements: any[] = [];
     let federatedFeedAuthSuccessCount: number = 0;
     try {
+        let noFederatedConnection = true;
+#if WIF
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        noFederatedConnection = !feedUrl || !entraWifServiceConnectionName
+#endif
 
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
-        if(newServerElements.length === 0 && (!feedUrl || !entraWifServiceConnectionName)) {
+        if(newServerElements.length === 0 && noFederatedConnection) {
             tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
             return;
         }
@@ -61,6 +67,7 @@ async function run(): Promise<void> {
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
         
+#if WIF
         if (feedUrl && entraWifServiceConnectionName) {
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
@@ -71,7 +78,7 @@ async function run(): Promise<void> {
 
                 const wifServerElement = {
                     id: entraWifServiceConnectionName,
-                    username: entraWifServiceConnectionName,
+                    username: 'WIFbuild',
                     password: token
                 };
 
@@ -87,6 +94,7 @@ async function run(): Promise<void> {
         else if ((feedUrl && !entraWifServiceConnectionName) || (!feedUrl && entraWifServiceConnectionName)) {
             tl.warning(tl.loc("Warning_MustUseBothFederatedInputs"));
         }
+#endif
 
         for (let serverElement of newServerElements) {
             settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);
