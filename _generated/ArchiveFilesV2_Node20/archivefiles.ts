@@ -4,7 +4,6 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
 import stream = require("stream");
 import utils = require('./utils.js');
-import store = require('artifact-engine/Store');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
@@ -21,7 +20,6 @@ tl.debug('repoRoot: ' + repoRoot);
 var win = tl.osType().match(/^Win/);
 tl.debug('win: ' + win);
 
-tl.debug(store.ArtifactItemStore)
 // archivers
 var xpTarLocation: string;
 var xpZipLocation: string;
