@@ -70,7 +70,6 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
-    "Warning_MustUseBothFederatedInputs": "If trying to authenticate with a Entra Workload ID-backed Azure Devops User service connection, must use both workloadIdentityServiceConnection and feedUrl inputs",
     "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
     "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
     "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",

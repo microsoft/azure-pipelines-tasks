@@ -22,7 +22,7 @@
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required.",
+      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required. All other inputs are ignored.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -33,7 +33,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection is required.",
+      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with mavenServiceConnections.",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -97,7 +97,6 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
-    "Warning_MustUseBothFederatedInputs": "If trying to authenticate with a Entra Workload ID-backed Azure Devops User service connection, must use both workloadIdentityServiceConnection and feedUrl inputs",
     "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
     "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
     "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",

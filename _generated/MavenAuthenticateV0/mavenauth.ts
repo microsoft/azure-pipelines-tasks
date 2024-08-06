@@ -16,17 +16,6 @@ async function run(): Promise<void> {
     let externalServiceEndpointsServerElements: any[] = [];
     let federatedFeedAuthSuccessCount: number = 0;
     try {
-        let noFederatedConnection = true;
-
-        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
-        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
-        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
-
-        if(newServerElements.length === 0 && noFederatedConnection) {
-            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
-            return;
-        }
-
         let userM2FolderPath: string = "";
 
         if (tl.osType().match(/^Win/)) {
@@ -59,6 +48,15 @@ async function run(): Promise<void> {
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
         
+        
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
+        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
+        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
+
+        if(newServerElements.length === 0) {
+            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            return;
+        }
 
         for (let serverElement of newServerElements) {
             settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);

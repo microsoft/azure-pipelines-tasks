@@ -8,7 +8,6 @@
   "loc.input.help.mavenServiceConnections": "Credentials to use for external repositories located in the project's pom.xml.",
   "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
   "loc.messages.Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
-  "loc.messages.Warning_MustUseBothFederatedInputs": "If trying to authenticate with a Entra Workload ID-backed Azure Devops User service connection, must use both workloadIdentityServiceConnection and feedUrl inputs",
   "loc.messages.Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
   "loc.messages.Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
   "loc.messages.Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",

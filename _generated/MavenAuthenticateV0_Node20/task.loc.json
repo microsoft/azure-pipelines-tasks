@@ -78,7 +78,6 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
     "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
-    "Warning_MustUseBothFederatedInputs": "ms-resource:loc.messages.Warning_MustUseBothFederatedInputs",
     "Info_GeneratingExternalRepositories": "ms-resource:loc.messages.Info_GeneratingExternalRepositories",
     "Info_GeneratingInternalFeeds": "ms-resource:loc.messages.Info_GeneratingInternalFeeds",
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
