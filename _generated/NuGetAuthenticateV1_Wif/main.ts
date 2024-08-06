@@ -20,12 +20,15 @@ async function main(): Promise<void> {
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
         if (feedUrl && entraWifServiceConnectionName) {
-            const parsedUrl = url.parse(feedUrl);
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-            return;
-        }
+            if (url.parse(feedUrl)) {
+                tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+                await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+                return;
+            } else {
+                throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
+            }
+        }   
 
         // Configure the credential provider for both same-organization feeds and service connections
         var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');

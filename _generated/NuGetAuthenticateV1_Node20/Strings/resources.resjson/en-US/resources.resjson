@@ -8,6 +8,7 @@
   "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
   "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider.",
   "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+  "loc.messages.Error_FailedToParseFeedUrl": "Failed to parse feed URL %s",
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
