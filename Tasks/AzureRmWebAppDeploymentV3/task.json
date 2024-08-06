@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 243,
-    "Patch": 6
+    "Minor": 244,
+    "Patch": 0
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -53,6 +53,8 @@
       "visibleRule": "WebAppKind != \"\""
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AzureRmWebAppDeployment@3 task is deprecated, please use a newer version of the AzureRmWebAppDeployment task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "ConnectedServiceName",

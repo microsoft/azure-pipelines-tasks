@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 2
+    "Minor": 244,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -45,6 +45,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Kubernetes@0 task is deprecated, please use a newer version of the Kubernetes task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "kubernetesServiceEndpoint",
@@ -375,7 +377,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20_229_2": "0.243.3"
+    "Default": "0.244.0",
+    "Node20_229_2": "0.244.1"
   }
 }
