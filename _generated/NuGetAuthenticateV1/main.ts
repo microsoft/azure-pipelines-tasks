@@ -8,6 +8,8 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
+    let federatedFeedAuthSuccessCount: number = 0;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -23,7 +25,8 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
-            'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
+            'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
         });
     }
 }

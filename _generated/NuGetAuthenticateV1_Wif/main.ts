@@ -9,6 +9,8 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
+    let federatedFeedAuthSuccessCount: number = 0;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -24,6 +26,7 @@ async function main(): Promise<void> {
                 tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
                 await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+                federatedFeedAuthSuccessCount++;
                 return;
             } else {
                 throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
@@ -37,7 +40,8 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, error);
     } finally {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
-            'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
+            'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
         });
     }
 }
