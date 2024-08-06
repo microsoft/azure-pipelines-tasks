@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 228,
+        "Minor": 244,
         "Patch": 0
     },
     "demands": [
@@ -37,6 +37,8 @@
         }
     ],
     "instanceNameFormat": "Deploy Compose Application to Service Fabric",
+    "deprecated": true,
+    "deprecationMessage": "The ServiceFabricComposeDeploy@0 task is deprecated",
     "inputs": [
         {
             "name": "serviceConnectionName",

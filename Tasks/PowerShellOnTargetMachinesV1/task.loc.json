@@ -3,6 +3,7 @@
   "name": "PowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 198,
+    "Minor": 244,
     "Patch": 0
   },
   "minimumAgentVersion": "1.104.0",
@@ -28,6 +29,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The PowerShellOnTargetMachines@1 task is deprecated, please use a newer version of the PowerShellOnTargetMachines task",
   "inputs": [
     {
       "name": "EnvironmentName",
