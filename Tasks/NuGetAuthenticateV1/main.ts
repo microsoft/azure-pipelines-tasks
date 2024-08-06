@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as url from 'url';
 #if WIF
 import { configureEntraCredProvider } from "azure-pipelines-tasks-artifacts-common/credentialProviderUtils";
 #endif
@@ -21,13 +22,18 @@ async function main(): Promise<void> {
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
-        // Skip configuring service connectoins if we are using feed url and wif service connection
+        // Skip configuring service connections if we are using feed url and wif service connection
         if (feedUrl && entraWifServiceConnectionName) 
         {
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-            return;
+            try {
+                const parsedUrl = url.parse(feedUrl);
+                tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, parsedUrl));
+                await configureEntraCredProvider(ProtocolType.NuGet, parsedUrl, entraWifServiceConnectionName);
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", parsedUrl));
+                return;
+            } catch (error) {
+                console.log(error); // => TypeError, "Failed to construct URL: Invalid URL"
+            }
         }
 #endif
 
