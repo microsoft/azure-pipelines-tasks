@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 243,
-    "Patch": 6
+    "Minor": 244,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -53,6 +53,8 @@
       "visibleRule": "WebAppKind != \"\""
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AzureRmWebAppDeployment@3 task is deprecated, please use a newer version of the AzureRmWebAppDeployment task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -769,7 +771,7 @@
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   },
   "_buildConfigMapping": {
-    "Default": "3.243.6",
-    "Node20_229_2": "3.243.7"
+    "Default": "3.244.0",
+    "Node20_229_2": "3.244.1"
   }
 }
