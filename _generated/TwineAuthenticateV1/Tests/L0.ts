@@ -15,12 +15,12 @@ describe('Twine Authenticate V1 Suite', function () {
         tl.rmRF(tempDir);
     });
 
-    it('sets authentication for current organization feed', function (done: Mocha.Done) {
+    it('sets authentication for current organization feed', async () => {
         this.timeout(50000);
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
@@ -40,15 +40,14 @@ describe('Twine Authenticate V1 Suite', function () {
         assert.strictEqual(lines[6], "password=token",
             "Default password from environment variable should be correct.");
 
-        done();
     });
 
-    it('sets authentication for current organization feed', (done: MochaDone) => {
+    it('sets authentication for current organization feed',  async () => {
         this.timeout(10000);
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
@@ -57,9 +56,9 @@ describe('Twine Authenticate V1 Suite', function () {
         let lines = fileContent.split(/\r?\n/);
 
         assert.strictEqual(lines[0], "[distutils]");
-        assert((lines[1] === "index-servers=Test.Feed") 
-                || (lines[1].startsWith('index-servers=') && lines[1].endsWith('Test.Feed')),
-                    "Test Feed should be added to auth list.");
+        assert((lines[1] === "index-servers=Test.Feed")
+            || (lines[1].startsWith('index-servers=') && lines[1].endsWith('Test.Feed')),
+            "Test Feed should be added to auth list.");
         assert.strictEqual(lines.at(-6), "[Test.Feed]");
         assert.strictEqual(lines.at(-5), "repository=https://vsts/packagesource/Test.Feed",
             "Test Feed repository should be correct.");
@@ -67,7 +66,5 @@ describe('Twine Authenticate V1 Suite', function () {
             "Default username should be correct.");
         assert.strictEqual(lines.at(-3), "password=token",
             "Default password from environment variable should be correct.");
-
-        done();
     });
 });
