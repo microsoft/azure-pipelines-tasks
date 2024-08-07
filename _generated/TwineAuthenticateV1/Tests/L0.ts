@@ -42,7 +42,7 @@ describe('Twine Authenticate V1 Suite', function () {
 
     });
 
-    it('sets authentication for current organization feed',  async () => {
+    it('sets authentication for current organization feed with dot',  async () => {
         this.timeout(10000);
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
