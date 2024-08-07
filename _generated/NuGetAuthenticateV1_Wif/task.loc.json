@@ -20,17 +20,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "nuGetServiceConnections",
-      "type": "connectedService:ExternalNuGetFeed",
-      "label": "ms-resource:loc.input.label.nuGetServiceConnections",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "True"
-      }
-    },
-    {
       "name": "forceReinstallCredentialProvider",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
@@ -55,6 +44,17 @@
       "type": "string",
       "defaultValue": "",
       "required": false
+    },
+    {
+      "name": "nuGetServiceConnections",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "ms-resource:loc.input.label.nuGetServiceConnections",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      }
     }
   ],
   "execution": {

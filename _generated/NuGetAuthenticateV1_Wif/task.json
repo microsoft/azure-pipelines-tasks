@@ -20,17 +20,6 @@
   "instanceNameFormat": "NuGet Authenticate",
   "inputs": [
     {
-      "name": "nuGetServiceConnections",
-      "type": "connectedService:ExternalNuGetFeed",
-      "label": "Service connection credentials for feeds outside this organization",
-      "required": false,
-      "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "True"
-      }
-    },
-    {
       "name": "forceReinstallCredentialProvider",
       "type": "boolean",
       "label": "Reinstall the credential provider even if already installed",
@@ -50,11 +39,22 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections.",
+      "label": "Azure Artifacts URL",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
       "type": "string",
       "defaultValue": "",
       "required": false
+    },
+    {
+      "name": "nuGetServiceConnections",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "Service connection credentials for feeds outside this organization",
+      "required": false,
+      "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      }
     }
   ],
   "execution": {
