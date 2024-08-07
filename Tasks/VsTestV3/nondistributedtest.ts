@@ -9,7 +9,6 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
-import { isFeatureFlagEnabled } from './runvstest';
 
 export class NonDistributedTest {
     constructor(inputDataContract: InputDataContract) {
@@ -77,17 +76,13 @@ export class NonDistributedTest {
             envVars = utils.Helper.setProfilerVariables(envVars);
         }
 
-        const isBlockingCommands = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-            'TestExecution.EnableBlockedCommandInRestrictedMode', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
-
         const execOptions: tr.IExecOptions = <any>{
             IgnoreTestFailures: this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures,
             env: envVars,
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false
             // Keeping this code in case we want to change failOnStdErr
-            outStream: new outStream.StringErrorWritable(false, isBlockingCommands, { decodeStrings: false }),
-            errStream: new outStream.StringErrorWritable(true, isBlockingCommands, { decodeStrings: false })
+            errStream: new outStream.StringErrorWritable({ decodeStrings: false })
         };
 
         // The error codes return below are not the same as tl.TaskResult which follows a different convention.
