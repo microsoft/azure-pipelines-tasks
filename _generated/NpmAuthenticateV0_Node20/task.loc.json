@@ -82,7 +82,8 @@
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
     "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
-    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend",
+    "OverwriteSetCredentials": "ms-resource:loc.messages.OverwriteSetCredentials"
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",
