@@ -47,14 +47,13 @@ describe('Twine Authenticate V1 Suite', async () => {
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.runAsync();
+        await tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
         let fileContent = fs.readFileSync(tempDir + path.sep + ".pypirc", "utf-8");
 
         let lines = fileContent.split(/\r?\n/);
-        console.log(lines);
 
         assert.strictEqual(lines[0], "[distutils]");
         assert((lines[1] === "index-servers=Test.Feed")
