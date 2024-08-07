@@ -46,10 +46,31 @@ try {
     }
 
     if ($BumpVersions) {
-        Write-Host "Bumping tasks $tasks" -ForegroundColor Cyan
-
-        $tasksPattern = '@(' + ($tasks -join '|') + ')'
         Set-Location $repositoryRoot
+        $tasksToBump = @()
+        $changes = git ls-files --modified --full-name
+        for ($i = 0; $i -lt $changes.Length; $i++) {
+            $changes[$i] = Resolve-Path (Join-Path $repositoryRoot $changes[$i]) -Relative
+        }
+
+        foreach ($task in $tasks) {
+            $taskPath = Join-Path $repositoryRoot Tasks $task
+            $taskPackageJsonPath = Resolve-Path (Join-Path $taskPath package.json) -Relative
+            if ($changes -contains $taskPackageJsonPath) {
+                $tasksToBump += , $task
+            }
+            else {
+                Write-Host "Dependency $Dependency in task $task is not modified. Skipping bump of version" -ForegroundColor Cyan
+            }
+        }
+
+        if ($tasksToBump.Count -eq 0) {
+            Write-Host "No tasks to bump" -ForegroundColor Cyan
+            return
+        }
+
+        Write-Host "Bumping tasks $tasksToBump" -ForegroundColor Cyan
+        $tasksPattern = '@(' + ($tasksToBump -join '|') + ')'
 
         # Bump twice as build config forces patch versions should be current + 2
         node make bump --task "$tasksPattern"
