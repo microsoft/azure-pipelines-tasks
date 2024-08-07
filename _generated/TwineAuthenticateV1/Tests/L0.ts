@@ -6,7 +6,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 const tempDir = path.join(__dirname, "temp");
 
-describe('Twine Authenticate V1 Suite', function () {
+describe('Twine Authenticate V1 Suite', async () => {
     before(() => {
         tl.mkdirP(tempDir);
     });
@@ -16,7 +16,7 @@ describe('Twine Authenticate V1 Suite', function () {
     });
 
     it('sets authentication for current organization feed', async () => {
-        this.timeout(50000);
+        // this.timeout(50000);
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -43,7 +43,7 @@ describe('Twine Authenticate V1 Suite', function () {
     });
 
     it('sets authentication for current organization feed with dot',  async () => {
-        this.timeout(10000);
+        // this.timeout(10000);
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -54,6 +54,7 @@ describe('Twine Authenticate V1 Suite', function () {
         let fileContent = fs.readFileSync(tempDir + path.sep + ".pypirc", "utf-8");
 
         let lines = fileContent.split(/\r?\n/);
+        console.log(lines);
 
         assert.strictEqual(lines[0], "[distutils]");
         assert((lines[1] === "index-servers=Test.Feed")
