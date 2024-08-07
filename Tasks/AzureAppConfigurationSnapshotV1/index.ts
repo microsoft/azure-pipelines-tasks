@@ -33,7 +33,6 @@ async function run(): Promise<void> {
         }
         else {
             tl.error(tl.loc("UnexpectedError", error.message));
-            tl.debug(JSON.stringify(error));
         }
         tl.setResult(tl.TaskResult.Failed, "", true);
     }
