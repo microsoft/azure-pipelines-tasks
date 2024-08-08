@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 243,
+        "Minor": 244,
         "Patch": 0
     },
     "runsOn": [
@@ -74,6 +74,11 @@
         "RevertedChangesToNpmrc": "Reverted changes made to %s.",
         "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
         "SuccessfulPush": "Successfully pushed .npmrc",
-        "SuccessfulAppend": "Successfully appended .npmrc"
+        "SuccessfulAppend": "Successfully appended .npmrc",
+        "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+        "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+        "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+        "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+        "SkippingParsingNpmrc": "Skipping parsing npmrc"
     }
 }

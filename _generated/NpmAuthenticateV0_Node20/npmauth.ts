@@ -9,6 +9,11 @@ import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as os from 'os';
 import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
+
+let internalFeedSuccessCount: number = 0;
+let externalFeedSuccessCount: number = 0;
+let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -59,6 +64,9 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
+    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+
+
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -77,7 +85,6 @@ async function main(): Promise<void> {
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
-    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
@@ -91,6 +98,7 @@ async function main(): Promise<void> {
                     registry = serviceEndpoint;
                     addedRegistry.push(serviceURL);
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, addedRegistry);
+                    externalFeedSuccessCount++;
                     break;
                 }
             }
@@ -103,6 +111,7 @@ async function main(): Promise<void> {
                     registry = localRegistry;
                     addedRegistry.push(localURL);
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
+                    internalFeedSuccessCount++;
                     break;
                 }
             }
@@ -128,6 +137,12 @@ main().catch(error => {
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
+}).finally(() => {
+    emitTelemetry("Packaging", "NpmAuthenticateV0", {
+        "InternalFeedAuthCount": internalFeedSuccessCount,
+        "ExternalFeedAuthCount": externalFeedSuccessCount,
+        "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
+    });
 });
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
