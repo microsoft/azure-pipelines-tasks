@@ -16,7 +16,6 @@ describe('Twine Authenticate V1 Suite', async () => {
     });
 
     it('sets authentication for current organization feed', async () => {
-        // this.timeout(50000);
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -39,11 +38,9 @@ describe('Twine Authenticate V1 Suite', async () => {
             "Default username should be correct.");
         assert.strictEqual(lines[6], "password=token",
             "Default password from environment variable should be correct.");
-
-    });
+    }).timeout(50000);
 
     it('sets authentication for current organization feed with dot',  async () => {
-        // this.timeout(10000);
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -66,5 +63,5 @@ describe('Twine Authenticate V1 Suite', async () => {
             "Default username should be correct.");
         assert.strictEqual(lines.at(-3), "password=token",
             "Default password from environment variable should be correct.");
-    });
+    }).timeout(50000);
 });
