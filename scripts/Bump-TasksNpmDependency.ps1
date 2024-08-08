@@ -4,6 +4,20 @@ Param(
     [switch]$BumpVersions
 )
 
+function Confirm-TaskVersionBumped([string]$TaskJsonPath) {
+    $diffScriptPath = Join-Path $PSScriptRoot Get-FileGitDiffAsJson.ps1
+
+    $diffJson = (& "$diffScriptPath" -FilePath "$TaskJsonPath") | ConvertFrom-Json
+
+    foreach ($diff in $diffJson) {
+        if ($diff.Change -eq 'Added' -and $diff.Content -match '"(Minor|Patch)":\s*\d+') {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 # You'll need to have txt file with task names line by line, e.g:
 # TaskV1
 # TaskV2
@@ -57,7 +71,13 @@ try {
             $taskPath = Join-Path $repositoryRoot Tasks $task
             $taskPackageJsonPath = Resolve-Path (Join-Path $taskPath package.json) -Relative
             if ($changes -contains $taskPackageJsonPath) {
-                $tasksToBump += , $task
+                $taskJsonPath = Resolve-Path (Join-Path $taskPath task.json) -Relative
+                if (-not (Confirm-TaskVersionBumped -TaskJsonPath $taskJsonPath)) {
+                    $tasksToBump += , $task
+                }
+                else {
+                    Write-Host "Task $task is already bumped. Skipping bump of version" -ForegroundColor Cyan
+                }
             }
             else {
                 Write-Host "Dependency $Dependency in task $task is not modified. Skipping bump of version" -ForegroundColor Cyan
