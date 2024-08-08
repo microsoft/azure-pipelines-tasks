@@ -14,11 +14,37 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
+    },
     {
       "name": "nuGetServiceConnections",
       "type": "connectedService:ExternalNuGetFeed",
@@ -29,13 +55,6 @@
         "EditableOptions": "False",
         "MultiSelectFlatList": "True"
       }
-    },
-    {
-      "name": "forceReinstallCredentialProvider",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
     }
   ],
   "execution": {

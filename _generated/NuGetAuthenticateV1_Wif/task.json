@@ -14,11 +14,37 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
   "inputs": [
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "Reinstall the credential provider even if already installed",
+      "defaultValue": "false",
+      "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts URL",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
+    },
     {
       "name": "nuGetServiceConnections",
       "type": "connectedService:ExternalNuGetFeed",
@@ -29,13 +55,6 @@
         "EditableOptions": "False",
         "MultiSelectFlatList": "True"
       }
-    },
-    {
-      "name": "forceReinstallCredentialProvider",
-      "type": "boolean",
-      "label": "Reinstall the credential provider even if already installed",
-      "defaultValue": "false",
-      "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
     }
   ],
   "execution": {
@@ -44,6 +63,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
