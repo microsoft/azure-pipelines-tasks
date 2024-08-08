@@ -1,7 +1,8 @@
 Param(
+    [Parameter(Mandatory = $true)]
     [string]$Dependency,
-    [string]$TasksFilePath = (Join-Path $PSScriptRoot TaskNames.txt),
-    [switch]$BumpVersions
+    [string]$TasksListFilePath = (Join-Path $PSScriptRoot TaskNames.txt),
+    [switch]$BumpTasks
 )
 
 function Confirm-TaskVersionBumped([string]$TaskJsonPath) {
@@ -22,8 +23,8 @@ function Confirm-TaskVersionBumped([string]$TaskJsonPath) {
 # TaskV1
 # TaskV2
 # ...
-Write-Host "Getting target tasks names from $TasksFilePath" -ForegroundColor Cyan
-$tasks = Get-Content $TasksFilePath
+Write-Host "Getting target tasks names from $TasksListFilePath" -ForegroundColor Cyan
+$tasks = Get-Content $TasksListFilePath
 
 $currentLocation = Get-Location
 $repositoryRoot = Join-Path $PSScriptRoot ..
@@ -59,7 +60,7 @@ try {
         }
     }
 
-    if ($BumpVersions) {
+    if ($BumpTasks) {
         Set-Location $repositoryRoot
         $tasksToBump = @()
         $changes = git ls-files --modified --full-name
