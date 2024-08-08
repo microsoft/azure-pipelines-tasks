@@ -10,7 +10,6 @@ import * as os from 'os';
 import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
-import * as url from 'url';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
@@ -138,14 +137,13 @@ main().catch(error => {
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
-});
-main().finally(() => {
+}).finally(() => {
     emitTelemetry("Packaging", "NpmAuthenticateV0", {
         "InternalFeedAuthCount": internalFeedSuccessCount,
         "ExternalFeedAuthCount": externalFeedSuccessCount,
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
-})
+});
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;

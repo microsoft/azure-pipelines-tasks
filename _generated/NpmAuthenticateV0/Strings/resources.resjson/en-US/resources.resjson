@@ -30,6 +30,6 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-  "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc",
-  "loc.messages.Error_FailedToParseFeedUrl": "Failed to parse feed URL %s"
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+  "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc"
 }

@@ -10,7 +10,6 @@ import * as os from 'os';
 import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
-import * as url from 'url';
 #if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
@@ -76,32 +75,30 @@ async function main(): Promise<void> {
 
     // Skip npmrc parsing if we are using feed url and wif service connection
     if (feedUrl && entraWifServiceConnectionName) {
-        if (url.parse(feedUrl))
+        tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+        const feedTenant = await getFeedTenantId(feedUrl);
+        let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+        if(token)
         {
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(feedUrl);
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-            if(token)
-            {
-                const nerfed = util.toNerfDart(feedUrl);
-                const auth = `${nerfed}:_authToken=${token}`;
-                tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
-                npmutil.appendToNpmrc(npmrc, os.EOL + auth + os.EOL);
-                tl.debug(tl.loc('SuccessfulAppend'));
-                npmrcFile.push(os.EOL + auth + os.EOL);
-                federatedFeedAuthSuccessCount++;
-                tl.debug(tl.loc('SuccessfulPush'));    
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-                console.log(tl.loc("SkippingParsingNpmrc"));
-            } 
-            else
-            {
-                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
-            }
-            return;
-        } else {
-            throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
+            const nerfed = util.toNerfDart(feedUrl);
+            const auth = `${nerfed}:_authToken=${token}`;
+            tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
+            npmutil.appendToNpmrc(npmrc, os.EOL + auth + os.EOL);
+            tl.debug(tl.loc('SuccessfulAppend'));
+            npmrcFile.push(os.EOL + auth + os.EOL);
+            federatedFeedAuthSuccessCount++;
+            tl.debug(tl.loc('SuccessfulPush'));    
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+            console.log(tl.loc("SkippingParsingNpmrc"));
+        } 
+        else
+        {
+            throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
         }
+        return;
+    }
+    else if (feedUrl || entraWifServiceConnectionName) {
+        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 #endif
 
@@ -175,14 +172,13 @@ main().catch(error => {
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
-});
-main().finally(() => {
+}).finally(() => {
     emitTelemetry("Packaging", "NpmAuthenticateV0", {
         "InternalFeedAuthCount": internalFeedSuccessCount,
         "ExternalFeedAuthCount": externalFeedSuccessCount,
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
-})
+});
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
