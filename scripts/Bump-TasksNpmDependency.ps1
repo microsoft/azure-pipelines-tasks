@@ -24,7 +24,7 @@ try {
         Set-Location $taskPath
         npm i "$Dependency"
         if ($LASTEXITCODE -ne 0) {
-            Write-Error "Failed to install task lib for $taskName" -ErrorAction Stop
+            Write-Error "Failed to install $Dependency for $taskName" -ErrorAction Stop
         }
 
         $buildConfigsDir = Get-ChildItem | Where-Object { $_.Name -eq '_buildConfigs' }
@@ -35,11 +35,11 @@ try {
                 $buildConfig = $_
                 $buildConfigPath = Join-Path $taskPath _buildConfigs $buildConfig.Name
 
-                Write-Host "Installing task lib for task $taskName buidconfig $buildConfig" -ForegroundColor Cyan
+                Write-Host "Installing $Dependency for task $taskName buidconfig $buildConfig" -ForegroundColor Cyan
                 Set-Location $buildConfigPath
                 npm i "$Dependency"
                 if ($LASTEXITCODE -ne 0) {
-                    Write-Error "Failed to install task lib for buildconfig $($buildConfig.Name) of task $taskName" -ErrorAction Stop
+                    Write-Error "Failed to install $Dependency for buildconfig $($buildConfig.Name) of task $taskName" -ErrorAction Stop
                 }
             }
         }
