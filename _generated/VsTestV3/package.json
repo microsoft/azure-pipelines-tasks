@@ -17,7 +17,7 @@
     "performance-now": "0.2.0",
     "request": "2.87.0",
     "string": "3.3.1",
-    "uuid": "^8.3.0",
+    "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
     "azure-pipelines-task-lib": "^4.1.0",
     "xml2js": "0.4.16",
