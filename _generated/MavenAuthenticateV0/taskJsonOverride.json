@@ -1,0 +1,43 @@
+{
+    "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with mavenServiceConnections.",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "artifactsFeeds",
+      "type": "pickList",
+      "label": "Feeds",
+      "defaultValue": "",
+      "helpMarkdown": "Select one or multiple feeds to authenticate.",
+      "properties": {
+        "EditableOptions": "true",
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "name": "mavenServiceConnections",
+      "label": "Credentials for repositories outside this organization/collection",
+      "helpMarkDown": "Credentials to use for external repositories located in the project's pom.xml.",
+      "type": "connectedService:externalmavenrepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ]
+}

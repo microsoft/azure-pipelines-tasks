@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 2
+    "Minor": 244,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -76,11 +76,15 @@
     "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
     "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
     "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from federated service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
-    "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
+    "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20_229_1": "0.243.3"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1",
+    "wif_242": "0.244.2"
   }
 }
