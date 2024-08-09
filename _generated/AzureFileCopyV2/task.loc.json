@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -376,7 +376,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "2.244.0",
-    "Node20_229_2": "2.244.1"
+    "Default": "2.244.2",
+    "Node20_229_2": "2.244.3"
   }
 }
