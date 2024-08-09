@@ -59,5 +59,14 @@
             "source": "MimeMapping.json",
             "options": "-R"
         }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
+                "node_modules/https-proxy-agent/node_modules/agent-base"
+            ],
+            "options": "-Rf"
+        }
     ]
 }
