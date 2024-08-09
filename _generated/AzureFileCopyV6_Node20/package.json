@@ -7,7 +7,8 @@
     "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.242.2",
     "moment": "^2.29.4",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "agent-base": "^6.0.2"
   },
   "devDependencies": {
     "typescript": "5.1.6"
