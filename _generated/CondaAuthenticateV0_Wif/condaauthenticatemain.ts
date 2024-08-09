@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
-import * as url from 'url';
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 
 async function main(): Promise<void> {
