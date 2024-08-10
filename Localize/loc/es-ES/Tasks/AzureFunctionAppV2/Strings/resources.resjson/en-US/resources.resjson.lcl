@@ -102,10 +102,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Elija el método de implementación para su aplicación Function. Tenga en cuenta que las aplicaciones de Consumo para Linux no admiten esta configuración.]]></Val>
+            <Val><![CDATA[Elija el método de implementación para su aplicación de funciones. Tenga en cuenta que las aplicaciones de Consumo flexible y Linux no admiten esta configuración.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -198,6 +201,15 @@
           <Val><![CDATA[Deployment method]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Método de implementación]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.isFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is Function App on Flex Consumption Plan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aplicación de funciones de TI en el plan Consumo flexible]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -387,6 +399,15 @@
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Implementando paquete web : %s en la ruta virtual (ruta física) : %s (%s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Deployment Type option does not apply for Flex Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La opción Tipo de implementación no se aplica para el Consumo flexible.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

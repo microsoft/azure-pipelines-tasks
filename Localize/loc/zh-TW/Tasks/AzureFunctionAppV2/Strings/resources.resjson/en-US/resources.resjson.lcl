@@ -102,10 +102,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[選擇 Function 應用程式的部署方法。請注意，Linux 使用量應用程式不支援此設定。]]></Val>
+            <Val><![CDATA[為您的函數應用程式選擇部署方法。請注意，Linux 和彈性使用量應用程式不支援此設定。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -198,6 +201,15 @@
           <Val><![CDATA[Deployment method]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[部署方法]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.isFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is Function App on Flex Consumption Plan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[是彈性使用量方案的函數應用程式]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -387,6 +399,15 @@
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[正於虛擬路徑 (實體路徑) 部署網頁套件 %s: %s (%s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Deployment Type option does not apply for Flex Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[部署類型]5D; 選項不適用於彈性使用量。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

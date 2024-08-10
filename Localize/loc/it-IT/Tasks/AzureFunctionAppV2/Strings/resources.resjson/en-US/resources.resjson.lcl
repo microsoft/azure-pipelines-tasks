@@ -102,10 +102,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Scegliere il metodo di distribuzione per l'app per le funzioni. Si noti che le app per le funzioni a consumo per Linux non supportano questa configurazione.]]></Val>
+            <Val><![CDATA[Scegliere il metodo di distribuzione per l'app per le funzioni. Si noti che le app per le funzioni a consumo per Linux e Flex non supportano questa configurazione.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -198,6 +201,15 @@
           <Val><![CDATA[Deployment method]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Metodo di distribuzione]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.isFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is Function App on Flex Consumption Plan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[App per le funzioni nel piano a consumo Flex]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -387,6 +399,15 @@
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Distribuzione del pacchetto Web %s nel percorso virtuale (percorso fisico) %s (%s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Deployment Type option does not apply for Flex Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'opzione Tipo di distribuzione non è valida per a consumo per Flex.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

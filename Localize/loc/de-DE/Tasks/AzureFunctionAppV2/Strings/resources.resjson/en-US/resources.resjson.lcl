@@ -102,10 +102,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Wählen Sie die Bereitstellungsmethode für Ihre Funktions-App aus. Beachten Sie, dass Linux-Verbrauch-Apps diese Konfiguration nicht unterstützen.]]></Val>
+            <Val><![CDATA[Wählen Sie die Bereitstellungsmethode für Ihre Funktions-App aus. Beachten Sie, dass Linux- und Flex-Verbrauch-Apps diese Konfiguration nicht unterstützen.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -198,6 +201,15 @@
           <Val><![CDATA[Deployment method]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Bereitstellungsmethode]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.isFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is Function App on Flex Consumption Plan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ist Funktions-App im Flex-Verbrauchsplan]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -387,6 +399,15 @@
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Webpaket "%s" wird im virtuellen Pfad (physischen Pfad) bereitgestellt: %s (%s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Deployment Type option does not apply for Flex Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Option "Bereitstellungstyp" gilt nicht für Flex-Verbrauch.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

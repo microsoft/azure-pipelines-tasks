@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          <Val><![CDATA[Execute PowerShell scripts on remote machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[在遠端電腦上執行 PowerShell 指令碼。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          <Val><![CDATA[PowerShell on target machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[目標電腦上的 PowerShell]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -47,19 +53,25 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[詳細資訊]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+            <Val><![CDATA[[深入了解此工作]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AdminPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
+          <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[目標電腦的系統管理員密碼。<br>其可接受組建/發行定義中 '$(passwordVariable)' 這類形式的變數。<br>您可以將變數類型標示為 'secret' 加以保護。]]></Val>
+            <Val><![CDATA[目標機器的系統管理員密碼。<br>其可接受組建或發行管線中定義的變數為 '$(passwordVariable)'。<br>您可將變數型別標記為 'secret' 加以保護。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -101,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.Protocol" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.]]></Val>
+          <Val><![CDATA[Select the protocol to use for the WinRM service connection with the machine(s). Default is HTTPS.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[選取 WinRM 與電腦連線時所囡使用的通訊協定。預設值為 HTTPS。]]></Val>
+            <Val><![CDATA[選取 WinRM 服務與機器連線時使用的通訊協定。預設為 HTTPS。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
