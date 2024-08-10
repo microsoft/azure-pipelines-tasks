@@ -102,10 +102,13 @@
       </Item>
       <Item ItemId=";loc.input.help.deploymentMethod" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[関数アプリのデプロイ方法を選択します。Linux 従量課金プラン アプリではこの構成がサポートされていないことに注意してください。]]></Val>
+            <Val><![CDATA[関数アプリのデプロイ方法を選択します。Linux 従量課金アプリと Flex 従量課金アプリではこの構成がサポートされていないことに注意してください。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -198,6 +201,15 @@
           <Val><![CDATA[Deployment method]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[デプロイ方法]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.isFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is Function App on Flex Consumption Plan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Flex 従量課金プランの関数アプリである]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -387,6 +399,15 @@
           <Val><![CDATA[Deploying web package : %s at virtual path (physical path) : %s (%s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Web パッケージ: %s を仮想パス (物理パス) へ配置しています: %s (%s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DeploymentTypeNotSupportedForFlexConsumption" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Deployment Type option does not apply for Flex Consumption.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[展開の種類]5D; オプションは、Flex 従量課金プランには適用されません。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

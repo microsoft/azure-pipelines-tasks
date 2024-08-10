@@ -12,12 +12,12 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+          <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Предварительная версия]5D; Приостановка конвейера для ожидания взаимодействия вручную. Работает только с конвейерами YAML.]]></Val>
+            <Val><![CDATA[Приостановка выполнения конвейера для ожидания взаимодействия вручную. Работает только с конвейерами YAML.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+            <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

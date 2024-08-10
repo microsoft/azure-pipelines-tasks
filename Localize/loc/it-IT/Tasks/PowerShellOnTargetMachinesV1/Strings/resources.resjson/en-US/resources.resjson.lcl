@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          <Val><![CDATA[Execute PowerShell scripts on remote machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Consente di eseguire script PowerShell nei computer remoti]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          <Val><![CDATA[PowerShell on target machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[PowerShell in computer di destinazione]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -47,19 +53,25 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Altre informazioni]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+            <Val><![CDATA[[Altre informazioni su questa attività]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AdminPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
+          <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Password dell'amministratore per i computer di destinazione. <br>Accetta la variabile definita nelle definizioni di compilazione/versione come '$(passwordVariable)'. <br>Per proteggerla, è possibile contrassegnare il tipo di variabile come 'secret'.]]></Val>
+            <Val><![CDATA[Password amministratore per i computer di destinazione. <br>Può accettare la variabile definita nelle pipeline di compilazione o di versione come '$(passwordVariable)'. <br>È possibile contrassegnare il tipo di variabile come "segreto" per proteggerlo.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -101,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.Protocol" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.]]></Val>
+          <Val><![CDATA[Select the protocol to use for the WinRM service connection with the machine(s). Default is HTTPS.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Consente di selezionare il protocollo da usare per la connessione WinRM con i computer. Il valore predefinito è HTTPS.]]></Val>
+            <Val><![CDATA[Selezionare il protocollo da utilizzare per la connessione al servizio Gestione remota Windows con i computer. Il valore predefinito è HTTPS.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
