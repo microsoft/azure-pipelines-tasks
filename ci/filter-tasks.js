@@ -18,7 +18,7 @@ var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version.
     var packageInfo;
     try {
-        var packageToken = process.env['PACKAGE_TOKEN'];
+        var packageToken = "foobar"// process.env['PACKAGE_TOKEN'];
         if (!packageToken) {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=21;]Failed to get info from package endpoint because no token was provided. Try setting the PACKAGE_TOKEN environment variable.`);
             return makeOptions.tasks;
