@@ -29,6 +29,7 @@ export class AuthInfo
         this.authType = authType;
         this.username = username;
         this.password = password;
+        tl.setSecret(password);
     }
 }
 
