@@ -1,0 +1,74 @@
+{
+  "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
+  "name": "CargoAuthenticate",
+  "friendlyName": "Cargo authenticate (for task runners)",
+  "description": "Authentication task for the cargo client used for installing Cargo crates distribution",
+  "helpUrl": "",
+  "helpMarkDown": "",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 244,
+    "Patch": 6
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "cargo Authenticate $(configFile)",
+  "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "cargoauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToAddAuthentication": "Failed to add authentication.",
+    "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
+    "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
+    "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
+    "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
+    "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
+    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
+    "ConnectionAlreadySet": "%s registry is already set for an %s connection",
+    "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.244.4",
+    "Node20_229_1": "0.244.5",
+    "wif_242": "0.244.6"
+  }
+}

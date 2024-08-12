@@ -1,0 +1,74 @@
+{
+  "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
+  "name": "CargoAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 244,
+    "Patch": 6
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "cargoauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "ConfigTomlNotToml": "ms-resource:loc.messages.ConfigTomlNotToml",
+    "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",
+    "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
+    "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
+    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.244.4",
+    "Node20_229_1": "0.244.5",
+    "wif_242": "0.244.6"
+  }
+}

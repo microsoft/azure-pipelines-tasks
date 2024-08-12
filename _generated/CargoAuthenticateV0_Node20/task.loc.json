@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 5
   },
   "runsOn": [
@@ -57,10 +57,13 @@
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
-    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet"
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.0",
-    "Node20_229_1": "0.243.5"
+    "Default": "0.244.4",
+    "Node20_229_1": "0.244.5",
+    "wif_242": "0.244.6"
   }
 }

@@ -9,9 +9,14 @@ import * as url from 'url';
 import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
+
+    let internalAuthCount = 0;
+    let externalAuthCount = 0;
+    let federatedAuthCount = 0;
 
     try {
         let configtoml = tl.getInput(constants.CargoAuthenticateTaskInput.ConfigFile);
@@ -79,19 +84,23 @@ async function main(): Promise<void> {
             const registryConfigName = registry.toLocaleUpperCase().replace(/-/g, "_");
             const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
             const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
+            let connectionType = '';
             if (tl.getVariable(tokenName)) {
-                tl.debug(tl.loc('ConnectionAlreadySet', registry, tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external' : 'internal'));
+                connectionType = tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external or federated' : 'internal';
+                tl.debug(tl.loc('ConnectionAlreadySet', registry, connectionType));
             }
-            if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
+            if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0 && (connectionType !== 'external or federated')) {
                 let currentRegistry : string;
+                const currentRegistryUrl = url.parse(result.registries[registry].index.replace("sparse+", "")).href;
                 for (let serviceConnection of externalServiceConnections) {
-                    if (url.parse(serviceConnection.packageSource.uri).href === url.parse(result.registries[registry].index.replace("sparse+", "")).href) {
+                    if (url.parse(serviceConnection.packageSource.uri).href === currentRegistryUrl) {
                         const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
                         currentRegistry = registry;
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
                         tl.debug(tl.loc('AddingAuthExternalRegistry', registry, tokenName));
                         setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
                         tl.setVariable(credProviderName, "cargo:token");
+                        externalAuthCount++;
                     }      
                 }
                 // Default to internal registry if no token has been set yet
@@ -99,6 +108,7 @@ async function main(): Promise<void> {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");
+                    internalAuthCount++;
                 }  
             }   
         } 
@@ -108,6 +118,15 @@ async function main(): Promise<void> {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
+    }
+
+    finally {
+        console.log(tl.loc("AuthTelemetry", internalAuthCount, externalAuthCount, federatedAuthCount));
+        emitTelemetry("Packaging", "CargoAuthenticateV0", {
+            "InternalFeedAuthCount": internalAuthCount,
+            "ExternalFeedAuthCount": externalAuthCount,
+            "FederatedConnectionAuthCount": federatedAuthCount
+        });
     }
 }
 

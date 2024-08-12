@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -53,6 +53,8 @@
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
     "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
-    "ConnectionAlreadySet": "%s registry is already set for an %s connection"
+    "ConnectionAlreadySet": "%s registry is already set for an %s connection",
+    "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   }
 }
