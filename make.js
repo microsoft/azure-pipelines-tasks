@@ -810,8 +810,10 @@ CLI.bump = function() {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
-        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+        const taskJsonStringified = JSON.stringify(taskJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskJsonPath, taskJsonStringified);
+        const taskLocJsonStringified = JSON.stringify(taskLocJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskLocJsonPath, taskLocJsonStringified);
 
         // Check that task.loc and task.loc.json versions match
         if ((taskJson.version.Major !== taskLocJson.version.Major) ||

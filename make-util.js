@@ -340,7 +340,7 @@ exports.ensureTool = ensureTool;
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
         20: 'v20.14.0',
-        16: 'v16.17.1',
+        16: 'v16.20.2',
         14: 'v14.10.1',
         10: 'v10.24.1',
         6: 'v6.10.3',
