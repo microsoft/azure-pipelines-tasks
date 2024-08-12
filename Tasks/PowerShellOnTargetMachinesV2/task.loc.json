@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 244,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -30,6 +30,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The PowerShellOnTargetMachines@2 task is deprecated, please use a newer version of the PowerShellOnTargetMachines task",
   "inputs": [
     {
       "name": "EnvironmentName",
