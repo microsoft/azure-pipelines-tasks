@@ -16,12 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "deprecated": true,
+  "deprecationMessage": "The PublishCodeCoverageResults@1 is deprecated. Users are recommended to switch to task version 2. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task",
   "inputs": [
     {
       "name": "codeCoverageTool",
