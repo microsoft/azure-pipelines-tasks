@@ -940,7 +940,7 @@ function Get-AzureSqlDatabaseServerResourceId {
         foreach ($resourceDetail in $ResourceDetails.Value) {
             if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType) {
                 $serverNameLower = $serverName.ToLower() 
-                $resourcedetail.id = $resourcedetail.id.Replace($serverName, $serverNameLower)
+                $resourcedetail.id = $resourcedetail.id -ireplace "$serverName", "$serverNameLower"
                 return $resourceDetail.id
             }
         }
