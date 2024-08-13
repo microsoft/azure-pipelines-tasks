@@ -33,7 +33,7 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
+      "label": "Azure Artifacts Feed url.",
       "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
       "type": "string",
       "defaultValue": "",
