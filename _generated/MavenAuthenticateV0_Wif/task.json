@@ -33,7 +33,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection and feedName are required. All other inputs are ignored. Not compatible with mavenServiceConnections.",
+      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection and feedName are required. All other inputs are ignored. Not compatible with mavenServiceConnections. Feed Url should be in the maven registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/maven/v1",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -107,7 +107,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
-    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "Error_MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty."
   },
   "_buildConfigMapping": {
     "Default": "0.244.6",

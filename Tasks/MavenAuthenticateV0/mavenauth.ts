@@ -83,6 +83,9 @@ async function run(): Promise<void> {
             }
             return;
         }
+        else if (feedUrl || entraWifServiceConnectionName) {
+            throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
+        }
 #endif
         
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");

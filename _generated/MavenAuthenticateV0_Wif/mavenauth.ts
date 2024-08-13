@@ -80,6 +80,9 @@ async function run(): Promise<void> {
             }
             return;
         }
+        else if (feedUrl || entraWifServiceConnectionName) {
+            throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
+        }
         
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
