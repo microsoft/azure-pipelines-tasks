@@ -9,13 +9,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 230,
+        "Minor": 244,
         "Patch": 0
     },
     "groups": [],
     "demands": [],
     "minimumAgentVersion": "2.155.1",
     "preview": false,
+    "deprecated": true,
+    "deprecationMessage": "The DownloadPipelineArtifact@0 task is deprecated, please use the latest version of the DownloadPipelineArtifact task",
     "inputs": [
         {
             "name": "pipelineId",
