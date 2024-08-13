@@ -20,14 +20,6 @@
         "required": false
       },
       {
-        "name": "feedName",
-        "label": "ms-resource:loc.input.label.feedName",
-        "helpMarkDown": "ms-resource:loc.input.help.feedName",
-        "type": "string",
-        "defaultValue": "",
-        "required": false
-      },
-      {
         "name": "artifactsFeeds",
         "type": "pickList",
         "label": "ms-resource:loc.input.label.artifactsFeeds",

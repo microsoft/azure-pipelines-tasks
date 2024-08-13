@@ -39,14 +39,6 @@
       "required": false
     },
     {
-      "name": "feedName",
-      "label": "Name of feed used with 'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "This is the name of feed to be used with the 'Entra Workload ID-backed Azure DevOps user' service connection. It will be the id used when authenticating for Maven. If this is set, workloadIdentityServiceConnection and feedUrl are required. All other inputs are ignored.",
-      "type": "string",
-      "defaultValue": "",
-      "required": false
-    },
-    {
       "name": "artifactsFeeds",
       "type": "pickList",
       "label": "Feeds",

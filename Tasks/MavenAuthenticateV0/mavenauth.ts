@@ -54,9 +54,8 @@ async function run(): Promise<void> {
 #if WIF
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-        const feedName = tl.getInput('feedName');
 
-        if (feedUrl && entraWifServiceConnectionName && feedName) {
+        if (feedUrl && entraWifServiceConnectionName) {
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
             const feedTenant = await getFeedTenantId(feedUrl);
@@ -64,6 +63,7 @@ async function run(): Promise<void> {
             
             if (token) {
 
+                const feedName = feedUrl.split('/').at(-3);
                 const wifServerElement = {
                     id: feedName,
                     username: 'WIFbuild',
