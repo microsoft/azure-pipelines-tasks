@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 2
+    "Patch": 8
   },
   "runsOn": [
     "Agent",
@@ -22,7 +22,7 @@
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required. All other inputs are ignored.",
+      "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl and feedName are required. All other inputs are ignored.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -33,7 +33,15 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with mavenServiceConnections.",
+      "helpMarkDown": "This is the packaging url of the feed your service principal should connect to. If this is set, workloadIdentityServiceConnection and feedName are required. All other inputs are ignored. Not compatible with mavenServiceConnections.",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "feedName",
+      "label": "Name of feed used with 'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "This is the name of feed to be used with the 'Entra Workload ID-backed Azure DevOps user' service connection. It will be the id used when authenticating for Maven. If this is set, workloadIdentityServiceConnection and feedUrl are required. All other inputs are ignored.",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -110,8 +118,8 @@
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20_229_1": "0.244.1",
-    "wif_242": "0.244.2"
+    "Default": "0.244.6",
+    "Node20_229_1": "0.244.7",
+    "wif_242": "0.244.8"
   }
 }

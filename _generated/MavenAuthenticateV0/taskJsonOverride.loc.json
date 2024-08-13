@@ -1,43 +1,51 @@
 {
     "inputs": [
-    {
-      "name": "workloadIdentityServiceConnection",
-      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
-      "type": "connectedService:workloadidentityuser",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "False"
+      {
+        "name": "workloadIdentityServiceConnection",
+        "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+        "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+        "type": "connectedService:workloadidentityuser",
+        "required": false,
+        "properties": {
+          "EditableOptions": "False",
+          "MultiSelectFlatList": "False"
+        }
+      },
+      {
+        "name": "feedUrl",
+        "label": "ms-resource:loc.input.label.feedUrl",
+        "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+        "type": "string",
+        "defaultValue": "",
+        "required": false
+      },
+      {
+        "name": "feedName",
+        "label": "ms-resource:loc.input.label.feedName",
+        "helpMarkDown": "ms-resource:loc.input.help.feedName",
+        "type": "string",
+        "defaultValue": "",
+        "required": false
+      },
+      {
+        "name": "artifactsFeeds",
+        "type": "pickList",
+        "label": "ms-resource:loc.input.label.artifactsFeeds",
+        "defaultValue": "",
+        "helpMarkdown": "Select one or multiple feeds to authenticate.",
+        "properties": {
+          "EditableOptions": "true",
+          "MultiSelectFlatList": "true"
+        }
+      },
+      {
+        "name": "mavenServiceConnections",
+        "label": "ms-resource:loc.input.label.mavenServiceConnections",
+        "helpMarkDown": "ms-resource:loc.input.help.mavenServiceConnections",
+        "type": "connectedService:externalmavenrepository",
+        "properties": {
+          "MultiSelectFlatList": "true"
+        }
       }
-    },
-    {
-      "name": "feedUrl",
-      "label": "ms-resource:loc.input.label.feedUrl",
-      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
-      "type": "string",
-      "defaultValue": "",
-      "required": false
-    },
-    {
-      "name": "artifactsFeeds",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.artifactsFeeds",
-      "defaultValue": "",
-      "helpMarkdown": "Select one or multiple feeds to authenticate.",
-      "properties": {
-        "EditableOptions": "true",
-        "MultiSelectFlatList": "true"
-      }
-    },
-    {
-      "name": "mavenServiceConnections",
-      "label": "ms-resource:loc.input.label.mavenServiceConnections",
-      "helpMarkDown": "ms-resource:loc.input.help.mavenServiceConnections",
-      "type": "connectedService:externalmavenrepository",
-      "properties": {
-        "MultiSelectFlatList": "true"
-      }
-    }
-  ]
+    ]
 }

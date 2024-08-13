@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
@@ -76,7 +76,7 @@
     "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
     "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
     "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
-    "Info_AddingFederatedFeedAuth":  "Adding auth information from federated service connection %s for feed %s",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from federated service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",

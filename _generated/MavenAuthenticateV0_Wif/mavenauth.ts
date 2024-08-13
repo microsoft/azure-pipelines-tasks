@@ -51,8 +51,9 @@ async function run(): Promise<void> {
         
         const feedUrl = tl.getInput("feedUrl");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        const feedName = tl.getInput('feedName');
 
-        if (feedUrl && entraWifServiceConnectionName) {
+        if (feedUrl && entraWifServiceConnectionName && feedName) {
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
             const feedTenant = await getFeedTenantId(feedUrl);
@@ -61,7 +62,7 @@ async function run(): Promise<void> {
             if (token) {
 
                 const wifServerElement = {
-                    id: entraWifServiceConnectionName,
+                    id: feedName,
                     username: 'WIFbuild',
                     password: token
                 };
@@ -69,6 +70,9 @@ async function run(): Promise<void> {
                 settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
                 federatedFeedAuthSuccessCount++;
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+
+                tl.debug(tl.loc("Info_WritingToSettingsXml"));
+                await util.jsonToXmlConverter(userSettingsXmlPath, settingsJson);
 
             }
             else {
