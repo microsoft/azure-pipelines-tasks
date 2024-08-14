@@ -23,11 +23,10 @@ async function main(): Promise<void> {
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
-    let existingEndpoints = tl.getVariable('EXISTING_ENDPOINTS');
-    let endpointsArray = [];
-    if(existingEndpoints){
-        endpointsArray = existingEndpoints.split(',');
-    }
+    let endpointsArray = tl.getVariable('EXISTING_ENDPOINTS') 
+        ? tl.getVariable('EXISTING_ENDPOINTS').split(',') 
+        : [];
+
     if (!(npmrc.endsWith('.npmrc'))) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
     }
@@ -83,7 +82,7 @@ async function main(): Promise<void> {
         tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
         const feedTenant = await getFeedTenantId(feedUrl);
         let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-        if(token)
+        if (token)
         {
             const nerfed = util.toNerfDart(feedUrl);
             const auth = `${nerfed}:_authToken=${token}`;
@@ -95,6 +94,15 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SuccessfulPush'));    
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
             console.log(tl.loc("SkippingParsingNpmrc"));
+
+            if (endpointsArray.includes(feedUrl)){
+                tl.warning(tl.loc('DuplicateCredentials', feedUrl));
+            }
+
+            else {
+                endpointsArray.push(feedUrl);
+                tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
+            }
         } 
         else
         {
@@ -114,13 +122,13 @@ async function main(): Promise<void> {
             var registry = await npmregistry.NpmRegistry.FromServiceEndpoint(e, true);
 
             // Add newly discovered endpoints to env variable. Warn of duplicates.
-            if (!endpointsArray || endpointsArray.indexOf(registry.url) == -1){
+            if (endpointsArray.includes(registry.url)){
+                tl.warning(tl.loc('DuplicateCredentials', registry.url));
+            }
+            else {
                 endpointsArray.push(registry.url);
                 tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
                 endpointRegistries.push(registry);
-            }
-            else {
-                tl.warning(tl.loc('DuplicateCredentials', registry.url));
             }
         }));
     }
@@ -136,7 +144,6 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
     let addedRegistry = [];
-    var hasCredentials = false;
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
@@ -158,37 +165,29 @@ async function main(): Promise<void> {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
-                    if (endpointsArray.length === 0  || endpointsArray.indexOf(localRegistry.url) == -1) {
-                        if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                            let localURL = URL.parse(localRegistry.url);
-                            console.log(tl.loc("AddingLocalCredentials"));
-                            registry = localRegistry;
-                            addedRegistry.push(localURL);
-                            npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
-                            break;
-                        }
+                    if (endpointsArray.includes(localRegistry.url)) {
+                        console.log(tl.loc("FoundEndpointCredentials", registryURL.host));
+                        break;
                     }
-                    else {
-                        hasCredentials = true;
+                    else if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
+                        let localURL = URL.parse(localRegistry.url);
+                        console.log(tl.loc("AddingLocalCredentials"));
+                        registry = localRegistry;
+                        addedRegistry.push(localURL);
+                        npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
+
+                        tl.debug(tl.loc('AddingAuthRegistry', registry.url));
+                        npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
+                        tl.debug(tl.loc('SuccessfulAppend'));
+                        npmrcFile.push(os.EOL + registry.auth + os.EOL);
+                        tl.debug(tl.loc('SuccessfulPush'));
+
                         break;
                     }
                 }
             }
+            console.log(tl.loc("IgnoringRegistry", registryURL.host));
         }
-        if (registry) {
-            tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
-            tl.debug(tl.loc('SuccessfulAppend'));
-            npmrcFile.push(os.EOL + registry.auth + os.EOL);
-            tl.debug(tl.loc('SuccessfulPush'));
-        }
-        else {
-            if (hasCredentials) {
-                console.log(tl.loc("FoundEndpointCredentials", registryURL.host));
-            }
-            else {
-                console.log(tl.loc("IgnoringRegistry", registryURL.host));
-            }        }
     }
 }
 
