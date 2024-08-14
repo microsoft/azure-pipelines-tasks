@@ -15,7 +15,7 @@ async function main(): Promise<void> {
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
-    let existingEndpoints = tl.getVariable('ExistingEndpoints');
+    let existingEndpoints = tl.getVariable('EXISTING_ENDPOINTS');
     let endpointsArray = [];
     if(existingEndpoints){
         endpointsArray = existingEndpoints.split(',');
@@ -67,21 +67,19 @@ async function main(): Promise<void> {
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
-        await Promise.all(endpointIds.map(async e => {
+        endpointIds.map(async e => {
             var registry = await npmregistry.NpmRegistry.FromServiceEndpoint(e, true);
 
             // Add newly discovered endpoints to env variable. Warn of duplicates.
-            if(!endpointsArray || endpointsArray.indexOf(registry) == -1){
+            if (!endpointsArray || endpointsArray.indexOf(registry.url) == -1){
                 endpointsArray.push(registry.url);
-                tl.setVariable('ExistingEndpoints', endpointsArray.join(','), false);
+                tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
+                endpointRegistries.push(registry);
             }
             else {
-                tl.debug(tl.loc('OverwriteSetCredentials', registry.url));
+                tl.warning(tl.loc('DuplicateCredentials', registry.url));
             }
-
-            endpointRegistries.push(registry);
-        }
-    ));
+        });
     }
 
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -96,6 +94,7 @@ async function main(): Promise<void> {
 
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     let addedRegistry = [];
+    var hasCredentials = false;
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
@@ -116,7 +115,7 @@ async function main(): Promise<void> {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
-                    if (existingEndpoints.length === 0  || existingEndpoints.indexOf(localRegistry.url) != -1) {
+                    if (endpointsArray.length === 0  || endpointsArray.indexOf(localRegistry.url) == -1) {
                         if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                             let localURL = URL.parse(localRegistry.url);
                             console.log(tl.loc("AddingLocalCredentials"));
@@ -125,6 +124,10 @@ async function main(): Promise<void> {
                             npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
                             break;
                         }
+                    }
+                    else {
+                        hasCredentials = true;
+                        break;
                     }
                 }
             }
@@ -137,7 +140,12 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SuccessfulPush'));
         }
         else {
-            console.log(tl.loc("IgnoringRegistry", registryURL.host));
+            if (hasCredentials) {
+                console.log(tl.loc("FoundEndpointCredentials", registryURL.host));
+            }
+            else {
+                console.log(tl.loc("IgnoringRegistry", registryURL.host));
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "runsOn": [
@@ -75,6 +75,7 @@
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
     "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
     "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend",
-    "OverwriteSetCredentials": "ms-resource:loc.messages.OverwriteSetCredentials"
+    "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
+    "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   }
 }
