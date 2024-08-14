@@ -81,6 +81,6 @@
     "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
     "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2",
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth",
-    "Error_MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty."
+    "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection"
   }
 }
