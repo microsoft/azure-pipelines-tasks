@@ -177,4 +177,5 @@
   "loc.messages.SyncFunctionTriggersSuccess": "Синхронизация триггеров для приложения-функции успешно завершена.",
   "loc.messages.UpdatedRunFromPackageSettings": "Параметр приложения WEBSITE_RUN_FROM_PACKAGE изменен на %s",
   "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "Параметр \"Тип развертывания\" не применяется для Потребление Linux.",
-  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "Параметр \"Тип развертывания\" не применяется для Потребление Flex.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "Параметр \"Тип развертывания\" не применяется для Потребление Flex."
+}
