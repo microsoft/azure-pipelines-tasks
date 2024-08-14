@@ -1,13 +1,6 @@
 {
     "inputs": [
         {
-            "name": "forceReinstallCredentialProvider",
-            "type": "boolean",
-            "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
-            "defaultValue": "false",
-            "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
-        },
-        {
             "name": "workloadIdentityServiceConnection",
             "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
             "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
@@ -25,6 +18,13 @@
             "type": "string",
             "defaultValue": "",
             "required": false
+        },
+        {
+            "name": "forceReinstallCredentialProvider",
+            "type": "boolean",
+            "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+            "defaultValue": "false",
+            "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
         },
         {
             "name": "nuGetServiceConnections",

@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as url from 'url';
 import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'

@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as url from 'url';
 import { configureEntraCredProvider } from "azure-pipelines-tasks-artifacts-common/credentialProviderUtils";
 import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
@@ -22,15 +21,12 @@ async function main(): Promise<void> {
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
         if (feedUrl && entraWifServiceConnectionName) {
-            if (url.parse(feedUrl)) {
-                tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-                await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-                federatedFeedAuthSuccessCount++;
-                return;
-            } else {
-                throw new Error(tl.loc("Error_FailedToParseFeedUrl", feedUrl));
-            }
+            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
+            await configureEntraCredProvider(ProtocolType.NuGet, feedUrl, entraWifServiceConnectionName);
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+            federatedFeedAuthSuccessCount++;
+            
+            return;
         }   
 
         // Configure the credential provider for both same-organization feeds and service connections

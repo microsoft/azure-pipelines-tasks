@@ -20,13 +20,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "forceReinstallCredentialProvider",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
-    },
-    {
       "name": "workloadIdentityServiceConnection",
       "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
       "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
@@ -44,6 +37,13 @@
       "type": "string",
       "defaultValue": "",
       "required": false
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
     },
     {
       "name": "nuGetServiceConnections",
@@ -74,9 +74,9 @@
   "messages": {
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
     "Error_FailedToParseFeedUrl": "ms-resource:loc.messages.Error_FailedToParseFeedUrl",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
-    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
-    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
     "Default": "1.244.3",
