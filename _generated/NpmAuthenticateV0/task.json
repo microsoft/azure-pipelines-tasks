@@ -67,7 +67,7 @@
     "AddingLocalCredentials": "Adding credentials for a local registry",
     "AddingEndpointCredentials": "Adding credentials for the %s service connection",
     "AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",
-    "IgnoringRegistry": "No service connections that matched %s were found",
+    "IgnoringRegistry": "No new service connections that matched %s were found",
     "ForcePackagingUrl": "Packaging collection URL forced to: %s",
     "CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm service connection instead (recommended), or remove the npm Authenticate task from your build to use credentials checked into an .npmrc.",
     "NoIndexJsonFile": "No index.json file was found and no files were restored",
@@ -79,7 +79,9 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
-    "SkippingParsingNpmrc": "Skipping parsing npmrc"
+    "SkippingParsingNpmrc": "Skipping parsing npmrc",
+    "DuplicateCredentials": "Auth for the registry '%s' was previously set. Ignoring new configuration.",
+    "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
     "Default": "0.244.0",
