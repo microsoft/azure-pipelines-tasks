@@ -6,7 +6,7 @@
   "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
   "loc.input.label.feedUrl": "Azure Artifacts Feed url.",
-  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
+  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections. Feed Url should be in the cargo registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/Cargo/index/",
   "loc.input.label.configFile": "config.toml file to authenticate",
   "loc.input.help.configFile": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
   "loc.input.label.cargoServiceConnections": "Credentials for registries outside this organization/collection",
@@ -20,5 +20,7 @@
   "loc.messages.AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
   "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection",
   "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
-  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+  "loc.messages.FeedUrlNotFound": "The feedUrl input does not correspond any registry in config.toml"
 }

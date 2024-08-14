@@ -28,8 +28,7 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
+      }
     },
     {
       "name": "feedUrl",
@@ -37,8 +36,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
+      "required": false
+    },
+    {
+      "name": "configFile",
+      "label": "ms-resource:loc.input.label.configFile",
+      "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "type": "filePath",
+      "required": true
+    },
+    {
+      "name": "cargoServiceConnections",
+      "label": "ms-resource:loc.input.label.cargoServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.cargoServiceConnections",
+      "type": "connectedService:externalcargorepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     }
   ],
   "execution": {
@@ -64,7 +78,9 @@
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
     "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
     "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
-    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
+    "FeedUrlNotFound": "ms-resource:loc.messages.FeedUrlNotFound"
   },
   "_buildConfigMapping": {
     "Default": "0.244.4",

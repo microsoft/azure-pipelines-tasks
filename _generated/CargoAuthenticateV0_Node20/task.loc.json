@@ -59,7 +59,9 @@
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
     "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
     "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
-    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
+    "FeedUrlNotFound": "ms-resource:loc.messages.FeedUrlNotFound"
   },
   "_buildConfigMapping": {
     "Default": "0.244.4",

@@ -55,7 +55,9 @@
     "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
     "ConnectionAlreadySet": "%s registry is already set for an %s connection",
     "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
-    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+    "FeedUrlNotFound": "The feedUrl input does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
     "Default": "0.244.4",

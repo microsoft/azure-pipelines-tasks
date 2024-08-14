@@ -57,6 +57,41 @@ async function main(): Promise<void> {
             return undefined;
         });
 
+        const feedUrl = tl.getInput("feedUrl");
+        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+
+        if (entraWifServiceConnectionName && feedUrl) {  
+            const registriesInfo = Object.entries(result.registries).map(registry => registry.reverse());
+            const registryMap = new Map();
+            registriesInfo.forEach(registryArr => registryMap.set(url.parse(registryArr[0]['index'].replace("sparse+", "")).href, registryArr[1]));
+
+            if (!registryMap.has(feedUrl)) {
+                throw new Error(tl.loc("FeedUrlNotFound"));
+            }
+
+            const registry = registryMap.get(feedUrl);
+            const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(feedUrl, registry);
+
+            if (isValidRegistry(registryUrl, collectionHosts, connectionType)) {
+                const feedTenant = await getFeedTenantId(feedUrl);
+                const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+
+                if (token) {
+                    setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`WifBuild:${token}`))}`);
+                    tl.setVariable(credProviderName, "cargo:token");
+                    federatedAuthCount++;
+                }
+                else {
+                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
+                }
+            }
+
+            return;
+        }
+        else if (entraWifServiceConnectionName || feedUrl) {
+            throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
+        }
+
         const localAccesstoken = `Bearer ${tl.getVariable('System.AccessToken')}`;
         const serviceConnections = getPackagingServiceConnections('cargoServiceConnections');
         let externalServiceConnections: ServiceConnection[] = [];
@@ -81,36 +116,13 @@ async function main(): Promise<void> {
         }
 
         for (let registry of Object.keys(result.registries)) {
-            const registryUrl = url.parse(result.registries[registry].index);
-            const registryConfigName = registry.toLocaleUpperCase().replace(/-/g, "_");
-            const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
-            const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
-            let connectionType = '';
-            if (tl.getVariable(tokenName)) {
-                connectionType = tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external or federated' : 'internal';
-                tl.debug(tl.loc('ConnectionAlreadySet', registry, connectionType));
-            }
-            if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0 && (connectionType !== 'external or federated')) {
+            const registryUrlStr = url.parse(result.registries[registry].index.replace("sparse+", "")).href;
+            const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registry);
+
+            if (isValidRegistry(registryUrl, collectionHosts, connectionType)) {
                 let currentRegistry : string;
-                const currentRegistryUrl = url.parse(result.registries[registry].index.replace("sparse+", "")).href;
-                const feedUrl = tl.getInput("feedUrl");
-                const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-                if (entraWifServiceConnectionName && feedUrl && (feedUrl === currentRegistryUrl)) {
-                    currentRegistry = registry;
-                    const feedTenant = await getFeedTenantId(feedUrl);
-                    const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-                    if (token) {
-                        setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`WifBuild:${token}`))}`);
-                        tl.setVariable(credProviderName, "cargo:token");
-                        federatedAuthCount++;
-                    }
-                    else {
-                        throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-                    }
-                    return;
-                }
                 for (let serviceConnection of externalServiceConnections) {
-                    if (url.parse(serviceConnection.packageSource.uri).href === currentRegistryUrl) {
+                    if (url.parse(serviceConnection.packageSource.uri).href === registryUrlStr) {
                         const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
                         currentRegistry = registry;
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
@@ -155,5 +167,28 @@ function setSecretEnvVariable(variableName: string, value: string){
     tl.setSecret(value);
     tl.setVariable(variableName, value);
 }
+
+// Informs on whether a registry was authenticated already, and if so says if it's an internal or external connection
+function getRegistryAuthStatus(tokenName: string, registryName: string): string{
+    let connectionType = ''
+    if (tl.getVariable(tokenName)) {
+        connectionType = tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external or federated' : 'internal';
+        tl.warning(tl.loc('ConnectionAlreadySet', registryName, connectionType));
+    }
+    return connectionType;
+}
+
+// Sets variables later needed for authenticating registries
+function setRegistryVars(urlStr: string, registryName: string): readonly [url.UrlWithStringQuery, string, string, string] {
+    const registryUrl = url.parse(urlStr);
+    const registryConfigName = registryName.toLocaleUpperCase().replace(/-/g, "_");
+    const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
+    const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
+    const connectionType = getRegistryAuthStatus(tokenName, registryName);
+    return [registryUrl, tokenName, credProviderName, connectionType] as const;
+}
+
+const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
+    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0 && (connectionType !== 'external or federated');
 
 main();
