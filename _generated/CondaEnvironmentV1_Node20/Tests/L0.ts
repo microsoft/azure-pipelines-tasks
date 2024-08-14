@@ -15,12 +15,12 @@ describe('CondaEnvironment L0 Suite', function () {
         require('./L0_conda_internal');
     });
 
-    it('succeeds when creating and activating an environment', function(done) {
+    it('succeeds when creating and activating an environment', async function() {
         this.timeout(4000);
         const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
-        testRunner.run();
+        await testRunner.runAsync();
 
         if (getPlatform() === Platform.Windows) {
             assert(testRunner.ran('conda create --quiet --prefix \\userprofile\\.conda\\envs\\test --mkdir --yes'));
@@ -30,14 +30,13 @@ describe('CondaEnvironment L0 Suite', function () {
 
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-        done();
     });
 
-    it('succeeds when using the `base` environment', function(done) {
+    it('succeeds when using the `base` environment', async function() {
         const testFile = path.join(__dirname, 'L0BaseEnvironment.js');
         const testRunner = new MockTestRunner(testFile);
 
-        testRunner.run();
+        await testRunner.runAsync();
 
         if (getPlatform() === Platform.Windows) {
             assert(testRunner.ran('conda install python=3 --quiet --yes --json'));
@@ -47,17 +46,15 @@ describe('CondaEnvironment L0 Suite', function () {
 
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-        done();
     });
 
-    it('fails when a Conda installation is not found', function(done) {
+    it('fails when a Conda installation is not found', async function() {
         const testFile = path.join(__dirname, 'L0CondaNotFound.js');
         const testRunner = new MockTestRunner(testFile);
 
-        testRunner.run();
+        await testRunner.runAsync();
 
         assert(testRunner.createdErrorIssue('loc_mock_CondaNotFound'));
         assert(testRunner.failed, 'task should have failed');
-        done();
     });
 });
