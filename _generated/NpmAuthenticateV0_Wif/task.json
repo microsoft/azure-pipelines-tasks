@@ -22,7 +22,7 @@
     {
       "name": "workloadIdentityServiceConnection",
       "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. Credentials for registries outside this organization/collection and registries in npmrc are ignored.",
+      "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatable.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
