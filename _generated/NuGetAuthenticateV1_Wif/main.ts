@@ -27,7 +27,9 @@ async function main(): Promise<void> {
             federatedFeedAuthSuccessCount++;
             
             return;
-        }   
+        }  else if (feedUrl || entraWifServiceConnectionName) {
+            throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
+        }
 
         // Configure the credential provider for both same-organization feeds and service connections
         var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
