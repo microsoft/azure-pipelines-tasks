@@ -124,7 +124,7 @@ describe('Bash Suite', function () {
 
     it('BASH_ENV - set environment variable', async () => {
         delete process.env['BASH_ENV'];
-        process.env['DISTRIBUTEDTASK_TASKS_NODE_SKIPDEBUGLOGSWHENDEBUGMODEOFF'] = 'false';
+        process.env['SYSTEM_DEBUG'] = 'true';
 
         const testPath: string = path.join(__dirname, 'L0SetBashEnv.js');
         const taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
@@ -139,7 +139,7 @@ describe('Bash Suite', function () {
 
     it('BASH_ENV - override environment variable', async () => {
         process.env['BASH_ENV'] = 'some/custom/path';
-        process.env['DISTRIBUTEDTASK_TASKS_NODE_SKIPDEBUGLOGSWHENDEBUGMODEOFF'] = 'false';
+        process.env['SYSTEM_DEBUG'] = 'true';
 
         const testPath: string = path.join(__dirname, 'L0SetBashEnv.js');
         const taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
