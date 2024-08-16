@@ -6,7 +6,6 @@
   "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required. All other inputs are ignored.",
   "loc.input.label.artifactsFeeds": "Feeds",
-  "loc.input.help.artifactsFeeds": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
   "loc.input.label.mavenServiceConnections": "Credentials for repositories outside this organization/collection",
   "loc.input.help.mavenServiceConnections": "Credentials to use for external repositories located in the project's pom.xml.",
   "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
