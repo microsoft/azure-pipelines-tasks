@@ -21,8 +21,8 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -32,8 +32,8 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts URL",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -41,16 +41,16 @@
     {
       "name": "forceReinstallCredentialProvider",
       "type": "boolean",
-      "label": "Reinstall the credential provider even if already installed",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
       "defaultValue": "false",
-      "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
     },
     {
       "name": "nuGetServiceConnections",
       "type": "connectedService:ExternalNuGetFeed",
-      "label": "Service connection credentials for feeds outside this organization",
+      "label": "ms-resource:loc.input.label.nuGetServiceConnections",
       "required": false,
-      "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "True"
