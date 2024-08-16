@@ -24,7 +24,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
-      "helpMarkdown": "Select one or multiple feeds to authenticate.",
+      "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
       "properties": {
         "EditableOptions": "true",
         "MultiSelectFlatList": "true"
@@ -70,6 +70,7 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
     "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
+    "Warning_TokenNotGenerated": "ms-resource:loc.messages.Warning_TokenNotGenerated",
     "Info_GeneratingExternalRepositories": "ms-resource:loc.messages.Info_GeneratingExternalRepositories",
     "Info_GeneratingInternalFeeds": "ms-resource:loc.messages.Info_GeneratingInternalFeeds",
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",

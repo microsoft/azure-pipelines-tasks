@@ -16,7 +16,7 @@
         "type": "pickList",
         "label": "ms-resource:loc.input.label.artifactsFeeds",
         "defaultValue": "",
-        "helpMarkdown": "Select one or multiple feeds to authenticate.",
+        "helpMarkdown": "ms-resource:loc.input.help.artifactsFeeds",
         "properties": {
           "EditableOptions": "true",
           "MultiSelectFlatList": "true"

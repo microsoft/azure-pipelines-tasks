@@ -3,7 +3,7 @@
       {
         "name": "workloadIdentityServiceConnection",
         "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-        "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, feedUrl is required. All other inputs are ignored.",
+        "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, the input mavenServiceConnections will be ignored.",
         "type": "connectedService:workloadidentityuser",
         "required": false,
         "properties": {
@@ -16,7 +16,7 @@
         "type": "pickList",
         "label": "Feeds",
         "defaultValue": "",
-        "helpMarkdown": "Select one or multiple feeds to authenticate.",
+        "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
         "properties": {
           "EditableOptions": "true",
           "MultiSelectFlatList": "true"

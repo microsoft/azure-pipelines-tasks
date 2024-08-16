@@ -53,20 +53,15 @@ async function run(): Promise<void> {
         const feedIdNames = tl.getDelimitedInput("artifactsFeeds", ',');
 
         if (entraWifServiceConnectionName) {
+
+            if (feedIdNames.length === 0) {
+                tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            }
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
             let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
             
             if (token) {
-
-                const centralElement = {
-                    id: 'central',
-                    username: 'CentralBuildWIF',
-                    password: token
-                }
-
-                settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, centralElement);
-                federatedFeedAuthSuccessCount++;
 
                 for (let feedName of feedIdNames) {
                     const wifServerElement = {
@@ -85,7 +80,7 @@ async function run(): Promise<void> {
 
             }
             else {
-                throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
+                tl.warning(tl.loc("Warning_TokenNotGenerated"));
             }
             return;
         }
