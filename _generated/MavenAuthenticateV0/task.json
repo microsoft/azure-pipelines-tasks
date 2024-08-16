@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 7
+    "Patch": 10
   },
   "runsOn": [
     "Agent",
@@ -84,8 +84,8 @@
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.244.7",
-    "Node20_229_1": "0.244.8",
-    "wif_242": "0.244.9"
+    "Default": "0.244.10",
+    "Node20_229_1": "0.244.11",
+    "wif_242": "0.244.12"
   }
 }
