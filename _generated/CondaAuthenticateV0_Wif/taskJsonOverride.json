@@ -2,7 +2,7 @@
     "inputs": [
       {
         "name": "workloadIdentityServiceConnection",
-        "label": "Azure DevOps Service Connection",
+        "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
         "helpMarkDown": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
         "type": "connectedService:workloadidentityuser",
         "required": false,
