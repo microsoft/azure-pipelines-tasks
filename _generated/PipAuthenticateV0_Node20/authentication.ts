@@ -25,6 +25,7 @@ export class ExternalAuthInfo
         this.authType = authType;
         this.username = username;
         this.password = password;
+        tl.setSecret(password);
     }
 }
 
