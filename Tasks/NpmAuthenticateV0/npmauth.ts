@@ -173,18 +173,20 @@ async function main(): Promise<void> {
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
                     addedRegistry.push(localURL);
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
-
-                    tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-                    npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
-                    tl.debug(tl.loc('SuccessfulAppend'));
-                    npmrcFile.push(os.EOL + registry.auth + os.EOL);
-                    tl.debug(tl.loc('SuccessfulPush'));
-                    internalFeedSuccessCount++;
-                    
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);                    
                     break;
                 }
             }
+        }
+
+        if (registry) {
+            tl.debug(tl.loc('AddingAuthRegistry', registry.url));
+            npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
+            tl.debug(tl.loc('SuccessfulAppend'));
+            npmrcFile.push(os.EOL + registry.auth + os.EOL);
+            tl.debug(tl.loc('SuccessfulPush'));
+        }
+        else {
             console.log(tl.loc("IgnoringRegistry", registryURL.host));
         }
     }
