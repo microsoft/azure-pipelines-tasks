@@ -7,6 +7,11 @@ import { getPlatform, Platform } from '../taskutil';
 
 describe('CondaEnvironment L0 Suite', function () {
     this.timeout(20000);
+
+    before(() => {
+        process.env['FAIL_DEPRECATED_BUILD_TASK'] = 'false';
+    });
+
     describe('conda.ts', function () {
         require('./L0_conda');
     });
