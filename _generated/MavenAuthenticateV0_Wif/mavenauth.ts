@@ -48,28 +48,37 @@ async function run(): Promise<void> {
             tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
-        
-        const feedUrl = tl.getInput("feedUrl");
-        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
-        if (feedUrl && entraWifServiceConnectionName) {
+        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        const feedIdNames = tl.getDelimitedInput("artifactsFeeds", ',');
+
+        if (entraWifServiceConnectionName) {
             
-            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(feedUrl);
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
+            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
             
             if (token) {
 
-                const feedName = feedUrl.split('/').at(-3);
-                const wifServerElement = {
-                    id: feedName,
-                    username: 'WIFbuild',
+                const centralElement = {
+                    id: 'central',
+                    username: 'CentralBuildWIF',
                     password: token
-                };
+                }
 
-                settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
+                settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, centralElement);
                 federatedFeedAuthSuccessCount++;
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
+
+                for (let feedName of feedIdNames) {
+                    const wifServerElement = {
+                        id: feedName,
+                        username: 'WIFbuild',
+                        password: token
+                    };
+    
+                    settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
+                    federatedFeedAuthSuccessCount++;
+                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
+                }
 
                 tl.debug(tl.loc("Info_WritingToSettingsXml"));
                 await util.jsonToXmlConverter(userSettingsXmlPath, settingsJson);
@@ -80,10 +89,7 @@ async function run(): Promise<void> {
             }
             return;
         }
-        else if (feedUrl || entraWifServiceConnectionName) {
-            throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
-        }
-        
+
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);

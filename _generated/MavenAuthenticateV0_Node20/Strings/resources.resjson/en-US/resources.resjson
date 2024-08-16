@@ -18,6 +18,5 @@
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
   "loc.messages.Error_InvalidServiceConnection": "The service connection for %s is invalid.",
   "loc.messages.Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
-  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty."
+  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
 }

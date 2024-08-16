@@ -47,8 +47,8 @@ async function run(): Promise<void> {
             tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
-        
-        
+
+
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
