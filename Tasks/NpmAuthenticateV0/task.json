@@ -80,7 +80,7 @@
         "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
         "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
         "SkippingParsingNpmrc": "Skipping parsing npmrc",
-        "DuplicateCredentials": "Auth for the registry '%s' was previously set. Ignoring new configuration.",
+        "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
         "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
     }
 }

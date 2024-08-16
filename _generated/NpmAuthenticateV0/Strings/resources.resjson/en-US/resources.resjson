@@ -32,6 +32,6 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
   "loc.messages.MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
   "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc",
-  "loc.messages.DuplicateCredentials": "Auth for the registry '%s' was previously set. Ignoring new configuration.",
+  "loc.messages.DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
   "loc.messages.FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
 }

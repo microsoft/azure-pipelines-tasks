@@ -124,8 +124,8 @@ async function main(): Promise<void> {
             else {
                 endpointsArray.push(registry.url);
                 tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
-                endpointRegistries.push(registry);
             }
+            endpointRegistries.push(registry);
         }));
     }
 
@@ -162,24 +162,23 @@ async function main(): Promise<void> {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
                     if (endpointsArray.includes(localRegistry.url)) {
-                        console.log(tl.loc("FoundEndpointCredentials", registryURL.host));
-                        break;
+                        tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
+                        tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
                     }
-                    else if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                        let localURL = URL.parse(localRegistry.url);
-                        console.log(tl.loc("AddingLocalCredentials"));
-                        registry = localRegistry;
-                        addedRegistry.push(localURL);
-                        npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
+                    let localURL = URL.parse(localRegistry.url);
+                    console.log(tl.loc("AddingLocalCredentials"));
+                    registry = localRegistry;
+                    addedRegistry.push(localURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
 
-                        tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-                        npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
-                        tl.debug(tl.loc('SuccessfulAppend'));
-                        npmrcFile.push(os.EOL + registry.auth + os.EOL);
-                        tl.debug(tl.loc('SuccessfulPush'));
-
-                        break;
-                    }
+                    tl.debug(tl.loc('AddingAuthRegistry', registry.url));
+                    npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
+                    tl.debug(tl.loc('SuccessfulAppend'));
+                    npmrcFile.push(os.EOL + registry.auth + os.EOL);
+                    tl.debug(tl.loc('SuccessfulPush'));
+                    internalFeedSuccessCount++;
+                    
+                    break;
                 }
             }
             console.log(tl.loc("IgnoringRegistry", registryURL.host));
