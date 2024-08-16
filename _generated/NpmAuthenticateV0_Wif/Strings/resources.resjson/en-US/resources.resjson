@@ -4,7 +4,7 @@
   "loc.description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like gulp and Grunt to authenticate with private registries.",
   "loc.instanceNameFormat": "npm Authenticate $(workingFile)",
   "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-  "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatable.",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.input.label.workingFile": ".npmrc file to authenticate",
