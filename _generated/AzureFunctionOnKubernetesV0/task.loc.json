@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -30,6 +30,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AzureFunctionOnKubernetes@0 task is deprecated, please use a newer version of the AzureFunctionOnKubernetes task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "dockerRegistryServiceConnection",
@@ -123,7 +125,7 @@
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_2": "0.238.1"
+    "Default": "0.244.2",
+    "Node20_229_2": "0.244.3"
   }
 }

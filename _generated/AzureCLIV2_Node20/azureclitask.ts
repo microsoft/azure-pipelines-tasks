@@ -139,6 +139,19 @@ export class azureclitask {
                 }
               }
 
+                // only Aggregation error contains array of errors
+                if (toolExecutionError.errors) {
+                    // Iterates through array and log errors separately
+                    toolExecutionError.errors.forEach((error) => {
+                        tl.error(error.message, tl.IssueSource.TaskInternal);
+                    });
+                    
+                    // fail with main message
+                    tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
+                } else {
+                    tl.setResult(tl.TaskResult.Failed, message);
+                }
+
               tl.setResult(tl.TaskResult.Failed, message);
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
@@ -278,6 +291,11 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
+        // since node19 default node's GlobalAgent has timeout 5sec
+        // keepAlive is set to true to avoid creating default node's GlobalAgent
+        const webApiOptions = {
+            keepAlive: true
+        }
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
@@ -286,7 +304,7 @@ export class azureclitask {
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
-        const connection = new WebApi(uri, authHandler);
+        const connection = new WebApi(uri, authHandler, webApiOptions);
         const api: ITaskApi = await connection.getTaskApi();
         const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {

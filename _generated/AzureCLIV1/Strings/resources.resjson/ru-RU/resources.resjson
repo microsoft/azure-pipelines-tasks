@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Задание переменной среды AZURE_CONFIG_DIR: %s",
   "loc.messages.SettingAzureCloud": "Задание активного облака: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion."
 }

@@ -8,6 +8,7 @@
         "AppCenterDistributeV3",
         "AppCenterTestV1",
         "ArchiveFilesV2",
+        "AzureAppConfigurationSnapshotV1",
         "AzureAppServiceManageV0",
         "AzureAppServiceSettingsV1",
         "AzureCLIV1",
@@ -403,5 +404,8 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
+    ],
+    "wif_242": [
+        "PipAuthenticateV1"
     ]
 }

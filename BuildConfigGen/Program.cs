@@ -51,7 +51,8 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_13 = new ConfigRecord(name: nameof(Node20_229_13), constMappingKey: "Node20_229_13", isDefault: false, isNode: true, nodePackageVersion: "^20.11.0", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation };
+            public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242 };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -98,7 +99,6 @@ namespace BuildConfigGen
             else
             {
                 NotNullOrThrow(task, "Task is required");
-                NotNullOrThrow(configs, "Configs is required");
             }
 
             string currentDir = Environment.CurrentDirectory;
@@ -142,7 +142,30 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                    // If config weren't passed, constract specific config for each task, otherwise we might have problems if first task has 2 configs, but the other 1,0 or diffrenet ones
+                    if (configs == null)
+                    {
+                        var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                        if (tasks.ContainsKey(t))
+                        {
+                            var taskMakeOptions = tasks[t];
+                            var taskConfigs = string.Join('|', taskMakeOptions.Configs);
+                            MainUpdateTask(t, taskConfigs!, writeUpdates, currentSprint, debugConfGen);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Config was not found for the task: {t}, skipping");
+                        }
+                    }
+                    else
+                    {
+                        // If configs was passed as arguments, just execute it
+                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                    }
+
+                    if (configs != null)
+                    {
+                    }
                 }
             }
 
@@ -421,10 +444,11 @@ namespace BuildConfigGen
 
                     HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
 
+                    WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
+                    WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
                 }
-
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
 
@@ -650,6 +674,24 @@ namespace BuildConfigGen
             {
                 AddNodehandler(outputTaskNode, config.nodeHandler);
             }
+
+            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+        }
+
+        private static void WriteWIFInputTaskJson(string taskPath, Config.ConfigRecord config, string fileName, bool isLoc)
+        {
+            if (!config.isWif)
+            {
+                return;
+            }
+
+            string taskJsonOverridePath = Path.Combine(taskPath, isLoc ? "taskJsonOverride.loc.json" : "taskJsonOverride.json");
+            JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskJsonOverridePath))!;
+            var clonedArray = JsonNode.Parse(inputTaskNode["inputs"]!.ToJsonString())!.AsArray();
+
+            string outputTaskPath = Path.Combine(taskPath, fileName);
+            JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
+            outputTaskNode["inputs"] = clonedArray;
 
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }

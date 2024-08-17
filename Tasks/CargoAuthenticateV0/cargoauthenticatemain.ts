@@ -79,6 +79,9 @@ async function main(): Promise<void> {
             const registryConfigName = registry.toLocaleUpperCase().replace(/-/g, "_");
             const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
             const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
+            if (tl.getVariable(tokenName)) {
+                tl.debug(tl.loc('ConnectionAlreadySet', registry, tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external' : 'internal'));
+            }
             if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
@@ -92,7 +95,7 @@ async function main(): Promise<void> {
                     }      
                 }
                 // Default to internal registry if no token has been set yet
-                if (!currentRegistry) {
+                if (!currentRegistry && !tl.getVariable(tokenName)) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");

@@ -92,6 +92,7 @@ function getPipelineVariable(variableName: string): string | undefined {
     return !!variable ? variable : undefined;
 }
 
+
 function getInstrumentationKey(appSettings: any): string | undefined {
     let connectionString = appSettings?.properties?.APPLICATIONINSIGHTS_CONNECTION_STRING;
     if (connectionString){

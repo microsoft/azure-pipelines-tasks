@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 243,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -28,6 +28,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "This task is deprecated as this version of the AzureFileCopy task uses a retired version of AzCopy. Use the latest version of the AzureFileCopy task. See https://github.com/Azure/azure-storage-azcopy/blob/main/MigrationGuideV8toV10.md",
   "inputs": [
     {
       "name": "SourcePath",
@@ -313,7 +315,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "3.243.0",
-    "Node20_229_2": "3.243.1"
+    "Default": "3.244.2",
+    "Node20_229_2": "3.244.3"
   }
 }
