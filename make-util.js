@@ -17,7 +17,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -340,7 +340,7 @@ exports.ensureTool = ensureTool;
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
         20: 'v20.14.0',
-        16: 'v16.17.1',
+        16: 'v16.20.2',
         14: 'v14.10.1',
         10: 'v10.24.1',
         6: 'v6.10.3',
