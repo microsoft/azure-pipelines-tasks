@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 10
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
@@ -84,8 +84,8 @@
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.10",
-    "Node20_229_1": "0.244.11",
-    "wif_242": "0.244.12"
+    "Default": "0.244.6",
+    "Node20_229_1": "0.244.7",
+    "wif_242": "0.244.8"
   }
 }
