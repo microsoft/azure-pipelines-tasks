@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 235,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [],
@@ -87,7 +87,7 @@
     "PlatformNotRecognized": "Platform not recognized"
   },
   "_buildConfigMapping": {
-    "Default": "0.235.0",
-    "Node20-225": "0.235.1"
+    "Default": "0.244.0",
+    "Node20-225": "0.244.1"
   }
 }
