@@ -4,6 +4,10 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
+#if WIF
+import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
+
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
 const backupSettingsXmlName: string = "_settings.xml";
@@ -13,16 +17,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
+    let federatedFeedAuthSuccessCount: number = 0;
     try {
-        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
-        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
-        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
-
-        if(newServerElements.length === 0) {
-            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
-            return;
-        }
-
         let userM2FolderPath: string = "";
 
         if (tl.osType().match(/^Win/)) {
@@ -55,6 +51,53 @@ async function run(): Promise<void> {
             tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
 
+#if WIF
+        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        const feedIdNames = tl.getDelimitedInput("artifactsFeeds", ',');
+
+        if (entraWifServiceConnectionName) {
+
+            if (feedIdNames.length === 0) {
+                tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            }
+            
+            tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
+            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
+            
+            if (token) {
+
+                for (let feedName of feedIdNames) {
+                    const wifServerElement = {
+                        id: feedName,
+                        username: 'WIFbuild',
+                        password: token
+                    };
+    
+                    settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
+                    federatedFeedAuthSuccessCount++;
+                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
+                }
+
+                tl.debug(tl.loc("Info_WritingToSettingsXml"));
+                await util.jsonToXmlConverter(userSettingsXmlPath, settingsJson);
+
+            }
+            else {
+                tl.warning(tl.loc("Warning_TokenNotGenerated"));
+            }
+            return;
+        }
+#endif
+
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
+        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
+        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
+
+        if(newServerElements.length === 0) {
+            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            return;
+        }
+
         for (let serverElement of newServerElements) {
             settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);
         };
@@ -68,7 +111,8 @@ async function run(): Promise<void> {
     finally {
         emitTelemetry("Packaging", "MavenAuthenticate", {
             "InternalFeedAuthCount": internalFeedServerElements.length,
-            "ExternalRepoAuthCount": externalServiceEndpointsServerElements.length
+            "ExternalRepoAuthCount": externalServiceEndpointsServerElements.length,
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
         });
     }
 }
