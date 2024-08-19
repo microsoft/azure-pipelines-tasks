@@ -27,19 +27,18 @@ describe('DeleteFiles Suite', function () {
         fs.mkdirSync(testRoot);
     })
 
-    function runValidations(validator: () => void, tr, done) {
+    function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
             validator();
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     }
 
-    it('Deletes multiple nested folders', (done: Mocha.Done) => {
+    it('Deletes multiple nested folders', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'nested');
@@ -58,17 +57,17 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0Nested.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(!fs.existsSync(path.join(root, 'A')));
             assert(!fs.existsSync(path.join(root, 'B')));
             assert(fs.existsSync(path.join(root, 'C')));
             assert(fs.existsSync(path.join(root, 'C', 'dontDelete.txt')));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Deletes files with negate pattern', (done: Mocha.Done) => {
+    it('Deletes files with negate pattern', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'negate');
@@ -81,15 +80,15 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0Negate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(!fs.existsSync(path.join(root, 'A', 'test2.css')));
             assert(fs.existsSync(path.join(root, 'A', 'test1.js')));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Deletes files starting with a dot', (done: Mocha.Done) => {
+    it('Deletes files starting with a dot', async () => {
         const root = path.join(testRoot, 'removeDotFiles');
         fs.mkdirSync(root);
       
@@ -100,15 +99,15 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0RemoveDotFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
       
-        tr.run();
+        await tr.runAsync();
       
         runValidations(() => {
             assert(!fs.existsSync(path.join(root, 'A', '.txt')));
             assert(!fs.existsSync(path.join(root, 'A', '.sample.txt')));
-        }, tr, done);
+        }, tr);
       });
 
-    it('Doesnt delete files starting with a dot', (done: Mocha.Done) => {
+    it('Doesnt delete files starting with a dot', async () => {
         const root = path.join(testRoot, 'DoesntRemoveDotFiles');
         fs.mkdirSync(root);
       
@@ -119,15 +118,15 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0DoesntRemoveDotFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
       
-        tr.run();
+        await tr.runAsync();
       
         runValidations(() => {
             assert(fs.existsSync(path.join(root, 'A', '.txt')));
             assert(fs.existsSync(path.join(root, 'A', '.sample.txt')));
-        }, tr, done);
+        }, tr);
       });
 
-    it('Deletes files using braces statement', (done: Mocha.Done) => {
+    it('Deletes files using braces statement', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'braces');
@@ -142,17 +141,17 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0Braces.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(!fs.existsSync(path.join(root, 'A', 'one.txt')));
             assert(!fs.existsSync(path.join(root, 'A', 'two.txt')));
             assert(fs.existsSync(path.join(root, 'A', 'three.txt')));
             assert(fs.existsSync(path.join(root, 'A', 'four.txt')));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Deletes a single file', (done: Mocha.Done) => {
+    it('Deletes a single file', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'singleFile');
@@ -167,7 +166,7 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0SingleFile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(fs.existsSync(path.join(root, 'A')));
@@ -175,10 +174,10 @@ describe('DeleteFiles Suite', function () {
             assert(fs.existsSync(path.join(root, 'A', 'A')));
             assert(fs.existsSync(path.join(root, 'A', 'A', 'test.txt')));
             assert(fs.existsSync(path.join(root, 'A', 'A', 'test2.txt')));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Removes the source folder if its empty', (done: Mocha.Done) => {
+    it('Removes the source folder if its empty', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'rmSource');
@@ -193,14 +192,14 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0RmSource.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(!fs.existsSync(root));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Doesnt remove folder outside the root', (done: Mocha.Done) => {
+    it('Doesnt remove folder outside the root', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'insideRoot');
@@ -213,14 +212,14 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0OutsideRoot.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(fs.existsSync(path.join(outsideRoot, 'test.txt')));
-        }, tr, done);
+        }, tr);
     });
 
-    it('Removes folder with locked file', (done: Mocha.Done) => {
+    it('Removes folder with locked file', async () => {
         this.timeout(5000);
 
         const root = path.join(testRoot, 'locked');
@@ -233,7 +232,7 @@ describe('DeleteFiles Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
         }
         catch (err) {}
         finally {
@@ -243,6 +242,6 @@ describe('DeleteFiles Suite', function () {
         runValidations(() => {
             assert(!fs.existsSync(path.join(root, 'A')));
             assert(tr.succeeded);
-        }, tr, done);
+        }, tr);
     });
 });

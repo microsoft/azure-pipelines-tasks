@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 2
   },
   "satisfies": [
     "DotNetCore"
@@ -80,7 +80,7 @@
     "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20_229_3": "0.244.1"
+    "Default": "0.244.2",
+    "Node20_229_3": "0.244.3"
   }
 }
