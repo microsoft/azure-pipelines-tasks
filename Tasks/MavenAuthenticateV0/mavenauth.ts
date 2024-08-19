@@ -4,8 +4,6 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
-import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi'
-
 #if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
@@ -55,25 +53,29 @@ async function run(): Promise<void> {
 
 #if WIF
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        const feedIdNames = tl.getDelimitedInput("artifactsFeeds", ',');
 
         if (entraWifServiceConnectionName) {
+
+            if (feedIdNames.length === 0) {
+                tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            }
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
             let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
             
             if (token) {
 
-                const wifServerElements = util.getInternalFeedsServerElements("artifactsFeeds", token)
-
-                if(wifServerElements.length === 0) {
-                    tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
-                    return;
-                }
-
-                for (let serverElement of wifServerElements) {
-                    settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);
+                for (let feedName of feedIdNames) {
+                    const wifServerElement = {
+                        id: feedName,
+                        username: entraWifServiceConnectionName,
+                        password: token
+                    };
+    
+                    settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
                     federatedFeedAuthSuccessCount++;
-                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", serverElement.id));
+                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
                 }
 
                 tl.debug(tl.loc("Info_WritingToSettingsXml"));
@@ -87,7 +89,7 @@ async function run(): Promise<void> {
         }
 #endif
 
-        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds", getSystemAccessToken());
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
