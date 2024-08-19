@@ -2,7 +2,9 @@ Param(
     [Parameter(Mandatory = $true)]
     [string]$Dependency,
     [string]$TasksListFilePath = (Join-Path $PSScriptRoot TaskNames.txt),
-    [switch]$BumpTasks
+    [switch]$BumpTasks,
+    [switch]$UpdateBuildConfigs,
+    [switch]$ExactVersion
 )
 
 Set-StrictMode -Version 3.0
@@ -53,33 +55,48 @@ try {
 
         $taskPath = Join-Path $repositoryRoot Tasks $taskName
 
+        ## Verify it's a node.js task
+        if(-not (Test-Path (Join-Path $taskPath package.json))) {
+            Write-Error "package.json not found for task $taskName. Verify it's a node.js task" -ErrorAction Stop
+        }
+
         Set-Location $taskPath
-        npm i "$Dependency"
+        $npmArgs = @('install', "$Dependency")
+        if ($ExactVersion) {
+            $npmArgs += , '--save-exact'
+        }
+        npm $npmArgs
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Failed to install $Dependency for $taskName" -ErrorAction Stop
         }
 
-        ## Updating target dependency in build configs
-        $buildConfigsDir = Get-ChildItem | Where-Object { $_.Name -eq '_buildConfigs' }
-        if ($buildConfigsDir) {
-            Write-Host "Bumping dependency in task $taskName build configs" -ForegroundColor Cyan
-            $buildConfigs = Get-ChildItem (Join-Path $taskPath _buildConfigs) | ForEach-Object { $_.Name }
-            $buildConfigsCount = $buildConfigs | Measure-Object | Select-Object -ExpandProperty Count
-            if ($buildConfigsCount -eq 0) {
-                Write-Host "No build configs found for task $taskName" -ForegroundColor Cyan
-                continue
-            }
+        if ($UpdateBuildConfigs) {
+            ## Updating target dependency in build configs
+            $buildConfigsDir = Get-ChildItem | Where-Object { $_.Name -eq '_buildConfigs' }
+            if ($buildConfigsDir) {
+                Write-Host "Bumping dependency in task $taskName build configs" -ForegroundColor Cyan
+                $buildConfigs = Get-ChildItem (Join-Path $taskPath _buildConfigs) | ForEach-Object { $_.Name }
+                $buildConfigsCount = $buildConfigs | Measure-Object | Select-Object -ExpandProperty Count
+                if ($buildConfigsCount -eq 0) {
+                    Write-Host "No build configs found for task $taskName" -ForegroundColor Cyan
+                    continue
+                }
 
-            $task.IsBuildConfigPresent = $true
+                $task.IsBuildConfigPresent = $true
 
-            foreach ($buildConfigName in $buildConfigs) {
-                $buildConfigPath = Join-Path $taskPath _buildConfigs $buildConfigName
+                foreach ($buildConfigName in $buildConfigs) {
+                    $buildConfigPath = Join-Path $taskPath _buildConfigs $buildConfigName
 
-                Write-Host "Installing $Dependency for task $taskName buidconfig $buildConfigName" -ForegroundColor Cyan
-                Set-Location $buildConfigPath
-                npm i "$Dependency"
-                if ($LASTEXITCODE -ne 0) {
-                    Write-Error "Failed to install $Dependency for buildconfig $buildConfigName of task $taskName" -ErrorAction Stop
+                    Write-Host "Installing $Dependency for task $taskName buidconfig $buildConfigName" -ForegroundColor Cyan
+                    Set-Location $buildConfigPath
+                    $npmArgs = @('install', "$Dependency")
+                    if ($ExactVersion) {
+                        $npmArgs += , '--save-exact'
+                    }
+                    npm $npmArgs
+                    if ($LASTEXITCODE -ne 0) {
+                        Write-Error "Failed to install $Dependency for buildconfig $buildConfigName of task $taskName" -ErrorAction Stop
+                    }
                 }
             }
         }
@@ -141,9 +158,11 @@ try {
 
     Write-Host "Building tasks $tasks" -ForegroundColor Cyan
     $tasksPattern = '@(' + (($tasks | ForEach-Object { $_.Name } ) -join '|') + ')'
+
+    Set-Location $repositoryRoot
     node make build --task "$tasksPattern"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Failed to Bump tasks $tasks" -ErrorAction Stop
+        Write-Error "Failed to build tasks $tasks" -ErrorAction Stop
     }
 }
 finally {
