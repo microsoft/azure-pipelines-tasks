@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 5
+    "Minor": 244,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -60,7 +60,7 @@
     "ConnectionAlreadySet": "%s registry is already set for an %s connection"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.0",
-    "Node20_229_1": "0.243.5"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1"
   }
 }

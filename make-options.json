@@ -406,6 +406,7 @@
         "PublishSymbolsV2"
     ],
     "wif_242": [
+        "NpmAuthenticateV0",
         "PipAuthenticateV1",
         "NuGetAuthenticateV1",
         "MavenAuthenticateV0"
