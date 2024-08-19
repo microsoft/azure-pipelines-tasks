@@ -27,7 +27,7 @@
     "@types/node": "^16.11.39",
     "@types/q": "^1.0.7",
     "@types/semver": "6.0.1",
-    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tool-lib": "^2.0.0-preview",
     "semver": "6.3.0",
     "typed-rest-client": "1.8.9"
