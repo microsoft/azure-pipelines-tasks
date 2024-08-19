@@ -14,5 +14,5 @@
   "loc.messages.AuthenticatingThisConfigToml": "Добавление проверки подлинности для реестра, указанного в этом файле config.toml в %s.",
   "loc.messages.AddingAuthRegistry": "Добавление проверки подлинности для реестра %s с именем токена %s.",
   "loc.messages.AddingAuthExternalRegistry": "Добавление проверки подлинности для внешнего реестра %s с именем токена %s.",
-  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
+  "loc.messages.ConnectionAlreadySet": "В реестре %s уже задано подключение %s."
 }

@@ -10,7 +10,7 @@
   "loc.input.help.azureSubscription": "Выберите подписку Azure Resource Manager для развертывания.",
   "loc.input.label.appType": "Тип приложения",
   "loc.input.help.appType": "Выберите тип приложения-функции Azure для развертывания.",
-  "loc.input.label.isFlexConsumption": "Is Function App on Flex Consumption Plan",
+  "loc.input.label.isFlexConsumption": "Находится ли приложение-функция в плане потребления Flex",
   "loc.input.label.appName": "Имя приложения Функций Azure",
   "loc.input.help.appName": "Введите или выберите имя существующего приложения \"Функции Azure\". Приложения-функции будут перечислены в зависимости от выбранного типа приложения.",
   "loc.input.label.deployToSlotOrASE": "Развернуть в слоте или среде службы приложений",
@@ -26,7 +26,7 @@
   "loc.input.label.appSettings": "Параметры приложений",
   "loc.input.help.appSettings": "Измените параметры веб-приложения после значения -key в синтаксисе. Значение с пробелами должно быть заключено в двойные кавычки.<br /> <b>Пример</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "Метод развертывания",
-  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.",
+  "loc.input.help.deploymentMethod": "Выберите метод развертывания для приложения-функции. Обратите внимание, что приложения потребления Linux и Flex не поддерживают эту конфигурацию.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Указан недопустимый путь к пакету службы приложений или папке: %s",
   "loc.messages.SetParamFilenotfound0": "Заданный файл параметров не найден: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML-преобразования успешно применены.",
@@ -178,5 +178,5 @@
   "loc.messages.SyncFunctionTriggersSuccess": "Синхронизация триггеров для приложения-функции успешно завершена.",
   "loc.messages.UpdatedRunFromPackageSettings": "Параметр приложения WEBSITE_RUN_FROM_PACKAGE изменен на %s",
   "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "Параметр \"Тип развертывания\" не применяется для Потребление Linux.",
-  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "Параметр \"Тип развертывания\" не применяется для потребления Flex."
 }

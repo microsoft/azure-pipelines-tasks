@@ -24,7 +24,7 @@
   "loc.messages.NoPypircFile": "Aucun fichier .pypirc à nettoyer.",
   "loc.messages.VariableSetForPypirc": "La variable d'environnement de .pypirc sur %s est définie.",
   "loc.messages.Info_RemovingPypircFile": "Suppression du fichier .pypirc de %s",
-  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
-  "loc.messages.NoRepoFound": "No repo url found under %s",
-  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
+  "loc.messages.DuplicateRegistry": "%s registre est déjà authentifié",
+  "loc.messages.NoRepoFound": "URL de dépôt introuvable sous %s",
+  "loc.messages.DuplicateRepoUrl": "Le dépôt avec l’URL de dépôt %s existe déjà et est authentifié"
 }
