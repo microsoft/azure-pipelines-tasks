@@ -70,5 +70,6 @@
   "loc.messages.UnableToIndexSources": "Non è possibile indicizzare le origini.",
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La libreria dbghelp.dll è già stata caricata da un percorso imprevisto. Percorso previsto: '{0}'. Percorso effettivo: '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "Il provider di origine '{0}' non è supportato per l'indicizzazione origine.",
-  "loc.messages.Win32Error0FromMethod1": "È stato rilevato l'errore Win32 '{0}' restituito dal metodo '{1}'."
+  "loc.messages.Win32Error0FromMethod1": "È stato rilevato l'errore Win32 '{0}' restituito dal metodo '{1}'.",
+  "loc.messages.NodeVersionSupport": "Il nodo v{0} non è più supportato a partire dal 31/08/2024. Aggiornare l'agente della pipeline alla versione più recente per Node 16 o versione successiva."
 }
