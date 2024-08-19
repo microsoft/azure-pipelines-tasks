@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -24,6 +24,10 @@
     },
     "Node16": {
       "target": "condaauthenticatemain.js"
+    },
+    "Node20_1": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -33,6 +37,19 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
+  "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    }
+  ],
   "_buildConfigMapping": {
     "Default": "0.244.0",
     "Node20_229_1": "0.244.1",
