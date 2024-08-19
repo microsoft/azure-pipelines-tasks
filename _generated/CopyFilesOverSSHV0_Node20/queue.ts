@@ -30,7 +30,7 @@ export default class Queue extends EventEmitter {
     this.delay = options.delay || 50;
   }
 
-  enqueue(jobs) {
+  enqueue(jobs: IJob[]) {
     this.jobs.push(...jobs);
     this.start();
   }

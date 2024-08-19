@@ -113,7 +113,7 @@ function prepareFiles(filesToCopy: string[], sourceFolder: string, targetFolder:
             targetPath = `./${targetPath}`;
         }
 
-        return [ x, utils.unixyPath(targetPath) ];
+        return [x, utils.unixyPath(targetPath)];
     });
 }
 
@@ -290,7 +290,7 @@ async function newRun() {
     });
 
     q.enqueue(preparedFiles.map((pathTuple) => {
-        const [ filepath, targetPath ] = pathTuple;
+        const [filepath, targetPath] = pathTuple;
 
         return {
             filepath,
@@ -320,12 +320,17 @@ async function newRun() {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc('CopyCompleted', successfullyCopiedFilesCount));
         } else {
             tl.debug(`Errors count ${errors.length}`);
-            errors.forEach(tl.error);
+            errors.forEach((err) => tl.error(err));
             tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', errors.length));
         }
     });
-    q.on(QueueEvents.ERROR, (error, filepath) => {
-        errors.push(tl.loc('FailedOnFile', filepath, error.message));
+    q.on(QueueEvents.ERROR, (error: unknown, filepath) => {
+        if (error instanceof Error) {
+            errors.push(tl.loc('FailedOnFile', filepath, error.message));
+        }
+        else {
+            errors.push(tl.loc('FailedOnFile', filepath, error));
+        }
     });
 }
 
@@ -484,9 +489,9 @@ if (tl.getBoolFeatureFlag('COPYFILESOVERSSHV0_USE_QUEUE')) {
     run().then(() => {
         tl.debug('Task successfully accomplished');
     })
-    .catch(err => {
-        tl.debug('Run was unexpectedly failed due to: ' + err);
-    });
+        .catch(err => {
+            tl.debug('Run was unexpectedly failed due to: ' + err);
+        });
 }
 
 function getReadyTimeoutVariable(): number {
