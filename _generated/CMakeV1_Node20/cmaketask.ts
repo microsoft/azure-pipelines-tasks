@@ -24,9 +24,15 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('CMakeReturnCode', code));
     }
     catch (err) {
-        tl.error(err.message);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('CMakeFailed', err.message));
-    }    
+        if (err instanceof Error) {
+            tl.error(err.message);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('CMakeFailed', err.message));
+        }
+        else {
+            tl.error(err + '');
+            tl.setResult(tl.TaskResult.Failed, err + '' || 'run() failed', true);
+        }
+    }
 }
 
 run();
