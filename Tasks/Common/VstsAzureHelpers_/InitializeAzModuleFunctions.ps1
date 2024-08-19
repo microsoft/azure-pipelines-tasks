@@ -32,7 +32,7 @@ function Initialize-AzModule {
             if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                 Write-Verbose "Supressing breaking changes warnings of Az module."
                 Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
-                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
+                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
             } else {
                 Write-Verbose "Update-AzConfig cmdlet is not available."
             }                          
