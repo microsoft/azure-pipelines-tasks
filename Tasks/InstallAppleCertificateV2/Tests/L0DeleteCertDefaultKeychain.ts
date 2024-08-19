@@ -11,8 +11,8 @@ tr.setInput('keychain', 'default');
 tr.setInput('deleteCert', 'true');
 
 process.env['AGENT_VERSION'] = '2.116.0';
-process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/usr/lib/login.keychain';
-process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_SHA1HASH'] = 'SHA1HASHOFP12CERTIFICATE';
+process.env['VSTS_TASKVARIABLE_KEYCHAINPATH'] = '/usr/lib/login.keychain';
+process.env['VSTS_TASKVARIABLE_CERTIFICATESHA1HASH'] = 'SHA1HASHOFP12CERTIFICATE';
 process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
