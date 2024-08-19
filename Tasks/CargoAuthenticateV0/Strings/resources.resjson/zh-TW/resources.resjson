@@ -14,5 +14,5 @@
   "loc.messages.AuthenticatingThisConfigToml": "為在 %s 的 config.toml 檔案中列出的登錄新增驗證",
   "loc.messages.AddingAuthRegistry": "正在新增登錄的驗證: 具有權杖名稱的 %s: %s",
   "loc.messages.AddingAuthExternalRegistry": "正在新增外部登錄的驗證: 具有權杖名稱的 %s: %s",
-  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
+  "loc.messages.ConnectionAlreadySet": "已為 %s 連線設定 %s 登錄"
 }

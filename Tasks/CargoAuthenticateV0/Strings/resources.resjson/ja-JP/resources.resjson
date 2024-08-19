@@ -14,5 +14,5 @@
   "loc.messages.AuthenticatingThisConfigToml": "%s にあるこの config.toml ファイルにリストされているレジストリの認証を追加しています",
   "loc.messages.AddingAuthRegistry": "レジストリの認証を追加しています: %s (トークン名: %s)",
   "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)",
-  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
+  "loc.messages.ConnectionAlreadySet": "%s レジストリは %s 接続に対して既に設定されています"
 }
