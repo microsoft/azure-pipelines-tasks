@@ -406,6 +406,8 @@
         "PublishSymbolsV2"
     ],
     "wif_242": [
-        "PipAuthenticateV1"
+        "NpmAuthenticateV0",
+        "PipAuthenticateV1",
+        "NuGetAuthenticateV1"
     ]
 }
