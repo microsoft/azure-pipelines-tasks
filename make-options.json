@@ -407,6 +407,7 @@
     ],
     "wif_242": [
         "PipAuthenticateV1",
+        "NuGetAuthenticateV1",
         "MavenAuthenticateV0"
     ]
 }
