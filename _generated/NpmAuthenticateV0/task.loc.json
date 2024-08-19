@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 244,
     "Patch": 0
   },
   "runsOn": [
@@ -74,10 +74,18 @@
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
     "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
-    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
+    "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc",
+    "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
+    "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.0",
-    "Node20_229_1": "0.243.1"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1",
+    "wif_242": "0.244.2"
   }
 }
