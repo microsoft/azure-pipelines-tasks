@@ -10,7 +10,7 @@
   "loc.input.help.azureSubscription": "Wählen Sie das Azure Resource Manager-Abonnement für die Bereitstellung aus.",
   "loc.input.label.appType": "App-Typ",
   "loc.input.help.appType": "Wählen Sie den Azure Functions-App-Typ für die Bereitstellung aus.",
-  "loc.input.label.isFlexConsumption": "Is Function App on Flex Consumption Plan",
+  "loc.input.label.isFlexConsumption": "Ist Funktions-App im Flex-Verbrauchsplan",
   "loc.input.label.appName": "Name der Azure Functions-App",
   "loc.input.help.appName": "Geben Sie den Namen einer vorhandenen Azure Functions-App ein, oder wählen Sie diesen aus. Die aufgeführten Funktions-Apps basieren auf dem ausgewählten App-Typ.",
   "loc.input.label.deployToSlotOrASE": "In Slot oder App Service-Umgebung bereitstellen",
@@ -26,7 +26,7 @@
   "loc.input.label.appSettings": "App-Einstellungen",
   "loc.input.help.appSettings": "Bearbeiten Sie Web-App-Anwendungseinstellungen entsprechend der Syntax \"-Schlüssel Wert\". Ein Wert mit Leerzeichen muss in doppelte Anführungszeichen eingeschlossen werden. <br /> <b>Beispiel</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "Bereitstellungsmethode",
-  "loc.input.help.deploymentMethod": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration.",
+  "loc.input.help.deploymentMethod": "Wählen Sie die Bereitstellungsmethode für Ihre Funktions-App aus. Beachten Sie, dass Linux- und Flex-Verbrauch-Apps diese Konfiguration nicht unterstützen.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Ungültiges App Service-Paket oder ungültiger App Service-Ordnerpfad angegeben: %s",
   "loc.messages.SetParamFilenotfound0": "Datei zum Festlegen der Parameter nicht gefunden: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Die XML-Transformationen wurden erfolgreich angewendet.",
@@ -178,5 +178,5 @@
   "loc.messages.SyncFunctionTriggersSuccess": "Die Triggersynchronisierung für die Funktions-App wurde erfolgreich abgeschlossen.",
   "loc.messages.UpdatedRunFromPackageSettings": "Die WEBSITE_RUN_FROM_PACKAGE-Anwendungseinstellung wurde auf \"%s\" aktualisiert.",
   "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "Die Option \"Bereitstellungstyp\" gilt nicht für Linux-Verbrauch.",
-  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "The Deployment Type option does not apply for Flex Consumption."
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "Die Option \"Bereitstellungstyp\" gilt nicht für Flex-Verbrauch."
 }

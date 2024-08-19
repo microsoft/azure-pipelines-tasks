@@ -14,5 +14,5 @@
   "loc.messages.AuthenticatingThisConfigToml": "Agregando autenticación para el Registro que aparece en este archivo config.toml en %s",
   "loc.messages.AddingAuthRegistry": "Agregando autenticación para el registro: %s con nombre de token: %s",
   "loc.messages.AddingAuthExternalRegistry": "Agregando autenticación para el registro externo: %s con nombre de token: %s",
-  "loc.messages.ConnectionAlreadySet": "%s registry is already set for an %s connection"
+  "loc.messages.ConnectionAlreadySet": "El registro %s ya está establecido para una conexión %s"
 }
