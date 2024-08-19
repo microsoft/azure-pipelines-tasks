@@ -66,7 +66,7 @@ async function run(): Promise<void> {
                 for (let feedName of feedIdNames) {
                     const wifServerElement = {
                         id: feedName,
-                        username: 'WIFbuild',
+                        username: entraWifServiceConnectionName,
                         password: token
                     };
     
