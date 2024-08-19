@@ -408,6 +408,7 @@
     "wif_242": [
         "NpmAuthenticateV0",
         "PipAuthenticateV1",
+        "CondaAuthenticateV0",
         "NuGetAuthenticateV1"
     ]
 }
