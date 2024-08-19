@@ -7,9 +7,7 @@ import * as auth from "./authentication";
 import * as utils from "./utilities";
 import * as ini from "ini";
 
-#if WIF
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils"
-#endif
 
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
@@ -84,7 +82,6 @@ async function main(): Promise<void> {
             usedRepos.add(connectionObj['repository']);
         }
 
-#if WIF
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
         const feedUrl = tl.getInput("feedUrl");
 
@@ -124,7 +121,6 @@ async function main(): Promise<void> {
         else if (entraWifServiceConnectionName || feedUrl) {
             throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
         }
-#endif
 
         let reposList: string[] = [];
 

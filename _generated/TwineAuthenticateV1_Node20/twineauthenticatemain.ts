@@ -7,6 +7,7 @@ import * as auth from "./authentication";
 import * as utils from "./utilities";
 import * as ini from "ini";
 
+
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
 {
@@ -35,6 +36,7 @@ async function main(): Promise<void> {
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;
+    let federatedFeedSuccessCount: number = 0;
     try {
         // Local feed
         const internalFeed = await auth.getInternalAuthInfoArray("artifactFeed");
@@ -47,105 +49,101 @@ async function main(): Promise<void> {
 
         let pypircPath = utils.getPypircPath();
 
-        // create new file. We do not merge existing files and always create a fresh file
-        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH"))) {
-            fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
+        // create new .pypirc file if one does not exist yet
+        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH")) || !tl.exist(pypircPath)) {
+            fs.writeFileSync(pypircPath, '', 'utf8');
             tl.setVariable("PYPIRC_PATH", pypircPath, false);
             tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
         }
-        else {
-            pypircPath = tl.getVariable("PYPIRC_PATH");
-            const pypirc = fs.readFileSync(pypircPath, 'utf8');
-            let fileContent = ini.parse(pypirc);
+        //else {
+        const pypirc = fs.readFileSync(pypircPath, 'utf8');
 
-            let usedRepos = new Set<string>();
+        let fileContent = ini.parse(pypirc);
 
-            for (let connection in fileContent) {
+        let usedRepos = new Set<string>();
 
-                const connectionObj: object = fileContent[connection];
+        for (let connection in fileContent) {
 
-                if (!connectionObj.hasOwnProperty('repository')) {
-                    const authenticatedRepo = getNestedRepoProperty(connectionObj);
+            const connectionObj: object = fileContent[connection];
 
-                    if (authenticatedRepo === undefined) {
-                        tl.warning(tl.loc("NoRepoFound", connection));
-                        continue;
-                    }
+            if (!connectionObj.hasOwnProperty('repository')) {
+                const authenticatedRepo = getNestedRepoProperty(connectionObj);
 
-                    usedRepos.add(authenticatedRepo);
+                if ((authenticatedRepo === undefined) && (connection.toLocaleLowerCase() !== 'distutils')) {
+                    tl.warning(tl.loc("NoRepoFound", connection));
                     continue;
                 }
 
-                usedRepos.add(connectionObj['repository']);
+                usedRepos.add(authenticatedRepo);
+                continue;
             }
 
-            let reposList: string[] = [];
-
-            for (let entry of newEndpointsToAdd) {
-
-                tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
-
-                if (entry.packageSource.feedName in fileContent){
-                    tl.warning(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
-                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
-                    continue;
-                }
-
-                let repo = new Repository(
-                    entry.packageSource.feedName,
-                    entry.packageSource.feedUri,
-                    entry.username,
-                    entry.password
-                );
-
-                if (usedRepos.has(repo.repository)) {
-                    tl.warning(tl.loc("DuplicateRepoUrl", repo.repository));
-                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
-                    continue;
-                }
-
-                reposList.push(repo.toString() + `${os.EOL}`);
-
-                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
-            }
-
-            let encodedStr = ini.encode(fileContent);
-            fs.writeFileSync(pypircPath, encodedStr);
-
-            fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
-
-            for (let repo of reposList) {
-                fs.appendFileSync(pypircPath, repo, 'utf8');
-            }
+            usedRepos.add(connectionObj['repository']);
         }
+
+
+        let reposList: string[] = [];
+
+        for (let entry of newEndpointsToAdd) {
+
+            let repo = new Repository(
+                entry.packageSource.feedName,
+                entry.packageSource.feedUri,
+                entry.username,
+                entry.password
+            );
+
+            if ((entry.packageSource.feedName in fileContent) || (usedRepos.has(repo.repository))) {
+                console.log(tl.loc("Warning_DuplicateEntryForFeed", entry.packageSource.feedName, repo.repository));
+
+                if (internalFeed.has(entry)) {
+                    internalFeed.delete(entry);
+                    continue;
+                }
+
+                externalEndpoints.delete(entry);
+                continue;
+            }
+
+            tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
+            reposList.push(repo.toString() + `${os.EOL}`);
+            
+            (!fileContent.hasOwnProperty("distutils") || !fileContent["distutils"].hasOwnProperty("index-servers")) ?
+                fileContent["distutils"] = {["index-servers"]: `${entry.packageSource.feedName}`} : 
+                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
+        }
+
+        let encodedStr = ini.encode(fileContent);
+        fs.writeFileSync(pypircPath, encodedStr);
+
+        fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
+
+        for (let repo of reposList) {
+            fs.appendFileSync(pypircPath, repo, 'utf8');
+        }
+        //}
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.size;
         externalFeedSuccessCount = externalEndpoints.size;
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
         emitTelemetry("Packaging", "TwineAuthenticateV1", {
             "InternalFeedAuthCount": internalFeedSuccessCount,
             "ExternalFeedAuthCount": externalFeedSuccessCount,
+            "FederatedFeedAuthCount": federatedFeedSuccessCount,
         });
     }
 }
 
 function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
     return array.filter((e, i, a) => a.indexOf(e) !== i);
-}
-
-function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints: Set<auth.AuthInfo>, entry: auth.AuthInfo): void {
-    if (internalFeed.has(entry)) {
-        internalFeed.delete(entry);
-        return;
-    }
-    externalEndpoints.delete(entry);
 }
 
 function getNestedRepoProperty(connection: object): string | undefined {
@@ -158,29 +156,6 @@ function getNestedRepoProperty(connection: object): string | undefined {
         }
     }
     return undefined;
-}
-
-// only used for new file writes.
-function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string{
-    const authInfo = Array.from(authInfoSet);
-    let feedNames = authInfo.map(entry => entry.packageSource.feedName);
-    let duplicateFeeds = findDuplicatesInArray<string>(feedNames);
-
-    if (duplicateFeeds.length > 0) {
-        throw new Error(tl.loc("Error_DuplicateEntryForFeed", duplicateFeeds.join(", ")));
-    }
-
-    feedNames.forEach(feedName =>
-        console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
-    let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
-    header += `${os.EOL}`
-
-    let repositories = authInfo.map(entry => 
-        new Repository(entry.packageSource.feedName, entry.packageSource.feedUri, 
-            entry.username, entry.password));
-    let repositoriesEncodedStr = repositories.map(repo => repo.toString()).join(os.EOL);
-
-    return header + os.EOL + repositoriesEncodedStr;
 }
 
 main();

@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 1
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -94,15 +94,15 @@
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "Warning_OnlyOneFeedAllowed": "ms-resource:loc.messages.Warning_OnlyOneFeedAllowed",
     "Warning_OnlyOneServiceConnectionAllowed": "ms-resource:loc.messages.Warning_OnlyOneServiceConnectionAllowed",
-    "Error_DuplicateEntryForFeed": "ms-resource:loc.messages.Error_DuplicateEntryForFeed",
+    "Warning_DuplicateEntryForFeed": "ms-resource:loc.messages.Warning_DuplicateEntryForFeed",
+    "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth",
+    "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry",
-    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound",
-    "DuplicateRepoUrl": "ms-resource:loc.messages.DuplicateRepoUrl"
+    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound"
   },
   "postjobexecution": {
     "Node10": {
@@ -119,7 +119,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_1": "1.244.1"
+    "Default": "1.244.3",
+    "Node20_229_1": "1.244.4",
+    "wif_242": "1.244.5"
   }
 }

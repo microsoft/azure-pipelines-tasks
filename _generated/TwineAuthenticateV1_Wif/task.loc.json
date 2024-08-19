@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 3
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -31,6 +31,27 @@
     }
   ],
   "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    },
     {
       "name": "artifactFeed",
       "aliases": [
@@ -78,6 +99,10 @@
     "Node16": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -106,6 +131,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }
