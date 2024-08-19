@@ -4,6 +4,8 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
+import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi'
+
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
@@ -49,7 +51,7 @@ async function run(): Promise<void> {
         }
 
 
-        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds", getSystemAccessToken());
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
