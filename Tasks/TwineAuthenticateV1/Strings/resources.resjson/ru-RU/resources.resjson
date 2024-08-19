@@ -24,7 +24,7 @@
   "loc.messages.NoPypircFile": "Отсутствует файл PYPIRC для очистки.",
   "loc.messages.VariableSetForPypirc": "Задана переменная среды для PYPIRC в %s.",
   "loc.messages.Info_RemovingPypircFile": "Удаление файла PYPIRC из %s",
-  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
-  "loc.messages.NoRepoFound": "No repo url found under %s",
-  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
+  "loc.messages.DuplicateRegistry": "В реестре %s уже выполнена проверка подлинности",
+  "loc.messages.NoRepoFound": "URL-адрес репозитория не найден в %s",
+  "loc.messages.DuplicateRepoUrl": "Репозиторий с URL-адресом %s уже существует, и для него выполнена проверка подлинности"
 }

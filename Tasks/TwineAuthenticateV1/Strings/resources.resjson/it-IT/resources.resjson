@@ -24,7 +24,7 @@
   "loc.messages.NoPypircFile": "Non è stato trovato alcun file con estensione pypirc da pulire.",
   "loc.messages.VariableSetForPypirc": "La variabile di ambiente per il file con estensione pypirc in %s è stata impostata.",
   "loc.messages.Info_RemovingPypircFile": "Rimozione del file con estensione pypirc da %s",
-  "loc.messages.DuplicateRegistry": "%s registry is already authenticated",
-  "loc.messages.NoRepoFound": "No repo url found under %s",
-  "loc.messages.DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
+  "loc.messages.DuplicateRegistry": "Il Registro di sistema %s è già autenticato",
+  "loc.messages.NoRepoFound": "Nessun URL del repository trovato in %s",
+  "loc.messages.DuplicateRepoUrl": "Il repository con URL del repository %s esiste già ed è autenticato"
 }
