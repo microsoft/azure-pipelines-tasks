@@ -6,5 +6,14 @@
   "loc.input.label.nuGetServiceConnections": "この組織外のフィードへのサービス接続の資格情報",
   "loc.input.help.nuGetServiceConnections": "この組織またはコレクション外のフィードへの NuGet サービス接続名のコンマ区切りリストです。この組織またはコレクション内のフィードの場合は空白のままにします。ビルドの資格情報が自動的に使用されます。",
   "loc.input.label.forceReinstallCredentialProvider": "資格情報プロバイダーが既にインストールされている場合でも再インストールする",
-  "loc.input.help.forceReinstallCredentialProvider": "資格情報プロバイダーがユーザー プロファイルに既にインストールされている場合に、タスクで指定された資格情報プロバイダーでそれを上書きするかどうかを決定します。これにより、資格情報プロバイダーがアップグレード (場合によってはダウングレード) されることがあります。"
+  "loc.input.help.forceReinstallCredentialProvider": "資格情報プロバイダーがユーザー プロファイルに既にインストールされている場合に、タスクで指定された資格情報プロバイダーでそれを上書きするかどうかを決定します。これにより、資格情報プロバイダーがアップグレード (場合によってはダウングレード) されることがあります。",
+  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Unable to get federated credentials from service connection",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Successfully added auth for feed %s."
 }

@@ -6,5 +6,14 @@
   "loc.input.label.nuGetServiceConnections": "Credenziali di connessione al servizio per feed esterni all'organizzazione",
   "loc.input.help.nuGetServiceConnections": "Elenco di nomi di connessione al servizio NuGet delimitato da virgole per i feed esterni a questa organizzazione/raccolta. Per i feed in questa organizzazione/raccolta, lasciare vuoto questo campo. Verranno usate automaticamente le credenziali della compilazione.",
   "loc.input.label.forceReinstallCredentialProvider": "Reinstalla il provider di credenziali anche se è già installato",
-  "loc.input.help.forceReinstallCredentialProvider": "Se il provider di credenziali è già installato nel profilo utente, determina se viene sovrascritto con il provider di credenziali specificato dall'attività. Potrebbe causare l'aggiornamento o il downgrade del provider di credenziali."
+  "loc.input.help.forceReinstallCredentialProvider": "Se il provider di credenziali è già installato nel profilo utente, determina se viene sovrascritto con il provider di credenziali specificato dall'attività. Potrebbe causare l'aggiornamento o il downgrade del provider di credenziali.",
+  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Unable to get federated credentials from service connection",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Successfully added auth for feed %s."
 }

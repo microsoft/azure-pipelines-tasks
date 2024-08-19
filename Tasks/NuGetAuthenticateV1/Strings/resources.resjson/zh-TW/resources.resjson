@@ -6,5 +6,14 @@
   "loc.input.label.nuGetServiceConnections": "此組織外部摘要的服務連線認證",
   "loc.input.help.nuGetServiceConnections": "此組織/集合外部摘要之 NuGet 服務連線名稱的以逗點分隔清單。如需此組織/集合中的摘要，請將此項保留空白; 系統會自動使用組建的認證。",
   "loc.input.label.forceReinstallCredentialProvider": "即使已安裝認證提供者，也會重新安裝",
-  "loc.input.help.forceReinstallCredentialProvider": "如果使用者設定檔中已安裝認證提供者，則會決定是否使用工作提供的認證提供者加以覆寫。這可能會將認證提供者升級 (也可能降級)。"
+  "loc.input.help.forceReinstallCredentialProvider": "如果使用者設定檔中已安裝認證提供者，則會決定是否使用工作提供的認證提供者加以覆寫。這可能會將認證提供者升級 (也可能降級)。",
+  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Unable to get federated credentials from service connection",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Successfully added auth for feed %s."
 }
