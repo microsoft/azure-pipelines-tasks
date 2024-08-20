@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Проверка подлинности Conda (для запускателей задач)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Задача проверки подлинности для клиента Conda",
+  "loc.instanceNameFormat": "Проверка подлинности Conda",
+  "loc.messages.FailedToAddAuthentication": "Добавить проверку подлинности не удалось.",
+  "loc.messages.AddingAuthChannel": "Добавление проверки подлинности для маркера %s"
+}

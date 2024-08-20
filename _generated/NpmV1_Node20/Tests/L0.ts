@@ -45,6 +45,10 @@ class MockedTask {
     public getSecret(): string {
         return this._secret;
     }
+
+    public setResourcePath(s: string){
+        
+    }
 }
 
 describe('Npm Toolrunner', function () {
