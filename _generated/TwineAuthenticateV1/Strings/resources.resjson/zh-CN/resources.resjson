@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
   "loc.messages.NoPypircFile": "没有要清理的 .pypirc 文件。",
   "loc.messages.VariableSetForPypirc": "已在 %s 设置 .pypirc 的环境变量。",
-  "loc.messages.Info_RemovingPypircFile": "正在从 %s 删除 .pypirc 文件"
+  "loc.messages.Info_RemovingPypircFile": "正在从 %s 删除 .pypirc 文件",
+  "loc.messages.DuplicateRegistry": "%s 注册表已通过身份验证",
+  "loc.messages.NoRepoFound": "在 %s 下找不到存储库 URL",
+  "loc.messages.DuplicateRepoUrl": "存储库 URL 为 %s 的存储库已存在，并且已通过身份验证"
 }

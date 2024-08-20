@@ -407,6 +407,9 @@
     ],
     "wif_242": [
         "PipAuthenticateV1",
+        "NpmAuthenticateV0",
+        "CondaAuthenticateV0",
+        "NuGetAuthenticateV1",
         "TwineAuthenticateV1"
     ]
 }

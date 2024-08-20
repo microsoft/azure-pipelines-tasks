@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -212,7 +212,7 @@
     "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_1": "1.244.1"
+    "Default": "1.244.2",
+    "Node20_229_1": "1.244.3"
   }
 }
