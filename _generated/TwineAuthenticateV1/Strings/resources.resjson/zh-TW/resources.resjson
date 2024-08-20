@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
   "loc.messages.NoPypircFile": "沒有任何要清除的 .pypirc 檔案。",
   "loc.messages.VariableSetForPypirc": "已在 %s 設定 .pypirc 的環境變數。",
-  "loc.messages.Info_RemovingPypircFile": "正在從 %s 移除 .pypirc 檔案"
+  "loc.messages.Info_RemovingPypircFile": "正在從 %s 移除 .pypirc 檔案",
+  "loc.messages.DuplicateRegistry": "已驗證 %s 登錄",
+  "loc.messages.NoRepoFound": "在 %s 下找不到存放庫 URL",
+  "loc.messages.DuplicateRepoUrl": "存放庫 URL 為 %s 的存放庫已經存在並經過驗證"
 }
