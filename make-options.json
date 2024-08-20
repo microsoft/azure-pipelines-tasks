@@ -410,6 +410,7 @@
         "NpmAuthenticateV0",
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
+        "MavenAuthenticateV0",
         "TwineAuthenticateV1"
     ]
 }
