@@ -55,7 +55,7 @@ async function main(): Promise<void> {
             tl.setVariable("PYPIRC_PATH", pypircPath, false);
             tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
         }
-        //else {
+        
         const pypirc = fs.readFileSync(pypircPath, 'utf8');
 
         let fileContent = ini.parse(pypirc);
@@ -86,6 +86,8 @@ async function main(): Promise<void> {
 
         for (let entry of newEndpointsToAdd) {
 
+            tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
             let repo = new Repository(
                 entry.packageSource.feedName,
                 entry.packageSource.feedUri,
@@ -95,23 +97,13 @@ async function main(): Promise<void> {
 
             if ((entry.packageSource.feedName in fileContent) || (usedRepos.has(repo.repository))) {
                 console.log(tl.loc("Warning_DuplicateEntryForFeed", entry.packageSource.feedName, repo.repository));
-
-                if (internalFeed.has(entry)) {
-                    internalFeed.delete(entry);
-                    continue;
-                }
-
-                externalEndpoints.delete(entry);
+                removeFromFeedCount(internalFeed, externalEndpoints, entry);
                 continue;
             }
 
-            tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
-
             reposList.push(repo.toString() + `${os.EOL}`);
             
-            (!fileContent.hasOwnProperty("distutils") || !fileContent["distutils"].hasOwnProperty("index-servers")) ?
-                fileContent["distutils"] = {["index-servers"]: `${entry.packageSource.feedName}`} : 
-                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
+            fileContent = configHeader(fileContent, entry.packageSource.feedName);
         }
 
         let encodedStr = ini.encode(fileContent);
@@ -122,18 +114,17 @@ async function main(): Promise<void> {
         for (let repo of reposList) {
             fs.appendFileSync(pypircPath, repo, 'utf8');
         }
-        //}
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.size;
         externalFeedSuccessCount = externalEndpoints.size;
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
         emitTelemetry("Packaging", "TwineAuthenticateV1", {
             "InternalFeedAuthCount": internalFeedSuccessCount,
             "ExternalFeedAuthCount": externalFeedSuccessCount,
@@ -142,8 +133,19 @@ async function main(): Promise<void> {
     }
 }
 
-function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
-    return array.filter((e, i, a) => a.indexOf(e) !== i);
+function configHeader(fileContent: any, feedName: string): any {
+    (!fileContent.hasOwnProperty("distutils") || !fileContent["distutils"].hasOwnProperty("index-servers")) ?
+        fileContent["distutils"] = {["index-servers"]: `${feedName}`} :
+        fileContent["distutils"]["index-servers"] += " " + feedName;
+    return fileContent;
+}
+
+function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints: Set<auth.AuthInfo>, entry: auth.AuthInfo): void {
+    if (internalFeed.has(entry)) {
+        internalFeed.delete(entry);
+        return;
+    }
+    externalEndpoints.delete(entry);
 }
 
 function getNestedRepoProperty(connection: object): string | undefined {
