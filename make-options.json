@@ -406,9 +406,11 @@
         "PublishSymbolsV2"
     ],
     "wif_242": [
-        "NpmAuthenticateV0",
         "PipAuthenticateV1",
+        "NpmAuthenticateV0",
         "CondaAuthenticateV0",
-        "NuGetAuthenticateV1"
+        "NuGetAuthenticateV1",
+        "MavenAuthenticateV0",
+        "TwineAuthenticateV1"
     ]
 }
