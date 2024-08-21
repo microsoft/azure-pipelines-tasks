@@ -33,8 +33,6 @@ function Initialize-AzModule {
                 $configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" } 
                 
                 if ($configValue -eq $null -or $configValue.Value -eq $true) {
-
-
                     # Update-AzConfig is a part of Az.Accounts
                     if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                         Write-Verbose "Supressing breaking changes warnings of Az module."
@@ -42,10 +40,7 @@ function Initialize-AzModule {
                         Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
                     } else {
                         Write-Verbose "Update-AzConfig cmdlet is not available."
-                    } 
-                    
-                     
-                                               
+                    }                            
                 } else {
                     Write-Verbose "No need to update the config." 
                 } 
