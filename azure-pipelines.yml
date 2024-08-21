@@ -30,6 +30,7 @@ parameters:
   type: boolean
   default: false
 
+
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
   taskName: ${{ parameters.task_name }}
