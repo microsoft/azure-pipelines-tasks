@@ -161,6 +161,11 @@ steps:
       git config --global user.email "$(username)@microsoft.com"
       git config --global user.name "$(username)"
 
+      Write-Host 'Enabling verbose git tracing..'
+      git config --global http.verbose true
+      $env:GIT_TRACE = 1
+      $env:GIT_CURL_VERBOSE = 1
+
       # Pull commits from remote and push branch to git
       git checkout -b $releaseBranch
       Write-Host 'Trying to pull the remote branch..'
