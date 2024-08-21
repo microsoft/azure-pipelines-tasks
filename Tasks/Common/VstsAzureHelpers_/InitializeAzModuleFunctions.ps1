@@ -48,8 +48,6 @@ function Initialize-AzModule {
                  Write-Verbose "Get-AzConfig cmdlet is not available."
             }  
 
-                                    
-
             # Enable-AzureRmAlias for azureRm compability
             if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
                 Write-Verbose "Enable-AzureRmAlias for backward compability"
