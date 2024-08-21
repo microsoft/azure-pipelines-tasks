@@ -28,9 +28,9 @@ function Initialize-AzModule {
         if ($featureFlags.retireAzureRM) {
             $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
 
-            $configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" } 
+            #$configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" } 
                 
-            if ($configValue -ne $null -and $configValue.Value -eq $true) {
+            #if ($configValue -ne $null -and $configValue.Value -eq $true) {
                 # Update-AzConfig is a part of Az.Accounts
                 if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                     Write-Verbose "Supressing breaking changes warnings of Az module."
@@ -39,9 +39,9 @@ function Initialize-AzModule {
                 } else {
                     Write-Verbose "Update-AzConfig cmdlet is not available."
                 }                          
-            } else {
-                Write-Verbose "No need to update the config." 
-            }                          
+           # } else {
+           #     Write-Verbose "No need to update the config." 
+           # }                          
 
             # Enable-AzureRmAlias for azureRm compability
             if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
