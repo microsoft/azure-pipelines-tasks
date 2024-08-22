@@ -8,6 +8,7 @@
         "AppCenterDistributeV3",
         "AppCenterTestV1",
         "ArchiveFilesV2",
+        "AzureAppConfigurationPushV10",
         "AzureAppConfigurationSnapshotV1",
         "AzureAppServiceManageV0",
         "AzureAppServiceSettingsV1",
