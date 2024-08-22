@@ -18,9 +18,9 @@
   "version": {
     "Major": 1,
     "Minor": 244,
-    "Patch": 3
+    "Patch": 5
   },
-  "minimumAgentVersion": "2.104.1",
+  "minimumAgentVersion": "2.209.0",
   "groups": [
     {
       "name": "AdditionalDeploymentOptions",
@@ -234,6 +234,9 @@
     "Node10": {
       "target": "azurermwebappdeployment.js"
     },
+    "Node16": {
+      "target": "azurermwebappdeployment.js"
+    },
     "Node20_1": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
@@ -392,7 +395,7 @@
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
   },
   "_buildConfigMapping": {
-    "Default": "1.244.2",
-    "Node20_229_2": "1.244.3"
+    "Default": "1.244.4",
+    "Node20_229_2": "1.244.5"
   }
 }
