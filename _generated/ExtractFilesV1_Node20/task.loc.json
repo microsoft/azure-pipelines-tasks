@@ -118,7 +118,7 @@
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20-225": "1.244.1"
+    "Default": "1.245.0",
+    "Node20-225": "1.245.1"
   }
 }
