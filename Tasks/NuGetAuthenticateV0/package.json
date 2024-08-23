@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "azure-pipelines-tasks-artifacts-common": "2.202.0",
+    "azure-pipelines-tasks-artifacts-common": "2.244.2",
     "azure-pipelines-task-lib": "^4.2.0",
     "@types/node": "^16.11.39"
   },

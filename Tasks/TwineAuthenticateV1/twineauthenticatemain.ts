@@ -7,6 +7,10 @@ import * as auth from "./authentication";
 import * as utils from "./utilities";
 import * as ini from "ini";
 
+#if WIF
+import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils"
+#endif
+
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
 {
@@ -35,6 +39,7 @@ async function main(): Promise<void> {
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;
+    let federatedFeedSuccessCount: number = 0;
     try {
         // Local feed
         const internalFeed = await auth.getInternalAuthInfoArray("artifactFeed");
@@ -47,82 +52,116 @@ async function main(): Promise<void> {
 
         let pypircPath = utils.getPypircPath();
 
-        // create new file. We do not merge existing files and always create a fresh file
-        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH"))) {
-            fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
+        // create new .pypirc file if one does not exist yet
+        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH")) || !tl.exist(pypircPath)) {
+            fs.writeFileSync(pypircPath, '', 'utf8');
             tl.setVariable("PYPIRC_PATH", pypircPath, false);
             tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
         }
-        else {
-            pypircPath = tl.getVariable("PYPIRC_PATH");
-            const pypirc = fs.readFileSync(pypircPath, 'utf8');
-            let fileContent = ini.parse(pypirc);
+        
+        const pypirc = fs.readFileSync(pypircPath, 'utf8');
 
-            let usedRepos = new Set<string>();
+        let fileContent = ini.parse(pypirc);
 
-            for (let connection in fileContent) {
+        let usedRepos = new Set<string>();
 
-                const connectionObj: object = fileContent[connection];
+        for (let connection in fileContent) {
 
-                if (!connectionObj.hasOwnProperty('repository')) {
-                    const authenticatedRepo = getNestedRepoProperty(connectionObj);
+            const connectionObj: object = fileContent[connection];
 
-                    if (authenticatedRepo === undefined) {
-                        tl.warning(tl.loc("NoRepoFound", connection));
-                        continue;
-                    }
+            if (!connectionObj.hasOwnProperty('repository')) {
+                const authenticatedRepo = getNestedRepoProperty(connectionObj);
 
-                    usedRepos.add(authenticatedRepo);
+                if ((authenticatedRepo === undefined) && (connection.toLocaleLowerCase() !== 'distutils')) {
+                    tl.warning(tl.loc("NoRepoFound", connection));
                     continue;
                 }
 
-                usedRepos.add(connectionObj['repository']);
+                usedRepos.add(authenticatedRepo);
+                continue;
             }
 
-            let reposList: string[] = [];
+            usedRepos.add(connectionObj['repository']);
+        }
 
-            for (let entry of newEndpointsToAdd) {
+#if WIF
+        const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        const feedUrl = tl.getInput("feedUrl");
 
-                tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+        if (entraWifServiceConnectionName && feedUrl) {
+            const urlPieces = feedUrl.split('/');
+            let feedName = '';
+            urlPieces.at(-1) === '' ? feedName = urlPieces.at(-4) : feedName = urlPieces.at(-3);
 
-                if (entry.packageSource.feedName in fileContent){
-                    tl.warning(tl.loc("DuplicateRegistry", entry.packageSource.feedName));
-                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
-                    continue;
-                }
-
-                let repo = new Repository(
-                    entry.packageSource.feedName,
-                    entry.packageSource.feedUri,
-                    entry.username,
-                    entry.password
-                );
-
-                if (usedRepos.has(repo.repository)) {
-                    tl.warning(tl.loc("DuplicateRepoUrl", repo.repository));
-                    removeFromFeedCount(internalFeed, externalEndpoints, entry);
-                    continue;
-                }
-
-                reposList.push(repo.toString() + `${os.EOL}`);
-
-                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
+            // First, check that repo is not a duplicate
+            if ((feedName in fileContent) || (usedRepos.has(feedUrl))) {
+                console.log(tl.loc("Warning_DuplicateEntryForFeed", feedName, feedUrl));
+                return;
             }
+
+            fileContent = configHeader(fileContent, feedName);
 
             let encodedStr = ini.encode(fileContent);
-            fs.writeFileSync(pypircPath, encodedStr);
+            fs.writeFileSync(pypircPath, encodedStr + os.EOL, 'utf8');
 
-            fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
+            const feedTenant = await getFeedTenantId(feedUrl);
+            const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
 
-            for (let repo of reposList) {
-                fs.appendFileSync(pypircPath, repo, 'utf8');
+            if (token) {
+                tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName));
+                const wifRepo = new Repository(feedName, feedUrl, entraWifServiceConnectionName, token);
+                fs.appendFileSync(pypircPath, os.EOL + wifRepo.toString(), 'utf8');
+                federatedFeedSuccessCount++;
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
             }
+            else {
+                throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
+            }
+
+            return;
+        }
+        else if (entraWifServiceConnectionName || feedUrl) {
+            throw new Error(tl.loc("Error_MissingFeedUrlOrServiceConnection"));
+        }
+#endif
+
+        let reposList: string[] = [];
+
+        for (let entry of newEndpointsToAdd) {
+
+            tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
+            let repo = new Repository(
+                entry.packageSource.feedName,
+                entry.packageSource.feedUri,
+                entry.username,
+                entry.password
+            );
+
+            if ((entry.packageSource.feedName in fileContent) || (usedRepos.has(repo.repository))) {
+                console.log(tl.loc("Warning_DuplicateEntryForFeed", entry.packageSource.feedName, repo.repository));
+                removeFromFeedCount(internalFeed, externalEndpoints, entry);
+                continue;
+            }
+
+            reposList.push(repo.toString() + `${os.EOL}`);
+            
+            fileContent = configHeader(fileContent, entry.packageSource.feedName);
+        }
+
+        let encodedStr = ini.encode(fileContent);
+        fs.writeFileSync(pypircPath, encodedStr);
+
+        fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
+
+        for (let repo of reposList) {
+            fs.appendFileSync(pypircPath, repo, 'utf8');
         }
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.size;
         externalFeedSuccessCount = externalEndpoints.size;
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
@@ -132,12 +171,16 @@ async function main(): Promise<void> {
         emitTelemetry("Packaging", "TwineAuthenticateV1", {
             "InternalFeedAuthCount": internalFeedSuccessCount,
             "ExternalFeedAuthCount": externalFeedSuccessCount,
+            "FederatedFeedAuthCount": federatedFeedSuccessCount,
         });
     }
 }
 
-function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
-    return array.filter((e, i, a) => a.indexOf(e) !== i);
+function configHeader(fileContent: any, feedName: string): any {
+    (!fileContent.hasOwnProperty("distutils") || !fileContent["distutils"].hasOwnProperty("index-servers")) ?
+        fileContent["distutils"] = {["index-servers"]: `${feedName}`} :
+        fileContent["distutils"]["index-servers"] += " " + feedName;
+    return fileContent;
 }
 
 function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints: Set<auth.AuthInfo>, entry: auth.AuthInfo): void {
@@ -158,29 +201,6 @@ function getNestedRepoProperty(connection: object): string | undefined {
         }
     }
     return undefined;
-}
-
-// only used for new file writes.
-function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string{
-    const authInfo = Array.from(authInfoSet);
-    let feedNames = authInfo.map(entry => entry.packageSource.feedName);
-    let duplicateFeeds = findDuplicatesInArray<string>(feedNames);
-
-    if (duplicateFeeds.length > 0) {
-        throw new Error(tl.loc("Error_DuplicateEntryForFeed", duplicateFeeds.join(", ")));
-    }
-
-    feedNames.forEach(feedName =>
-        console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
-    let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
-    header += `${os.EOL}`
-
-    let repositories = authInfo.map(entry => 
-        new Repository(entry.packageSource.feedName, entry.packageSource.feedUri, 
-            entry.username, entry.password));
-    let repositoriesEncodedStr = repositories.map(repo => repo.toString()).join(os.EOL);
-
-    return header + os.EOL + repositoriesEncodedStr;
 }
 
 main();

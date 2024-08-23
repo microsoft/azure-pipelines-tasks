@@ -15,6 +15,7 @@ describe("Maven L0 Suite", function () {
         // process.env["MOCK_IGNORE_TEMP_PATH"] = "true"; // This will remove the temp path from any outputs
         process.env["MOCK_TEMP_PATH"] = path.join(__dirname, "..", "..");
         process.env["MOCK_NORMALIZE_SLASHES"] = "true";
+        process.env['SYSTEM_DEBUG'] = 'true';
 
         createTemporaryFolders();
     });

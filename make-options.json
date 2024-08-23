@@ -407,6 +407,11 @@
     ],
     "wif_242": [
         "PipAuthenticateV1",
-        "CargoAuthenticateV0"
+        "CargoAuthenticateV0",
+        "NpmAuthenticateV0",
+        "CondaAuthenticateV0",
+        "NuGetAuthenticateV1",
+        "MavenAuthenticateV0",
+        "TwineAuthenticateV1"
     ]
 }
