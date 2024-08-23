@@ -84,8 +84,11 @@ async function main(): Promise<void> {
                 const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registryInfo[0]);
                 if (isValidRegistry(registryUrl, collectionHosts, connectionType))
                 {
-                    tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
-                    setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`WifBuild:${token}`))}`);
+                    if (tl.getVariable(tokenName)) {
+                        tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
+                    }
+                    
+                    setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${token}`))}`);
                     tl.setVariable(credProviderName, "cargo:token");
                     federatedAuthCount++;
                 }
