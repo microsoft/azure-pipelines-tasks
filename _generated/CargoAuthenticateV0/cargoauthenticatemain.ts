@@ -17,7 +17,7 @@ async function main(): Promise<void> {
     let internalAuthCount = 0;
     let externalAuthCount = 0;
     let federatedAuthCount = 0;
-
+    
     try {
         let configtoml = tl.getInput(constants.CargoAuthenticateTaskInput.ConfigFile);
         if (!tl.exist(configtoml)) {
@@ -97,15 +97,18 @@ async function main(): Promise<void> {
                         externalAuthCount++;
                     }      
                 }
-                // Default to internal registry if no token has been set yet
+                // Default to internal registry if no token has been set yet, warn if token is already set
                 if (!currentRegistry && !tl.getVariable(tokenName)) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");
                     internalAuthCount++;
                 }  
-            }   
-        } 
+                else if (!currentRegistry && tl.getVariable(tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySet', registry, connectionType));
+                } 
+            } 
+        }
     }
 
     catch(error) {
@@ -138,7 +141,6 @@ function getRegistryAuthStatus(tokenName: string, registryName: string): string{
     let connectionType = ''
     if (tl.getVariable(tokenName)) {
         connectionType = tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external or federated' : 'internal';
-        tl.warning(tl.loc('ConnectionAlreadySet', registryName, connectionType));
     }
     return connectionType;
 }
@@ -154,6 +156,6 @@ function setRegistryVars(urlStr: string, registryName: string): readonly [url.Ur
 }
 
 const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
-    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0 && (connectionType !== 'external or federated');
+    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();

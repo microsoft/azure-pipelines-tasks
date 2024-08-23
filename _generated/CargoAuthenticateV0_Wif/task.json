@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 6
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -19,25 +19,6 @@
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "cargo Authenticate $(configFile)",
   "inputs": [
-    {
-      "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
-      "type": "connectedService:workloadidentityuser",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "False"
-      }
-    },
-    {
-      "name": "feedUrl",
-      "label": "Azure Artifacts Feed url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections. Feed Url should be in the cargo registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/Cargo/index/",
-      "type": "string",
-      "defaultValue": "",
-      "required": false
-    },
     {
       "name": "configFile",
       "label": "config.toml file to authenticate",
@@ -53,6 +34,25 @@
       "properties": {
         "MultiSelectFlatList": "true"
       }
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "registryNames",
+      "label": "Registry names from config.toml",
+      "helpMarkDown": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
+      "type": "string",
+      "defaultValue": "",
+      "required": false
     }
   ],
   "execution": {
@@ -76,15 +76,16 @@
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
     "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
-    "ConnectionAlreadySet": "%s registry is already set for an %s connection",
+    "ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+    "ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
     "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-    "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
-    "FeedUrlNotFound": "The feedUrl input does not correspond any registry in config.toml"
+    "MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+    "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.4",
-    "Node20_229_1": "0.244.5",
-    "wif_242": "0.244.6"
+    "Default": "0.244.2",
+    "Node20_229_1": "0.244.3",
+    "wif_242": "0.244.4"
   }
 }

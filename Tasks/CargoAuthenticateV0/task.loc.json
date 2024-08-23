@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 244,
-    "Patch": 4
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -54,9 +54,10 @@
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
     "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "ConnectionAlreadySetOverwriting": "ms-resource:loc.messages.ConnectionAlreadySetOverwriting",
     "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
-    "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
-    "FeedUrlNotFound": "ms-resource:loc.messages.FeedUrlNotFound"
+    "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   }
 }

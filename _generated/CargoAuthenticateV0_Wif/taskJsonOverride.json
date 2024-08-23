@@ -1,25 +1,6 @@
 {
     "inputs": [
         {
-            "name": "workloadIdentityServiceConnection",
-            "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-            "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
-            "type": "connectedService:workloadidentityuser",
-            "required": false,
-            "properties": {
-                "EditableOptions": "False",
-                "MultiSelectFlatList": "False"
-            }
-        },
-        {
-            "name": "feedUrl",
-            "label": "Azure Artifacts Feed url.",
-            "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections. Feed Url should be in the cargo registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/Cargo/index/",
-            "type": "string",
-            "defaultValue": "",
-            "required": false
-        },
-        {
             "name": "configFile",
             "label": "config.toml file to authenticate",
             "helpMarkDown": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
@@ -34,6 +15,25 @@
             "properties": {
               "MultiSelectFlatList": "true"
             }
+        },
+        {
+            "name": "workloadIdentityServiceConnection",
+            "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+            "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+            "type": "connectedService:workloadidentityuser",
+            "required": false,
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            }
+        },
+        {
+            "name": "registryNames",
+            "label": "Registry names from config.toml",
+            "helpMarkDown": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
+            "type": "string",
+            "defaultValue": "",
+            "required": false
         }
     ]
 }

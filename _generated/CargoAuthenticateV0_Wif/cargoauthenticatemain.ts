@@ -18,7 +18,7 @@ async function main(): Promise<void> {
     let internalAuthCount = 0;
     let externalAuthCount = 0;
     let federatedAuthCount = 0;
-
+    
     try {
         let configtoml = tl.getInput(constants.CargoAuthenticateTaskInput.ConfigFile);
         if (!tl.exist(configtoml)) {
@@ -57,39 +57,41 @@ async function main(): Promise<void> {
             return undefined;
         });
 
-        const feedUrl = tl.getInput("feedUrl");
+        const registries = tl.getInput("registryNames");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
-        if (entraWifServiceConnectionName && feedUrl) {  
-            const registriesInfo = Object.entries(result.registries).map(registry => registry.reverse());
-            const registryMap = new Map();
-            registriesInfo.forEach(registryArr => registryMap.set(url.parse(registryArr[0]['index'].replace("sparse+", "")).href, registryArr[1]));
+        if (entraWifServiceConnectionName && registries) {
+            const registryNames = registries.split(',');
+            const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
 
-            if (!registryMap.has(feedUrl)) {
-                throw new Error(tl.loc("FeedUrlNotFound"));
+            if (!token) {
+                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
             }
 
-            const registry = registryMap.get(feedUrl);
-            const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(feedUrl, registry);
+            for (let registryName of registryNames) {
+                if(!result.registries[registryName]) {
+                    throw new Error(tl.loc("RegistryNotFound", registryName));
+                }
+            }
 
-            if (isValidRegistry(registryUrl, collectionHosts, connectionType)) {
-                const feedTenant = await getFeedTenantId(feedUrl);
-                const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-
-                if (token) {
+            const registriesInfo = (<any>Object).entries(result.registries).filter(registry => registryNames.includes(registry[0]));
+            for (let registryInfo of registriesInfo)
+            {
+                var registryUrlStr = url.parse(registryInfo[1].index.replace("sparse+", "")).href;
+                const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registryInfo[0]);
+                if (isValidRegistry(registryUrl, collectionHosts, connectionType))
+                {
+                    tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
                     setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`WifBuild:${token}`))}`);
                     tl.setVariable(credProviderName, "cargo:token");
                     federatedAuthCount++;
-                }
-                else {
-                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
                 }
             }
 
             return;
         }
-        else if (entraWifServiceConnectionName || feedUrl) {
-            throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
+        else if (entraWifServiceConnectionName || registries) {
+            throw new Error(tl.loc("MissingRegistryNameOrServiceConnection"));
         }
 
         const localAccesstoken = `Bearer ${tl.getVariable('System.AccessToken')}`;
@@ -132,15 +134,18 @@ async function main(): Promise<void> {
                         externalAuthCount++;
                     }      
                 }
-                // Default to internal registry if no token has been set yet
+                // Default to internal registry if no token has been set yet, warn if token is already set
                 if (!currentRegistry && !tl.getVariable(tokenName)) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");
                     internalAuthCount++;
                 }  
-            }   
-        } 
+                else if (!currentRegistry && tl.getVariable(tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySet', registry, connectionType));
+                } 
+            } 
+        }
     }
 
     catch(error) {
@@ -173,7 +178,6 @@ function getRegistryAuthStatus(tokenName: string, registryName: string): string{
     let connectionType = ''
     if (tl.getVariable(tokenName)) {
         connectionType = tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external or federated' : 'internal';
-        tl.warning(tl.loc('ConnectionAlreadySet', registryName, connectionType));
     }
     return connectionType;
 }
@@ -189,6 +193,6 @@ function setRegistryVars(urlStr: string, registryName: string): readonly [url.Ur
 }
 
 const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
-    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0 && (connectionType !== 'external or federated');
+    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();
