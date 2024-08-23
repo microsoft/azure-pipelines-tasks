@@ -20,22 +20,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "configFile",
-      "label": "ms-resource:loc.input.label.configFile",
-      "helpMarkDown": "ms-resource:loc.input.help.configFile",
-      "type": "filePath",
-      "required": true
-    },
-    {
-      "name": "cargoServiceConnections",
-      "label": "ms-resource:loc.input.label.cargoServiceConnections",
-      "helpMarkDown": "ms-resource:loc.input.help.cargoServiceConnections",
-      "type": "connectedService:externalcargorepository",
-      "properties": {
-        "MultiSelectFlatList": "true"
-      }
-    },
-    {
       "name": "workloadIdentityServiceConnection",
       "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
       "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
@@ -53,6 +37,22 @@
       "type": "string",
       "defaultValue": "",
       "required": false
+    },
+    {
+      "name": "configFile",
+      "label": "ms-resource:loc.input.label.configFile",
+      "helpMarkDown": "ms-resource:loc.input.help.configFile",
+      "type": "filePath",
+      "required": true
+    },
+    {
+      "name": "cargoServiceConnections",
+      "label": "ms-resource:loc.input.label.cargoServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.cargoServiceConnections",
+      "type": "connectedService:externalcargorepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     }
   ],
   "execution": {
