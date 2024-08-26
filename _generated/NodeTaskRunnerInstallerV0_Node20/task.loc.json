@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 245,
     "Patch": 1
   },
   "preview": true,
@@ -63,7 +63,7 @@
     "RunnerAlreadyInstalled": "ms-resource:loc.messages.RunnerAlreadyInstalled"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20-225": "0.238.1"
+    "Default": "0.245.0",
+    "Node20-225": "0.245.1"
   }
 }
