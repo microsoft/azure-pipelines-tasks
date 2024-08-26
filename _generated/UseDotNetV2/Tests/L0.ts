@@ -15,6 +15,7 @@ function runValidations(validator: () => void, tr) {
     catch (error) {
         console.log("STDERR", tr.stderr);
         console.log("STDOUT", tr.stdout);
+        throw error;
     }
 }
 

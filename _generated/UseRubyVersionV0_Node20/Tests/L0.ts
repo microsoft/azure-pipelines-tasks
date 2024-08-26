@@ -11,11 +11,11 @@ describe('UseRubyVersion L0 Suite', function () {
     after(function () {
     });
 
-    it('finds version in cache in Linux', function () {
+    it('finds version in cache in Linux', async function () {
         let tp: string = path.join(__dirname, 'L0FindVersionInLinuxCache.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
@@ -23,13 +23,13 @@ describe('UseRubyVersion L0 Suite', function () {
     });
 
 
-    it('rejects version not in cache', function () {
+    it('rejects version not in cache', async function () {
         this.timeout(4000);
 
         let tp: string = path.join(__dirname, 'L0RejectVersionNotInCache.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.includes('loc_mock_VersionNotFound 3.x'), 'error message not as expected');
@@ -39,13 +39,13 @@ describe('UseRubyVersion L0 Suite', function () {
         assert(tr.stdout.includes('loc_mock_ToolNotFoundSelfHosted Ruby https://go.microsoft.com/fwlink/?linkid=2005989'));
     });
 
-    it('sets PATH correctly on Linux', function () {
+    it('sets PATH correctly on Linux', async function () {
         this.timeout(4000);
 
         let tp: string = path.join(__dirname, 'L0SetPathOnLinux.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
@@ -54,13 +54,13 @@ describe('UseRubyVersion L0 Suite', function () {
         assert(tr.stdout.includes('##vso[task.prependpath]' + path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby tool location was not added to PATH as expected');
     });
 
-    it('sets PATH correctly on Windows', function () {
+    it('sets PATH correctly on Windows', async function () {
         this.timeout(4000);
 
         let tp: string = path.join(__dirname, 'L0SetPathOnWindows.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
