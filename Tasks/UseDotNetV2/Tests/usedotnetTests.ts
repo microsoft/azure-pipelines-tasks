@@ -165,11 +165,7 @@ mockery.registerMock('./versioninstaller', {
 mockery.registerMock('./nugetinstaller', {
     NuGetInstaller: {
         installNuGet: function (version) {
-#if NODE20
             return new Promise<void>((resolve, reject) => {
-#else
-            return new Promise((resolve, reject) => {
-#endif
                 resolve();
             });
         }
