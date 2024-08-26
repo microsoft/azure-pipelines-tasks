@@ -128,6 +128,9 @@ async function main(): Promise<void> {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
                     if (url.parse(serviceConnection.packageSource.uri).href === registryUrlStr) {
+                        if (tl.getVariable(tokenName)) {
+                            tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registry, connectionType));
+                        };
                         const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
                         currentRegistry = registry;
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
