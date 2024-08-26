@@ -6,7 +6,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 const tempDir = path.join(__dirname, "temp");
 
-describe('Twine Authenticate V1 Suite', function () {
+describe('Twine Authenticate V1 Suite', async () => {
     before(() => {
         tl.mkdirP(tempDir);
     });
@@ -15,12 +15,11 @@ describe('Twine Authenticate V1 Suite', function () {
         tl.rmRF(tempDir);
     });
 
-    it('sets authentication for current organization feed', function (done: Mocha.Done) {
-        this.timeout(50000);
+    it('sets authentication for current organization feed', async () => {
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
@@ -32,23 +31,20 @@ describe('Twine Authenticate V1 Suite', function () {
         assert.strictEqual(lines[0], "[distutils]");
         assert.strictEqual(lines[1], "index-servers=TestFeed",
             "Test Feed should be added to auth list.");
-        assert.strictEqual(lines[2], "[TestFeed]");
-        assert.strictEqual(lines[3], "repository=https://vsts/packagesource/TestFeed",
+        assert.strictEqual(lines[3], "[TestFeed]");
+        assert.strictEqual(lines[4], "repository=https://vsts/packagesource/TestFeed",
             "Test Feed repository should be correct.");
-        assert.strictEqual(lines[4], "username=build",
+        assert.strictEqual(lines[5], "username=build",
             "Default username should be correct.");
-        assert.strictEqual(lines[5], "password=token",
+        assert.strictEqual(lines[6], "password=token",
             "Default password from environment variable should be correct.");
+    }).timeout(50000);
 
-        done();
-    });
-
-    it('sets authentication for current organization feed', (done: MochaDone) => {
-        this.timeout(10000);
+    it('sets authentication for current organization feed with dot',  async () => {
         let tp = path.join(__dirname, './setAuthInternalFeedWithDot.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
@@ -57,16 +53,15 @@ describe('Twine Authenticate V1 Suite', function () {
         let lines = fileContent.split(/\r?\n/);
 
         assert.strictEqual(lines[0], "[distutils]");
-        assert.strictEqual(lines[1], "index-servers=Test.Feed",
+        assert((lines[1] === "index-servers=Test.Feed")
+            || (lines[1].startsWith('index-servers=') && lines[1].endsWith('Test.Feed')),
             "Test Feed should be added to auth list.");
-        assert.strictEqual(lines[2], "[Test.Feed]");
-        assert.strictEqual(lines[3], "repository=https://vsts/packagesource/Test.Feed",
+        assert.strictEqual(lines.at(-6), "[Test.Feed]");
+        assert.strictEqual(lines.at(-5), "repository=https://vsts/packagesource/Test.Feed",
             "Test Feed repository should be correct.");
-        assert.strictEqual(lines[4], "username=build",
+        assert.strictEqual(lines.at(-4), "username=build",
             "Default username should be correct.");
-        assert.strictEqual(lines[5], "password=token",
+        assert.strictEqual(lines.at(-3), "password=token",
             "Default password from environment variable should be correct.");
-
-        done();
-    });
+    }).timeout(50000);
 });

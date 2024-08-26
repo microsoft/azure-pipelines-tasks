@@ -8,7 +8,7 @@ describe('Docker Compose Suite', function() {
     let composeCommand: string;
 
     before(() => {
-        composeCommand = "docker compose";
+        composeCommand = "docker-compose";
     });
 
     beforeEach(() => {

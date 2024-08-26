@@ -7,6 +7,8 @@ import { getBuildConfigs } from './helpers';
 
 interface BuildResult { result: string; message: string }
 
+const parralelRunVariable = "ALLOW_PARALLEL_RUN"
+
 const DISABLED = 'disabled';
 const INVALID = 'invalid';
 
@@ -16,6 +18,15 @@ const buildResultCode = {
   4: 'PartiallySucceeded',
   8: 'Failed',
   32: 'Canceled'
+};
+
+const buildStatuses = {
+  0: 'None',
+  1: 'InProgress',
+  2: 'Completed',
+  4: 'Cancelling',
+  8: 'Postponed',
+  32: 'NotStarted'
 };
 
 const buildResultEnum = {
@@ -29,7 +40,7 @@ const buildResultEnum = {
 async function main() {
   const disabledPipelines: string[] = [];
   const invalidPipelines: string[] = [];
-  const runningTestBuilds: Promise<BuildResult>[] = [];
+  const runningTestBuilds: Promise<BuildResult | BuildResult[]>[] = [];
   for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
     const runResult = await runTaskPipelines(task);
@@ -47,8 +58,9 @@ async function main() {
 
   Promise.all(runningTestBuilds).then(buildResults => {
     console.log('\nResults:');
+    const buildResultsFlat = buildResults.flat();
 
-    buildResults.map(buildResult => {
+    buildResultsFlat.map(buildResult => {
       if (buildResult.result === buildResultEnum.PartiallySucceeded) {
         buildResult.message = `##vso[task.issue type=warning]${buildResult.message}`;
       } else if (buildResult.result !== buildResultEnum.Succeeded) {
@@ -80,14 +92,19 @@ async function main() {
     }
 
     console.log('\n');
-    if (failed) console.log('##vso[task.complete result=Failed]');
+    if (failed) {
+      console.log('##vso[task.complete result=Failed]');
+      process.exit(1);
+    }
+    process.exit(0);
   });
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[] | typeof DISABLED | typeof INVALID> {
+async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
   const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
+  let allowParrallelRun = true;
 
   if (pipeline) {
     if (pipeline.queueStatus === 2) { // disabled
@@ -95,22 +112,58 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[
       return DISABLED;
     }
 
+    if (pipeline.id) {
+      const definition = await api.getDefinition(pipeline.id!);
+      allowParrallelRun = definition?.variables?.[parralelRunVariable]?.value === 'false' ? false : true;
+    }
+
     const configs = getBuildConfigs(taskName);
     console.log(`Detected buildconfigs ${JSON.stringify(configs)}`);
 
-    const runningBuilds: Promise<BuildResult>[] = [];
-    for (const config of configs) {
-      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
-      const pipelineBuild = await startTestPipeline(pipeline, config);
+    const runningBuilds: Promise<BuildResult | BuildResult[]>[] = [];
+    console.log(`Parallel run is ${allowParrallelRun ? 'enabled' : 'disabled'} for "${taskName}" task`);
+
+    // TODO possibly refactor
+    if (allowParrallelRun) {
+      for (const config of configs) {
+        console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+        const pipelineBuild = await startTestPipeline(pipeline, config);
+
+        if (pipelineBuild === null) {
+          console.log(`Pipeline "${pipeline.name}" is not valid.`);
+          return INVALID;
+        }
+
+        runningBuilds.push(completeBuild(taskName, pipelineBuild));
+      }
+    } else {
+      const firstConfig = configs.shift();
+      const pipelineBuild = await startTestPipeline(pipeline, firstConfig);
 
       if (pipelineBuild === null) {
         console.log(`Pipeline "${pipeline.name}" is not valid.`);
         return INVALID;
       }
 
-      const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve));
-      runningBuilds.push(buildPromise);
+      runningBuilds.push(new Promise<BuildResult[]>(async resolve => {
+        const buildResults = new Array<BuildResult>();
+        console.log(`Running tests for "${taskName}" task with config "${firstConfig}" for pipeline "${pipeline.name}"`);
+        let result = await completeBuild(taskName, pipelineBuild);
+        buildResults.push(result);
+
+        for (const config of configs) {
+          console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+          const pipelineBuild = await startTestPipeline(pipeline, config);
+          if (pipelineBuild !== null) {
+
+            result = await completeBuild(taskName, pipelineBuild);
+            buildResults.push(result);
+          }
+        }
+        resolve(buildResults);
+      }));
     }
+
 
     return runningBuilds;
   }
@@ -150,11 +203,10 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''
   }
 }
 
-async function completeBuild(
+function completeBuild(
   pipelineName: string,
   pipelineBuild: Build,
-  resolve: (value: BuildResult) => void
-): Promise<void> {
+): Promise<BuildResult> {
   const maxRetries = 3;
   const buildTimeoutInSeconds = 300 * 60;
   const intervalInSeconds = 20;
@@ -163,40 +215,42 @@ async function completeBuild(
 
   let retryCount = 0;
   let intervalAmount = 0;
+  return new Promise<BuildResult>(resolve => {
+    const interval = setInterval(
+      async () => {
+        const buildStatus = await fetchBuildStatus(pipelineBuild);
+        const statusText = buildStatus.status ? buildStatuses[buildStatus.status] : 'Unknown';
+        console.log(`State of the ${stringifiedBuild}: "${statusText}(${buildStatus.status})"`);
 
-  const interval = setInterval(
-    async () => {
-      const buildStatus = await fetchBuildStatus(pipelineBuild);
-      console.log(`State of the ${stringifiedBuild}: "${buildStatus.status}"`);
+        if (buildStatus.status !== 2) { // completed
+          if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
+            clearInterval(interval);
 
-      if (buildStatus.status !== 2) { // completed
-        if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
-          clearInterval(interval);
+            resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+          }
 
-          resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+          return;
         }
 
-        return;
-      }
+        const result = buildResultCode[buildStatus.result!];
 
-      const result = buildResultCode[buildStatus.result!];
+        if (
+          result !== buildResultEnum.Succeeded &&
+          result !== buildResultEnum.PartiallySucceeded &&
+          retryCount < maxRetries
+        ) {
+          console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
+          await retryFailedJobsInBuild(pipelineBuild);
+        } else {
+          clearInterval(interval);
 
-      if (
-        result !== buildResultEnum.Succeeded &&
-        result !== buildResultEnum.PartiallySucceeded &&
-        retryCount < maxRetries
-      ) {
-        console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
-        await retryFailedJobsInBuild(pipelineBuild);
-      } else {
-        clearInterval(interval);
+          resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
+        }
+      },
 
-        resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
-      }
-    },
-
-    intervalInSeconds * 1000
-  );
+      intervalInSeconds * 1000
+    );
+  });
 }
 
 process.on('uncaughtException', err => {

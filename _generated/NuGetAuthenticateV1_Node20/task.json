@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 244,
+    "Patch": 7
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -52,9 +52,16 @@
       "argumentFormat": ""
     }
   },
-  "messages": {},
+  "messages": {
+    "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
+    "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
+  },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Default": "1.244.6",
+    "Node20_229_1": "1.244.7",
+    "wif_242": "1.244.8"
   }
 }

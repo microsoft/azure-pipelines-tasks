@@ -10,6 +10,7 @@
   "loc.input.help.azureSubscription": "配置用の Azure Resource Manager サブスクリプションを選択します。",
   "loc.input.label.appType": "アプリの種類",
   "loc.input.help.appType": "デプロイの Azure 関数アプリの種類を選択します。",
+  "loc.input.label.isFlexConsumption": "Flex 従量課金プランの関数アプリである",
   "loc.input.label.appName": "Azure Functions App 名",
   "loc.input.help.appName": "既存の Azure Functions アプリの名前を入力または選択します。一覧に表示される関数アプリは、選択したアプリの種類に基づいて表示されます。",
   "loc.input.label.deployToSlotOrASE": "スロットまたは App Service 環境に配置する",
@@ -25,7 +26,7 @@
   "loc.input.label.appSettings": "アプリ設定",
   "loc.input.help.appSettings": "構文 -key value の後に続く Web App アプリケーションの設定を編集します。スペースが含まれる値は二重引用符で囲む必要があります。<br /> <b>例</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "デプロイ方法",
-  "loc.input.help.deploymentMethod": "関数アプリのデプロイ方法を選択します。Linux 従量課金プラン アプリではこの構成がサポートされていないことに注意してください。",
+  "loc.input.help.deploymentMethod": "関数アプリのデプロイ方法を選択します。Linux 従量課金アプリと Flex 従量課金アプリではこの構成がサポートされていないことに注意してください。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "無効な App Service パッケージまたはフォルダー パスが指定されました: %s",
   "loc.messages.SetParamFilenotfound0": "設定パラメーター ファイルが見つかりません: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 変換が正常に適用されました",
@@ -176,5 +177,6 @@
   "loc.messages.SyncingFunctionTriggers": "関数アプリのトリガーを同期しています",
   "loc.messages.SyncFunctionTriggersSuccess": "関数アプリの同期トリガーが正常に完了しました",
   "loc.messages.UpdatedRunFromPackageSettings": "WEBSITE_RUN_FROM_PACKAGE アプリケーション設定が %s に更新されました",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "[展開の種類] オプションは、Linux 従量課金プランには適用されません。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "[展開の種類] オプションは、Linux 従量課金プランには適用されません。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "[展開の種類] オプションは、Flex 従量課金プランには適用されません。"
 }

@@ -31,11 +31,19 @@ parameters:
   default: false
 
 variables:
-  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  taskName: ${{ parameters.task_name }}
-  taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
-  runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
-  system.debug: true
+- name: currentDate
+  value: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+- name: taskName
+  value: ${{ parameters.task_name }}
+- name: taskNameIsSet
+  value: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+- name: runCodeQl
+  value: ${{ eq(parameters.enableCodeQL, true) }}
+- name: system.debug
+  value: true
+
+- group: Courtesy-Push-GitHub-AccessToken
+
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -111,6 +119,7 @@ extends:
       # Courtesy Push
       - job: courtesy_push
         displayName: Courtesy Push
+        timeoutInMinutes: 180
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022

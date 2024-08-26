@@ -16,11 +16,13 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 244,
     "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
+  "deprecated": true,
+  "deprecationMessage": "The AzureNLBManagement@01 task is deprecated",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -105,7 +107,7 @@
     "SettingTheNetworkInterface": "Setting the network interface %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.244.0",
+    "Node20_229_2": "1.244.1"
   }
 }

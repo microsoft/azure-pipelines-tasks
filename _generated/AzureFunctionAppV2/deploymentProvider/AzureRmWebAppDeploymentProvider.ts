@@ -43,7 +43,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        if (this.kuduServiceUtility) {
+        if (this.kuduServiceUtility && !this.taskParams.isFlexConsumption) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }

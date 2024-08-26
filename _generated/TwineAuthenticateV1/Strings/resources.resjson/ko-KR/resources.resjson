@@ -23,5 +23,8 @@
   "loc.messages.FailedToAddAuthentication": "인증을 추가하지 못했습니다.",
   "loc.messages.NoPypircFile": "정리할 .pypirc 파일이 없습니다.",
   "loc.messages.VariableSetForPypirc": "%s에 있는 .pypirc의 환경 변수가 설정되었습니다.",
-  "loc.messages.Info_RemovingPypircFile": "%s에서 .pypirc 파일을 제거하는 중"
+  "loc.messages.Info_RemovingPypircFile": "%s에서 .pypirc 파일을 제거하는 중",
+  "loc.messages.DuplicateRegistry": "%s 레지스트리가 이미 인증되었습니다.",
+  "loc.messages.NoRepoFound": "%s에서 리포지토리 URL을 찾을 수 없습니다.",
+  "loc.messages.DuplicateRepoUrl": "리포지토리 URL %s이(가) 있는 리포지토리가 이미 있으며 인증되었습니다."
 }

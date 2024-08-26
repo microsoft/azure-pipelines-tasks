@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 235,
-    "Patch": 1
+    "Minor": 244,
+    "Patch": 3
   },
   "instanceNameFormat": "File Transform: $(Package)",
   "groups": [
@@ -28,6 +28,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The FileTransform@1 task is deprecated, please use a newer version of the FileTransform task",
   "inputs": [
     {
       "name": "folderPath",
@@ -120,7 +122,7 @@
     "SkippedUpdatingFile": "Skipped Updating file: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.0",
-    "Node20_229_3": "1.235.1"
+    "Default": "1.244.2",
+    "Node20_229_3": "1.244.3"
   }
 }

@@ -7,6 +7,12 @@ import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 import { getAccessToken } from './Auth';
 
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if(nodeVersion < 16) {
+    tl.warning(tl.loc('NodeVersionSupport', nodeVersion));
+}
+
+
 const symbolRequestAlreadyExistsError = 17;
 const {"v4": uuidV4} = require('uuid');
 

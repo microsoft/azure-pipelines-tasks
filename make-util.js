@@ -17,7 +17,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -173,13 +173,20 @@ var buildNodeTask = function (taskPath, outDir) {
         } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
-
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
         cd(taskPath);
     }
 
@@ -333,7 +340,7 @@ exports.ensureTool = ensureTool;
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
         20: 'v20.14.0',
-        16: 'v16.17.1',
+        16: 'v16.20.2',
         14: 'v14.10.1',
         10: 'v10.24.1',
         6: 'v6.10.3',
@@ -724,6 +731,8 @@ var fileToJson = function (file) {
 exports.fileToJson = fileToJson;
 
 var createResjson = function (task, taskPath) {
+    console.log(`createResjson ${taskPath}`);
+
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
         resources['loc.friendlyName'] = task.friendlyName;
@@ -1774,49 +1783,32 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-    const validatingTasks = {};
+    var tasks = taskList.join('|')
+    const programPath = getBuildConfigGenerator(baseConfigToolPath);
+    const args = [
+        "--task",
+        `"${tasks}"`
+    ];
+
+    if (sprintNumber) {
+        args.push("--current-sprint");
+        args.push(sprintNumber);
+    }
     
-    for (const key in makeOptions) {
-        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-
-        makeOptions[key].forEach((taskName) => {
-            if (taskList.indexOf(taskName) ===  -1) return;
-            if (validatingTasks[key]) {
-                validatingTasks[key].push(taskName);
-            } else {
-                validatingTasks[key] = [taskName];
-            }
-        });
+    var writeUpdateArg = "";
+    if(writeUpdates)
+    {
+        writeUpdateArg += " --write-updates";
     }
-    for (const config in validatingTasks) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const args = [
-            "--configs",
-            config,
-            "--task",
-            `"${validatingTasks[config].join('|')}"`
-        ];
 
-        if (sprintNumber) {
-            args.push("--current-sprint");
-            args.push(sprintNumber);
-        }
-        
-        var writeUpdateArg = "";
-        if(writeUpdates)
-        {
-            writeUpdateArg += " --write-updates";
-        }
-
-        var debugAgentDirArg = "";
-        if(debugAgentDir) {
-            debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
-        }
-
-        banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
-        run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+    var debugAgentDirArg = "";
+    if(debugAgentDir) {
+        debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
     }
+
+    banner(`Validating: tasks ${tasks} \n`);
+    run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+
 }
 exports.processGeneratedTasks = processGeneratedTasks;
 

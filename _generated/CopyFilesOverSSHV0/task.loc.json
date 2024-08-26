@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 240,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [],
@@ -194,7 +194,7 @@
     "UploadFolderFailed": "ms-resource:loc.messages.UploadFolderFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.0",
-    "Node20-225": "0.240.1"
+    "Default": "0.244.0",
+    "Node20-225": "0.244.1"
   }
 }

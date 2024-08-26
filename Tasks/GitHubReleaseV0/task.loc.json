@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 244,
     "Patch": 0
   },
   "demands": [],
@@ -27,6 +27,8 @@
       "visibleRule": "addChangeLog = true"
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The GitHubRelease@0 task is deprecated, please use a newer version of the GitHubRelease task",
   "inputs": [
     {
       "name": "gitHubConnection",
