@@ -112,7 +112,7 @@ export class AzureStorageArtifactDownloader {
   }
 
   private async _getARMCredentials(): Promise<msRestAzure.ApplicationTokenCredentials> {
-    const endpoint: AzureEndpoint = await new AzureRMEndpoint(this.connectedService).getEndpoint();
+    const endpoint: AzureEndpoint = await new AzureRMEndpoint(this.connectedService).getEndpoint(undefined, true);
     return endpoint.applicationTokenCredentials;
   }
 }
