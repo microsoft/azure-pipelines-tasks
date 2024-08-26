@@ -17,7 +17,12 @@ import { useRubyVersion, getPlatform } from './userubyversion';
             versionSpec,
             addToPath
         });
-    } catch (e) {
-        task.setResult(task.TaskResult.Failed, e.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            task.setResult(task.TaskResult.Failed, error.message);
+        }
+        else {
+            task.setResult(task.TaskResult.Failed, error + '');
+        }
     }
 })();

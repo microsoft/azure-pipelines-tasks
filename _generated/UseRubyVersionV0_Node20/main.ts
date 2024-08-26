@@ -4,7 +4,6 @@ import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry'
 import { useRubyVersion, getPlatform } from './userubyversion';
 
 (async () => {
-    let error: any | undefined;
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         const versionSpec = task.getInput('versionSpec', true) || '';
@@ -18,8 +17,12 @@ import { useRubyVersion, getPlatform } from './userubyversion';
             versionSpec,
             addToPath
         });
-    } catch (e) {
-        error = e;
-        task.setResult(task.TaskResult.Failed, error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            task.setResult(task.TaskResult.Failed, error.message);
+        }
+        else {
+            task.setResult(task.TaskResult.Failed, error + '');
+        }
     }
 })();
