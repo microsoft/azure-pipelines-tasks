@@ -5,7 +5,6 @@ import * as tl from "azure-pipelines-task-lib";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import * as auth from "./authentication";
 import * as utils from "./utilities";
-import * as ini from "ini";
 
 
  // tslint:disable-next-line:max-classes-per-file
@@ -26,7 +25,7 @@ export class Repository
 
     toString()
     {
-        return `[${this.feedName}]${os.EOL}repository=${this.repository}${os.EOL}username=${this.username}${os.EOL}password=${this.password}${os.EOL}`;
+        return `[${this.feedName}]${os.EOL}repository=${this.repository}${os.EOL}username=${this.username}${os.EOL}password=${this.password}`;
     }
 }
 
@@ -49,71 +48,10 @@ async function main(): Promise<void> {
 
         let pypircPath = utils.getPypircPath();
 
-        // create new .pypirc file if one does not exist yet
-        if (!tl.getVariable("PYPIRC_PATH") || !tl.exist(tl.getVariable("PYPIRC_PATH")) || !tl.exist(pypircPath)) {
-            fs.writeFileSync(pypircPath, '', 'utf8');
-            tl.setVariable("PYPIRC_PATH", pypircPath, false);
-            tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
-        }
-        
-        const pypirc = fs.readFileSync(pypircPath, 'utf8');
 
-        let fileContent = ini.parse(pypirc);
-
-        let usedRepos = new Set<string>();
-
-        for (let connection in fileContent) {
-
-            const connectionObj: object = fileContent[connection];
-
-            if (!connectionObj.hasOwnProperty('repository')) {
-                const authenticatedRepo = getNestedRepoProperty(connectionObj);
-
-                if ((authenticatedRepo === undefined) && (connection.toLocaleLowerCase() !== 'distutils')) {
-                    tl.warning(tl.loc("NoRepoFound", connection));
-                    continue;
-                }
-
-                usedRepos.add(authenticatedRepo);
-                continue;
-            }
-
-            usedRepos.add(connectionObj['repository']);
-        }
-
-
-        let reposList: string[] = [];
-
-        for (let entry of newEndpointsToAdd) {
-
-            tl.debug(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
-
-            let repo = new Repository(
-                entry.packageSource.feedName,
-                entry.packageSource.feedUri,
-                entry.username,
-                entry.password
-            );
-
-            if ((entry.packageSource.feedName in fileContent) || (usedRepos.has(repo.repository))) {
-                console.log(tl.loc("Warning_DuplicateEntryForFeed", entry.packageSource.feedName, repo.repository));
-                removeFromFeedCount(internalFeed, externalEndpoints, entry);
-                continue;
-            }
-
-            reposList.push(repo.toString() + `${os.EOL}`);
-            
-            fileContent = configHeader(fileContent, entry.packageSource.feedName);
-        }
-
-        let encodedStr = ini.encode(fileContent);
-        fs.writeFileSync(pypircPath, encodedStr);
-
-        fs.appendFileSync(pypircPath, `${os.EOL}`, 'utf8');
-
-        for (let repo of reposList) {
-            fs.appendFileSync(pypircPath, repo, 'utf8');
-        }
+        // create new file. We do not merge existing files and always create a fresh file
+        fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
+        setPypircEnvVar(pypircPath);
 
         // Configuring the pypirc file
         internalFeedSuccessCount = internalFeed.size;
@@ -133,31 +71,35 @@ async function main(): Promise<void> {
     }
 }
 
-function configHeader(fileContent: any, feedName: string): any {
-    (!fileContent.hasOwnProperty("distutils") || !fileContent["distutils"].hasOwnProperty("index-servers")) ?
-        fileContent["distutils"] = {["index-servers"]: `${feedName}`} :
-        fileContent["distutils"]["index-servers"] += " " + feedName;
-    return fileContent;
+function findDuplicatesInArray<T>(array: Array<T>): Array<T>{
+    return array.filter((e, i, a) => a.indexOf(e) !== i);
 }
 
-function removeFromFeedCount(internalFeed: Set<auth.AuthInfo>, externalEndpoints: Set<auth.AuthInfo>, entry: auth.AuthInfo): void {
-    if (internalFeed.has(entry)) {
-        internalFeed.delete(entry);
-        return;
+function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string {
+    const authInfo = Array.from(authInfoSet);
+    let feedNames = authInfo.map(entry => entry.packageSource.feedName);
+    let duplicateFeeds = findDuplicatesInArray<string>(feedNames);
+
+    if (duplicateFeeds.length > 0) {
+        throw new Error(tl.loc("Error_DuplicateEntryForFeed", duplicateFeeds.join(", ")));
     }
-    externalEndpoints.delete(entry);
+
+    feedNames.forEach(feedName =>
+        console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
+    let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
+
+    let repositories = authInfo.map(entry =>
+        new Repository(entry.packageSource.feedName, entry.packageSource.feedUri,
+            entry.username, entry.password));
+
+    let repositoriesEncodedStr = repositories.map(repo => repo.toString()).join(`${os.EOL}${os.EOL}`);
+
+    return header + os.EOL + os.EOL + repositoriesEncodedStr;
 }
 
-function getNestedRepoProperty(connection: object): string | undefined {
-    for (const key in connection) {
-        if (typeof connection[key] === 'object') {
-            return getNestedRepoProperty(connection[key]);
-        }
-        else if (key.toLowerCase() === 'repository') {
-            return connection[key];
-        }
-    }
-    return undefined;
+function setPypircEnvVar(pypircPath: string): void {
+    tl.setVariable("PYPIRC_PATH", pypircPath, false);
+    tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
 }
 
 main();

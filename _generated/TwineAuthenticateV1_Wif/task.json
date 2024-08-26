@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 7
+    "Minor": 245,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -116,7 +116,7 @@
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
     "Warning_OnlyOneFeedAllowed": "Only one internal feed can be authorized at a time using this task. All the feeds except first one will be ignored.",
     "Warning_OnlyOneServiceConnectionAllowed": "Only one service connection can be authorized at a time using this task. All the connections except first one will be ignored.",
-    "Warning_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s or url %s. Use unique names and url's to avoid potential publish issues.",
+    "Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "Error_MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
     "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
@@ -141,8 +141,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.244.5",
-    "Node20_229_1": "1.244.6",
-    "wif_242": "1.244.7"
+    "Default": "1.245.0",
+    "Node20_229_1": "1.245.1",
+    "wif_242": "1.245.2"
   }
 }

@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 6
+    "Minor": 245,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -95,7 +95,7 @@
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "Warning_OnlyOneFeedAllowed": "ms-resource:loc.messages.Warning_OnlyOneFeedAllowed",
     "Warning_OnlyOneServiceConnectionAllowed": "ms-resource:loc.messages.Warning_OnlyOneServiceConnectionAllowed",
-    "Warning_DuplicateEntryForFeed": "ms-resource:loc.messages.Warning_DuplicateEntryForFeed",
+    "Error_DuplicateEntryForFeed": "ms-resource:loc.messages.Error_DuplicateEntryForFeed",
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
@@ -120,8 +120,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.244.5",
-    "Node20_229_1": "1.244.6",
-    "wif_242": "1.244.7"
+    "Default": "1.245.0",
+    "Node20_229_1": "1.245.1",
+    "wif_242": "1.245.2"
   }
 }
