@@ -3,6 +3,11 @@
   "loc.helpMarkDown": "",
   "loc.description": "Conda 客户端的身份验证任务",
   "loc.instanceNameFormat": "Conda 身份验证",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
   "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
-  "loc.messages.AddingAuthChannel": "为令牌 %s 添加身份验证"
+  "loc.messages.AddingAuthChannel": "为令牌 %s 添加身份验证",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
 }
