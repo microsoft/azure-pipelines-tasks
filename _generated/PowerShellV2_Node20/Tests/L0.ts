@@ -8,95 +8,94 @@ import { runValidateFileArgsTests } from './L0ValidateFileArgs';
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
-    function runValidations(validator: () => void, tr, done: Mocha.Done) {
+    function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
             validator();
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     }
 
-    it('Runs an inline script correctly', (done: Mocha.Done) => {
+    it('Runs an inline script correctly', async () => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0Inline.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}Write-Host "my script output" to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Runs a checked in script correctly', (done: Mocha.Done) => {
+    it('Runs a checked in script correctly', async () => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0External.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Adds arguments to the script', (done: Mocha.Done) => {
+    it('Adds arguments to the script', async () => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0Args.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' myCustomArg to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Reports stderr correctly', (done: Mocha.Done) => {
+    it('Reports stderr correctly', async () => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0StdErr.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(tr.failed, 'Powershell should have failed');
             assert(tr.stdout.indexOf('##vso[task.issue type=error;source=CustomerScript;]myErrorTest') > 0, 'Powershell should have correctly written myErrorTest');
             assert(tr.stdout.length > 1000, 'Powershell stderr output is not truncated');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Runs scripts with & operator', (done: Mocha.Done) => {
+    it('Runs scripts with & operator', async () => {
         this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0RunScriptInSeparateScope.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
-        }, tr, done);
+        }, tr);
     });
 
     describe('Environment variable expansion', testEnvExpansion);

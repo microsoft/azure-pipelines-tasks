@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Cargo 認証 (タスク ランナー用)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Cargo クレート配布のインストールに使用される Cargo クライアントの認証タスク",
+  "loc.instanceNameFormat": "Cargo 認証 $(configFile)",
+  "loc.input.label.configFile": "認証するための config.toml ファイル",
+  "loc.input.help.configFile": "使用するレジストリを指定する config.toml ファイルへのパス。フォルダーではなくファイルを選択します。例: \"/.cargo/config.toml\"。",
+  "loc.input.label.cargoServiceConnections": "この組織/コレクション外のレジストリの資格情報",
+  "loc.input.help.cargoServiceConnections": "プロジェクトの config.toml にある外部レジストリに使用する資格情報です。この組織/コレクション内のレジストリの場合は、空白のままにします。ビルドの資格情報が自動的に使用されます。",
+  "loc.messages.FailedToAddAuthentication": "認証を追加できませんでした。",
+  "loc.messages.ConfigTomlNotToml": "認証するために選択したファイル (%s) は有効な .toml ファイルではありません。",
+  "loc.messages.ConfigTomlDoesNotExist": "%s で選択した config.toml ファイルが現時点では存在しません。",
+  "loc.messages.ConfigTomlMissingRegistry": "選択した config.toml ファイルには registries テーブルが含まれている必要があります",
+  "loc.messages.AuthenticatingThisConfigToml": "%s にあるこの config.toml ファイルにリストされているレジストリの認証を追加しています",
+  "loc.messages.AddingAuthRegistry": "レジストリの認証を追加しています: %s (トークン名: %s)",
+  "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)"
+}

@@ -479,6 +479,8 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
+    process.env['SYSTEM_DEBUG'] = 'true';
+
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));

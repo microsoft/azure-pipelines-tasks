@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 245,
     "Patch": 0
   },
   "runsOn": [
@@ -53,6 +53,11 @@
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
-    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet"
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "ConnectionAlreadySetOverwriting": "ms-resource:loc.messages.ConnectionAlreadySetOverwriting",
+    "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   }
 }

@@ -8,30 +8,27 @@ const isWin = os.type().match(/^Win/);
 describe('GulpV1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-    before((done: Mocha.Done) => {
+    before(() => {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build';
-        done();
     });
 
-    it('runs a gulpfile through global gulp', (done: Mocha.Done) => {
+    it('runs a gulpfile through global gulp', async () => {
         const tp = path.join(__dirname, 'L0GulpGlobalGood.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
         assert(tr.invokedToolCount == 1, 'should have only run gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('runs a gulpfile through local gulp', (done: Mocha.Done) => {
+    it('runs a gulpfile through local gulp', async () => {
         const tp = path.join(__dirname, 'L0GulpLocalGood.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -47,15 +44,13 @@ describe('GulpV1 Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have only run gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('runs gulp when code coverage is enabled', (done: Mocha.Done) => {
+    it('runs gulp when code coverage is enabled', async () => {
         const tp = path.join(__dirname, 'L0GulpLocalGoodWithCodeCoverage.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -71,15 +66,13 @@ describe('GulpV1 Suite', function () {
         assert(tr.invokedToolCount == 3, 'should have run npm, Gulp and istanbul');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('runs a gulpFile when publishJUnitTestResults is false', (done: Mocha.Done) => {
+    it('runs a gulpFile when publishJUnitTestResults is false', async () => {
         const tp = path.join(__dirname, 'L0PublishJUnitTestResultsFalse.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -95,92 +88,79 @@ describe('GulpV1 Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have only run Gulp');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('fails if gulpFile not set', (done: Mocha.Done) => {
+    it('fails if gulpFile not set', async () => {
         const tp = path.join(__dirname, 'L0GulpFileNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('Input required: gulpFile'), 'Should have printed: Input required: gulpFile');
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails if cwd not set', (done: Mocha.Done) => {
+    it('fails if cwd not set', async () => {
         const tp = path.join(__dirname, 'L0CwdNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('Input required: cwd'), 'Should have printed: Input required: cwd');
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('runs a gulpfile through global gulp if gulpjs not set', (done: Mocha.Done) => {
+    it('runs a gulpfile through global gulp if gulpjs not set', async () => {
+        process.env['SYSTEM_DEBUG'] = 'true';
         const tp = path.join(__dirname, 'L0GulpjsNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('gulpjs not set'), 'Should have printed: gulpjs not set');
         assert(tr.invokedToolCount == 1, 'should have only run Gulp');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('fails if gulpFile not found', (done: Mocha.Done) => {
+    it('fails if gulpFile not found', async () => {
         const tp = path.join(__dirname, 'L0NoGulpFile.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('Not found gulpfile.js'), 'Should have printed: Not found gulpfile.js');
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails if gulp no exist globally and locally', (done: Mocha.Done) => {
+    it('fails if gulp no exist globally and locally', async () => {
         const tp = path.join(__dirname, 'L0NoGulp.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('loc_mock_GulpNotInstalled'), 'Should have printed: loc_mock_GulpNotInstalled');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails if npm fails', (done: Mocha.Done) => {
+    it('fails if npm fails', async () => {
         const tp = path.join(__dirname, 'L0NpmFails.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('loc_mock_NpmFailed'), 'Should have printed: loc_mock_NpmFailed');
         assert(tr.invokedToolCount == 2, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails if gulp fails', (done: Mocha.Done) => {
+    it('fails if gulp fails', async () => {
         const tp = path.join(__dirname, 'L0GulpFails.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -196,15 +176,13 @@ describe('GulpV1 Suite', function () {
         assert(tr.stdOutContained('loc_mock_GulpFailed'), 'Should have printed: loc_mock_GulpFailed');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails if istanbul fails', (done: Mocha.Done) => {
+    it('fails if istanbul fails', async () => {
         const tp = path.join(__dirname, 'L0IstanbulFails.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -220,28 +198,25 @@ describe('GulpV1 Suite', function () {
         assert(tr.stdOutContained('loc_mock_IstanbulFailed'), 'Should have printed: loc_mock_IstanbulFailed');
         assert(tr.invokedToolCount == 3, 'should have run npm, gulp and istanbul');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails when test result files input is not provided', (done: Mocha.Done) => {
+    it('fails when test result files input is not provided', async () => {
         const tp = path.join(__dirname, 'L0TestResultFilesNotSet.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('Input required: testResultsFiles'), 'Should have printed: Input required: testResultsFiles');
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('gives warning and runs when test result files input does not match any file', (done: Mocha.Done) => {
+    it('gives warning and runs when test result files input does not match any file', async () => {
+        process.env['SYSTEM_DEBUG'] = 'true';
         const tp = path.join(__dirname, 'L0TestResultFilesDoesNotMatchAnyFile.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         if (isWin) {
             assert(
@@ -260,33 +235,27 @@ describe('GulpV1 Suite', function () {
             'should give a warning for test file pattern not matched.'
         );
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('fails when test source files input is not provided for coverage', (done: Mocha.Done) => {
+    it('fails when test source files input is not provided for coverage', async () => {
         const tp = path.join(__dirname, 'L0NoTestSourceFiles.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 
-    it('fails when test source files input does not match any file', (done: Mocha.Done) => {
+    it('fails when test source files input does not match any file', async () => {
         const tp = path.join(__dirname, 'L0InvalidTestSource.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdOutContained('loc_mock_IstanbulFaile'), 'Should have printed: loc_mock_IstanbulFaile');
         assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
         assert(tr.failed, 'should have failed');
-
-        done();
     });
 });
