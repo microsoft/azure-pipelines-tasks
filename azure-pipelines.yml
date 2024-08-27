@@ -83,14 +83,8 @@ extends:
           outputs:
             - output: buildArtifacts
               displayName: 'Publish package artifact'
-              condition: >
-                and(
-                  succeeded(),
-                  ne(variables['build.reason'], 'PullRequest'),
-                  ne(variables['numTasks'], 0)
-                )
-              PathtoPublish: _package/tasks.zip
-              ArtifactName: package
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: drop
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:

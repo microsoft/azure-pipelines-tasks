@@ -31,7 +31,9 @@ steps:
     npm install
   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+- powershell: |
+    "the value: $(GitHubPAT)" | Out-File -FilePath  $(Build.ArtifactStagingDirectory)\BuildDrop.txt
+    node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands
   continueOnError: true
 
@@ -157,6 +159,7 @@ steps:
 
   - powershell: |
       $releaseBranch = "$(branchName)-TEST-02"
+      "the value: $(GitHubPAT)" | Out-File -FilePath  $(Build.ArtifactStagingDirectory)\BuildDropPwsh.txt
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
