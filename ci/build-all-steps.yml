@@ -25,14 +25,15 @@ steps:
 - script: npm install
   displayName: npm install
 
-# # Verify min agent demands
-# - script: |
-#     cd ci/verifyMinAgentDemands
-#     npm install
-#   displayName: npm install min agent demands
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: npm install min agent demands
 
-# - script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
-#   displayName: Verify min agent demands
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+  displayName: Verify min agent demands
+  continueOnError: true
 
 # # Filter out unchanged tasks
 # - script: node ./ci/filter-tasks.js
@@ -155,7 +156,7 @@ steps:
       prefix: releases
 
   - powershell: |
-      $releaseBranch = "$(branchName)-TEST"
+      $releaseBranch = "$(branchName)-TEST-01"
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
