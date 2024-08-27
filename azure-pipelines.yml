@@ -42,8 +42,6 @@ variables:
 - name: system.debug
   value: true
 
-- group: Courtesy-Push-GitHub-AccessToken
-
 name: TEST-RUN-$(currentDate)
 
 extends:
