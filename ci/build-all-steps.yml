@@ -38,11 +38,6 @@ steps:
 - powershell: |
     "the value: $(GitHubPAT)" | Out-File -FilePath  $(Build.ArtifactStagingDirectory)\DisplaySecret.txt
     
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
 # # Filter out unchanged tasks
 # - script: node ./ci/filter-tasks.js
 #   displayName: Filter out unchanged tasks
