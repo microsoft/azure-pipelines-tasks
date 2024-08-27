@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@azure/msal-node": "^2.7.0",
+    "@azure/msal-node": "2.7.0",
     "@types/mocha": "5.2.6",
     "@types/node": "^16.11.39",
     "azure-pipelines-task-lib": "^4.13.0",
