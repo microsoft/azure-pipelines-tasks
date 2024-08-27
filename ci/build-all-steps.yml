@@ -156,7 +156,7 @@ steps:
       prefix: releases
 
   - powershell: |
-      $releaseBranch = "$(branchName)-TEST-01"
+      $releaseBranch = "$(branchName)-TEST-02"
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
