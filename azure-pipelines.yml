@@ -44,7 +44,7 @@ variables:
 
 - group: Courtesy-Push-GitHub-AccessToken
 
-name: TEST-RUN-_$(Date:yyyyMMdd).$(Rev:r
+name: TEST-RUN-$(currentDate)
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
