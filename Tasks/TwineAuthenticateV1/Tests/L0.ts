@@ -49,6 +49,8 @@ describe('Twine Authenticate V1 Suite', async () => {
         assert(tr.succeeded, 'should have succeeded');
         assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
         let fileContent = fs.readFileSync(tempDir + path.sep + ".pypirc", "utf-8");
+        console.log('File content: ');
+        console.log(fileContent);
 
         let lines = fileContent.split(/\r?\n/);
 
@@ -56,12 +58,12 @@ describe('Twine Authenticate V1 Suite', async () => {
         assert((lines[1] === "index-servers=Test.Feed")
             || (lines[1].startsWith('index-servers=') && lines[1].endsWith('Test.Feed')),
             "Test Feed should be added to auth list.");
-        assert.strictEqual(lines.at(-6), "[Test.Feed]");
-        assert.strictEqual(lines.at(-5), "repository=https://vsts/packagesource/Test.Feed",
+        assert.strictEqual(lines.at(-4), "[Test.Feed]");
+        assert.strictEqual(lines.at(-3), "repository=https://vsts/packagesource/Test.Feed",
             "Test Feed repository should be correct.");
-        assert.strictEqual(lines.at(-4), "username=build",
+        assert.strictEqual(lines.at(-2), "username=build",
             "Default username should be correct.");
-        assert.strictEqual(lines.at(-3), "password=token",
+        assert.strictEqual(lines.at(-1), "password=token",
             "Default password from environment variable should be correct.");
     }).timeout(50000);
 });
