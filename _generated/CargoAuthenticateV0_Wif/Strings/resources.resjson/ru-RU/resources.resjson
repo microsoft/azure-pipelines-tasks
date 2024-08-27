@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Проверка подлинности Cargo (для запускателей задач)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Задача проверки подлинности для клиента Cargo, используемая для установки дистрибутива Cargo crates.",
+  "loc.instanceNameFormat": "$(configFile) для проверки подлинности Cargo",
+  "loc.input.label.configFile": "Файл config.toml для проверки подлинности",
+  "loc.input.help.configFile": "Путь к файлу config.toml, в котором указаны реестры, с которыми нужно работать. Выберите файл, а не папку, например \"/.cargo/config.toml\".",
+  "loc.input.label.cargoServiceConnections": "Учетные данные для реестров за пределами текущей организации/коллекции",
+  "loc.input.help.cargoServiceConnections": "Учетные данные для внешних реестров из проектного файла config.toml. Для реестров в текущей организации/коллекции оставьте это поле пустым; будут автоматически использоваться учетные данные сборки.",
+  "loc.messages.FailedToAddAuthentication": "Добавить проверку подлинности не удалось.",
+  "loc.messages.ConfigTomlNotToml": "Выбранный файл для проверки подлинности (%s) не является допустимым файлом .toml.",
+  "loc.messages.ConfigTomlDoesNotExist": "Файл config.toml, выбранный в %s, сейчас не существует.",
+  "loc.messages.ConfigTomlMissingRegistry": "Выбранный файл config.toml должен содержать таблицу реестров.",
+  "loc.messages.AuthenticatingThisConfigToml": "Добавление проверки подлинности для реестра, указанного в этом файле config.toml в %s.",
+  "loc.messages.AddingAuthRegistry": "Добавление проверки подлинности для реестра %s с именем токена %s.",
+  "loc.messages.AddingAuthExternalRegistry": "Добавление проверки подлинности для внешнего реестра %s с именем токена %s."
+}
