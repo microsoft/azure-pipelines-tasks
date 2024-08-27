@@ -83,16 +83,20 @@ extends:
           os: windows
         templateContext:
           outputs:
-            - output: buildArtifacts
-              displayName: 'Publish package artifact'
-              condition: >
-                and(
-                  succeeded(),
-                  ne(variables['build.reason'], 'PullRequest'),
-                  ne(variables['numTasks'], 0)
-                )
-              PathtoPublish: _package/tasks.zip
-              ArtifactName: package
+          - output: buildArtifacts
+            displayName: 'Publish package artifact'
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: drop
+            # - output: buildArtifacts
+            #   displayName: 'Publish package artifact'
+            #   condition: >
+            #     and(
+            #       succeeded(),
+            #       ne(variables['build.reason'], 'PullRequest'),
+            #       ne(variables['numTasks'], 0)
+            #     )
+            #   PathtoPublish: _package/tasks.zip
+            #   ArtifactName: package
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
