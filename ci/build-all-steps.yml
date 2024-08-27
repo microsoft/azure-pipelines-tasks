@@ -31,7 +31,7 @@ steps:
     npm install
   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+- script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify min agent demands
 
 # Filter out unchanged tasks
@@ -169,12 +169,12 @@ steps:
       # Pull commits from remote and push branch to git
       git checkout -b $releaseBranch
       Write-Host 'Trying to pull the remote branch..'
-      git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+      git pull https://github.com/microsoft/azure-pipelines-tasks $releaseBranch
       if (-not $?) {
         Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
       }
       Write-Host 'Trying to push to the remote branch..'
-      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+      git push https://github.com/microsoft/azure-pipelines-tasks $releaseBranch
     condition: |
       and(
         succeeded(),
@@ -201,4 +201,5 @@ steps:
         eq(variables['COURTESY_PUSH'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
+    continueOnError: true
     displayName: Create Release
