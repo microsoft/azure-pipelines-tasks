@@ -49,9 +49,6 @@
     "validator": "^13.7.0"
   },
   "dependencies": {
-    "agent-base": "^6.0.2",
-    "glob": "^11.0.0",
-    "inflight": "^1.0.6",
-    "rimraf": "^6.0.1"
+    "agent-base": "^6.0.2"
   }
 }
