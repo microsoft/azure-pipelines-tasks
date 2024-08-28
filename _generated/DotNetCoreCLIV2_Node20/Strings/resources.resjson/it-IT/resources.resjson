@@ -14,8 +14,8 @@
   "loc.input.help.command": "Comando dotnet da eseguire. Selezionare 'Personalizza' per aggiungere argomenti o usare un comando non elencato qui.",
   "loc.input.label.publishWebProjects": "Pubblica progetti Web",
   "loc.input.help.publishWebProjects": "Se è impostato su true, l'attività proverà a trovare i progetti Web nel repository e a eseguire su di essi il comando publish. I progetti Web sono identificabili dalla presenza di un file web.config file o della cartella wwwroot nella directory.",
-  "loc.input.label.projects": "Percorso dei progetti",
-  "loc.input.help.projects": "Percorso dei file csproj da usare. È possibile usare i caratteri jolly, ad esempio **/.csproj per tutti i file con estensione csproj in tutte le sottocartelle. **Questo campo è conforme al criterio GLOB e viene eseguito sulla radice del repository in tutti i casi, indipendentemente dalla directory di lavoro.**",
+  "loc.input.label.projects": "Percorso per uno o più progetti o soluzioni",
+  "loc.input.help.projects": "Percorso dei file con estensione csproj o sln da usare. È possibile usare i caratteri jolly, ad esempio **/.csproj per tutti i file con estensione csproj in tutte le sottocartelle. **Questo campo è conforme al criterio GLOB e viene eseguito sulla radice del repository in tutti i casi, indipendentemente dalla directory di lavoro.**",
   "loc.input.label.custom": "Comando personalizzato",
   "loc.input.help.custom": "Comando da passare a dotnet.exe per l'esecuzione.",
   "loc.input.label.arguments": "Argomenti",
@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 presenta alcuni problemi di compatibilità con le versioni precedenti di Nuget (<=5.7), quindi se per il ripristino si usa una versione precedente di Nuget (e non dotnet cli), i comandi di dotnet cli (ad esempio dotnet build) che si basano su tali pacchetti ripristinati potrebbero non riuscire. Per mitigare tale errore, è possibile: (1) usare dotnet cli per il ripristino, (2) usare Nuget versione 5.8 per il ripristino, (3) usare Global.json con una versione precedente dell'SDK (<=3) per compilare",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "Informazioni: .NET Core SDK/Runtime 2.2 e 3.0 stanno per passare alla fase EOL (End of Life) e sono stati rimossi da tutti gli agenti ospitati. Se si usano questi SDK/Runtime in agenti ospitati, eseguire l'aggiornamento a versioni più recenti per cui non è previsto il passaggio alla fase EOL oppure usare l'attività Usa dotnet per installare la versione richiesta.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg è attualmente abilitato per questa attività. Per risolvere questo avviso, modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale."
 }

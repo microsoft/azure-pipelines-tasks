@@ -14,8 +14,8 @@
   "loc.input.help.command": "要執行的 dotnet 命令。選取 [自訂] 可新增引數或使用此處未列出的命令。",
   "loc.input.label.publishWebProjects": "發佈 Web 專案",
   "loc.input.help.publishWebProjects": "若為 true，工作會嘗試在存放庫中尋找 Web 專案，並對其執行 publish 命令。目錄中有 web.config 檔案或 wwwroot 資料夾，即表示有 Web 專案。",
-  "loc.input.label.projects": "專案的路徑",
-  "loc.input.help.projects": "要使用的 csproj 檔案路徑。您可以使用萬用字元 (例如 **/*.csproj 表示所有子資料夾中的所有 .csproj 檔案)。**此欄位會遵循 Glob 模式，並在所有時間針對存放庫的根目錄執行，不論工作目錄為何。**",
+  "loc.input.label.projects": "到專案或解決方案的路徑",
+  "loc.input.help.projects": "要使用之 csproj 或 sln 檔案的路徑。您可以使用萬用字元 (例如 **/*.csproj 表示所有子資料夾中的所有 .csproj 檔案)。**此欄位會遵循 Glob 模式，並在所有時間針對存放庫的根目錄執行，不論工作目錄為何。**",
   "loc.input.label.custom": "自訂命令",
   "loc.input.help.custom": "要傳遞至 dotnet.exe 以加以執行的命令。",
   "loc.input.label.arguments": "引數",
@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 和一些舊版 Nuget (<=5.7) 有相容性問題，所以如果使用較舊的 Nuget 版本 (不是 dotnet cli) 還原，則依賴這些還原套件的 dotnet cli 命令 (例如 dotnet build) 可能會失敗。為減少此類錯誤，您可以使用以下任一方法: (1) – 使用 dotnet cli 還原，(2) – 使用 Nuget 5.8 版還原，(3) – 使用使用舊版 sdk (<=3) 的 global.json 建置",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "資訊: .NET Core SDK/執行階段 2.2 及 3.0 目前已停產 (EOL)，並自所有裝載的代理程式中移除。如果您在裝載的代理程式上使用這些 SDK/執行階段，請升級至未停產的較新版本，或使用 UseDotNet 工作安裝必要的版本。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "目前已為此工作啟用 IncludeNugetOrg。若要解决此警告，請編輯建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。"
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服務連線並非使用支援的驗證方法。請使用個人存取權杖型驗證的服務連線。"
 }
