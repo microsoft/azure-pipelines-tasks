@@ -6,7 +6,16 @@ This task is used to pull key-values from your [App configuration store](https:/
 
 ## Contact Information
 
-Please report a problem to [AzureAppConfig@microsoft.com](AzureAppConfig@microsoft.com) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+Please report a problem to <AzureAppConfig@microsoft.com> if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+
+## Pre-requisites for the task
+The following need to be set up for the task to work properly.
+
+- Azure Subscription - [create one for free](https://azure.microsoft.com/free/)
+- App Configuration store - [create one for free](https://learn.microsoft.com/azure/azure-app-configuration/quickstart-azure-app-configuration-create#create-an-app-configuration-store)
+- Azure DevOps project - [create one for free](https://go.microsoft.com/fwlink/?LinkId=2014881)
+- [Azure Pipelines agent version 2.144](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.144.0) or later
+- Service connection - [create a service connection](https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline#create-a-service-connection)
 
 ### Parameters of the task:
 
