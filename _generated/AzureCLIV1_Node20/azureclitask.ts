@@ -6,6 +6,12 @@ import os = require("os");
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    const dns = require("dns");
+    dns.setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
 export class azureclitask {
     public static checkIfAzurePythonSdkIsInstalled() {
         return !!tl.which("az", false);
