@@ -12,10 +12,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).]]></Val>
+          <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2 and later).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[VsTest(Visual Studio Test) Runner를 사용하여 단위 및 기능 테스트(Selenium, Appium, 코딩된 UI 테스트 등)를 실행합니다. MsTest, xUnit, NUnit, Chutzpah(QUnit, Mocha 및 Jasmine을 사용한 JavaScript 테스트용) 등의 Visual Studio 테스트 어댑터가 있는 테스트 프레임워크를 실행할 수 있습니다. 이 작업(버전 2)을 사용하여 여러 에이전트에 테스트를 배포할 수 있습니다.]]></Val>
+            <Val><![CDATA[VsTest(Visual Studio Test) Runner를 사용하여 단위 및 기능 테스트(Selenium, Appium, 코딩된 UI 테스트 등)를 실행합니다. MsTest, xUnit, NUnit, Chutzpah(QUnit, Mocha 및 Jasmine을 사용한 JavaScript 테스트용) 등의 Visual Studio 테스트 어댑터가 있는 테스트 프레임워크를 실행할 수 있습니다. 이 작업(버전 2 이상)을 사용하여 여러 에이전트에 테스트를 배포할 수 있습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
