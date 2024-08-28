@@ -1,45 +1,16 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
-import * as msal from "@azure/msal-node";
-//import { getFederatedToken } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
-import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 
-export async function getAccessToken(): Promise<string> {
-  try {
-    let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
-    const hasAccountName : boolean = (AsAccountName) ? true : false;
-    const connectedServiceName : string = tl.getInput("ConnectedServiceName", !hasAccountName);
-    tl.debug(`connectedServiceName: ${connectedServiceName}`);
-    const usePat : boolean = tl.getBoolInput("usePat", false);
-
-    if (usePat) {
-      if (connectedServiceName)
-      {
-        throw new Error(`Service connection is not supported when 'usePat' is set to 'false'.`);
-      }
-
-      const patVar : string = 'ArtifactServices.Drop.PAT';
-
-      tl.debug(`Retrieving PAT from to pipeline variable '${patVar}'`);
-      return tl.getVariable(patVar);
-    }
-
-    if (connectedServiceName)
-    {
-      tl.debug(`Retrieving access token from service connection.`);
-      return await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
-    }
-
-    tl.debug(`Retrieving system access token`);
-    return clientToolUtils.getSystemAccessToken();
-  } catch (err: any) {
-    tl.setResult(tl.TaskResult.Failed, err.message);
-    throw err;
-  }
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if(nodeVersion < 16) {
+    tl.error(tl.loc('NodeVersionSupport', nodeVersion));
 }
 
+import * as msal from "@azure/msal-node";
+import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 
-async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+
   // workloadidentityfederation
   const authorizationScheme = tl
     .getEndpointAuthorizationSchemeRequired(connectedService)

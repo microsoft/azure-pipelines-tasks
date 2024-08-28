@@ -5,13 +5,14 @@ import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/univers
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import { getAccessToken } from './Auth';
+import { getAccessTokenViaWorkloadIdentityFederation } from './Auth';
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if(nodeVersion < 16) {
-    tl.warning(tl.loc('NodeVersionSupport', nodeVersion));
-}
+    console.log(tl.loc('NodeVersionSupport', nodeVersion));
+    tl.error(tl.loc('NodeVersionSupport', nodeVersion));
 
+}
 
 const symbolRequestAlreadyExistsError = 17;
 const {"v4": uuidV4} = require('uuid');
@@ -35,13 +36,13 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
-        let personalAccessToken;
-        const usePat : boolean = (AsAccountName) ? true : false;
-        const connectedServiceName: string = tl.getInput("ConnectedServiceName", !usePat);
+        let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
+        const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
         tl.debug("connectedServiceName: " + connectedServiceName);
+
         if(connectedServiceName){
             tl.debug("connectedServiceName: " + connectedServiceName);
-            personalAccessToken = await getAccessToken();
+            personalAccessToken = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
         }
         else if (AsAccountName) {
             tl.debug("AsAccountName: " + AsAccountName);
@@ -49,11 +50,10 @@ export async function run(clientToolFilePath: string): Promise<void> {
         }
         else {
             personalAccessToken = clientToolUtils.getSystemAccessToken();
+            //Get the symbol service uri and set it to the symbolServiceUri
+            const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+            symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
         }
-
-        //Get the symbol service uri and set it to the symbolServiceUri
-        const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
 
         let defaultSymbolFolder: string = tl.getVariable("Build.SourcesDirectory") ? tl.getVariable("Build.SourcesDirectory") : "";
         let symbolsFolder: string = tl.getInput("SymbolsFolder", false) ? tl.getInput("SymbolsFolder", false) : defaultSymbolFolder;

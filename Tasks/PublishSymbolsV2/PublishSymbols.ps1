@@ -186,7 +186,7 @@ try {
 
         . $PSScriptRoot\Auth.ps1
 
-        $connectedServiceName = Get-VstsInput -Name ConnectedServiceName
+        [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
         Write-Host "Symbol Request Name = $connectedServiceName"
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')

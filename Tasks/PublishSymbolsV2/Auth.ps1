@@ -9,23 +9,30 @@ function Get-AccessToken()
     )
 
     [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
-    Write-Host "connectedServiceName: $ConnectedServiceName"
-
+    
     if($ConnectedServiceName)
     {
         Write-Host "connectedServiceName is specified. Using it to get the access token. - $ConnectedServiceName"
         $accessToken = Get-ConnectedServiceNameAccessToken -connectedServiceName $ConnectedServiceName;
         $PersonalAccessToken = $accessToken.access_token;
-        Write-Host "accessToken.access_token. - $accessToken.access_token"
+        Write-Host "PersonalAccessToken - received"
     }
     elseif ($AsAccountName) {
         Write-Host "PAT access token"
         $PersonalAccessToken = Get-PATToken -AsAccountName $AsAccountName -UseAad $UseAad;
     }
     else {
+        if ($PersonalAccessToken -or $UseAad) {
+            throw "If PAT or UseAad is specified, then AccountName needs to be present"
+        }
         <# Action when all if and elseif conditions are false #>
         Write-Host "System access token"
-        $PersonalAccessToken = Get-SystemAccessToken -PersonalAccessToken $PersonalAccessToken -UseAad $UseAad;
+        $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
+        $PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
+
+        if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
+            throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+        }
     }
 
     Write-Host "Received PersonalAccessToken: $PersonalAccessToken"
@@ -104,9 +111,9 @@ function Get-PATToken()
 
     [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
 
-    if ( $AsAccountName ) {
-        if ( $PersonalAccessToken ) {
-            if ( $UseAad ) {
+    if ($AsAccountName) {
+        if ($PersonalAccessToken) {
+            if ($UseAad -eq $true) {
                 throw "If AccountName is specified, then only one of PAT or UseAad should be present"
             }
 
@@ -116,30 +123,10 @@ function Get-PATToken()
                 throw "The PAT needs to be specified as a secret"
             }
         }
-        elseif ( -not $UseAad ) {
+        elseif ($UseAad -eq $false) {
             throw "If AccountName is specified, then either PAT or UseAad needs to be present"
         }
     }
 
     return $PersonalAccessToken;
-}
-
-function Get-SystemAccessToken()
-{
-    param(
-        [string] [Parameter(Mandatory = $true)] $PersonalAccessToken,
-        [string] [Parameter(Mandatory=$true)] $UseAad
-    )
-    if ( $PersonalAccessToken -or $UseAad ) {
-        throw "If PAT or UseAad is specified, then AccountName needs to be present"
-    }
-
-    $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
-    [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
-
-    if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
-        throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
-    }
-
-    return $PersonalAccessToken
 }
