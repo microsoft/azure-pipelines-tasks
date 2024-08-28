@@ -3,6 +3,11 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tarea de autenticación para el cliente de Conda",
   "loc.instanceNameFormat": "Autenticación de Conda",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
   "loc.messages.FailedToAddAuthentication": "No se pudo agregar la autenticación",
-  "loc.messages.AddingAuthChannel": "Agregando autenticación para el token %s"
+  "loc.messages.AddingAuthChannel": "Agregando autenticación para el token %s",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
 }
