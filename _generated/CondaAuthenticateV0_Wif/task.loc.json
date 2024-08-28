@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 2
   },
   "runsOn": [
@@ -40,6 +40,9 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
       "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
       "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
@@ -51,8 +54,8 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20_229_1": "0.244.1",
-    "wif_242": "0.244.2"
+    "Default": "0.245.0",
+    "Node20_229_1": "0.245.1",
+    "wif_242": "0.245.2"
   }
 }
