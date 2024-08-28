@@ -41,7 +41,7 @@ function Initialize-AzModule {
                         Write-Verbose "Update-AzConfig cmdlet is not available."
                     }                            
                 } else {
-                    Write-Verbose "No need to update the config." 
+                    Write-Verbose "No need to update config." 
                 } 
                  
             } else {
