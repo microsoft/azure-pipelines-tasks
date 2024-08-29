@@ -28,10 +28,10 @@
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
-      "label": "Azure Resource Manager connection",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "SymbolsFolder",
