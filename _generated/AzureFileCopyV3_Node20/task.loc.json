@@ -319,7 +319,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "3.244.2",
-    "Node20_229_2": "3.244.3"
+    "Default": "3.245.0",
+    "Node20_229_2": "3.245.1"
   }
 }

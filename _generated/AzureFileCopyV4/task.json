@@ -301,7 +301,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.244.0",
-    "Node20_229_2": "4.244.1"
+    "Default": "4.245.0",
+    "Node20_229_2": "4.245.1"
   }
 }
