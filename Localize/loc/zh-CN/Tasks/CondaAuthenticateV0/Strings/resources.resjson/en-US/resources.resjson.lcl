@@ -37,6 +37,9 @@
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is set, it will generate credentials using service connection instead of the build pipeline identity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果进行了此设置，则会使用服务连接而不是生成管道标识生成凭据。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -88,12 +91,18 @@
       <Item ItemId=";loc.messages.Info_AddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Adding auth information from service connection %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在添加服务连接 %s 中的身份验证信息]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added auth for service connection %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已成功为服务连接 %s 添加身份验证。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

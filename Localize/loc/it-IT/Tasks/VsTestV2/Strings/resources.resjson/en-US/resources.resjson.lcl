@@ -11,10 +11,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).]]></Val>
+          <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2 and later).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Consente di eseguire unit test e test funzionali (Selenium, Appium, test codificato dell'interfaccia utente e così via) usando Visual Studio Test (VsTest) Runner. È anche possibile eseguire i framework di test che contengono un adattatore di test di Visual Studio, come MsTest, xUnit, NUnit, Chutzpah (per test di JavaScript con QUnit, Mocha e Jasmine) e così via. Questa attività consente anche di distribuire i test in più agenti (versione 2).]]></Val>
+            <Val><![CDATA[Consente di eseguire unit test e test funzionali (Selenium, Appium, test codificato dell'interfaccia utente e così via) usando Visual Studio Test (VsTest) Runner. È anche possibile eseguire i framework di test che contengono un adattatore di test di Visual Studio, come MsTest, xUnit, NUnit, Chutzpah (per test di JavaScript con QUnit, Mocha e Jasmine) e così via. I test possono essere distribuiti in più agenti (versione 2 e successive).]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

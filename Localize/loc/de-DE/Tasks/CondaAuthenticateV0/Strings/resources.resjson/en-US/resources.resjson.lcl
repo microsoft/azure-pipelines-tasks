@@ -37,6 +37,9 @@
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is set, it will generate credentials using service connection instead of the build pipeline identity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wenn diese Option festgelegt ist, werden Anmeldeinformationen mithilfe der Dienstverbindung anstelle der Buildpipelineidentität generiert.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -88,12 +91,18 @@
       <Item ItemId=";loc.messages.Info_AddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Adding auth information from service connection %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Authentifizierungsinformationen der Dienstverbindung %s werden hinzugefügt]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added auth for service connection %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Authentifizierung für Dienstverbindung %s erfolgreich hinzugefügt.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
