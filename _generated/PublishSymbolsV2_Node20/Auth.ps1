@@ -15,7 +15,7 @@ function Get-AccessToken()
         Write-Host "connectedServiceName is specified. Using it to get the access token. - $ConnectedServiceName"
         $accessToken = Get-ConnectedServiceNameAccessToken -connectedServiceName $ConnectedServiceName;
         $PersonalAccessToken = $accessToken.access_token;
-        Write-Host "accessToken.access_token. - $accessToken.access_token"
+        Write-Host "PersonalAccessToken - received"
     }
     elseif ($AsAccountName) {
         Write-Host "PAT access token"
