@@ -18,6 +18,7 @@ Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
 # DRI Rotation for @microsoft/release-management-task-team : DRI-ReleaseManagement
+Tasks/AzureAppConfigurationV10/  @microsoft/azure-appconfig-team
 
 Tasks/AzureAppConfigurationPushV10/  @microsoft/azure-appconfig-team
 
