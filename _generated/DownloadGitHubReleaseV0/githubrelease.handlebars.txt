@@ -1,0 +1,14 @@
+[
+{{#this}}
+  {
+    "path": "{{this.name}}",
+    "lastModified": "{{this.updated_at}}",
+    "fileLength" : "{{this.size}}",
+    "itemType": "file",
+    "contentType": "application/octet-stream",
+    "metadata": {
+        "downloadUrl" : "{{this.url}}"
+    }
+  }{{#unless @last}},{{/unless}}
+{{/this}}
+]

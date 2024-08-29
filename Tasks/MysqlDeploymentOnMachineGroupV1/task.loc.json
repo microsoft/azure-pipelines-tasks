@@ -16,12 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "The MysqlDeploymentOnMachineGroup@1 task is deprecated",
   "inputs": [
     {
       "name": "TaskNameSelector",

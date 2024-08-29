@@ -18,7 +18,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     const zipPath = path.join(__dirname, "../../../../Tests/test.zip");
     const defaultTimeout = 10000;
 
-    before(() => {
+    before(async () => {
 
         fs.writeFileSync(finalPath, "fileContent");
         fs.writeFileSync(finalPath2, "fileContent");
@@ -41,7 +41,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"]="/agent/1/_work";
     });
 
-    after(() => {
+    after(async () => {
         delete process.env['BUILD_BUILDID'];
         delete process.env['BUILD_SOURCEBRANCH'];
         delete process.env['BUILD_SOURCEVERSION'];
@@ -53,283 +53,283 @@ describe('AppCenterDistribute L0 Suite', function () {
         fs.unlinkSync(zipPath);
     });
 
-    it('Positive path: upload one ipa file', function () {
+    it('Positive path: upload one ipa file', async function () {
         this.timeout(20000)
         let tp = path.join(__dirname, 'L0OneIpaPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Negative path: can not upload multiple files', function () {
+    it('Negative path: can not upload multiple files', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0MultipleIpaFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Negative path: cannot continue upload without symbols', function () {
+    it('Negative path: cannot continue upload without symbols', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0NoSymbolsFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Positive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', function () {
+    it('Positive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Negative path: mobile center api rejects fail the task', function () {
+    it('Negative path: mobile center api rejects fail the task', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0ApiRejectsFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Negative path: publish multiple stores destinations fail the task', function () {
+    it('Negative path: publish multiple stores destinations fail the task', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMultipleStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Negative path: publish stores without destintation fail the task', function () {
+    it('Negative path: publish stores without destintation fail the task', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishNoStoresFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Positive path: publish single store destination', function () {
+    it('Positive path: publish single store destination', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishStore.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish single store destination and ignores isSilent property', function () {
+    it('Positive path: publish single store destination and ignores isSilent property', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishStoreIgnoreSilent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: single file with Include Parent', function () {
+    it('Positive path: single file with Include Parent', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymIncludeParent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: multiple dSYMs in the same folder', function () {
+    it('Positive path: multiple dSYMs in the same folder', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: multiple dSYMs in parallel folders', function () {
+    it('Positive path: multiple dSYMs in parallel folders', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: multiple dSYMs in a tree', function () {
+    it('Positive path: multiple dSYMs in a tree', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_tree.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: a single dSYM', function () {
+    it('Positive path: a single dSYM', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: a single APPXSYM', function () {
+    it('Positive path: a single APPXSYM', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0SymAPPXSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish commit info (including commit message)', function () {
+    it('Positive path: publish commit info (including commit message)', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish commit info (excluding commit message)', function () {
+    it('Positive path: publish commit info (excluding commit message)', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_2.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish commit info for feature branch', function () {
+    it('Positive path: publish commit info for feature branch', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_3.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish commit info for tfvc branch', function () {
+    it('Positive path: publish commit info for tfvc branch', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_4.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish mandatory update', function () {
+    it('Positive path: publish mandatory update', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish silent update', function () {
+    it('Positive path: publish silent update', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishSilentUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish multiple destinations', function () {
+    it('Positive path: publish multiple destinations', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0PublishMultipleDestinations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: upload Android mapping txt to diagnostics', function () {
+    it('Positive path: upload Android mapping txt to diagnostics', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0AndroidMappingTxtProvided.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
     // TODO (hangs)
-    it.skip('Negative path: upload zip file fails without build version', function () {
+    it.skip('Negative path: upload zip file fails without build version', async function () {
         this.timeout(defaultTimeout)
 
         let tp = path.join(__dirname, 'L0PublishZipNoBuildVersionFails.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
     });
 
-    it('Positive path: upload without build version don\'t change the body', function () {
+    it('Positive path: upload without build version don\'t change the body', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0EmptyBuildVersionDoesntAppearInBody.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: upload with build version updates the body and leads to successfull upload', function () {
+    it('Positive path: upload with build version updates the body and leads to successfull upload', async function () {
         this.timeout(defaultTimeout);
 
         let tp = path.join(__dirname, 'L0BuildVersionSpecifiedInBodyLeadToSuccessfulUpload.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
+    it('Positive path: upload Breakpad .so files always packs them to .zip', async function () {
         this.timeout(defaultTimeout);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
     
-    it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
+    it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', async function () {
         this.timeout(defaultTimeout);
 
         const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
     });
 

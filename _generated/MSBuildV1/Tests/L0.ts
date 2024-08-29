@@ -27,13 +27,13 @@ describe('MSBuild Suite', function () {
         })
     }
 
-    it('Xplat MSBuild: Defaults', (done: Mocha.Done) => {
+    it('Xplat MSBuild: Defaults', async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildDefaults.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         //build
         assert(tr.ran('/home/bin/xbuild /user/build/fun.sln /p:Platform=$(Platform) /p:Configuration=$(Configuration)'),
@@ -42,17 +42,15 @@ describe('MSBuild Suite', function () {
         assert(tr.invokedToolCount === 1, 'should have run xbuild for solution.');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Xplat MSBuild: Clean and Build', (done: Mocha.Done) => {
+    it('Xplat MSBuild: Clean and Build', async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildClean.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         //clean
         assert(tr.ran('/home/bin/xbuild /user/build/fun.sln /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
@@ -65,17 +63,15 @@ describe('MSBuild Suite', function () {
         assert(tr.invokedToolCount === 2, 'should have run xbuild for solution.');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Xplat MSBuild: Multiple solutions', (done: Mocha.Done) => {
+    it('Xplat MSBuild: Multiple solutions', async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0MSBuildMultipleSolutions.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         //clean
         assert(tr.ran('/home/bin/xbuild /user/build/fun.sln /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
@@ -94,7 +90,5 @@ describe('MSBuild Suite', function () {
         assert(tr.invokedToolCount === 4, 'should have run xbuild for solution.');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 });

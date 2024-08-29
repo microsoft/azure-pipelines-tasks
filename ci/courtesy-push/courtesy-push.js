@@ -67,10 +67,11 @@ async function getDeps(depArr) {
     for (let i = 0; i < depArr.length; i++) {
         const newDep = depArr[i];
         var [ name, version ] = await extractDependency(newDep);
+        const lowercasedName = name.toLowerCase();
 
-        if (!deps.hasOwnProperty(name)) deps[name] = {};
+        if (!deps.hasOwnProperty(lowercasedName)) deps[lowercasedName] = {};
 
-        const dep = deps[name];
+        const dep = deps[lowercasedName];
 
         dep.name = name;
         dep.version = version;
@@ -154,17 +155,18 @@ async function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
     while (index < newDepsArr.length) {
         const currentDep = newDepsArr[index];
         const [ name ] = await extractDependency(currentDep);
-
-        if (!name || !basicDepsForUpdate.has(name)) {
+        
+        const lowerName = name && name.toLowerCase();
+        if (!name || !basicDepsForUpdate.has(lowerName)) {
             index++;
             continue;
         }
 
-        newDepsArr.splice(index, 1, depsForUpdate[name].depStr);
+        newDepsArr.splice(index, 1, depsForUpdate[lowerName].depStr);
         index++;
 
-        if (depsForUpdate[name].configs) {
-            depsForUpdate[name].configs
+        if (depsForUpdate[lowerName].configs) {
+            depsForUpdate[lowerName].configs
                 .sort((a, b) => a.name > b.name)
                 .forEach(config => {
                     updatedDepsObj.added.push(config.name);

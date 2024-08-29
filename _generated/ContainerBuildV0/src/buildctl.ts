@@ -26,7 +26,7 @@ async function verifyBuildctl() {
 
     if (!buildctlToolPath)
         await configureBuildctl();
-    
+
     tl.debug(tl.loc("VerifyBuildctlInstallation"));
 
     var buildctlTool = tl.tool(buildctlToolPath);
@@ -46,7 +46,7 @@ export async function buildctlBuildAndPush() {
 
     let tags = tl.getDelimitedInput("tags", "\n");
     let endpointId = tl.getInput("dockerRegistryServiceConnection");
-    let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
+    let registryAuthenticationToken: RegistryAuthenticationToken = await getDockerRegistryEndpointAuthenticationToken(endpointId);
 
     // Connect to any specified container registry
     var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";

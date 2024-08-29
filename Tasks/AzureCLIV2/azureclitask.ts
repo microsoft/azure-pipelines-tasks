@@ -7,13 +7,32 @@ import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/web
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
+#if NODE20
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    const dns = require("dns");
+    dns.setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
+#endif
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
+const AZ_SESSION_REFRESH_INTERVAL_MS: number = 480000; // 8 minutes, 2 minutes before IdToken expiry date
 
 export class azureclitask {
 
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
+
+        if(tl.getBoolFeatureFlag('AZP_AZURECLIV2_SETUP_PROXY_ENV')) {
+            const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
+            if (proxyConfig) {
+                process.env['HTTP_PROXY'] = proxyConfig.proxyFormattedUrl;
+                process.env['HTTPS_PROXY'] = proxyConfig.proxyFormattedUrl;
+                tl.debug(tl.loc('ProxyConfigMessage', proxyConfig.proxyUrl));
+            }
+        }
+
         try{
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
@@ -31,7 +50,22 @@ export class azureclitask {
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+            const authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            
             await this.loginAzureRM(connectedService);
+
+            var keepAzSessionActive: boolean = tl.getBoolInput('keepAzSessionActive', false);
+            var stopRefreshingSession: () => void = () => {};
+            if (keepAzSessionActive) {
+                // This is a tactical workaround to keep the session active for the duration of the task to avoid AADSTS700024 errors.
+                // This is a temporary solution until the az cli provides a way to refresh the session.
+                if (authorizationScheme !== 'workloadidentityfederation') {
+                    const errorMessage = tl.loc('KeepingAzSessionActiveUnsupportedScheme', authorizationScheme);
+                    tl.error(errorMessage);
+                    throw errorMessage;
+                }
+                stopRefreshingSession = this.keepRefreshingAzSession(connectedService);
+            }
 
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
@@ -42,8 +76,7 @@ export class azureclitask {
                 errLinesCount++;
             });
 
-            var addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
-            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            const addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
             if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
@@ -82,6 +115,10 @@ export class azureclitask {
             }
         }
         finally {
+            if (keepAzSessionActive) {
+              stopRefreshingSession();
+            }
+
             if (scriptType) {
                 await scriptType.cleanUp();
             }
@@ -109,6 +146,19 @@ export class azureclitask {
                   message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
                 }
               }
+
+                // only Aggregation error contains array of errors
+                if (toolExecutionError.errors) {
+                    // Iterates through array and log errors separately
+                    toolExecutionError.errors.forEach((error) => {
+                        tl.error(error.message, tl.IssueSource.TaskInternal);
+                    });
+                    
+                    // fail with main message
+                    tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
+                } else {
+                    tl.setResult(tl.TaskResult.Failed, message);
+                }
 
               tl.setResult(tl.TaskResult.Failed, message);
             } else if (exitCode != 0){
@@ -249,6 +299,13 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
+#if NODE20
+        // since node19 default node's GlobalAgent has timeout 5sec
+        // keepAlive is set to true to avoid creating default node's GlobalAgent
+        const webApiOptions = {
+            keepAlive: true
+        }
+#endif
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
@@ -257,7 +314,11 @@ export class azureclitask {
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
+#if NODE20
+        const connection = new WebApi(uri, authHandler, webApiOptions);
+#else
         const connection = new WebApi(uri, authHandler);
+#endif
         const api: ITaskApi = await connection.getTaskApi();
         const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
@@ -265,6 +326,19 @@ export class azureclitask {
         }
 
         return response.oidcToken;
+    }
+
+    private static keepRefreshingAzSession(connectedService: string): () => void {
+        const intervalId = setInterval(async () => {
+         try {
+            tl.debug(tl.loc('RefreshingAzSession'));
+            await this.loginAzureRM(connectedService);
+         } catch (error) {
+            tl.warning(tl.loc('FailedToRefreshAzSession', error));
+         }
+        }, AZ_SESSION_REFRESH_INTERVAL_MS);
+
+        return () => clearInterval(intervalId);
     }
 }
 

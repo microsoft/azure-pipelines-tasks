@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 244,
     "Patch": 1
   },
   "runsOn": [
@@ -32,10 +32,14 @@
   },
   "messages": {
     "FailedToAddAuthentication": "Failed to add authentication.",
-    "AddingAuthChannel": "Adding auth for the token %s"
+    "AddingAuthChannel": "Adding auth for the token %s",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.244.0",
+    "Node20_229_1": "0.244.1",
+    "wif_242": "0.244.2"
   }
 }

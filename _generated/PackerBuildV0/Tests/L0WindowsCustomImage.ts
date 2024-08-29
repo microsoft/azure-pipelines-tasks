@@ -36,7 +36,7 @@ process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"]
 process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
-
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 // provide answers for task mock
 let a: any = <any>{
     "which": {
@@ -51,6 +51,10 @@ let a: any = <any>{
         "packer --version": {
             "code": 0,
             "stdout": "0.12.3"
+        },
+        "packer -machine-readable --version": {
+            "code": 0,
+            "stdout": "1234567,,version,1.2.4"
         },
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\custom.windows.template.json": {
             "code": 0,

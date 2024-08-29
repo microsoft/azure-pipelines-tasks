@@ -10,6 +10,7 @@
   "loc.input.help.azureSubscription": "배포에 대한 Azure Resource Manager 구독을 선택합니다.",
   "loc.input.label.appType": "앱 유형",
   "loc.input.help.appType": "배포에 대한 Azure 함수 앱 유형을 선택합니다.",
+  "loc.input.label.isFlexConsumption": "Flex 사용량 플랜의 함수 앱임",
   "loc.input.label.appName": "Azure Functions 앱 이름",
   "loc.input.help.appName": "기존 Azure Functions 앱의 이름을 입력하거나 선택합니다. 나열된 기능 앱은 선택한 앱 유형을 기반으로 합니다.",
   "loc.input.label.deployToSlotOrASE": "슬롯 또는 App Service Environment에 배포",
@@ -25,7 +26,7 @@
   "loc.input.label.appSettings": "앱 설정",
   "loc.input.help.appSettings": "구문 -key 값 다음에 오는 웹앱 애플리케이션 설정을 편집합니다. 공백이 포함되는 값은 큰따옴표로 묶어야 합니다.<br /> <b>예</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "배포 방법",
-  "loc.input.help.deploymentMethod": "Function 앱에 대한 배포 방법을 선택합니다. Linux 사용 앱은 이 구성을 지원하지 않습니다.",
+  "loc.input.help.deploymentMethod": "Function 앱에 대한 배포 방법을 선택합니다. Linux 및 Flex 사용량 앱은 이 구성을 지원하지 않습니다.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "잘못된 App Service 패키지 또는 폴더 경로를 제공했습니다. %s",
   "loc.messages.SetParamFilenotfound0": "매개 변수 설정 파일을 찾을 수 없습니다. %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 변환을 적용했습니다.",
@@ -176,5 +177,6 @@
   "loc.messages.SyncingFunctionTriggers": "함수 앱의 트리거를 동기화하는 중",
   "loc.messages.SyncFunctionTriggersSuccess": "함수 앱의 트리거 동기화를 완료했습니다.",
   "loc.messages.UpdatedRunFromPackageSettings": "WEBSITE_RUN_FROM_PACKAGE 애플리케이션 설정을 %s(으)로 업데이트했습니다.",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "배포 유형 옵션은 Linux 사용에 적용되지 않습니다."
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "배포 유형 옵션은 Linux 사용에 적용되지 않습니다.",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "배포 유형 옵션은 Flex 사용량에 적용되지 않습니다."
 }

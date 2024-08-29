@@ -1,4 +1,5 @@
-Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
+# Import-Module 
+. "$PSScriptRoot\ps_modules\TaskModuleIISManageUtility\AppCmdOnTargetMachines.ps1"
 
 function Set-IISWebSite
 {

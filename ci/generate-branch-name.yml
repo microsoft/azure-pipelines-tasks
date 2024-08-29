@@ -4,7 +4,7 @@ parameters:
   default: "users/$(username)"
 steps:
 - powershell: |
-    $postfix =  if("$(isHotfix)" -eq $true) { "hotfix-buildId-$(Build.BuildId)" } else { "courtesypush" }
+    $postfix =  if("$(taskNameIsSet)" -eq $true) { "hotfix-buildId-$(Build.BuildId)" } else { "courtesypush" }
     $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
     Write-Host $branchName
     Write-Host "##vso[task.setVariable variable=branchName]$branchName"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Рабочие элементы запросов",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://go.microsoft.com/fwlink/?linkid=870238)",
   "loc.description": "Выполнение запроса рабочего элемента и проверка числа возвращенных элементов",
   "loc.instanceNameFormat": "Рабочие элементы запросов",
   "loc.group.displayName.advanced": "Дополнительно",

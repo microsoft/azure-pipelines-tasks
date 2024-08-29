@@ -7,7 +7,7 @@ import helmcli from "../helmcli";
 Removes a helm chart from local
  */
 
-export function addArguments(helmCli: helmcli): void {
+export async function addArguments(helmCli: helmcli): Promise<void> {
     helmCli.addArgument("remove");
 
     helmCli.addArgument(tl.getVariable("helmChartRef"));

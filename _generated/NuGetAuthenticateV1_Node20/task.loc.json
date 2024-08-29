@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 244,
+    "Patch": 7
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -52,9 +52,16 @@
       "argumentFormat": ""
     }
   },
-  "messages": {},
+  "messages": {
+    "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
+    "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
+  },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Default": "1.244.6",
+    "Node20_229_1": "1.244.7",
+    "wif_242": "1.244.8"
   }
 }

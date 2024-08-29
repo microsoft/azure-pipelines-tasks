@@ -84,7 +84,6 @@ class ProgressTracker {
 
 function findFiles(ftpOptions: FtpOptions): string[] {
     tl.debug("Searching for files to upload");
-    let error: any | undefined;
     try {
         const rootFolderStats = tl.stats(ftpOptions.rootFolder);
         if (rootFolderStats.isFile()) {
@@ -153,8 +152,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         return Array.from(matchingFilesSet).sort();
     }
     catch (err) {
-        error = err;
-        tl.error(error);
+        tl.error(err + '');
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     }
 

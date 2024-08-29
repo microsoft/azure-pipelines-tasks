@@ -3,7 +3,7 @@
 # with an existing JSON file containing previous checksums. If the version 
 # already exists in the existing JSON file, an exception is raised.
 #
-# Usage: python generate_checksum.py <checksums.txt> <old_checksums.json>
+# Usage: python generate_checksum.py <checksums_download_url> <old_checksums.json>
 #
 # checksums.txt format:
 # 2ef0560c3c88908a22d1f302e5b0119160e72380e25fb58c2d7b153e9397a04c  notation_1.0.0-rc.1_linux_arm64.tar.gz
@@ -17,65 +17,76 @@
 import os
 import sys
 import json
+import requests
+
+def download_file(url, dest_path):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(dest_path, 'wb') as f:
+            f.write(response.content)
+        return True
+    else:
+        return False
 
 def build_url(name, version, filename):
     return {
-        "notation": lambda : f'https://github.com/notaryproject/notation/releases/download/v{version}/{filename}',
-        "notation-azure-kv": lambda :f'https://github.com/Azure/notation-azure-kv/releases/download/v{version}/{filename}'
+        "notation": lambda: f'https://github.com/notaryproject/notation/releases/download/v{version}/{filename}',
+        "notation-azure-kv": lambda: f'https://github.com/Azure/notation-azure-kv/releases/download/v{version}/{filename}'
     }[name]()
 
-def process_checksum(filepath):
+def process_checksum(checksum_text):
     verionInfo = {}
-    with open(filepath, 'r') as f:
-        for line in f.readlines():
-            line = line.rstrip('\n')
-            parts = line.split(' ')
-            checksum = parts[0]
-            filename = parts[2]
-            name_parts = filename.split('_')
-            name = name_parts[0]
-            version = name_parts[1]
-            osName = name_parts[2]
-            arch = name_parts[3].split('.')[0]
+    for line in checksum_text.splitlines():
+        line = line.rstrip('\n')
+        parts = line.split(' ')
+        checksum = parts[0]
+        filename = parts[2]
+        name_parts = filename.split('_')
+        name = name_parts[0]
+        version = name_parts[1]
+        osName = name_parts[2]
+        arch = name_parts[3].split('.')[0]
 
-            # generate checksum
-            verionInfo.setdefault('version', version)
-            verionInfo.setdefault(osName, {})
-            verionInfo[osName].setdefault(arch, {})
-            verionInfo[osName][arch] = {
-                "url": build_url(name, version, filename),
-                "checksum": checksum
-            }
+        verionInfo.setdefault('version', version)
+        verionInfo.setdefault(osName, {})
+        verionInfo[osName].setdefault(arch, {})
+        verionInfo[osName][arch] = {
+            "url": build_url(name, version, filename),
+            "checksum": checksum
+        }
 
     return verionInfo
 
 def update_checksums(filepath, checksums):
-    # read old checksums
-    versionList = []
     if os.path.exists(filepath):
-        f = open(filepath, 'r')
-        versionList = json.load(f)
-        f.close()
+        with open(filepath, 'r') as f:
+            versionList = json.load(f)
+    else:
+        versionList = []
 
-    # check if version exists
     for versionInfo in versionList:
         if versionInfo['version'] == checksums['version']:
             raise Exception(f'Version {checksums["version"]} already exists in {filepath}')
 
-    # update checksums
     with open(filepath, 'w') as f:
         json.dump([checksums] + versionList, f, indent=4, sort_keys=True)
 
 def main():
     if len(sys.argv) < 3:
-        print('Usage: python generate_checksum.py <checksums.txt> <old_checksums.json>')
+        print('Usage: python generate_checksum.py <checksums_download_url> <old_checksums.json>')
         sys.exit(1)
     
-    filepath = sys.argv[1]
+    download_url = sys.argv[1]
     old_checksums = sys.argv[2]
 
-    checksums = process_checksum(filepath)
-    update_checksums(old_checksums, checksums)
+    response = requests.get(download_url)
+    if response.status_code == 200:
+        checksum_text = response.text
+        checksums = process_checksum(checksum_text)
+        update_checksums(old_checksums, checksums)
+        print('Checksums updated successfully.')
+    else:
+        print('Failed to download checksum file.')
 
 if __name__ == '__main__':
     main()

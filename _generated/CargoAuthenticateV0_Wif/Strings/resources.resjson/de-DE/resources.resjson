@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Cargo-Authentifizierung (für Aufgabenausführungen)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Authentifizierungsaufgabe für den Cargo-Client zum Installieren der Verteilung von Cargo-Kisten",
+  "loc.instanceNameFormat": "Cargo-Authentifizierung für $(configFile)",
+  "loc.input.label.configFile": "Zu authentifizierende config.toml-Datei",
+  "loc.input.help.configFile": "Pfad zur Datei „config.toml“, die die Registrierungen angibt, mit denen Sie arbeiten möchten. Wählen Sie die Datei und nicht den Ordner aus, z. B. „/.cargo/config.toml“.",
+  "loc.input.label.cargoServiceConnections": "Anmeldeinformationen für Registrierungen außerhalb dieser Organisation/Sammlung",
+  "loc.input.help.cargoServiceConnections": "Anmeldeinformationen zur Verwendung für externe Registrierungen in der config.toml-Datei des Projekts. Lassen Sie dieses Feld bei Registrierungen in dieser Organisation/Sammlung leer. Es werden automatisch die Anmeldeinformationen für den Build verwendet.",
+  "loc.messages.FailedToAddAuthentication": "Fehler beim Hinzufügen der Authentifizierung.",
+  "loc.messages.ConfigTomlNotToml": "Die für die Authentifizierung ausgewählte Datei (%s) ist keine gültige TOML-Datei.",
+  "loc.messages.ConfigTomlDoesNotExist": "Die unter „%s“ ausgewählte config.toml-Datei ist zurzeit nicht vorhanden.",
+  "loc.messages.ConfigTomlMissingRegistry": "Die ausgewählte config.toml-Datei muss eine Registrierungstabelle enthalten.",
+  "loc.messages.AuthenticatingThisConfigToml": "Die Authentifizierung für die in dieser config.toml-Datei unter %s aufgeführte Registrierung wird hinzugefügt.",
+  "loc.messages.AddingAuthRegistry": "Authentifizierung für Registrierung wird hinzugefügt: %s mit Tokenname: %s",
+  "loc.messages.AddingAuthExternalRegistry": "Authentifizierung für externe Registrierung wird hinzugefügt: %s mit Tokenname: %s"
+}

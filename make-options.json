@@ -8,6 +8,8 @@
         "AppCenterDistributeV3",
         "AppCenterTestV1",
         "ArchiveFilesV2",
+        "AzureAppConfigurationPushV10",
+        "AzureAppConfigurationSnapshotV1",
         "AzureAppServiceManageV0",
         "AzureAppServiceSettingsV1",
         "AzureCLIV1",
@@ -76,6 +78,7 @@
         "DockerV1",
         "DockerV2",
         "DockerComposeV0",
+        "DockerComposeV1",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
@@ -110,6 +113,7 @@
         "GulpV0",
         "GulpV1",
         "HelmDeployV0",
+        "HelmDeployV1",
         "HelmInstallerV0",
         "HelmInstallerV1",
         "IISWebAppDeployment",
@@ -130,6 +134,7 @@
         "KubernetesManifestV1",
         "ManualInterventionV8",
         "ManualValidationV0",
+        "ManualValidationV1",
         "MavenAuthenticateV0",
         "MavenV2",
         "MavenV3",
@@ -169,6 +174,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
+        "PublishToAzureServiceBusV2",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
@@ -194,6 +200,7 @@
         "VSBuildV1",
         "VsTestV1",
         "VsTestV2",
+        "VsTestV3",
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV1",
         "WindowsMachineFileCopyV2",
@@ -339,6 +346,7 @@
         "GoV0",
         "GoToolV0",
         "HelmDeployV0",
+        "HelmDeployV1",
         "HelmInstallerV0",
         "HelmInstallerV1",
         "IISWebAppDeploymentOnMachineGroupV0",
@@ -398,5 +406,14 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
+    ],
+    "wif_242": [
+        "PipAuthenticateV1",
+        "CargoAuthenticateV0",
+        "NpmAuthenticateV0",
+        "CondaAuthenticateV0",
+        "NuGetAuthenticateV1",
+        "MavenAuthenticateV0",
+        "TwineAuthenticateV1"
     ]
 }

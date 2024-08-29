@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 235,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 2
   },
   "instanceNameFormat": "File Transform: $(Package)",
   "groups": [
@@ -28,6 +28,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The FileTransform@1 task is deprecated, please use a newer version of the FileTransform task",
   "inputs": [
     {
       "name": "folderPath",

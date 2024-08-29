@@ -10,6 +10,7 @@
   "loc.input.help.azureSubscription": "選取部署的 Azure Resource Manager 訂用帳戶。",
   "loc.input.label.appType": "應用程式類型",
   "loc.input.help.appType": "選取部署的 Azure Function 應用程式類型。",
+  "loc.input.label.isFlexConsumption": "是彈性使用量方案的函數應用程式",
   "loc.input.label.appName": "Azure Functions 應用程式名稱",
   "loc.input.help.appName": "輸入或選取現有 Azure Functions 應用程式的名稱。列出的 Function 應用程式將依據選取的應用程式類型。",
   "loc.input.label.deployToSlotOrASE": "將部署到位置或 App Service 環境",
@@ -25,7 +26,7 @@
   "loc.input.label.appSettings": "應用程式設定",
   "loc.input.help.appSettings": "請使用語法「-索引鍵 值」編輯 Web 應用程式設定。若值包含空格，應將其括以雙引號。<br /> <b>範例</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "部署方法",
-  "loc.input.help.deploymentMethod": "選擇 Function 應用程式的部署方法。請注意，Linux 使用量應用程式不支援此設定。",
+  "loc.input.help.deploymentMethod": "為您的函數應用程式選擇部署方法。請注意，Linux 和彈性使用量應用程式不支援此設定。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "提供的 App Service 套件或資料夾路徑無效: %s",
   "loc.messages.SetParamFilenotfound0": "找不到設定參數檔案: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "已成功套用 XML 轉換",
@@ -176,5 +177,6 @@
   "loc.messages.SyncingFunctionTriggers": "正在同步函數應用程式的觸發程序",
   "loc.messages.SyncFunctionTriggersSuccess": "已成功完成函數應用程式的同步處理觸發程序",
   "loc.messages.UpdatedRunFromPackageSettings": "已將 WEBSITE_RUN_FROM_PACKAGE 應用程式設定更新為 %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署類型選項不適用於 Linux 使用量。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署類型選項不適用於 Linux 使用量。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "[部署類型] 選項不適用於彈性使用量。"
 }

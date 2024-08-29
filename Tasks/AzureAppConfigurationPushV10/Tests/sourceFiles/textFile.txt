@@ -1,0 +1,36 @@
+{"app":
+    {
+        "Settings":{
+            "BackgroundColor":"Yellow",
+            "FontSize":"45",
+            "Fruit":"Banana",
+            "Color":"Orange",
+            "FontColor":"Black"
+        }
+    },
+    "FeatureManagement": {
+        "FeatureT": true, 
+        "FeatureU": false, 
+        "FeatureV": {
+            "EnabledFor": [
+                {
+                    "Name": "TimeWindow",
+                    "Parameters": {
+                    "Start": "Wed, 01 May 2019 13:59:59 GMT",
+                    "End": "Mon, 01 July 2019 00:00:00 GMT"
+                    }
+                }
+            ]
+        },
+        "FeatureX": {
+            "EnabledFor": [] 
+        },
+        "FeatureY": {
+            "EnabledFor": [
+                {
+                "Name": "AlwaysOn"
+                }
+            ]
+        }
+    }
+}

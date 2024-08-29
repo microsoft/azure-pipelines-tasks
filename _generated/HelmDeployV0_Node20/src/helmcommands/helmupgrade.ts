@@ -6,7 +6,7 @@ import * as helmutil from "./../utils";
 import { addHelmTlsSettings } from "./../tlssetting";
 import * as semver from 'semver';
 
-export function addArguments(helmCli: helmcli): void {
+export async function addArguments(helmCli: helmcli): Promise<void> {
     var chartType = tl.getInput("chartType", true);
     var releaseName = tl.getInput("releaseName", false);
     var overrideValues = tl.getInput("overrideValues", false);

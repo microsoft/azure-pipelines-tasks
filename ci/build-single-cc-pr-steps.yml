@@ -46,7 +46,7 @@ steps:
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
     BRANCH: '$(branchName)'
@@ -56,4 +56,4 @@ steps:
     node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)

@@ -30,7 +30,7 @@ describe('AzureWebAppDeployment Suite', function() {
     it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 1 PASSED') >=0, 'should have printed PARAMETERPARSERUTILITY CASE 1 PASSED');
         assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED') >= 0, 'should have printed PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED');
@@ -42,7 +42,7 @@ describe('AzureWebAppDeployment Suite', function() {
         let tp = path.join(__dirname,'AzureRmWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
-            tr.run();
+            tr.runAsync();
             assert(tr.stdOutContained('PreDeployment steps for container web app should succeeded'), 'Should have printed: PreDeployment steps for container web app should succeeded');
             assert(tr.stdOutContained('PreDeployment steps for container web app with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for container web app withSlotEnabled should succeeded');
             assert(tr.stdOutContained('Resource Group: MOCK_RESOURCE_GROUP_NAME'), 'Should have printed: Resource Group: MOCK_RESOURCE_GROUP_NAME');

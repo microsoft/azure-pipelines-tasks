@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.11.0';
+var node20Version = '20.14.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -190,6 +190,11 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
     await CLI.serverBuild(argv);
 }
 
+CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
+    await CLI.build(argv);
+    await CLI.test(argv);
+}
+
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
@@ -203,7 +208,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     const makeOptions = fileToJson(makeOptionsPath);
 
     // Verify generated files across tasks are up-to-date
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
 
     const allTasks = getTaskList(taskList);
 
@@ -224,14 +229,14 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         await util.installNodeAsync('20');
         ensureTool('node', '--version', `v${node20Version}`);
         for (const taskName of allTasksNode20) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 20);
+            await buildTaskWrapped(taskName, allTasksNode20.length, 20, !writeUpdatedsFromGenTasks);
         }
     } 
     if (allTasksDefault.length > 0) {
        await util.installNodeAsync('10');
         ensureTool('node', '--version', `v${node10Version}`);
         for (const taskName of allTasksDefault) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 10);
+            await buildTaskWrapped(taskName, allTasksNode20.length, 10, !writeUpdatedsFromGenTasks);
         }
     }
 
@@ -258,7 +263,7 @@ function getNodeVersion (taskName) {
 
 }
 
-async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
+async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBuild = false) {
     let isGeneratedTask = false;
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
@@ -343,7 +348,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir);
+                    buildNodeTask(modPath, modOutDir, isServerBuild);
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -405,7 +410,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
 
     // build Node task
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir);
+        buildNodeTask(taskPath, outDir, isServerBuild);
     }
 
     // remove the hashes for the common packages, they change every build
@@ -473,6 +478,8 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     var minIstanbulVersion = '20';
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
+
+    process.env['SYSTEM_DEBUG'] = 'true';
 
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
@@ -805,8 +812,10 @@ CLI.bump = function() {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
-        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+        const taskJsonStringified = JSON.stringify(taskJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskJsonPath, taskJsonStringified);
+        const taskLocJsonStringified = JSON.stringify(taskLocJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskLocJsonPath, taskLocJsonStringified);
 
         // Check that task.loc and task.loc.json versions match
         if ((taskJson.version.Major !== taskLocJson.version.Major) ||
@@ -1020,7 +1029,7 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 var command  = argv._[0];
 
 if (typeof CLI[command] !== 'function') {
-  fail('Invalid CLI command: "' + command + '"\r\nValid commands:' + Object.keys(CLI));
+  fail(`Invalid CLI command: "${command}"\r\nValid commands: ${Object.keys(CLI).join(', ')}`);
 }
 
 CLI[command](argv);

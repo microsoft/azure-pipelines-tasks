@@ -71,6 +71,12 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 . "$PSScriptRoot\Utility.ps1"
+
+if ($featureFlags.retireAzureRM)
+{
+    Modify-PSModulePathForHostedAgent
+}
+
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
 Initialize-Azure
@@ -119,17 +125,14 @@ try {
         # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
         $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
 
-        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-
         # Getting storage key for the storage account based on the connection type
-        $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
+        $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType $storageAccount $connectionType $connectedServiceName $vstsAccessToken
+        $storageAccountType = Get-StorageAccountType $storageAccount $connectionType $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -142,7 +145,7 @@ try {
             $containerName = [guid]::NewGuid().ToString()
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
         }
-        
+
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
@@ -228,7 +231,7 @@ try {
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
-        
+
         return
     }
 
@@ -243,7 +246,7 @@ try {
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
             -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
-            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
+            -connectedServiceName $connectedServiceName
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
@@ -255,7 +258,7 @@ try {
         # generate container sas token with full permissions
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
 
-        # Copies files on azureVMs 
+        # Copies files on azureVMs
         Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
                                                 -credential $invokeRemoteScriptParams.credential `
                                                 -protocol $invokeRemoteScriptParams.protocol `

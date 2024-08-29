@@ -31,19 +31,19 @@ class API {
         this.webApi = new WebApi(adoUrl, authHandler);
     }
 
-    public async getDefinitions () {
+    public async getDefinitions() {
         const api = await this.getBuildApi();
 
         return await api.getDefinitions(this.projectName);
     }
 
-    public async getBuild (buildId: number) {
+    public async getBuild(buildId: number) {
         const api = await this.getBuildApi();
 
         return await api.getBuild(this.projectName, buildId);
     }
 
-    public async queueBuild (definitionId: number, parameters = {}) {
+    public async queueBuild(definitionId: number, parameters = {}) {
         const api = await this.getBuildApi();
 
         return await api.queueBuild({
@@ -52,13 +52,18 @@ class API {
         }, this.projectName);
     }
 
-    public async updateBuild (buildId: number) {
+    public async updateBuild(buildId: number) {
         const api = await this.getBuildApi();
 
         return await api.updateBuild({}, this.projectName, buildId, true);
     }
+    public async getDefinition(definitionId: number) {
+        const api = await this.getBuildApi();
 
-    private async getBuildApi () {
+        return await api.getDefinition(this.projectName, definitionId);
+    }
+
+    private async getBuildApi() {
         if (!this.buildApi) this.buildApi = await this.webApi.getBuildApi();
 
         return this.buildApi;
