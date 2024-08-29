@@ -31,6 +31,10 @@ export async function sign(): Promise<void> {
             const caCertBundle = taskLib.getInput('caCertBundle', false) || '';
             const selfSignedCert = taskLib.getBoolInput('selfSigned', false);
 
+            // get timestamp flags
+            const timestampURL = taskLib.getInput('timestampURL', false) || '';
+            const timestampRootCert = taskLib.getInput('timestampRootCert', false) || '';
+
             // setup env
             const [credentialEnvs, credentialType] = await getVaultCredentials();
             const keyVaultPluginEnv = { ...env, ...credentialEnvs}
@@ -42,6 +46,8 @@ export async function sign(): Promise<void> {
                         '--plugin', 'azure-kv',
                         '--id', keyid,
                         '--signature-format', signatureFormat])
+                    .argIf(timestampURL, `--timestamp-url=${timestampURL}`)
+                    .argIf(timestampRootCert, `--timestamp-root-cert=${timestampRootCert}`)
                     .argIf(allowReferrerAPI, '--allow-referrers-api')
                     .argIf(caCertBundle, `--plugin-config=ca_certs=${caCertBundle}`)
                     .argIf(selfSignedCert, '--plugin-config=self_signed=true')
