@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -191,7 +191,7 @@
         "vstsFeed"
       ],
       "type": "pickList",
-      "label": "Use packages from this Azure Artifacts feed",
+      "label": "Use packages from this Azure Artifacts feed. Please just enter the feed name, not an entire url",
       "defaultValue": "",
       "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
       "required": "false",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.244.0",
-    "Node20_229_2": "2.244.1"
+    "Default": "2.245.0",
+    "Node20_229_2": "2.245.1"
   }
 }

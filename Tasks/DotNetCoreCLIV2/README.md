@@ -45,7 +45,7 @@ If you choose 'Use the build number', this will use the build number to version 
 
 Options specific to **dotnet restore** command
 * **Feeds to use\*:** You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.
-* **Use packages from this Azure Artifacts/TFS feed\*:** Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.
+* **Use packages from this Azure Artifacts/TFS feed. Please just enter the feed name, not an entire url\*:** Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.
 * **Use packages from NuGet.org\*:** Include NuGet.org in the generated NuGet.config.
 * **Disable local cache\*:** Prevents NuGet from using packages from local machine caches.
 * **Destination directory\*:** Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default NuGet package cache.
