@@ -18,6 +18,7 @@ Register-Mock Get-VstsInput { 'Some input search pattern' } -ParametersEvaluator
 Register-Mock Get-VstsInput { 'Some input symbols product' } -ParametersEvaluator { $Name -eq 'SymbolsProduct' }
 Register-Mock Get-VstsInput { 'Some input symbols version' } -ParametersEvaluator { $Name -eq 'SymbolsVersion' }
 Register-Mock Get-VstsInput { 'Some input symbols folder' } -ParametersEvaluator { $Name -eq 'SymbolsFolder' }
+Register-Mock Get-VstsInput { 'Some input serviceconnection' } -ParametersEvaluator { $Name -eq 'ConnectedServiceName' }
 Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
 $env:PublishSymbols_Debug = $null

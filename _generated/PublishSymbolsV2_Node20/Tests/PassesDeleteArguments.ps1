@@ -17,6 +17,7 @@ Register-Mock Invoke-IndexSources
 Register-Mock Invoke-PublishSymbols
 Register-Mock Invoke-UnpublishSymbols
 Register-Mock Get-VstsInput { 'FileShare' } -ParametersEvaluator { $Name -eq 'SymbolServerType' }
+Register-Mock Get-VstsInput { 'Some input serviceconnection' } -ParametersEvaluator { $Name -eq 'ConnectedServiceName' }
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'IndexSources' }
 Register-Mock Get-VstsInput { '123' } -- -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
 Register-Mock Get-VstsInput { $true } -- -Name 'Delete' -AsBool
