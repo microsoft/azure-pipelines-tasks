@@ -68,40 +68,6 @@ function Get-ConnectedServiceNameAccessToken()
 
     return $accessToken;
 }
-
-# Get the Bearer Access Token - MSAL
-function Get-ADOAccessTokenMSAL()
-{
-    param(
-        [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM
-    )
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Force
-
-    Get-MSALInstance $endpoint $connectedServiceNameARM
-
-    # prepare MSAL scopes
-    [string] $azureDevOpsResourceId = "499b84ac-1321-427f-aa17-267ca6975798";
-    $azureDevOpsResourceId = $azureDevOpsResourceId + "/.default"
-    $scopes = [Collections.Generic.List[string]]@($azureDevOpsResourceId)
-
-    try {
-        Write-Verbose "Fetching Access Token - MSAL"
-        $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
-        return $tokenResult
-    }
-    catch {
-        $exceptionMessage = $_.Exception.Message.ToString()
-        $parsedException = Parse-Exception($_.Exception)
-        if ($parsedException) {
-            $exceptionMessage = $parsedException
-        }
-        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AccessTokenMSAL)"
-        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $endpoint.Auth.Parameters.TenantId)
-    }
-}
-
 function Get-PATToken()
 {
     param(
