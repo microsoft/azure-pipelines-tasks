@@ -9,6 +9,7 @@ Register-Mock Find-VstsMatch { 'Some PDB file 1', 'Some PDB file 2' }
 Register-Mock Invoke-IndexSources
 Register-Mock Invoke-PublishSymbols
 Register-Mock Get-VstsTaskVariable
+Register-Mock Get-VstsInput { 'Some input service connection' } -ParametersEvaluator { $Name -eq 'ConnectedServiceName' }
 Register-Mock Get-VstsInput { 'FileShare' } -ParametersEvaluator { $Name -eq 'SymbolServerType' }
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'IndexSources' }
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'PublishSymbols' }
@@ -18,7 +19,6 @@ Register-Mock Get-VstsInput { 'Some input search pattern' } -ParametersEvaluator
 Register-Mock Get-VstsInput { 'Some input symbols product' } -ParametersEvaluator { $Name -eq 'SymbolsProduct' }
 Register-Mock Get-VstsInput { 'Some input symbols version' } -ParametersEvaluator { $Name -eq 'SymbolsVersion' }
 Register-Mock Get-VstsInput { 'Some input symbols folder' } -ParametersEvaluator { $Name -eq 'SymbolsFolder' }
-Register-Mock Get-VstsInput { 'Some input serviceconnection' } -ParametersEvaluator { $Name -eq 'ConnectedServiceName' }
 Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
 $env:PublishSymbols_Debug = $null
