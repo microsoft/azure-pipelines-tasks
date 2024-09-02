@@ -10,9 +10,13 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 #if NODE20
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
-    const dns = require("dns");
-    dns.setDefaultResultOrder("ipv4first");
+    require("dns").setDefaultResultOrder("ipv4first");
     tl.debug("Set default DNS lookup order to ipv4 first");
+}
+
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
 }
 #endif
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";

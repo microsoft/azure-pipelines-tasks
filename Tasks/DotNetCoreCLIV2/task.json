@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -191,9 +191,9 @@
         "vstsFeed"
       ],
       "type": "pickList",
-      "label": "Use packages from this Azure Artifacts feed",
+      "label": "Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]feed name.",
       "defaultValue": "",
-      "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
+      "helpMarkDown": "Include the selected feed in the generated NuGet.config.\n\nFormat:\n* For organization-scoped feeds: `FeedName`\n* For project-scoped feeds: `ProjectName/FeedName`",
       "required": "false",
       "groupName": "restoreAuth",
       "visibleRule": "selectOrConfig = select",

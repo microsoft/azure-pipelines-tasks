@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 1
   },
   "demands": [
@@ -305,7 +305,7 @@
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   },
   "_buildConfigMapping": {
-    "Default": "4.244.0",
-    "Node20_229_2": "4.244.1"
+    "Default": "4.245.0",
+    "Node20_229_2": "4.245.1"
   }
 }
