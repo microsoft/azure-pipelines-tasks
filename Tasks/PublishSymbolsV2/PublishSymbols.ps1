@@ -184,7 +184,7 @@ try {
 
         Write-Host "Symbol Request Name = $RequestName"
 
-        . $PSScriptRoot\Auth.ps1
+        Import-Module $PSScriptRoot\Auth.ps1
 
         [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
         Write-Host "Symbol Request Name = $connectedServiceName"
