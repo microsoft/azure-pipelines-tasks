@@ -7,6 +7,7 @@ import * as utils from './helpers';
 import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
+import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
 import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables } from './constants';
 
@@ -34,6 +35,8 @@ async function execute() {
         const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
+
+        setUpConnectedServiceEnvironmentVariables();
 
         if (serverBasedRun) {
 
@@ -188,6 +191,25 @@ function isServerBasedRun(): boolean {
     }
 
     return false;
+}
+
+function setUpConnectedServiceEnvironmentVariables() {
+    var connectedService = tl.getInput('ConnectedServiceName');
+    if(connectedService) {
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+        if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+        }
+        else {
+            tl.debug('Connected service is not of type Workload Identity Federation');
+        }
+    }
+    else {
+        tl.debug('No connected service set');
+    }
 }
 
 if (osPlat !== 'win32') {
