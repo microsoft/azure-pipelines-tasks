@@ -83,7 +83,7 @@ export class TaskParameters {
             throw new ArgumentError(tl.loc("OnlySupportedImportModeOptions", All, IgnoreMatch));
         }
 
-        taskParameters.importMode = importMode == IgnoreMatch ? ImportMode.IgnoreMatch: ImportMode.All;
+        taskParameters.importMode = importMode == All ? ImportMode.All: ImportMode.IgnoreMatch;
 
         try {
 
