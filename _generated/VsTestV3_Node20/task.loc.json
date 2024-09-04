@@ -49,16 +49,6 @@
   ],
   "inputs": [
     {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
-    },
-    {
       "name": "testSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testSelector",
