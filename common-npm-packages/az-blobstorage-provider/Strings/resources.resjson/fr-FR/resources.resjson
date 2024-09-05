@@ -1,0 +1,14 @@
+{
+  "loc.messages.CreatedBlobForItem": "Blob créé pour l'élément {0}. URI de blob : {1}",
+  "loc.messages.CreatedContainer": "Conteneur {0} créé.",
+  "loc.messages.ErrorInReadStream": "Erreur du flux de lecture : {0}",
+  "loc.messages.ErrorInWriteStream": "Erreur du flux d'écriture : {0}",
+  "loc.messages.FailedToCreateBlob": "Nous n’avons pas pu créer le blob {0}. Erreur : {1}",
+  "loc.messages.FailedToCreateContainer": "Nous n’avons pas pu créer le conteneur {0}. Erreur : {1}",
+  "loc.messages.FailedToListItemInsideContainer": "Nous n’avons pas pu lister des éléments présents dans le conteneur : {0}. Erreur : {1}",
+  "loc.messages.SuccessFullyFetchedItemList": "Récupération (fetch) réussie de la liste des éléments",
+  "loc.messages.UnableToFetchItem": "Nous n’avons pas pu récupérer (fetch) l'élément : {0}. Erreur : {1}",
+  "loc.messages.UploadingItem": "Chargement en cours {0}.",
+  "loc.messages.ContinuationTokenExistsFetchingRemainingFiles": "Un jeton de continuation existe. Tentative de récupération (fetch) de la liste des fichiers restants.",
+  "loc.messages.GetArtifactItemsNotSupported": "Obtention des éléments d'artefact non prise en charge, chemin d’accès du code non valide"
+}

@@ -1,0 +1,89 @@
+{
+  "hydrated": false,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines",
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2024-02-19 12:38:43Z",
+      "lastUpdatedDate": "2024-02-19 12:38:43Z"
+    }
+  },
+  "results": {
+    "3e5ae515e83952828ad60b7217adfaf23ff30c2a57807d832b3d04ac6df138f3": {
+      "signature": "3e5ae515e83952828ad60b7217adfaf23ff30c2a57807d832b3d04ac6df138f3",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "8964f6915925ffece89558291588c7e50cb91d6cc0bdb82d647e1a8b9f614c61": {
+      "signature": "8964f6915925ffece89558291588c7e50cb91d6cc0bdb82d647e1a8b9f614c61",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "e0efa13c009c8e3db070de742d1d9446b4b6c6b1df40cecdfae86b4a420c62e8": {
+      "signature": "e0efa13c009c8e3db070de742d1d9446b4b6c6b1df40cecdfae86b4a420c62e8",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "dde16a68649da3953f8bd8ef7adc61f17f9adc9464b33074483f801a44c848c3": {
+      "signature": "dde16a68649da3953f8bd8ef7adc61f17f9adc9464b33074483f801a44c848c3",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "b7be027603978dae161092792f85b9c8130d1b0cb0b173a44eac21e24c5c7800": {
+      "signature": "b7be027603978dae161092792f85b9c8130d1b0cb0b173a44eac21e24c5c7800",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "3d9d4a4f2fccb14b5c94c4f125d8e3dd755fd793a7c049d3d085c9a50689f0f9": {
+      "signature": "3d9d4a4f2fccb14b5c94c4f125d8e3dd755fd793a7c049d3d085c9a50689f0f9",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "c034d2b50564df80cb6affc2e56863937cfc73b06841fb0b05f9392450b2ce31": {
+      "signature": "c034d2b50564df80cb6affc2e56863937cfc73b06841fb0b05f9392450b2ce31",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    },
+    "9e23ac2436c30839a8cdedbb2b1ef506338b8cd4a9d12c83c976363b5e271461": {
+      "signature": "9e23ac2436c30839a8cdedbb2b1ef506338b8cd4a9d12c83c976363b5e271461",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Unit test mocks",
+      "createdDate": "2024-02-19 12:38:43Z"
+    }
+  }
+}

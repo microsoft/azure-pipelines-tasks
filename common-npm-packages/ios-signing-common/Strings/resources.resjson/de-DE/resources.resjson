@@ -1,0 +1,7 @@
+{
+  "loc.messages.SignIdNotFound": "Fehler beim Suchen der iOS-Signaturidentität. Überprüfen Sie die angegebenen Signatur- und Bereitstellungsinformationen.",
+  "loc.messages.TempKeychainSetupFailed": "Fehler beim Hinzufügen der temporären Schlüsselkette zum Schlüsselkettensuchpfad.",
+  "loc.messages.ProvProfileDetailsNotFound": "Fehler beim Suchen der Details für das Bereitstellungsprofil: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Fehler beim Suchen der Bereitstellungsprofil-UUID für das Bereitstellungsprofil: %s",
+  "loc.messages.ProvProfileNameNotFound": "Fehler beim Suchen Bereitstellungsprofilnamens für das Bereitstellungsprofil: %s"
+}
