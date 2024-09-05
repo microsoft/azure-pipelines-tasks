@@ -16,4 +16,10 @@ let mockApi = {
 };
 tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', mockApi);
 
+tr.setAnswers({
+    osType: {
+        "osType": "Windows NT"
+    }
+});
+
 tr.run();

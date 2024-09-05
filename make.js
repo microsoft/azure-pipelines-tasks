@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.14.0';
+var node20Version = '20.17.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -479,6 +479,8 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
+    process.env['SYSTEM_DEBUG'] = 'true';
+
     // build the general tests and ps test infra
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));
@@ -810,8 +812,10 @@ CLI.bump = function() {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
-        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+        const taskJsonStringified = JSON.stringify(taskJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskJsonPath, taskJsonStringified);
+        const taskLocJsonStringified = JSON.stringify(taskLocJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
+        fs.writeFileSync(taskLocJsonPath, taskLocJsonStringified);
 
         // Check that task.loc and task.loc.json versions match
         if ((taskJson.version.Major !== taskLocJson.version.Major) ||

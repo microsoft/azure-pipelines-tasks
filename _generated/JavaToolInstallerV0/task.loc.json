@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 245,
     "Patch": 2
   },
   "satisfies": [
@@ -229,7 +229,7 @@
     "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20-225": "0.243.3"
+    "Default": "0.245.2",
+    "Node20-225": "0.245.3"
   }
 }

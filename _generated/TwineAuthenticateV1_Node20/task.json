@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 1
   },
   "runsOn": [
@@ -88,21 +88,22 @@
     "Info_AddingInternalFeeds": "Adding auth information for %s internal feed.",
     "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
     "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
-    "Info_SuccessAddingAuth": "Successfully added auth for %s internal feed and %s external endpoint.",
+    "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds, %s external endpoints, and %s federated feeds",
     "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
     "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added federated auth for feed %s.",
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
     "Warning_OnlyOneFeedAllowed": "Only one internal feed can be authorized at a time using this task. All the feeds except first one will be ignored.",
     "Warning_OnlyOneServiceConnectionAllowed": "Only one service connection can be authorized at a time using this task. All the connections except first one will be ignored.",
-    "Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.",
+    "Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "Error_MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
     "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
     "FailedToAddAuthentication": "Failed to add authentication.",
     "NoPypircFile": "No .pypirc file to clean up.",
     "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
     "Info_RemovingPypircFile": "Removing .pypirc file from %s",
-    "DuplicateRegistry": "%s registry is already authenticated",
-    "NoRepoFound": "No repo url found under %s",
-    "DuplicateRepoUrl": "Repo with repository url %s already exists and is authenticated"
+    "NoRepoFound": "No repo url found under %s"
   },
   "postjobexecution": {
     "Node10": {
@@ -119,7 +120,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_1": "1.244.1"
+    "Default": "1.245.0",
+    "Node20_229_1": "1.245.1",
+    "wif_242": "1.245.2"
   }
 }

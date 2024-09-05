@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 245,
     "Patch": 0
   },
   "runsOn": [
@@ -87,18 +87,19 @@
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "Warning_OnlyOneFeedAllowed": "ms-resource:loc.messages.Warning_OnlyOneFeedAllowed",
     "Warning_OnlyOneServiceConnectionAllowed": "ms-resource:loc.messages.Warning_OnlyOneServiceConnectionAllowed",
     "Error_DuplicateEntryForFeed": "ms-resource:loc.messages.Error_DuplicateEntryForFeed",
+    "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth",
+    "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry",
-    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound",
-    "DuplicateRepoUrl": "ms-resource:loc.messages.DuplicateRepoUrl"
+    "NoRepoFound": "ms-resource:loc.messages.NoRepoFound"
   },
   "postjobexecution": {
     "Node10": {
@@ -111,7 +112,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_1": "1.244.1"
+    "Default": "1.245.0",
+    "Node20_229_1": "1.245.1",
+    "wif_242": "1.245.2"
   }
 }
