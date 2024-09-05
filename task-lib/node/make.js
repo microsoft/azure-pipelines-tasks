@@ -26,7 +26,7 @@ target.build = function() {
     target.clean();
     target.loc();
 
-    run('tsc --outDir ' + buildPath);
+    run('npx tsc --outDir ' + buildPath);
     cp(rp('package.json'), buildPath);
     cp(rp('package-lock.json'), buildPath);
     cp(rp('README.md'), buildPath);

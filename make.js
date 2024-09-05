@@ -57,6 +57,7 @@ var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
+var taskLibPath = path.join(__dirname, 'task-lib/node');
 
 var CLI = {};
 
@@ -203,6 +204,10 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
         }
     });
+
+    // build task-lib
+    cd(taskLibPath);
+    run("node make.js build");
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);

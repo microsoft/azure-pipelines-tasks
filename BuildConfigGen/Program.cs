@@ -29,7 +29,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateTaskLib = false);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
@@ -52,7 +52,8 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242 };
+            public static readonly ConfigRecord UpdateTaskLib = new ConfigRecord(name: nameof(UpdateTaskLib), constMappingKey: "UpdateTaskLib", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UpdateTaskLib", writeNpmrc: true, shouldUpdateTaskLib:true );
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, UpdateTaskLib };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -456,11 +457,18 @@ namespace BuildConfigGen
                 {
                     GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath);
 
-                    EnsureDependencyVersionsAreSyncronized(
-                        task,
-                        Path.Combine(taskTargetPath, "package.json"),
-                        Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json"));
-                    WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
+                    string buildConfigPackageJsonPath = Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json");
+
+                    if (File.Exists(buildConfigPackageJsonPath))
+                    {
+                        EnsureDependencyVersionsAreSyncronized(
+                            task,
+                            Path.Combine(taskTargetPath, "package.json"),
+                            buildConfigPackageJsonPath);
+
+                    }
+
+                    WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateTaskLib);
                 }
 
                 debugConfigGen.WriteTypescriptConfig(taskOutput);
@@ -476,9 +484,27 @@ namespace BuildConfigGen
             const string versionRE = @"(\d+)\.(\d+)\.(\d+)";
             var originMatch = Regex.Match(version1, versionRE);
             var generatedMatch = Regex.Match(version2, versionRE);
-            var originDependencyVersion = Version.Parse($"{originMatch.Groups[1].Value}.{originMatch.Groups[2].Value}.{originMatch.Groups[3].Value}");
-            var generatedDependencyVersion = Version.Parse($"{generatedMatch.Groups[1].Value}.{generatedMatch.Groups[2].Value}.{generatedMatch.Groups[3].Value}");
-            return originDependencyVersion.CompareTo(generatedDependencyVersion) > 0;
+
+            if (originMatch.Success && generatedMatch.Success)
+            {
+                var originDependencyVersion = Version.Parse($"{originMatch.Groups[1].Value}.{originMatch.Groups[2].Value}.{originMatch.Groups[3].Value}");
+                var generatedDependencyVersion = Version.Parse($"{generatedMatch.Groups[1].Value}.{generatedMatch.Groups[2].Value}.{generatedMatch.Groups[3].Value}");
+                return originDependencyVersion.CompareTo(generatedDependencyVersion) > 0;
+            }
+            else
+            {
+                if(!originMatch.Success)
+                {
+                    Console.WriteLine($"VersionIsGreaterThan: {version1} doesn't look like a version");
+                }
+
+                if (!generatedMatch.Success)
+                {
+                    Console.WriteLine($"VersionIsGreaterThan: {version1} doesn't look like a version");
+                }
+            }
+
+            return false;
         }
 
         private static void EnsureDependencyVersionsAreSyncronized(
@@ -696,7 +722,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
@@ -706,6 +732,11 @@ namespace BuildConfigGen
             if (shouldUpdateTypescript)
             {
                 outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = "5.1.6";
+            }
+
+            if(shouldUpdateTaskLib)
+            {
+                outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = "file:../../task-lib/node/_build";
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json
