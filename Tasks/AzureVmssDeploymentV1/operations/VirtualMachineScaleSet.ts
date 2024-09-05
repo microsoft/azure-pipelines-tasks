@@ -53,7 +53,7 @@ export default class VirtualMachineScaleSet {
 
         const audience = 'https://' + storageDetails.name + '.blob.core.windows.net/';
 
-        tl.debug("Getting credentials for connected service: endpoint =" + endpoint +"audience" + audience);
+        tl.debug("Getting credentials for connected service: endpoint =" + endpoint +" audience = " + audience);
 
         const credentialT = new ConnectedServiceCredential(endpoint, audience);
 
@@ -63,12 +63,13 @@ export default class VirtualMachineScaleSet {
         tl.debug("retrived credentials for connected service: credentialT =" + credentialT );
         const blobServiceClient = new BlobServiceClient(customScriptInfo.storageAccount.primaryBlobUrl, credentialT);
         const containerClient = blobServiceClient.getContainerClient("vststasks");
-    
+        tl.debug("retrived container details for vststasks = " + containerClient );
         let uploadedBlobUrls: string[] = [];
 
         let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
         console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
-        
+        tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
+
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
         } else {
@@ -89,7 +90,7 @@ export default class VirtualMachineScaleSet {
         const uploadedBlobUrls: string[] = [];
     
         const files = fs.readdirSync(dirPath);
-    
+        tl.debug("upload directory started for dirPath =" + dirPath + ", blobsPrefixPath =" +blobsPrefixPath );
         for (const file of files) {
             const fullPath = path.join(dirPath, file);
     
