@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "commonjs",
+        "declaration": true,
+        "moduleResolution": "node",
+        "strictNullChecks": true
+    },
+    "files": [
+        "index.ts",
+        "mock-task.ts",
+        "mock-run.ts",
+        "mock-test.ts"
+    ]
+}

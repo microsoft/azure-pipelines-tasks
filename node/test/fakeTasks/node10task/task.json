@@ -1,0 +1,12 @@
+{
+    "id": "id",
+    "name": "Node10Task",
+    "execution": {
+        "Node": {
+            "target": "usedotnet.js"
+        },
+        "Node10": {
+            "target": "usedotnet.js"
+        }
+    }
+}

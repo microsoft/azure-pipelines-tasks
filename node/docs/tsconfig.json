@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "commonjs",
+        "declaration": false,
+        "moduleResolution": "node"
+    },
+    "files": [
+        "gendocs.ts",
+        "TypeScriptSourceToJson.ts"
+    ]
+}
