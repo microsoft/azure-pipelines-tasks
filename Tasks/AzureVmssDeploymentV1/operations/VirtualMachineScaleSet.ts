@@ -48,15 +48,19 @@ export default class VirtualMachineScaleSet {
     private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo): Promise<string[]> {
         console.log(tl.loc("UploadingCustomScriptsBlobs", customScriptInfo.localDirPath))
         let storageDetails = customScriptInfo.storageAccount;
-
+        
         const endpoint = await new AzureRMEndpoint(tl.getInput("ConnectedServiceName", true)).getEndpoint();
+
         const audience = 'https://' + storageDetails.name + '.blob.core.windows.net/';
+
+        tl.debug("Getting credentials for connected service: endpoint =" + endpoint +"audience" + audience);
+
         const credentialT = new ConnectedServiceCredential(endpoint, audience);
 
         if (!credentialT || credentialT == null) {
             throw new Error("Failed to obtain credentials.");
         }
-
+        tl.debug("retrived credentials for connected service: credentialT =" + credentialT );
         const blobServiceClient = new BlobServiceClient(customScriptInfo.storageAccount.primaryBlobUrl, credentialT);
         const containerClient = blobServiceClient.getContainerClient("vststasks");
     
@@ -74,6 +78,7 @@ export default class VirtualMachineScaleSet {
             if (uploadResponse._response.status === 201) {
                 const blobUrl = blockBlobClient.url;
                 uploadedBlobUrls.push(blobUrl);
+                tl.debug("uploaded files to blob ");
             } else {
                 throw new Error("Failed to upload the file to the blob.");
             }
@@ -99,6 +104,7 @@ export default class VirtualMachineScaleSet {
     
                 if (uploadResponse._response.status === 201) {
                     const blobUrl = blockBlobClient.url;
+                    tl.debug("uploaded directory files to blob ");
                     uploadedBlobUrls.push(blobUrl);
                 } else {
                     throw new Error(`Failed to upload file: ${fullPath}`);
@@ -114,7 +120,7 @@ export default class VirtualMachineScaleSet {
         let storageAccount: azureModel.StorageAccount = await storageArmClient.storageAccounts.get(this.taskParameters.customScriptsStorageAccount);
 
         let storageAccountResourceGroupName = utils.getResourceGroupNameFromUri(storageAccount.id);
-
+        tl.debug("Retrived storage account details for " + this.taskParameters.customScriptsStorageAccount + " ,primaryBlobUrl :"+storageAccount.properties.primaryEndpoints.blob + ", resourceGroupName :"+ storageAccountResourceGroupName);
         return <StorageAccountInfo>{
             name: this.taskParameters.customScriptsStorageAccount,
             primaryBlobUrl: storageAccount.properties.primaryEndpoints.blob,
