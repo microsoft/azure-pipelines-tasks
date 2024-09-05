@@ -42,8 +42,6 @@ variables:
 - name: system.debug
   value: true
 
-- group: Courtesy-Push-GitHub-AccessToken
-
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
