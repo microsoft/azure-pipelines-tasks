@@ -25,7 +25,7 @@ tmr.setAnswers({
             "code": 0,
             "stdout": "extracted" 
         },
-        "notation verify localhost:5000/e2e@sha256:xxxxxx --verbose": {
+        "notation verify localhost:5000/e2e@sha256:xxxxxx --verbose --debug": {
             "code": 0,
             "stdout": "extracted" 
         },
