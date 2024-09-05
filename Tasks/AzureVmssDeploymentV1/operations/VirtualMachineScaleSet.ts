@@ -61,6 +61,7 @@ export default class VirtualMachineScaleSet {
             throw new Error("Failed to obtain credentials.");
         }
         tl.debug("retrived credentials for connected service: credentialT =" + credentialT );
+        tl.debug("retrived customScriptInfo.storageAccount.primaryBlobUrl =" + customScriptInfo.storageAccount.primaryBlobUrl );
         const blobServiceClient = new BlobServiceClient(customScriptInfo.storageAccount.primaryBlobUrl, credentialT);
         const containerClient = blobServiceClient.getContainerClient("vststasks");
         tl.debug("retrived container details for vststasks = " + containerClient );
