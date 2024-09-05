@@ -67,9 +67,9 @@ export default class VirtualMachineScaleSet {
         tl.debug("retrived container details for vststasks = " + containerClient );
         let uploadedBlobUrls: string[] = [];
 
-        let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
-        console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
-        tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
+        // let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
+        // console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
+        //tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
 
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
