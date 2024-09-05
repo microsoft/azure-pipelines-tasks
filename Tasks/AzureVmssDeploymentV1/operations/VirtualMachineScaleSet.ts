@@ -46,6 +46,9 @@ export default class VirtualMachineScaleSet {
     }
 
     private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo): Promise<string[]> {
+        try{
+
+        
         console.log(tl.loc("UploadingCustomScriptsBlobs", customScriptInfo.localDirPath))
         let storageDetails = customScriptInfo.storageAccount;
         
@@ -86,6 +89,10 @@ export default class VirtualMachineScaleSet {
             }
         }
         return uploadedBlobUrls;
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, `Error uploading custom scripts to blob: ${error.message}`);
+        throw error;
+      }
     }
     private async uploadDirectoryToBlob(containerClient: ContainerClient, dirPath: string, blobsPrefixPath: string): Promise<string[]> {
         const uploadedBlobUrls: string[] = [];
