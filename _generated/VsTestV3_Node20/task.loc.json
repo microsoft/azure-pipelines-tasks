@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 245,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -48,6 +48,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -662,7 +672,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "3.245.0",
-    "Node20_229_4": "3.245.1"
+    "Default": "3.245.2",
+    "Node20_229_4": "3.245.3"
   }
 }
