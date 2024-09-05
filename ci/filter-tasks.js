@@ -240,8 +240,6 @@ const ciBuildReasonList = [AzpBuildReason.Individualci, AzpBuildReason.Batchedci
 
 async function filterTasks () {
     try {
-        setTaskVariables(makeOptions.tasks, makeOptions.tasks);
-        return
         if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
             // If CI, we will compare any tasks that have updated versions.
             const tasks = await getTasksToBuildForCI();
