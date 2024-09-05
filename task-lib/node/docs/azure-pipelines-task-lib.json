@@ -1,0 +1,2650 @@
+{
+  "members": {
+    "toolrunner": {
+      "name": "toolrunner",
+      "kind": "file",
+      "members": {
+        "IExecOptions": {
+          "name": "IExecOptions",
+          "members": {
+            "failOnStdErr": {
+              "documentation": "optional.  whether to fail if output to stderr.  defaults to false ",
+              "name": "failOnStdErr",
+              "return": "boolean"
+            },
+            "ignoreReturnCode": {
+              "documentation": "optional.  defaults to failing on non zero.  ignore will not fail leaving it up to the caller ",
+              "name": "ignoreReturnCode",
+              "return": "boolean"
+            }
+          },
+          "documentation": "Interface for exec options",
+          "kind": "interface"
+        },
+        "IExecSyncOptions": {
+          "name": "IExecSyncOptions",
+          "members": {
+            "cwd": {
+              "documentation": "optional working directory.  defaults to current ",
+              "name": "cwd",
+              "return": "string"
+            },
+            "env": {
+              "documentation": "optional envvar dictionary.  defaults to current process's env ",
+              "name": "env",
+              "return": "{ [key: string]: string; }"
+            },
+            "silent": {
+              "documentation": "optional.  defaults to false ",
+              "name": "silent",
+              "return": "boolean"
+            },
+            "outStream": {
+              "documentation": "",
+              "name": "outStream",
+              "return": "any"
+            },
+            "errStream": {
+              "documentation": "",
+              "name": "errStream",
+              "return": "any"
+            },
+            "windowsVerbatimArguments": {
+              "documentation": "optional.  foo.whether to skip quoting/escaping arguments if needed.  defaults to false. ",
+              "name": "windowsVerbatimArguments",
+              "return": "boolean"
+            }
+          },
+          "documentation": "Interface for execSync options",
+          "kind": "interface"
+        },
+        "IExecSyncResult": {
+          "name": "IExecSyncResult",
+          "members": {
+            "stdout": {
+              "documentation": "standard output ",
+              "name": "stdout",
+              "return": "string"
+            },
+            "stderr": {
+              "documentation": "error output ",
+              "name": "stderr",
+              "return": "string"
+            },
+            "code": {
+              "documentation": "return code ",
+              "name": "code",
+              "return": "number"
+            },
+            "error": {
+              "documentation": "Error on failure ",
+              "name": "error",
+              "return": "Error"
+            }
+          },
+          "documentation": "Interface for exec results returned from synchronous exec functions",
+          "kind": "interface"
+        },
+        "ToolRunner": {
+          "name": "ToolRunner",
+          "members": {
+            "_debug": {
+              "name": "_debug",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "message",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_argStringToArray": {
+              "name": "_argStringToArray",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "argString",
+                      "type": "string",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "string[]",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_getCommandString": {
+              "name": "_getCommandString",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecOptions",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "noPrefix",
+                      "type": "boolean",
+                      "optional": true,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "string",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_processLineBuffer": {
+              "name": "_processLineBuffer",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "data",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "strBuffer",
+                      "type": "string",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "onLine",
+                      "type": "(line: string) => void",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_getSpawnFileName": {
+              "name": "_getSpawnFileName",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [],
+                  "members": {},
+                  "return": "string",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_getSpawnArgs": {
+              "name": "_getSpawnArgs",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecOptions",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "string[]",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_isCmdFile": {
+              "name": "_isCmdFile",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [],
+                  "members": {},
+                  "return": "boolean",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_windowsQuoteCmdArg": {
+              "name": "_windowsQuoteCmdArg",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "arg",
+                      "type": "string",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "string",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_uv_quote_cmd_arg": {
+              "name": "_uv_quote_cmd_arg",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "arg",
+                      "type": "string",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "string",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_cloneExecOptions": {
+              "name": "_cloneExecOptions",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecOptions",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "IExecOptions",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_getSpawnOptions": {
+              "name": "_getSpawnOptions",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecOptions",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "any",
+                  "documentation": ""
+                }
+              ]
+            },
+            "_getSpawnSyncOptions": {
+              "name": "_getSpawnSyncOptions",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecSyncOptions",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "any",
+                  "documentation": ""
+                }
+              ]
+            },
+            "arg": {
+              "name": "arg",
+              "members": {},
+              "documentation": "Add argument\nAppend an argument or an array of arguments \nreturns ToolRunner for chaining\n\n@returns   ToolRunner",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "val",
+                      "type": "string | string[]",
+                      "optional": false,
+                      "documentation": "string cmdline or array of strings"
+                    }
+                  ],
+                  "members": {},
+                  "return": "ToolRunner",
+                  "documentation": "Add argument\nAppend an argument or an array of arguments \nreturns ToolRunner for chaining\n\n@returns   ToolRunner"
+                }
+              ]
+            },
+            "line": {
+              "name": "line",
+              "members": {},
+              "documentation": "Parses an argument line into one or more arguments\ne.g. .line('\"arg one\" two -z') is equivalent to .arg(['arg one', 'two', '-z'])\nreturns ToolRunner for chaining\n\n@returns   ToolRunner",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "val",
+                      "type": "string",
+                      "optional": false,
+                      "documentation": "string argument line"
+                    }
+                  ],
+                  "members": {},
+                  "return": "ToolRunner",
+                  "documentation": "Parses an argument line into one or more arguments\ne.g. .line('\"arg one\" two -z') is equivalent to .arg(['arg one', 'two', '-z'])\nreturns ToolRunner for chaining\n\n@returns   ToolRunner"
+                }
+              ]
+            },
+            "argIf": {
+              "name": "argIf",
+              "members": {},
+              "documentation": "Add argument(s) if a condition is met\nWraps arg().  See arg for details\nreturns ToolRunner for chaining\n\n@returns   ToolRunner",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "condition",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": "boolean condition"
+                    },
+                    {
+                      "name": "val",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": "string cmdline or array of strings"
+                    }
+                  ],
+                  "members": {},
+                  "return": "this",
+                  "documentation": "Add argument(s) if a condition is met\nWraps arg().  See arg for details\nreturns ToolRunner for chaining\n\n@returns   ToolRunner"
+                }
+              ]
+            },
+            "pipeExecOutputToTool": {
+              "name": "pipeExecOutputToTool",
+              "members": {},
+              "documentation": "Pipe output of exec() to another tool\n@returns {ToolRunner}",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "tool",
+                      "type": "ToolRunner",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "file",
+                      "type": "string",
+                      "optional": true,
+                      "documentation": "optional filename to additionally stream the output to."
+                    }
+                  ],
+                  "members": {},
+                  "return": "ToolRunner",
+                  "documentation": "Pipe output of exec() to another tool\n@returns {ToolRunner}"
+                }
+              ]
+            },
+            "exec": {
+              "name": "exec",
+              "members": {},
+              "documentation": "Exec a tool.\nOutput will be streamed to the live console.\nReturns promise with return code\n\n@returns   number",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecOptions",
+                      "optional": true,
+                      "documentation": "optional exec options.  See IExecOptions"
+                    }
+                  ],
+                  "members": {},
+                  "return": "any",
+                  "documentation": "Exec a tool.\nOutput will be streamed to the live console.\nReturns promise with return code\n\n@returns   number"
+                }
+              ]
+            },
+            "execSync": {
+              "name": "execSync",
+              "members": {},
+              "documentation": "Exec a tool synchronously. \nOutput will be *not* be streamed to the live console.  It will be returned after execution is complete.\nAppropriate for short running tools \nReturns IExecSyncResult with output and return code\n\n@returns   IExecSyncResult",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "options",
+                      "type": "IExecSyncOptions",
+                      "optional": true,
+                      "documentation": "optional exec options.  See IExecSyncOptions"
+                    }
+                  ],
+                  "members": {},
+                  "return": "IExecSyncResult",
+                  "documentation": "Exec a tool synchronously. \nOutput will be *not* be streamed to the live console.  It will be returned after execution is complete.\nAppropriate for short running tools \nReturns IExecSyncResult with output and return code\n\n@returns   IExecSyncResult"
+                }
+              ]
+            }
+          },
+          "documentation": "",
+          "kind": "class",
+          "constructors": [
+            {
+              "parameters": [
+                {
+                  "name": "toolPath",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "ToolRunner",
+              "documentation": ""
+            }
+          ]
+        }
+      }
+    },
+    "task": {
+      "name": "task",
+      "kind": "file",
+      "members": {
+        "setStdStream": {
+          "name": "setStdStream",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "stdStream",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "setErrStream": {
+          "name": "setErrStream",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "errStream",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "setResult": {
+          "name": "setResult",
+          "members": {},
+          "documentation": "Sets the result of the task.\nExecution will continue.\nIf not set, task will be Succeeded.\nIf multiple calls are made to setResult the most pessimistic call wins (Failed) regardless of the order of calls.\n\n@returns         void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "result",
+                  "type": "TaskResult",
+                  "optional": false,
+                  "documentation": "TaskResult enum of Succeeded, SucceededWithIssues or Failed.  "
+                },
+                {
+                  "name": "message",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "A message which will be logged as an error issue if the result is Failed."
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Sets the result of the task.\nExecution will continue.\nIf not set, task will be Succeeded.\nIf multiple calls are made to setResult the most pessimistic call wins (Failed) regardless of the order of calls.\n\n@returns         void"
+            }
+          ]
+        },
+        "setResourcePath": {
+          "name": "setResourcePath",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "Full path to the json."
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Sets the location of the resources json.  This is typically the task.json file.\nCall once at the beginning of the script before any calls to loc.\n\n@returns   void"
+            }
+          ]
+        },
+        "loc": {
+          "name": "loc",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "key of the resources string in the resource file"
+                },
+                {
+                  "name": "param",
+                  "type": "any[]",
+                  "optional": false,
+                  "documentation": "additional params for formatting the string"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the localized string from the json resource file.  Optionally formats with additional params.\n\n@returns   string"
+            }
+          ]
+        },
+        "getVariable": {
+          "name": "getVariable",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the variable to get"
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets a variable value that is defined on the build/release definition or set at runtime.\n\n@returns   string"
+            }
+          ]
+        },
+        "assertAgent": {
+          "name": "assertAgent",
+          "members": {},
+          "documentation": "Asserts the agent version is at least the specified minimum.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "minimum",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "minimum version version - must be 2.104.1 or higher"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Asserts the agent version is at least the specified minimum."
+            }
+          ]
+        },
+        "getVariables": {
+          "name": "getVariables",
+          "members": {},
+          "documentation": "Gets a snapshot of the current state of all job variables available to the task.\nRequires a 2.104.1 agent or higher for full functionality.\n\nLimitations on an agent prior to 2.104.1:\n 1) The return value does not include all public variables. Only public variables\n    that have been added using setVariable are returned.\n 2) The name returned for each secret variable is the formatted environment variable\n    name, not the actual variable name (unless it was set explicitly at runtime using\n    setVariable).\n\n@returns VariableInfo[]",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "VariableInfo[]",
+              "documentation": "Gets a snapshot of the current state of all job variables available to the task.\nRequires a 2.104.1 agent or higher for full functionality.\n\nLimitations on an agent prior to 2.104.1:\n 1) The return value does not include all public variables. Only public variables\n    that have been added using setVariable are returned.\n 2) The name returned for each secret variable is the formatted environment variable\n    name, not the actual variable name (unless it was set explicitly at runtime using\n    setVariable).\n\n@returns VariableInfo[]"
+            }
+          ]
+        },
+        "getAgentMode": {
+          "name": "getAgentMode",
+          "members": {},
+          "documentation": "Gets a agent hosted mode: Unknown, SelfHosted or MsHosted.\nRequires a 2.212.0 agent or higher for full functionality. With lower version returns AgentHostedMode.Unknown value. \n\n@returns AgentHostedMode",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "AgentHostedMode",
+              "documentation": "Gets a agent hosted mode: Unknown, SelfHosted or MsHosted.\nRequires a 2.212.0 agent or higher for full functionality. With lower version returns AgentHostedMode.Unknown value. \n\n@returns AgentHostedMode"
+            }
+          ]
+        },
+        "setVariable": {
+          "name": "setVariable",
+          "members": {},
+          "documentation": "Sets a variable which will be available to subsequent tasks as well.\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the variable to set"
+                },
+                {
+                  "name": "val",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "value to set"
+                },
+                {
+                  "name": "secret",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether variable is secret.  Multi-line secrets are not allowed.  Optional, defaults to false"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Sets a variable which will be available to subsequent tasks as well.\n\n@returns   void"
+            }
+          ]
+        },
+        "setSecret": {
+          "name": "setSecret",
+          "members": {},
+          "documentation": "Registers a value with the logger, so the value will be masked from the logs.  Multi-line secrets are not allowed.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "val",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "value to register"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Registers a value with the logger, so the value will be masked from the logs.  Multi-line secrets are not allowed."
+            }
+          ]
+        },
+        "VariableInfo": {
+          "name": "VariableInfo",
+          "members": {
+            "name": {
+              "documentation": "",
+              "name": "name",
+              "return": "string"
+            },
+            "value": {
+              "documentation": "",
+              "name": "value",
+              "return": "string"
+            },
+            "secret": {
+              "documentation": "",
+              "name": "secret",
+              "return": "boolean"
+            }
+          },
+          "documentation": "Snapshot of a variable at the time when getVariables was called. ",
+          "kind": "interface"
+        },
+        "getInput": {
+          "name": "getInput",
+          "members": {},
+          "documentation": "Gets the value of an input.  The value is also trimmed.\nIf required is true and the value is not set, it will throw.\n\n@returns   string | undefined",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the input to get"
+                },
+                {
+                  "name": "required",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether input is required.  optional, defaults to false"
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets the value of an input.  The value is also trimmed.\nIf required is true and the value is not set, it will throw.\n\n@returns   string | undefined"
+            }
+          ]
+        },
+        "getInputRequired": {
+          "name": "getInputRequired",
+          "members": {},
+          "documentation": "Gets the value of an input.  The value is also trimmed.\nIf the value is not set, it will throw.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the input to get"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the value of an input.  The value is also trimmed.\nIf the value is not set, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "getBoolInput": {
+          "name": "getBoolInput",
+          "members": {},
+          "documentation": "Gets the value of an input and converts to a bool.  Convenience.\nIf required is true and the value is not set, it will throw.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the bool input to get"
+                },
+                {
+                  "name": "required",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether input is required.  optional, defaults to false"
+                }
+              ],
+              "members": {},
+              "return": "boolean",
+              "documentation": "Gets the value of an input and converts to a bool.  Convenience.\nIf required is true and the value is not set, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "getDelimitedInput": {
+          "name": "getDelimitedInput",
+          "members": {},
+          "documentation": "Gets the value of an input and splits the value using a delimiter (space, comma, etc).\nEmpty values are removed.  This function is useful for splitting an input containing a simple\nlist of items - such as build targets.\nIMPORTANT: Do not use this function for splitting additional args!  Instead use argString(), which\nfollows normal argument splitting rules and handles values encapsulated by quotes.\nIf required is true and the value is not set, it will throw.\n\n@returns   string[]",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the input to get"
+                },
+                {
+                  "name": "delim",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "delimiter to split on"
+                },
+                {
+                  "name": "required",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether input is required.  optional, defaults to false"
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Gets the value of an input and splits the value using a delimiter (space, comma, etc).\nEmpty values are removed.  This function is useful for splitting an input containing a simple\nlist of items - such as build targets.\nIMPORTANT: Do not use this function for splitting additional args!  Instead use argString(), which\nfollows normal argument splitting rules and handles values encapsulated by quotes.\nIf required is true and the value is not set, it will throw.\n\n@returns   string[]"
+            }
+          ]
+        },
+        "filePathSupplied": {
+          "name": "filePathSupplied",
+          "members": {},
+          "documentation": "Checks whether a path inputs value was supplied by the user\nFile paths are relative with a picker, so an empty path is the root of the repo.\nUseful if you need to condition work (like append an arg) if a value was supplied\n\n@returns   boolean",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the path input to check"
+                }
+              ],
+              "members": {},
+              "return": "boolean",
+              "documentation": "Checks whether a path inputs value was supplied by the user\nFile paths are relative with a picker, so an empty path is the root of the repo.\nUseful if you need to condition work (like append an arg) if a value was supplied\n\n@returns   boolean"
+            }
+          ]
+        },
+        "getPathInput": {
+          "name": "getPathInput",
+          "members": {},
+          "documentation": "Gets the value of a path input\nIt will be quoted for you if it isn't already and contains spaces\nIf required is true and the value is not set, it will throw.\nIf check is true and the path does not exist, it will throw.\n\n@returns   string | undefined",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the input to get"
+                },
+                {
+                  "name": "required",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether input is required.  optional, defaults to false"
+                },
+                {
+                  "name": "check",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether path is checked.  optional, defaults to false "
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets the value of a path input\nIt will be quoted for you if it isn't already and contains spaces\nIf required is true and the value is not set, it will throw.\nIf check is true and the path does not exist, it will throw.\n\n@returns   string | undefined"
+            }
+          ]
+        },
+        "getPathInputRequired": {
+          "name": "getPathInputRequired",
+          "members": {},
+          "documentation": "Gets the value of a path input\nIt will be quoted for you if it isn't already and contains spaces\nIf the value is not set, it will throw.\nIf check is true and the path does not exist, it will throw.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the input to get"
+                },
+                {
+                  "name": "check",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether path is checked.  optional, defaults to false "
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the value of a path input\nIt will be quoted for you if it isn't already and contains spaces\nIf the value is not set, it will throw.\nIf check is true and the path does not exist, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "getEndpointUrl": {
+          "name": "getEndpointUrl",
+          "members": {},
+          "documentation": "Gets the url for a service endpoint\nIf the url was not set and is not optional, it will throw.\n\n@returns   string | undefined",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                },
+                {
+                  "name": "optional",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": "whether the url is optional"
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets the url for a service endpoint\nIf the url was not set and is not optional, it will throw.\n\n@returns   string | undefined"
+            }
+          ]
+        },
+        "getEndpointUrlRequired": {
+          "name": "getEndpointUrlRequired",
+          "members": {},
+          "documentation": "Gets the url for a service endpoint\nIf the url was not set, it will throw.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the url for a service endpoint\nIf the url was not set, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "getEndpointDataParameter": {
+          "name": "getEndpointDataParameter",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "key",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "optional",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": ""
+            }
+          ]
+        },
+        "getEndpointDataParameterRequired": {
+          "name": "getEndpointDataParameterRequired",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "key",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": ""
+            }
+          ]
+        },
+        "getEndpointAuthorizationScheme": {
+          "name": "getEndpointAuthorizationScheme",
+          "members": {},
+          "documentation": "Gets the endpoint authorization scheme for a service endpoint\nIf the endpoint authorization scheme is not set and is not optional, it will throw.\n\n@returns {string} value of the endpoint authorization scheme or undefined",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                },
+                {
+                  "name": "optional",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": "whether the endpoint authorization scheme is optional"
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets the endpoint authorization scheme for a service endpoint\nIf the endpoint authorization scheme is not set and is not optional, it will throw.\n\n@returns {string} value of the endpoint authorization scheme or undefined"
+            }
+          ]
+        },
+        "getEndpointAuthorizationSchemeRequired": {
+          "name": "getEndpointAuthorizationSchemeRequired",
+          "members": {},
+          "documentation": "Gets the endpoint authorization scheme for a service endpoint\nIf the endpoint authorization scheme is not set, it will throw.\n\n@returns {string} value of the endpoint authorization scheme",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the endpoint authorization scheme for a service endpoint\nIf the endpoint authorization scheme is not set, it will throw.\n\n@returns {string} value of the endpoint authorization scheme"
+            }
+          ]
+        },
+        "getEndpointAuthorizationParameter": {
+          "name": "getEndpointAuthorizationParameter",
+          "members": {},
+          "documentation": "Gets the endpoint authorization parameter value for a service endpoint with specified key\nIf the endpoint authorization parameter is not set and is not optional, it will throw.\n\n@returns {string} value of the endpoint authorization parameter value or undefined",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                },
+                {
+                  "name": "key",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "key to find the endpoint authorization parameter"
+                },
+                {
+                  "name": "optional",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": "optional whether the endpoint authorization scheme is optional"
+                }
+              ],
+              "members": {},
+              "return": "string | undefined",
+              "documentation": "Gets the endpoint authorization parameter value for a service endpoint with specified key\nIf the endpoint authorization parameter is not set and is not optional, it will throw.\n\n@returns {string} value of the endpoint authorization parameter value or undefined"
+            }
+          ]
+        },
+        "getEndpointAuthorizationParameterRequired": {
+          "name": "getEndpointAuthorizationParameterRequired",
+          "members": {},
+          "documentation": "Gets the endpoint authorization parameter value for a service endpoint with specified key\nIf the endpoint authorization parameter is not set, it will throw.\n\n@returns {string} value of the endpoint authorization parameter value",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                },
+                {
+                  "name": "key",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "key to find the endpoint authorization parameter"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the endpoint authorization parameter value for a service endpoint with specified key\nIf the endpoint authorization parameter is not set, it will throw.\n\n@returns {string} value of the endpoint authorization parameter value"
+            }
+          ]
+        },
+        "EndpointAuthorization": {
+          "name": "EndpointAuthorization",
+          "members": {
+            "parameters": {
+              "documentation": "dictionary of auth data ",
+              "name": "parameters",
+              "return": "{ [key: string]: string; }"
+            },
+            "scheme": {
+              "documentation": "auth scheme such as OAuth or username/password etc... ",
+              "name": "scheme",
+              "return": "string"
+            }
+          },
+          "documentation": "Interface for EndpointAuthorization\nContains a schema and a string/string dictionary of auth data",
+          "kind": "interface"
+        },
+        "getEndpointAuthorization": {
+          "name": "getEndpointAuthorization",
+          "members": {},
+          "documentation": "Gets the authorization details for a service endpoint\nIf the authorization was not set and is not optional, it will throw.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the service endpoint"
+                },
+                {
+                  "name": "optional",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": "whether the url is optional"
+                }
+              ],
+              "members": {},
+              "return": "EndpointAuthorization",
+              "documentation": "Gets the authorization details for a service endpoint\nIf the authorization was not set and is not optional, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "getSecureFileName": {
+          "name": "getSecureFileName",
+          "members": {},
+          "documentation": "Gets the name for a secure file\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "secure file id"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the name for a secure file\n\n@returns   string"
+            }
+          ]
+        },
+        "getSecureFileTicket": {
+          "name": "getSecureFileTicket",
+          "members": {},
+          "documentation": "Gets the secure file ticket that can be used to download the secure file contents\n\n@returns {string} secure file ticket",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the secure file"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets the secure file ticket that can be used to download the secure file contents\n\n@returns {string} secure file ticket"
+            }
+          ]
+        },
+        "getTaskVariable": {
+          "name": "getTaskVariable",
+          "members": {},
+          "documentation": "Gets a variable value that is set by previous step from the same wrapper task.\nRequires a 2.115.0 agent or higher.\n\n@returns   string",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the variable to get"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Gets a variable value that is set by previous step from the same wrapper task.\nRequires a 2.115.0 agent or higher.\n\n@returns   string"
+            }
+          ]
+        },
+        "setTaskVariable": {
+          "name": "setTaskVariable",
+          "members": {},
+          "documentation": "Sets a task variable which will only be available to subsequent steps belong to the same wrapper task.\nRequires a 2.115.0 agent or higher.\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the variable to set"
+                },
+                {
+                  "name": "val",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "value to set"
+                },
+                {
+                  "name": "secret",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether variable is secret.  optional, defaults to false"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Sets a task variable which will only be available to subsequent steps belong to the same wrapper task.\nRequires a 2.115.0 agent or higher.\n\n@returns   void"
+            }
+          ]
+        },
+        "command": {
+          "name": "command",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "command",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "properties",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "message",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "warning": {
+          "name": "warning",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "error": {
+          "name": "error",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "debug": {
+          "name": "debug",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "_checkShell": {
+          "name": "_checkShell",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "cmd",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "continueOnError",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "FsStats": {
+          "name": "FsStats",
+          "members": {},
+          "documentation": "",
+          "kind": "interface"
+        },
+        "stats": {
+          "name": "stats",
+          "members": {},
+          "documentation": "Get's stat on a path. \nUseful for checking whether a file or directory.  Also getting created, modified and accessed time.\nsee [fs.stat](https://nodejs.org/api/fs.html#fs_class_fs_stats)\n\n@returns   fsStat ",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to check"
+                }
+              ],
+              "members": {},
+              "return": "FsStats",
+              "documentation": "Get's stat on a path. \nUseful for checking whether a file or directory.  Also getting created, modified and accessed time.\nsee [fs.stat](https://nodejs.org/api/fs.html#fs_class_fs_stats)\n\n@returns   fsStat "
+            }
+          ]
+        },
+        "exist": {
+          "name": "exist",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to check"
+                }
+              ],
+              "members": {},
+              "return": "boolean",
+              "documentation": "Returns whether a path exists.\n\n@returns   boolean "
+            }
+          ]
+        },
+        "FsOptions": {
+          "name": "FsOptions",
+          "members": {
+            "encoding": {
+              "documentation": "",
+              "name": "encoding",
+              "return": "string"
+            },
+            "mode": {
+              "documentation": "",
+              "name": "mode",
+              "return": "number"
+            },
+            "flag": {
+              "documentation": "",
+              "name": "flag",
+              "return": "string"
+            }
+          },
+          "documentation": "",
+          "kind": "interface"
+        },
+        "writeFile": {
+          "name": "writeFile",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "data",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "options",
+                  "type": "string | FsOptions",
+                  "optional": true,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "osType": {
+          "name": "osType",
+          "members": {},
+          "documentation": "Useful for determining the host operating system.\nsee [os.type](https://nodejs.org/api/os.html#os_os_type)\n\n@return      the name of the operating system",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "string",
+              "documentation": "Useful for determining the host operating system.\nsee [os.type](https://nodejs.org/api/os.html#os_os_type)\n\n@return      the name of the operating system"
+            }
+          ]
+        },
+        "cwd": {
+          "name": "cwd",
+          "members": {},
+          "documentation": "Returns the process's current working directory.\nsee [process.cwd](https://nodejs.org/api/process.html#process_process_cwd)\n\n@return      the path to the current working directory of the process",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "string",
+              "documentation": "Returns the process's current working directory.\nsee [process.cwd](https://nodejs.org/api/process.html#process_process_cwd)\n\n@return      the path to the current working directory of the process"
+            }
+          ]
+        },
+        "checkPath": {
+          "name": "checkPath",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to check"
+                },
+                {
+                  "name": "name",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name only used in error message to identify the path"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Checks whether a path exists.\nIf the path does not exist, it will throw.\n\n@returns   void"
+            }
+          ]
+        },
+        "cd": {
+          "name": "cd",
+          "members": {},
+          "documentation": "Change working directory.\n\n@returns   void ",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "new working directory path"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Change working directory.\n\n@returns   void "
+            }
+          ]
+        },
+        "pushd": {
+          "name": "pushd",
+          "members": {},
+          "documentation": "Change working directory and push it on the stack\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "new working directory path"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Change working directory and push it on the stack\n\n@returns   void"
+            }
+          ]
+        },
+        "popd": {
+          "name": "popd",
+          "members": {},
+          "documentation": "Change working directory back to previously pushed directory\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "void",
+              "documentation": "Change working directory back to previously pushed directory\n\n@returns   void"
+            }
+          ]
+        },
+        "mkdirP": {
+          "name": "mkdirP",
+          "members": {},
+          "documentation": "Make a directory.  Creates the full path with folders in between\nWill throw if it fails\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to create"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Make a directory.  Creates the full path with folders in between\nWill throw if it fails\n\n@returns   void"
+            }
+          ]
+        },
+        "resolve": {
+          "name": "resolve",
+          "members": {},
+          "documentation": "Resolves a sequence of paths or path segments into an absolute path.\nCalls node.js path.resolve()\nAllows L0 testing with consistent path formats on Mac/Linux and Windows in the mock implementation\n@returns {string}",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "pathSegments",
+                  "type": "any[]",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Resolves a sequence of paths or path segments into an absolute path.\nCalls node.js path.resolve()\nAllows L0 testing with consistent path formats on Mac/Linux and Windows in the mock implementation\n@returns {string}"
+            }
+          ]
+        },
+        "which": {
+          "name": "which",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "tool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "name of the tool"
+                },
+                {
+                  "name": "check",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether to check if tool exists"
+                }
+              ],
+              "members": {},
+              "return": "string",
+              "documentation": "Returns path of a tool had the tool actually been invoked.  Resolves via paths.\nIf you check and the tool does not exist, it will throw.\n\n@returns   string"
+            }
+          ]
+        },
+        "ls": {
+          "name": "ls",
+          "members": {},
+          "documentation": "Returns array of files in the given path, or in current directory if no path provided.  See shelljs.ls\n@return {string[]}          An array of files in the given path(s).",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "Available options: -R (recursive), -A (all files, include files beginning with ., except for . and ..)"
+                },
+                {
+                  "name": "paths",
+                  "type": "string[]",
+                  "optional": false,
+                  "documentation": "Paths to search."
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Returns array of files in the given path, or in current directory if no path provided.  See shelljs.ls\n@return {string[]}          An array of files in the given path(s)."
+            }
+          ]
+        },
+        "cp": {
+          "name": "cp",
+          "members": {},
+          "documentation": "Copies a file or folder.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "source path"
+                },
+                {
+                  "name": "dest",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "destination path"
+                },
+                {
+                  "name": "options",
+                  "type": "string",
+                  "optional": true,
+                  "documentation": "string -r, -f or -rf for recursive and force "
+                },
+                {
+                  "name": "continueOnError",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "optional. whether to continue on error"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Copies a file or folder."
+            }
+          ]
+        },
+        "mv": {
+          "name": "mv",
+          "members": {},
+          "documentation": "Moves a path.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "source path"
+                },
+                {
+                  "name": "dest",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "destination path"
+                },
+                {
+                  "name": "options",
+                  "type": "string",
+                  "optional": true,
+                  "documentation": "string -f or -n for force and no clobber "
+                },
+                {
+                  "name": "continueOnError",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "optional. whether to continue on error"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Moves a path."
+            }
+          ]
+        },
+        "FindOptions": {
+          "name": "FindOptions",
+          "members": {
+            "allowBrokenSymbolicLinks": {
+              "documentation": "When true, broken symbolic link will not cause an error.",
+              "name": "allowBrokenSymbolicLinks",
+              "return": "boolean"
+            },
+            "followSpecifiedSymbolicLink": {
+              "documentation": "Equivalent to the -H command line option. Indicates whether to traverse descendants if\nthe specified path is a symbolic link directory. Does not cause nested symbolic link\ndirectories to be traversed.",
+              "name": "followSpecifiedSymbolicLink",
+              "return": "boolean"
+            },
+            "followSymbolicLinks": {
+              "documentation": "Equivalent to the -L command line option. Indicates whether to traverse descendants of\nsymbolic link directories.",
+              "name": "followSymbolicLinks",
+              "return": "boolean"
+            }
+          },
+          "documentation": "Interface for FindOptions\nContains properties to control whether to follow symlinks",
+          "kind": "interface"
+        },
+        "find": {
+          "name": "find",
+          "members": {},
+          "documentation": "Recursively finds all paths a given path. Returns an array of paths.\n\n@returns   string[]",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "findPath",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to search"
+                },
+                {
+                  "name": "options",
+                  "type": "FindOptions",
+                  "optional": true,
+                  "documentation": "optional. defaults to { followSymbolicLinks: true }. following soft links is generally appropriate unless deleting files."
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Recursively finds all paths a given path. Returns an array of paths.\n\n@returns   string[]"
+            }
+          ]
+        },
+        "_FindItem": {
+          "name": "_FindItem",
+          "members": {},
+          "documentation": "",
+          "kind": "class",
+          "constructors": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "level",
+                  "type": "number",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "_FindItem",
+              "documentation": ""
+            }
+          ]
+        },
+        "_debugFindOptions": {
+          "name": "_debugFindOptions",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": "FindOptions",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "_getDefaultFindOptions": {
+          "name": "_getDefaultFindOptions",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "FindOptions",
+              "documentation": ""
+            }
+          ]
+        },
+        "legacyFindFiles": {
+          "name": "legacyFindFiles",
+          "members": {},
+          "documentation": "Prefer tl.find() and tl.match() instead. This function is for backward compatibility\nwhen porting tasks to Node from the PowerShell or PowerShell3 execution handler.\n\n@returns  string[]",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "rootDirectory",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to root unrooted patterns with"
+                },
+                {
+                  "name": "pattern",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "include and exclude patterns"
+                },
+                {
+                  "name": "includeFiles",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether to include files in the result. defaults to true when includeFiles and includeDirectories are both false"
+                },
+                {
+                  "name": "includeDirectories",
+                  "type": "boolean",
+                  "optional": true,
+                  "documentation": "whether to include directories in the result"
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Prefer tl.find() and tl.match() instead. This function is for backward compatibility\nwhen porting tasks to Node from the PowerShell or PowerShell3 execution handler.\n\n@returns  string[]"
+            }
+          ]
+        },
+        "_legacyFindFiles_getMatchingItems": {
+          "name": "_legacyFindFiles_getMatchingItems",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "includePatterns",
+                  "type": "string[]",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "excludePatterns",
+                  "type": "RegExp[]",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "includeFiles",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "includeDirectories",
+                  "type": "boolean",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": ""
+            }
+          ]
+        },
+        "rmRF": {
+          "name": "rmRF",
+          "members": {},
+          "documentation": "Remove a path recursively with force\nReturns whether it succeeds\n\n@returns   void",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to remove"
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": "Remove a path recursively with force\nReturns whether it succeeds\n\n@returns   void"
+            }
+          ]
+        },
+        "exec": {
+          "name": "exec",
+          "members": {},
+          "documentation": "Exec a tool.  Convenience wrapper over ToolRunner to exec with args in one call.\nOutput will be streamed to the live console.\nReturns promise with return code\n\n@returns   number",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "tool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to tool to exec"
+                },
+                {
+                  "name": "args",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": "an arg string or array of args"
+                },
+                {
+                  "name": "options",
+                  "type": "IExecOptions",
+                  "optional": true,
+                  "documentation": "optional exec options.  See IExecOptions"
+                }
+              ],
+              "members": {},
+              "return": "any",
+              "documentation": "Exec a tool.  Convenience wrapper over ToolRunner to exec with args in one call.\nOutput will be streamed to the live console.\nReturns promise with return code\n\n@returns   number"
+            }
+          ]
+        },
+        "execSync": {
+          "name": "execSync",
+          "members": {},
+          "documentation": "Exec a tool synchronously.  Convenience wrapper over ToolRunner to execSync with args in one call.\nOutput will be *not* be streamed to the live console.  It will be returned after execution is complete.\nAppropriate for short running tools \nReturns IExecResult with output and return code\n\n@returns   IExecSyncResult",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "tool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to tool to exec"
+                },
+                {
+                  "name": "args",
+                  "type": "string | string[]",
+                  "optional": false,
+                  "documentation": "an arg string or array of args"
+                },
+                {
+                  "name": "options",
+                  "type": "IExecSyncOptions",
+                  "optional": true,
+                  "documentation": "optional exec options.  See IExecSyncOptions"
+                }
+              ],
+              "members": {},
+              "return": "IExecSyncResult",
+              "documentation": "Exec a tool synchronously.  Convenience wrapper over ToolRunner to execSync with args in one call.\nOutput will be *not* be streamed to the live console.  It will be returned after execution is complete.\nAppropriate for short running tools \nReturns IExecResult with output and return code\n\n@returns   IExecSyncResult"
+            }
+          ]
+        },
+        "tool": {
+          "name": "tool",
+          "members": {},
+          "documentation": "Convenience factory to create a ToolRunner.\n\n@returns   ToolRunner",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "tool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "path to tool to exec"
+                }
+              ],
+              "members": {},
+              "return": "ToolRunner",
+              "documentation": "Convenience factory to create a ToolRunner.\n\n@returns   ToolRunner"
+            }
+          ]
+        },
+        "MatchOptions": {
+          "name": "MatchOptions",
+          "members": {
+            "debug": {
+              "documentation": "",
+              "name": "debug",
+              "return": "boolean"
+            },
+            "nobrace": {
+              "documentation": "",
+              "name": "nobrace",
+              "return": "boolean"
+            },
+            "noglobstar": {
+              "documentation": "",
+              "name": "noglobstar",
+              "return": "boolean"
+            },
+            "dot": {
+              "documentation": "",
+              "name": "dot",
+              "return": "boolean"
+            },
+            "noext": {
+              "documentation": "",
+              "name": "noext",
+              "return": "boolean"
+            },
+            "nocase": {
+              "documentation": "",
+              "name": "nocase",
+              "return": "boolean"
+            },
+            "nonull": {
+              "documentation": "",
+              "name": "nonull",
+              "return": "boolean"
+            },
+            "matchBase": {
+              "documentation": "",
+              "name": "matchBase",
+              "return": "boolean"
+            },
+            "nocomment": {
+              "documentation": "",
+              "name": "nocomment",
+              "return": "boolean"
+            },
+            "nonegate": {
+              "documentation": "",
+              "name": "nonegate",
+              "return": "boolean"
+            },
+            "flipNegate": {
+              "documentation": "",
+              "name": "flipNegate",
+              "return": "boolean"
+            }
+          },
+          "documentation": "",
+          "kind": "interface"
+        },
+        "match": {
+          "name": "match",
+          "members": {},
+          "documentation": "Applies glob patterns to a list of paths. Supports interleaved exclude patterns.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "list",
+                  "type": "string[]",
+                  "optional": false,
+                  "documentation": "array of paths"
+                },
+                {
+                  "name": "patterns",
+                  "type": "string[] | string",
+                  "optional": false,
+                  "documentation": "patterns to apply. supports interleaved exclude patterns."
+                },
+                {
+                  "name": "patternRoot",
+                  "type": "string",
+                  "optional": true,
+                  "documentation": "optional. default root to apply to unrooted patterns. not applied to basename-only patterns when matchBase:true."
+                },
+                {
+                  "name": "options",
+                  "type": "MatchOptions",
+                  "optional": true,
+                  "documentation": "optional. defaults to { dot: true, nobrace: true, nocase: process.platform == 'win32' }."
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Applies glob patterns to a list of paths. Supports interleaved exclude patterns."
+            }
+          ]
+        },
+        "filter": {
+          "name": "filter",
+          "members": {},
+          "documentation": "Filter to apply glob patterns",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "pattern",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "pattern to apply"
+                },
+                {
+                  "name": "options",
+                  "type": "MatchOptions",
+                  "optional": true,
+                  "documentation": "optional. defaults to { dot: true, nobrace: true, nocase: process.platform == 'win32' }."
+                }
+              ],
+              "members": {},
+              "return": "(element: string, indexed: number, array: string[]) => boolean",
+              "documentation": "Filter to apply glob patterns"
+            }
+          ]
+        },
+        "_debugMatchOptions": {
+          "name": "_debugMatchOptions",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": "MatchOptions",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "void",
+              "documentation": ""
+            }
+          ]
+        },
+        "_getDefaultMatchOptions": {
+          "name": "_getDefaultMatchOptions",
+          "members": {},
+          "documentation": "",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "MatchOptions",
+              "documentation": ""
+            }
+          ]
+        },
+        "findMatch": {
+          "name": "findMatch",
+          "members": {},
+          "documentation": "Determines the find root from a list of patterns. Performs the find and then applies the glob patterns.\nSupports interleaved exclude patterns. Unrooted patterns are rooted using defaultRoot, unless\nmatchOptions.matchBase is specified and the pattern is a basename only. For matchBase cases, the\ndefaultRoot is used as the find root.",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "defaultRoot",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": "default path to root unrooted patterns. falls back to System.DefaultWorkingDirectory or process.cwd()."
+                },
+                {
+                  "name": "patterns",
+                  "type": "string[] | string",
+                  "optional": false,
+                  "documentation": "pattern or array of patterns to apply"
+                },
+                {
+                  "name": "findOptions",
+                  "type": "FindOptions",
+                  "optional": true,
+                  "documentation": "defaults to { followSymbolicLinks: true }. following soft links is generally appropriate unless deleting files."
+                },
+                {
+                  "name": "matchOptions",
+                  "type": "MatchOptions",
+                  "optional": true,
+                  "documentation": "defaults to { dot: true, nobrace: true, nocase: process.platform == 'win32' }"
+                }
+              ],
+              "members": {},
+              "return": "string[]",
+              "documentation": "Determines the find root from a list of patterns. Performs the find and then applies the glob patterns.\nSupports interleaved exclude patterns. Unrooted patterns are rooted using defaultRoot, unless\nmatchOptions.matchBase is specified and the pattern is a basename only. For matchBase cases, the\ndefaultRoot is used as the find root."
+            }
+          ]
+        },
+        "ProxyConfiguration": {
+          "name": "ProxyConfiguration",
+          "members": {
+            "proxyUrl": {
+              "documentation": "",
+              "name": "proxyUrl",
+              "return": "string"
+            },
+            "proxyUsername": {
+              "documentation": "",
+              "name": "proxyUsername",
+              "return": "string"
+            },
+            "proxyPassword": {
+              "documentation": "",
+              "name": "proxyPassword",
+              "return": "string"
+            },
+            "proxyBypassHosts": {
+              "documentation": "",
+              "name": "proxyBypassHosts",
+              "return": "string[]"
+            }
+          },
+          "documentation": "",
+          "kind": "interface"
+        },
+        "getHttpProxyConfiguration": {
+          "name": "getHttpProxyConfiguration",
+          "members": {},
+          "documentation": "Gets http proxy configuration used by Build/Release agent\n\n@return  ProxyConfiguration",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [
+                {
+                  "name": "requestUrl",
+                  "type": "string",
+                  "optional": true,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "ProxyConfiguration",
+              "documentation": "Gets http proxy configuration used by Build/Release agent\n\n@return  ProxyConfiguration"
+            }
+          ]
+        },
+        "CertConfiguration": {
+          "name": "CertConfiguration",
+          "members": {
+            "caFile": {
+              "documentation": "",
+              "name": "caFile",
+              "return": "string"
+            },
+            "certFile": {
+              "documentation": "",
+              "name": "certFile",
+              "return": "string"
+            },
+            "keyFile": {
+              "documentation": "",
+              "name": "keyFile",
+              "return": "string"
+            },
+            "certArchiveFile": {
+              "documentation": "",
+              "name": "certArchiveFile",
+              "return": "string"
+            },
+            "passphrase": {
+              "documentation": "",
+              "name": "passphrase",
+              "return": "string"
+            }
+          },
+          "documentation": "",
+          "kind": "interface"
+        },
+        "getHttpCertConfiguration": {
+          "name": "getHttpCertConfiguration",
+          "members": {},
+          "documentation": "Gets http certificate configuration used by Build/Release agent\n\n@return  CertConfiguration",
+          "kind": "function",
+          "signatures": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "CertConfiguration",
+              "documentation": "Gets http certificate configuration used by Build/Release agent\n\n@return  CertConfiguration"
+            }
+          ]
+        },
+        "TestPublisher": {
+          "name": "TestPublisher",
+          "members": {
+            "publish": {
+              "name": "publish",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "resultFiles",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "mergeResults",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "platform",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "config",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "runTitle",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "publishRunAttachments",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                },
+                {
+                  "parameters": [
+                    {
+                      "name": "resultsFiles",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "mergeResults",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "platform",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "config",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "runTitle",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "publishRunAttachments",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "testRunSystem",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                }
+              ]
+            }
+          },
+          "documentation": "",
+          "kind": "class",
+          "constructors": [
+            {
+              "parameters": [
+                {
+                  "name": "testRunner",
+                  "type": "any",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "TestPublisher",
+              "documentation": ""
+            }
+          ]
+        },
+        "CodeCoveragePublisher": {
+          "name": "CodeCoveragePublisher",
+          "members": {
+            "publish": {
+              "name": "publish",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "codeCoverageTool",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "summaryFileLocation",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "reportDirectory",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    },
+                    {
+                      "name": "additionalCodeCoverageFiles",
+                      "type": "any",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                }
+              ]
+            }
+          },
+          "documentation": "",
+          "kind": "class",
+          "constructors": [
+            {
+              "parameters": [],
+              "members": {},
+              "return": "CodeCoveragePublisher",
+              "documentation": ""
+            }
+          ]
+        },
+        "CodeCoverageEnabler": {
+          "name": "CodeCoverageEnabler",
+          "members": {
+            "enableCodeCoverage": {
+              "name": "enableCodeCoverage",
+              "members": {},
+              "documentation": "",
+              "kind": "method",
+              "signatures": [
+                {
+                  "parameters": [
+                    {
+                      "name": "buildProps",
+                      "type": "{ [key: string]: string; }",
+                      "optional": false,
+                      "documentation": ""
+                    }
+                  ],
+                  "members": {},
+                  "return": "void",
+                  "documentation": ""
+                }
+              ]
+            }
+          },
+          "documentation": "",
+          "kind": "class",
+          "constructors": [
+            {
+              "parameters": [
+                {
+                  "name": "buildTool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                },
+                {
+                  "name": "ccTool",
+                  "type": "string",
+                  "optional": false,
+                  "documentation": ""
+                }
+              ],
+              "members": {},
+              "return": "CodeCoverageEnabler",
+              "documentation": ""
+            }
+          ]
+        }
+      }
+    }
+  }
+}

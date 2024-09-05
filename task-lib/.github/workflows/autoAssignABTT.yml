@@ -1,0 +1,27 @@
+name: Auto Assign ABTT to Project Board
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  assign_one_project:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Assign to ABTT Project
+    steps:
+    - name: "Add triage and area labels"
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        labels: |
+          Area: TaskLib
+          triage
+
+    - name: "Assign newly opened issues to project board"
+      uses: actions/add-to-project@v0.4.1
+      with:
+        project-url: https://github.com/orgs/microsoft/projects/755
+        github-token: ${{ secrets.ABTT_TOKEN }}

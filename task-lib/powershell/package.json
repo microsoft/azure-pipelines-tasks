@@ -1,0 +1,21 @@
+{
+  "name": "vsts-task-sdk",
+  "version": "0.21.1",
+  "private": true,
+  "scripts": {
+    "build": "node make.js build",
+    "test": "node make.js test"
+  },
+  "author": "Microsoft",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.60",
+    "@types/shelljs": "^0.8.14",
+    "adm-zip": "^0.5.9",
+    "mocha": "5.2.0",
+    "nodejs-file-downloader": "^4.11.1",
+    "shelljs": "^0.8.5",
+    "typescript": "^4.0.2"
+  }
+}
