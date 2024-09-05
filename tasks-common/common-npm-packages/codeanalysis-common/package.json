@@ -1,0 +1,33 @@
+{
+  "name": "azure-pipelines-tasks-codeanalysis-common",
+  "version": "2.242.0",
+  "author": "Microsoft Corporation",
+  "description": "Build with Gradle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "dependencies": {
+    "@types/node": "^10.17.0",
+    "azure-pipelines-task-lib": "^3.1.0",
+    "glob": "7.1.0",
+    "mocha": "^10.5.1",
+    "rewire": "^6.0.0",
+    "sinon": "^14.0.0",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.6",
+    "typescript": "4.0.2"
+  },
+  "main": "VSTS Tasks Code Analysis",
+  "scripts": {
+    "build": "cd ../build-scripts && npm install && cd ../codeanalysis-common && node make.js --build",
+    "test": "mocha _build/Tests/L0.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
+}

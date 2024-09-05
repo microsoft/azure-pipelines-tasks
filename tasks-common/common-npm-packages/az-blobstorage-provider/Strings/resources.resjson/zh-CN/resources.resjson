@@ -1,0 +1,14 @@
+{
+  "loc.messages.CreatedBlobForItem": "已为项 {0} 创建 blob。Blob URI: {1}",
+  "loc.messages.CreatedContainer": "已创建容器 {0}。",
+  "loc.messages.ErrorInReadStream": "读取流中出错: {0}",
+  "loc.messages.ErrorInWriteStream": "写入流中出错: {0}",
+  "loc.messages.FailedToCreateBlob": "未能创建 blob {0}。错误: {1}",
+  "loc.messages.FailedToCreateContainer": "未能创建容器 {0}。错误: {1}",
+  "loc.messages.FailedToListItemInsideContainer": "未能在容器 {0} 中列出项。错误: {1}",
+  "loc.messages.SuccessFullyFetchedItemList": "已成功提取项列表",
+  "loc.messages.UnableToFetchItem": "无法提取项: {0}。错误: {1}",
+  "loc.messages.UploadingItem": "正在上传 {0}。",
+  "loc.messages.ContinuationTokenExistsFetchingRemainingFiles": "延续令牌存在，正在尝试提取剩余文件列表。",
+  "loc.messages.GetArtifactItemsNotSupported": "获取项目项不受支持，代码路径无效"
+}

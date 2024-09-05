@@ -1,0 +1,29 @@
+{
+  "name": "azure-pipelines-tasks-common-packages",
+  "version": "1.0.0",
+  "description": "Shared npm packages for azure pipelines tasks",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install && cd common-npm-packages/build-scripts && npm install && cd ../.. && node make.js --build",
+    "test": "node make.js --test",
+    "publish": "node publish.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/azure-pipelines-tasks-common-packages.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/microsoft/azure-pipelines-tasks-common-packages/issues"
+  },
+  "homepage": "https://github.com/microsoft/azure-pipelines-tasks-common-packages#readme",
+  "devDependencies": {
+    "minimist": "^1.2.6",
+    "mocha": "^10.5.1",
+    "mocha-junit-reporter": "^2.2.0",
+    "nyc": "^17.0.0",
+    "shelljs": "^0.8.5",
+    "@octokit/rest": "^16.43.2"
+  }
+}

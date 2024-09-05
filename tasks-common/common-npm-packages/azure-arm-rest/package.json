@@ -1,0 +1,40 @@
+{
+  "name": "azure-pipelines-tasks-azure-arm-rest",
+  "version": "3.245.0",
+  "description": "Common Lib for Azure ARM REST apis",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "1.5.4",
+    "async-mutex": "^0.4.0",
+    "azure-devops-node-api": "^14.0.1",
+    "azure-pipelines-task-lib": "^4.11.0",
+    "https-proxy-agent": "^4.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "msalv1": "npm:@azure/msal-node@^1.18.4",
+    "msalv2": "npm:@azure/msal-node@^2.7.0",
+    "node-fetch": "^2.6.7",
+    "q": "1.5.1",
+    "typed-rest-client": "^2.0.1",
+    "xml2js": "0.6.2"
+  },
+  "devDependencies": {
+    "nock": "^13.5.5",
+    "shelljs": "^0.8.5",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "build": "node ../build-scripts/downloadArchive.js https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl_fix_whitespace.zip ./openssl && node make.js"
+  }
+}
