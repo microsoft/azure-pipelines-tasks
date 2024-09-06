@@ -70,9 +70,9 @@ export default class VirtualMachineScaleSet {
         tl.debug("retrived container details for vststasks = " + containerClient );
         let uploadedBlobUrls: string[] = [];
 
-        // let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
-        // console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
-        //tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
+         let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
+         console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
+        tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
 
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
@@ -90,9 +90,26 @@ export default class VirtualMachineScaleSet {
         }
         return uploadedBlobUrls;
     } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, `Error uploading custom scripts to blob: ${error.message}`);
-        throw error;
-      }
+        let errorMessage = `Error uploading custom scripts to blob: ${error.message || error}`;
+    
+        // Add error type if available
+        if (error.name) {
+            errorMessage += ` | Error Type: ${error.name}`;
+        }
+    
+        // Add stack trace if available
+        if (error.stack) {
+            errorMessage += ` | Stack Trace: ${error.stack}`;
+        }
+    
+        // Optionally log the entire error object for more context
+        tl.error(`Full error object: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`);
+    
+        // Set the task result with the detailed error message
+        tl.setResult(tl.TaskResult.Failed, errorMessage);
+    
+        throw error;  // Rethrow to handle further up the stack if necessary
+    }
     }
     private async uploadDirectoryToBlob(containerClient: ContainerClient, dirPath: string, blobsPrefixPath: string): Promise<string[]> {
         const uploadedBlobUrls: string[] = [];
