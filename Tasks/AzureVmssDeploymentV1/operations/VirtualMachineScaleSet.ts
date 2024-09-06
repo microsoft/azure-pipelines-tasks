@@ -121,7 +121,7 @@ export default class VirtualMachineScaleSet {
         tl.debug("upload directory started for dirPath =" + dirPath + ", blobsPrefixPath =" +blobsPrefixPath );
         for (const file of files) {
             const fullPath = path.join(dirPath, file);
-            tl.debug("upload directory started for fullPath =" + dirPath  );
+            tl.debug("upload directory started for fullPath =" + fullPath  );
             if (fs.lstatSync(fullPath).isDirectory()) {
                 const subDirectoryUrls = await this.uploadDirectoryToBlob(containerClient, fullPath, path.join(blobsPrefixPath, file));
                 uploadedBlobUrls.push(...subDirectoryUrls);
