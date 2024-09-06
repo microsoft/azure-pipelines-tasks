@@ -49,10 +49,9 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.stdout.indexOf("virtualMachineScaleSets.list is called") > -1, "virtualMachineScaleSets.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs.zip of compression type zip from C:\\some\\dir") > -1, "archive should be correctly created");
                 assert(tr.stdout.indexOf("Invoker command: powershell ./100-12345/200/5/customScriptInvoker.ps1 -zipName 'cs.zip' -script '.\\\\\"\"\"de`$p``l o''y.ps1\"\"\"' -scriptArgs '\"\"\"first ''arg''\"\"\" seco``nd`$arg' -prefixPath '100-12345/200/5'") > -1, "invoker command should be correct");
-                // assert(tr.stdout.indexOf("blobservice.BlobServiceClient is called with primaryBlobUrl teststorage1.blob.core.windows.net/") > -1, "container client should be created");
-                // assert(tr.stdout.indexOf("blobservice.getContainerClient is called with containername vststasks") > -1, "container client should be created");
-                // assert(tr.stdout.indexOf("blobservice.uploadFile is called with path C:\\users\\temp\\vstsvmss12345") > -1, "scripts should be uploaded to correct account and container");
-                // assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
+                assert(tr.stdout.indexOf("blobservice.getContainerClient is called with containername vststasks") > -1, "container client should be created");
+                assert(tr.stdout.indexOf("blobservice.uploadFile is called with path C:\\users\\temp\\vstsvmss12345") > -1, "scripts should be uploaded to correct account and container");
+                //assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > -1, "virtualMachineExtensions.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called with resource testvmss1 and extension extensionNameTest") > -1, "virtualMachineExtensions.createOrUpdate function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("custom script: teststorage1.blob.core.windows.net/vststasks/100-12345/200/5/folder1/file1") > -1, "vm extension should use correct file1");
