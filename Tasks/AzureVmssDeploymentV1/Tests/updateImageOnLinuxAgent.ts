@@ -34,8 +34,8 @@ process.env["RELEASE_ATTEMPTNUMBER"] = "5";
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "**/*.*": [
-            "/users/temp/vstsvmss12345/folder1/file1",
-            "/users/temp/vstsvmss12345/folder1/folder2/file2",
+            "C:\\users\\temp\\vstsvmss12345\\folder1\\file1",
+            "C:\\users\\temp\\vstsvmss12345\\folder1\\folder2\\file2",
         ]
     },
     "osType": {

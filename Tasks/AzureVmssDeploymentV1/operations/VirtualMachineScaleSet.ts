@@ -72,11 +72,14 @@ export default class VirtualMachineScaleSet {
 
          let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
          console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
-        tl.debug("getting blobsBaseUrl =" + blobsBaseUrl );
+        
+         tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath );
 
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
+            tl.debug("it is directory" );
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
         } else {
+            tl.debug("it is file" );
             const blockBlobClient = containerClient.getBlockBlobClient(customScriptInfo.blobsPrefixPath);
             const uploadResponse = await blockBlobClient.uploadFile(customScriptInfo.localDirPath);
             
@@ -118,7 +121,7 @@ export default class VirtualMachineScaleSet {
         tl.debug("upload directory started for dirPath =" + dirPath + ", blobsPrefixPath =" +blobsPrefixPath );
         for (const file of files) {
             const fullPath = path.join(dirPath, file);
-    
+            tl.debug("upload directory started for fullPath =" + dirPath  );
             if (fs.lstatSync(fullPath).isDirectory()) {
                 const subDirectoryUrls = await this.uploadDirectoryToBlob(containerClient, fullPath, path.join(blobsPrefixPath, file));
                 uploadedBlobUrls.push(...subDirectoryUrls);
@@ -260,6 +263,7 @@ export default class VirtualMachineScaleSet {
         console.log(tl.loc("CopiedInvokerScript", packageDirectory));
 
         tl.debug("Invoker command: " + invokerCommand);
+        tl.debug("packageDirectory: " + packageDirectory);
         return <CustomScriptsInfo>{
             localDirPath: packageDirectory,
             command: invokerCommand,
