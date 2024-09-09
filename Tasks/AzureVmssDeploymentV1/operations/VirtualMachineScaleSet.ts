@@ -73,13 +73,13 @@ export default class VirtualMachineScaleSet {
          let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
          console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
         
-         tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath );
+         tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath + ", blobsPrefixPath = " + customScriptInfo.blobsPrefixPath );
 
-        if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
-            tl.debug("it is directory" );
-            uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
-        } else {
-            tl.debug("it is file" );
+        // if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
+        //     tl.debug("it is directory" );
+        //     uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
+        // } else {
+        //     tl.debug("it is file" );
             const blockBlobClient = containerClient.getBlockBlobClient(customScriptInfo.blobsPrefixPath);
             const uploadResponse = await blockBlobClient.uploadFile(customScriptInfo.localDirPath);
             
@@ -90,7 +90,7 @@ export default class VirtualMachineScaleSet {
             } else {
                 throw new Error("Failed to upload the file to the blob.");
             }
-        }
+        //}
         return uploadedBlobUrls;
     } catch (error) {
         let errorMessage = `Error uploading custom scripts to blob: ${error.message || error}`;
