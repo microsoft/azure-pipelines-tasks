@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@azure/identity": "^4.4.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.11.59",
     "@types/q": "^1.0.7",
