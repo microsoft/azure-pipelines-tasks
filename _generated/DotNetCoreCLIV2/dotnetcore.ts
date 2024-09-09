@@ -468,7 +468,7 @@ export class dotNetExe {
                 tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
             }
             else {
-                tl.debug('Connected service is not of type Workload Identity Federation');
+                tl.warning('Connected service is not of type Workload Identity Federation');
             }
         }
         else {
