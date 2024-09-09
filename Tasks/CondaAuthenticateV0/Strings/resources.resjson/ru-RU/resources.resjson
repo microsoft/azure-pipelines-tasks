@@ -3,11 +3,11 @@
   "loc.helpMarkDown": "",
   "loc.description": "Задача проверки подлинности для клиента Conda",
   "loc.instanceNameFormat": "Проверка подлинности Conda",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-  "loc.input.help.workloadIdentityServiceConnection": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
+  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Пользователь Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra\"",
+  "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задан, учетные данные будут создаваться с помощью подключения к службе, а не удостоверения конвейера сборки.",
   "loc.messages.FailedToAddAuthentication": "Добавить проверку подлинности не удалось.",
   "loc.messages.AddingAuthChannel": "Добавление проверки подлинности для маркера %s",
-  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
-  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
-  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  "loc.messages.Info_AddingFederatedFeedAuth": "Добавление сведений о проверке подлинности из подключения к службе %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Успешно добавлена проверка подлинности для подключения к службе %s.",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Не удалось получить федеративные учетные данные из подключения службы: %s."
 }
