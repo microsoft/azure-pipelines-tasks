@@ -43,6 +43,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "osType": {
         "osType": "Windows_NT"
+    },
+    "fs": {
+        "existsSync": (path: string) => true,  // Mock fs.existsSync to always return true
+        "lstatSync": (path: string) => ({ isDirectory: () => true })  // Mock to treat as directory
     }
 };
 

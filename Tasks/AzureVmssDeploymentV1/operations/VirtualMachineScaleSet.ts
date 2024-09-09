@@ -73,27 +73,29 @@ export default class VirtualMachineScaleSet {
          let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
          console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
         
-         tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath + ", blobsPrefixPath = " + customScriptInfo.blobsPrefixPath );
+         tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath );
 
-        // if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
-        //     tl.debug("it is directory" );
-        //     uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
-        // } else {
-             tl.debug("it is file" );
-             const file = "cs.zip";
-            const blobName = path.join(customScriptInfo.blobsPrefixPath, file);
-            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-            tl.debug("blockBlobClient" + blockBlobClient + "blobname" + blobName );
-            const uploadResponse = await blockBlobClient.uploadFile("C:\\users\\temp\\vstsvmss12345\\cs.zip");
-            
-            if (uploadResponse._response.status === 201) {
-                const blobUrl = blockBlobClient.url;
-                uploadedBlobUrls.push(blobUrl);
-                tl.debug("uploaded files to blob ");
-            } else {
-                throw new Error("Failed to upload the file to the blob.");
-            }
-        //}
+        //  if (!fs.existsSync(customScriptInfo.localDirPath)) {
+        //     throw new Error(`Path does not exist: ${customScriptInfo.localDirPath}`);
+        // }
+        if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
+            tl.debug("it is directory" );
+            uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
+        } else {
+            tl.debug("it is file" );
+                const blobName = path.join(customScriptInfo.blobsPrefixPath);
+                const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    
+                const uploadResponse = await blockBlobClient.uploadFile(customScriptInfo.localDirPath);
+    
+                if (uploadResponse._response.status === 201) {
+                    const blobUrl = blockBlobClient.url;
+                    tl.debug("uploaded directory files to blob ");
+                    uploadedBlobUrls.push(blobUrl);
+                } else {
+                    throw new Error(`Failed to upload file: ${customScriptInfo.localDirPath}`);
+                }
+        }
         return uploadedBlobUrls;
     } catch (error) {
         let errorMessage = `Error uploading custom scripts to blob: ${error.message || error}`;
