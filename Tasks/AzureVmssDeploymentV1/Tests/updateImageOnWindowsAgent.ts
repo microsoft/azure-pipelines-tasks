@@ -37,6 +37,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/*.*": [
             "C:\\users\\temp\\vstsvmss12345\\folder1\\file1",
             "C:\\users\\temp\\vstsvmss12345\\folder1\\folder2\\file2",
+            "C:\\users\\temp\\vstsvmss12345",
+            "C:\\users\\temp\\vstsvmss12345\\cs.zip"
         ]
     },
     "osType": {

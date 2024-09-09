@@ -80,9 +80,11 @@ export default class VirtualMachineScaleSet {
         //     uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
         // } else {
              tl.debug("it is file" );
-            const blockBlobClient = containerClient.getBlockBlobClient(customScriptInfo.blobsPrefixPath);
-            tl.debug("blockBlobClient" + blockBlobClient );
-            const uploadResponse = await blockBlobClient.uploadFile("C:/users/temp/vstsvmss12345/cs.zip");
+             const file = "cs.zip";
+            const blobName = path.join(customScriptInfo.blobsPrefixPath, file);
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            tl.debug("blockBlobClient" + blockBlobClient + "blobname" + blobName );
+            const uploadResponse = await blockBlobClient.uploadFile("C:\\users\\temp\\vstsvmss12345\\cs.zip");
             
             if (uploadResponse._response.status === 201) {
                 const blobUrl = blockBlobClient.url;
