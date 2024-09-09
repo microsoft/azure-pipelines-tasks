@@ -47,19 +47,50 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "fs": {
         "existsSync": (path: string) => {
             console.log(`Checking if path exists: ${path}`);
-            return path === 'C:\\users\\temp\\vstsvmss12345';
+            // Return true if the path exists
+            return [
+                'C:\\users\\temp\\vstsvmss12345',
+                'C:\\users\\temp\\vstsvmss12345\\folder1',
+                'C:\\users\\temp\\vstsvmss12345\\folder1\\folder2',
+                'C:\\users\\temp\\vstsvmss12345\\cs.zip'
+            ].includes(path);
         },
         "mkdirSync": (path: string) => {
             console.log(`Mock creating directory: ${path}`);
         },
         "lstatSync": (path: string) => {
             console.log(`Mock lstatSync called for: ${path}`);
-            if (path === 'C:\\users\\temp\\vstsvmss12345') {
+            // Return a mock object indicating whether the path is a directory
+            if ([
+                'C:\\users\\temp\\vstsvmss12345',
+                'C:\\users\\temp\\vstsvmss12345\\folder1',
+                'C:\\users\\temp\\vstsvmss12345\\folder1\\folder2'
+            ].includes(path)) {
                 return {
                     isDirectory: () => true
                 };
             }
+            if ([
+                'C:\\users\\temp\\vstsvmss12345\\cs.zip'
+            ].includes(path)) {
+                return {
+                    isDirectory: () => false
+                };
+            }
             throw new Error(`ENOENT: no such file or directory, lstat '${path}'`);
+        },
+        "readdirSync": (dirPath: string) => {
+            console.log(`Mock readdirSync called for: ${dirPath}`);
+            if (dirPath === 'C:\\users\\temp\\vstsvmss12345') {
+                return ['folder1', 'cs.zip'];  // Mocked directory contents
+            }
+            if (dirPath === 'C:\\users\\temp\\vstsvmss12345\\folder1') {
+                return ['file1', 'folder2'];
+            }
+            if (dirPath === 'C:\\users\\temp\\vstsvmss12345\\folder1\\folder2') {
+                return ['file2'];
+            }
+            throw new Error(`ENOENT: no such directory, readdir '${dirPath}'`);
         }
     }
 };
