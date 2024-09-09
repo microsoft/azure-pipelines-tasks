@@ -54,9 +54,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "lstatSync": (path: string) => {
             console.log(`Mock lstatSync called for: ${path}`);
-            return {
-                isDirectory: () => true
-            };
+            if (path === 'C:\\users\\temp\\vstsvmss12345') {
+                return {
+                    isDirectory: () => true
+                };
+            }
+            throw new Error(`ENOENT: no such file or directory, lstat '${path}'`);
         }
     }
 };
