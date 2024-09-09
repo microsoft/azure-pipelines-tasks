@@ -56,28 +56,24 @@ export default class VirtualMachineScaleSet {
 
         const audience = 'https://' + storageDetails.name + '.blob.core.windows.net/';
 
-        tl.debug("Getting credentials for connected service: endpoint =" + endpoint +" audience = " + audience);
-
         const credentialT = new ConnectedServiceCredential(endpoint, audience);
 
         if (!credentialT || credentialT == null) {
             throw new Error("Failed to obtain credentials.");
         }
-        tl.debug("retrived credentials for connected service: credentialT =" + credentialT );
-        tl.debug("retrived customScriptInfo.storageAccount.primaryBlobUrl =" + customScriptInfo.storageAccount.primaryBlobUrl );
+   
         const blobServiceClient = new BlobServiceClient(customScriptInfo.storageAccount.primaryBlobUrl, credentialT);
         const containerClient = blobServiceClient.getContainerClient("vststasks");
-        tl.debug("retrived container details for vststasks = " + containerClient );
+
         let uploadedBlobUrls: string[] = [];
 
-         let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
-         console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
         
          tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath );
 
         //  if (!fs.existsSync(customScriptInfo.localDirPath)) {
         //     throw new Error(`Path does not exist: ${customScriptInfo.localDirPath}`);
         // }
+        uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
             tl.debug("it is directory" );
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
@@ -121,7 +117,7 @@ export default class VirtualMachineScaleSet {
     }
     private async uploadDirectoryToBlob(containerClient: ContainerClient, dirPath: string, blobsPrefixPath: string): Promise<string[]> {
         const uploadedBlobUrls: string[] = [];
-    
+        tl.debug("inside upload directory" );
         const files = fs.readdirSync(dirPath);
         tl.debug("upload directory started for dirPath =" + dirPath + ", blobsPrefixPath =" +blobsPrefixPath );
         for (const file of files) {
