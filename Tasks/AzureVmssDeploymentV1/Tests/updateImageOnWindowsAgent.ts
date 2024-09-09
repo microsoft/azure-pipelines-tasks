@@ -45,8 +45,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows_NT"
     },
     "fs": {
-        "existsSync": (path: string) => true,  // Mock fs.existsSync to always return true
-        "lstatSync": (path: string) => ({ isDirectory: () => true })  // Mock to treat as directory
+        "existsSync": (path: string) => {
+            console.log(`Checking if path exists: ${path}`);
+            return path === 'C:\\users\\temp\\vstsvmss12345';
+        },
+        "mkdirSync": (path: string) => {
+            console.log(`Mock creating directory: ${path}`);
+        },
+        "lstatSync": (path: string) => {
+            console.log(`Mock lstatSync called for: ${path}`);
+            return {
+                isDirectory: () => true
+            };
+        }
     }
 };
 
