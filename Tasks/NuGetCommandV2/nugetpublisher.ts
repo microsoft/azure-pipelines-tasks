@@ -465,7 +465,6 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
             }
         }
         if (accessToken) {
-            tl.setSecret(accessToken);
             return accessToken;
         }
     }

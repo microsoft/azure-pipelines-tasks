@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 244,
-    "Patch": 0
+    "Minor": 245,
+    "Patch": 22
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,14 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "SymbolsFolder",
       "type": "string",

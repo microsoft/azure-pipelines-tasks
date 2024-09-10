@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 245,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -48,6 +48,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",

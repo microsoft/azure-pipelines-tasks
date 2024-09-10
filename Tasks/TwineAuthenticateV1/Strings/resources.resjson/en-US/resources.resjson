@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "Only one internal feed can be authorized at a time using this task. All the feeds except first one will be ignored.",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "Only one service connection can be authorized at a time using this task. All the connections except first one will be ignored.",
-  "loc.messages.Warning_DuplicateEntryForFeed": "This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.NoPypircFile": "No .pypirc file to clean up.",
