@@ -14,7 +14,7 @@
   "loc.input.help.solution": "解決方案、packages.config 或 project.json 檔案的路徑，其參考要還原的檔案。",
   "loc.input.label.selectOrConfig": "要使用的摘要",
   "loc.input.help.selectOrConfig": "您可以在這裡從 Azure Artifacts 和 (或) NuGet.org 選取摘要，也可以將 nuget.config 檔案認可至您的原始程式碼存放庫，並在這裡設定其路徑。",
-  "loc.input.label.feedRestore": "使用此 Azure Artifacts/TFS 摘要中的套件",
+  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
   "loc.input.help.feedRestore": "在產生的 NuGet.config 中包含選取的摘要。您必須安裝 Azure Artifacts 且經過授權，才能於此處選取摘要。",
   "loc.input.label.includeNuGetOrg": "使用 NuGet.org 中的套件",
   "loc.input.help.includeNuGetOrg": "在產生的 NuGet.config 中包含 NuGet.org。",

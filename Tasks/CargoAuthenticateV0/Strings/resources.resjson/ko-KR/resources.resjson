@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "화물 상자 배포를 설치하는 데 사용되는 화물 클라이언트에 대한 인증 작업",
   "loc.instanceNameFormat": "화물 인증 $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, registryNames is required. All other inputs are ignored.",
+  "loc.input.label.registryNames": "Registry names from config.toml",
+  "loc.input.help.registryNames": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
   "loc.input.label.configFile": "인증할 config.toml 파일",
   "loc.input.help.configFile": "사용할 레지스트리를 지정하는 config.toml 파일의 경로입니다. 폴더가 아니라 파일을 선택합니다(예: \"/.cargo/config.toml\".).",
   "loc.input.label.cargoServiceConnections": "이 조직/컬렉션 외부 레지스트리에 대한 자격 증명",
@@ -14,5 +18,10 @@
   "loc.messages.AuthenticatingThisConfigToml": "%s에서 이 config.toml 파일에 나열된 레지스트리에 대한 인증을 추가하는 중",
   "loc.messages.AddingAuthRegistry": "레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)",
   "loc.messages.AddingAuthExternalRegistry": "외부 레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)",
-  "loc.messages.ConnectionAlreadySet": "%s 레지스트리가 %s 연결에 대해 이미 설정되어 있습니다."
+  "loc.messages.ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+  "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
 }

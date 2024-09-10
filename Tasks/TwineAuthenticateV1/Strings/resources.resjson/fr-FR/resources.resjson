@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Échec de l'analyse de l'URL de flux et de l'ajout d'informations d'authentification. %s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "Un seul flux interne peut être autorisé à l'aide de cette tâche. Tous les flux sauf le premier vont être ignorés.",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "Une seule connexion de service peut être autorisée à l'aide de cette tâche. Toutes les connexions sauf la première vont être ignorées.",
-  "loc.messages.Warning_DuplicateEntryForFeed": "Il s'agit d'une entrée en double pour le nom du flux. Utilisez des noms uniques pour éviter d’éventuels problèmes de publication.",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "Impossible d'obtenir l'URI de packaging. Utilisation de l'URI de collection par défaut.",
   "loc.messages.FailedToAddAuthentication": "Échec de l'ajout de l'authentification.",
   "loc.messages.NoPypircFile": "Aucun fichier .pypirc à nettoyer.",
