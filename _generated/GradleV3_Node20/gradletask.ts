@@ -10,7 +10,7 @@ import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/S
 import { IAnalysisTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/IAnalysisTool';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import { getExecOptions, setJavaHome, setGradleOpts, getGradleVersion } from './Modules/environment';
+import { getExecOptions, setJavaHome, setGradleOpts, getGradleVersion, setUpConnectedServiceEnvironmentVariables } from './Modules/environment';
 import { configureWrapperScript, isMultiModuleProject } from './Modules/project-configuration';
 import { enableCodeCoverageAsync, publishTestResults, publishCodeCoverageResultsAsync, resolveCodeCoveragePreset } from './Modules/code-coverage';
 import { ICodeAnalysisResult, ICodeCoveragePreset, ICodeCoverageSettings, IPublishCodeCoverageSettings, ITaskResult } from './interfaces';
@@ -27,6 +27,9 @@ async function run() {
         // Set working directory
         const workingDirectory: string = tl.getPathInput('cwd', false, true);
         tl.cd(workingDirectory);
+
+        // Setup service connection environment variables
+        setUpConnectedServiceEnvironmentVariables();
 
         const javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
         const codeCoverageTool: string = tl.getInput('codeCoverageTool');

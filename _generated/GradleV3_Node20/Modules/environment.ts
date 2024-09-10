@@ -115,3 +115,22 @@ export function extractGradleVersion(str: string): string {
     const match = str.match(regex);
     return match?.groups?.version || 'unknown';
 }
+
+export function setUpConnectedServiceEnvironmentVariables() {
+    var connectedService = tl.getInput('ConnectedServiceName');
+    if(connectedService) {
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+        if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+        }
+        else {
+            tl.warning('Connected service is not of type Workload Identity Federation');
+        }
+    }
+    else {
+        tl.debug('No connected service set');
+    }
+}
