@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 245,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "instanceNameFormat": "Run a Python script",
@@ -120,7 +120,7 @@
     "ParameterRequired": "The `%s` parameter is required"
   },
   "_buildConfigMapping": {
-    "Default": "0.245.0",
-    "Node20-225": "0.245.1"
+    "Default": "0.245.2",
+    "Node20-225": "0.245.3"
   }
 }
