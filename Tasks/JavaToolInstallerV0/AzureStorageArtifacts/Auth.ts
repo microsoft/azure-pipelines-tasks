@@ -1,9 +1,8 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { ClientSecretCredential } from "@azure/identity";
 
-export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<ClientSecretCredential> {
+export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
     // Validate authorization scheme
     const authorizationScheme = tl.getEndpointAuthorizationSchemeRequired(connectedService).toLowerCase();
     if (authorizationScheme !== "workloadidentityfederation") {
@@ -22,12 +21,7 @@ export async function getAccessTokenViaWorkloadIdentityFederation(connectedServi
     }
     tl.debug(`Federated token obtained for service connection ${connectedService}`);
 
-    // Instead of getting an access token string, return a ClientSecretCredential
-    return new ClientSecretCredential(
-        servicePrincipalTenantId,
-        servicePrincipalId,
-        federatedToken
-    );
+    return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
 }
 
 async function getAccessTokenFromFederatedToken(
