@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Chemin du fichier solution, du fichier packages.config ou du fichier project.json qui référence les packages à restaurer.",
   "loc.input.label.selectOrConfig": "Flux à utiliser",
   "loc.input.help.selectOrConfig": "Sélectionnez un flux à partir d'Azure Artifacts et/ou NuGet.org ici, ou validez un fichier nuget.config dans votre dépôt de code source, puis définissez son chemin ici.",
-  "loc.input.label.feedRestore": "Utiliser les packages de ce flux Azure Artifacts/TFS",
+  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
   "loc.input.help.feedRestore": "Incluez le flux sélectionné dans le fichier NuGet.config généré. Pour pouvoir sélectionner un flux, vous devez au préalable installer Azure Artifacts et l'associer à une licence.",
   "loc.input.label.includeNuGetOrg": "Utiliser les packages de NuGet.org",
   "loc.input.help.includeNuGetOrg": "Incluez NuGet.org dans le fichier NuGet.config généré.",

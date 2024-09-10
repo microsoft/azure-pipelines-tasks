@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "無法剖析摘要 URL 和新增驗證資訊。%s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "使用此工作時，一次只能授權一個內部摘要。除了第一個摘要外，將會忽略所有摘要。",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "使用此工作時，一次只能授權一個服務連線。除了第一個連線外，將會忽略所有連線。",
-  "loc.messages.Warning_DuplicateEntryForFeed": "這是摘要名稱的重複項目。使用唯一名稱以避免潛在的發佈問題。",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "無法取得封裝 URI，將改用預設收集 URI。",
   "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
   "loc.messages.NoPypircFile": "沒有任何要清除的 .pypirc 檔案。",

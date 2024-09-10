@@ -14,7 +14,7 @@
   "loc.input.help.solution": "復元するパッケージを参照するソリューション、packages.config、project.json ファイルへのパス。",
   "loc.input.label.selectOrConfig": "使用するフィード",
   "loc.input.help.selectOrConfig": "Azure Artifacts や NuGet.org からフィードをここで選択するか、ソース コード リポジトリに nuGet.config ファイルをコミットしてそのパスをここで設定します。",
-  "loc.input.label.feedRestore": "この Azure Artifacts/TFS フィードからのパッケージを使用する",
+  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
   "loc.input.help.feedRestore": "生成する NuGet.config に、選択したフィードを含めます。ここでフィードを選択するには、Azure Artifacts をインストールしてライセンスを取得している必要があります。",
   "loc.input.label.includeNuGetOrg": "NuGet.org からのパッケージを使用する",
   "loc.input.help.includeNuGetOrg": "生成される NuGet.config に NuGet.org を含めます。",

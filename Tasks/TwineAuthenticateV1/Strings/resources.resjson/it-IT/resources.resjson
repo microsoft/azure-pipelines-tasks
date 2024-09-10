@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Non è stato possibile analizzare l'URL del feed e aggiungere le informazioni di autenticazione. %s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "Con questa attività è possibile autorizzare un solo feed interno alla volta. Tutti i feed tranne il primo verranno ignorati.",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "Con questa attività è possibile autorizzare una sola connessione al servizio alla volta. Tutte le connessioni tranne la prima verranno ignorate.",
-  "loc.messages.Warning_DuplicateEntryForFeed": "È presente una voce duplicata per il nome del feed. Usare nomi univoci per evitare potenziali problemi di pubblicazione.",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "Non è possibile recuperare l'URI della creazione di pacchetti. Verrà usato l'URI della raccolta predefinito.",
   "loc.messages.FailedToAddAuthentication": "Non è stato possibile aggiungere l'autenticazione.",
   "loc.messages.NoPypircFile": "Non è stato trovato alcun file con estensione pypirc da pulire.",

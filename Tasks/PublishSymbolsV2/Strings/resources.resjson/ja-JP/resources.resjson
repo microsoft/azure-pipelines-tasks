@@ -4,6 +4,8 @@
   "loc.description": "ソース コードにインデックスを作成し、シンボルをファイル共有または Azure Artifacts シンボル サーバーに公開します",
   "loc.instanceNameFormat": "シンボル パスを発行する",
   "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.ConnectedServiceName": "Azure Resource Manager connection",
+  "loc.input.help.ConnectedServiceName": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation.",
   "loc.input.label.SymbolsFolder": "シンボル フォルダーへのパス",
   "loc.input.help.SymbolsFolder": "シンボル ファイルを検索するソース フォルダーへのパス。既定値は $(Build.SourcesDirectory) です。それ以外の場合は、$(Build.BinariesDirectory)/MyProject などのルート指定のパスを指定してください",
   "loc.input.label.SearchPattern": "検索パターン",

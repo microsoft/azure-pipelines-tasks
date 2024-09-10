@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "フィード URL の解析および認証情報の追加に失敗しました。%s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "このタスクを使用して一度に承認できる内部フィードは 1 つだけです。最初のフィード以外はすべて無視されます。",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "このタスクを使用して一度に承認できるサービス接続は 1 つだけです。最初の接続以外はすべて無視されます。",
-  "loc.messages.Warning_DuplicateEntryForFeed": "これはフィード名の重複エントリです。一意の名前を使用して、潜在的な発行の問題を回避します。",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "既定のコレクション URI を使用して、パッケージ URI を取得できません。",
   "loc.messages.FailedToAddAuthentication": "認証を追加できませんでした。",
   "loc.messages.NoPypircFile": "クリーンアップするための .pypirc ファイルがありません。",
