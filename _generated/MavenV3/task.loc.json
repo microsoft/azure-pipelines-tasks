@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 245,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -519,7 +519,7 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "3.245.0",
-    "Node20-225": "3.245.1"
+    "Default": "3.245.2",
+    "Node20-225": "3.245.3"
   }
 }

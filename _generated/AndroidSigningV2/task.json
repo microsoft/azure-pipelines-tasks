@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 244,
-    "Patch": 2
+    "Minor": 246,
+    "Patch": 0
   },
   "demands": [
     "JDK"
@@ -187,7 +187,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "2.244.2",
-    "Node20-225": "2.244.3"
+    "Default": "2.246.0",
+    "Node20-225": "2.246.1"
   }
 }
