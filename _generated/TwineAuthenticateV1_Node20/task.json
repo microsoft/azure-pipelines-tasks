@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 245,
     "Patch": 1
   },
   "runsOn": [
@@ -120,8 +120,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20_229_1": "1.246.1",
-    "wif_242": "1.246.2"
+    "Default": "1.245.0",
+    "Node20_229_1": "1.245.1",
+    "wif_242": "1.245.2"
   }
 }
