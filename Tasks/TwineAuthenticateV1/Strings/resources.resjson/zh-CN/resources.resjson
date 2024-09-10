@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "未能分析源 URL 和添加身份验证信息。%s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "使用此任务，一次只能对一个内部源进行授权。将忽略第一个源以外的所有源。",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "使用此任务，一次只能对一个服务连接进行授权。将忽略第一个连接以外的所有连接。",
-  "loc.messages.Warning_DuplicateEntryForFeed": "这是源名称的重复条目。使用唯一名称以避免潜在的发布问题。",
+  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
   "loc.messages.FailedToGetPackagingUri": "无法使用默认集合 URI 获取打包 URI。",
   "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
   "loc.messages.NoPypircFile": "没有要清理的 .pypirc 文件。",

@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tarea de autenticación para el cliente de carga usado para instalar la distribución de cajas de carga",
   "loc.instanceNameFormat": "autenticación de carga $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, registryNames is required. All other inputs are ignored.",
+  "loc.input.label.registryNames": "Registry names from config.toml",
+  "loc.input.help.registryNames": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
   "loc.input.label.configFile": "archivo config.toml para autenticar",
   "loc.input.help.configFile": "Ruta de acceso al archivo config.toml que especifica los registros con los que quiere trabajar. Seleccione el archivo, no la carpeta. Por ejemplo, \"/.cargo/config.toml\".",
   "loc.input.label.cargoServiceConnections": "Credenciales para registros fuera de esta organización o colección",
@@ -14,5 +18,10 @@
   "loc.messages.AuthenticatingThisConfigToml": "Agregando autenticación para el Registro que aparece en este archivo config.toml en %s",
   "loc.messages.AddingAuthRegistry": "Agregando autenticación para el registro: %s con nombre de token: %s",
   "loc.messages.AddingAuthExternalRegistry": "Agregando autenticación para el registro externo: %s con nombre de token: %s",
-  "loc.messages.ConnectionAlreadySet": "El registro %s ya está establecido para una conexión %s"
+  "loc.messages.ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+  "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
 }

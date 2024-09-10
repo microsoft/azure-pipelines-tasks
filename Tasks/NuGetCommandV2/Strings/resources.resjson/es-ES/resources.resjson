@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Ruta de acceso al archivo de la solución, packages.config o project.json que hace referencia a los paquetes que se van a restaurar.",
   "loc.input.label.selectOrConfig": "Fuentes para usar",
   "loc.input.help.selectOrConfig": "Seleccione una fuente de Azure Artifacts o NuGet.org aquí, o bien confirme un archivo nuget.config en el repositorio del código fuente y establezca aquí su ruta de acceso.",
-  "loc.input.label.feedRestore": "Usar paquetes de esta fuente de Azure Artifacts/TFS",
+  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
   "loc.input.help.feedRestore": "Incluya la fuente seleccionada en el archivo NuGet.config generado. Debe tener Azure Artifacts instalado y con licencia para poder seleccionar una fuente aquí.",
   "loc.input.label.includeNuGetOrg": "Usar paquetes de NuGet.org",
   "loc.input.help.includeNuGetOrg": "Incluya NuGet.org en el archivo NuGet.config generado.",
