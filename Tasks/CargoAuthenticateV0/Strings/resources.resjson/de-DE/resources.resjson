@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Authentifizierungsaufgabe für den Cargo-Client zum Installieren der Verteilung von Cargo-Kisten",
   "loc.instanceNameFormat": "Cargo-Authentifizierung für $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, registryNames is required. All other inputs are ignored.",
+  "loc.input.label.registryNames": "Registry names from config.toml",
+  "loc.input.help.registryNames": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
   "loc.input.label.configFile": "Zu authentifizierende config.toml-Datei",
   "loc.input.help.configFile": "Pfad zur Datei „config.toml“, die die Registrierungen angibt, mit denen Sie arbeiten möchten. Wählen Sie die Datei und nicht den Ordner aus, z. B. „/.cargo/config.toml“.",
   "loc.input.label.cargoServiceConnections": "Anmeldeinformationen für Registrierungen außerhalb dieser Organisation/Sammlung",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "Die ausgewählte config.toml-Datei muss eine Registrierungstabelle enthalten.",
   "loc.messages.AuthenticatingThisConfigToml": "Die Authentifizierung für die in dieser config.toml-Datei unter %s aufgeführte Registrierung wird hinzugefügt.",
   "loc.messages.AddingAuthRegistry": "Authentifizierung für Registrierung wird hinzugefügt: %s mit Tokenname: %s",
-  "loc.messages.AddingAuthExternalRegistry": "Authentifizierung für externe Registrierung wird hinzugefügt: %s mit Tokenname: %s"
+  "loc.messages.AddingAuthExternalRegistry": "Authentifizierung für externe Registrierung wird hinzugefügt: %s mit Tokenname: %s",
+  "loc.messages.ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+  "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
 }

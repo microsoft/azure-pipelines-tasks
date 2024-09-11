@@ -4,6 +4,8 @@
   "loc.description": "Hiermit wird Ihr Quellcode indiziert, und Symbole werden in einer Dateifreigabe oder auf einem Azure Artifacts-Symbolserver veröffentlicht.",
   "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung",
   "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.ConnectedServiceName": "Azure Resource Manager connection",
+  "loc.input.help.ConnectedServiceName": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation.",
   "loc.input.label.SymbolsFolder": "Pfad zum Symbolordner",
   "loc.input.help.SymbolsFolder": "Der Pfad zu dem Ordner, der nach Symboldateien durchsucht wird. Der Standardwert ist \"$(Build.SourcesDirectory)\". Geben Sie andernfalls einen Stammpfad an, z. B.: \"$(Build.BinariesDirectory)/MyProject\".",
   "loc.input.label.SearchPattern": "Suchmuster",

@@ -8,7 +8,7 @@
   "loc.input.label.SourceFolder": "Carpeta de origen",
   "loc.input.help.SourceFolder": "La carpeta de origen desde la que se ejecutarán los patrones de copia. La raíz del repositorio está vacía. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) si los archivos no están en el repositorio. Ejemplo: $(agent.builddirectory)",
   "loc.input.label.Contents": "Contenido",
-  "loc.input.help.Contents": "Rutas de acceso de archivo que se incluirán como parte de la copia. Se admiten varias líneas de patrones de coincidencia. [Más información] (https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.input.help.Contents": "File paths to include as part of the copy. Supports multiple lines of match patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Carpeta de destino",
   "loc.input.help.TargetFolder": "La carpeta de destino o la ruta UNC en la que se copiarán los archivos. Puede usar [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Ejemplo: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Borrar carpeta de destino",

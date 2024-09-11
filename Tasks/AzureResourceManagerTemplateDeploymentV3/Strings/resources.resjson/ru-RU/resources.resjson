@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/armtaskreadme)",
   "loc.description": "Развертывание шаблона Azure Resource Manager (ARM) во всех областях развертывания",
   "loc.instanceNameFormat": "Развертывание шаблона ARM: область $(deploymentScope)",
-  "loc.releaseNotes": "— Добавлена поддержка развертывания во всех областях развертывания.\n— Удалены все действия, относящиеся к виртуальной машине.",
+  "loc.releaseNotes": "- Добавлена поддержка bicepparam.",
   "loc.group.displayName.AzureDetails": "Сведения об Azure",
   "loc.group.displayName.Template": "Шаблон",
   "loc.group.displayName.Advanced": "Дополнительно",
@@ -38,6 +38,8 @@
   "loc.input.help.deploymentOutputs": "Укажите имя для выходной переменной, которая будет содержать раздел выходных данных текущего объекта развертывания в строковом формате. Вы можете использовать командлет ConvertFrom-Json PowerShell для анализа объекта JSON и доступа к отдельным выходным значениям. Дополнительные сведения см. [здесь](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Доступ к сведениям о субъекте-службе в параметрах переопределения",
   "loc.input.help.addSpnToEnvironment": "Добавляет идентификатор субъекта-службы и ключ выбранной конечной точки Azure в среду выполнения скрипта. Переменные \"$servicePrincipalId\" и \"$servicePrincipalKey\" можно использовать в таких параметрах переопределения, как \"-key $servicePrincipalKey\"",
+  "loc.input.label.useWithoutJSON": "Использовать отдельные выходные значения без примененного JSON.Stringify",
+  "loc.input.help.useWithoutJSON": "Отдельные выходные значения преобразуются через JSON.Stringify по умолчанию. Если вы хотите использовать выходные значения без их преобразования через JSON.Stringify, включите этот параметр. Дополнительные сведения см. [здесь](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Проверка наличия следующей группы ресурсов: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Не удалось проверить состояние группы ресурсов. Ошибка: %s.",
   "loc.messages.ResourceGroupStatus": "Такая группа ресурсов существует: %s.",
@@ -93,5 +95,11 @@
   "loc.messages.AzureCLINotFound": "Azure CLI не найден в агенте.",
   "loc.messages.FailedToFetchAzureCLIVersion": "Не удалось получить версию AZ CLI от агента. Ошибка: %s",
   "loc.messages.BicepBuildFailed": "Не удалось выполнить команду \"az bicep build\". Ошибка: %s",
-  "loc.messages.BicepFileCleanupFailed": "Не удалось удалить файл Bicep. Ошибка: %s"
+  "loc.messages.BicepFileCleanupFailed": "Не удалось удалить файл Bicep. Ошибка: %s",
+  "loc.messages.LoginFailed": "Сбой входа в Azure: %s",
+  "loc.messages.MSILoginFailed": "Сбой входа в Azure с использованием управляемого удостоверения службы: %s",
+  "loc.messages.AuthSchemeNotSupported": "Схема проверки подлинности %s не поддерживается",
+  "loc.messages.ErrorInSettingUpSubscription": "Ошибка при настройке подписки: %s",
+  "loc.messages.BicepParamBuildFailed": "Сбой \"az bicep build-param\". Ошибка: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Версия Azure CLI должна быть >= 2.47.0, чтобы использовать файл .bicepparam."
 }

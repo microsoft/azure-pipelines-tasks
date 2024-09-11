@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "Не удалось получить идентификатор ресурса для ресурса с типом \"%s\" и именем \"%s\". Ошибка: %s",
   "loc.messages.JarPathNotPresent": "Отсутствует путь к jar-файлу Java.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Не удалось обновить ресурс Application Insights \"%s\". Ошибка: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Переход от веб-развертывания к запуску из пакета, что помогает избежать ошибки FILE_IN_USE. Обратите внимание, что запуск из пакета не поддерживает тип пакета msBuild. Измените формат пакета, чтобы использовать этот метод развертывания."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Переход от веб-развертывания к запуску из пакета, что помогает избежать ошибки FILE_IN_USE. Обратите внимание, что запуск из пакета не поддерживает тип пакета msBuild. Измените формат пакета, чтобы использовать этот метод развертывания.",
+  "loc.messages.MSDeployNotSupportTokenAuth": "Служба приложений настроена не использовать обычную проверку подлинности. Для этого требуется веб-развертывание msdeploy.exe версии 7.1.7225 или более поздней. Требуется версия Visual Studio, которая включает обновленную версию msdeploy.exe. Дополнительные сведения см. на странице https://aka.ms/azdo-webapp-msdeploy."
 }

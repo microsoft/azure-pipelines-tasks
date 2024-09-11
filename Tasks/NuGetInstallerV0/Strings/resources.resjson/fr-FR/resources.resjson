@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Programme d'installation de NuGet",
   "loc.helpMarkDown": "[Plus d'informations](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
-  "loc.description": "Installe ou restaure les packages NuGet manquants. Utilisez la tâche NuGetAuthenticate@0 pour accéder aux dernières fonctionnalités.",
+  "loc.description": "Installs or restores missing NuGet packages. Use NuGetAuthenticate@0 task for latest capabilities.",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Chemin de la solution ou de packages.config",

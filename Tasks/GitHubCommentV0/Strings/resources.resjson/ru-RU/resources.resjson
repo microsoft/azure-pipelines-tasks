@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Комментарий GitHub",
+  "loc.helpMarkDown": "",
   "loc.description": "Запись комментария в сущность GitHub, т. е. вопрос или запрос на вытягивание",
   "loc.instanceNameFormat": "Запись комментария GitHub",
   "loc.input.label.gitHubConnection": "Подключение GitHub (OAuth или личный маркер доступа)",

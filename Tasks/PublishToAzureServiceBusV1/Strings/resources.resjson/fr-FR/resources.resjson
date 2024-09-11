@@ -13,7 +13,7 @@
   "loc.input.label.signPayload": "Signer le message",
   "loc.input.help.signPayload": "Si la valeur est true, le message est signé à condition que le certificat soit privé.",
   "loc.input.label.certificateString": "Variable de certificat",
-  "loc.input.help.certificateString": "Spécifiez la variable secrète qui dispose du contenu du certificat. Il peut également s'agir d'un certificat stocké dans un coffre de clés Azure Key Vault [lié] (https://docs.microsoft.com/fr-fr/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) à un groupe de variables utilisé par ce pipeline de mise en production.",
+  "loc.input.help.certificateString": "Specify the secret variable that contains the certificate content.  This can also be a certificate stored in an Azure key vault that is [linked](https://docs.microsoft.com/en-us/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) to a Variable Group used by this release pipeline.",
   "loc.input.label.signatureKey": "Clé de propriété de signature",
   "loc.input.help.signatureKey": "Clé où doit se trouver la signature dans les propriétés du message. En l'absence d'informations, la valeur par défaut est 'signature' dans les propriétés du message",
   "loc.input.label.waitForCompletion": "Attendre l'exécution de la tâche",

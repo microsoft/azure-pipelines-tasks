@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Cargo クレート配布のインストールに使用される Cargo クライアントの認証タスク",
   "loc.instanceNameFormat": "Cargo 認証 $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.help.workloadIdentityServiceConnection": "If this is set, registryNames is required. All other inputs are ignored.",
+  "loc.input.label.registryNames": "Registry names from config.toml",
+  "loc.input.help.registryNames": "Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.",
   "loc.input.label.configFile": "認証するための config.toml ファイル",
   "loc.input.help.configFile": "使用するレジストリを指定する config.toml ファイルへのパス。フォルダーではなくファイルを選択します。例: \"/.cargo/config.toml\"。",
   "loc.input.label.cargoServiceConnections": "この組織/コレクション外のレジストリの資格情報",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "選択した config.toml ファイルには registries テーブルが含まれている必要があります",
   "loc.messages.AuthenticatingThisConfigToml": "%s にあるこの config.toml ファイルにリストされているレジストリの認証を追加しています",
   "loc.messages.AddingAuthRegistry": "レジストリの認証を追加しています: %s (トークン名: %s)",
-  "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)"
+  "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)",
+  "loc.messages.ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+  "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
 }
