@@ -13,7 +13,7 @@
     "browserify-mime": "1.2.9",
     "glob": "7.1.2",
     "q": "1.4.1",
-    "semver": "5.4.1",
+    "semver": "^7.6.3",
     "typed-rest-client": "^1.8.9",
     "vso-node-api": "6.0.1-preview"
   },
