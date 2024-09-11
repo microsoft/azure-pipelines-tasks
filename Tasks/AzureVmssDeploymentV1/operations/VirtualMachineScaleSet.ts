@@ -70,10 +70,6 @@ export default class VirtualMachineScaleSet {
         
          tl.debug("getting customScriptInfo.localDirPath =" + customScriptInfo.localDirPath );
 
-        //  if (!fs.existsSync(customScriptInfo.localDirPath)) {
-        //     throw new Error(`Path does not exist: ${customScriptInfo.localDirPath}`);
-        // }
-        uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);
         if (fs.lstatSync(customScriptInfo.localDirPath).isDirectory()) {
             tl.debug("it is directory" );
             uploadedBlobUrls = await this.uploadDirectoryToBlob(containerClient, customScriptInfo.localDirPath, customScriptInfo.blobsPrefixPath);

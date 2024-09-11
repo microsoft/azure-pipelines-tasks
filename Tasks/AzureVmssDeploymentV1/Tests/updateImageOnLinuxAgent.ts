@@ -1,6 +1,8 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import * as fs from 'fs';    
+import * as sinon from 'sinon';  
 
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -36,12 +38,60 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/*.*": [
             "C:\\users\\temp\\vstsvmss12345\\folder1\\file1",
             "C:\\users\\temp\\vstsvmss12345\\folder1\\folder2\\file2",
+            "C:\\users\\temp\\vstsvmss12345",
+            "C:\\users\\temp\\vstsvmss12345\\cs.tar.gz",
+            "C:/users/temp/vstsvmss12345",
+            "C:/users/temp/vstsvmss12345/cs.tar.gz"
         ]
     },
     "osType": {
-        "osType": "Linux"
+        "osType": "Windows_NT"
     }
 };
+const mockStats: fs.Stats = {
+    isFile: () => false,
+    isDirectory: () => true,
+    isBlockDevice: () => false,
+    isCharacterDevice: () => false,
+    isSymbolicLink: () => false,
+    isFIFO: () => false,
+    isSocket: () => false,
+    dev: 0,
+    ino: 0,
+    mode: 0,
+    nlink: 0,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    size: 0,
+    blksize: 0,
+    blocks: 0,
+    atimeMs: 0,
+    mtimeMs: 0,
+    ctimeMs: 0,
+    birthtimeMs: 0,
+    atime: new Date(),
+    mtime: new Date(),
+    ctime: new Date(),
+    birthtime: new Date()
+};
+
+
+const existsSyncStub = sinon.stub(fs, 'existsSync').callsFake((p: string) => {
+    if (p === "C:\\users\\temp\\vstsvmss12345") {
+        return true;  // Simulate that the directory exists
+    }
+    return fs.existsSync(p);  // Use the real fs.existsSync for other paths
+});
+
+const lstatSyncStub = sinon.stub(fs, 'lstatSync').callsFake((p: string) => {
+    if (p === "C:\\users\\temp\\vstsvmss12345") {
+        return mockStats;  // Simulate that the directory exists
+    }
+    return fs.lstatSync(p);  // Use the real fs.lstatSync for other paths
+});
+
+
 
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
@@ -64,3 +114,5 @@ tr.registerMock('BlobServiceClient', require('@azure/storage-blob'));
 tr.registerMock('ContainerClient', require('@azure/storage-blob'));
 
 tr.run();
+existsSyncStub.restore();
+lstatSyncStub.restore();
