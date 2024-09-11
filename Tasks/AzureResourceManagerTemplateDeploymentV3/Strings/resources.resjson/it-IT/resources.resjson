@@ -8,7 +8,7 @@
   "loc.group.displayName.Template": "Modello",
   "loc.group.displayName.Advanced": "Avanzate",
   "loc.input.label.deploymentScope": "Ambito di distribuzione",
-  "loc.input.help.deploymentScope": "Ambito di distribuzione della distribuzione. Per altre informazioni sugli ambiti di distribuzione, vedere questo [collegamento] (https://docs.microsoft.com/it-it/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
+  "loc.input.help.deploymentScope": "Deployment scope of the deployment. To know more abour deployment scopes, refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
   "loc.input.label.ConnectedServiceName": "Connessione ad Azure Resource Manager",
   "loc.input.help.ConnectedServiceName": "Selezionare la connessione al servizio Azure Resource Manager con accesso all'ambito di distribuzione selezionato.",
   "loc.input.label.subscriptionName": "Sottoscrizione",
