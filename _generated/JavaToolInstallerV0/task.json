@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 245,
-    "Patch": 2
+    "Patch": 4
   },
   "satisfies": [
     "Java",
@@ -229,7 +229,7 @@
     "ErrorCleaningFolder": "Folder cleaning error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.245.2",
-    "Node20-225": "0.245.3"
+    "Default": "0.245.4",
+    "Node20-225": "0.245.5"
   }
 }
