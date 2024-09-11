@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/armtaskreadme)",
   "loc.description": "Azure Resource Manager-Vorlage (ARM) für alle Bereitstellungsbereiche bereitstellen",
   "loc.instanceNameFormat": "ARM-Vorlagenbereitstellung: Bereich \"$(deploymentScope)\"",
-  "loc.releaseNotes": "– Unterstützung für die Bereitstellung in allen Bereitstellungsbereichen hinzugefügt.\n– Alle VM-bezogenen Aktionen wurden entfernt.",
+  "loc.releaseNotes": "- Unterstützung für bicepparam wurde hinzugefügt.",
   "loc.group.displayName.AzureDetails": "Azure-Details",
   "loc.group.displayName.Template": "Vorlage",
   "loc.group.displayName.Advanced": "Erweitert",
@@ -38,6 +38,8 @@
   "loc.input.help.deploymentOutputs": "Geben Sie einen Namen für die Variable für die Ausgabevariable an, die den Ausgabenabschnitt des aktuellen Bereitstellungsobjekts im Zeichenfolgenformat enthält. Mit dem PowerShell-Cmdlet \"ConvertFrom-Json\" können Sie das JSON-Objekt analysieren und auf die einzelnen Ausgabewerte zugreifen. Weitere Informationen finden Sie [hier](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs).",
   "loc.input.label.addSpnToEnvironment": "Auf Dienstprinzipaldetails in Außerkraftsetzungsparametern zugreifen",
   "loc.input.help.addSpnToEnvironment": "Hiermit werden Dienstprinzipal-ID und -schlüssel des ausgewählten Azure-Endpunkts zur Ausführungsumgebung des Skripts hinzugefügt. Sie können die folgenden Variablen in Ihren Außerkraftsetzungsparametern wie \"-key $servicePrincipalKey\" verwenden: \"$servicePrincipalId\" und \"$servicePrincipalKey\".",
+  "loc.input.label.useWithoutJSON": "Einzelne Ausgabewerte ohne Anwendung von JSON.Stringify verwenden",
+  "loc.input.help.useWithoutJSON": "Einzelne Ausgabewerte werden standardmäßig über JSON.Stringify konvertiert. Wenn Sie die Ausgabewerte so verwenden möchten, wie sie sind, ohne sie über JSON.Stringify zu konvertieren, aktivieren Sie diese Option. Weitere Informationen finden Sie [hier](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Überprüfen, ob die folgende Ressourcengruppe vorhanden ist: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Fehler beim Überprüfen des Ressourcengruppenstatus. Fehler: %s",
   "loc.messages.ResourceGroupStatus": "Die Ressourcengruppe ist vorhanden: %s.",
@@ -93,5 +95,11 @@
   "loc.messages.AzureCLINotFound": "Azure CLI auf dem Agent nicht gefunden.",
   "loc.messages.FailedToFetchAzureCLIVersion": "Fehler beim Abrufen der AZ CLI-Version vom Agent. Fehler: %s",
   "loc.messages.BicepBuildFailed": "Fehler bei \"az bicep build\". Fehler: %s",
-  "loc.messages.BicepFileCleanupFailed": "Fehler beim Löschen der Bicep-Datei. Fehler: %s"
+  "loc.messages.BicepFileCleanupFailed": "Fehler beim Löschen der Bicep-Datei. Fehler: %s",
+  "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung: %s",
+  "loc.messages.MSILoginFailed": "Fehler bei der Azure-Anmeldung mit einer verwalteten Dienstidentität: %s",
+  "loc.messages.AuthSchemeNotSupported": "Das Authentifizierungsschema „%s“ wird nicht unterstützt.",
+  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s",
+  "loc.messages.BicepParamBuildFailed": "Fehler bei \"az bicep build-param\". Fehler: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI Version muss >= 2.47.0 sein, um die .bicepparam-Datei zu verwenden."
 }
