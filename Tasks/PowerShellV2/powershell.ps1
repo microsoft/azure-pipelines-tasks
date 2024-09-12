@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
-        [string]
+        [string] 
         $VstsInputName,
 
         [Parameter()]

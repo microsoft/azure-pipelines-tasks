@@ -330,7 +330,10 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
             var modName = path.basename(modPath);
             var modOutDir = path.join(buildTasksCommonPath, modName);
 
-            if (!test('-d', modOutDir)) {
+            console.log('Common Module : {modPath = ' + modPath + " , modName = " + modName + " , modOutDir = " + modOutDir)
+            console.log(test('-d', modOutDir))
+            if (test('-d', modOutDir)) {
+                
                 banner('Building module ' + modPath, true);
 
                 // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder

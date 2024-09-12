@@ -6,6 +6,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
+import { execSync } from 'child_process';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -18,10 +19,31 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
     return result
 }
 
+// Function to execute PowerShell commands
+function runPowerShellScript(scriptPath: string): void {
+    const fullScriptPath = path.join(__dirname, scriptPath);
+    
+    try {
+        // Execute the PowerShell script, making cmdlets available to the pipeline
+        const output = execSync(`powershell -Command "Import-Module $PSScriptRoot\\ps_modules\\VstsAzureHelpers_"`);
+        console.log(output.toString());
+    } catch (error) {
+        console.error(`Error running PowerShell script: ${error.message}`);
+    }
+}
+
+// Main function to run when the task is executed
+function runTask() {
+    // Inject the custom cmdlet by running the script that defines it
+    runPowerShellScript('powershell.ps1');
+
+    console.log("PowerShell cmdlet injected successfully.");
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-
+        // runTask()
         // Get inputs.
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
@@ -76,6 +98,12 @@ async function run() {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
 
+        const directory1: string = process.cwd();
+        const directory2: string = path.resolve();
+
+        console.log(directory1);  
+        console.log(directory2); 
+
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
 
@@ -109,6 +137,7 @@ async function run() {
                         }
                     }
                 };
+                Get-ChildItem -Recurse $PSScriptRoot | Select Fullname 
                 Invoke-Command {${script}} -WarningVariable +warnings;
             `;
         }
@@ -175,6 +204,8 @@ async function run() {
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
         }
+
+
 
         // Fail on stderr.
         if (stderrFailure) {

@@ -28,6 +28,10 @@
     {
       "module": "../Common/Sanitizer",
       "type": "ps"
+    },
+    {
+      "module": "../Common/VstsAzureHelpers_",
+      "type": "ps"
     }
   ]
 }

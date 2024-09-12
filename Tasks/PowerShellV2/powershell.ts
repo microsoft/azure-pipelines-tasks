@@ -6,6 +6,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
+import { execSync } from 'child_process';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -21,7 +22,6 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-
         // Get inputs.
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
@@ -76,6 +76,12 @@ async function run() {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
 
+        const directory1: string = process.cwd();
+        const directory2: string = path.resolve();
+
+        console.log(directory1);  
+        console.log(directory2); 
+
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
 
@@ -109,6 +115,7 @@ async function run() {
                         }
                     }
                 };
+                Get-ChildItem -Recurse $PSScriptRoot | Select Fullname 
                 Invoke-Command {${script}} -WarningVariable +warnings;
             `;
         }
@@ -175,6 +182,8 @@ async function run() {
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
         }
+
+
 
         // Fail on stderr.
         if (stderrFailure) {
