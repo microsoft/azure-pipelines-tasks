@@ -1,5 +1,5 @@
 {
-    "name": "vsts-azureappconfiguration-pull-task",
+    "name": "vsts-azureappconfiguration-export-task",
     "description": "The project is a Azure DevOps extension used to fetch Key-Values from a given App Configuration",
     "repository": {
         "type": "git",

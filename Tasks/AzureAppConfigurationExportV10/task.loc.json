@@ -1,6 +1,6 @@
 {
   "id": "6b1a4059-eb7f-47b2-97e9-b959cb665b8d",
-  "name": "AzureAppConfiguration",
+  "name": "AzureAppConfigurationExport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/pull-key-value-devops-pipeline",
