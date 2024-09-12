@@ -2,7 +2,6 @@
     "inputs": [
       {
         "name": "workloadIdentityServiceConnection",
-        "aliases": ["azureDevOpsServiceConnection"],
         "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
         "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
         "type": "connectedService:workloadidentityuser",
@@ -15,9 +14,9 @@
       {
         "name": "artifactsFeeds",
         "type": "pickList",
-        "label": "Select one or multiple feeds to authenticate. If 'azureDevOpsServiceConnection' is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+        "label": "ms-resource:loc.input.label.artifactsFeeds",
         "defaultValue": "",
-        "helpMarkdown": "ms-resource:loc.input.help.artifactsFeeds",
+        "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
         "properties": {
           "EditableOptions": "true",
           "MultiSelectFlatList": "true"

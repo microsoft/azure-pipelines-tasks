@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 6
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -24,7 +24,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
-      "helpMarkdown": "Select one or multiple feeds to authenticate. If 'azureDevOpsServiceConnection' is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+      "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
       "properties": {
         "EditableOptions": "true",
         "MultiSelectFlatList": "true"
@@ -84,8 +84,8 @@
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.6",
-    "Node20_229_1": "0.246.7",
-    "wif_242": "0.246.8"
+    "Default": "0.246.3",
+    "Node20_229_1": "0.246.4",
+    "wif_242": "0.246.5"
   }
 }
