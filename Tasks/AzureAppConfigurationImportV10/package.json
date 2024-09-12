@@ -1,5 +1,5 @@
 {
-    "name": "vsts-azureappconfiguration-push-task",
+    "name": "vsts-azureappconfiguration-import-task",
     "version": "1.0.0",
     "description": "The project is a Azure DevOps extension used push key-values from a configuration file into your App Configuration store",
     "repository": {
