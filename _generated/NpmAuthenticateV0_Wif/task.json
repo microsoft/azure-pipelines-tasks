@@ -21,10 +21,7 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "aliases": [
-        "azureDevOpsServiceConnection"
-      ],
-      "label": "'Azure DevOps' Service Connection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
       "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
@@ -44,7 +41,7 @@
     {
       "name": "workingFile",
       "label": ".npmrc file to authenticate",
-      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". If Azure Artifacts URL and 'Azure DevOps' Service Connection are set, registries in npmrc will be ignored.",
+      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.",
       "type": "filePath",
       "required": true
     },
