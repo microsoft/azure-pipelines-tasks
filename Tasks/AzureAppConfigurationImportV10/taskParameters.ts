@@ -1,4 +1,4 @@
-import * as tl from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 import { AzureEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azureModels"
 import { AzureRMEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint";
 import { Tags } from "./tags";
