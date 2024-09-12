@@ -75,7 +75,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
-        "CSMwithBicep WithSpaceInPath.bicep": [CSMBicepWithSpaceInPath],
         "CSMwithBicep.bicepparam": [CSMBicepParam],
         "CSMwithBicep.prod.bicepparam": [CSMBicepParamWithEnv],
         "CSMwithBicepWithWarning.bicep": [CSMBicepWithWarning],
