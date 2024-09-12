@@ -24,7 +24,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
-      "helpMarkdown": "ms-resource:loc.input.label.artifactsFeeds",
+      "helpMarkdown": "ms-resource:loc.input.help.artifactsFeeds",
       "properties": {
         "EditableOptions": "true",
         "MultiSelectFlatList": "true"
