@@ -38,7 +38,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
-      "helpMarkdown": "Select one or multiple feeds to authenticate. If 'azureDevOpsServiceConnection' is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+      "helpMarkdown": "ms-resource:loc.input.help.artifactsFeeds",
       "properties": {
         "EditableOptions": "true",
         "MultiSelectFlatList": "true"
