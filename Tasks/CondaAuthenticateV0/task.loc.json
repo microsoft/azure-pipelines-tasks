@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
