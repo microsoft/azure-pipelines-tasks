@@ -1,4 +1,4 @@
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib';
 import { TaskParameters } from "./taskParameters";
 import { 
     AppConfigurationImporter, 

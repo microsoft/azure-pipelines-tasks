@@ -1,4 +1,4 @@
-import * as tl from "azure-pipelines-task-lib/task";
+import * as tl from "azure-pipelines-task-lib";
 import * as path from "path";
 import { TaskParameters } from "./taskParameters";
 import { AppConfigurationError } from './errors';

@@ -1,7 +1,7 @@
 {
     "id": "04fc3ed1-4513-4f38-b0fe-5a15864bfa9c",
-    "name": "AzureAppConfigurationPush",
-    "friendlyName": "Azure App Configuration Push",
+    "name": "AzureAppConfigurationImport",
+    "friendlyName": "Azure App Configuration Import",
     "description": "Push key-values to an Azure App Configuration instance",
     "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",

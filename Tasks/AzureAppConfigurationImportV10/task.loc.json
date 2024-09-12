@@ -1,6 +1,6 @@
 {
   "id": "04fc3ed1-4513-4f38-b0fe-5a15864bfa9c",
-  "name": "AzureAppConfigurationPush",
+  "name": "AzureAppConfigurationImport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline",
