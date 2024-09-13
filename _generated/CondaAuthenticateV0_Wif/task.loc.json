@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 2
+    "Patch": 8
   },
   "runsOn": [
     "Agent",
@@ -40,6 +40,9 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
       "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
       "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
@@ -51,8 +54,8 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_1": "0.246.1",
-    "wif_242": "0.246.2"
+    "Default": "0.246.6",
+    "Node20_229_1": "0.246.7",
+    "wif_242": "0.246.8"
   }
 }
