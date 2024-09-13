@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "file:../../task-lib/node/_build",
+    "azure-pipelines-task-lib": "^4.15.0",
     "azure-pipelines-tasks-securefiles-common": "2.1.0"
   },
   "devDependencies": {
