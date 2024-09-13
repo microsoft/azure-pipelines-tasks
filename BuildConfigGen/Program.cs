@@ -737,8 +737,6 @@ namespace BuildConfigGen
             if (shouldUpdateTaskLib)
             {
                 UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
-
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
                 UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
                 UpdateDep(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
                 UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
@@ -762,14 +760,13 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void UpdateDep(JsonNode outputNodePackagePathJsonNode, string V, string V1)
+        private static void UpdateDep(JsonNode outputNodePackagePathJsonNode, string module, string buildPath)
         {
-
             var depNode = outputNodePackagePathJsonNode["dependencies"];
-            var f = depNode![V];
+            var f = depNode![module];
             if (f != null)
             {
-                f = V1;
+                outputNodePackagePathJsonNode["dependencies"]![module] = buildPath;
             }
         }
 
