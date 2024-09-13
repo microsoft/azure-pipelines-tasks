@@ -734,15 +734,43 @@ namespace BuildConfigGen
                 outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = "5.1.6";
             }
 
-            if(shouldUpdateTaskLib)
+            if (shouldUpdateTaskLib)
             {
-                outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = "file:../../task-lib/node/_build";
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
+
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azurermdeploycommon", "file:../../tasks-common/common-npm-packages/azurermdeploycommon/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codeanalysis-common", "file:../../tasks-common/common-npm-packages/codeanalysis-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codecoverage-tools", "file:../../tasks-common/common-npm-packages/codecoverage-tools/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-docker-common", "file:../../tasks-common/common-npm-packages/docker-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-ios-signing-common", "file:../../tasks-common/common-npm-packages/ios-signing-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-java-common", "file:../../tasks-common/common-npm-packages/java-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "file:../../tasks-common/common-npm-packages/kubernetes-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-msbuildhelpers", "file:../../tasks-common/common-npm-packages/msbuildhelpers/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-packaging-common", "file:../../tasks-common/common-npm-packages/packaging-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-securefiles-common", "file:../../tasks-common/common-npm-packages/securefiles-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-utility-common", "file:../../tasks-common/common-npm-packages/utility-common/_build");
+                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-webdeployment-common", "file:../../tasks-common/common-npm-packages/webdeployment-common/_build");
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
             string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
+        }
+
+        private static void UpdateDep(JsonNode outputNodePackagePathJsonNode, string V, string V1)
+        {
+
+            var depNode = outputNodePackagePathJsonNode["dependencies"];
+            var f = depNode![V];
+            if (f != null)
+            {
+                f = V1;
+            }
         }
 
         private static bool HasNodeHandler(JsonNode taskHandlerContents)

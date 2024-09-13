@@ -58,6 +58,7 @@ var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
+var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
 var CLI = {};
 
@@ -208,6 +209,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     // build task-lib
     cd(taskLibPath);
     run("node make.js build");
+
+    
+    await util.installNodeAsync('20');
+    // build task-lib
+    cd(tasksCommonPath);
+    run("node make.js --build");
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
