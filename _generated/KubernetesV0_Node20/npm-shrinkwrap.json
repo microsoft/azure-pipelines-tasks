@@ -447,20 +447,6 @@
       "resolved": "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.10.tgz",
       "integrity": "sha512-BgeaZuElf7DEYZhWYDTc/XcLZXdVgFkVSTa13BqKvbnmUrxr3TJFKofUxCtDO9UQOdhnV+HPOESdHiHKZOJV1A=="
     },
-    "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib": {
-      "version": "4.0.0-preview",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.0-preview.tgz",
-      "integrity": "sha512-BK+VOo42Bec72Wic6Vsm2MaAJezNyF05OYAQS5FuZJM5Z972lZqYpujtSc4BFKUhC3HO+F/Yf4xhAV2tZCzN9Q==",
-      "dependencies": {
-        "minimatch": "3.0.5",
-        "mockery": "^1.7.0",
-        "q": "^1.5.1",
-        "semver": "^5.1.0",
-        "shelljs": "^0.8.5",
-        "sync-request": "6.1.0",
-        "uuid": "^3.0.1"
-      }
-    },
     "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-tool-lib": {
       "version": "2.0.0-preview",
       "resolved": "https://registry.npmjs.org/azure-pipelines-tool-lib/-/azure-pipelines-tool-lib-2.0.0-preview.tgz",
@@ -473,35 +459,6 @@
         "semver-compare": "^1.0.0",
         "typed-rest-client": "^1.8.6",
         "uuid": "^3.3.2"
-      }
-    },
-    "node_modules/azure-pipelines-tasks-utility-common/node_modules/minimatch": {
-      "version": "3.0.5",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz",
-      "integrity": "sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==",
-      "dependencies": {
-        "brace-expansion": "^1.1.7"
-      },
-      "engines": {
-        "node": "*"
-      }
-    },
-    "node_modules/azure-pipelines-tasks-utility-common/node_modules/tunnel": {
-      "version": "0.0.6",
-      "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.6.tgz",
-      "integrity": "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==",
-      "engines": {
-        "node": ">=0.6.11 <=0.7.0 || >=0.7.3"
-      }
-    },
-    "node_modules/azure-pipelines-tasks-utility-common/node_modules/typed-rest-client": {
-      "version": "1.8.9",
-      "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.8.9.tgz",
-      "integrity": "sha512-uSmjE38B80wjL85UFX3sTYEUlvZ1JgCRhsWj/fJ4rZ0FqDUFoIuodtiVeE+cUqiVTOKPdKrp/sdftD15MDek6g==",
-      "dependencies": {
-        "qs": "^6.9.1",
-        "tunnel": "0.0.6",
-        "underscore": "^1.12.1"
       }
     },
     "node_modules/azure-pipelines-tool-lib": {
@@ -1070,11 +1027,6 @@
         "node": "*"
       }
     },
-    "node_modules/mockery": {
-      "version": "1.7.0",
-      "resolved": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
-      "integrity": "sha1-9O3g2HUMHJcnwnLqLGBiniyaHE8="
-    },
     "node_modules/ms": {
       "version": "2.1.2",
       "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz",
@@ -1375,9 +1327,10 @@
       "integrity": "sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg=="
     },
     "node_modules/semver": {
-      "version": "5.7.1",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.1.tgz",
-      "integrity": "sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==",
+      "version": "5.7.2",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.2.tgz",
+      "integrity": "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==",
+      "license": "ISC",
       "bin": {
         "semver": "bin/semver"
       }
@@ -1421,17 +1374,6 @@
       },
       "funding": {
         "url": "https://github.com/sponsors/isaacs"
-      }
-    },
-    "node_modules/shelljs/node_modules/minimatch": {
-      "version": "3.1.2",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz",
-      "integrity": "sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==",
-      "dependencies": {
-        "brace-expansion": "^1.1.7"
-      },
-      "engines": {
-        "node": "*"
       }
     },
     "node_modules/side-channel": {
