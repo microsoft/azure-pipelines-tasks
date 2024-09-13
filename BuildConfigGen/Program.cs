@@ -1108,6 +1108,7 @@ namespace BuildConfigGen
 
             if (targetNode != null && ExecutorHasNodeHandler(targetNode))
             {
+                var executionPath = GetExecutionPath(taskNode, target);
                 if (targetNode!.ContainsKey(nodeVersion))
                 {
                     targetNode!.Remove(nodeVersion);
@@ -1115,7 +1116,7 @@ namespace BuildConfigGen
 
                 targetNode!.Add(nodeVersion, new JsonObject
                 {
-                    ["target"] = GetExecutionPath(taskNode, target),
+                    ["target"] = executionPath,
                     ["argumentFormat"] = ""
                 });
             }
