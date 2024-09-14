@@ -52,8 +52,8 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
-            public static readonly ConfigRecord UpdateTaskLib = new ConfigRecord(name: nameof(UpdateTaskLib), constMappingKey: "UpdateTaskLib", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UpdateTaskLib", writeNpmrc: true, shouldUpdateTaskLib:true );
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, UpdateTaskLib };
+            public static readonly ConfigRecord UseLocalTaskLibAndCommonPackages = new ConfigRecord(name: nameof(UseLocalTaskLibAndCommonPackages), constMappingKey: "UseLocalTaskLibAndCommonPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UseLocalTaskLibAndCommonPackages", writeNpmrc: true, shouldUpdateTaskLib: true);
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, UseLocalTaskLibAndCommonPackages };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -290,7 +290,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x => !x.isDefault).Select(x => x.name));
+                    errorMessage = $"Configs ({config}) specified must be one of: " + string.Join(',', Config.Configs.Where(x => !x.isDefault).Select(x => x.name));
                     throw new Exception(errorMessage);
                 }
             }

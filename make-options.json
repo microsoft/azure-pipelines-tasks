@@ -417,11 +417,11 @@
         "MavenAuthenticateV0",
         "TwineAuthenticateV1"
     ],
-    "UpdateTaskLib": [
+    "UseLocalTaskLibAndCommonPackages": [
         "AndroidSigningV2",
         "AndroidSigningV3",
         "ANTV1",
-        "AppCenterDistributeV1",
+        "Not compiling yet: AppCenterDistributeV1",
         "AppCenterDistributeV2",
         "AppCenterDistributeV3",
         "AppCenterTestV1",

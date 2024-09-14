@@ -208,13 +208,13 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
     // build task-lib
     cd(taskLibPath);
-    run("node make.js build");
+    run("node make.js build", /*inheritStreams:*/true);
 
     
     await util.installNodeAsync('20');
     // build task-lib
     cd(tasksCommonPath);
-    run("node make.js --build");
+    run("node make.js --build", /*inheritStreams:*/true);
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
