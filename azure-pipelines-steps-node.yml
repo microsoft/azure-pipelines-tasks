@@ -8,6 +8,10 @@ steps:
   inputs:
     versionSpec: $(nodeVersion)
 
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
 - script: npm ci
   displayName: (task-lib) npm ci
   workingDirectory: node
@@ -39,6 +43,10 @@ steps:
       command: build
       projects: 'powershell/CompiledHelpers/VstsTaskSdk.csproj'
       arguments: '--configuration Release'
+
+  - task: NpmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
 
   - script: npm ci
     displayName: (VstsTaskSdk) npm ci
