@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -37,23 +37,23 @@ const stdOuts = [
 
 export function getDefaultKeychainPathTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
         });
     });
 
     after(() => {
-        mockery.disable();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterAll();
+        mocker.deregisterAll();
     });
 
     for (let i = 0; i < stdOuts.length; i++) {
@@ -61,7 +61,7 @@ export function getDefaultKeychainPathTest() {
             tmAnswers['exec']['path/to/security default-keychain']['stdout'] = stdOuts[i];
             tlClone.setAnswers(tmAnswers);
 
-            mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+            mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
             let iosSigning = require("../ios-signing-common");
           
             iosSigning.getDefaultKeychainPath().

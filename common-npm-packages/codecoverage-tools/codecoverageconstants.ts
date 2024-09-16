@@ -82,6 +82,61 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 }`;
 }
 
+// Enable Jacoco Code Coverage for multi-module Gradle projects (for Gradle version 6 and higher). 
+export function jacocoGradleMultiModuleEnableV2(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
+  return `
+allprojects {
+  repositories {
+      mavenCentral()
+  }
+
+  apply plugin: 'jacoco'
+}
+
+def jacocoExcludes = [${excludeFilter}]
+def jacocoIncludes = [${includeFilter}]
+
+subprojects {
+  jacocoTestReport {
+      afterEvaluate {
+          classDirectories.setFrom files(
+                  fileTree(dir: "${classFileDirectory}", exclude: jacocoExcludes, include: jacocoIncludes)
+          )
+      }
+      reports {
+          html.required = true
+          html.destination file("\${buildDir}/jacocoHtml")
+          xml.required = true
+          xml.destination file("\${buildDir}/summary.xml")
+      }
+  }
+  test {
+      jacoco {
+          destinationFile = file("${reportDir}/jacoco.exec")
+      }
+  }
+}
+task jacocoRootReport(type: JacocoReport) {
+  dependsOn = subprojects.test
+  executionData.setFrom files(subprojects.jacocoTestReport.executionData)
+  sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories.setFrom files(subprojects.sourceSets.main.output)
+  afterEvaluate {
+      classDirectories.setFrom(
+              files(classDirectories.files.collect {
+                  fileTree(dir: it, exclude: jacocoExcludes)
+              })
+      )
+  }
+  reports {
+      html.required = true
+      xml.required = true
+      xml.destination file("${reportDir}/summary.xml")
+      html.destination file("${reportDir}/")
+  }
+}`;
+}
+
 export function jacocoGradleSingleModuleEnable(
     excludeFilter: string,
     includeFilter: string,
@@ -122,6 +177,7 @@ test {
 }`;
 }
 
+// Enable Jacoco Code Coverage for single-module Gradle projects (for Gradle version 6 and higher). 
 export function jacocoGradleSingleModuleEnableV2(
     excludeFilter: string,
     includeFilter: string,
@@ -149,8 +205,8 @@ jacocoTestReport {
     }
 
     reports {
-        html.enabled = true
-        xml.enabled = true
+        html.required = true
+        xml.required = true
         xml.destination file("${reportDir}/summary.xml")
         html.destination file("${reportDir}")
     }

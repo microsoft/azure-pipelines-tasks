@@ -9,8 +9,9 @@ export function AzureAppServiceMockTests(defaultTimeout = 2000) {
         let tp = path.join(__dirname, 'azure-arm-app-service-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
-        try {
-            tr.run();
+        
+        tr.runAsync()
+        .then(() => {
             assert(tr.succeeded, "azure-arm-app-service-tests should have passed but failed.");
             console.log("\tvalidating start");
             start(tr);
@@ -46,17 +47,14 @@ export function AzureAppServiceMockTests(defaultTimeout = 2000) {
             getMetadata(tr);
             console.log("\tvalidating updateMetadata");
             updateMetadata(tr);
-        }
-        catch(error) {
+            done();
+        })
+        .catch((error) => {
             passed = false;
             console.log(tr.stdout);
             console.log(tr.stderr);
             done(error);
-        }
-
-        if(passed) {
-            done();
-        }
+        });
     });
 
 }

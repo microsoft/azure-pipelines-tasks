@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import * as mockery from "mockery";
+import * as mockery from "azure-pipelines-task-lib/lib-mocker";
 import * as path from "path";
 
 export function runCopyDirectoryTests(): void {

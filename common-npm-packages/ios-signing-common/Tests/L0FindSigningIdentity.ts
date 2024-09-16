@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -19,7 +19,7 @@ const tmAnswers = {
     },
     'exec': {
         'path/to/security find-identity -v -p codesigning ': {
-            "code": 1,
+            "code": 0,
             "stdout": null
         }
     }
@@ -38,35 +38,35 @@ const stdOuts = [
 
 export function findSigningIdentityTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
-        } as mockery.MockeryEnableArgs);
+        });
     });
 
     after(() => {
-        mockery.deregisterAll();
-        mockery.disable();
+        mocker.deregisterAll();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterMock('azure-pipelines-task-lib/task');
+        mocker.deregisterMock('azure-pipelines-task-lib/task');
     });
 
     it(`Shoud throw error on incorrect path`, (done: MochaDone) => {
         tlClone.setAnswers(tmAnswers);
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
         let iosSigning = require("../ios-signing-common");
 
         iosSigning.findSigningIdentity('').
             then(res => done(res)).
             catch(err => {
-                assert.ok(err instanceof Error);
+                assert.ok(err.includes("SignIdNotFound"));
                 done();
             });
     });
@@ -82,7 +82,7 @@ export function findSigningIdentityTest() {
 
         it(`Shoud return correct value for plist path ${keychainPath}`, (done: MochaDone) => {
             tlClone.setAnswers(tmAnswers);
-            mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+            mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
             let iosSigning = require("../ios-signing-common");
 
             iosSigning.findSigningIdentity(keychainPath).

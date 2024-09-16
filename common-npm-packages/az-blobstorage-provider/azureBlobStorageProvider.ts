@@ -9,6 +9,7 @@ import store = require('artifact-engine/Store');
 import tl = require('azure-pipelines-task-lib/task');
 import { BlobItem, BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
 import abortController = require("@azure/abort-controller");
+import {ConnectedServiceTokenCredential } from "./ConnectedSeviceTokenCredential"
 
 const resourcePath: string = path.join(__dirname, 'module.json');
 tl.setResourcePath(resourcePath);
@@ -24,11 +25,15 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _containerClient: ContainerClient;
     private _blobServiceClient: BlobServiceClient;
     private _addPrefixToDownloadedItems: boolean = false;
+    private _useCredential: boolean = false;
+    private _endpoint: any;
 
-    constructor(storageAccount: string, containerName: string, accessKey: string, prefixFolderPath?: string, host?: string, addPrefixToDownloadedItems?: boolean) {
+    constructor(storageAccount: string, containerName: string, accessKey: string, prefixFolderPath?: string, host?: string, addPrefixToDownloadedItems?: boolean, useCredential?: boolean, endpoint?: any) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
         this._containerName = containerName;
+        this._useCredential = useCredential;
+        this._endpoint = endpoint;
 
         if (!!prefixFolderPath) {
             this._prefixFolderPath = prefixFolderPath.endsWith("/") ? prefixFolderPath : prefixFolderPath + "/";
@@ -37,9 +42,14 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         }
 
         const sharedKeyCredential = new StorageSharedKeyCredential(this._storageAccount, this._accessKey);
-
-        this._blobServiceClient = new BlobServiceClient(this.getStorageUrl(this._storageAccount), sharedKeyCredential);
-
+        if(this._useCredential)
+        {
+            const credentialT = new ConnectedServiceTokenCredential(this._endpoint, this.getStorageUrl(this._storageAccount));
+            this._blobServiceClient = new BlobServiceClient(this.getStorageUrl(this._storageAccount), credentialT);
+        }
+        else{
+            this._blobServiceClient = new BlobServiceClient(this.getStorageUrl(this._storageAccount), sharedKeyCredential);
+        }
         this._containerClient = this._blobServiceClient.getContainerClient(this._containerName);
 
         this._addPrefixToDownloadedItems = !!addPrefixToDownloadedItems;
@@ -52,7 +62,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         console.log(tl.loc("UploadingItem", blobPath));
 
         const blockBlobClient = this._containerClient.getBlockBlobClient(blobPath);
-
+        
         try {
             const bufferSize = 8 * 1024 * 1024;
             const maxConcurrency = 20;

@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-java-common",
-    "version": "2.219.1",
+    "version": "2.245.0",
     "description": "Azure Pipelines tasks Java Common",
     "main": "java-common.js",
     "scripts": {
@@ -18,10 +18,10 @@
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
         "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
         "@types/semver": "^7.3.3",
-        "semver": "^7.3.2",
-        "azure-pipelines-task-lib": "^3.1.0",
-        "@types/node": "^10.17.0"
+        "azure-pipelines-task-lib": "^4.17.0",
+        "semver": "^7.3.2"
     },
     "devDependencies": {
         "typescript": "4.0.2"

@@ -4,12 +4,12 @@ import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 
 export function ApplicationInsightsTests() {
-    it('azure-arm-appinsights AzureApplicationInsights', (done: MochaDone) => {
+    it('azure-arm-appinsights AzureApplicationInsights', async () => {
         let tp = path.join(__dirname, 'azure-arm-appinsights-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
         try {
-            tr.run();
+            await tr.runAsync();
             assert(tr.succeeded, "azure-arm-appinsights should have passed but failed.");
             console.log("\tvalidating get");
             get(tr);
@@ -20,11 +20,7 @@ export function ApplicationInsightsTests() {
             passed = false;
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done(error);
-        }
-
-        if(passed) {
-            done();
+            throw error;
         }
     });
 }

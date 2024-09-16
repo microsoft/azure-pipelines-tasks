@@ -25,7 +25,7 @@ export class AzureApplicationInsightsTests {
             tl.setResult(tl.TaskResult.Failed, 'AzureApplicationInsightsTests.get() should have failed but passed.');
         }
         catch(error) {
-            tl.error(error);            
+            tl.error(error);
         }
     }
 

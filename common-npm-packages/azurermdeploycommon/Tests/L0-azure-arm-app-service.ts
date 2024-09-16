@@ -4,12 +4,12 @@ import tl = require('azure-pipelines-task-lib/task');
 import * as path from 'path';
 
 export function AzureAppServiceMockTests() {
-    it('azure-arm-app-service AzureAppService', (done: MochaDone) => {
+    it('azure-arm-app-service AzureAppService', async () => {
         let tp = path.join(__dirname, 'azure-arm-app-service-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
         try {
-            tr.run();
+            await tr.runAsync();
             assert(tr.succeeded, "azure-arm-app-service-tests should have passed but failed.");
             console.log("\tvalidating start");
             start(tr);
@@ -44,11 +44,7 @@ export function AzureAppServiceMockTests() {
             passed = false;
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done(error);
-        }
-
-        if(passed) {
-            done();
+            throw error;
         }
     });
 

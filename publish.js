@@ -17,7 +17,7 @@ async function publishPackages(packages) {
                 const npmrc = `//registry.npmjs.org/:_authToken=\${NPM_TOKEN}`;
                 console.log(`Writing .npmrc: ${npmrc}`);
                 fs.writeFileSync('.npmrc', npmrc);
-                util.run('npm publish');
+                util.run('npm publish --registry https://registry.npmjs.org/');
                 await releaseNotes.createReleaseNotes(package, 'main');
             }
             catch(ex) {

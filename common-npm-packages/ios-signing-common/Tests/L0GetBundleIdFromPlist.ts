@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -40,28 +40,28 @@ const stdOuts = [
 
 export function getBundleIdFromPlistTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
-        } as mockery.MockeryEnableArgs);
+        });
     });
 
     after(() => {
-        mockery.disable();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterAll();
+        mocker.deregisterAll();
     });
 
     it(`Shoud return null on empty parameters`, (done: MochaDone) => {
         tlClone.setAnswers(tmAnswers);
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
         let iosSigning = require("../ios-signing-common");
         
         iosSigning.getBundleIdFromPlist().
@@ -83,7 +83,7 @@ export function getBundleIdFromPlistTest() {
 
         it(`Shoud return correct value for plist path ${plistPath}`, (done: MochaDone) => {
             tlClone.setAnswers(tmAnswers);
-            mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+            mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
             let iosSigning = require("../ios-signing-common");
 
             iosSigning.getBundleIdFromPlist(plistPath).
