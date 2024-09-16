@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-codecoverage-tools",
-  "version": "3.242.0",
+  "version": "3.245.1",
   "author": "Microsoft Corporation",
   "description": "VSTS Tasks Code Coverage Tools",
   "license": "MIT",
@@ -11,12 +11,13 @@
     "@types/cheerio": "0.22.0",
     "@types/node": "^10.17.0",
     "@types/q": "^1.5.4",
-    "azure-pipelines-task-lib": "^3.1.0",
+    "azure-pipelines-task-lib": "^4.17.0",
     "cheerio": "1.0.0-rc.6",
     "fs-extra": "^0.30.0",
     "mocha": "^10.5.1",
     "os": "^0.1.1",
     "rewire": "^6.0.0",
+    "semver": "^7.5.4",
     "sinon": "^14.0.0",
     "strip-bom": "^3.0.0",
     "xml2js": "^0.6.2"

@@ -4,12 +4,13 @@ import * as path from 'path';
 
 export function KuduServiceTests(defaultTimeout = 2000) {
     it('azure-arm-app-service-kudu Kudu', function (done: Mocha.Done) {
+        process.env['SYSTEM_DEBUG'] = 'true';
         this.timeout(defaultTimeout);
         let tp = path.join(__dirname, 'azure-arm-app-service-kudu-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
-        try {
-            tr.run();
+        tr.runAsync()
+        .then(() => {
             assert(tr.succeeded, "azure-arm-app-service-kudu-tests should have passed but failed.");
             console.log("\tvalidating updateDeployment");
             updateDeployment(tr);
@@ -47,17 +48,14 @@ export function KuduServiceTests(defaultTimeout = 2000) {
             zipDeploy(tr);
             console.log("\tvalidating deleteFile");
             deleteFile(tr);
-        }
-        catch(error) {
+            done();
+        })
+        .catch((error) => {
             passed = false;
             console.log(tr.stdout);
             console.log(tr.stderr);
             done(error);
-        }
-
-        if(passed) {
-            done();
-        }
+        });
     });
 }
 

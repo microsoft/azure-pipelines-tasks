@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-webdeployment-common",
-    "version": "4.243.1",
+    "version": "4.245.0",
     "description": "Common Lib for MSDeploy Utility",
     "repository": {
         "type": "git",
@@ -33,7 +33,6 @@
     "devDependencies": {
         "@types/semver": "^7.5.4",
         "@types/winreg": "^1.2.34",
-        "mocha": "^6.2.3",
         "nyc": "^15.1.0",
         "typescript": "4.0.2"
     }

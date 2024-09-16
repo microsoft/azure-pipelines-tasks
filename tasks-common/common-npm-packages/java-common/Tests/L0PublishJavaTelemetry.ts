@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -14,24 +14,24 @@ tlClone.getVariable = variable => {
 
 export function publishJavaTelemetryTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
-        } as mockery.MockeryEnableArgs);
+        });
     });
 
     after(() => {
-        mockery.deregisterAll();
-        mockery.disable();
+        mocker.deregisterAll();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterMock('azure-pipelines-task-lib/task');
+        mocker.deregisterMock('azure-pipelines-task-lib/task');
     });
 
     it('Should print to console if taskName and javaTelemetryData are provided and Agent.Version >= 2.120', () => {
@@ -40,7 +40,7 @@ export function publishJavaTelemetryTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
 
         const originalConsole = console.log
         console.log = function (msg) {
@@ -62,7 +62,7 @@ export function publishJavaTelemetryTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
 
         const javaCommon = require("../java-common");
         javaCommon.publishJavaTelemetry(null, 'test');
@@ -76,7 +76,7 @@ export function publishJavaTelemetryTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
 
         const javaCommon = require("../java-common");
         javaCommon.publishJavaTelemetry('testTask', null);
@@ -90,7 +90,7 @@ export function publishJavaTelemetryTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task',
+        mocker.registerMock('azure-pipelines-task-lib/task',
             Object.assign(tlClone, {
                 // Modify method at the end of tests, because properties are mutable
                 getVariable: variable => {
@@ -112,7 +112,7 @@ export function publishJavaTelemetryTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task',
+        mocker.registerMock('azure-pipelines-task-lib/task',
             Object.assign(tlClone, {
                 getVariable: variable => {
                     if (variable.toLowerCase() === 'agent.version') throw new Error('some test error');

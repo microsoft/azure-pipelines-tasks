@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -19,29 +19,29 @@ tlClone.setStdStream({
 
 export function getTempKeychainPathTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
         });
     });
 
     after(() => {
-        mockery.disable();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(function () {
-        mockery.deregisterAll();
+        mocker.deregisterAll();
     });
 
     it("should return correct keychain path", (done: MochaDone) => {
         const resultPath = tlClone.resolve(tlClone.getVariable('agent.tempdirectory'), 'ios_signing_temp.keychain');
 
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
         let iosSigning = require("../ios-signing-common");
 
         assert.ok(iosSigning.getTempKeychainPath().indexOf(resultPath) >= 0);

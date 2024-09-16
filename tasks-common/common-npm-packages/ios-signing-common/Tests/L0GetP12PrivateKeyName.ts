@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -37,24 +37,24 @@ const createOpenSSlCommand = (p12CertPath, p12Pwd, frendlyName, addOutput, opens
 
 export function getP12PrivateKeyNameTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
-        } as mockery.MockeryEnableArgs);
+        });
     });
 
     after(() => {
-        mockery.deregisterAll();
-        mockery.disable();
+        mocker.deregisterAll();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterMock('azure-pipelines-task-lib/task');
+        mocker.deregisterMock('azure-pipelines-task-lib/task');
     });
 
     for (let i = 0; i < stdOuts.length; i++) {
@@ -72,7 +72,7 @@ export function getP12PrivateKeyNameTest() {
                 write: (msg) => taskOutput += msg
             });
 
-            mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+            mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
             let iosSigning = require("../ios-signing-common");
             const openPksRes = opensslPkcsArgs ? `,"${opensslPkcsArgs || ''}"` : '';
             iosSigning.getP12PrivateKeyName(p12CertPath, p12Pwd, opensslPkcsArgs).

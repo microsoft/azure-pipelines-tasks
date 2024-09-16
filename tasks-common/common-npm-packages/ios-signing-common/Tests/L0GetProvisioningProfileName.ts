@@ -1,4 +1,4 @@
-import * as mockery from "mockery";
+import * as mocker from "azure-pipelines-task-lib/lib-mocker";
 import * as assert from "assert";
 
 import { setToolProxy } from "./utils"
@@ -41,24 +41,24 @@ const tmAnswers = {
 
 export function getProvisioningProfileNameTest() {
     before(() => {
-        mockery.disable();
-        mockery.enable({
+        mocker.disable();
+        mocker.enable({
             useCleanCache: true,
             warnOnUnregistered: false
-        } as mockery.MockeryEnableArgs);
+        });
     });
 
     after(() => {
-        mockery.deregisterAll();
-        mockery.disable();
+        mocker.deregisterAll();
+        mocker.disable();
     });
 
     beforeEach(() => {
-        mockery.resetCache();
+        mocker.resetCache();
     });
 
     afterEach(() => {
-        mockery.deregisterMock('azure-pipelines-task-lib/task');
+        mocker.deregisterMock('azure-pipelines-task-lib/task');
     });
 
     it(`Shoud return correct Provisioning Profile Name`, (done: MochaDone) => {
@@ -68,7 +68,7 @@ export function getProvisioningProfileNameTest() {
             write: (msg) => taskOutput += msg
         });
 
-        mockery.registerMock('azure-pipelines-task-lib/task', tlClone);
+        mocker.registerMock('azure-pipelines-task-lib/task', tlClone);
         let iosSigning = require("../ios-signing-common");
 
         iosSigning.getProvisioningProfileName('some/test/path').

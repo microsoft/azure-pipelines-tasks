@@ -3,12 +3,12 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 
 export function KuduServiceTests() {
-    it('azure-arm-app-service-kudu Kudu', (done: MochaDone) => {
+    it('azure-arm-app-service-kudu Kudu', async () => {
         let tp = path.join(__dirname, 'azure-arm-app-service-kudu-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
         try {
-            tr.run();
+            await tr.runAsync();
             assert(tr.succeeded, "azure-arm-app-service-kudu-tests should have passed but failed.");
             console.log("\tvalidating updateDeployment");
             updateDeployment(tr);
@@ -51,11 +51,7 @@ export function KuduServiceTests() {
             passed = false;
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done(error);
-        }
-
-        if(passed) {
-            done();
+            throw error;
         }
     });
 }

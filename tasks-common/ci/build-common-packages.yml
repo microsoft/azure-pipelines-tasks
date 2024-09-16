@@ -11,6 +11,10 @@ jobs:
     inputs:
       versionSpec: "16.x"
 
+  - task: NpmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
+
   - script: npm i -g npm@8.19.4 --force
     displayName: Use npm version 8.19.4
 

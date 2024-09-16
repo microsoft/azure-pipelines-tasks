@@ -56,7 +56,7 @@ if (options.test) {
     const gitkeepName = '.gitkeep';
     const junitPath = path.join(testResultsPath, 'junit');
     const coveragePath = path.join(testResultsPath, 'coverage');
-
+    process.env['SYSTEM_DEBUG'] = true;
     console.log('Testing shared npm packages');
     util.cd('common-npm-packages');
     const suite = options.suite || defaultTestSuite;

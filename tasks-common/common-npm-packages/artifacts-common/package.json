@@ -1,6 +1,6 @@
 {
     "name": "azure-pipelines-tasks-artifacts-common",
-    "version": "2.245.0",
+    "version": "2.245.1",
     "description": "Azure Artifacts common code (for new authentication tasks)",
     "scripts": {
         "build": "cd ../build-scripts && npm install && cd ../artifacts-common && node make.js"
@@ -19,7 +19,7 @@
         "azure-pipelines-task-lib": "^4.13.0",
         "fs-extra": "8.1.0",
         "node-fetch": "^2.7.0",
-        "semver": "6.3.0"
+        "semver": "^6.3.1"
     },
     "devDependencies": {
         "@types/node-fetch": "^2.6.11",
