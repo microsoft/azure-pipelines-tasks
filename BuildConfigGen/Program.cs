@@ -479,28 +479,34 @@ namespace BuildConfigGen
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
 
-        private static bool VersionIsGreaterThan(string version1, string version2)
+        private static bool VersionIsGreaterThan(string originVersion, string buildConfigVersion)
         {
-            const string versionRE = @"(\d+)\.(\d+)\.(\d+)";
-            var originMatch = Regex.Match(version1, versionRE);
-            var generatedMatch = Regex.Match(version2, versionRE);
+            if(buildConfigVersion.StartsWith("^"))
+            {
+                // if buildConfig version starts with ^, it's always up to date
+                return false;
+            }
 
-            if (originMatch.Success && generatedMatch.Success)
+            const string versionRE = @"(\d+)\.(\d+)\.(\d+)";
+            var originMatch = Regex.Match(originVersion, versionRE);
+            var buildConfigMatch = Regex.Match(buildConfigVersion, versionRE);
+
+            if (originMatch.Success && buildConfigMatch.Success)
             {
                 var originDependencyVersion = Version.Parse($"{originMatch.Groups[1].Value}.{originMatch.Groups[2].Value}.{originMatch.Groups[3].Value}");
-                var generatedDependencyVersion = Version.Parse($"{generatedMatch.Groups[1].Value}.{generatedMatch.Groups[2].Value}.{generatedMatch.Groups[3].Value}");
+                var generatedDependencyVersion = Version.Parse($"{buildConfigMatch.Groups[1].Value}.{buildConfigMatch.Groups[2].Value}.{buildConfigMatch.Groups[3].Value}");
                 return originDependencyVersion.CompareTo(generatedDependencyVersion) > 0;
             }
             else
             {
                 if(!originMatch.Success)
                 {
-                    Console.WriteLine($"VersionIsGreaterThan: {version1} doesn't look like a version");
+                    Console.WriteLine($"VersionIsGreaterThan: {originVersion} doesn't look like a version");
                 }
 
-                if (!generatedMatch.Success)
+                if (!buildConfigMatch.Success)
                 {
-                    Console.WriteLine($"VersionIsGreaterThan: {version1} doesn't look like a version");
+                    Console.WriteLine($"VersionIsGreaterThan: {buildConfigVersion} doesn't look like a version");
                 }
             }
 
@@ -530,15 +536,23 @@ namespace BuildConfigGen
                 var buildConfigTaskDependencies = buildConfigTaskPackage["dependencies"];
                 NotNullOrThrow(buildConfigTaskDependencies, $"BUG: buildConfigs dependencies in {task} is null");
                 string? buildConfigDependencyVersion = buildConfigTaskDependencies[originDependency.Key]?.ToString();
-                
+
                 if (buildConfigDependencyVersion is null) {
                     notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {task} is missing in buildConfig's package.json");
                     continue;
                 }
 
-                if (VersionIsGreaterThan(originVersion, buildConfigDependencyVersion))
+                if (buildConfigDependencyVersion.StartsWith("file:") // skip if config package is file reference
+                    )
                 {
-                    notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {generatedPackagePath} has {buildConfigDependencyVersion} version and should be updated to {originVersion} as in {originPackagePath}");
+                    // do nothing
+                }
+                else
+                {
+                    if (VersionIsGreaterThan(originVersion, buildConfigDependencyVersion))
+                    {
+                        notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {generatedPackagePath} has {buildConfigDependencyVersion} version and should be updated to {originVersion} as in {originPackagePath}");
+                    }
                 }
             }
         }
