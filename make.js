@@ -102,6 +102,18 @@ if (argv.task) {
 } else {
     // load the default list
     taskList = fileToJson(makeOptionsPath).tasks;
+
+    if (argv.skipToTask)
+    {
+        var skipToTaskIndex = taskList.indexOf(argv.skipToTask);
+
+        if (skipToTaskIndex==-1)
+        {
+            fail('argv.skipToTask (' + argv.skipToTask + ') not found');
+        }
+
+        taskList = taskList.slice(skipToTaskIndex);
+    }
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -206,21 +218,27 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    // build task-lib
-    cd(taskLibPath);
-    run("node make.js build", /*inheritStreams:*/true);
+    if (!argv.skipPrebuildSteps)
+    {
+        // build task-lib
+        cd(taskLibPath);
+        run("node make.js build", /*inheritStreams:*/true);
 
-    
-    await util.installNodeAsync('20');
-    // build task-lib
-    cd(tasksCommonPath);
-    run("node make.js --build", /*inheritStreams:*/true);
+        
+        await util.installNodeAsync('20');
+        // build task-lib
+        cd(tasksCommonPath);
+        run("node make.js --build", /*inheritStreams:*/true);
+    }
 
     // Need to validate generated tasks first
-    const makeOptions = fileToJson(makeOptionsPath);
+    if (!argv.skipPrebuildSteps)
+    {
+        const makeOptions = fileToJson(makeOptionsPath);
 
-    // Verify generated files across tasks are up-to-date
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
+        // Verify generated files across tasks are up-to-date
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
+    }
 
     const allTasks = getTaskList(taskList);
 
