@@ -26,10 +26,23 @@ export class AzureStorageArtifactDownloader {
     try {
       console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
-      const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
+      // TODO: Check if this.connectedService is the right parameter for AzureRMEndpoint
+      const endpointObject = await new AzureRMEndpoint(this.connectedService).getEndpoint();
+      let useWorkloadIdentityFederation = endpointObject.scheme === 'WorkloadIdentityFederation';
 
-      const blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
+      // Storage account details being fetched with Azure Resource Manager Service Connection
+      const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails(!useWorkloadIdentityFederation);
 
+      let blobService: BlobService.BlobService;
+
+      if (useWorkloadIdentityFederation) {
+        // Construct Blob Service using Workload Identity Federation
+        blobService = new BlobService.BlobService(storageAccount.name, null, null, true, endpointObject);
+      }
+      else {
+        // Construct Blob Service using Storage Account Access key
+        blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey, null, false, null);
+      }
       await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
 
     } catch (e) {
@@ -38,7 +51,7 @@ export class AzureStorageArtifactDownloader {
     }
   }
 
-  private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
+  private async _getStorageAccountDetails(fetchStorageAccountKeys: boolean): Promise<StorageAccountInfo> {
     tl.debug("Getting storage account details for " + this.azureStorageAccountName);
 
     const subscriptionId: string = tl.getEndpointDataParameter(this.connectedService, "subscriptionId", false);
@@ -53,51 +66,57 @@ export class AzureStorageArtifactDownloader {
     if (this.azureResourceGroupName) {
       tl.debug("Group name is provided. Using fast query to get storage account details.");
       storageAccount = await this._getStorageAccountWithResourceGroup(storageArmClient, this.azureResourceGroupName, this.azureStorageAccountName);
-    } 
+    }
 
     if (!storageAccount) {
       tl.debug("Group name is not provided or fast query failed. Using legacy query to get storage account details.");
       storageAccount = isUseOldStorageAccountQuery
         ? await this._legacyGetStorageAccount(storageArmClient)
         : await this._getStorageAccount(storageArmClient);
-    
     }
 
     const storageAccountResourceGroupName = armStorage.StorageAccounts.getResourceGroupNameFromUri(storageAccount.id);
 
-    tl.debug("Listing storage access keys...");
-    const accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, this.azureStorageAccountName, null, storageAccount.type);
+    let primaryAccessKey: string = null;
+    if (fetchStorageAccountKeys) {
+      tl.debug("Listing Storage Account Access Key(s)...");
+      const accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, this.azureStorageAccountName, null, storageAccount.type);
+      primaryAccessKey = accessKeys[0];
+    }
+    else {
+      tl.debug("Skipped fetching of Storage Account Access Key(s)...");
+    }
 
     return <StorageAccountInfo>{
       name: this.azureStorageAccountName,
       resourceGroupName: storageAccountResourceGroupName,
-      primaryAccessKey: accessKeys[0]
+      primaryAccessKey: primaryAccessKey // Might be null
     }
   }
 
   private async _legacyGetStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
-      const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
-      const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
-      if (index < 0) {
-        throw new Error(tl.loc("StorageAccountDoesNotExist", this.azureStorageAccountName));
-      }
+    const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
+    const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
+    if (index < 0) {
+      throw new Error(tl.loc("StorageAccountDoesNotExist", this.azureStorageAccountName));
+    }
 
-      return storageAccounts[index];
+    return storageAccounts[index];
   }
 
   private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
-      const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
+    const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
 
-      if (!storageAccount) {
-        throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
-      }
+    if (!storageAccount) {
+      throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
+    }
 
-      return storageAccount;
+    return storageAccount;
   }
 
   private async _getStorageAccountWithResourceGroup(storageArmClient: armStorage.StorageManagementClient, resourceGroupName: string, storageAccountName: string): Promise<Model.StorageAccount | undefined> {
     let storageAccount = undefined;
-    
+
     try {
       storageAccount = await storageArmClient.storageAccounts.getStorageAccountProperties(resourceGroupName, storageAccountName);
     } catch (e) {
