@@ -1,6 +1,6 @@
 {
-  "id": "04fc3ed1-4513-4f38-b0fe-5a15864bfa9c",
-  "name": "AzureAppConfigurationPush",
+  "id": "fd186364-adb5-43c0-91ea-c5f9daa5b747",
+  "name": "AzureAppConfigurationImport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline",
@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 245,
-    "Patch": 1
+    "Minor": 246,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "minimumAgentVersion": "2.144.0",
