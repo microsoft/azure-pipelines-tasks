@@ -166,7 +166,7 @@
   ],
   "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "execution": {
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     },
