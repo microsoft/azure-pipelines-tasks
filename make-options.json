@@ -375,6 +375,7 @@
     ],
     "Node20_229_6": [
         "AzureVmssDeploymentV0",
+        "AzureVmssDeploymentV1",
         "PackerBuildV0",
         "PackerBuildV1"
     ],
