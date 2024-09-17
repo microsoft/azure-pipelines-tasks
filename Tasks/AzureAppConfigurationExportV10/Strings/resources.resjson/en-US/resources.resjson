@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure App Configuration",
+  "loc.friendlyName": "Azure App Configuration Export",
   "loc.helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
   "loc.description": "Download key-values to task variables from Azure App Configuration",
   "loc.instanceNameFormat": "Azure App Configuration",
