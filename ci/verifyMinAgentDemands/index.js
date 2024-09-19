@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const semver = require('semver');
 const tl = require('azure-pipelines-task-lib/task');
-const { pat } = require('minimist')(process.argv.slice(2));
+const pat = process.env.GITHUB_PAT;
 
 const fileToJson = (...filePath) => {
     const file = path.join(...filePath);
