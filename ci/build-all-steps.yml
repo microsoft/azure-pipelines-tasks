@@ -109,7 +109,12 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), and(ne(variables['numTasks'], 0), eq(variables['weekly_run'], False)))
+
+# Build Tasks 
+- script: node make.js serverBuild
+  displayName: Build Tasks
+  condition: and(succeeded(), eq(variables['weekly_run'], True))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
@@ -128,7 +133,8 @@ steps:
       succeeded(),
       ne(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['COURTESY_PUSH'], 'true'),
-      ne(variables['numTasks'], 0)
+      ne(variables['numTasks'], 0),
+      ne(variables['weekly_run'], True)
     )
 
 # Only on Windows:
@@ -141,7 +147,8 @@ steps:
       and(
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
+        ne(variables['numTasks'], 0),
+        ne(variables['weekly_run'], True)
       )
 
   # Sign all task zips as nuget packages
@@ -156,16 +163,22 @@ steps:
       and(
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
+        ne(variables['numTasks'], 0),
+        ne(variables['weekly_run'], True)
       )
 
 # Test
 - script: node make.js test
   displayName: Run tests
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: |
+    and(
+      succeeded(),
+      ne(variables['numTasks'], 0),
+      ne(variables['weekly_run'], True)
+    )
 - script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['weekly_run'], True))
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
