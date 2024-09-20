@@ -29,7 +29,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateTaskLib = false);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateTaskLib = false, bool useGlobalVersion = false);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
@@ -52,7 +52,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
-            public static readonly ConfigRecord UseLocalTaskLibAndCommonPackages = new ConfigRecord(name: nameof(UseLocalTaskLibAndCommonPackages), constMappingKey: "UseLocalTaskLibAndCommonPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UseLocalTaskLibAndCommonPackages", writeNpmrc: true, shouldUpdateTaskLib: true);
+            public static readonly ConfigRecord UseLocalTaskLibAndCommonPackages = new ConfigRecord(name: nameof(UseLocalTaskLibAndCommonPackages), constMappingKey: "UseLocalTaskLibAndCommonPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UseLocalTaskLibAndCommonPackages", writeNpmrc: true, shouldUpdateTaskLib: true, useGlobalVersion: true);
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, UseLocalTaskLibAndCommonPackages };
         }
 
@@ -386,7 +386,8 @@ namespace BuildConfigGen
 
             string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated);
+            TaskVersion globalVersion = GetGlobalVersion(gitRootPath);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, globalVersion);
 
             var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
             if (duplicateVersions.Any())
@@ -909,8 +910,7 @@ namespace BuildConfigGen
             }
         }
 
-
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, TaskVersion globalVersion)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -1021,19 +1021,59 @@ namespace BuildConfigGen
                 {
                     if (!config.isDefault && !configTaskVersionMapping.ContainsKey(config))
                     {
-                        TaskVersion targetVersion;
-                        do
+                        if (config.useGlobalVersion)
                         {
-                            targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);
-                            offset++;
+                            // global version is updated unconditionally below
                         }
-                        while (configTaskVersionMapping.Values.Contains(targetVersion));
+                        else
+                        {
+                            TaskVersion targetVersion;
 
-                        configTaskVersionMapping.Add(config, targetVersion);
-                        versionsUpdated.Add(config);
+                            do
+                            {
+                                targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);
+                                offset++;
+                            }
+                            while (configTaskVersionMapping.Values.Contains(targetVersion));
+
+                            configTaskVersionMapping.Add(config, targetVersion);
+                            versionsUpdated.Add(config);
+                        }
                     }
                 }
             }
+
+            foreach (var config in targetConfigs)
+            {
+                if (config.useGlobalVersion)
+                {
+                    if (configTaskVersionMapping.ContainsKey(config))
+                    {
+                        configTaskVersionMapping[config] = globalVersion;
+                    }
+                    else
+                    {
+                        configTaskVersionMapping.Add(config, globalVersion);
+                    }
+                }
+            }
+        }
+
+        private static TaskVersion GetGlobalVersion(string srcPath)
+        {
+            string path = Path.Combine(srcPath, @"globalversion.txt");
+            string globalVersionString = File.ReadAllText(path);
+
+            const string shortVersionRegex = @"^\d+\.\d+$";
+            Regex re = new Regex(shortVersionRegex);
+
+            if (!re.IsMatch(globalVersionString))
+            {
+                throw new Exception($"{path} doesn't contain expected content matching {shortVersionRegex}");
+            }
+
+            TaskVersion globalVersion = new TaskVersion("0." + globalVersionString);
+            return globalVersion;
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)

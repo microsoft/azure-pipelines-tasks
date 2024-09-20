@@ -80,6 +80,11 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         return new TaskVersion(Major, Minor, overridePatch);
     }
 
+    public TaskVersion CloneWithMajor(int major)
+    {
+        return new TaskVersion(major, Minor, Patch);
+    }
+
     public static implicit operator String(TaskVersion version)
     {
         return version.ToString();
