@@ -68,11 +68,12 @@ namespace BuildConfigGen
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
         /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null)
+        /// <param name="includeUseLocalTaskLibAndCommonPackages">Include includeUseLocalTaskLibAndCommonPackages config</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeUseLocalTaskLibAndCommonPackages = false)
         {
             try
             {
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeUseLocalTaskLibAndCommonPackages);
             }
             catch (Exception e2)
             {
@@ -90,7 +91,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir)
+        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir, bool includeUseLocalTaskLibAndCommonPackages)
         {
             if (allTasks)
             {
@@ -132,7 +133,7 @@ namespace BuildConfigGen
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen);
+                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
                 }
             }
             else
@@ -151,7 +152,7 @@ namespace BuildConfigGen
                         {
                             var taskMakeOptions = tasks[t];
                             var taskConfigs = string.Join('|', taskMakeOptions.Configs);
-                            MainUpdateTask(t, taskConfigs!, writeUpdates, currentSprint, debugConfGen);
+                            MainUpdateTask(t, taskConfigs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
                         }
                         else
                         {
@@ -161,7 +162,7 @@ namespace BuildConfigGen
                     else
                     {
                         // If configs was passed as arguments, just execute it
-                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
+                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
                     }
 
                     if (configs != null)
@@ -259,7 +260,8 @@ namespace BuildConfigGen
             string configsString,
             bool writeUpdates,
             int? currentSprint,
-            IDebugConfigGenerator debugConfigGen)
+            IDebugConfigGenerator debugConfigGen,
+            bool includeUseLocalTaskLibAndCommonPackages)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -286,7 +288,16 @@ namespace BuildConfigGen
                         errorMessage = "The config with the name: " + matchedConfig.name + " is deprecated. Writing updates for deprecated configs is not allowed.";
                         throw new Exception(errorMessage);
                     }
-                    targetConfigs.Add(matchedConfig);
+
+                    if (matchedConfig.shouldUpdateTaskLib && !includeUseLocalTaskLibAndCommonPackages)
+                    {
+                        Console.WriteLine("Skipping " + matchedConfig.name + " as --include-use-local-task-lib-and-common-packages not supplied");
+                    }
+                    else
+                    {
+                        targetConfigs.Add(matchedConfig);
+                    }
+
                 }
                 else
                 {
@@ -482,7 +493,7 @@ namespace BuildConfigGen
 
         private static bool VersionIsGreaterThan(string originVersion, string buildConfigVersion)
         {
-            if(buildConfigVersion.StartsWith("^"))
+            if (buildConfigVersion.StartsWith("^"))
             {
                 // if buildConfig version starts with ^, it's always up to date
                 return false;
@@ -500,7 +511,7 @@ namespace BuildConfigGen
             }
             else
             {
-                if(!originMatch.Success)
+                if (!originMatch.Success)
                 {
                     Console.WriteLine($"VersionIsGreaterThan: {originVersion} doesn't look like a version");
                 }
@@ -538,7 +549,8 @@ namespace BuildConfigGen
                 NotNullOrThrow(buildConfigTaskDependencies, $"BUG: buildConfigs dependencies in {task} is null");
                 string? buildConfigDependencyVersion = buildConfigTaskDependencies[originDependency.Key]?.ToString();
 
-                if (buildConfigDependencyVersion is null) {
+                if (buildConfigDependencyVersion is null)
+                {
                     notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {task} is missing in buildConfig's package.json");
                     continue;
                 }
