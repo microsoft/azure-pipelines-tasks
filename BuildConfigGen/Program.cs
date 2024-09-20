@@ -428,9 +428,9 @@ namespace BuildConfigGen
                 var taskConfigPath = Path.Combine(taskOutput, "task.json");
                 var taskConfigExists = File.Exists(taskConfigPath);
 
-                // only update task output if a new version was added, the config exists, or the task contains preprocessor instructions
+                // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
                 // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config))
+                if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config) || config.isNode)
                 {
                     CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
