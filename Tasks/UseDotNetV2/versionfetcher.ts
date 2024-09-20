@@ -12,6 +12,19 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
+#if NODE20
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
+
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
+#endif
+
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
     private channels: Channel[];
@@ -20,9 +33,14 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
+        const timeout = 60_000 * 5;
         var requestOptions: httpInterfaces.IRequestOptions = {
             allowRetries: true,
-            maxRetries: 3
+            maxRetries: 3,
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout
+            }
         };
 
         if (proxyUrl) {

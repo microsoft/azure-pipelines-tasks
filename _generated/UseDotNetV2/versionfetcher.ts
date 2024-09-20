@@ -12,6 +12,7 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
+
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
     private channels: Channel[];
@@ -20,9 +21,14 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
+        const timeout = 60_000 * 5;
         var requestOptions: httpInterfaces.IRequestOptions = {
             allowRetries: true,
-            maxRetries: 3
+            maxRetries: 3,
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout
+            }
         };
 
         if (proxyUrl) {
