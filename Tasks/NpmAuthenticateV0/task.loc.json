@@ -21,9 +21,6 @@
   "inputs": [
     {
       "name": "workingFile",
-      "aliases": [
-        "azureDevOpsServiceConnection"
-      ],
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
       "type": "filePath",
