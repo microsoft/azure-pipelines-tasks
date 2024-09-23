@@ -68,7 +68,17 @@ async function main(): Promise<void> {
         fs.writeFileSync(indexFile, JSON.stringify(npmrcTable));
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
-
+    
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
+    } catch (error) {
+        tl.debug('Unable to get packaging URIs');
+        util.logError(error);
+        throw error;
+    }
+    // Getting local registries will also save normalized registries in the npmrc
+    let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
     const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
@@ -129,23 +139,12 @@ async function main(): Promise<void> {
         }));
     }
 
-    let packagingLocation: pkgLocationUtils.PackagingLocation;
-    try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
-    } catch (error) {
-        tl.debug('Unable to get packaging URIs');
-        util.logError(error);
-        throw error;
-    }
-    let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
-
     let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
         if (endpointRegistries && endpointRegistries.length > 0) {
             for (let serviceEndpoint of endpointRegistries) {
-
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
