@@ -10,7 +10,7 @@
   "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
-  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+  "loc.input.help.feedUrl": "If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "Found build credentials",
   "loc.messages.NoBuildCredentials": "Could not find build credentials",
   "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",

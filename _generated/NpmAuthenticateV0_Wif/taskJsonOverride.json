@@ -15,7 +15,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts URL",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+      "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
       "type": "string",
       "defaultValue": "",
       "required": false
