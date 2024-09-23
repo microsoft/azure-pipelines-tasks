@@ -9,6 +9,8 @@ import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInter
 import constants = require('./constants');
 import { ITestResultsApi } from "azure-devops-node-api/TestResultsApi";
 
+const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
+
 export interface TestPlanData {
     listOfFQNOfTestCases: string[];
     testPlanId: number;
@@ -186,7 +188,7 @@ export async function getTestCaseListAsync(testPlanId: number, testSuiteId: numb
     let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
     let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
     let projectId = tl.getVariable('System.TeamProjectId');
-    let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
+    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
     let vsts: apim.WebApi = new apim.WebApi(url, auth);
     let testPlanApi = await vsts.getTestPlanApi();
 
@@ -278,7 +280,7 @@ export async function getTestResultApiClient(){
     let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
     let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
 
-    let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
+    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
     let vsts: apim.WebApi = new apim.WebApi(url, auth);
     let testResultsApi = await vsts.getTestResultsApi();
 
