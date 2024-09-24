@@ -1,4 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as path from 'path';
 
 const UNCPathPattern: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 
@@ -44,4 +45,21 @@ export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolea
         const cleanFilesInTarget: string = `sh -c "rm -rf '${targetFolder}'/${hiddenFilesClean}*"`;
         return cleanFilesInTarget;
     }
+}
+
+export function prepareFiles(filesToCopy: string[], sourceFolder: string, targetFolder: string, flattenFolders: boolean) {
+    return filesToCopy.map(x => {
+        let targetPath = path.posix.join(
+            targetFolder,
+            flattenFolders
+                ? path.basename(x)
+                : x.substring(sourceFolder.length).replace(/^\\/g, "").replace(/^\//g, "")
+        );
+
+        if (!path.isAbsolute(targetPath) && !pathIsUNC(targetPath)) {
+            targetPath = `./${targetPath}`;
+        }
+
+        return [x, unixyPath(targetPath)];
+    });
 }
