@@ -101,6 +101,18 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}{3}", Major, Minor, Patch, suffix);
     }
 
+
+    internal string MinorPatchToString()
+    {
+        String suffix = String.Empty;
+        if (IsTest)
+        {
+            throw new NotImplementedException();
+        }
+
+        return String.Format(CultureInfo.InvariantCulture, "{1}.{2}{3}", Major, Minor, Patch, suffix);
+    }
+
     public override int GetHashCode()
     {
         return this.ToString().GetHashCode();

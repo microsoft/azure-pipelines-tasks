@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -25,7 +24,7 @@ namespace BuildConfigGen
         private const string buildConfigs = "_buildConfigs";
         static readonly JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
-        static class Config
+        internal static class Config
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
@@ -78,6 +77,11 @@ namespace BuildConfigGen
             catch (Exception e2)
             {
                 // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
+                // error handling strategy:
+                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+
 
                 var restore = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -91,8 +95,30 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir, bool includeUseLocalTaskLibAndCommonPackages)
+        private static void ValidateGlobalVersion(int currentSprint)
         {
+            // the purpose of this method is to validate global version
+            // Global version is X.[sprint].[patch]
+            // Patch should be greater than any task with same sprint patch (+max buildconfig offset) to avoid conflicts
+            
+            // But what if a task version is updated?
+                // we should ensure task version updates don't collide with the global version (they should be offset by any existing global versions)
+                // global version should be incremented
+
+
+            // so we need to:
+                // enumerate tasks having UseLocalTaskLibAndCommonPackages config
+                // if sprint matches and patch is equal or greater than global patch for any config, then global patch needs to be updated
+                // we really need to check this after updating/validating task versions for other configs
+                // so processing / generating UseLocalTaskLibAndCommonPackages should occur last   
+                // so version info should be collected in UpdateVersions
+
+        }
+
+        private static void MainInner(string? task, string? configs, int? currentSprintNullable, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir, bool includeUseLocalTaskLibAndCommonPackages)
+        {
+            //ValidateGlobalVersion();
+
             if (allTasks)
             {
                 NullOrThrow(task, "If allTasks specified, task must not be supplied");
@@ -105,6 +131,12 @@ namespace BuildConfigGen
 
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
+            string globalVersionPath = Path.Combine(gitRootPath, @"globalversion.txt");
+
+            TaskVersion? globalVersion = GetGlobalVersion(gitRootPath, globalVersionPath);
+
             if (getTaskVersionTable)
             {
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
@@ -113,7 +145,7 @@ namespace BuildConfigGen
 
                 foreach (var t in tasks.Values)
                 {
-                    GetVersions(t.Name, string.Join('|', t.Configs), out var r);
+                    GetVersions(t.Name, string.Join('|', t.Configs), out var r, globalVersion);
 
                     foreach (var z in r)
                     {
@@ -128,20 +160,56 @@ namespace BuildConfigGen
                 ? new NoDebugConfigGenerator()
                 : new VsCodeLaunchConfigGenerator(gitRootPath, debugAgentDir);
 
+            int maxPatchForCurrentSprint = 0;
+
+            int currentSprint;
+            if (currentSprintNullable.HasValue)
+            {
+                currentSprint = currentSprintNullable.Value;
+            }
+            else
+            {
+                currentSprint = GetCurrentSprint();
+            }
+
+            Dictionary<string, TaskStateStruct> taskVersionInfo = [];
+
+
             if (allTasks)
             {
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+
                 foreach (var t in tasks.Values)
                 {
-                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
+                    MainInnerUpdateTaskVersions(taskVersionInfo, t.Name, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion);
+                }
+
+                foreach (var t in tasks.Values)
+                {
+                    MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t.Name, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, ref globalVersion);
+                }
+
+                ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
+
+                foreach (var t in tasks.Values)
+                {
+                    MainUpdateTask(taskVersionInfo[t.Name], t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages, versionMapFile);
                 }
             }
             else
             {
-                // error handling strategy:
-                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
-                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
-                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                foreach (var t in task!.Split(',', '|'))
+                {
+                    MainInnerUpdateTaskVersions(taskVersionInfo, t, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion);
+                }
+
+                foreach (var t in task!.Split(',', '|'))
+                {
+                    MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, ref globalVersion);
+                }
+
+                ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
+
                 foreach (var t in task!.Split(',', '|'))
                 {
                     // If config weren't passed, constract specific config for each task, otherwise we might have problems if first task has 2 configs, but the other 1,0 or diffrenet ones
@@ -152,7 +220,7 @@ namespace BuildConfigGen
                         {
                             var taskMakeOptions = tasks[t];
                             var taskConfigs = string.Join('|', taskMakeOptions.Configs);
-                            MainUpdateTask(t, taskConfigs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
+                            MainUpdateTask(taskVersionInfo[t], t, taskConfigs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages, versionMapFile);
                         }
                         else
                         {
@@ -162,11 +230,7 @@ namespace BuildConfigGen
                     else
                     {
                         // If configs was passed as arguments, just execute it
-                        MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages);
-                    }
-
-                    if (configs != null)
-                    {
+                        MainUpdateTask(taskVersionInfo[t], t, configs!, writeUpdates, currentSprint, debugConfGen, includeUseLocalTaskLibAndCommonPackages, versionMapFile);
                     }
                 }
             }
@@ -177,6 +241,134 @@ namespace BuildConfigGen
             {
                 notSyncronizedDependencies.Insert(0, $"##vso[task.logissue type=error]There are problems with the dependencies in the buildConfig's package.json files. Please fix the following issues:");
                 throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
+            }
+        }
+
+        private static void MainInnerUpdateTaskVersions(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, string globalVersionPath, TaskVersion? globalVersion)
+        {
+            // logic -- if includeUseLocalTaskLibAndCommonPackages, then we want to create/update includeUseLocalTaskLibAndCommonPackages
+            // if !includeUseLocalTaskLibAndCommonPackages -- 
+            // global version NOT mapped to task mapping files
+            // however, if it exists, account for it when updating existing tasks
+
+            // populate version information
+            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersion, forGlobal: false);
+        }
+
+
+        private static void MainInnerUpdateTaskVersionsGlobal(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, string globalVersionPath, ref TaskVersion? globalVersion)
+        {
+            if (includeUseLocalTaskLibAndCommonPackages)
+            {
+                if (globalVersion is null)
+                {
+                    globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
+                }
+                else
+                {
+                    if (globalVersion.Minor == currentSprint)
+                    {
+                        globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, maxPatchForCurrentSprint);
+                        globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[task].configTaskVersionMapping[Config.Default].Major);
+                    }
+                    else
+                    {
+                        globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                        globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[task].configTaskVersionMapping[Config.Default].Major);
+                    }
+                }
+
+                // populate global verison information
+                MainInnerUpdateTaskVersionsInner(taskVersionInfo, task!, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersion, forGlobal: true);
+            }
+        }
+
+        private static void MainInnerUpdateTaskVersionsInner(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, TaskVersion? globalVersion, bool forGlobal)
+        {
+            // If config weren't passed, constract specific config for each task, otherwise we might have problems if first task has 2 configs, but the other 1,0 or diffrenet ones
+            if (configs == null)
+            {
+                foreach (var t in task!.Split(',', '|'))
+                {
+
+                    var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                    if (tasks.ContainsKey(t))
+                    {
+                        var taskMakeOptions = tasks[t];
+
+                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(tasks[t].Configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+
+                        UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersion, forGlobal);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Config was not found for the task: {t}, skipping");
+                    }
+                }
+            }
+            else
+            {
+                HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configs!.Split(',', '|'), writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+
+                UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersion, forGlobal);
+            }
+        }
+
+        private static void UpdateVersionsForTasks(Dictionary<string, TaskStateStruct> taskVersionInfo, string[] tasks, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs, ref int maxPatchForCurrentSprint, string versionMapFile, TaskVersion? globalVersion, bool forGlobal)
+        {
+            string currentDir = Environment.CurrentDirectory;
+
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+            foreach (var task in tasks)
+            {
+                string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+                if (!Directory.Exists(taskTargetPath))
+                {
+                    throw new Exception($"expected {taskTargetPath} to exist!");
+                }
+
+                Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping;
+                HashSet<Config.ConfigRecord> versionsUpdated;
+
+                if (taskVersionInfo.TryGetValue(task, out var mapping))
+                {
+                    configTaskVersionMapping = mapping.configTaskVersionMapping;
+                    versionsUpdated = mapping.versionsUpdated;
+                }
+                else
+                {
+                    configTaskVersionMapping = [];
+                    versionsUpdated = [];
+
+                    taskVersionInfo.Add(task, new TaskStateStruct(configTaskVersionMapping, versionsUpdated));
+                }
+
+                if (forGlobal)
+                {
+                    UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, versionMapFile, ref maxPatchForCurrentSprint, globalVersion);
+                }
+                else
+                {
+                    if(globalVersion is null)
+                    {
+                        throw new Exception("globalVersion shouldn't be null here");
+                    }
+
+                    UpdateVersionsGlobal(task, taskVersionInfo[task], targetConfigs, globalVersion);
+                }
+
+                var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
+                if (duplicateVersions.Any())
+                {
+                    StringBuilder dupConfigsStr = new StringBuilder();
+                    foreach (var x in duplicateVersions)
+                    {
+                        dupConfigsStr.AppendLine($"task={task} version={x.version} specified in multiple configName={x.configName} config count={x.count}");
+                    }
+
+                    throw new Exception(dupConfigsStr.ToString());
+                }
             }
         }
 
@@ -196,7 +388,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void GetVersions(string task, string configsString, out List<(string task, string config, string version)> versionList)
+        private static void GetVersions(string task, string configsString, out List<(string task, string config, string version)> versionList, TaskVersion? globalVersion)
         {
             versionList = new List<(string task, string config, string version)>();
 
@@ -232,7 +424,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(false);
 
-                if (ReadVersionMap(versionMapFile, out var versionMap, out var maxVersionNullable))
+                if (ReadVersionMap(versionMapFile, out var versionMap, out var maxVersionNullable, globalVersion))
                 {
                     foreach (var version in versionMap)
                     {
@@ -256,12 +448,14 @@ namespace BuildConfigGen
         }
 
         private static void MainUpdateTask(
+            TaskStateStruct taskVersionState,
             string task,
             string configsString,
             bool writeUpdates,
-            int? currentSprint,
+            int currentSprint,
             IDebugConfigGenerator debugConfigGen,
-            bool includeUseLocalTaskLibAndCommonPackages)
+            bool includeUseLocalTaskLibAndCommonPackages,
+            string versionMapFile)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -273,7 +467,133 @@ namespace BuildConfigGen
                 throw new Exception("configs expected!");
             }
 
-            string[] configs = configsString.Split("|");
+            HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsString.Split("|"), writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+
+            try
+            {
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
+
+                string currentDir = Environment.CurrentDirectory;
+
+                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+                string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+                if (!Directory.Exists(taskTargetPath))
+                {
+                    throw new Exception($"expected {taskTargetPath} to exist!");
+                }
+
+                string taskHandler = Path.Combine(taskTargetPath, "task.json");
+                JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
+
+                if (targetConfigs.Any(x => x.isNode))
+                {
+                    // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+                    if (!HasNodeHandler(taskHandlerContents))
+                    {
+                        Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
+                        return;
+                    }
+                }
+
+                // Create _generated
+                string generatedFolder = Path.Combine(gitRootPath, "_generated");
+                if (!Directory.Exists(generatedFolder))
+                {
+                    ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
+                }
+
+                foreach (var config in targetConfigs)
+                {
+                    bool versionUpdated = taskVersionState.versionsUpdated.Contains(config);
+
+                    string taskOutput;
+                    if (config.isDefault)
+                    {
+                        taskOutput = Path.Combine(gitRootPath, "_generated", task);
+                    }
+                    else
+                    {
+                        string directoryName = config.name;
+                        if (config.overriddenDirectoryName != null)
+                        {
+                            directoryName = config.overriddenDirectoryName;
+                        }
+
+                        taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{directoryName}");
+                    }
+
+                    if (config.enableBuildConfigOverrides)
+                    {
+                        EnsureBuildConfigFileOverrides(config, taskTargetPath);
+                    }
+
+                    var taskConfigPath = Path.Combine(taskOutput, "task.json");
+                    var taskConfigExists = File.Exists(taskConfigPath);
+
+                    // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
+                    // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
+                    if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config) || config.isNode)
+                    {
+                        CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+
+                        if (config.enableBuildConfigOverrides)
+                        {
+                            CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                        }
+
+                        // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
+                        // don't check content as preprocessor hasn't run
+                        ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                        HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
+
+                        WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
+                        WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
+                        WriteTaskJson(taskOutput, taskVersionState.configTaskVersionMapping, config, "task.json");
+                        WriteTaskJson(taskOutput, taskVersionState.configTaskVersionMapping, config, "task.loc.json");
+                    }
+                    WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
+                    WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.loc.json");
+
+                    if (config.isNode)
+                    {
+                        GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath);
+
+                        string buildConfigPackageJsonPath = Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json");
+
+                        if (File.Exists(buildConfigPackageJsonPath))
+                        {
+                            EnsureDependencyVersionsAreSyncronized(
+                                task,
+                                Path.Combine(taskTargetPath, "package.json"),
+                                buildConfigPackageJsonPath);
+
+                        }
+
+                        WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateTaskLib);
+                    }
+
+                    debugConfigGen.WriteTypescriptConfig(taskOutput);
+                    debugConfigGen.AddForTask(taskConfigPath);
+                }
+
+                // delay updating version map file until after buildconfigs generated
+                WriteVersionMapFile(versionMapFile, taskVersionState.configTaskVersionMapping, targetConfigs: targetConfigs);
+
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+            }
+            finally
+            {
+                if (ensureUpdateModeVerifier != null)
+                {
+                    ensureUpdateModeVerifier.CleanupTempFiles();
+                }
+            }
+        }
+
+        private static HashSet<Config.ConfigRecord> GetConfigRecords(IEnumerable<string> configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages)
+        {
             string errorMessage;
 
             Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Where(x => !x.isDefault).Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
@@ -306,21 +626,7 @@ namespace BuildConfigGen
                 }
             }
 
-            try
-            {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-
-                MainUpdateTaskInner(task, currentSprint, targetConfigs, debugConfigGen);
-
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
-            }
-            finally
-            {
-                if (ensureUpdateModeVerifier != null)
-                {
-                    ensureUpdateModeVerifier.CleanupTempFiles();
-                }
-            }
+            return targetConfigs;
         }
 
         private static int GetCurrentSprint()
@@ -356,139 +662,13 @@ namespace BuildConfigGen
 
         private static void MainUpdateTaskInner(
             string task,
-            int? currentSprint,
+            int currentSprint,
             HashSet<Config.ConfigRecord> targetConfigs,
-            IDebugConfigGenerator debugConfigGen)
+            IDebugConfigGenerator debugConfigGen,
+            ref int maxPatchForCurrentSprint,
+            bool handleCommonPackages)
         {
-            if (!currentSprint.HasValue)
-            {
-                currentSprint = GetCurrentSprint();
-            }
-
-            string currentDir = Environment.CurrentDirectory;
-
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-
-            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
-            if (!Directory.Exists(taskTargetPath))
-            {
-                throw new Exception($"expected {taskTargetPath} to exist!");
-            }
-
-            string taskHandler = Path.Combine(taskTargetPath, "task.json");
-            JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
-
-            if (targetConfigs.Any(x => x.isNode))
-            {
-                // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-                if (!HasNodeHandler(taskHandlerContents))
-                {
-                    Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
-                    return;
-                }
-            }
-
-            // Create _generated
-            string generatedFolder = Path.Combine(gitRootPath, "_generated");
-            if (!Directory.Exists(generatedFolder))
-            {
-                ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
-            }
-
-            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
-
-            TaskVersion globalVersion = GetGlobalVersion(gitRootPath);
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, globalVersion);
-
-            var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
-            if (duplicateVersions.Any())
-            {
-                StringBuilder dupConfigsStr = new StringBuilder();
-                foreach (var x in duplicateVersions)
-                {
-                    dupConfigsStr.AppendLine($"task={task} version={x.version} specified in multiple configName={x.configName} config count={x.count}");
-                }
-
-                throw new Exception(dupConfigsStr.ToString());
-            }
-
-            foreach (var config in targetConfigs)
-            {
-                bool versionUpdated = versionsUpdated.Contains(config);
-
-                string taskOutput;
-                if (config.isDefault)
-                {
-                    taskOutput = Path.Combine(gitRootPath, "_generated", task);
-                }
-                else
-                {
-                    string directoryName = config.name;
-                    if (config.overriddenDirectoryName != null)
-                    {
-                        directoryName = config.overriddenDirectoryName;
-                    }
-
-                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{directoryName}");
-                }
-
-                if (config.enableBuildConfigOverrides)
-                {
-                    EnsureBuildConfigFileOverrides(config, taskTargetPath);
-                }
-
-                var taskConfigPath = Path.Combine(taskOutput, "task.json");
-                var taskConfigExists = File.Exists(taskConfigPath);
-
-                // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
-                // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config) || config.isNode)
-                {
-                    CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
-
-                    if (config.enableBuildConfigOverrides)
-                    {
-                        CopyConfigOverrides(taskTargetPath, taskOutput, config);
-                    }
-
-                    // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
-                    // don't check content as preprocessor hasn't run
-                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
-
-                    HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
-
-                    WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
-                    WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
-                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
-                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
-                }
-                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
-                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
-
-                if (config.isNode)
-                {
-                    GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath);
-
-                    string buildConfigPackageJsonPath = Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json");
-
-                    if (File.Exists(buildConfigPackageJsonPath))
-                    {
-                        EnsureDependencyVersionsAreSyncronized(
-                            task,
-                            Path.Combine(taskTargetPath, "package.json"),
-                            buildConfigPackageJsonPath);
-
-                    }
-
-                    WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateTaskLib);
-                }
-
-                debugConfigGen.WriteTypescriptConfig(taskOutput);
-                debugConfigGen.AddForTask(taskConfigPath);
-            }
-
-            // delay updating version map file until after buildconfigs generated
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
+     
         }
 
         private static bool VersionIsGreaterThan(string originVersion, string buildConfigVersion)
@@ -922,7 +1102,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, TaskVersion globalVersion)
+        private static void UpdateVersions(string task, string taskTarget, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -933,7 +1113,7 @@ namespace BuildConfigGen
 
             {
                 TaskVersion? defaultVersion = null;
-                if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
+                if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable, globalVersion))
                 {
                     maxVersion = maxVersionNullable!;
                     defaultVersion = versionMap[Config.Default.name];
@@ -951,15 +1131,13 @@ namespace BuildConfigGen
                 }
             }
 
-            configTaskVersionMapping = new();
-
             // copy the mappings.  As we go check if any configs not mapped. If so, invalidate.
             bool allConfigsMappedAndValid = true;
             foreach (var config in targetConfigs)
             {
                 if (versionMap.ContainsKey(config.constMappingKey))
                 {
-                    configTaskVersionMapping.Add(config, versionMap[config.constMappingKey]);
+                    taskState.configTaskVersionMapping.Add(config, versionMap[config.constMappingKey]);
                 }
                 else
                 {
@@ -970,7 +1148,7 @@ namespace BuildConfigGen
             // invalidate if input version is not the default version specified in mapping
             if (allConfigsMappedAndValid)
             {
-                if (inputVersion == configTaskVersionMapping[Config.Default])
+                if (inputVersion == taskState.configTaskVersionMapping[Config.Default])
                 {
 
                 }
@@ -980,8 +1158,6 @@ namespace BuildConfigGen
                 }
             }
 
-
-            versionsUpdated = new HashSet<Config.ConfigRecord>();
             TaskVersion baseVersion = maxVersion;
 
             bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
@@ -1000,16 +1176,16 @@ namespace BuildConfigGen
             if (!allConfigsMappedAndValid)
             {
                 var old = new Dictionary<Config.ConfigRecord, TaskVersion>();
-                foreach (var x in configTaskVersionMapping)
+                foreach (var x in taskState.configTaskVersionMapping)
                 {
                     old.Add(x.Key, x.Value);
                 }
 
-                configTaskVersionMapping.Clear();
+                taskState.configTaskVersionMapping.Clear();
 
                 if (defaultVersionMatchesSourceVersion)
                 {
-                    configTaskVersionMapping.Add(Config.Default, inputVersion);
+                    taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);
 
                     foreach (var config in targetConfigs)
                     {
@@ -1017,21 +1193,21 @@ namespace BuildConfigGen
                         {
                             if (old.TryGetValue(config, out var oldVersion))
                             {
-                                configTaskVersionMapping.Add(config, oldVersion);
+                                taskState.configTaskVersionMapping.Add(config, oldVersion);
                             }
                         }
                     }
                 }
                 else
                 {
-                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
+                    taskState.configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
                     offset++;
-                    versionsUpdated.Add(Config.Default);
+                    taskState.versionsUpdated.Add(Config.Default);
                 }
 
                 foreach (var config in targetConfigs)
                 {
-                    if (!config.isDefault && !configTaskVersionMapping.ContainsKey(config))
+                    if (!config.isDefault && !taskState.configTaskVersionMapping.ContainsKey(config))
                     {
                         if (config.useGlobalVersion)
                         {
@@ -1046,42 +1222,75 @@ namespace BuildConfigGen
                                 targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);
                                 offset++;
                             }
-                            while (configTaskVersionMapping.Values.Contains(targetVersion));
+                            while (taskState.configTaskVersionMapping.Values.Contains(targetVersion));
 
-                            configTaskVersionMapping.Add(config, targetVersion);
-                            versionsUpdated.Add(config);
+                            taskState.configTaskVersionMapping.Add(config, targetVersion);
+
+                            if (!taskState.versionsUpdated.Contains(config))
+                            {
+                                taskState.versionsUpdated.Add(config);
+                            }
                         }
                     }
                 }
             }
 
+            foreach (var x in taskState.configTaskVersionMapping)
+            {
+                if (x.Value.Major == currentSprint)
+                {
+                    maxPatchForCurrentSprint = Math.Max(x.Value.Patch, maxPatchForCurrentSprint);
+                }
+            }
+        }
+
+        private static void UpdateVersionsGlobal(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, TaskVersion globalVersion)
+        {
             foreach (var config in targetConfigs)
             {
                 if (config.useGlobalVersion)
                 {
-                    if (configTaskVersionMapping.ContainsKey(config))
+                    if (taskState.configTaskVersionMapping.ContainsKey(config))
                     {
-                        configTaskVersionMapping[config] = globalVersion;
+
+                        if (taskState.configTaskVersionMapping[config] != globalVersion)
+                        {
+                            taskState.configTaskVersionMapping[config] = globalVersion;
+
+                            if (!taskState.versionsUpdated.Contains(config))
+                            {
+                                taskState.versionsUpdated.Add(config);
+                            }
+                        }
                     }
                     else
                     {
-                        configTaskVersionMapping.Add(config, globalVersion);
+                        taskState.configTaskVersionMapping.Add(config, globalVersion);
+
+                        if (!taskState.versionsUpdated.Contains(config))
+                        {
+                            taskState.versionsUpdated.Add(config);
+                        }
                     }
                 }
             }
         }
 
-        private static TaskVersion GetGlobalVersion(string srcPath)
+        private static TaskVersion? GetGlobalVersion(string srcPath, string globalVersionPath)
         {
-            string path = Path.Combine(srcPath, @"globalversion.txt");
-            string globalVersionString = File.ReadAllText(path);
+            if(!File.Exists(globalVersionPath))
+            {
+                return null;
+            }
+
+            string globalVersionString = File.ReadAllText(globalVersionPath);
 
             const string shortVersionRegex = @"^\d+\.\d+$";
             Regex re = new Regex(shortVersionRegex);
 
             if (!re.IsMatch(globalVersionString))
             {
-                throw new Exception($"{path} doesn't contain expected content matching {shortVersionRegex}");
+                throw new Exception($"{globalVersionPath} doesn't contain expected content matching {shortVersionRegex}");
             }
 
             TaskVersion globalVersion = new TaskVersion("0." + globalVersionString);
@@ -1135,7 +1344,10 @@ namespace BuildConfigGen
             {
                 foreach (var config in targetConfigs)
                 {
-                    sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
+                    if (!config.useGlobalVersion) // do not write globalVersion configs to task-specific
+                    {
+                        sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
+                    }
                 }
             }
 
@@ -1188,7 +1400,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static bool ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, [NotNullWhen(returnValue: true)] out TaskVersion? maxVersion)
+        private static bool ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, [NotNullWhen(returnValue: true)] out TaskVersion? maxVersion, TaskVersion? globalVersion)
         {
             versionMap = new();
             maxVersion = null;
@@ -1218,6 +1430,17 @@ namespace BuildConfigGen
                 if (maxVersion is null)
                 {
                     throw new Exception($"expected Default version to be present in {versionMapFile}");
+                }
+
+                if (globalVersion is not null)
+                {
+                    TaskVersion taskGlobalVersion = maxVersion.CloneWithMinorAndPatch(globalVersion.Minor, globalVersion.Patch);
+                    versionMap.Add(Config.UseLocalTaskLibAndCommonPackages.constMappingKey, taskGlobalVersion);
+
+                    if (taskGlobalVersion > maxVersion)
+                    {
+                        maxVersion = taskGlobalVersion;
+                    }
                 }
 
                 return true;
@@ -1275,5 +1498,18 @@ namespace BuildConfigGen
             return ret;
         }
 
+    }
+
+    internal record struct TaskStateStruct(Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated)
+    {
+        public static implicit operator (Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated)(TaskStateStruct value)
+        {
+            return (value.configTaskVersionMapping, value.versionsUpdated);
+        }
+
+        public static implicit operator TaskStateStruct((Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated) value)
+        {
+            return new TaskStateStruct(value.configTaskVersionMapping, value.versionsUpdated);
+        }
     }
 }
