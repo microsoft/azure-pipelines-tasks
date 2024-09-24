@@ -32,9 +32,8 @@ steps:
   displayName: npm install min agent demands
 
 - script: node ./ci/verifyMinAgentDemands/index.js
-  # uncommnet this line once we will decide to return tocken to checks
-  # env: 
-  #   GITHUB_PAT: variables['GitHubPAT']
+  env:
+    GITHUB_PAT: $(GitHubPAT)
   displayName: Verify min agent demands
 
 # Filter out unchanged tasks

@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
@@ -199,7 +199,7 @@
     "Info_ResolvedLatestVersion": "Resolved latest package version: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20_229_1": "1.246.1"
+    "Default": "1.246.2",
+    "Node20_229_1": "1.246.3"
   }
 }
