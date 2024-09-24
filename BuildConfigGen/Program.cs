@@ -72,6 +72,7 @@ namespace BuildConfigGen
         {
             try
             {
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
                 MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeUseLocalTaskLibAndCommonPackages);
             }
             catch (Exception e2)
@@ -296,7 +297,7 @@ namespace BuildConfigGen
                     {
                         var taskMakeOptions = tasks[t];
 
-                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(tasks[t].Configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(tasks[t].Configs, writeUpdates);
 
                         UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersion, forGlobal);
                     }
@@ -308,7 +309,7 @@ namespace BuildConfigGen
             }
             else
             {
-                HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configs!.Split(',', '|'), writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+                HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configs!.Split(',', '|'), writeUpdates);
 
                 UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersion, forGlobal);
             }
@@ -346,16 +347,16 @@ namespace BuildConfigGen
 
                 if (forGlobal)
                 {
-                    UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, versionMapFile, ref maxPatchForCurrentSprint, globalVersion);
-                }
-                else
-                {
-                    if(globalVersion is null)
+                    if (globalVersion is null)
                     {
                         throw new Exception("globalVersion shouldn't be null here");
                     }
 
                     UpdateVersionsGlobal(task, taskVersionInfo[task], targetConfigs, globalVersion);
+                }
+                else
+                {
+                    UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, versionMapFile, ref maxPatchForCurrentSprint, globalVersion);
                 }
 
                 var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
@@ -422,8 +423,6 @@ namespace BuildConfigGen
 
             try
             {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(false);
-
                 if (ReadVersionMap(versionMapFile, out var versionMap, out var maxVersionNullable, globalVersion))
                 {
                     foreach (var version in versionMap)
@@ -467,12 +466,10 @@ namespace BuildConfigGen
                 throw new Exception("configs expected!");
             }
 
-            HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsString.Split("|"), writeUpdates, includeUseLocalTaskLibAndCommonPackages);
+            HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsString.Split("|"), writeUpdates);
 
             try
             {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-
                 string currentDir = Environment.CurrentDirectory;
 
                 string gitRootPath = GitUtil.GetGitRootPath(currentDir);
@@ -592,7 +589,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static HashSet<Config.ConfigRecord> GetConfigRecords(IEnumerable<string> configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages)
+        private static HashSet<Config.ConfigRecord> GetConfigRecords(IEnumerable<string> configs, bool writeUpdates)
         {
             string errorMessage;
 
@@ -609,14 +606,7 @@ namespace BuildConfigGen
                         throw new Exception(errorMessage);
                     }
 
-                    if (matchedConfig.shouldUpdateTaskLib && !includeUseLocalTaskLibAndCommonPackages)
-                    {
-                        Console.WriteLine("Skipping " + matchedConfig.name + " as --include-use-local-task-lib-and-common-packages not supplied");
-                    }
-                    else
-                    {
-                        targetConfigs.Add(matchedConfig);
-                    }
+                    targetConfigs.Add(matchedConfig);
 
                 }
                 else
