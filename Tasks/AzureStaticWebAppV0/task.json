@@ -160,6 +160,30 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+    },
+    {
+      "name": "azure_static_web_apps_api_token",
+      "type": "string",
+      "label": "Azure Static Web Apps api token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+    },
+    {
+      "name": "azure_access_token",
+      "type": "string",
+      "label": "Azure Access Token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Access Token used for deployment. Not required if passed as a variable"
+    },
+    {
+      "name": "default_hostname",
+      "type": "string",
+      "label": "Default Hostname",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Default hostname for deployment. Not required if passed as an environment variable"
     }
   ],
   "execution": {
