@@ -47,7 +47,7 @@
         "default"
       ],
       "createdDate": "2024-09-24 08:56:24Z",
-      "justification": ""
+      "justification": "Skip the test file with example token"
     },
     "10281d0eb6e3cbd458b75591e8332638f1b0ac979db305d3ea11bc2cf12c7f83": {
       "signature": "10281d0eb6e3cbd458b75591e8332638f1b0ac979db305d3ea11bc2cf12c7f83",
