@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 2
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -21,7 +21,10 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
+      "label": "'Azure DevOps' Service Connection",
       "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
@@ -33,7 +36,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts URL",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+      "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -111,8 +114,8 @@
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_1": "0.246.1",
-    "wif_242": "0.246.2"
+    "Default": "0.246.3",
+    "Node20_229_1": "0.246.4",
+    "wif_242": "0.246.5"
   }
 }
