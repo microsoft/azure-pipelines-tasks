@@ -7,6 +7,7 @@ import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { execSync } from 'child_process';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -19,17 +20,38 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
     return result
 }
 
+function setUpConnectedServiceEnvironmentVariables() {
+    var connectedService = tl.getInput('ConnectedServiceName');
+    if(connectedService) {
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+        if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            process.env.VSTS_ACCESS_TOKEN = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false);
+            tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+        }
+        else {
+            tl.debug('Connected service is not of type Workload Identity Federation');
+        }
+    }
+    else {
+        tl.debug('No connected service set');
+    }
+}
+
+
 async function run() {
     try {
-        tl.setResourcePath(path.join(__dirname, 'task.json'));
         // Get inputs.
+
+        setUpConnectedServiceEnvironmentVariables();
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
         let input_verbosePreference: string = getActionPreference('verbosePreference', 'Default');
         let input_debugPreference: string = getActionPreference('debugPreference', 'Default');
         let input_progressPreference: string = getActionPreference('progressPreference', 'SilentlyContinue');
-
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -75,12 +97,6 @@ async function run() {
         if (input_progressPreference.toUpperCase() != 'DEFAULT') {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
-
-        const directory1: string = process.cwd();
-        const directory2: string = path.resolve();
-
-        console.log(directory1);  
-        console.log(directory2); 
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {

@@ -163,7 +163,12 @@ function Get-EnvironmentAuthUrl {
         [Parameter(Mandatory = $false)] $useMSAL = $false
     )
 
-    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
+    $stringOb = $endpoint | Out-String
+    Write-Host $stringOb    
+    Write-Host $endpoint.Data
+    Write-Host $endpoint.Data.activeDirectoryAuthority
+
+    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl } 
 
     if ([string]::IsNullOrEmpty($envAuthUrl)) {
         if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
@@ -178,9 +183,9 @@ function Get-EnvironmentAuthUrl {
         }
     }
 
-    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
-    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
-    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
+    Write-Host "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
+    Write-Host "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
+    Write-Host "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
 
     return $envAuthUrl
 }
@@ -357,12 +362,16 @@ function Build-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $vstsAccessToken
     )
 
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
+    Write-Host $clientId
     $tenantId = $endpoint.Auth.Parameters.TenantId
+    Write-Host $tenantId
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint -useMSAL $true
+    Write-Host $envAuthUrl
 
     try {
         # load the MSAL library
@@ -370,7 +379,7 @@ function Build-MSALInstance {
 
         $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId).WithAuthority($envAuthUrl, $tenantId)
 
-        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+        if ($endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
             Write-Verbose "MSAL - ServicePrincipal - certificate is used.";
 
             $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
@@ -381,8 +390,10 @@ function Build-MSALInstance {
         elseif ($endpoint.Auth.Scheme -eq $wifConnection) {
             Write-Verbose "MSAL - WorkloadIdentityFederation is used";
 
-            $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-            $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+            if ([string]::IsNullOrWhiteSpace($vstsAccessToken)) {
+                $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+                $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+            }
 
             $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
@@ -408,12 +419,13 @@ function Get-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $vstsAccessToken
     )
 
     # build MSAL if instance does not exist
     if ($null -eq $script:msalClientInstance) {
-        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM
+        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
     }
 
     return $script:msalClientInstance
@@ -1290,6 +1302,7 @@ function Get-AzureLoadBalancerDetails {
 }
 
 function Get-AzureRMLoadBalancerFrontendIpConfigDetails {
+
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
 
@@ -1439,6 +1452,42 @@ function Get-VstsFederatedToken {
     return $federatedToken
 }
 
+# Get the Bearer Access Token - MSAL
+function Get-AccessTokenMSALWithCustomScope {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $scope,
+        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+    )
+
+    if ([string]::IsNullOrWhiteSpace($vstsAccessToken)) {
+        Get-MSALInstance $endpoint $connectedServiceNameARM
+    } else {
+        Write-Host "yo"
+        Get-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
+    }
+     
+    # prepare MSAL scopes
+    [string] $resourceId = $scope + "/.default"
+    $scopes = [Collections.Generic.List[string]]@($resourceId)
+    try {
+        Write-Verbose "Fetching Access Token - MSAL"
+        $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
+        return $tokenResult
+    }
+    catch {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if ($parsedException) {
+            $exceptionMessage = $parsedException
+        }
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AccessTokenMSAL)"
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $endpoint.Auth.Parameters.TenantId)
+    }
+}
+
 # Export only the public function.
 Export-ModuleMember -Function Add-AzureSqlDatabaseServerFirewallRule
 Export-ModuleMember -Function Remove-AzureSqlDatabaseServerFirewallRule
@@ -1456,3 +1505,4 @@ Export-ModuleMember -Function Get-AzureLoadBalancerDetails
 Export-ModuleMember -Function Get-AzureRMLoadBalancerFrontendIpConfigDetails
 Export-ModuleMember -Function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
 Export-ModuleMember -Function Get-AzureRMAccessToken
+Export-ModuleMember -Function Get-AccessTokenMSALWithCustomScope

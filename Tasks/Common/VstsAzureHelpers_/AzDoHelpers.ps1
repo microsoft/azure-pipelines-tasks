@@ -1,45 +1,54 @@
-function Get-AzDOToken {
-    
-    $connectionServiceName = Get-VstsInput - Name "ConnectedServiceName"
+function Get-AzDOToken()
+{
+    $connectionServiceName = $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID
+    $servicePrincipalId = $env:AZURESUBSCRIPTION_CLIENT_ID
+    $tenantId = $env:AZURESUBSCRIPTION_TENANT_ID
+    $activeDirectoryAuthority = "https://login.microsoftonline.com/$tenantId/"
+    $vstsAccessToken = $env:VSTS_ACCESS_TOKEN
+    $scheme = "WorkloadIdentityFederation"
 
-    Write-Host $connectionServiceName
-
-    if ([string]::IsNullOrEmpty($connectionServiceName)) {
+    if ($null -eq $connectionServiceName -or $connectionServiceName -eq "") {
+        Write-Host "Returning System.AccessToken"
         return System.AccessToken
-    } 
-
-    $endpoint = Get-VstsEndpoint -Name $connectionServiceName
-
-    Write-Host $endpoint
-    
-    if ($endpoint.Auth.Scheme -ne 'WorkloadIdentityFederation ') {
-        Write-Error 'Connected service is not of type Workload Identity Federation'
-        throw
     }
 
-    # Generate Azure access token
-    $tokenRequestBody = @{
-        resource = "https://management.azure.com/"
-        client_id = $endpoint.Auth.Parameters.ClientId
-        client_secret = $endpoint.Auth.Parameters.ClientSecret
-        grant_type = "client_credentials"
+    $accessToken = @{
+        token_type = $null
+        access_token = $null
+        expires_on = $null
     }
 
-    $TenantId = $endpoint.Auth.Parameters.TenantId
-    $ServicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
+    Import-Module $PSScriptRoot/../../ps_modules/VstsAzureRestHelpers_ -Force
 
-    $tokenResponse = Invoke-RestMethod -Method Post -Uri "https://login.microsoftonline.com/$(TenantId)/oauth2/token" -ContentType "application/x-www-form-urlencoded" -Body $tokenRequestBody
+    $parameters = @{
+        TenantId = $tenantId
+        ServicePrincipalId = $servicePrincipalId
+    }
 
-    Write-Host $tokenResponse
+    $auth = @{
+        Scheme = $scheme 
+        Parameters = $parameters
+    }
 
-    $AzureAccessToken = $tokenResponse.access_token
+    $data = @{
+        activeDirectoryAuthority = $activeDirectoryAuthority
+    }
 
-    Write-Host $AzureAccessToken
+    $vstsEndpoint = @{
+        Auth = $auth
+        Data = $data
+    }
 
-    Connect-AzAccount -AccessToken $AzureAccessToken -TenantId $TenantId -AccountId $ServicePrincipalId
-    $Token = Get-AzAccessToken -ResourceUrl "499b84ac-1321-427f-aa17-267ca6975798"
+    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+        -connectedServiceNameARM $connectionServiceName `
+        -scope "499b84ac-1321-427f-aa17-267ca6975798" `
+        -vstsAccessToken $vstsAccessToken
 
-    Write-Host $Token
+    $accessToken.token_type = $result.TokenType
+    $accessToken.access_token = $result.AccessToken
+    $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
 
-    return $Token.token
+    Write-Host "Get-connectionServiceNameAccessToken: Received accessToken";
+
+    return $accessToken;
 }
