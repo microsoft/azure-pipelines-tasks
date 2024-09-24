@@ -35,9 +35,7 @@ async function run(): Promise<void> {
             const storageArmClient = new armStorage.StorageManagementClient(azureEndpoint.applicationTokenCredentials, azureEndpoint.subscriptionID);
             let storageAccount: StorageAccount = await storageArmClient.storageAccounts.get(storageAccountName);
             let storageAccountResourceGroupName = getResourceGroupNameFromUri(storageAccount.id);
-            let accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, storageAccountName, null);
-            let accessKey: string = accessKeys[0];
-            let data: string = `/DestKey:\"${accessKey}\"`;
+            let data: string = `/DestKey:\"\"`;
             let options = { encoding : "utf8" }
             fs.writeFileSync(file, data, options);
             tl.setTaskVariable('AFC_V2_ARM_STORAGE_KEY_FILE', file);
