@@ -33,7 +33,7 @@ steps:
 
 - script: node ./ci/verifyMinAgentDemands/index.js
   env:
-    GITHUB_PAT: variables['GitHubPAT']
+    GITHUB_PAT: $(GitHubPAT)
   displayName: Verify min agent demands
 
 # Filter out unchanged tasks
