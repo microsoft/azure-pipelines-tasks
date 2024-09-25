@@ -173,10 +173,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          <Val><![CDATA[Include the selected feed in the generated NuGet.config.]A;]A;Format:]A;* For organization-scoped feeds: `FeedName`]A;* For project-scoped feeds: `ProjectName/FeedName`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Schließen Sie den ausgewählten Feed in die generierte Datei "NuGet.config" ein. Azure Artifacts muss installiert und lizenziert sein, damit Sie hier einen Feed auswählen können.]]></Val>
+            <Val><![CDATA[Ausgewählten Feed in die erstellte Datei "NuGet.config" einbeziehen.]A;]A;Format:]A;* Für organisationsbezogene Feeds: "FeedName"]A;* Für projektbezogene Feeds: "ProjectName/FeedName"]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -500,10 +503,13 @@
       </Item>
       <Item ItemId=";loc.input.label.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          <Val><![CDATA[Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]5D;feed name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Pakete aus diesem Azure Artifacts-Feed verwenden]]></Val>
+            <Val><![CDATA[Verwenden Sie Pakete aus diesem Azure Artifacts-Feed. Wählen Sie aus der Dropdownliste aus, oder geben Sie den [Projektnamen/]5D;Feednamen ein.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
