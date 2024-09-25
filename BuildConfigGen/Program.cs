@@ -110,7 +110,6 @@ namespace BuildConfigGen
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
 
-            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
             string globalVersionPath = Path.Combine(gitRootPath, @"globalversion.txt");
 
             TaskVersion? globalVersion = GetGlobalVersion(gitRootPath, globalVersionPath);
@@ -157,12 +156,12 @@ namespace BuildConfigGen
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    MainInnerUpdateTaskVersionsInner(taskVersionInfo, t.Name, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal: false);
+                    MainInnerUpdateTaskVersionsInner(taskVersionInfo, t.Name, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: false);
                 }
 
                 foreach (var t in tasks.Values)
                 {
-                    MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t.Name, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, ref globalVersion);
+                    MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t.Name, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, ref globalVersion);
                 }
 
                 if (includeLocalPackagesBuildConfig)
@@ -171,7 +170,7 @@ namespace BuildConfigGen
 
                     foreach (var t in tasks.Values)
                     {
-                        MainUpdateTask(taskVersionInfo[t.Name], t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, versionMapFile, hasGlobalVersion: globalVersion is not null);
+                        MainUpdateTask(taskVersionInfo[t.Name], t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, hasGlobalVersion: globalVersion is not null);
                     }
                 }
             }
@@ -179,14 +178,14 @@ namespace BuildConfigGen
             {
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    MainInnerUpdateTaskVersionsInner(taskVersionInfo, t, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal: false);
+                    MainInnerUpdateTaskVersionsInner(taskVersionInfo, t, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: false);
                 }
 
                 if (includeLocalPackagesBuildConfig)
                 {
                     foreach (var t in task!.Split(',', '|'))
                     {
-                        MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, ref globalVersion);
+                        MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, ref globalVersion);
                     }
 
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
@@ -202,7 +201,7 @@ namespace BuildConfigGen
                         {
                             var taskMakeOptions = tasks[t];
                             var taskConfigs = string.Join('|', taskMakeOptions.Configs);
-                            MainUpdateTask(taskVersionInfo[t], t, taskConfigs!, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, versionMapFile, hasGlobalVersion: globalVersion is not null);
+                            MainUpdateTask(taskVersionInfo[t], t, taskConfigs!, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, hasGlobalVersion: globalVersion is not null);
                         }
                         else
                         {
@@ -212,7 +211,7 @@ namespace BuildConfigGen
                     else
                     {
                         // If configs was passed as arguments, just execute it
-                        MainUpdateTask(taskVersionInfo[t], t, configs!, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, versionMapFile, hasGlobalVersion: globalVersion is not null);
+                        MainUpdateTask(taskVersionInfo[t], t, configs!, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, hasGlobalVersion: globalVersion is not null);
                     }
                 }
             }
@@ -234,10 +233,10 @@ namespace BuildConfigGen
             // however, if it exists, account for it when updating existing tasks
 
             // populate version information
-            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal: false);
+            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: false);
         }
 
-        private static void MainInnerUpdateTaskVersionsGlobal(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, string globalVersionPath, ref TaskVersion? globalVersion)
+        private static void MainInnerUpdateTaskVersionsGlobal(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string globalVersionPath, ref TaskVersion? globalVersion)
         {
             if (globalVersion is null)
             {
@@ -258,10 +257,10 @@ namespace BuildConfigGen
             }
 
             // populate global verison information
-            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task!, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal: true);
+            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task!, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: true);
         }
 
-        private static void MainInnerUpdateTaskVersionsInner(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
+        private static void MainInnerUpdateTaskVersionsInner(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
         {
             // If config weren't passed, constract specific config for each task, otherwise we might have problems if first task has 2 configs, but the other 1,0 or diffrenet ones
             if (configs == null)
@@ -276,7 +275,7 @@ namespace BuildConfigGen
 
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(tasks[t].Configs, writeUpdates);
 
-                        UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal);
+                        UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, globalVersionPath, globalVersion, forGlobal);
                     }
                     else
                     {
@@ -288,11 +287,11 @@ namespace BuildConfigGen
             {
                 HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configs!.Split(',', '|'), writeUpdates);
 
-                UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal);
+                UpdateVersionsForTasks(taskVersionInfo, task!.Split(',', '|'), currentSprint, targetConfigs, ref maxPatchForCurrentSprint, globalVersionPath, globalVersion, forGlobal);
             }
         }
 
-        private static void UpdateVersionsForTasks(Dictionary<string, TaskStateStruct> taskVersionInfo, string[] tasks, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs, ref int maxPatchForCurrentSprint, string versionMapFile, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
+        private static void UpdateVersionsForTasks(Dictionary<string, TaskStateStruct> taskVersionInfo, string[] tasks, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs, ref int maxPatchForCurrentSprint, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
         {
             string currentDir = Environment.CurrentDirectory;
 
@@ -333,7 +332,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, versionMapFile, globalVersionPath, ref maxPatchForCurrentSprint, globalVersion);
+                    UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, globalVersionPath, ref maxPatchForCurrentSprint, globalVersion);
                 }
 
                 var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
@@ -462,7 +461,6 @@ namespace BuildConfigGen
             int currentSprint,
             IDebugConfigGenerator debugConfigGen,
             bool includeLocalPackagesBuildConfig,
-            string versionMapFile,
             bool hasGlobalVersion
             )
         {
@@ -483,6 +481,8 @@ namespace BuildConfigGen
                 string currentDir = Environment.CurrentDirectory;
 
                 string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+                string versionMapFile = GetVersionMapFile(task, gitRootPath);
+
 
                 string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
                 if (!Directory.Exists(taskTargetPath))
@@ -604,6 +604,11 @@ namespace BuildConfigGen
                     ensureUpdateModeVerifier.CleanupTempFiles();
                 }
             }
+        }
+
+        private static string GetVersionMapFile(string task, string gitRootPath)
+        {
+            return Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
         }
 
         private static HashSet<Config.ConfigRecord> GetConfigRecords(IEnumerable<string> configs, bool writeUpdates)
@@ -1068,7 +1073,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string task, string taskTarget, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, string globalVersionPath, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion)
+        private static void UpdateVersions(string task, string taskTarget, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -1076,6 +1081,10 @@ namespace BuildConfigGen
             var inputVersion = GetInputVersion(taskTarget);
 
             bool defaultVersionMatchesSourceVersion;
+
+            string currentDir = Environment.CurrentDirectory;
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string versionMapFile = GetVersionMapFile(gitRootPath, task);
 
             {
                 TaskVersion? defaultVersion = null;
