@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -207,7 +207,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_7": "2.246.1"
+    "Default": "2.246.2",
+    "Node20_229_7": "2.246.3"
   }
 }
