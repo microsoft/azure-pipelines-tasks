@@ -153,7 +153,8 @@ namespace BuildConfigGen
             Dictionary<string, TaskStateStruct> taskVersionInfo = [];
 
             {
-                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable();
+                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
+                    .Where(c=>c.Value.Configs.Any()); // only tasks with configs
 
                 if (!allTasks)
                 {
@@ -1256,19 +1257,26 @@ namespace BuildConfigGen
 
         private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
         {
-            StringBuilder sb = new StringBuilder();
-            using (var sw = new StringWriter(sb))
+            if (targetConfigs.Where(c => !c.isDefault && !c.useGlobalVersion).Any())
             {
-                foreach (var config in targetConfigs)
+                StringBuilder sb = new StringBuilder();
+                using (var sw = new StringWriter(sb))
                 {
-                    if (!config.useGlobalVersion) // do not write globalVersion configs to task-specific
+                    foreach (var config in targetConfigs)
                     {
-                        sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
+                        if (!config.useGlobalVersion) // do not write globalVersion configs to task-specific
+                        {
+                            sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
+                        }
                     }
                 }
-            }
 
-            ensureUpdateModeVerifier!.WriteAllText(versionMapFile, sb.ToString(), suppressValidationErrorIfTargetPathDoesntExist: false);
+                ensureUpdateModeVerifier!.WriteAllText(versionMapFile, sb.ToString(), suppressValidationErrorIfTargetPathDoesntExist: false);
+            }
+            else
+            {
+                Console.WriteLine($"Not writing {versionMapFile} because there are no configs for task which are not Default or useGlobalVersion");
+            }
         }
 
         private static string GetExecutionPath(JsonNode taskNode, string execution)
