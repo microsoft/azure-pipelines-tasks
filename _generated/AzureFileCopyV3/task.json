@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 245,
+    "Minor": 246,
     "Patch": 0
   },
   "demands": [
@@ -315,7 +315,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "3.245.0",
-    "Node20_229_2": "3.245.1"
+    "Default": "3.246.0",
+    "Node20_229_2": "3.246.1"
   }
 }

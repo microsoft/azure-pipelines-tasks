@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 245,
+    "Minor": 246,
     "Patch": 1
   },
   "demands": [
@@ -305,7 +305,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.245.0",
-    "Node20_229_2": "4.245.1"
+    "Default": "4.246.0",
+    "Node20_229_2": "4.246.1"
   }
 }

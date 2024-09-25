@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 6
+    "Minor": 246,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -56,8 +56,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
   },
   "_buildConfigMapping": {
-    "Default": "1.244.6",
-    "Node20_229_1": "1.244.7",
-    "wif_242": "1.244.8"
+    "Default": "1.246.3",
+    "Node20_229_1": "1.246.4",
+    "wif_242": "1.246.5"
   }
 }

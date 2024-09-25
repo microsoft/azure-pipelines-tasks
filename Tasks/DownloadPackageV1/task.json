@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",

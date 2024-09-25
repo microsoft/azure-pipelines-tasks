@@ -17,6 +17,7 @@ Register-Mock Invoke-IndexSources
 Register-Mock Invoke-PublishSymbols
 foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Unregister-Mock Get-VstsInput
+    Register-Mock Get-VstsInput { 'Some input service connection' } -ParametersEvaluator { $Name -eq 'ConnectedServiceName' }
     Register-Mock Get-VstsInput { '123' } -- -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
     Register-Mock Get-VstsInput { '' } -- -Name 'SymbolsPath' # Empty to skip publishing.
     Register-Mock Get-VstsInput { 'FileShare' } -ParametersEvaluator { $Name -eq 'SymbolServerType' }
