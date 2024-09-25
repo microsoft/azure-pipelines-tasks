@@ -1778,8 +1778,9 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
+ * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
@@ -1799,6 +1800,11 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if(writeUpdates)
     {
         writeUpdateArg += " --write-updates";
+    }
+
+    if(includeLocalPackagesBuildConfig)
+    {
+        writeUpdateArg += " --include-local-packages-build-config";        
     }
 
     var debugAgentDirArg = "";

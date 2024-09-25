@@ -218,17 +218,20 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    if (!argv.skipPrebuildSteps)
+    if (argv.includeLocalPackagesBuildConfig)
     {
-        // build task-lib
-        cd(taskLibPath);
-        run("node make.js build", /*inheritStreams:*/true);
+        if (!argv.skipPrebuildSteps)
+        {
+            // build task-lib
+            cd(taskLibPath);
+            run("node make.js build", /*inheritStreams:*/true);
 
-        
-        await util.installNodeAsync('20');
-        // build task-lib
-        cd(tasksCommonPath);
-        run("node make.js --build", /*inheritStreams:*/true);
+            
+            await util.installNodeAsync('20');
+            // build task-lib
+            cd(tasksCommonPath);
+            run("node make.js --build", /*inheritStreams:*/true);
+        }
     }
 
     // Need to validate generated tasks first
@@ -237,7 +240,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         const makeOptions = fileToJson(makeOptionsPath);
 
         // Verify generated files across tasks are up-to-date
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
     }
 
     const allTasks = getTaskList(taskList);

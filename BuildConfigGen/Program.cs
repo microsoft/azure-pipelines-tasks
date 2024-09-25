@@ -28,7 +28,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateTaskLib = false, bool useGlobalVersion = false);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
@@ -51,8 +51,8 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
-            public static readonly ConfigRecord UseLocalTaskLibAndCommonPackages = new ConfigRecord(name: nameof(UseLocalTaskLibAndCommonPackages), constMappingKey: "UseLocalTaskLibAndCommonPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "UseLocalTaskLibAndCommonPackages", writeNpmrc: true, shouldUpdateTaskLib: true, useGlobalVersion: true);
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, UseLocalTaskLibAndCommonPackages };
+            public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "LocalPackages", writeNpmrc: true, shouldUpdateLocalPkgs: true, useGlobalVersion: true);
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -67,13 +67,13 @@ namespace BuildConfigGen
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
         /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
-        /// <param name="includeUseLocalTaskLibAndCommonPackages">Include includeUseLocalTaskLibAndCommonPackages config</param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeUseLocalTaskLibAndCommonPackages = false)
+        /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeLocalPackagesBuildConfig = false)
         {
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeUseLocalTaskLibAndCommonPackages);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig);
             }
             catch (Exception e2)
             {
@@ -262,10 +262,8 @@ namespace BuildConfigGen
             MainInnerUpdateTaskVersionsInner(taskVersionInfo, task, configs, writeUpdates, includeUseLocalTaskLibAndCommonPackages, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, versionMapFile, globalVersionPath, globalVersion, forGlobal: false);
         }
 
-
         private static void MainInnerUpdateTaskVersionsGlobal(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, string? configs, bool writeUpdates, bool includeUseLocalTaskLibAndCommonPackages, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string versionMapFile, string globalVersionPath, ref TaskVersion? globalVersion)
         {
-
             if (globalVersion is null)
             {
                 globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
@@ -580,7 +578,7 @@ namespace BuildConfigGen
 
                             }
 
-                            WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateTaskLib);
+                            WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs);
                         }
 
                         debugConfigGen.WriteTypescriptConfig(taskOutput);
@@ -1438,7 +1436,7 @@ namespace BuildConfigGen
                 if (globalVersion is not null)
                 {
                     TaskVersion taskGlobalVersion = maxVersion.CloneWithMinorAndPatch(globalVersion.Minor, globalVersion.Patch);
-                    versionMap.Add(Config.UseLocalTaskLibAndCommonPackages.constMappingKey, taskGlobalVersion);
+                    versionMap.Add(Config.LocalPackages.constMappingKey, taskGlobalVersion);
 
                     if (taskGlobalVersion > maxVersion)
                     {

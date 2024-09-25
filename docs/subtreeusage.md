@@ -1,3 +1,8 @@
+Build examples:
+
+node make.js build --includeLocalPackagesBuildConfig
+node make.js build --includeLocalPackagesBuildConfig --task MavenV4
+
 Subtrees were added to pull in modules from other repos
 
 git clone https://github.com/microsoft/azure-pipelines-tasks  
