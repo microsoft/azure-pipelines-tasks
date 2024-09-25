@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
-    "Patch": 11
+    "Minor": 246,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -574,7 +574,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.243.10",
-    "Node20_229_3": "1.243.11"
+    "Default": "1.246.0",
+    "Node20_229_3": "1.246.1"
   }
 }
