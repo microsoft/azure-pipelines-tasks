@@ -37,34 +37,40 @@ const versionMap = new Map([
 
 const problems = [];
 
-for (const task of tasks) {
-    const taskJson = JSON.parse(fs.readFileSync(path.join(task.path, 'task.json'), 'utf8'));
+for (let i = 0; i < tasks.length; i++) {
+    const taskJson = JSON.parse(fs.readFileSync(path.join(tasks[i].path, 'task.json'), 'utf8'));
 
     if (!taskJson.hasOwnProperty('execution')) {
         continue;
     }
 
     const taskMinimumAgentVersion = taskJson.minimumAgentVersion;
+
+    const handlers = Object.keys(taskJson.execution);
     
     if (taskMinimumAgentVersion === undefined) {
-        problems.push(`The minimum agent version is not defined in ${task.name} task`);
+        if (handlers.includes('Node10')) {
+            continue;
+        }
+
+        problems.push(`${i + 1}. ${tasks[i].name} - the minimum agent version is not defined in ${tasks[i].name} task.\n\tLocation: ${tasks[i].path}\n`);
         continue;
     }
-    
-    const handlers = Object.keys(taskJson.execution);
 
-    for (const key of versionMap.entries()) {
-        if (handlers.includes(key[0]) && semver.gte(taskMinimumAgentVersion, key[1])) {
+    for (const [ nodeVersion, agentVersion ] of versionMap.entries()) {
+        if (handlers.includes(nodeVersion) && semver.gte(taskMinimumAgentVersion, agentVersion)) {
             break;
         }
 
-        problems.push(`The minimum agent version is not correct for ${key[0]} executor in ${task.name} task, should be min ${key[1]}`);
+        problems.push(`${i + 1}. ${tasks[i].name} - the minimum agent version is not correct for ${nodeVersion} executor in ${tasks[i].name} task, should be min ${agentVersion}\n\tLocation: ${tasks[i].path}\n`);
         break;
     }
 }
 
 if (problems.length > 0) {
-    console.log(`Found ${problems.length} problems:`);
+    console.log(`Found ${problems.length} issues to address:\n`);
     console.log(problems.join('\n'));
+    console.log('Please address these issues and attempt the process again.');
+    console.log('For guidance on resolving these problems, you can use the following documentation: https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/migrateNode20.md#specify-minimumagentversion');
     process.exit(1);
 }
