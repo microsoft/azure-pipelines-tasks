@@ -470,10 +470,13 @@
       </Item>
       <Item ItemId=";loc.input.label.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use packages from this Azure Artifacts/TFS feed]]></Val>
+          <Val><![CDATA[Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]5D;feed name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 Azure Artifacts/TFS 피드의 패키지 사용]]></Val>
+            <Val><![CDATA[이 Azure Artifacts/TFS 피드의 패키지를 사용합니다. 드롭다운에서 선택하거나 [프로젝트 이름/]5D;피드 이름을 입력합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use packages from this Azure Artifacts/TFS feed]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

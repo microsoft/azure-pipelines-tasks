@@ -52,6 +52,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[認証する config.toml で指定されたレジストリ名のコンマ区切りリスト。これが設定されている場合は workloadIdentityServiceConnection が必須です。他のすべての入力は無視されます。cargoServiceConnections と互換性がありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this is set, registryNames is required. All other inputs are ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[これが設定されている場合は registryNames が必須です。他のすべての入力は無視されます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cargoServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials for registries outside this organization/collection]]></Val>
@@ -67,6 +85,21 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[認証するための config.toml ファイル]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry names from config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[config.toml からのレジストリ名]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -93,6 +126,15 @@
           <Val><![CDATA[Adding auth for registry: %s with token name: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[レジストリの認証を追加しています: %s (トークン名: %s)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.AuthTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Authenticated %s internal feeds, %s external repos, and %s federated service connections]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[認証された %s 個の内部フィード、%s 個の外部リポジトリ、%s 個のフェデレーション サービス接続]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,9 +177,21 @@
       </Item>
       <Item ItemId=";loc.messages.ConnectionAlreadySet" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          <Val><![CDATA[Registry %s already has auth set for an %s connection.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[%s レジストリは %s 接続に対して既に設定されています]]></Val>
+            <Val><![CDATA[レジストリ %s は、%s 接続の認証が既に設定されています。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConnectionAlreadySetOverwriting" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry %s already has auth set for an %s connection. Overwriting the existing auth.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストリ %s は、%s 接続の認証が既に設定されています。既存の認証を上書きしています。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -147,6 +201,33 @@
           <Val><![CDATA[Failed to add authentication.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[認証を追加できませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サービス接続からフェデレーション資格情報を取得できません: %s。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingRegistryNameOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Both registry name and service connection need to be set and cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストリ名とサービス接続は、両方とも設定する必要があり、空にすることはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストリ名の入力 '%s' は、config.toml 内のいずれのレジストリにも対応していません。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
