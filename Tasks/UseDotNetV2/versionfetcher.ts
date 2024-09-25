@@ -33,7 +33,7 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
-        const timeout = 60_000 * 5;
+        const timeout: number = this.getRequestTimeout();
         var requestOptions: httpInterfaces.IRequestOptions = {
             allowRetries: true,
             maxRetries: 3,
@@ -319,6 +319,16 @@ export class DotNetCoreVersionFetcher {
 
     private getCurrentDir(): string {
         return __dirname;
+    }
+
+    private getRequestTimeout(): number {
+        let timeout = 60_000 * 5;
+        const inputValue: string = tl.getInput('requestTimeout', false);
+        if (!(Number.isNaN(Number(inputValue)))) {
+            const maxTimeout = 60_000 * 30;
+            timeout = Math.min(parseInt(inputValue), maxTimeout);
+        }
+        return timeout;
     }
 }
 

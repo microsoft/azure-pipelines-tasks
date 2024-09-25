@@ -105,6 +105,14 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "execution": {
