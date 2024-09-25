@@ -112,7 +112,6 @@ namespace BuildConfigGen
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
 
             string globalVersionPath = Path.Combine(gitRootPath, @"globalversion.txt");
-
             TaskVersion? globalVersion = GetGlobalVersion(gitRootPath, globalVersionPath);
 
             if (getTaskVersionTable)
@@ -154,7 +153,7 @@ namespace BuildConfigGen
 
             {
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
-                    .Where(c=>c.Value.Configs.Any()); // only tasks with configs
+                    .Where(c => c.Value.Configs.Any()); // only tasks with configs
 
                 if (!allTasks)
                 {
@@ -165,18 +164,51 @@ namespace BuildConfigGen
 
                 foreach (var t in tasks)
                 {
-                    IEnumerable<string> configsList = FilterConfigsFotTask(configs, t);
+                    taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                }
 
-                    MainInnerUpdateTaskVersionsInner(taskVersionInfo, t.Value.Name, configsList, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: false);
+                foreach (var t in tasks)
+                {
+                    IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+                    HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
+                    UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, ref maxPatchForCurrentSprint, globalVersion);
+                    CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
                 }
 
                 if (includeLocalPackagesBuildConfig)
                 {
                     foreach (var t in tasks)
                     {
-                        IEnumerable<string> configsList = FilterConfigsFotTask(configs, t);
+                        IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
 
-                        MainInnerUpdateTaskVersionsGlobal(taskVersionInfo, t.Value.Name, configsList, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, ref globalVersion);
+                        if (globalVersion is null)
+                        {
+                            globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
+                        }
+                        else
+                        {
+                            if (globalVersion.Minor == currentSprint)
+                            {
+                                globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
+                                globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major);
+                            }
+                            else
+                            {
+                                globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                                globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major);
+                            }
+                        }
+
+                        // populate global verison information
+                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
+
+                        if (globalVersion is null)
+                        {
+                            throw new Exception("globalVersion shouldn't be null here");
+                        }
+
+                        UpdateVersionsGlobal(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, globalVersion);
+                        CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
                     }
 
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
@@ -184,7 +216,7 @@ namespace BuildConfigGen
 
                 foreach (var t in tasks)
                 {
-                    IEnumerable<string> configsList = FilterConfigsFotTask(configs, t);
+                    IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
 
                     MainUpdateTask(taskVersionInfo[t.Value.Name], t.Value.Name, configsList, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, hasGlobalVersion: globalVersion is not null);
                 }
@@ -199,7 +231,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static IEnumerable<string> FilterConfigsFotTask(string? configs, KeyValuePair<string, MakeOptionsReader.AgentTask> t)
+        private static IEnumerable<string> FilterConfigsForTask(string? configs, KeyValuePair<string, MakeOptionsReader.AgentTask> t)
         {
             var configsList = t.Value.Configs.AsEnumerable();
             if (configs != null)
@@ -211,79 +243,8 @@ namespace BuildConfigGen
             return configsList;
         }
 
-        private static void MainInnerUpdateTaskVersionsGlobal(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, IEnumerable<string> configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string globalVersionPath, ref TaskVersion? globalVersion)
+        private static void CheckForDuplicates(string task, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
         {
-            if (globalVersion is null)
-            {
-                globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
-            }
-            else
-            {
-                if (globalVersion.Minor == currentSprint)
-                {
-                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
-                    globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[task].configTaskVersionMapping[Config.Default].Major);
-                }
-                else
-                {
-                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
-                    globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[task].configTaskVersionMapping[Config.Default].Major);
-                }
-            }
-
-            // populate global verison information
-            MainInnerUpdateTaskVersionsInner(taskVersionInfo, task!, configs, writeUpdates, includeLocalPackagesBuildConfig, gitRootPath, ref maxPatchForCurrentSprint, currentSprint, globalVersionPath, globalVersion, forGlobal: true);
-        }
-
-        private static void MainInnerUpdateTaskVersionsInner(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, IEnumerable<string> configs, bool writeUpdates, bool includeLocalPackagesBuildConfig, string gitRootPath, ref int maxPatchForCurrentSprint, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
-        {
-            HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configs, writeUpdates);
-
-            UpdateVersionsForTask(taskVersionInfo, task, currentSprint, targetConfigs, ref maxPatchForCurrentSprint, globalVersionPath, globalVersion, forGlobal);
-        }
-
-        private static void UpdateVersionsForTask(Dictionary<string, TaskStateStruct> taskVersionInfo, string task, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs, ref int maxPatchForCurrentSprint, string globalVersionPath, TaskVersion? globalVersion, bool forGlobal)
-        {
-            string currentDir = Environment.CurrentDirectory;
-
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-
-            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
-            if (!Directory.Exists(taskTargetPath))
-            {
-                throw new Exception($"expected {taskTargetPath} to exist!");
-            }
-
-            Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping;
-            HashSet<Config.ConfigRecord> versionsUpdated;
-
-            if (taskVersionInfo.TryGetValue(task, out var mapping))
-            {
-                configTaskVersionMapping = mapping.configTaskVersionMapping;
-                versionsUpdated = mapping.versionsUpdated;
-            }
-            else
-            {
-                configTaskVersionMapping = [];
-                versionsUpdated = [];
-
-                taskVersionInfo.Add(task, new TaskStateStruct(configTaskVersionMapping, versionsUpdated));
-            }
-
-            if (forGlobal)
-            {
-                if (globalVersion is null)
-                {
-                    throw new Exception("globalVersion shouldn't be null here");
-                }
-
-                UpdateVersionsGlobal(task, taskVersionInfo[task], targetConfigs, globalVersion);
-            }
-            else
-            {
-                UpdateVersions(task, taskTargetPath, taskVersionInfo[task], targetConfigs, currentSprint, globalVersionPath, ref maxPatchForCurrentSprint, globalVersion);
-            }
-
             var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
             if (duplicateVersions.Any())
             {
@@ -422,10 +383,8 @@ namespace BuildConfigGen
             try
             {
                 string currentDir = Environment.CurrentDirectory;
-
                 string gitRootPath = GitUtil.GetGitRootPath(currentDir);
                 string versionMapFile = GetVersionMapFile(task, gitRootPath);
-
 
                 string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
                 if (!Directory.Exists(taskTargetPath))
@@ -857,22 +816,22 @@ namespace BuildConfigGen
 
             if (shouldUpdateTaskLib)
             {
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azurermdeploycommon", "file:../../tasks-common/common-npm-packages/azurermdeploycommon/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codeanalysis-common", "file:../../tasks-common/common-npm-packages/codeanalysis-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codecoverage-tools", "file:../../tasks-common/common-npm-packages/codecoverage-tools/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-docker-common", "file:../../tasks-common/common-npm-packages/docker-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-ios-signing-common", "file:../../tasks-common/common-npm-packages/ios-signing-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-java-common", "file:../../tasks-common/common-npm-packages/java-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "file:../../tasks-common/common-npm-packages/kubernetes-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-msbuildhelpers", "file:../../tasks-common/common-npm-packages/msbuildhelpers/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-packaging-common", "file:../../tasks-common/common-npm-packages/packaging-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-securefiles-common", "file:../../tasks-common/common-npm-packages/securefiles-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-utility-common", "file:../../tasks-common/common-npm-packages/utility-common/_build");
-                UpdateDep(outputNodePackagePathJsonNode, "azure-pipelines-tasks-webdeployment-common", "file:../../tasks-common/common-npm-packages/webdeployment-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azurermdeploycommon", "file:../../tasks-common/common-npm-packages/azurermdeploycommon/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codeanalysis-common", "file:../../tasks-common/common-npm-packages/codeanalysis-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codecoverage-tools", "file:../../tasks-common/common-npm-packages/codecoverage-tools/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-docker-common", "file:../../tasks-common/common-npm-packages/docker-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-ios-signing-common", "file:../../tasks-common/common-npm-packages/ios-signing-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-java-common", "file:../../tasks-common/common-npm-packages/java-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "file:../../tasks-common/common-npm-packages/kubernetes-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-msbuildhelpers", "file:../../tasks-common/common-npm-packages/msbuildhelpers/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-packaging-common", "file:../../tasks-common/common-npm-packages/packaging-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-securefiles-common", "file:../../tasks-common/common-npm-packages/securefiles-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-utility-common", "file:../../tasks-common/common-npm-packages/utility-common/_build");
+                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-webdeployment-common", "file:../../tasks-common/common-npm-packages/webdeployment-common/_build");
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json
@@ -881,7 +840,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void UpdateDep(JsonNode outputNodePackagePathJsonNode, string module, string buildPath)
+        private static void UpdateDepNode(JsonNode outputNodePackagePathJsonNode, string module, string buildPath)
         {
             var depNode = outputNodePackagePathJsonNode["dependencies"];
             var f = depNode![module];
@@ -1016,17 +975,24 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string task, string taskTarget, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion)
+        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion)
         {
+            string currentDir = Environment.CurrentDirectory;
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+
+            if (!Directory.Exists(taskTargetPath))
+            {
+                throw new Exception($"expected {taskTargetPath} to exist!");
+            }
+
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
 
-            var inputVersion = GetInputVersion(taskTarget);
+            var inputVersion = GetInputVersion(taskTargetPath);
 
             bool defaultVersionMatchesSourceVersion;
 
-            string currentDir = Environment.CurrentDirectory;
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
             string versionMapFile = GetVersionMapFile(task, gitRootPath);
 
             {
@@ -1045,7 +1011,7 @@ namespace BuildConfigGen
 
                 if (inputVersion <= maxVersion && !defaultVersionMatchesSourceVersion)
                 {
-                    throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile {versionMapFile} and globalVersionPath={globalVersionPath}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
+                    throw new Exception($"inputVersion={inputVersion} version specified in task taskTargetPath={taskTargetPath} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile {versionMapFile} and globalVersionPath={globalVersionPath}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
                 }
             }
 
@@ -1170,7 +1136,6 @@ namespace BuildConfigGen
                 {
                     if (taskState.configTaskVersionMapping.ContainsKey(config))
                     {
-
                         if (taskState.configTaskVersionMapping[config] != globalVersion)
                         {
                             taskState.configTaskVersionMapping[config] = globalVersion;
@@ -1196,7 +1161,7 @@ namespace BuildConfigGen
 
         private static TaskVersion? GetGlobalVersion(string srcPath, string globalVersionPath)
         {
-            if(!File.Exists(globalVersionPath))
+            if (!File.Exists(globalVersionPath))
             {
                 return null;
             }
