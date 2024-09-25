@@ -93,9 +93,9 @@ namespace BuildConfigGen
                 Name = name;
             }
 
-            public string Name;
+            public readonly string Name;
 
-            public HashSet<string> Configs = new HashSet<string>();
+            public readonly HashSet<string> Configs = new HashSet<string>();
 
         }
     }
