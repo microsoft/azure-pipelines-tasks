@@ -109,10 +109,10 @@
     {
       "name": "requestTimeout",
       "type": "int",
-      "label": "Set timeout for package download request",
+      "label": "ms-resource:loc.input.label.requestTimeout",
       "defaultValue": 300000,
       "required": false,
-      "helpMarkDown": "Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 30 minutes."
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "execution": {
