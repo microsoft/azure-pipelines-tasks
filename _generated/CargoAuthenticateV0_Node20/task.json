@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
-    "Patch": 1
+    "Minor": 246,
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -65,8 +65,8 @@
     "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.245.0",
-    "Node20_229_1": "0.245.1",
-    "wif_242": "0.245.2"
+    "Default": "0.246.3",
+    "Node20_229_1": "0.246.4",
+    "wif_242": "0.246.5"
   }
 }

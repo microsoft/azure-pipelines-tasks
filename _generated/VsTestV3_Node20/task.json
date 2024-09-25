@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 245,
+    "Minor": 246,
     "Patch": 1
   },
   "demands": [
@@ -48,6 +48,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -662,7 +672,7 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d"
   },
   "_buildConfigMapping": {
-    "Default": "3.245.0",
-    "Node20_229_4": "3.245.1"
+    "Default": "3.246.0",
+    "Node20_229_4": "3.246.1"
   }
 }

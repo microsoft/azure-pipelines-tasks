@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 245,
+    "Minor": 246,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -67,6 +67,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "command",
       "type": "pickList",
@@ -587,7 +597,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.245.0",
-    "Node20_229_2": "2.245.1"
+    "Default": "2.246.0",
+    "Node20_229_2": "2.246.1"
   }
 }

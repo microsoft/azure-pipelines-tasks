@@ -2,7 +2,8 @@
     "inputs": [
         {
             "name": "workloadIdentityServiceConnection",
-            "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+            "aliases": ["azureDevOpsServiceConnection"],
+            "label": "'Azure DevOps' Service Connection",
             "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
             "type": "connectedService:workloadidentityuser",
             "required": false,
@@ -15,7 +16,7 @@
         {
             "name": "feedUrl",
             "label": "Azure Artifacts Feed url.",
-            "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/",
+            "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/",
             "type": "string",
             "defaultValue": "",
             "required": false,
