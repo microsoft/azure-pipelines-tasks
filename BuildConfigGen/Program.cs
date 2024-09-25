@@ -1026,7 +1026,7 @@ namespace BuildConfigGen
 
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-            string versionMapFile = GetVersionMapFile(gitRootPath, task);
+            string versionMapFile = GetVersionMapFile(task, gitRootPath);
 
             {
                 TaskVersion? defaultVersion = null;
