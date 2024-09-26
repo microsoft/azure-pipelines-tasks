@@ -212,6 +212,7 @@ namespace BuildConfigGen
                     }
 
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
+                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
                 }
 
                 foreach (var t in tasks)
@@ -333,6 +334,10 @@ namespace BuildConfigGen
 
         private static int GetCurrentSprint()
         {
+            // Scheduled time for Cortesy Push
+            var cortesyPushScheduleDay = DayOfWeek.Tuesday;
+            var cortesyPushUtcTime = new TimeOnly(8, 30); //UTC time
+
             string url = "https://whatsprintis.it";
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -340,6 +345,25 @@ namespace BuildConfigGen
             string json = httpClient.GetStringAsync(url).Result;
             JsonDocument currentSprintData = JsonDocument.Parse(json);
             int currentSprint = currentSprintData.RootElement.GetProperty("sprint").GetInt32();
+            int week = currentSprintData.RootElement.GetProperty("week").GetInt32();
+
+            if (week == 3) // if it is the end of the current sprint
+            {
+                var nowUtc = DateTime.UtcNow;
+
+                // Increase sprint number if scheduled pipeline was already triggered
+                if (nowUtc.DayOfWeek > cortesyPushScheduleDay)
+                {
+                    currentSprint++;
+                }
+                else if (nowUtc.DayOfWeek == cortesyPushScheduleDay)
+                {
+                    if (TimeOnly.FromDateTime(nowUtc) >= cortesyPushUtcTime)
+                    {
+                        currentSprint++;
+                    }
+                }
+            }
 
             return currentSprint;
         }
@@ -358,7 +382,7 @@ namespace BuildConfigGen
                     Console.WriteLine(s);
                 }
 
-                throw new Exception($"Updates needed, please run BuildConfigGen  --task {task} --write-updates");
+                throw new Exception($"Updates needed, please run npm make.js --task {task} ");
             }
         }
 
