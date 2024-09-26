@@ -16,6 +16,7 @@ namespace BuildConfigGen
             var r = new Utf8JsonReader(File.ReadAllBytes(Path.Combine(gitRootPath, @"make-options.json")));
 
             bool inConfig = false;
+            bool underTasksNode = false;
             string configName = "";
 
             while (r.Read())
@@ -32,44 +33,56 @@ namespace BuildConfigGen
                             {
                                 // skip
                                 inConfig = false;
+                                underTasksNode = false;
                             }
                             else if (text == "tasks")
                             {
                                 inConfig = false;
+                                underTasksNode = true;
                             }
                             else
                             {
-
                                 inConfig = true;
                                 configName = text!;
+                                underTasksNode = false;
                             }
 
                             break;
                         }
                     case JsonTokenType.String:
                         {
+                            if(underTasksNode && inConfig)
+                            {
+                                throw new Exception("don't expect underTasksNode && inConfig");
+                            }
+
+                            // only add tasks under task node!  (if there is a task that only exists under a config, ignore it!)
+                            if (underTasksNode)
+                            {
+                                string? text = r.GetString();
+                                if(agentTasks.ContainsKey(text!))
+                                {
+                                    throw new Exception($"duplicate task in make-options {text}");
+                                }
+
+                                AgentTask task = new AgentTask(text!);
+                                agentTasks.Add(text!, task);
+                            }
+
                             if (inConfig)
                             {
                                 string? text = r.GetString();
-                                //Console.WriteLine(r.TokenType + " " + text);
 
-                                AgentTask task;
-                                if (agentTasks.TryGetValue(text!, out task!))
+                                AgentTask? task;
+                                if (agentTasks.TryGetValue(text!, out task))
                                 {
+                                    if (configName == "")
+                                    {
+                                        throw new Exception("expected configName to have value");
+                                    }
 
+                                    task.Configs.Add(configName);
                                 }
-                                else
-                                {
-                                    task = new AgentTask(text!);
-                                    agentTasks.Add(text!, task);
-                                }
-
-                                if (configName == "")
-                                {
-                                    throw new Exception("expected configName to have value");
-                                }
-
-                                task.Configs.Add(configName);
                             }
 
                             break;
@@ -93,9 +106,9 @@ namespace BuildConfigGen
                 Name = name;
             }
 
-            public string Name;
+            public readonly string Name;
 
-            public HashSet<string> Configs = new HashSet<string>();
+            public readonly HashSet<string> Configs = new HashSet<string>();
 
         }
     }
