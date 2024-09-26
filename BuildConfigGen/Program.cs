@@ -212,6 +212,7 @@ namespace BuildConfigGen
                     }
 
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
+                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
                 }
 
                 foreach (var t in tasks)
@@ -358,7 +359,7 @@ namespace BuildConfigGen
                     Console.WriteLine(s);
                 }
 
-                throw new Exception($"Updates needed, please run BuildConfigGen  --task {task} --write-updates");
+                throw new Exception($"Updates needed, please run npm make.js --task {task} ");
             }
         }
 
