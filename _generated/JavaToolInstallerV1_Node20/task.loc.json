@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 1
+    "Patch": 2
   },
   "satisfies": [
     "Java",
@@ -234,6 +234,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.246.0",
-    "Node20-225": "1.246.1"
+    "Node20_229_14": "1.246.2"
   }
 }

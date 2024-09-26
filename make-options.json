@@ -263,7 +263,6 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
-        "JavaToolInstallerV1",
         "JenkinsQueueJobV2",
         "MavenV4",
         "UsePythonVersionV0",
@@ -410,7 +409,8 @@
         "PublishTestResultsV2"
     ],
     "Node20_229_14": [
-        "PublishSymbolsV2"
+        "PublishSymbolsV2",
+        "JavaToolInstallerV1"
     ],
     "wif_242": [
         "PipAuthenticateV1",
