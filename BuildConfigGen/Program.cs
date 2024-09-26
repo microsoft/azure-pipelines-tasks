@@ -382,7 +382,7 @@ namespace BuildConfigGen
                     Console.WriteLine(s);
                 }
 
-                throw new Exception($"Updates needed, please run npm make.js --task {task} ");
+                throw new Exception($"Updates to generated files must be checked in, please run node make.js --task {task} ");
             }
         }
 
