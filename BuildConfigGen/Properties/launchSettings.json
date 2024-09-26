@@ -2,7 +2,7 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": " --task PipAuthenticateV1   "
+      "commandLineArgs": " --task AndroidSigningV2 --write-updates "
     }
   }
 }

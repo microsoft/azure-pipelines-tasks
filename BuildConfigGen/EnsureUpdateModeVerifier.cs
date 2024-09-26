@@ -75,22 +75,31 @@ namespace BuildConfigGen
 
         public void CleanupTempFiles()
         {
-            int count = 0;
-            foreach (var f in RedirectedToTempl.Values)
+            try
             {
-                count++;
-                if (!tempsToKeep.Contains(f))
+                int count = 0;
+                foreach (var f in RedirectedToTempl.Values)
                 {
-                    if (File.Exists(f))
+                    count++;
+                    if (!tempsToKeep.Contains(f))
                     {
-                        File.Delete(f);
+                        if (File.Exists(f))
+                        {
+                            File.Delete(f);
+                        }
                     }
                 }
-            }
 
-            if (count > 0 && !verifyOnly)
+                if (count > 0 && !verifyOnly)
+                {
+                    throw new Exception("Expected RedirectedToTemp to be empty when !verifyOnly");
+                }
+            }
+            finally
             {
-                throw new Exception("Expected RedirectedToTemp to be empty when !verifyOnly");
+                this.VerifyErrors.Clear();
+                this.RedirectedToTempl.Clear();
+                this.CopiedFilesToCheck.Clear();
             }
         }
 
