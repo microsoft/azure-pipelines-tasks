@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 246,
-    "Patch": 2
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [

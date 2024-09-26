@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 1
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [
@@ -531,7 +531,7 @@
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
   },
   "_buildConfigMapping": {
-    "Default": "4.246.2",
-    "Node20-225": "4.246.3"
+    "Default": "4.246.0",
+    "Node20-225": "4.246.1"
   }
 }
