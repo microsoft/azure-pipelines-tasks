@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
+    "Minor": 246,
     "Patch": 0
   },
   "demands": [],
@@ -391,7 +391,7 @@
     "EnvironmentLink": "For more information, go to %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20_229_3": "0.244.1"
+    "Default": "0.246.0",
+    "Node20_229_3": "0.246.1"
   }
 }

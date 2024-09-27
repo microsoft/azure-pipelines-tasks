@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
   "loc.description": "Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 6, or MSBuild >= 15.8.166.59604",
   "loc.instanceNameFormat": "NuGet Authenticate",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
