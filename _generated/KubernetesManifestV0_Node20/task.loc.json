@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -395,7 +395,7 @@
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_3": "0.246.1"
+    "Default": "0.246.2",
+    "Node20_229_3": "0.246.3"
   }
 }
