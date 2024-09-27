@@ -88,12 +88,8 @@ export class AzureStorageArtifactDownloader {
     try {
       console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
-      const endpointObject = await new AzureRMEndpoint(this.connectedService).getEndpoint();
-      console.log(tl.loc('downloadArtifacts - Fetched endpointObject:', JSON.stringify(endpointObject)));
-
+      const endpointObject = await this._getAzureRMEndpoint();
       const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
-      console.log(tl.loc('downloadArtifacts - Fetched storageAccount:', JSON.stringify(storageAccount)));
-      
       const blobService = new BlobService.BlobService(storageAccount.name, "", "", true, endpointObject);
       await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
 
@@ -218,6 +214,17 @@ export class AzureStorageArtifactDownloader {
   private async _getARMCredentials(): Promise<msRestAzure.ApplicationTokenCredentials> {
     const endpoint: AzureEndpoint = await new AzureRMEndpoint(this.connectedService).getEndpoint();
     return endpoint.applicationTokenCredentials;
+  }
+
+  /**
+   * Retrieves the full Azure Resource Manager (ARM) endpoint details.
+   *
+   * @returns {Promise<AzureEndpoint>} A promise that resolves to the AzureEndpoint.
+   * @private
+   */
+  private async _getAzureRMEndpoint(): Promise<AzureEndpoint> {
+    const endpoint: AzureEndpoint = await new AzureRMEndpoint(this.connectedService).getEndpoint();
+    return endpoint;
   }
 }
 
