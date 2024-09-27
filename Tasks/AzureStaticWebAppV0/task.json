@@ -162,14 +162,6 @@
       "helpMarkDown": "Directory location of the Data API source files relative to working directory"
     },
     {
-      "name": "azure_static_web_apps_api_token",
-      "type": "string",
-      "label": "Azure Static Web Apps api token",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
-    },
-    {
       "name": "azure_access_token",
       "type": "string",
       "label": "Azure Access Token",
