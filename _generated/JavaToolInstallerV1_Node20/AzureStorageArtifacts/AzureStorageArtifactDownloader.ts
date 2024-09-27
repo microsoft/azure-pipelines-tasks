@@ -87,10 +87,13 @@ export class AzureStorageArtifactDownloader {
   public async downloadArtifacts(downloadToPath: string, fileType: string): Promise<void> {
     try {
       console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
-      
-      // TODO: Check if this.connectedService is the right parameter for AzureRMEndpoint
+
       const endpointObject = await new AzureRMEndpoint(this.connectedService).getEndpoint();
+      console.log(tl.loc('downloadArtifacts - Fetched endpointObject:', JSON.stringify(endpointObject)));
+
       const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
+      console.log(tl.loc('downloadArtifacts - Fetched storageAccount:', JSON.stringify(storageAccount)));
+      
       const blobService = new BlobService.BlobService(storageAccount.name, "", "", true, endpointObject);
       await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
 
