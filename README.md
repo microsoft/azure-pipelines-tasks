@@ -5,7 +5,7 @@
 This repo contains the tasks provided out-of-the-box with Azure Pipelines and Team Foundation Server.
 
 This provides open examples of how we write tasks which will help you write other tasks that can be uploaded to your account or server.  See **Writing Tasks** below.
-Could you check the Deprecation.md file for the list of tasks that are no longer supported?
+Check the Deprecation.md file for the list of tasks that are no longer supported?
 
 ## Status
 |   | Build & Test |
