@@ -17,10 +17,10 @@
 import os
 import sys
 import json
-import requests
+from security import safe_requests
 
 def download_file(url, dest_path):
-    response = requests.get(url)
+    response = safe_requests.get(url)
     if response.status_code == 200:
         with open(dest_path, 'wb') as f:
             f.write(response.content)
@@ -79,7 +79,7 @@ def main():
     download_url = sys.argv[1]
     old_checksums = sys.argv[2]
 
-    response = requests.get(download_url)
+    response = safe_requests.get(download_url)
     if response.status_code == 200:
         checksum_text = response.text
         checksums = process_checksum(checksum_text)
