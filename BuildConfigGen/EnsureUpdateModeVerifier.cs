@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.IO;
 using System.Security.AccessControl;
 
 namespace BuildConfigGen
@@ -10,7 +11,7 @@ namespace BuildConfigGen
         // if any changes would be made to output, verification should fail
         // check the contents of VerifyErrors for verification errors
 
-        private readonly bool verifyOnly;
+        private bool verifyOnly;
         private List<string> VerifyErrors = new List<string>();
         internal Dictionary<string, string> CopiedFilesToCheck = new Dictionary<string, string>();
         internal Dictionary<string, string> RedirectedToTempl = new Dictionary<string, string>();
@@ -30,7 +31,6 @@ namespace BuildConfigGen
 
             if (!skipContentCheck)
             {
-
                 foreach (var r in CopiedFilesToCheck)
                 {
                     string? sourceFile;
@@ -105,7 +105,9 @@ namespace BuildConfigGen
 
         internal void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            if (verifyOnly)
+            EnsureUnconditionalFile(destFileName);
+
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 if (File.Exists(destFileName))
                 {
@@ -130,7 +132,9 @@ namespace BuildConfigGen
                     VerifyErrors.Add($"Copy {sourceFileName} to {destFileName} (overwrite={overwrite}).  Dest file doesn't exist.");
                 }
             }
-            else
+
+
+            if (!verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 File.Copy(sourceFileName, destFileName, overwrite);
             }
@@ -138,7 +142,10 @@ namespace BuildConfigGen
 
         internal void Move(string sourceFileName, string destFileName)
         {
-            if (verifyOnly)
+            EnsureUnconditionalFile(sourceFileName);
+            EnsureUnconditionalFile(destFileName);
+
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 // verification won't pass if we encounter a move
 
@@ -152,7 +159,8 @@ namespace BuildConfigGen
                     VerifyErrors.Add($"Need to move {sourceFileName} to {destFileName}.  Dest file doesn't exist.");
                 }
             }
-            else
+
+            if (!verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 File.Move(sourceFileName, destFileName);
             }
@@ -160,7 +168,9 @@ namespace BuildConfigGen
 
         internal void WriteAllText(string path, string contents, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
-            if (verifyOnly)
+            EnsureUnconditionalFile(path);
+
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 if (File.Exists(path))
                 {
@@ -191,7 +201,8 @@ namespace BuildConfigGen
                     }
                 }
             }
-            else
+
+            if (!verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 File.WriteAllText(path, contents);
             }
@@ -205,7 +216,9 @@ namespace BuildConfigGen
 
         internal void DirectoryCreateDirectory(string path, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
-            if (verifyOnly)
+            EnsureUnconditionalPath(path);
+
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 if (!Directory.Exists(path))
                 {
@@ -220,7 +233,8 @@ namespace BuildConfigGen
                     }
                 }
             }
-            else
+
+            if (!verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 Directory.CreateDirectory(path);
             }
@@ -228,7 +242,8 @@ namespace BuildConfigGen
 
         internal string FileReadAllText(string filePath)
         {
-            if (verifyOnly)
+            // special handling note needed for lastVerifyOnlyState.HasValue as updates are written to 'redirected' temp files
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 string targetFile = ResolveFile(filePath);
 
@@ -240,9 +255,10 @@ namespace BuildConfigGen
             }
         }
 
-        internal string [] FileReadAllLines(string filePath)
+        internal string[] FileReadAllLines(string filePath)
         {
-            if (verifyOnly)
+            // special handling note needed for lastVerifyOnlyState.HasValue as updates are written to 'redirected' temp files
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
                 string targetFile = ResolveFile(filePath);
 
@@ -263,7 +279,7 @@ namespace BuildConfigGen
 
         private string ResolveFile(string filePath)
         {
-            if(!verifyOnly)
+            if (!verifyOnly)
             {
                 return filePath;
             }
@@ -295,20 +311,86 @@ namespace BuildConfigGen
 
         internal void DeleteDirectoryRecursive(string path)
         {
-            if(verifyOnly)
+            if (verifyOnly || lastVerifyOnlyState.HasValue)
             {
-                if(Directory.Exists(path))
+                if (Directory.Exists(path))
                 {
                     VerifyErrors.Add($"Expected directory {path} to not exist");
                 }
             }
-            else
+
+            if (!verifyOnly || lastVerifyOnlyState.HasValue)
             {
-                if(Directory.Exists(path))
+                EnsureUnconditionalPath(path);
+
+                if (Directory.Exists(path))
                 {
                     Directory.Delete(path, true);
                 }
             }
+        }
+
+        private void EnsureUnconditionalPath(string path)
+        {
+            if (allowedUnconditionalPath is not null && !IsSubPath(allowedUnconditionalPath, path))
+            {
+                throw new Exception($"BUG: path={path} must be under allowedUnconditionalPath={allowedUnconditionalPath}");
+            }
+        }
+
+        private void EnsureUnconditionalFile(string file)
+        {
+            if (allowedUnconditionalPath is not null && !IsSubFile(allowedUnconditionalPath, file))
+            {
+                throw new Exception($"BUG: file={file} must be under allowedUnconditionalPath={allowedUnconditionalPath}");
+            }
+        }
+
+        bool? lastVerifyOnlyState;
+        string? allowedUnconditionalPath;
+
+        internal void StartUnconditionalWrites(string allowedUnconditionalPath)
+        {
+            if (!verifyOnly)
+            {
+                return;
+            }
+
+            if (lastVerifyOnlyState.HasValue)
+            {
+                throw new Exception($"expected lastVerifyOnlyState={lastVerifyOnlyState} to be null");
+            }
+
+            lastVerifyOnlyState = verifyOnly;
+            verifyOnly = false;
+            this.allowedUnconditionalPath = allowedUnconditionalPath;
+        }
+
+        internal void ResumeWriteBehavior()
+        {
+            if (lastVerifyOnlyState.HasValue)
+            {
+                verifyOnly = lastVerifyOnlyState.Value;
+                lastVerifyOnlyState = null;
+                this.allowedUnconditionalPath = null;
+            }
+        }
+
+        // generaetd by copilot 20240926
+        static bool IsSubPath(string mainPath, string subPath)
+        {
+            var mainDirectory = new DirectoryInfo(mainPath).FullName;
+            var subDirectory = new DirectoryInfo(subPath).FullName;
+
+            return subDirectory.StartsWith(mainDirectory, StringComparison.OrdinalIgnoreCase);
+        }
+
+        static bool IsSubFile(string mainPath, string subFile)
+        {
+            var mainDirectory = new DirectoryInfo(mainPath).FullName;
+            var subDirectory = new FileInfo(subFile).FullName;
+
+            return subDirectory.StartsWith(mainDirectory, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
