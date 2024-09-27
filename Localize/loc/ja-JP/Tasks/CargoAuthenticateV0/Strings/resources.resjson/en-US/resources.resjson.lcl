@@ -100,6 +100,9 @@
       <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービスの接続]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

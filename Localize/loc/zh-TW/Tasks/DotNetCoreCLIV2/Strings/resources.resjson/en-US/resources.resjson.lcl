@@ -173,10 +173,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          <Val><![CDATA[Include the selected feed in the generated NuGet.config.]A;]A;Format:]A;* For organization-scoped feeds: `FeedName`]A;* For project-scoped feeds: `ProjectName/FeedName`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[在產生的 NuGet.config 中包含選取的摘要。您必須安裝 Azure Artifacts 且經過授權，才能於此處選取摘要。]]></Val>
+            <Val><![CDATA[在產生的 NuGet.config 中包含選取的摘要。]A;]A;格式:]A;* 針對組織範圍的摘要: 'FeedName']A;* 針對專案範圍的摘要: 'ProjectName/FeedName']]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -500,10 +503,13 @@
       </Item>
       <Item ItemId=";loc.input.label.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          <Val><![CDATA[Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]5D;feed name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[使用此 Azure 成品摘要中的套件]]></Val>
+            <Val><![CDATA[使用此 Azure 成品摘要中的套件。從下拉式清單中選取，或輸入 [專案名稱/]5D;摘要名稱。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

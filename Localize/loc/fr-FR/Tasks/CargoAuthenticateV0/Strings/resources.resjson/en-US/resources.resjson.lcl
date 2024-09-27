@@ -52,6 +52,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Liste séparée par des virgules des noms de registre spécifiés dans votre config.toml pour l'authentification. Si cette option est définie, workloadIdentityServiceConnection est requis. Toutes les autres entrées sont ignorées. Non compatible avec cargoServiceConnections.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this is set, registryNames is required. All other inputs are ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si cette option est définie, RegistryNames est requis. Toutes les autres entrées sont ignorées.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cargoServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials for registries outside this organization/collection]]></Val>
@@ -66,6 +84,24 @@
           <Val><![CDATA[config.toml file to authenticate]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[fichier config.toml à authentifier]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry names from config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Noms de registre de config.toml]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Connexion de service « Utilisateur Azure DevOps adossé à l’ID de charge de travail Entra »]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -93,6 +129,15 @@
           <Val><![CDATA[Adding auth for registry: %s with token name: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ajout de l’authentification pour le Registre : %s avec le nom de jeton : %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.AuthTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Authenticated %s internal feeds, %s external repos, and %s federated service connections]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Flux internes %s authentifiés, référentiels externes %s et connexions de services fédérés %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,9 +180,21 @@
       </Item>
       <Item ItemId=";loc.messages.ConnectionAlreadySet" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          <Val><![CDATA[Registry %s already has auth set for an %s connection.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Le registre %s est déjà défini pour une connexion %s]]></Val>
+            <Val><![CDATA[Le registre %s a déjà défini l'authentification pour une connexion %s.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConnectionAlreadySetOverwriting" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry %s already has auth set for an %s connection. Overwriting the existing auth.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le registre %s a déjà défini l'authentification pour une connexion %s. Écraser l'authentification existante.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -147,6 +204,33 @@
           <Val><![CDATA[Failed to add authentication.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Nous n’avons pas pu ajouter l’authentification.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossible d'obtenir les informations d'identification fédérées à partir de la connexion au service : %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingRegistryNameOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Both registry name and service connection need to be set and cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le nom du registre et la connexion au service doivent être définis et ne peuvent pas être vides.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les noms de registre saisis « %s » ne correspondent à aucun registre dans config.toml]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

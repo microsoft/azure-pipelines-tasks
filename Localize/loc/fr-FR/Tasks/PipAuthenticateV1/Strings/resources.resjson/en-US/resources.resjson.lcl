@@ -130,7 +130,7 @@
         <Str Cat="Text">
           <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Connexion de service « Prise en charge de l’ID de charge de travail Azure DevOps utilisateur »]]></Val>
+            <Val><![CDATA[Connexion de service « Utilisateur Azure DevOps adossé à l’ID de charge de travail Entra »]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

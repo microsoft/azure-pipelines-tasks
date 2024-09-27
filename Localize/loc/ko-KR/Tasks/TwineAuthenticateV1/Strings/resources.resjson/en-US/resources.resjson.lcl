@@ -138,6 +138,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[피드 이름 %s에 대한 중복 항목입니다. 잠재적인 게시 문제를 방지하려면 고유한 이름을 사용하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
@@ -278,15 +287,6 @@
           <Val><![CDATA[Environment variable for .pypirc at %s is set.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[%s에 있는 .pypirc의 환경 변수가 설정되었습니다.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.Warning_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[피드 이름에 대한 중복 항목입니다. 잠재적인 게시 문제를 방지하려면 고유한 이름을 사용하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

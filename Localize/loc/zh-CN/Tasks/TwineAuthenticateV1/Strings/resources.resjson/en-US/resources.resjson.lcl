@@ -138,6 +138,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[这是源名称 %s 的重复条目。使用唯一名称以避免潜在的发布问题。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
@@ -278,15 +287,6 @@
           <Val><![CDATA[Environment variable for .pypirc at %s is set.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[已在 %s 设置 .pypirc 的环境变量。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.Warning_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[这是源名称的重复条目。使用唯一名称以避免潜在的发布问题。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
