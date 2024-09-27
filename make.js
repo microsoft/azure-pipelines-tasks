@@ -57,6 +57,8 @@ var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
+var taskLibPath = path.join(__dirname, 'task-lib/node');
+var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
 var CLI = {};
 
@@ -100,6 +102,18 @@ if (argv.task) {
 } else {
     // load the default list
     taskList = fileToJson(makeOptionsPath).tasks;
+
+    if (argv.skipToTask)
+    {
+        var skipToTaskIndex = taskList.indexOf(argv.skipToTask);
+
+        if (skipToTaskIndex==-1)
+        {
+            fail('argv.skipToTask (' + argv.skipToTask + ') not found');
+        }
+
+        taskList = taskList.slice(skipToTaskIndex);
+    }
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -204,11 +218,30 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    // Need to validate generated tasks first
-    const makeOptions = fileToJson(makeOptionsPath);
+    if (argv.includeLocalPackagesBuildConfig)
+    {
+        if (!argv.skipPrebuildSteps)
+        {
+            // build task-lib
+            cd(taskLibPath);
+            run("node make.js build", /*inheritStreams:*/true);
 
-    // Verify generated files across tasks are up-to-date
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
+            
+            await util.installNodeAsync('20');
+            // build task-lib
+            cd(tasksCommonPath);
+            run("node make.js --build", /*inheritStreams:*/true);
+        }
+    }
+
+    // Need to validate generated tasks first
+    if (!argv.skipPrebuildSteps)
+    {
+        const makeOptions = fileToJson(makeOptionsPath);
+
+        // Verify generated files across tasks are up-to-date
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
+    }
 
     const allTasks = getTaskList(taskList);
 
