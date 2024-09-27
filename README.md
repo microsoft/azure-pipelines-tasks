@@ -1,25 +1,26 @@
 # Azure Pipelines Tasks
-![Tasks](/taskbanner.png "Tasks")
+
+![Tasks](/taskbanner.png 'Tasks')
 
 ## Overview
+
 This repo contains the tasks provided out-of-the-box with Azure Pipelines and Team Foundation Server.
 
 This provides open examples of how we write tasks which will help you write other tasks that can be uploaded to your account or server.  See **Writing Tasks** below.
 Check the Deprecation.md file for the list of tasks that are no longer supported?
 
 ## Status
-|   | Build & Test |
-|---|:-----:|
-|![Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]| 
-|![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
-|![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
+
+|                                            |                   Build & Test                    |
+| ------------------------------------------ | :-----------------------------------------------: |
+| ![Win](docs/res/win_med.png) **Windows**   |   [![Build & Test][win-build-badge]][win-build]   |
+| ![macOS](docs/res/apple_med.png) **macOS** | [![Build & Test][macOS-build-badge]][macOS-build] |
+| ![Linux](docs/res/linux_med.png) **Linux** | [![Build & Test][linux-build-badge]][linux-build] |
 
 [win-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-windows
 [win-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7634
-
 [macOS-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-macos
 [macOS-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7635
-
 [linux-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-linux
 [linux-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7636
 
@@ -29,9 +30,10 @@ See the documentation for [Continuous integration and deployment](https://aka.ms
 
 ## Writing Tasks
 
-If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Bash tasks.  Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
+If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Bash tasks. Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
 
-Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first-class way and handle return codes, treat std/err out, and write timeline records based on expected output.  They also get access to credentials to write back to TFS/Azure Pipelines. 
+
+Tasks are simply tool runners. They know how to run MSBuild, VSTest, etc... in a first-class way and handle return codes, treat std/err out, and write timeline records based on expected output. They also get access to credentials to write back to TFS/Azure Pipelines.
 
 For uploading custom tasks to Azure Pipelines use the [TFS Cross Platform Command Line utility](https://github.com/Microsoft/tfs-cli).
 
