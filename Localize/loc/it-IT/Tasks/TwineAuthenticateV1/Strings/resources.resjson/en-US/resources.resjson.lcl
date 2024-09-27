@@ -67,7 +67,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se questa impostazione è impostata, è necessario workloadIdentityServiceConnection. Tutti gli altri input vengono ignorati. Non compatibile con pythonUploadServiceConnections. L'URL del feed deve essere nel formato registro pypi, ad esempio https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+            <Val><![CDATA[Se questa impostazione è impostata, è necessario workloadIdentityServiceConnection. Tutti gli altri input vengono ignorati. Non compatibile con pythonUploadServiceConnections. L'URL del feed deve essere nel formato del registro di caricamento pypi, ad esempio https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

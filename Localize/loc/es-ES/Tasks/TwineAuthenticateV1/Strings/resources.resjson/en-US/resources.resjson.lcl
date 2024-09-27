@@ -124,7 +124,7 @@
         <Str Cat="Text">
           <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Conexión de servicio "Usuario de Azure DevOps respaldado por Id. de carga de trabajo de Entra"]]></Val>
+            <Val><![CDATA[Conexión de servicio "Usuario de Azure DevOps respaldado por id. de carga de trabajo de Entra"]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -134,6 +134,15 @@
           <Val><![CDATA[Twine Authenticate $(message)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Autenticación de Twine $(message)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se trata de una entrada duplicada para el nombre de fuente %s. Usar nombres únicos para evitar posibles problemas de publicación.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -278,15 +287,6 @@
           <Val><![CDATA[Environment variable for .pypirc at %s is set.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[La variable de entorno para .pypirc en %s está establecida.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.Warning_DuplicateEntryForFeed" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se trata de una entrada duplicada para el nombre de la fuente. Use nombres únicos para evitar posibles problemas de publicación.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -67,7 +67,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[これを設定した場合、workloadIdentityServiceConnection は必須です。他のすべての入力は無視されます。pythonUploadServiceConnections と互換性がありません。フィード URL は pypi アップロード レジストリ形式にする必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/)]]></Val>
+            <Val><![CDATA[これを設定した場合、workloadIdentityServiceConnection は必須です。他のすべての入力は無視されます。pythonUploadServiceConnections と互換性がありません。フィード URL は pypi アップロード レジストリ形式にする必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -124,7 +124,7 @@
         <Str Cat="Text">
           <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービス接続]]></Val>
+            <Val><![CDATA['Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービスの接続]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

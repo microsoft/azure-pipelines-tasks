@@ -173,10 +173,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          <Val><![CDATA[Include the selected feed in the generated NuGet.config.]A;]A;Format:]A;* For organization-scoped feeds: `FeedName`]A;* For project-scoped feeds: `ProjectName/FeedName`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[선택한 피드를 생성된 NuGet.config에 포함합니다. 여기서 피드를 선택하려면 Azure Artifacts가 설치되고 사용이 허가된 상태여야 합니다.]]></Val>
+            <Val><![CDATA[생성된 NuGet.config에 선택한 피드를 포함합니다.]A;]A;형식:]A;* 조직 범위 피드의 경우: 'FeedName']A;* 프로젝트 범위 피드의 경우: 'ProjectName/FeedName']]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -500,10 +503,13 @@
       </Item>
       <Item ItemId=";loc.input.label.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          <Val><![CDATA[Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]5D;feed name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 Azure Artifacts 피드의 패키지 사용]]></Val>
+            <Val><![CDATA[이 Azure Artifacts 피드의 패키지를 사용합니다. 드롭다운에서 선택하거나 [프로젝트 이름/]5D;피드 이름을 입력합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

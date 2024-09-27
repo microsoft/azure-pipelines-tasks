@@ -52,6 +52,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Comma seperated list of registry names specified in your config.toml to authenticate. If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with cargoServiceConnections.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[以逗號分隔的 config.toml 中指定的登錄名稱清單，以進行驗證。如果設定此選項，則需要 workloadIdentityServiceConnection。忽略所有其他輸入。與 cargoServiceConnections 不相容。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this is set, registryNames is required. All other inputs are ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果已設定，則需要 registryNames。忽略所有其他輸入。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cargoServiceConnections" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials for registries outside this organization/collection]]></Val>
@@ -66,6 +84,24 @@
           <Val><![CDATA[config.toml file to authenticate]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[要驗證的 config.toml 檔案]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.registryNames" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry names from config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[來自 config.toml 的登錄名稱]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[採用 Entra 工作負載 ID 的 Azure DevOps 使用者服務連線]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -93,6 +129,15 @@
           <Val><![CDATA[Adding auth for registry: %s with token name: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[正在新增登錄的驗證: 具有權杖名稱的 %s: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.AuthTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Authenticated %s internal feeds, %s external repos, and %s federated service connections]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已驗證 %s 內部摘要、%s 外部存放庫，以及 %s 的同盟服務連線]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,9 +180,21 @@
       </Item>
       <Item ItemId=";loc.messages.ConnectionAlreadySet" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          <Val><![CDATA[Registry %s already has auth set for an %s connection.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已為 %s 連線設定 %s 登錄]]></Val>
+            <Val><![CDATA[登錄 %s 已經有 %s 連線的驗證設定。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[%s registry is already set for an %s connection]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConnectionAlreadySetOverwriting" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry %s already has auth set for an %s connection. Overwriting the existing auth.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[登錄 %s 已經有 %s 連線的驗證設定。正在覆寫現有的驗證。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -147,6 +204,33 @@
           <Val><![CDATA[Failed to add authentication.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[無法新增驗證。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法取得服務連線的同盟認證: %s。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingRegistryNameOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Both registry name and service connection need to be set and cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[登錄名稱和服務連線都必須設定，且不能是空的。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[登錄名稱輸入 '%s' 未對應 config.toml 中的任何登錄]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

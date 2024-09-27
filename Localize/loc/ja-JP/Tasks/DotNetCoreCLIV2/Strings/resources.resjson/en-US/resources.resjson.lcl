@@ -173,10 +173,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          <Val><![CDATA[Include the selected feed in the generated NuGet.config.]A;]A;Format:]A;* For organization-scoped feeds: `FeedName`]A;* For project-scoped feeds: `ProjectName/FeedName`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[生成する NuGet.config に、選択したフィードを含めます。ここでフィードを選択するには、Azure Artifacts をインストールしてライセンスを取得している必要があります。]]></Val>
+            <Val><![CDATA[生成される NuGet.config に選択したフィードを組み込みます。]A;]A;形式:]A;* 組織スコープのフィードの場合: 'FeedName']A;* プロジェクトスコープのフィードの場合: 'ProjectName/FeedName']]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -500,10 +503,13 @@
       </Item>
       <Item ItemId=";loc.input.label.feedRestore" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          <Val><![CDATA[Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]5D;feed name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[この Azure Artifacts フィードからのパッケージを使用する]]></Val>
+            <Val><![CDATA[この Azure Artifacts フィードからのパッケージを使用してください。ドロップダウンから選択するか、[プロジェクト名/]5D; フィード名を入力してください。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use packages from this Azure Artifacts feed]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
