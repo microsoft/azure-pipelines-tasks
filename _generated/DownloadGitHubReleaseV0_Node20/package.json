@@ -21,7 +21,7 @@
     "@types/node": "^22.5.4",
     "artifact-engine": "^1.5.2",
     "azure-pipelines-task-lib": "^4.17.0",
-    "nock": "^9.6.1",
+    "nock": "^13.5.5",
     "typed-rest-client": "^2.0.2"
   },
   "devDependencies": {
