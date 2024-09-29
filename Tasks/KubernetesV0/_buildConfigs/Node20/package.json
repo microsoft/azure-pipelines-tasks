@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@types/del": "^2.2.0",
+    "@types/del": "^3.0.1",
     "@types/glob": "^5.0.10",
     "@types/mocha": "^10.0.7",
     "@types/node": "^20.3.1",
