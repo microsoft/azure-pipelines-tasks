@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/del": "^3.0.1",
-    "@types/glob": "^5.0.10",
+    "@types/glob": "^8.10",
     "@types/mocha": "^10.0.7",
     "@types/node": "^20.3.1",
     "@types/q": "^1.5.0",
