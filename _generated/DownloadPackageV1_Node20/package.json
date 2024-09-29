@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^10.0.7",
     "@types/node": "^20.3.1",
     "azure-devops-node-api": "14.0.2",
     "azure-pipelines-task-lib": "3.3.1",
