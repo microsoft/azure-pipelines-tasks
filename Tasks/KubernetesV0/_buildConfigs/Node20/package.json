@@ -12,7 +12,7 @@
     "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
     "azure-pipelines-tasks-utility-common": "3.212.0",
     "del": "2.2.0",
-    "js-yaml": "3.13.1"
+    "js-yaml": "4.1.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
