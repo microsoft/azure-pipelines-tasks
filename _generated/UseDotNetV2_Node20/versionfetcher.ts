@@ -323,7 +323,7 @@ export class DotNetCoreVersionFetcher {
         let timeout = 60_000 * 5;
         const inputValue: string = tl.getInput('requestTimeout', false);
         if (!(Number.isNaN(Number(inputValue)))) {
-            const maxTimeout = 60_000 * 30;
+            const maxTimeout = 60_000 * 10;
             timeout = Math.min(parseInt(inputValue), maxTimeout);
         }
         return timeout;
