@@ -11,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {
@@ -84,7 +84,7 @@
     "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20_229_3": "1.246.1"
+    "Default": "1.246.2",
+    "Node20_229_3": "1.246.3"
   }
 }
