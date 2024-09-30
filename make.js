@@ -224,12 +224,14 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         {
             // build task-lib
             cd(taskLibPath);
+            run("npm install", /*inheritStreams:*/true);
             run("node make.js build", /*inheritStreams:*/true);
 
             
             await util.installNodeAsync('20');
             // build task-lib
             cd(tasksCommonPath);
+            run("npm install", /*inheritStreams:*/true);
             run("node make.js --build", /*inheritStreams:*/true);
         }
     }
