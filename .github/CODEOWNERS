@@ -288,6 +288,8 @@ Tasks/InvokeRestApiV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
+Tasks/JavaToolInstallerV1/     @microsoft/akvelon-build-task-team
+
 Tasks/JenkinsDownloadArtifactsV1/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
