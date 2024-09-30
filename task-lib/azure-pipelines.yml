@@ -1,0 +1,78 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# This pipeline will be extended to the OneESPT template
+# The Task 'PublishPipelineArtifact@1' has been converted to an output named '' in the templateContext section.
+trigger:
+- master
+- features/*
+- releases/*
+
+variables:
+- group: npm-tokens
+- name: nodeVersion
+  value: '16.13.0'
+
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    featureFlags:
+      autoBaseline: false
+    sdl:
+      baseline:
+        baselineSet: default
+        baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
+      sourceAnalysisPool:
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: stage
+      jobs:
+      #################################################
+      - job: windows
+      #################################################
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-windows-2022
+          os: windows
+        steps:
+        - template: /azure-pipelines-steps-node.yml@self
+          parameters:
+            os: Windows_NT  
+
+      #################################################
+      - job: linux
+      #################################################
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-ubuntu-2204
+          os: linux
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: 'node/_build'
+            artifactType: 'pipeline'
+            artifactName: 'npm-package'
+        steps:
+        - template: /azure-pipelines-steps-node.yml@self
+          parameters:
+            os: Linux
+
+      #################################################
+      - job: macOS
+      #################################################
+        pool:
+          name: Azure Pipelines
+          image: macOS-latest
+          os: macOS
+        steps:
+        - template: /azure-pipelines-steps-node.yml@self
+          parameters:
+            os: Darwin

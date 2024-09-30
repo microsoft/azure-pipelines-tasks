@@ -1,0 +1,18 @@
+{
+  "loc.messages.PSLIB_AgentVersion0Required": "バージョン {0} 以降のエージェントが必要です。",
+  "loc.messages.PSLIB_ContainerPathNotFound0": "コンテナーのパスが見つかりません: '{0}'",
+  "loc.messages.PSLIB_EndpointAuth0": "'{0}' サービス エンドポイントの資格情報",
+  "loc.messages.PSLIB_EndpointUrl0": "'{0}' サービス エンドポイントの URL",
+  "loc.messages.PSLIB_EnumeratingSubdirectoriesFailedForPath0": "パス '{0}' のサブディレクトリを列挙できませんでした",
+  "loc.messages.PSLIB_FileNotFound0": "ファイルが見つかりません: '{0}'",
+  "loc.messages.PSLIB_Input0": "'{0}' 入力",
+  "loc.messages.PSLIB_InvalidPattern0": "使用できないパターンです: '{0}'",
+  "loc.messages.PSLIB_LeafPathNotFound0": "リーフ パスが見つかりません: '{0}'",
+  "loc.messages.PSLIB_PathLengthNotReturnedFor0": "パスの正規化/展開に失敗しました。Kernel32 サブシステムからパス '{0}' の長さが返されませんでした",
+  "loc.messages.PSLIB_PathNotFound0": "パスが見つかりません: '{0}'",
+  "loc.messages.PSLIB_Process0ExitedWithCode1": "プロセス '{0}' がコード '{1}' で終了しました。",
+  "loc.messages.PSLIB_Required0": "必要: {0}",
+  "loc.messages.PSLIB_StringFormatFailed": "文字列のフォーマットに失敗しました。",
+  "loc.messages.PSLIB_StringResourceKeyNotFound0": "文字列のリソース キーが見つかりません: '{0}'",
+  "loc.messages.PSLIB_TaskVariable0": "'{0}' タスク変数"
+}
