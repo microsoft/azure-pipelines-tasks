@@ -14,7 +14,7 @@
   "loc.input.help.solution": "引用要还原的包的解决方案、packages.config 或 project.json 文件的路径。",
   "loc.input.label.selectOrConfig": "要使用的源",
   "loc.input.help.selectOrConfig": "可以在此处选择 Azure Artifacts 和/或 NuGet.org 中的源，也可以将 nuget.config 文件提交到源代码存储库，并在此处设置其路径。",
-  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
+  "loc.input.label.feedRestore": "从该 Azure Artifacts/TFS 源使用包。从下拉列表中选择或输入 [project name/]feed 名称。",
   "loc.input.help.feedRestore": "将所选源包含在生成的 NuGet.config 中。必须安装 Azure Artifacts 并授权才能在此处选择源。",
   "loc.input.label.includeNuGetOrg": "从 NuGet.org 使用包",
   "loc.input.help.includeNuGetOrg": "在生成的 NuGet.config 中包含 NuGet.org。",

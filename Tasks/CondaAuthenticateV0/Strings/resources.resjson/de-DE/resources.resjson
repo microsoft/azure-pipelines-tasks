@@ -3,8 +3,6 @@
   "loc.helpMarkDown": "",
   "loc.description": "Authentifizierungsaufgabe für den Conda-Client",
   "loc.instanceNameFormat": "Conda-Authentifizierung",
-  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Entra Workload ID-gesicherter Azure-DevOps Benutzer“",
-  "loc.input.help.workloadIdentityServiceConnection": "Wenn diese Option festgelegt ist, werden Anmeldeinformationen mithilfe der Dienstverbindung anstelle der Buildpipelineidentität generiert.",
   "loc.messages.FailedToAddAuthentication": "Fehler beim Hinzufügen der Authentifizierung.",
   "loc.messages.AddingAuthChannel": "Die Authentifizierung für das Token „%s“ wird hinzugefügt",
   "loc.messages.Info_AddingFederatedFeedAuth": "Authentifizierungsinformationen der Dienstverbindung %s werden hinzugefügt",
