@@ -23,7 +23,7 @@
     "agent-base": "7.1.1",
     "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.245.0",
-    "azure-pipelines-tasks-utility-common": "^3.225.0",
+    "azure-pipelines-tasks-utility-common": "^3.242.0",
     "q": "2.0.3",
     "xml2js": "^0.6.2"
   },
