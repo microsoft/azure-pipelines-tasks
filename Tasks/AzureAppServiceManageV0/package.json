@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^22.5.4",
-    "@types/q": "1.0.7",
+    "@types/q": "1.5.8",
     "agent-base": "7.1.1",
     "azure-pipelines-task-lib": "^4.17.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.245.0",
