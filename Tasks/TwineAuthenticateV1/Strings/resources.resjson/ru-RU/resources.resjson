@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Не удалось проанализировать URL-адрес веб-канала и добавить сведения о проверке подлинности. %s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "С помощью этой задачи одновременно можно авторизовать только один внутренний веб-канал. Все каналы, кроме первого, будут пропущены.",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "С помощью этой задачи одновременно можно авторизовать только одно подключение службы. Все подключения, кроме первого, будут пропущены.",
-  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
+  "loc.messages.Error_DuplicateEntryForFeed": "Это повторяющаяся запись для веб-канала %s. Используйте уникальные имена, чтобы избежать возможных проблем с публикацией.",
   "loc.messages.FailedToGetPackagingUri": "Не удалось получить URI упаковки, используется URI коллекции по умолчанию.",
   "loc.messages.FailedToAddAuthentication": "Не удалось добавить проверку подлинности.",
   "loc.messages.NoPypircFile": "Отсутствует файл PYPIRC для очистки.",

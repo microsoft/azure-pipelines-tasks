@@ -23,7 +23,7 @@
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Fehler beim Analysieren der Feed-URL und beim Hinzufügen von Authentifizierungsinformationen. %s",
   "loc.messages.Warning_OnlyOneFeedAllowed": "Über diese Aufgabe kann jeweils nur ein interner Feed autorisiert werden. Alle Feeds mit Ausnahme des ersten werden ignoriert.",
   "loc.messages.Warning_OnlyOneServiceConnectionAllowed": "Über diese Aufgabe kann jeweils nur eine Dienstverbindung autorisiert werden. Alle Verbindungen mit Ausnahme der ersten werden ignoriert.",
-  "loc.messages.Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name %s. Use unique names to avoid potential publish issues.",
+  "loc.messages.Error_DuplicateEntryForFeed": "Dies ist ein doppelter Eintrag für den Feednamen %s. Verwenden Sie eindeutige Namen, um potenzielle Veröffentlichungsprobleme zu vermeiden.",
   "loc.messages.FailedToGetPackagingUri": "Der URI für die Paketierung kann nicht mithilfe des URI der Standardsammlung abgerufen werden.",
   "loc.messages.FailedToAddAuthentication": "Fehler beim Hinzufügen der Authentifizierung.",
   "loc.messages.NoPypircFile": "Es ist keine PYPIRC-Datei zum Bereinigen vorhanden.",
