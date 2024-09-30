@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Percorso del file di soluzione, packages.config o project.json che fa riferimento ai pacchetti da ripristinare.",
   "loc.input.label.selectOrConfig": "Feed da usare",
   "loc.input.help.selectOrConfig": "È possibile selezionare un feed da Azure Artifacts e/o NuGet.org oppure eseguire il commit di un file nuget.config nel repository del codice sorgente e impostarne qui il percorso.",
-  "loc.input.label.feedRestore": "Use packages from this Azure Artifacts/TFS feed. Select from the dropdown or enter [project name/]feed name.",
+  "loc.input.label.feedRestore": "Usare pacchetti da questo feed Azure Artifacts/TFS. Selezionare una voce dall'elenco a discesa o immettere [nome progetto/]nome feed.",
   "loc.input.help.feedRestore": "Includere il feed selezionato nel file NuGet.config generato. Per selezionare un feed qui, è necessario aver installato Azure Artifacts e disporre della relativa licenza.",
   "loc.input.label.includeNuGetOrg": "Usa pacchetti da NuGet.org",
   "loc.input.help.includeNuGetOrg": "Include NuGet.org nel file NuGet.config generato.",
