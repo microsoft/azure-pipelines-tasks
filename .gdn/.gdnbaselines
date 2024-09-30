@@ -1,0 +1,53 @@
+{
+  "hydrated": false,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines",
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2024-02-12 09:43:39Z",
+      "lastUpdatedDate": "2024-02-12 09:43:39Z"
+    }
+  },
+  "results": {
+    "b69db68dbaeed34dc8e8a9d95f105cf988a082dd0b40df9b906012a9e9667d78": {
+      "signature": "b69db68dbaeed34dc8e8a9d95f105cf988a082dd0b40df9b906012a9e9667d78",
+      "alternativeSignatures": [
+        "867f1b2f02684cdad1fa698b1b1da6faea6379a658c7d12f35712aa7f19f82b1"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Needs to read user's input",
+      "createdDate": "2024-02-12 09:43:39Z",
+      "expirationDate": null
+    },
+    "2ee0cc2e621864121ae6c020602e5523286faca343e102e5f781a33acca01972": {
+      "signature": "2ee0cc2e621864121ae6c020602e5523286faca343e102e5f781a33acca01972",
+      "alternativeSignatures": [
+        "20b29bfc53a5caeadea6bc5f6c567cb18366e6b0c38ccda850550eec6d2d1c6d"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Needs to read user's input",
+      "createdDate": "2024-02-12 09:43:39Z",
+      "expirationDate": null
+    },
+    "45ad44eaa03776fe24b72384ae78ed4a319fefcabf04f4d90302da421bdb2425": {
+      "signature": "45ad44eaa03776fe24b72384ae78ed4a319fefcabf04f4d90302da421bdb2425",
+      "alternativeSignatures": [
+        "1ad54a7a814514c10f5323d007fca8a792f9836acef8822d23f44191f5fdb6df"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "Needs to read user's input",
+      "createdDate": "2024-02-12 09:43:39Z",
+      "expirationDate": null
+    }
+  }
+}

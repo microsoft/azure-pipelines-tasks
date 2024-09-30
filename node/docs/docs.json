@@ -1,0 +1,121 @@
+{
+    "files": [
+        "../toolrunner.ts",
+        "../task.ts"
+    ],
+    "aliases": {
+        "toolrunner": "members['toolrunner'].members['ToolRunner'].members",
+        "task": "members['task'].members"
+    },
+    "structure": {
+        "Input Functions": {
+            "Summary": "Functions for retrieving inputs for the task",
+            "Document": [
+                "task.getInput",
+                "task.getInputRequired",
+                "task.getBoolInput",
+                "task.getPathInput",
+                "task.getPathInputRequired",
+                "task.filePathSupplied",
+                "task.getDelimitedInput",
+                "task.getVariable",
+                "task.VariableInfo",
+                "task.getVariables",
+                "task.setVariable",
+                "task.getTaskVariable",
+                "task.setTaskVariable",
+                "task.getAgentMode"
+            ]
+        },
+        "Execution": {
+            "Summary": "Tasks typically execute a series of tools (cli) and set the result of the task based on the outcome of those",
+            "Sample": "samples/toolrunner.src",
+            "Document": [
+                "task.tool",
+                "toolrunner.ToolRunner.arg",
+                "toolrunner.ToolRunner.line",
+                "toolrunner.ToolRunner.argIf",
+                "toolrunner.IExecOptions",
+                "toolrunner.ToolRunner.exec",
+                "toolrunner.ToolRunner.execSync",
+                "toolrunner.ToolRunner.pipeExecOutputToTool",
+                "toolrunner.IExecSyncResult",
+                "task.exec",
+                "task.execSync",
+                "task.setResult"
+            ]
+        },
+        "Service Connections": {
+            "Summary": "Retrieve service connections (previously called \"service endpoints\") and authorization details",
+            "Document": [
+                "task.getEndpointUrl",
+                "task.getEndpointUrlRequired",
+                "task.getEndpointDataParameter",
+                "task.getEndpointDataParameterRequired",
+                "task.getEndpointAuthorizationScheme",
+                "task.getEndpointAuthorizationSchemeRequired",
+                "task.getEndpointAuthorizationParameter",
+                "task.getEndpointAuthorizationParameterRequired",
+                "task.EndpointAuthorization",
+                "task.getEndpointAuthorization"
+            ]
+        },
+        "Secrets": {
+            "Summary": "Functions for managing pipeline secrets",
+            "Document": [
+                "task.setSecret"
+            ]
+        },
+        "Secure Files": {
+            "Summary": "Retrieve secure files details required to download the file",
+            "Document": [
+                "task.getSecureFileName",
+                "task.getSecureFileTicket"
+            ]
+        },
+        "Disk Functions": {
+            "Summary": "Functions for disk operations",
+            "Document": [
+                "task.which",
+                "task.checkPath",
+                "task.exist",
+                "task.cd",
+                "task.cp",
+                "task.mv",
+                "task.mkdirP",
+                "task.FindOptions",
+                "task.find",
+                "task.rmRF",
+                "task.pushd",
+                "task.popd",
+                "task.resolve",
+                "task.stats",
+                "task.writeFile"
+            ]
+        },
+        "Globbing": {
+            "Summary": "Functions for matching file paths",
+            "Document": [
+                "task.MatchOptions",
+                "task.match",
+                "task.findMatch",
+                "task.filter",
+                "task.legacyFindFiles"
+            ]
+        },
+        "Localization": {
+            "Summary": "Localization is optional but is supported using these functions at runtime",
+            "Sample": "samples/loc.src",
+            "Document": [
+                "task.setResourcePath",
+                "task.loc"
+            ]
+        },
+        "Proxy": {
+            "Summary": "Funtions for web proxy settings",
+            "Document": [
+                "task.getHttpProxyConfiguration"
+            ]
+        }
+    }
+}

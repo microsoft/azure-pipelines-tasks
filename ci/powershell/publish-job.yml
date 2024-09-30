@@ -1,0 +1,23 @@
+jobs:
+  - job: Publish
+    displayName: Publish SDK to PowerShell gallery
+    pool:
+      vmImage: windows-2022
+    steps:
+      - powershell: |
+          Install-Module -Name Microsoft.PowerShell.PSResourceGet -Verbose
+        displayName: Install new publish cmdlets
+
+      - powershell: |
+          $publishOptions = @{
+              Path       = './VstsTaskSdk'
+              ApiKey     = $env:API_KEY
+              Repository = 'PSGallery'
+              Verbose    = $true
+          }
+          Publish-PSResource @publishOptions
+
+        displayName: Publish to gallery
+        workingDirectory: powershell/_build
+        env:
+          API_KEY: $(PSGalleryApiKey)

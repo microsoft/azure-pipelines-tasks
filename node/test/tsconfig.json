@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "declaration": false,
+        "outDir": "../_test",
+        "moduleResolution": "node"
+    },
+    "files": [
+        "dirtests.ts",
+        "inputtests.ts",
+        "internalhelpertests.ts",
+        "commandtests.ts",
+        "resulttests.ts",
+        "disktests.ts",
+        "legacyfindfilestests.ts",
+        "vaulttests.ts",
+        "toolrunnertests.ts",
+        "toolrunnerTestsWithExecAsync.ts",
+        "cctests.ts",
+        "loctests.ts",
+        "matchtests.ts",
+        "filtertests.ts",
+        "findmatchtests.ts",
+        "mocktests.ts",
+        "retrytests.ts",
+        "isuncpathtests.ts",
+        "gethttpproxytests.ts",
+        "mockertests.ts",
+        "fakeModules/fakemodule1.ts",
+        "fakeModules/fakemodule2.ts",
+        "taskissuecommandtests.ts"
+    ]
+}
