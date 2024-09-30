@@ -49,6 +49,7 @@
     "validator": "^13.7.0"
   },
   "dependencies": {
-    "agent-base": "^6.0.2"
+    "agent-base": "^6.0.2",
+    "extract-zip": "^2.0.1"
   }
 }
