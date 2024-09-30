@@ -1,0 +1,39 @@
+{
+    "name": "azure-pipelines-tasks-webdeployment-common",
+    "version": "4.245.0",
+    "description": "Common Lib for MSDeploy Utility",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "scripts": {
+        "build": "pwsh build.ps1",
+        "test": "nyc --all --src ./_build mocha ./_build/Tests/L0.js"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@types/ltx": "3.0.6",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
+        "@xmldom/xmldom": "git+https://github.com/xmldom/xmldom.git#0.8.6",
+        "archiver": "1.2.0",
+        "azure-pipelines-task-lib": "^4.2.0",
+        "ltx": "2.8.0",
+        "node-stream-zip": "^1.15.0",
+        "q": "1.4.1",
+        "semver": "^7.5.4",
+        "winreg": "1.2.2",
+        "xml2js": "0.6.2"
+    },
+    "devDependencies": {
+        "@types/semver": "^7.5.4",
+        "@types/winreg": "^1.2.34",
+        "nyc": "^15.1.0",
+        "typescript": "4.0.2"
+    }
+}
