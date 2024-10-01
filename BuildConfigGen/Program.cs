@@ -493,20 +493,20 @@ namespace BuildConfigGen
 
                             // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                            if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config) || config.isNode)
+                            if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config) || config.isNode)
                             {
-                                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+                                CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
                                 if (config.enableBuildConfigOverrides)
                                 {
-                                    CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                                    CopyConfigOverrides(gitRootPath, taskTargetPath, taskOutput, config);
                                 }
 
                                 // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
                                 // don't check content as preprocessor hasn't run
                                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
 
-                                HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
+                                HandlePreprocessingInTarget(gitRootPath, taskOutput, config, validateAndWriteChanges: true, hasDirectives: out _);
 
                                 WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                 WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
@@ -674,9 +674,9 @@ namespace BuildConfigGen
             }
         }
 
-        private static bool HasTaskInputContainsPreprocessorInstructions(string sourcePath, Config.ConfigRecord config)
+        private static bool HasTaskInputContainsPreprocessorInstructions(string gitRootPath, string sourcePath, Config.ConfigRecord config)
         {
-            HandlePreprocessingInTarget(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
+            HandlePreprocessingInTarget(gitRootPath, sourcePath, config, validateAndWriteChanges: false, hasDirectives: out bool hasPreprocessorDirectives);
             return hasPreprocessorDirectives;
         }
 
@@ -716,7 +716,7 @@ namespace BuildConfigGen
             readmeFile = Path.Combine(taskTargetPath, buildConfigs, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
         }
 
-        private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
+        private static void CopyConfigOverrides(string gitRootPath, string taskTargetPath, string taskOutput, Config.ConfigRecord config)
         {
             if (!config.enableBuildConfigOverrides)
             {
@@ -738,13 +738,13 @@ namespace BuildConfigGen
 
             if (doCopy)
             {
-                CopyConfig(overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: true, config: config, allowPreprocessorDirectives: false);
+                CopyConfig(gitRootPath, overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: true, config: config, allowPreprocessorDirectives: false);
             }
         }
 
-        private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config, bool validateAndWriteChanges, out bool hasDirectives)
+        private static void HandlePreprocessingInTarget(string gitRootPath, string taskOutput, Config.ConfigRecord config, bool validateAndWriteChanges, out bool hasDirectives)
         {
-            var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+            var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(gitRootPath, taskOutput));
 
             hasDirectives = false;
 
@@ -929,16 +929,16 @@ namespace BuildConfigGen
             return false;
         }
 
-        private static void CopyConfig(string taskTargetPathOrUnderscoreBuildConfigPath, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
+        private static void CopyConfig(string gitRootPath, string taskTargetPathOrUnderscoreBuildConfigPath, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
         {
-            var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTargetPathOrUnderscoreBuildConfigPath);
+            var paths = GitUtil.GetNonIgnoredFileListFromPath(gitRootPath, taskTargetPathOrUnderscoreBuildConfigPath);
 
             HashSet<string> pathsToRemoveFromOutput;
 
             // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
-            if (Directory.Exists(taskOutput))
+            if (Directory.Exists(taskOutput) && !config.useAltGeneratedPath /* exclude alt which is .gitignore */)
             {
-                pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+                pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(gitRootPath, taskOutput));
             }
             else
             {
@@ -956,7 +956,7 @@ namespace BuildConfigGen
                     throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
                 }
 
-                var hasPreprocessorDirectives = HasTaskInputContainsPreprocessorInstructions(taskTargetPathOrUnderscoreBuildConfigPath, config);
+                var hasPreprocessorDirectives = HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPathOrUnderscoreBuildConfigPath, config);
 
                 if (hasPreprocessorDirectives)
                 {
