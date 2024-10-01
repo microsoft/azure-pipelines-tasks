@@ -19,6 +19,13 @@ namespace BuildConfigGen
 
         internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> validConfigPreprocessorVariableNames, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
         {
+            RuntimeTests.Instance(default).VersionParser_ParseVersion.PreconditionIfExternal(file);
+            PreprocessInner(file, lines, validConfigPreprocessorVariableNames, configName, out processedOutput, out validationErrors, out madeChanges);
+            RuntimeTests.Instance(default).VersionParser_ParseVersion.AssertEquals(processedOutput);
+        }
+
+        internal static void PreprocessInner(string file, IEnumerable<string> lines, ISet<string> validConfigPreprocessorVariableNames, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
+        {
             const string ifCommand = "if";
             const string elseIfCommand = "elseif";
             const string endIfCommand = "endif";
