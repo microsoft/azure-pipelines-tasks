@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 2
   },
   "satisfies": [
     "GO"
@@ -67,7 +67,7 @@
     "TempDirNotSet": "ms-resource:loc.messages.TempDirNotSet"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_3": "0.246.1"
+    "Default": "0.246.2",
+    "Node20_229_3": "0.246.3"
   }
 }
