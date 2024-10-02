@@ -12,3 +12,13 @@ export function getProjectFiles(projectPattern: string[]): string[] {
 
     return projectFiles;
 }
+
+export function getRequestTimeout(): number {
+    let timeout = 60_000 * 5;
+    const inputValue: string = tl.getInput('requestTimeout', false);
+    if (!(Number.isNaN(Number(inputValue)))) {
+        const maxTimeout = 60_000 * 10;
+        timeout = Math.min(parseInt(inputValue), maxTimeout);
+    }
+    return timeout;
+}

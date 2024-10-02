@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -123,7 +123,7 @@
     "InvalidMobileProvisionFileExtension": "ms-resource:loc.messages.InvalidMobileProvisionFileExtension"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20-225": "1.246.1"
+    "Default": "1.246.2",
+    "Node20-225": "1.246.3"
   }
 }
