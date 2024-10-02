@@ -140,10 +140,11 @@ function getTaskList(taskList, includeLocalPackagesBuildConfig) {
     }
 
     generatedTaskFolders = generatedTaskFolders.filter((taskName) => {
-            return 
-                ((includeLocalPackagesBuildConfig && fs.existsSync(path.join(genTaskPath, taskName)) || !includeLocalPackagesBuildConfig) && fs.statSync(path.join(genTaskPath, taskName))).isDirectory() 
-                    || (includeLocalPackagesBuildConfig && fs.statSync(path.join(genTaskPathLocal, taskName))).isDirectory()
-                ;
+            return !taskName.endsWith(".versionmap.txt") 
+                && (
+                        (((includeLocalPackagesBuildConfig && fs.existsSync(path.join(genTaskPath, taskName))) || !includeLocalPackagesBuildConfig) && fs.statSync(path.join(genTaskPath, taskName)).isDirectory()) 
+                        || (includeLocalPackagesBuildConfig && fs.statSync(path.join(genTaskPathLocal, taskName)).isDirectory())
+                );
         });
 
     taskList.forEach((taskName) => {
