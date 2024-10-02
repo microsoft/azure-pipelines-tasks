@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -505,6 +505,14 @@
       "required": "false",
       "groupName": "generalAdvanced",
       "visibleRule": "command != restore && command != push && command != pack"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "dataSourceBindings": [
@@ -597,7 +605,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_2": "2.246.1"
+    "Default": "2.247.0",
+    "Node20_229_2": "2.247.1"
   }
 }
