@@ -12,6 +12,8 @@ const routesLocationInputName = 'routes_location';
 const buildTimeoutInMinutesInputName = 'build_timeout_in_minutes';
 const configFileLocationInputName = 'config_file_location';
 const apiTokenInputName = 'azure_static_web_apps_api_token';
+const accessTokenInputName = 'azure_access_token';
+const defaultHostnameInputName = 'default_hostname';
 const deploymentEnvironmentInputName = 'deployment_environment';
 const productionBranchInputName = 'production_branch';
 const dataApiLocationInputName = 'data_api_location';
@@ -87,7 +89,9 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     const skipApiBuild: boolean = tl.getBoolInput('skip_api_build', false);
     const isStaticExport: boolean = tl.getBoolInput('is_static_export', false);
     const apiToken: string = process.env[apiTokenInputName] || tl.getInput(apiTokenInputName, false) || "";
-
+    const accessToken: string = process.env[accessTokenInputName] || tl.getInput(accessTokenInputName, false) || "";
+    const defaultHostname: string = process.env[defaultHostnameInputName] || tl.getInput(defaultHostnameInputName, false) || "";
+    
     const systemVerbose = getNullableBooleanFromString(process.env['SYSTEM_DEBUG']);
     const inputVerbose = getNullableBooleanFromString(tl.getInput('verbose', false));
 
@@ -114,7 +118,9 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addSystemVariableToString("VERBOSE", verbose.toString());
 
     addInputStringToString("DEPLOYMENT_TOKEN", apiToken, apiTokenInputName);
-
+    addInputStringToString("AZURE_ACCESS_TOKEN", accessToken, accessTokenInputName);
+    addInputStringToString("DEFAULT_HOSTNAME", defaultHostname, defaultHostnameInputName);
+    
     process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
     process.env['SWA_WORKING_DIR'] = workingDirectory;
     process.env['SWA_WORKSPACE_DIR'] = containerWorkingDir;
