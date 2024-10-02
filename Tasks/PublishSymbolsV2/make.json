@@ -1,23 +1,7 @@
 {
-  "rm": [
-        {
-            "items": [
-                "node_modules/https-proxy-agent/node_modules/agent-base",
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ],
   "common": [
     {
       "module": "../Common/PowershellHelpers",
-      "type": "ps"
-    },
-    {
-      "module": "../Common/VstsAzureHelpers_",
       "type": "ps"
     },
     {
@@ -39,6 +23,16 @@
   ],
   "externals": {
     "nugetv2": [
+      {
+        "name": "Newtonsoft.Json",
+        "version": "12.0.3",
+        "repository": "https://www.nuget.org/api/v2/",
+        "cp": [
+            {
+                "source": "lib/net45/Newtonsoft.Json.dll"
+            }
+        ]
+      },
       {
         "name": "Microsoft.TeamFoundationServer.Client",
         "version": "15.101.0-preview",
