@@ -18,7 +18,6 @@ $codeowners | ForEach-Object {
 
     $taskName = $_ -replace 'Tasks/', '' -replace '/.*', ''
     $taskJson = Get-Content (Join-Path $tasksDir $taskName task.json) | ConvertFrom-Json -AsHashtable
-    # $taskJson
     $task = [pscustomobject]@{
         DirName = $taskName
         Name     = $taskJson.name
