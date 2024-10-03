@@ -120,9 +120,51 @@ namespace BuildConfigGen
             }
         }
 
-        internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string taskTarget)
+        internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string gitRoot, string taskTarget)
         {
-            if(!Directory.Exists(taskTarget))
+            string gitIgnorePathBak = Path.Combine(gitRoot, ".gitignore.bak");
+            string gitIgnore = Path.Combine(gitRoot, ".gitignore");
+
+            bool needsGitIgnoreUpdate = taskTarget.Contains("/_generated_local/") || taskTarget.Contains(@"\_generated_local\");
+
+            string? gitIgnoreContent = null;
+
+            if (needsGitIgnoreUpdate)
+            {
+                gitIgnoreContent = File.ReadAllText(gitIgnore);
+                const string genertedLocalPath = "_generated_local/";
+
+                if (!gitIgnoreContent.Contains(genertedLocalPath))
+                {
+                    throw new Exception("Expected " + genertedLocalPath + " in " + gitIgnore);
+                }
+
+                gitIgnoreContent = gitIgnoreContent.Replace(genertedLocalPath, "");
+
+                File.Copy(gitIgnore, gitIgnorePathBak, true);
+            }
+
+            try
+            {
+                if (needsGitIgnoreUpdate)
+                {
+                    File.WriteAllText(gitIgnore, gitIgnoreContent);
+                }
+
+                return GetNonIgnoredFileListFromPathInner(taskTarget);
+            }
+            finally
+            {
+                if (needsGitIgnoreUpdate)
+                {
+                    File.Move(gitIgnorePathBak, gitIgnore, true);
+                }
+            }
+        }
+
+        private static IEnumerable<string> GetNonIgnoredFileListFromPathInner(string taskTarget)
+        {
+            if (!Directory.Exists(taskTarget))
             {
                 throw new Exception($"{nameof(taskTarget)}=={taskTarget} doesn't exist");
             }
@@ -136,7 +178,6 @@ namespace BuildConfigGen
 
             return paths;
         }
-
 
         private static IEnumerable<string> GitLsFiles(string taskTarget)
         {
