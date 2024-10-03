@@ -1914,15 +1914,12 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 
         var genTaskPath = path.join(basicGenTaskPath, taskName);
 
-        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)){
-            if(includeLocalPackagesBuildConfig)
-            {
-                genTaskPath = path.join(basicGenTaskPathLocal, taskName);
-            }
+        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)) {
+            genTaskPath = path.join(basicGenTaskPathLocal, taskName);
         };
 
         // if it's not a generated task, we don't need to sync files
-        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)){
+        if (!fs.existsSync(genTaskPath)){
             return;
         }
 
