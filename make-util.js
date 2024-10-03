@@ -1902,7 +1902,7 @@ exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
  * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
  * and copy files from generated to source if needed
  */
-function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenTaskPathLocal, includeLocalPackagesBuildConfig, callGenTaskDuringBuild = false) {
     const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
@@ -1912,10 +1912,16 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
     return async function(taskName, ...args) {
         await originalFunction.apply(this, [taskName, ...args]);
 
-        const genTaskPath = path.join(basicGenTaskPath, taskName);
+        var genTaskPath = path.join(basicGenTaskPath, taskName);
+
+        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)) {
+            genTaskPath = path.join(basicGenTaskPathLocal, taskName);
+        };
 
         // if it's not a generated task, we don't need to sync files
-        if (!fs.existsSync(genTaskPath)) return;
+        if (!fs.existsSync(genTaskPath)){
+            return;
+        }
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
