@@ -11,7 +11,8 @@ namespace BuildConfigGen
         // if any changes would be made to output, verification should fail
         // check the contents of VerifyErrors for verification errors
 
-        private bool verifyOnly;
+        private bool verifyState;
+        private readonly bool verifyFromConstructor;
         private List<string> VerifyErrors = new List<string>();
         internal Dictionary<string, string> CopiedFilesToCheck = new Dictionary<string, string>();
         internal Dictionary<string, string> RedirectedToTempl = new Dictionary<string, string>();
@@ -19,7 +20,8 @@ namespace BuildConfigGen
 
         public EnsureUpdateModeVerifier(bool verifyOnly)
         {
-            this.verifyOnly = verifyOnly;
+            this.verifyState = verifyOnly;
+            this.verifyFromConstructor = verifyOnly;
         }
 
         public IEnumerable<string> GetVerifyErrors(bool skipContentCheck)
@@ -90,9 +92,9 @@ namespace BuildConfigGen
                     }
                 }
 
-                if (count > 0 && !verifyOnly)
+                if (count > 0 && !verifyFromConstructor)
                 {
-                    throw new Exception("Expected RedirectedToTemp to be empty when !verifyOnly");
+                    throw new Exception("Expected RedirectedToTemp to be empty when !verifyFromConstructor");
                 }
             }
             finally
@@ -105,9 +107,9 @@ namespace BuildConfigGen
 
         internal void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            EnsureUnconditionalFile(destFileName);
+            bool verifyOnly = UseVerifyOnlyForFile(destFileName);
 
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            if (verifyOnly)
             {
                 if (File.Exists(destFileName))
                 {
@@ -132,9 +134,7 @@ namespace BuildConfigGen
                     VerifyErrors.Add($"Copy {sourceFileName} to {destFileName} (overwrite={overwrite}).  Dest file doesn't exist.");
                 }
             }
-
-
-            if (!verifyOnly || lastVerifyOnlyState.HasValue)
+            else
             {
                 File.Copy(sourceFileName, destFileName, overwrite);
             }
@@ -142,10 +142,17 @@ namespace BuildConfigGen
 
         internal void Move(string sourceFileName, string destFileName)
         {
-            EnsureUnconditionalFile(sourceFileName);
-            EnsureUnconditionalFile(destFileName);
+            bool verifyOnlySource = UseVerifyOnlyForFile(sourceFileName);
+            bool verifyOnlyDest = UseVerifyOnlyForFile(destFileName);
 
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            if (verifyOnlySource != verifyOnlyDest)
+            {
+                throw new Exception($"BUG: both source and dest must be unconditional path or not sourceFileName={sourceFileName} destFileName={destFileName}");
+            }
+
+            var verifyOnly = verifyOnlySource || verifyOnlyDest;
+
+            if (verifyOnly)
             {
                 // verification won't pass if we encounter a move
 
@@ -159,8 +166,7 @@ namespace BuildConfigGen
                     VerifyErrors.Add($"Need to move {sourceFileName} to {destFileName}.  Dest file doesn't exist.");
                 }
             }
-
-            if (!verifyOnly || lastVerifyOnlyState.HasValue)
+            else
             {
                 File.Move(sourceFileName, destFileName);
             }
@@ -168,9 +174,9 @@ namespace BuildConfigGen
 
         internal void WriteAllText(string path, string contents, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
-            EnsureUnconditionalFile(path);
+            bool verifyOnly = UseVerifyOnlyForFile(path);
 
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            if (verifyOnly)
             {
                 if (File.Exists(path))
                 {
@@ -201,8 +207,7 @@ namespace BuildConfigGen
                     }
                 }
             }
-
-            if (!verifyOnly || lastVerifyOnlyState.HasValue)
+            else
             {
                 File.WriteAllText(path, contents);
             }
@@ -216,9 +221,9 @@ namespace BuildConfigGen
 
         internal void DirectoryCreateDirectory(string path, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
-            EnsureUnconditionalPath(path);
+            bool verifyOnly = UseVerifyOnlyForPath(path);
 
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            if (verifyOnly)
             {
                 if (!Directory.Exists(path))
                 {
@@ -233,8 +238,7 @@ namespace BuildConfigGen
                     }
                 }
             }
-
-            if (!verifyOnly || lastVerifyOnlyState.HasValue)
+            else
             {
                 Directory.CreateDirectory(path);
             }
@@ -242,8 +246,9 @@ namespace BuildConfigGen
 
         internal string FileReadAllText(string filePath)
         {
-            // special handling note needed for lastVerifyOnlyState.HasValue as updates are written to 'redirected' temp files
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            bool verifyOnly = UseVerifyOnlyForFile(filePath);
+
+            if (verifyOnly)
             {
                 string targetFile = ResolveFile(filePath);
 
@@ -257,8 +262,9 @@ namespace BuildConfigGen
 
         internal string[] FileReadAllLines(string filePath)
         {
-            // special handling note needed for lastVerifyOnlyState.HasValue as updates are written to 'redirected' temp files
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            bool verifyOnly = UseVerifyOnlyForFile(filePath);
+
+            if (verifyOnly)
             {
                 string targetFile = ResolveFile(filePath);
 
@@ -279,7 +285,7 @@ namespace BuildConfigGen
 
         private string ResolveFile(string filePath)
         {
-            if (!verifyOnly)
+            if (!UseVerifyOnlyForFile(filePath))
             {
                 return filePath;
             }
@@ -311,18 +317,17 @@ namespace BuildConfigGen
 
         internal void DeleteDirectoryRecursive(string path)
         {
-            if (verifyOnly || lastVerifyOnlyState.HasValue)
+            bool verify = UseVerifyOnlyForPath(path);
+
+            if (verify)
             {
                 if (Directory.Exists(path))
                 {
                     VerifyErrors.Add($"Expected directory {path} to not exist");
                 }
             }
-
-            if (!verifyOnly || lastVerifyOnlyState.HasValue)
+            else
             {
-                EnsureUnconditionalPath(path);
-
                 if (Directory.Exists(path))
                 {
                     Directory.Delete(path, true);
@@ -330,49 +335,102 @@ namespace BuildConfigGen
             }
         }
 
-        private void EnsureUnconditionalPath(string path)
+        private bool UseVerifyOnlyForFile(string file)
         {
-            if (allowedUnconditionalPath is not null && !IsSubPath(allowedUnconditionalPath, path))
+            return UseVerifyOnlyInternal(file, true);
+        }
+
+        private bool UseVerifyOnlyForPath(string path)
+        {
+            return UseVerifyOnlyInternal(path, false);
+        }
+
+        private bool UseVerifyOnlyInternal(string path, bool trueForFile)
+        {
+            EnsureState();
+
+            /*
+            // if verifyOnly state
+            if (verifyState)
             {
-                throw new Exception($"BUG: path={path} must be under allowedUnconditionalPath={allowedUnconditionalPath}");
+                return true;
+            }*/
+
+            // if !verifyOnly was passed to constructor, unconditional writes everywhere
+            if (!verifyFromConstructor)
+            {
+                return false;
+            }
+
+            // if uncondo
+            if (allowedUnconditionalPath is null)
+            {
+                return verifyState;
+            }
+
+            if (trueForFile ? IsSubFile(allowedUnconditionalPath, path) : IsSubPath(allowedUnconditionalPath, path))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
-        private void EnsureUnconditionalFile(string file)
-        {
-            if (allowedUnconditionalPath is not null && !IsSubFile(allowedUnconditionalPath, file))
-            {
-                throw new Exception($"BUG: file={file} must be under allowedUnconditionalPath={allowedUnconditionalPath}");
-            }
-        }
-
-        bool? lastVerifyOnlyState;
         string? allowedUnconditionalPath;
 
         internal void StartUnconditionalWrites(string allowedUnconditionalPath)
         {
-            if (!verifyOnly)
+            EnsureState();
+
+            if(verifyState != verifyFromConstructor)
+            { 
+                throw new Exception($"BUG: expected verifyState {verifyState} == verifyFromConstructor {verifyFromConstructor}");
+            }
+
+            if (!verifyFromConstructor)
             {
                 return;
             }
 
-            if (lastVerifyOnlyState.HasValue)
-            {
-                throw new Exception($"expected lastVerifyOnlyState={lastVerifyOnlyState} to be null");
-            }
-
-            lastVerifyOnlyState = verifyOnly;
-            verifyOnly = false;
+            verifyState = false;
             this.allowedUnconditionalPath = allowedUnconditionalPath;
         }
 
         internal void ResumeWriteBehavior()
         {
-            if (lastVerifyOnlyState.HasValue)
+            EnsureState();
+
+            if (!verifyFromConstructor)
             {
-                verifyOnly = lastVerifyOnlyState.Value;
-                lastVerifyOnlyState = null;
-                this.allowedUnconditionalPath = null;
+                return;
+            }
+
+            verifyState = verifyFromConstructor;
+            this.allowedUnconditionalPath = null;
+        }
+
+        private void EnsureState()
+        {
+            if(!verifyFromConstructor && verifyState)
+            {
+                throw new Exception("BUG: verifyState cannot be true if verifyFromConstructor is false");
+            }
+
+            if (verifyFromConstructor)
+            {
+                if (this.allowedUnconditionalPath is null && !verifyState)
+                {
+                    throw new Exception($"BUG: expected allowedUnconditionalPath={allowedUnconditionalPath} to be not null when !verifyState=={!verifyState}");
+                }
+            }
+            else 
+            {
+                if (this.allowedUnconditionalPath is not null)
+                {
+                    throw new Exception($"BUG: expected allowedUnconditionalPath={allowedUnconditionalPath} to be null");
+                }
             }
         }
 

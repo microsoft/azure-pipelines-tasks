@@ -178,12 +178,18 @@ namespace BuildConfigGen
                     CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
                 }
 
-                if (includeLocalPackagesBuildConfig)
+                // bump patch number for global if any tasks invalidated.
+                if (taskVersionInfo.Values.Any(x => x.versionsUpdated.Any()))
                 {
-                    foreach (var t in tasks)
-                    {
-                        IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+                    maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1;
+                }
 
+                foreach (var t in tasks)
+                {
+                    IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+
+                    if (includeLocalPackagesBuildConfig)
+                    {
                         if (globalVersion is null)
                         {
                             globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
@@ -197,27 +203,30 @@ namespace BuildConfigGen
                             }
                             else
                             {
+                                // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
                                 globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
                                 globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major);
                             }
                         }
+                    }
 
+                    if (globalVersion is not null)
+                    {
                         // populate global verison information
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-
-                        if (globalVersion is null)
-                        {
-                            throw new Exception("globalVersion shouldn't be null here");
-                        }
 
                         UpdateVersionsGlobal(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, globalVersion);
                         CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
                     }
-
-                    ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
-                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
                 }
 
+                if (globalVersion is not null)
+                {
+                    ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
+                }
+
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
+            
                 foreach (var t in tasks)
                 {
                     IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
@@ -442,7 +451,7 @@ namespace BuildConfigGen
                 {
                     if (config.useGlobalVersion && !hasGlobalVersion)
                     {
-                        Console.WriteLine($"MainUpdateTask: Skipping useGlobalVersion config for task b/c GlobalVersion not initialized.  (run with --include-use-local-task-lib-and-common-packages.  hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion}");
+                        Console.WriteLine($"Info: MainUpdateTask: Skipping useGlobalVersion config for task b/c GlobalVersion not initialized.  (to opt-in and start producing LocalBuildConfig, run with --include-local-packages-build-config.  hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion}).  Note: this is not an error!");
                     }
                     else
                     {
@@ -1120,6 +1129,8 @@ namespace BuildConfigGen
 
                 if (defaultVersionMatchesSourceVersion)
                 {
+                    // scenerio:  No task changes, adding a new config(s)
+                    // retain existing versions to reduce changes
                     taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);
 
                     foreach (var config in targetConfigs)
@@ -1135,6 +1146,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
+                    // scenerio: base version bumped.  New version is max(patch)+1 (if current sprint)
                     taskState.configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
                     offset++;
                     taskState.versionsUpdated.Add(Config.Default);
@@ -1146,7 +1158,7 @@ namespace BuildConfigGen
                     {
                         if (config.useGlobalVersion)
                         {
-                            // global version is updated unconditionally below
+                            // global version is updated unconditionally in UpdateVersionsGlobal
                         }
                         else
                         {
@@ -1172,7 +1184,8 @@ namespace BuildConfigGen
 
             foreach (var x in taskState.configTaskVersionMapping)
             {
-                if (x.Value.Major == currentSprint)
+                // accumulate the max patch, excluding existing globalversion (used for providing a new global version)
+                if (x.Value.Minor == currentSprint && !x.Key.useGlobalVersion)
                 {
                     maxPatchForCurrentSprint = Math.Max(x.Value.Patch, maxPatchForCurrentSprint);
                 }
@@ -1217,7 +1230,7 @@ namespace BuildConfigGen
                 return null;
             }
 
-            string globalVersionString = File.ReadAllText(globalVersionPath);
+            string globalVersionString = File.ReadAllText(globalVersionPath).Trim();
 
             const string shortVersionRegex = @"^\d+\.\d+$";
             Regex re = new Regex(shortVersionRegex);
