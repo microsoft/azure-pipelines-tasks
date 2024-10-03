@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -249,7 +249,7 @@
     "NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
   },
   "_buildConfigMapping": {
-    "Default": "2.247.2",
-    "Node20_229_14": "2.247.3"
+    "Default": "2.247.4",
+    "Node20_229_14": "2.247.5"
   }
 }
