@@ -35,7 +35,7 @@ foreach ($taskPath in (Get-ChildItem -Path $tasksDir)) {
 
         $owners = @()
         $ownersLine = $codeowners
-        | Where-Object { $_ -like "*$($taskDirName)*" }
+        | Where-Object { $_ -like "*Tasks/$($taskDirName)*" }
         | ForEach-Object { $_ -replace "Tasks/$($taskDirName)( |/)", '' }
         if ($null -ne $ownersLine) {
             $owners = ($ownersLine.Trim()) -split '\s+'
