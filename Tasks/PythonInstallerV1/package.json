@@ -1,7 +1,7 @@
 {
   "name": "python-installer",
   "version": "1.0.0",
-  "description": "Installs the specified version of Python from the tool cache. Optionally add it to PATH.",
+  "description": "Installs the specified version of Python. Optionally add it to PATH.",
   "main": "pythoninstaller.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

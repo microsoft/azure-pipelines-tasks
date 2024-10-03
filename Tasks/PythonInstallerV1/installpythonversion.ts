@@ -19,20 +19,39 @@ const OS_VERSION = osutil._getOsVersion();
  * @param parameters task parameters.
  */
 export async function installPythonVersion(versionSpec: string, parameters: TaskParameters) {
-    const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, parameters);
+    console.log("installPythonVersion function called");
+    if (parameters.fromGitHubActionsRegistry == true) {
+        const pythonInstallerDir: string = await downloadPythonVersion(versionSpec, parameters);
 
-    task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
-    const installerScriptOptions = {
-        cwd: pythonInstallerDir,
-        windowsHide: true
-    };
+        task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
-    if (os.platform() === 'win32') {
-        return task.exec('powershell', './setup.ps1', installerScriptOptions);
-    } else {
-        return task.exec('bash', './setup.sh', installerScriptOptions);
+        const installerScriptOptions = {
+            cwd: pythonInstallerDir,
+            windowsHide: true
+        };
+
+        if (os.platform() === 'win32') {
+            return task.exec('powershell', './setup.ps1', installerScriptOptions);
+        } else {
+            return task.exec('bash', './setup.sh', installerScriptOptions);
+        }
+    
     }
+
+    else if (parameters.fromPythonDistribution == true) {
+        const pythonInstallerDir: string = await downloadFromPythonOrg(versionSpec, parameters);
+        //display a sample message in logs
+        console.log("general test message");
+        console.log("Python installer directory: " + pythonInstallerDir);
+
+        task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
+
+        return pythonInstallerDir;
+
+
+    }
+
 }
 /**
  * Function to download and install python from the python.org website.
@@ -43,34 +62,45 @@ async function downloadFromPythonOrg(versionSpec: string, parameters: TaskParame
     let downloadUrl: string;
     let fileName: string;
 
+    // Download .exe if windows (separate for 32-bit and 64-bit), and .tgz if linux, and .pkg if mac
     if (os.platform() === 'win32') {
-        fileName = `python-${versionSpec}-amd64.exe`;
-        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/${fileName}`;
-    } else {
+        if (parameters.architecture === 'x64') {
+            downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-amd64.exe`;
+            fileName = `python-${versionSpec}-amd64.exe`;
+        }
+        else {
+            downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}.exe`;
+            fileName = `python-${versionSpec}.exe`;
+        }
+    } else if (os.platform() === 'linux') {
+        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/Python-${versionSpec}.tgz`;
         fileName = `Python-${versionSpec}.tgz`;
-        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/${fileName}`;
+    } else if (os.platform() === 'darwin') {
+        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-macosx11.pkg`;
+        fileName = `python-${versionSpec}-macosx11.pkg`;
+    } else {
+        throw new Error(task.loc('OSNotSupported', os.platform()));
     }
 
     task.debug(`Downloading Python from ${downloadUrl}`);
 
-    // Download the file
-    const downloadPath: string = await tool.downloadTool(downloadUrl);
-    task.debug(`Downloaded Python to ${downloadPath}`);
+    const pythonArchivePath: string = await tool.downloadTool(downloadUrl, fileName);
 
-    let extractedPath : string;
-    return extractedPath;
-    // Extract the file
-    // let extractedPath: string;
-    // if (os.platform() === 'win32') {
-    //     extractedPath = path.join(parameters.installDir, `python-${versionSpec}`);
-    //     fs.mkdirSync(extractedPath, { recursive: true });
-    //     fs.renameSync(downloadPath, path.join(extractedPath, fileName));
-    // } else {
-    //     extractedPath = await tool.extractTar(downloadPath, parameters.installDir);
-    // }
+    task.debug(`Downloaded python installer/archive to ${pythonArchivePath}`);
 
-    // task.debug(`Extracted Python to ${extractedPath}`);
-    // return extractedPath;
+    //return path to the extracted python installer file/archive
+
+    if (os.platform() === 'win32') {
+        return pythonArchivePath;
+    } else if (os.platform() === 'linux') {
+        return tool.extractTar(pythonArchivePath);
+    }
+    else if (os.platform() === 'darwin') {
+        return pythonArchivePath;
+    }
+    else {
+        throw new Error(task.loc('OSNotSupported', os.platform()));
+    }
 }
 
 

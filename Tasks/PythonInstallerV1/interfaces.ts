@@ -1,7 +1,11 @@
 export interface TaskParameters {
     versionSpec: string,
-    disableDownloadFromRegistry: boolean,
-    downloadFromPythonDistribution: boolean,
+    // disableDownloadFromRegistry: boolean,
+    // downloadFromPythonDistribution: boolean,
+    preInstalled: boolean,
+    fromAzure: boolean,
+    fromPythonDistribution: boolean,
+    fromGitHubActionsRegistry: boolean,
     allowUnstable: boolean,
     addToPath: boolean,
     architecture: string,

@@ -103,12 +103,28 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         task.warning(task.loc('ExactVersionNotRecommended'));
     }
 
-    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    //find only if parameters.PreInstalled is true
+    // if (parameters.preInstalled) {
+    //     const installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    //     if (installDir) {
+    //         task.setVariable('pythonLocation', installDir);
+    //         if (parameters.addToPath) {
+    //             toolUtil.prependPathSafe(installDir);
+    //             toolUtil.prependPathSafe(binDir(installDir, platform));
+    //         }
+    //         return;
+    //     }
+    // }
+    // let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
     // Python version not found in local cache, try to download and install
+    // let installDir: string | null = null;
+
+    // set installDir to null
+    let installDir: string | null = null;
     
     if (!installDir) {
         task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
-        if (!parameters.disableDownloadFromRegistry) {
+        if (parameters.fromGitHubActionsRegistry) {
             try {
                 task.debug('Trying to download python from registry.');
                 await installPythonVersion(semanticVersionSpec, parameters);
@@ -119,6 +135,33 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
             } catch (err) {
                 task.error(task.loc('DownloadFailed', err.toString()));
             }
+        }
+        else if (parameters.fromAzure) {
+            try {
+                task.debug('Trying to download python from Azure.');
+                await installPythonVersion(semanticVersionSpec, parameters);
+                installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                if (installDir) {
+                    task.debug(`Successfully installed python from Azure to ${installDir}.`);
+                }
+            } catch (err) {
+                task.error(task.loc('DownloadFailed', err.toString()));
+            }
+        }
+        else if (parameters.fromPythonDistribution) {
+            try {
+                task.debug('Trying to download python from python.org.');
+                await installPythonVersion(semanticVersionSpec, parameters);
+                installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                if (installDir) {
+                    task.debug(`Successfully installed python from python.org to ${installDir}.`);
+                }
+            } catch (err) {
+                task.error(task.loc('DownloadFailed', err.toString()));
+            }
+        }
+        else if (parameters.preInstalled) {
+            task.error(task.loc('PythonNotFound'));
         }
     }
 

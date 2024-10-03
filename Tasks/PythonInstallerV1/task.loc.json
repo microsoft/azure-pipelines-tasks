@@ -36,20 +36,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "downloadFromPythonDistribution",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.downloadFromPythonDistribution",
+      "name": "pythonSourceOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.pythonSourceOption",
       "required": true,
-      "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.downloadFromPythonDistribution"
-    },
-    {
-      "name": "disableDownloadFromRegistry",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.disableDownloadFromRegistry",
-      "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.disableDownloadFromRegistry"
+      "options": {
+        "AzureStorage": "Azure Storage",
+        "GitHubActionsRegistry": "GitHub Actions Registry",
+        "PythonDistribution": "Python Distribution",
+        "PreInstalled": "Local Pre-installed Python"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.pythonSourceOption"
     },
     {
       "name": "allowUnstable",
@@ -58,7 +55,7 @@
       "required": false,
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.allowUnstable",
-      "visibleRule": "disableDownloadFromRegistry = false"
+      "visibleRule": "pythonSourceOption == GitHubActionsRegistry"
     },
     {
       "name": "githubToken",
@@ -66,7 +63,7 @@
       "label": "ms-resource:loc.input.label.githubToken",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.githubToken",
-      "visibleRule": "disableDownloadFromRegistry = false"
+      "visibleRule": "pythonSourceOption == GitHubActionsRegistry"
     },
     {
       "name": "addToPath",

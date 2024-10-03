@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "Use Python $(versionSpec)",
@@ -36,20 +36,17 @@
       "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
     },
     {
-      "name": "downloadFromPythonDistribution",
-      "type": "boolean",
-      "label": "Download releases from the official python.org distribution",
+      "name": "pythonSourceOption",
+      "type": "pickList",
+      "label": "Python source",
       "required": true,
-      "defaultValue": "true",
-      "helpMarkDown": "Download python version from the python.org releases. [More information](https://www.python.org/downloads/)"
-    },
-    {
-      "name": "disableDownloadFromRegistry",
-      "type": "boolean",
-      "label": "Disable downloading releases from the GitHub registry",
-      "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "Whether to disable downloading missing python version from the [Github Actions registry](https://github.com/actions/python-versions). Check this if you only want to use local pre-installed python."
+      "options": {
+        "AzureStorage": "Azure Storage",
+        "GitHubActionsRegistry": "GitHub Actions Registry",
+        "PythonDistribution": "Python Distribution",
+        "PreInstalled": "Local Pre-installed Python"
+      },
+      "helpMarkDown": "Source for python installation."
     },
     {
       "name": "allowUnstable",
@@ -58,7 +55,7 @@
       "required": false,
       "defaultValue": "false",
       "helpMarkDown": "Allow downloading unstable python versions from [Github Actions python versions registry](https://github.com/actions/python-versions).",
-      "visibleRule": "disableDownloadFromRegistry = false"
+      "visibleRule": "pythonSourceOption == GitHubActionsRegistry"
     },
     {
       "name": "githubToken",
@@ -66,7 +63,7 @@
       "label": "GitHub token for GitHub Actions python registry",
       "required": false,
       "helpMarkDown": "GitHub token is needed to prevent anonymous requests limit to the [Github Actions python versions registry](https://github.com/actions/python-versions). Leaving this empty may cause download failures. Not needed if you only use locally installed python.",
-      "visibleRule": "disableDownloadFromRegistry = false"
+      "visibleRule": "pythonSourceOption == GitHubActionsRegistry"
     },
     {
       "name": "addToPath",
