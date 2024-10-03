@@ -27,7 +27,8 @@
 ###############################################################################
 *.js         text
 *.json       text
-*.resjson    text
+*.resjson    binary
+tasks.schema.json binary
 *.htm        text
 *.html       text
 *.xml        text

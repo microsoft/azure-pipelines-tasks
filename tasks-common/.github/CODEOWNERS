@@ -1,0 +1,32 @@
+
+ci/  @microsoft/akvelon-build-task-team
+
+common-npm-packages/artifacts-common/            @microsoft/azure-artifacts-packages
+
+common-npm-packages/az-blobstorage-provider/     @omeshp  @hiyadav  @bishal-pdmsft
+
+common-npm-packages/azure-arm-rest/              @microsoft/release-management-task-team @manolerazvan
+
+common-npm-packages/azurermdeploycommon/         @vincentdass  @microsoft/release-management-task-team @manolerazvan
+
+common-npm-packages/codeanalysis-common/         @microsoft/akvelon-build-task-team
+
+common-npm-packages/codecoverage-tools/          @rasunkar  @microsoft/adoautotest
+
+common-npm-packages/docker-common/               @microsoft/release-management-task-team @manolerazvan
+
+common-npm-packages/ios-signing-common/          @microsoft/akvelon-build-task-team  @hashtagchris
+
+common-npm-packages/java-common/                 @microsoft/akvelon-build-task-team  @kelliejos
+
+common-npm-packages/kubernetes-common/           @nishubansal  @ds-ms
+
+common-npm-packages/msbuildhelpers/              @microsoft/akvelon-build-task-team
+
+common-npm-packages/packaging-common/            @microsoft/azure-artifacts-packages
+
+common-npm-packages/securefiles-common/          @microsoft/akvelon-build-task-team  @hashtagchris
+
+common-npm-packages/utility-common/              @nishubansal  @ds-ms
+
+common-npm-packages/webdeployment-common/        @microsoft/release-management-task-team @manolerazvan

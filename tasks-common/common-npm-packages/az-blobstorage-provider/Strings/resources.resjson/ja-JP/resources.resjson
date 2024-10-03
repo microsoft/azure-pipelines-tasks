@@ -1,0 +1,14 @@
+{
+  "loc.messages.CreatedBlobForItem": "項目 {0}の BLOB を作成しました。BLOB URI: {1}",
+  "loc.messages.CreatedContainer": "コンテナー {0}を作成しました。",
+  "loc.messages.ErrorInReadStream": "読み取りストリームでエラーが発生しました: {0}",
+  "loc.messages.ErrorInWriteStream": "書き込みストリームでエラーが発生しました: {0}",
+  "loc.messages.FailedToCreateBlob": "BLOB {0}を作成できませんでした。エラー: {1}",
+  "loc.messages.FailedToCreateContainer": "コンテナー {0}を作成できませんでした。エラー: {1}",
+  "loc.messages.FailedToListItemInsideContainer": "コンテナー内の項目を一覧表示できませんでした: {0}。エラー: {1}",
+  "loc.messages.SuccessFullyFetchedItemList": "アイテムの一覧が正常にフェッチされました",
+  "loc.messages.UnableToFetchItem": "項目をフェッチできません: {0}。エラー: {1}",
+  "loc.messages.UploadingItem": "{0} をアップロードしています。",
+  "loc.messages.ContinuationTokenExistsFetchingRemainingFiles": "継続トークンが存在し、残りのファイルの一覧をフェッチしようとしています。",
+  "loc.messages.GetArtifactItemsNotSupported": "サポートされていない成果物項目の取得、無効なコード パス"
+}

@@ -1,0 +1,550 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "title": "Azure DevOps Tasks schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A unique guid for this task",
+      "pattern": "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name with no spaces",
+      "pattern": "^[A-Za-z0-9\\-]+$"
+    },
+    "friendlyName": {
+      "type": "string",
+      "description": "Descriptive name (spaces allowed). Must be <= 40 chars"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what your task does"
+    },
+    "helpUrl": {
+      "type": "string"
+    },
+    "helpMarkDown": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "preview": {
+      "type": "boolean"
+    },
+    "deprecated": {
+      "type": "boolean",
+      "description": "Task is deprecated only when the latest version is marked as deprecated. Deprecated tasks appear at the end of searches under a section that is collapsed by default."
+    },
+    "removalDate": {
+      "type": "string",
+      "description": "The date included in the depreciation warning after which the task may no longer be available. Format: YYYY-MM-DD",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "deprecationMessage": {
+      "type": "string",
+      "description": "A tailored deprecation message containing detailed information about the task deprecation (besides the removal date and the URL leading to the task documentation) in addition to the common deprecation message."
+    },
+    "showEnvironmentVariables": {
+      "type": "boolean",
+      "description": "Toggles showing the environment variable editor in the task editor UI. Allows passing environment variables to script based tasks."
+    },
+    "runsOn": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Agent",
+          "MachineGroup",
+          "Server",
+          "ServerGate",
+          "DeploymentGroup"
+        ]
+      }
+    },
+    "visibility": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Build",
+          "Release"
+        ]
+      }
+    },
+    "category": {
+      "type": "string",
+      "description": "Where the task appears in Azure DevOps. Use the 'Azure *' categories for Azure DevOps and Azure DevOps Server 2019. Use the other categories for Team Foundation Server 2018 and below.",
+      "enum": [
+        "Build",
+        "Utility",
+        "Test",
+        "Package",
+        "Deploy",
+
+        "Azure Repos",
+        "Azure Boards",
+        "Azure Pipelines",
+        "Azure Test Plans",
+        "Azure Artifacts"
+      ]
+    },
+    "groups": {
+      "type": "array",
+      "description": "Describes groups that task properties may be logically grouped by in the UI.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "displayName"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "isExpanded": {
+            "type": "boolean"
+          },
+          "visibleRule": {
+            "type": "string",
+            "description": "Allow's you to define a rule which dictates when the group will be visible to a user, for example \"variableName1 != \\\"\\\" && variableName2 = value || variableName3 NotEndsWith value\""
+          }
+        }
+      }
+    },
+    "demands": {
+      "type": "array",
+      "description": "Allows you to define a list of demands that a build agent requires to run this build task.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minimumAgentVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Always update this when you release your task, so that the agents utilize the latest code.",
+      "required": [
+        "Major",
+        "Minor",
+        "Patch"
+      ],
+      "properties": {
+        "Major": {
+          "type": "number"
+        },
+        "Minor": {
+          "type": "number"
+        },
+        "Patch": {
+          "type": "number"
+        }
+      }
+    },
+    "instanceNameFormat": {
+      "type": "string",
+      "description": "This is how the task will be displayed within the build step list - you can use variable values by using $(variablename)"
+    },
+    "releaseNotes": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "label",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The variable name to use to store the user-supplied value",
+            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "label": {
+            "type": "string",
+            "description": "The text displayed to the user for the input label"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type that dictates the control rendered to the user.",
+            "anyOf": [
+              {
+                "enum": [
+                  "boolean",
+                  "filePath",
+                  "multiLine",
+                  "pickList",
+                  "radio",
+                  "secureFile",
+                  "string",
+                  "int",
+                  "identities",
+                  "querycontrol"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^connectedService\\:.+$"
+              }
+            ]
+          },
+          "defaultValue": {
+            "type": [
+              "string",
+              "boolean"
+            ],
+            "description": "The default value to apply to this input."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the input is a required field (default is false).",
+            "default": false
+          },
+          "helpMarkDown": {
+            "type": "string",
+            "description": "Help to be displayed when hovering over the help icon for the input. To display URLs use the format [Text To Display](http://Url)"
+          },
+          "groupName": {
+            "type": "string",
+            "description": "Setting this to the name of a group defined in 'groups' will place the input into that group."
+          },
+          "visibleRule": {
+            "type": "string",
+            "description": "Allow's you to define a rule which dictates when the input will be visible to a user, for example \"variableName1 != \\\"\\\" && variableName2 = value || variableName3 NotEndsWith value\""
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "EditableOptions": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "MultiSelect": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "MultiSelectFlatList": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "DisableManageLink": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "IsSearchable": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "PopulateDefaultValue": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              },
+              "isVariableOrNonNegativeNumber": {
+                "type": "string",
+                "enum": [
+                  "true",
+                  "false"
+                ]
+              },
+              "resizable": {
+                "type": "boolean"
+              },
+              "rows": {
+                "type": "string",
+                "pattern": "^\\d+$"
+              },
+              "maxLength": {
+                "type": "string",
+                "pattern": "^\\d+$"
+              },
+              "editorExtension": {
+                "type": "string"
+              },
+              "EndpointFilterRule": {
+                "type": "string"
+              }
+            }
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "dataSourceBindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "endpointId": {
+            "type": "string"
+          },
+          "dataSourceName": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "resultTemplate": {
+            "type": "string"
+          },
+          "endpointUrl": {
+            "type": "string"
+          },
+          "resultSelector": {
+            "type": "string"
+          },
+          "RequestVerb": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST",
+              "DELETE",
+              "OPTIONS",
+              "HEAD",
+              "PUT",
+              "TRACE",
+              "PATCH"
+            ]
+          },
+          "requestContent": {
+            "type": "string"
+          },
+          "callbackContextTemplate": {
+            "type": "string"
+          },
+          "callbackRequiredTemplate": {
+            "type": "string"
+          },
+          "initialContextTemplate": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sourceDefinitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "selector": {
+            "type": "string"
+          },
+          "keySelector": {
+            "type": "string"
+          },
+          "authKey": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "prejobexecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Execution options for this task (on Pre-Job stage)",
+      "properties": {
+        "Node16": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node10": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell3": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell": {
+          "$ref": "#/definitions/executionObject"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Execution options for this task",
+      "properties": {
+        "Node16": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node10": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell3": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell": {
+          "$ref": "#/definitions/executionObject"
+        }
+      }
+    },
+    "postjobexecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Execution options for this task (on Post-Job stage)",
+      "properties": {
+        "Node16": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node10": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Node": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell3": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell": {
+          "$ref": "#/definitions/executionObject"
+        }
+      }
+    },
+    "messages": {
+      "type": "object"
+    },
+    "outputVariables": {
+      "type": "array",
+      "description": "Describes output variables of task.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The variable name",
+            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the variable"
+          }
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Restrictions on tasks",
+      "properties": {
+        "commands": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Restrictions on available task commands",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "any",
+                "restricted"
+              ]
+            }
+          }
+        },
+        "settableVariables": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Restrictions on which variables can be set via commands",
+          "properties": {
+            "allowed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "executionObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+          "target"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "The target file to be executed. You can use variables here in brackets e.g. $(currentDirectory)\filename.ps1"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "windows"
+            ]
+          }
+        },
+        "argumentFormat": {
+          "type": "string"
+        },
+        "workingDirectory": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
