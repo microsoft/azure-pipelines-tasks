@@ -164,18 +164,18 @@
     {
       "name": "azure_access_token",
       "type": "string",
-      "label": "Azure Access Token",
+      "label": "ms-resource:loc.input.label.azure_access_token",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Access Token used for deployment. Not required if passed as a variable"
+      "helpMarkDown": "ms-resource:loc.input.help.azure_access_token"
     },
     {
       "name": "default_hostname",
       "type": "string",
-      "label": "Default Hostname",
+      "label": "ms-resource:loc.input.label.default_hostname",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Default hostname for deployment. Not required if passed as an environment variable"
+      "helpMarkDown": "ms-resource:loc.input.help.default_hostname"
     }
   ],
   "execution": {
