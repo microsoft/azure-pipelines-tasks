@@ -16,6 +16,10 @@
     {
       "module": "../Common/TlsHelper_",
       "type": "ps"
+    },
+    {
+      "module": "../Common/VstsAzureRestHelpers_",
+      "type": "ps"
     }
   ],
   "externals": {
