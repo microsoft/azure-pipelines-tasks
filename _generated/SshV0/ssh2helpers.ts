@@ -147,7 +147,11 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
-                    console.log(data.toString('utf8'));
+                    if (tl.getPipelineFeature("trimSshTaskOutput")) {
+                        console.log(data.toString('utf8').trim());
+                    } else {
+                        console.log(data.toString('utf8'));
+                    }
                     if (!passwordSent) {
                         passwordSent = handlePasswordInput(data, stream, password, dataBuffer);
                         if (passwordSent) {
@@ -174,7 +178,11 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
-                    console.log(data.toString('utf8'));
+                    if (tl.getPipelineFeature("trimSshTaskOutput")) {
+                        console.log(data.toString('utf8').trim());
+                    } else {
+                        console.log(data.toString('utf8'));
+                    }
                 }
             }).stderr.on('data', (data) => {
                 stdErrWritten = true;
