@@ -73,8 +73,11 @@ namespace BuildConfigGen
         {
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
                 MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig);
+                Console.WriteLine("Elapsed=" + sw.ToString());
             }
             catch (Exception e2)
             {
@@ -945,7 +948,7 @@ namespace BuildConfigGen
             HashSet<string> pathsToRemoveFromOutput;
 
             // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
-            if (Directory.Exists(taskOutput) && !config.useAltGeneratedPath /* exclude alt which is .gitignore */)
+            if (Directory.Exists(taskOutput))
             {
                 pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(gitRootPath, taskOutput));
             }
