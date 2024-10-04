@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 0
   },
   "preview": true,
@@ -160,6 +160,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+    },
+    {
+      "name": "azure_access_token",
+      "type": "string",
+      "label": "Azure Access Token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Access Token used for deployment. Not required if passed as a variable"
+    },
+    {
+      "name": "default_hostname",
+      "type": "string",
+      "label": "Default Hostname",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Default hostname for deployment. Not required if passed as an environment variable"
     }
   ],
   "execution": {
@@ -173,7 +189,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_8": "0.246.1"
+    "Default": "0.247.0",
+    "Node20_229_8": "0.247.1"
   }
 }
