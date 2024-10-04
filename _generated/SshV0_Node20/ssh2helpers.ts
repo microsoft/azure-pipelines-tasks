@@ -147,8 +147,8 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
-                    if (tl.getPipelineFeature("trimSshTaskOutput")) {
-                        console.log(data.toString('utf8').trim());
+                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
+                        process.stdout.write(data);
                     } else {
                         console.log(data.toString('utf8'));
                     }
@@ -178,8 +178,8 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string
-                    if (tl.getPipelineFeature("trimSshTaskOutput")) {
-                        console.log(data.toString('utf8').trim());
+                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
+                        process.stdout.write(data);
                     } else {
                         console.log(data.toString('utf8'));
                     }
