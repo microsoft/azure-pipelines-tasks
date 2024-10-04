@@ -1,3 +1,4 @@
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as ssh2 from 'ssh2';
@@ -35,7 +36,7 @@ function handlePasswordInput(data: string, stream: any, password: string, dataBu
 function handleError(data: any): void {
     tl.debug('stderr = ' + data);
     if (data && data.toString().trim() !== '') {
-        tl.error(data.toString('utf8'));
+        tl.error(data.toString('utf8'), IssueSource.CustomerScript);
     }
 }
 
