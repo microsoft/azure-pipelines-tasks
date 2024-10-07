@@ -1,4 +1,4 @@
-# Azure AppConfiguration Export
+# Azure App Configuration Export
 
 ### Overview
 

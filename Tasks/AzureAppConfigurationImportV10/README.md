@@ -1,4 +1,4 @@
-# Azure AppConfiguration Import
+# Azure App Configuration Import
 
 ### Overview
 
