@@ -2,7 +2,7 @@
 
 ### Overview
 
-This task is used to push key-values from a configuration file to your  [App Configuration store](https://learn.microsoft.com/azure/azure-app-configuration/quickstart-azure-app-configuration-create). 
+This task is used to import key-values from a configuration file to your [App Configuration store](https://learn.microsoft.com/azure/azure-app-configuration/quickstart-azure-app-configuration-create). 
 
 ## Contact Information
 

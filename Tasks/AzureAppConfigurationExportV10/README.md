@@ -2,7 +2,7 @@
 
 ### Overview
 
-This task is used to pull key-values from your [App configuration store](https://learn.microsoft.com/azure/azure-app-configuration/quickstart-azure-app-configuration-create) and sets them as Azure pipeline variables, which can be consumed by subsequent tasks.
+This task is used to export key-values from your [App configuration store](https://learn.microsoft.com/azure/azure-app-configuration/quickstart-azure-app-configuration-create) and sets them as Azure pipeline variables, which can be consumed by subsequent tasks.
 
 ## Contact Information
 
