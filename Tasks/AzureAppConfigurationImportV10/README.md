@@ -1,4 +1,4 @@
-# Azure AppConfiguration Push
+# Azure AppConfiguration Import
 
 ### Overview
 
