@@ -126,6 +126,7 @@
         "InstallSSHKeyV0",
         "InvokeRestApiV1",
         "JavaToolInstallerV0",
+        "JavaToolInstallerV1",
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
         "KubectlInstallerV0",
@@ -408,7 +409,8 @@
         "PublishTestResultsV2"
     ],
     "Node20_229_14": [
-        "PublishSymbolsV2"
+        "PublishSymbolsV2",
+        "JavaToolInstallerV1"
     ],
     "wif_242": [
         "PipAuthenticateV1",
