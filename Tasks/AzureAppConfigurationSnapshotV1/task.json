@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 244,
+        "Minor": 247,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration Snapshot",
@@ -163,6 +163,6 @@
         "UnexpectedError": "An unexpected error occurred. %s",
         "HttpError": "A HTTP error occurred \nName: %s \nCode: %s \nStatus code: %s \nUrl: %s \nError message: %s \nClientRequestId: %s",
         "UnauthenticatedRestError": "\nStatus code: %s \nUrl: %s \nError message: %s \nWWW-Authenticate: %s \nClientRequestId: %s",
-        "AuthenticationError":"Error response: %s \nStatus code: %s \nError message: %s"
+        "AuthenticationError": "Error response: %s \nStatus code: %s \nError message: %s"
     }
 }
