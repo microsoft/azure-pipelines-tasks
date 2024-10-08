@@ -227,5 +227,9 @@
     "ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
     "ExtractingArchiveToPath": "Extracting archive to: %s",
     "ErrorCleaningFolder": "Folder cleaning error: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.247.0",
+    "Node20_229_14": "1.247.1"
   }
 }
