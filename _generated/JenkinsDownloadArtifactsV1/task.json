@@ -2,7 +2,7 @@
   "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
   "name": "JenkinsDownloadArtifacts",
   "friendlyName": "Jenkins download artifacts",
-  "description": "Download artifacts produced by a Jenkins job",
+  "description":"Download artifacts produced by a Jenkins job",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/jenkins-download-artifacts",
   "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
   "category": "Utility",

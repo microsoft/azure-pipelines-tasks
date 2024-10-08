@@ -2,7 +2,7 @@
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
     "friendlyName": "Build machine image",
-    "description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
+    "description":"Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
     "category": "Deploy",

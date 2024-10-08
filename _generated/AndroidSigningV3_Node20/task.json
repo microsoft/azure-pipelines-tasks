@@ -2,7 +2,7 @@
   "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
   "name": "AndroidSigning",
   "friendlyName": "Android signing",
-  "description": "Sign and align Android APK files",
+  "description":"Sign and align Android APK files",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/android-signing",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "category": "Build",

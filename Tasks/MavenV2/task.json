@@ -2,7 +2,7 @@
     "id": "AC4EE482-65DA-4485-A532-7B085873E532",
     "name": "Maven",
     "friendlyName": "Maven",
-    "description": "Build, test, and deploy with Apache Maven",
+    "description":"Build, test, and deploy with Apache Maven",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",

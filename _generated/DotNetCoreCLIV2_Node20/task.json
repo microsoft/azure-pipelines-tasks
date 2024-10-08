@@ -2,7 +2,7 @@
   "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
   "name": "DotNetCoreCLI",
   "friendlyName": ".NET Core",
-  "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
+  "description":"Build, test, package, or publish a dotnet application, or run a custom dotnet command",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=832194) or [see the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",

@@ -2,7 +2,7 @@
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
     "friendlyName": "Download Pipeline Artifacts",
-    "description": "Download build and pipeline artifacts",
+    "description":"Download build and pipeline artifacts",
     "helpMarkDown": "Download one or more published build or pipeline artifacts.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
     "category": "Utility",
@@ -247,7 +247,7 @@
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the pipeline artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
+            "description":"Stores the build number of the pipeline artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
     ]
 }

@@ -2,7 +2,7 @@
   "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
-  "description": "Build and deploy an Azure IoT Edge image",
+  "description":"Build and deploy an Azure IoT Edge image",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
   "helpMarkDown": "Visit the [documentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) for help.",
   "category": "Build",
@@ -291,7 +291,7 @@
   "OutputVariables": [
     {
       "name": "DEPLOYMENT_FILE_PATH",
-      "description": "This is the path of generated deployment file.",
+      "description":"This is the path of generated deployment file.",
       "visibleRule": "action = Build module images"
     }
   ]

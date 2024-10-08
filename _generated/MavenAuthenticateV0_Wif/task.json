@@ -2,7 +2,7 @@
   "id": "D4B964F9-EA90-41BB-9526-29589628AD90",
   "name": "MavenAuthenticate",
   "friendlyName": "Maven Authenticate",
-  "description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
+  "description":"Provides credentials for Azure Artifacts feeds and external maven repositories",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate",
   "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "category": "Package",

@@ -2,7 +2,7 @@
   "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
   "name": "DotNetCoreInstaller",
   "friendlyName": ".NET Core sdk/runtime installer",
-  "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
+  "description":"Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4ihfi)",
   "category": "Tool",

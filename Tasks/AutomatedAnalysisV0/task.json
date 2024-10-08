@@ -2,7 +2,7 @@
     "id": "6B519857-1A20-4248-BAE8-AAD039015AFB",
     "name": "AutomatedAnalysis",
     "friendlyName": "Automated Analysis",
-    "description": "Do a automated analysis of your appication metrics ",
+    "description":"Do a automated analysis of your appication metrics ",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",

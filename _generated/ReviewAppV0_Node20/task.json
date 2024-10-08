@@ -2,7 +2,7 @@
   "id": "DEEAFED4-0B18-4F58-968D-86655B4D2CE9",
   "name": "ReviewApp",
   "friendlyName": "Review App",
-  "description": "Use this task under deploy phase provider to create a resource dynamically",
+  "description":"Use this task under deploy phase provider to create a resource dynamically",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "category": "Utility",
   "preview": true,

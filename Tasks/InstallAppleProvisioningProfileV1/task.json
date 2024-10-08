@@ -2,7 +2,7 @@
   "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
   "name": "InstallAppleProvisioningProfile",
   "friendlyName": "Install Apple provisioning profile",
-  "description": "Install an Apple provisioning profile required to build on a macOS agent machine",
+  "description":"Install an Apple provisioning profile required to build on a macOS agent machine",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-provisioning-profile",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "category": "Utility",
@@ -68,11 +68,11 @@
   "outputVariables": [
     {
       "name": "provisioningProfileUuid",
-      "description": "The UUID property for the selected provisioning profile."
+      "description":"The UUID property for the selected provisioning profile."
     },
     {
       "name": "provisioningProfileName",
-      "description": "The Name property for the selected provisioning profile."
+      "description":"The Name property for the selected provisioning profile."
     }
   ],
   "prejobexecution": {

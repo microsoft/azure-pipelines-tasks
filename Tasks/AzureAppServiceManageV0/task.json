@@ -2,7 +2,7 @@
   "id": "f045e430-8704-11e6-968f-e717e6411619",
   "name": "AzureAppServiceManage",
   "friendlyName": "Azure App Service manage",
-  "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "description":"Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
@@ -217,7 +217,7 @@
   "outputVariables": [
     {
       "name": "LocalPathsForInstalledExtensions",
-      "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
+      "description":"The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
     }
   ],
   "dataSourceBindings": [

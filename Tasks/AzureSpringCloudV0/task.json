@@ -2,7 +2,7 @@
     "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
     "name": "AzureSpringCloud",
     "friendlyName": "Azure Spring Apps",
-    "description": "Deploy applications to Azure Spring Apps and manage deployments.",
+    "description":"Deploy applications to Azure Spring Apps and manage deployments.",
     "helpUrl": "https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines",
     "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
     "category": "Deploy",
@@ -259,7 +259,7 @@
     "outputVariables": [
         {
             "name": "testEndpoint",
-            "description": "After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
+            "description":"After the 'Deploy' action only. Contains private URL for accessing the updated deployment."
         }
     ],
     "dataSourceBindings": [

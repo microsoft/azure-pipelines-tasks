@@ -2,7 +2,7 @@
     "id": "8e038650-f7bf-11e8-8a6c-8fff434b4eff",
     "name": "DockerInstaller",
     "friendlyName": "Docker CLI installer",
-    "description": "Install Docker CLI on agent machine.",
+    "description":"Install Docker CLI on agent machine.",
     "helpUrl": "https://aka.ms/azpipes-docker-installer-tsg",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",

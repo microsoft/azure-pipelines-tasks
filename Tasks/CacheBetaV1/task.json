@@ -2,7 +2,7 @@
     "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
     "name": "CacheBeta",
     "friendlyName": "Cache (Beta)",
-    "description": "Cache files between runs",
+    "description":"Cache files between runs",
     "helpUrl": "https://aka.ms/pipeline-caching-docs",
     "helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
     "category": "Utility",

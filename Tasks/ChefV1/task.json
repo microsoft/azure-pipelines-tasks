@@ -2,7 +2,7 @@
     "id": "B719DB6C-40A2-4F43-9AFF-827825BAECAE",
     "name": "Chef",
     "friendlyName": "Chef",
-    "description": "Deploy to Chef environments by editing environment attributes",
+    "description":"Deploy to Chef environments by editing environment attributes",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/chef",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
     "category": "Deploy",

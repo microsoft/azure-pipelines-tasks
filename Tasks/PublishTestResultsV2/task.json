@@ -2,7 +2,7 @@
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",
-    "description": "Publish test results to Azure Pipelines",
+    "description":"Publish test results to Azure Pipelines",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",

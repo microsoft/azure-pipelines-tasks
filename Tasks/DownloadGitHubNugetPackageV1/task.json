@@ -2,7 +2,7 @@
   "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
   "name": "DownloadGitHubNugetPackage",
   "friendlyName": "Download GitHub Nuget Packages",
-  "description": "Restore your nuget packages using dotnet CLI",
+  "description":"Restore your nuget packages using dotnet CLI",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
   "helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",

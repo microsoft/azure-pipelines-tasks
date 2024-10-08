@@ -2,7 +2,7 @@
     "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
     "name": "ServiceFabricComposeDeploy",
     "friendlyName": "Service Fabric Compose deploy",
-    "description": "Deploy a Docker Compose application to an Azure Service Fabric cluster",
+    "description":"Deploy a Docker Compose application to an Azure Service Fabric cluster",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-compose-deploy",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
     "category": "Deploy",

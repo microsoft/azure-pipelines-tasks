@@ -2,7 +2,7 @@
     "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
     "name": "PublishPipelineArtifact",
     "friendlyName": "Publish Pipeline Artifacts",
-    "description": "Publish (upload) a file or directory as a named artifact for the current run",
+    "description":"Publish (upload) a file or directory as a named artifact for the current run",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
     "helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
     "category": "Utility",

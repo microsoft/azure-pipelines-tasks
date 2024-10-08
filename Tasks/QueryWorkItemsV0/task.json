@@ -2,7 +2,7 @@
     "id": "F1E4B0E6-017E-4819-8A48-EF19AE96E289",
     "name": "queryWorkItems",
     "friendlyName": "Query work items",
-    "description": "Execute a work item query and check the number of items returned",
+    "description":"Execute a work item query and check the number of items returned",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/work-item-query",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870238)",

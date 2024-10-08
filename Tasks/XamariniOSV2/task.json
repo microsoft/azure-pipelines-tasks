@@ -2,7 +2,7 @@
   "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
   "name": "XamariniOS",
   "friendlyName": "Xamarin.iOS",
-  "description": "Build an iOS app with Xamarin on macOS",
+  "description":"Build an iOS app with Xamarin on macOS",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-ios",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
   "category": "Build",

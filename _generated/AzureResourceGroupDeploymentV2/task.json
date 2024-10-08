@@ -2,7 +2,7 @@
   "id": "94A74903-F93F-4075-884F-DC11F34058B4",
   "name": "AzureResourceGroupDeployment",
   "friendlyName": "Azure resource group deployment",
-  "description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
+  "description":"Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
   "category": "Deploy",

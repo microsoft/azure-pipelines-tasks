@@ -2,7 +2,7 @@
   "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
   "name": "AzureRmWebAppDeployment",
   "friendlyName": "Azure App Service deploy",
-  "description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
+  "description":"Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
   "helpUrl": "https://aka.ms/azureappservicetroubleshooting",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
   "category": "Deploy",
@@ -453,7 +453,7 @@
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected App Service."
+      "description":"Application URL of the selected App Service."
     }
   ],
   "dataSourceBindings": [

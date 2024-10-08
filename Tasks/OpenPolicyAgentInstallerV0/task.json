@@ -2,7 +2,7 @@
     "id": "50817E39-E160-45E1-A825-1C746B7D2EB2",
     "name": "OpenPolicyAgentInstaller",
     "friendlyName": "Open Policy Agent Installer",
-    "description": "Install Open Policy Agent on agent machine",
+    "description":"Install Open Policy Agent on agent machine",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Utility",

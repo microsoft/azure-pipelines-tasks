@@ -2,7 +2,7 @@
   "id": "E28912F1-0114-4464-802A-A3A35437FD16",
   "name": "Docker",
   "friendlyName": "Docker",
-  "description": "Build or push Docker images, login or logout, start or stop containers, or run a Docker command",
+  "description":"Build or push Docker images, login or logout, start or stop containers, or run a Docker command",
   "helpUrl": "https://aka.ms/azpipes-docker-tsg",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker documentation](https://docs.docker.com/)",
   "category": "Build",
@@ -141,7 +141,7 @@
   "outputVariables": [
     {
       "name": "DockerOutput",
-      "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
+      "description":"The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
     }
   ],
   "instanceNameFormat": "$(command)",
