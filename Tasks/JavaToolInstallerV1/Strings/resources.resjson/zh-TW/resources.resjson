@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "JAVA 工具安裝程式",
-  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=875287)或[參閱 Java 文件](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1)或[參閱 Java 文件](https://docs.oracle.com/java/)",
   "loc.description": "從使用者提供的 Azure Blob 或工具快取取得特定版本的 Java，並設定 JAVA_HOME",
   "loc.instanceNameFormat": "使用 JAVA $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "從 Azure Blob 下載 JAVA",

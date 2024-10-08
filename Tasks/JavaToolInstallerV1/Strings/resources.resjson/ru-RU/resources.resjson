@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установщик средств Java",
-  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=875287) или [документацию по Java](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1) или [документацию по Java](https://docs.oracle.com/java/)",
   "loc.description": "Получение определенной версии Java из предоставленного пользователем BLOB-объекта Azure или кэша инструментов и задание JAVA_HOME",
   "loc.instanceNameFormat": "Использовать Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Скачать Java из BLOB-объекта Azure",

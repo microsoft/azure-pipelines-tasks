@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java ツール インストーラー",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=875287)、または [Java のドキュメントを参照](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1)、または [Java のドキュメントを参照](https://docs.oracle.com/java/)",
   "loc.description": "ユーザーが指定する Azure Blob またはツール キャッシュから Java の特定のバージョンを取得し、JAVA_HOME を設定します",
   "loc.instanceNameFormat": "Java $(versionSpec) の使用",
   "loc.group.displayName.JavaInAzureGroup": "Azure BLOB からの Java のダウンロード",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Programma di installazione strumento Java",
-  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=875287). In alternativa [vedere la documentazione di Java](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1). In alternativa [vedere la documentazione di Java](https://docs.oracle.com/java/)",
   "loc.description": "Acquisisce una versione specifica di Java da un BLOB di Azure specificato dall'utente o dalla cache degli strumenti e imposta JAVA_HOME",
   "loc.instanceNameFormat": "Usa Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Scarica Java da un BLOB di Azure",

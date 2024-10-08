@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer für Java-Tools",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=875287) oder [Java-Dokumentation anzeigen](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1) oder [Java-Dokumentation anzeigen](https://docs.oracle.com/java/)",
   "loc.description": "Hiermit wird eine bestimmte Java-Version aus einem benutzerseitig bereitgestellten Azure-Blob oder dem Toolcache abgerufen und JAVA_HOME festgelegt.",
   "loc.instanceNameFormat": "Java $(versionSpec) verwenden",
   "loc.group.displayName.JavaInAzureGroup": "Java aus einem Azure-Blob herunterladen",

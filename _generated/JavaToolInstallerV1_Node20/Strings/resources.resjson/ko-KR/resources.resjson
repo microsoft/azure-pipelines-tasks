@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java 도구 설치 관리자",
-  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=875287) 또는 [Java 설명서 참조](https://docs.oracle.com/java/)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v1) 또는 [Java 설명서 참조](https://docs.oracle.com/java/)",
   "loc.description": "사용자 제공 Azure Blob 또는 도구 캐시에서 특정 버전의 Java를 가져오고 JAVA_HOME을 설정합니다.",
   "loc.instanceNameFormat": "Java $(versionSpec) 사용",
   "loc.group.displayName.JavaInAzureGroup": "Azure Blob에서 Java 다운로드",
