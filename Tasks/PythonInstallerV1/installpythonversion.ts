@@ -41,14 +41,38 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
 
     else if (parameters.fromPythonDistribution == true) {
         const pythonInstallerDir: string = await downloadFromPythonOrg(versionSpec, parameters);
-        //display a sample message in logs
-        console.log("general test message");
-        console.log("Python installer directory: " + pythonInstallerDir);
 
         task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
-        return pythonInstallerDir;
 
+        //copy a powershell script in this folder to the above absolute path
+        const powershellScriptPath = path.join(__dirname, 'windows_setup.ps1');
+        task.debug(`Powershell script path is ${powershellScriptPath}`);
+        const powershellScriptPathAbs = path.resolve(powershellScriptPath);
+        task.debug(`Powershell script path absolute is ${powershellScriptPathAbs}`);
+
+        fs.copyFileSync(powershellScriptPathAbs, '<PLACEHOLDER_DIR>\\windows_setup.ps1');
+        task.debug(`Copied powershell script to ${pythonInstallerDir}`);
+
+        //  set arguments for the powershell script - architecture, version and filename
+
+        const pythonVersion = versionSpec;
+        const pythonArchitecture = parameters.architecture;
+        const pythonFilename = path.basename(pythonInstallerDir);
+
+        //pass the arguments to the powershell script
+        const powershellScriptArgs = `-version ${pythonVersion} -architecture ${pythonArchitecture} -filename ${pythonFilename}`;
+        
+        //navigate to that directory and then run the powershell script
+        const installerScriptOptions = {
+            cwd: '<PLACEHOLDER_DIR>',
+            windowsHide: true
+        };
+
+        return task.exec('powershell', `./windows_setup.ps1 ${powershellScriptArgs}`, installerScriptOptions);
+
+        //run the powershell script
+        // return task.exec('powershell', './windows_setup.ps1', installerScriptOptions);
 
     }
 
@@ -66,7 +90,9 @@ async function downloadFromPythonOrg(versionSpec: string, parameters: TaskParame
     if (os.platform() === 'win32') {
         if (parameters.architecture === 'x64') {
             downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-amd64.exe`;
+            task.debug('Download url is: ' + downloadUrl);
             fileName = `python-${versionSpec}-amd64.exe`;
+            task.debug('File name is: ' + fileName);
         }
         else {
             downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}.exe`;
@@ -75,7 +101,10 @@ async function downloadFromPythonOrg(versionSpec: string, parameters: TaskParame
     } else if (os.platform() === 'linux') {
         downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/Python-${versionSpec}.tgz`;
         fileName = `Python-${versionSpec}.tgz`;
-    } else if (os.platform() === 'darwin') {
+        
+        
+    } // TODO: verify is os platform returns 'darwin'
+    else if (os.platform() === 'darwin') { 
         downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-macosx11.pkg`;
         fileName = `python-${versionSpec}-macosx11.pkg`;
     } else {

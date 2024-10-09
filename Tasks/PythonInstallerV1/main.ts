@@ -10,10 +10,11 @@ import { usePythonVersion } from './pythoninstaller';
         const versionSpec = task.getInput('versionSpec', true);
         // const downloadFromPythonDistribution = task.getBoolInput('downloadFromPythonDistribution', true)
         // const disableDownloadFromRegistry = task.getBoolInput('disableDownloadFromRegistry');
-        const preInstalled: boolean = ('PreInstalled' === task.getInput('pythonSourceOption', true));
-        const fromAzure: boolean = ('AzureStorage' == task.getInput('pythonSourceOption', true));
-        const fromPythonDistribution: boolean = ('PythonDistribution' == task.getInput('pythonSourceOption', true));
-        const fromGitHubActionsRegistry: boolean = ('GitHubActionsRegistry' == task.getInput('pythonSourceOption', true));
+        const selectedSource = task.getInput('pythonSourceOption', true);
+        const preInstalled: boolean = (selectedSource === 'PreInstalled');
+        const fromAzure: boolean = (selectedSource === 'AzureStorage');
+        const fromPythonDistribution: boolean = (selectedSource === 'PythonDistribution');
+        const fromGitHubActionsRegistry: boolean = (selectedSource === 'GitHubActionsRegistry');
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
