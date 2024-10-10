@@ -1,0 +1,57 @@
+parameters:
+- name: os
+  type: string
+
+steps:
+- task: NodeTool@0
+  displayName: use node $(nodeVersion)
+  inputs:
+    versionSpec: $(nodeVersion)
+
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+- script: npm ci
+  displayName: (task-lib) npm ci
+  workingDirectory: node
+
+- script: npm test
+  workingDirectory: node
+  displayName: (task-lib) npm test
+
+# Only on Linux. For CI runs on master, automatically publish packages
+- ${{ if eq(parameters.os, 'Linux') }}:
+  - bash: |
+      echo //registry.npmjs.org/:_authToken=\${NPM_TOKEN} > .npmrc
+      npm publish || true # Ignore publish failures, usually will happen because package already exists
+    displayName: (task-lib) npm publish
+    workingDirectory: node/_build
+    condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), in(variables['build.sourcebranch'], 'refs/heads/master'))
+    env:
+      NPM_TOKEN: $(npm-automation.token)
+
+  # PublishPipelineArtifact step is configured in the base template.
+  # See the templateContext section in the azure-pipelines.yml file
+
+# Only on Windows. Build VstsTaskSdk for powershell 
+- ${{ if eq(parameters.os, 'Windows_NT') }}:
+  # Build step for .NET source code. This is needed to enable CodeQL for C# code
+  - task: DotNetCoreCLI@2
+    displayName: 'Build .NET project(s)'
+    inputs:
+      command: build
+      projects: 'powershell/CompiledHelpers/VstsTaskSdk.csproj'
+      arguments: '--configuration Release'
+
+  - task: NpmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
+
+  - script: npm ci
+    displayName: (VstsTaskSdk) npm ci
+    workingDirectory: powershell
+
+  - script: npm test
+    displayName: (VstsTaskSdk) npm test
+    workingDirectory: powershell
