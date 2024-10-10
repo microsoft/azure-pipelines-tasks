@@ -1,0 +1,15 @@
+/// <reference path="../definitions/azure-pipelines-task-lib.d.ts" />
+
+tl.setResourcePath(path.join( __dirname, 'task.json'));
+
+...
+
+var errMsg = tl.loc('FailedWithReturnCode', code));
+
+// in the task.json
+{
+    "messages": {
+        "FailedWithReturnCode": "Tool exited with return code: %d",
+        "ToolFailed": "Tool failed with error: %s"
+    }
+}

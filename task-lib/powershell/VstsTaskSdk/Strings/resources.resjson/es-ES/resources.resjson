@@ -1,0 +1,18 @@
+{
+  "loc.messages.PSLIB_AgentVersion0Required": "Se require la versión {0} o posterior del agente.",
+  "loc.messages.PSLIB_ContainerPathNotFound0": "No se encuentra la ruta de acceso del contenedor: '{0}'",
+  "loc.messages.PSLIB_EndpointAuth0": "Credenciales del punto de conexión de servicio '{0}'",
+  "loc.messages.PSLIB_EndpointUrl0": "URL del punto de conexión de servicio '{0}'",
+  "loc.messages.PSLIB_EnumeratingSubdirectoriesFailedForPath0": "No se pudieron enumerar los subdirectorios de la ruta de acceso: '{0}'",
+  "loc.messages.PSLIB_FileNotFound0": "Archivo no encontrado: '{0}'",
+  "loc.messages.PSLIB_Input0": "Entrada '{0}'",
+  "loc.messages.PSLIB_InvalidPattern0": "Patrón no válido: '{0}'",
+  "loc.messages.PSLIB_LeafPathNotFound0": "No se encuentra la ruta de acceso de la hoja: '{0}'",
+  "loc.messages.PSLIB_PathLengthNotReturnedFor0": "No se pudo normalizar o expandir la ruta de acceso. El subsistema Kernel32 no devolvió la longitud de la ruta de acceso para: '{0}'",
+  "loc.messages.PSLIB_PathNotFound0": "No se encuentra la ruta de acceso: '{0}'",
+  "loc.messages.PSLIB_Process0ExitedWithCode1": "El proceso '{0}' finalizó con el código '{1}'.",
+  "loc.messages.PSLIB_Required0": "Se requiere: {0}",
+  "loc.messages.PSLIB_StringFormatFailed": "Error de formato de cadena.",
+  "loc.messages.PSLIB_StringResourceKeyNotFound0": "No se encuentra la clave de recurso de la cadena: '{0}'",
+  "loc.messages.PSLIB_TaskVariable0": "Variable de tarea '{0}'"
+}
