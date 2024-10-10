@@ -28,6 +28,8 @@
 *.js         text
 *.json       text
 *.resjson    text
+resources.resjson   binary
+tasks.schema.json   binary
 *.htm        text
 *.html       text
 *.xml        text
