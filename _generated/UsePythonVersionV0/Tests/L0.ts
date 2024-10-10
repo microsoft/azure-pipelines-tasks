@@ -56,6 +56,7 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(didPrependPath(testRunner, pythonDir));
         assert(didPrependPath(testRunner, pythonBinDir));
         assert(didPrependPath(testRunner, pythonAppdataDir));
+        assert(testRunner.stdout.includes("loc_mock_MissingGithubToken"), 'should log warning when github token is missing');
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });

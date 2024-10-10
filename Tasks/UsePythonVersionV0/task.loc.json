@@ -80,6 +80,15 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "suppressGitHubTokenWarning",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.suppressGitHubTokenWarning",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.suppressGitHubTokenWarning",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
