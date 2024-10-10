@@ -1,0 +1,33 @@
+{
+    "name": "azure-pipelines-tasks-kubernetes-common",
+    "version": "2.245.0",
+    "description": "Common Library for Kubernetes",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks-common-packages.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks-common-packages/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks-common-packages#readme",
+    "dependencies": {
+        "@types/mocha": "5.2.7",
+        "@types/node": "10.17.0",
+        "@types/node-forge": "^1.3.2",
+        "@types/uuid": "8.3.0",
+        "azure-devops-node-api": "^12.0.0",
+        "azure-pipelines-task-lib": "^4.0.0-preview",
+        "azure-pipelines-tool-lib": "^2.0.7",
+        "js-yaml": "3.13.1",
+        "node-forge": "^1.3.1"
+    },
+    "devDependencies": {
+        "shelljs": "^0.8.5",
+        "typescript": "4.0.2"
+    },
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../kubernetes-common && node make.js"
+    }
+}

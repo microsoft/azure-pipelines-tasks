@@ -1,0 +1,58 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+jobs:
+- job: 'BuildCommonNpmPackages'
+  displayName: 'Build Common Npm Packages'
+  steps:
+  - checkout: self
+    clean: true
+
+  - task: NodeTool@0
+    displayName: Use node 16
+    inputs:
+      versionSpec: "16.x"
+
+  - task: NpmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
+
+  - script: npm i -g npm@8.19.4 --force
+    displayName: Use npm version 8.19.4
+
+  - script: |
+      npm install
+    displayName: Npm install
+
+  - script: |
+      npm run build
+    displayName: Build Common Npm packages
+
+  - script: |
+      node ./ci/verify-source-changes.js
+    displayName: Verify task source changes
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
+
+  - script: |
+      npm run test
+    displayName: Test Common Npm packages
+
+  - task: PublishTestResults@2
+    displayName: Publish JUnit Results
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/test-results/junit/*suite.xml'
+
+  - task: PublishCodeCoverageResults@1
+    displayName: Publish Code Coverage Results
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/test-results/*coverage.xml
+
+  # For CI runs on master, automatically publish packages
+  - bash: |
+      npm run publish
+    condition: and(succeeded(), in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'), eq(variables['Agent.OS'], 'Windows_NT'))
+    env:
+      NPM_TOKEN: $(npm-automation.token)
+      GH_TOKEN: $(gh-automation.token)
+    displayName: Publish packages (Only Windows)
+    enabled: true

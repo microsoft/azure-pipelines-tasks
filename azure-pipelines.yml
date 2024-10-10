@@ -1,0 +1,65 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# This pipeline will be extended to the OneESPT template
+trigger:
+- main
+- releases/*
+variables:
+- name: skipBuildTagsForGitHubPullRequests
+  value: true
+- group: npm-tokens
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    settings:
+      skipBuildTagsForGitHubPullRequests: true
+    featureFlags:
+      autoBaseline: false
+    sdl:
+      baseline:
+        baselineSet: default
+        baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
+      sourceAnalysisPool:
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: 'BuildCommonNpmWin'
+      displayName: 'Windows - Build & Publish Common Npm packages'
+      dependsOn: []
+      pool:
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
+      condition: succeeded()
+      jobs:
+      - template: /ci/build-common-packages.yml@self
+
+    - stage: 'BuildCommonNpmUbuntu'
+      displayName: 'Ubuntu - Build Common Npm packages'
+      dependsOn: []
+      pool:
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-ubuntu-2204
+        os: linux
+      condition: succeeded()
+      jobs:
+      - template: /ci/build-common-packages.yml@self
+
+    - stage: 'BuildCommonNpmMac'
+      displayName: 'MacOS - Build Common Npm packages'
+      dependsOn: []
+      pool:
+        name: Azure Pipelines
+        image: macOS-latest
+        os: macOS
+      condition: succeeded()
+      jobs:
+      - template: /ci/build-common-packages.yml@self

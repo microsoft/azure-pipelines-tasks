@@ -1,0 +1,20 @@
+{
+  "loc.messages.UnableToFetchKubectlVersion": "Не удалось получить версию kubectl. Убедитесь, что сервер Kubernetes запущен и работает.",
+  "loc.messages.KubectlClientVersion": "Версия клиента kubectl",
+  "loc.messages.KubectlServerVersion": "Версия сервера kubectl",
+  "loc.messages.KubectlServerVerisonNotFound": "Не удалось найти версию сервера kubectl.",
+  "loc.messages.HelmLatestNotKnown": "Невозможно получить сведения о последней версии Helm из %s. Ошибка: %s. Используется версия Helm по умолчанию: %s.",
+  "loc.messages.HelmDownloadFailed": "Не удалось скачать Helm из расположения %s. Ошибка: %s",
+  "loc.messages.HelmNotFoundInFolder": "Исполняемый файл Helm не найден по пути %s.",
+  "loc.messages.DownloadStableVersionFailed": "Не удалось считать последнюю версию kubectl из файла stable.txt по URL-адресу %s. Используется стабильная версия по умолчанию: %s.",
+  "loc.messages.DownloadKubectlFailedFromLocation": "Не удалось скачать kubectl из расположения %s. Ошибка: %s",
+  "loc.messages.CouldNotDeterminePodStatus": "Не удалось определить состояние объекта pod из-за ошибки: %s",
+  "loc.messages.ServiceExternalIP": "Внешний IP-адрес службы %s — %s.",
+  "loc.messages.CouldNotDetermineServiceStatus": "Не удалось определить состояние службы %s из-за ошибки: %s",
+  "loc.messages.RolloutStatusTimedout": "Сбой проверки состояния выпуска.",
+  "loc.messages.AllContainersNotInReadyState": "Все контейнеры не находятся в состоянии готовности.",
+  "loc.messages.waitForServiceIpAssignment": "Ожидание назначения внешнего IP-адреса службы %s",
+  "loc.messages.waitForServiceIpAssignmentTimedOut": "Истекло время ожидания назначения внешнего IP-адреса службы %s.",
+  "loc.messages.EnvironmentLink": "Дополнительные сведения: %s",
+  "loc.messages.AuthSchemeNotSupported": "Схема проверки подлинности %s не поддерживается"
+}
