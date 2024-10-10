@@ -8,6 +8,7 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
 
 import { TaskParameters, PythonRelease, PythonFileInfo } from './interfaces';
+import { PassThrough } from 'stream';
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
 const OS_VERSION = osutil._getOsVersion();
@@ -40,39 +41,92 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
     }
 
     else if (parameters.fromPythonDistribution == true) {
-        const pythonInstallerDir: string = await downloadFromPythonOrg(versionSpec, parameters);
+        const pythonInstallerFile: string = await downloadFromPythonOrg(versionSpec, parameters);
 
-        task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
+        task.debug(`Downloaded Python Installer file to ${pythonInstallerFile}; running installation script`);
+
+        const parentdir = path.dirname(pythonInstallerFile);
+
+        task.debug(`Parent directory of python installer is ${parentdir}`);
 
 
-        //copy a powershell script in this folder to the above absolute path
-        const powershellScriptPath = path.join(__dirname, 'windows_setup.ps1');
-        task.debug(`Powershell script path is ${powershellScriptPath}`);
-        const powershellScriptPathAbs = path.resolve(powershellScriptPath);
-        task.debug(`Powershell script path absolute is ${powershellScriptPathAbs}`);
+        // For Windows
+        if (os.platform() === 'win32') {
+            //copy a powershell script in this folder to the above absolute path
+            const powershellScriptPath = path.join(__dirname, 'windows_setup.ps1');
+            task.debug(`Powershell script path is ${powershellScriptPath}`);
+            const powershellScriptPathAbs = path.resolve(powershellScriptPath);
+            task.debug(`Powershell script path absolute is ${powershellScriptPathAbs}`);
 
-        fs.copyFileSync(powershellScriptPathAbs, '<PLACEHOLDER_DIR>\\windows_setup.ps1');
-        task.debug(`Copied powershell script to ${pythonInstallerDir}`);
+            fs.copyFileSync(powershellScriptPathAbs, `${parentdir}/windows_setup.ps1`);
+            task.debug(`Copied powershell script to ${parentdir}`);
 
-        //  set arguments for the powershell script - architecture, version and filename
+            //  set arguments for the powershell script - architecture, version and filename
 
-        const pythonVersion = versionSpec;
-        const pythonArchitecture = parameters.architecture;
-        const pythonFilename = path.basename(pythonInstallerDir);
+            const pythonVersion = versionSpec;
+            const pythonArchitecture = parameters.architecture;
+            const pythonFilename = path.basename(pythonInstallerFile);
 
-        //pass the arguments to the powershell script
-        const powershellScriptArgs = `-version ${pythonVersion} -architecture ${pythonArchitecture} -filename ${pythonFilename}`;
-        
-        //navigate to that directory and then run the powershell script
-        const installerScriptOptions = {
-            cwd: '<PLACEHOLDER_DIR>',
-            windowsHide: true
-        };
+            //pass the arguments to the powershell script
+            const powershellScriptArgs = `-Architecture ${pythonArchitecture} -Version ${pythonVersion}  -PythonExecName ${pythonFilename}`;
+            
+            //navigate to that directory and then run the powershell script
+            const installerScriptOptions = {
+                cwd: parentdir,
+                windowsHide: true
+            };
 
-        return task.exec('powershell', `./windows_setup.ps1 ${powershellScriptArgs}`, installerScriptOptions);
+            return task.exec('powershell', `./windows_setup.ps1 ${powershellScriptArgs}`, installerScriptOptions);
+        }
 
-        //run the powershell script
-        // return task.exec('powershell', './windows_setup.ps1', installerScriptOptions);
+        else if (os.platform() === 'linux') {
+            const setupScriptPath = path.join(__dirname, 'linux_setup.sh');
+            task.debug(`Setup script path is ${setupScriptPath}`);
+            const setupScriptPathAbs = path.resolve(setupScriptPath);
+            task.debug(`Setup script path absolute is ${setupScriptPathAbs}`);
+
+            fs.copyFileSync(setupScriptPathAbs, `${pythonInstallerFile}/linux_setup.sh`);
+            task.debug(`Copied setup script to ${pythonInstallerFile}`);
+
+            const pythonVersion = versionSpec;
+            const pythonArchitecture = parameters.architecture;
+
+            const setupScriptArgs = `${pythonVersion} ${pythonArchitecture}`;
+
+            const installerScriptOptions = {
+                cwd: pythonInstallerFile,
+                windowsHide: true
+            };
+
+            return task.exec('bash', `./linux_setup.sh ${setupScriptArgs}`, installerScriptOptions);
+        }
+
+        else if (os.platform() === 'darwin') {
+            const setupScriptPath = path.join(__dirname, 'macos_setup.sh');
+            task.debug(`Setup script path is ${setupScriptPath}`);
+            const setupScriptPathAbs = path.resolve(setupScriptPath);
+            task.debug(`Setup script path absolute is ${setupScriptPathAbs}`);
+
+            fs.copyFileSync(setupScriptPathAbs, `${parentdir}/macos_setup.sh`);
+            task.debug(`Copied setup script to ${parentdir}`);
+
+            const pythonVersion = versionSpec;
+            const pythonArchitecture = parameters.architecture;
+            const pythonFilename = path.basename(pythonInstallerFile);
+
+            const setupScriptArgs = `${pythonVersion} ${pythonFilename} ${pythonArchitecture}`;
+
+            const installerScriptOptions = {
+                cwd: parentdir,
+                windowsHide: true
+            };
+
+            return task.exec('bash', `./macos_setup.sh ${setupScriptArgs}`, installerScriptOptions);
+        }
+        else {
+            throw new Error(task.loc('OSNotSupported', os.platform()));
+        }
+
 
     }
 
@@ -85,6 +139,8 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
 async function downloadFromPythonOrg(versionSpec: string, parameters: TaskParameters): Promise<string> {
     let downloadUrl: string;
     let fileName: string;
+
+    task.debug(`OS platform is ${os.platform()}`);
 
     // Download .exe if windows (separate for 32-bit and 64-bit), and .tgz if linux, and .pkg if mac
     if (os.platform() === 'win32') {
@@ -105,8 +161,8 @@ async function downloadFromPythonOrg(versionSpec: string, parameters: TaskParame
         
     } // TODO: verify is os platform returns 'darwin'
     else if (os.platform() === 'darwin') { 
-        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-macosx11.pkg`;
-        fileName = `python-${versionSpec}-macosx11.pkg`;
+        downloadUrl = `https://www.python.org/ftp/python/${versionSpec}/python-${versionSpec}-macos11.pkg`;
+        fileName = `python-${versionSpec}-macos11.pkg`;
     } else {
         throw new Error(task.loc('OSNotSupported', os.platform()));
     }

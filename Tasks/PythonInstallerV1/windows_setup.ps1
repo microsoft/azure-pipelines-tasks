@@ -1,6 +1,12 @@
-[String] $Architecture = ""
-[String] $Version = ""
-[String] $PythonExecName = ""
+# use command line arguments to pass the following parameters
+param (
+    [string]$Architecture,
+    [string]$Version,
+    [string]$PythonExecName
+)
+# [String] $Architecture = 
+# [String] $Version = 
+# [String] $PythonExecName = 
 
 function Get-RegistryVersionFilter {
     param(
