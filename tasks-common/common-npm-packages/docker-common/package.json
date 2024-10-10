@@ -1,0 +1,31 @@
+{
+    "name": "azure-pipelines-tasks-docker-common",
+    "version": "2.247.0",
+    "description": "Common Library for Azure Rest Calls",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks-common-packages.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks-common-packages/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks-common-packages#readme",
+    "dependencies": {
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.0",
+        "@types/q": "1.5.4",
+        "@types/uuid": "^8.3.0",
+        "azure-pipelines-task-lib": "^4.13.0",
+        "azure-pipelines-tasks-azure-arm-rest": "^3.242.2",
+        "del": "2.2.0",
+        "q": "1.4.1"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
+    },
+    "scripts": {
+        "build": "cd ../build-scripts && npm install && cd ../docker-common && node make.js"
+    }
+}
