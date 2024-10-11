@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using BuildConfigGen.Debugging;
+using MeasurementFramework;
 
 namespace BuildConfigGen
 {
@@ -61,6 +62,8 @@ namespace BuildConfigGen
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
+        internal static Measurements measurements = new Measurements((int)DateTime.UtcNow.Ticks);
+
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
@@ -69,8 +72,12 @@ namespace BuildConfigGen
         /// <param name="getTaskVersionTable"></param>
         /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
         /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeLocalPackagesBuildConfig = false)
+        static int Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeLocalPackagesBuildConfig = false)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            int ret = 0;
+
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
@@ -92,12 +99,25 @@ namespace BuildConfigGen
                 Console.WriteLine("An exception occured generating configs. Exception message below: (full callstack above)");
                 Console.WriteLine(e2.Message);
 
-                Environment.Exit(1);
+                ret= 1;
             }
+            finally
+            {
+                Console.WriteLine("Elapsed=" + sw.ToString());
+                measurements.MainElapsed.Measure(sw.Elapsed);
+                measurements.ExitCode.Measure(ret);
+                measurements.logger.TryFlush();
+            }
+
+
+            return ret;
         }
 
         private static void MainInner(string? task, string? configs, int? currentSprintNullable, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir, bool includeLocalPackagesBuildConfig)
         {
+            measurements.AllTasks.Measure(allTasks);
+            measurements.WriteUpdates.Measure(writeUpdates);
+
             if (allTasks)
             {
                 NullOrThrow(task, "If allTasks specified, task must not be supplied");
@@ -470,11 +490,13 @@ namespace BuildConfigGen
                         var taskConfigPath = Path.Combine(taskOutput, "task.json");
                         var taskConfigExists = File.Exists(taskConfigPath);
 
-                        // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
-                        // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                        if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config) || config.isNode)
-                        {
-                            CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+                            // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
+                            // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
+                            if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config) || config.isNode)
+                            {
+                                measurements.UpdateTaskOutput.Measure();
+
+                                CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
                             if (config.enableBuildConfigOverrides)
                             {

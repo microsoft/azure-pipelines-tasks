@@ -50,6 +50,8 @@ namespace BuildConfigGen
 
                 if (startPreprocessMatch.Success)
                 {
+                    Program.measurements.StartPreprocessorMatch.Measure();
+
                     lineIsDirective = true;
 
                     if (startPreprocessMatch.Groups["spacesBeforeHash"].Value != "")
@@ -85,10 +87,11 @@ namespace BuildConfigGen
                     {
                         expressions.Add(expression);
                     }
-
                 }
                 else if (elseAndEndIfPreprocessMatch.Success)
                 {
+                    Program.measurements.ElseAndEndIfPreprocessorMatch.Measure();
+
                     lineIsDirective = true;
 
                     if (elseAndEndIfPreprocessMatch.Groups["spacesBeforeHash"].Value != "")
@@ -107,9 +110,12 @@ namespace BuildConfigGen
 
                 if (command is not null)
                 {
+
                     switch (command)
                     {
                         case ifCommand:
+                            Program.measurements.CommandIf.Measure();
+
                             if (inElseBlock)
                             {
                                 validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #else block detected, not allowed");
@@ -128,6 +134,8 @@ namespace BuildConfigGen
                             }
                             break;
                         case elseIfCommand:
+                            Program.measurements.CommandElseIf.Measure();
+
                             if (!inIfBlock)
                             {
                                 validationErrors.Add($"Error {file}:{lineNumber}: #elseif detected without matching #if block");
@@ -139,6 +147,8 @@ namespace BuildConfigGen
                             }
                             break;
                         case elseCommand:
+                            Program.measurements.CommandElse.Measure();
+
                             if (!inIfBlock)
                             {
                                 validationErrors.Add($"Error {file}:{lineNumber}: #else detected without matching #if or #ifelse block");
@@ -149,6 +159,8 @@ namespace BuildConfigGen
                             currentExpression = null;
                             break;
                         case endIfCommand:
+                            Program.measurements.EndIf.Measure();
+
                             if (inIfBlock || inElseBlock)
                             {
                                 // do nothing
