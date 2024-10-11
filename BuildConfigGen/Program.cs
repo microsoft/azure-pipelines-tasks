@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using BuildConfigGen.Debugging;
 
 namespace BuildConfigGen
@@ -155,57 +156,97 @@ namespace BuildConfigGen
             Dictionary<string, TaskStateStruct> taskVersionInfo = [];
 
             {
-                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
+                IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> tasksList = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
                     .Where(c => c.Value.Configs.Any()); // only tasks with configs
 
-                if (!allTasks)
+                IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> tasks;
+
+                if (allTasks)
+                {
+                    tasks = tasksList;
+                }
+                else
                 {
                     var taskList = task!.Split(',', '|');
-
-                    tasks = tasks.Where(s => taskList.Where(tl => string.Equals(tl, s.Key, StringComparison.OrdinalIgnoreCase)).Any());
+                    tasks = tasksList.Where(s => taskList.Where(tl => string.Equals(tl, s.Key, StringComparison.OrdinalIgnoreCase)).Any());
                 }
 
-                foreach (var t in tasks)
+                if (includeLocalPackagesBuildConfig)
                 {
-                    taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                    Console.WriteLine("Updating global version...");
+                    var tasksNeedingUpdates = new List<string>();
+
+                    // when generating global version, we must enumerate all tasks to generate correct maxPatchForCurrentSprint across all tasks to avoid collisions
+                    foreach (var t in tasksList)
+                    {
+                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                        IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
+
+                        bool taskTargettedForUpdating = allTasks || tasks.Where(x => x.Key == t.Value.Name).Any();
+                        bool taskVersionsNeedUpdating = taskVersionInfo[t.Value.Name].versionsUpdated.Any();
+
+                        if (taskVersionsNeedUpdating && !taskTargettedForUpdating)
+                        {
+                            tasksNeedingUpdates.Add(t.Value.Name);
+                        }
+
+                        UpdateMaxPatchForSprint(taskVersionInfo[t.Value.Name], currentSprint, ref maxPatchForCurrentSprint);
+                        CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
+                    }
+
+                    if (tasksNeedingUpdates.Count > 0)
+                    {
+                        throw new Exception($"The following tasks have versions that need updating (needed for updating global version): {string.Join(", ", tasksNeedingUpdates)}.  Please run 'node make.js build --task [taskname]' to update");
+                    }
+
+                    // bump patch number for global if any tasks invalidated or if there is no existing global version
+                    if (taskVersionInfo.Values.Any(x => x.versionsUpdated.Any()) || globalVersion is null)
+                    {
+                        maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1;
+
+                        Console.WriteLine($"Global version: maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1");
+                    }
+
+                    Console.WriteLine($"Global version update: globalVersion = {globalVersion} maxPatchForCurrentSprint={maxPatchForCurrentSprint}" );
+                }
+                else
+                {
+                    foreach (var t in tasks)
+                    {
+                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                        IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+                        HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
+                        CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
+                    }
                 }
 
                 foreach (var t in tasks)
                 {
                     IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
-                    HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-                    UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, ref maxPatchForCurrentSprint, globalVersion, generatedFolder);
-                    CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping);
-                }
 
-                // bump patch number for global if any tasks invalidated.
-                if (taskVersionInfo.Values.Any(x => x.versionsUpdated.Any()))
-                {
-                    maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1;
-                }
-
-                foreach (var t in tasks)
-                {
-                    IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
+                    int taskMajorVersion = taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major;
 
                     if (includeLocalPackagesBuildConfig)
                     {
                         if (globalVersion is null)
                         {
-                            globalVersion = new TaskVersion(0, currentSprint, maxPatchForCurrentSprint);
+                            globalVersion = new TaskVersion(taskMajorVersion, currentSprint, maxPatchForCurrentSprint);
                         }
                         else
                         {
                             if (globalVersion.Minor == currentSprint)
                             {
                                 globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
-                                globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major);
+                                globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
                             }
                             else
                             {
                                 // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
                                 globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
-                                globalVersion = globalVersion.CloneWithMajor(taskVersionInfo[t.Value.Name].configTaskVersionMapping[Config.Default].Major);
+                                globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
                             }
                         }
                     }
@@ -226,7 +267,7 @@ namespace BuildConfigGen
                 }
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
-            
+
                 foreach (var t in tasks)
                 {
                     IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
@@ -1035,7 +1076,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, ref int maxPatchForCurrentSprint, TaskVersion? globalVersion, string generatedFolder)
+        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder)
         {
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
@@ -1102,23 +1143,23 @@ namespace BuildConfigGen
                 }
             }
 
-            TaskVersion baseVersion = maxVersion;
-
-            bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
-
-            int offset = 0;
-
-            if (baseVersionIsCurrentSprint)
-            {
-                offset = 1;
-            }
-            else
-            {
-                baseVersion = inputVersion.CloneWithMinorAndPatch(currentSprint, 0);
-            }
-
             if (!allConfigsMappedAndValid)
             {
+                TaskVersion baseVersion = maxVersion;
+
+                bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
+
+                int offset = 0;
+
+                if (baseVersionIsCurrentSprint)
+                {
+                    offset = 1;
+                }
+                else
+                {
+                    baseVersion = inputVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                }
+
                 var old = new Dictionary<Config.ConfigRecord, TaskVersion>();
                 foreach (var x in taskState.configTaskVersionMapping)
                 {
@@ -1181,7 +1222,10 @@ namespace BuildConfigGen
                     }
                 }
             }
+        }
 
+        private static void UpdateMaxPatchForSprint(TaskStateStruct taskState, int currentSprint, ref int maxPatchForCurrentSprint)
+        {
             foreach (var x in taskState.configTaskVersionMapping)
             {
                 // accumulate the max patch, excluding existing globalversion (used for providing a new global version)
