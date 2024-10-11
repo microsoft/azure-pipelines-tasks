@@ -23,7 +23,7 @@ The parameters of the task are described below. The parameters listed with a \* 
 
 * **Azure Subscription**\*: Select the AzureRM Subscription. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Connection** and select **Azure Resource Manager** from the dropdown.
 
-* **App Configuration Endpoint**\*: Select the endpoint of the App Configuration store to which the key-values will be pulled from.
+* **App Configuration Endpoint**\*: Select the endpoint of the App Configuration store to which the key-values will be exported from.
 
 * **Selection Mode**\*: Provide the selection mode. Selection mode allows you to specify how key-values are to be selected from the configuration store. The default value is **Default**
     - **Default**: Allows the use of key and label filter to specify key-values that will be selected from the store.
