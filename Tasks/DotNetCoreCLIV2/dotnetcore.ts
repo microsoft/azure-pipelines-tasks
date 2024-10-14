@@ -5,7 +5,18 @@ import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
+#if NODE20
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
 
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
+#endif
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
@@ -33,7 +44,6 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join(__dirname, "node_modules", "azure-pipelines-tasks-packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         this.setConsoleCodePage();

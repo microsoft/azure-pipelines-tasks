@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 245,
-    "Patch": 1
+    "Minor": 246,
+    "Patch": 3
   },
   "preview": true,
   "demands": [],
@@ -49,7 +49,7 @@
     "VerifyHelmInstallation": "Verifying helm installation..."
   },
   "_buildConfigMapping": {
-    "Default": "1.245.0",
-    "Node20_229_3": "1.245.1"
+    "Default": "1.246.2",
+    "Node20_229_3": "1.246.3"
   }
 }

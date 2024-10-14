@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
+    "Minor": 246,
     "Patch": 1
   },
   "demands": [],
@@ -49,7 +49,7 @@
     "VerifyKubectlInstallation": "Verifying kubectl installation..."
   },
   "_buildConfigMapping": {
-    "Default": "0.245.0",
-    "Node20_229_3": "0.245.1"
+    "Default": "0.246.0",
+    "Node20_229_3": "0.246.1"
   }
 }

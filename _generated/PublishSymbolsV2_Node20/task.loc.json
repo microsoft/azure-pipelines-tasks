@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 245,
-    "Patch": 23
+    "Minor": 247,
+    "Patch": 7
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -257,7 +257,7 @@
     "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport"
   },
   "_buildConfigMapping": {
-    "Default": "2.245.22",
-    "Node20_229_14": "2.245.23"
+    "Default": "2.247.6",
+    "Node20_229_14": "2.247.7"
   }
 }

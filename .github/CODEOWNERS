@@ -108,7 +108,9 @@ Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
-Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
+Tasks/AzureVmssDeploymentV0/   @microsoft/release-management-task-team @manolerazvan
+
+Tasks/AzureVmssDeploymentV1/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/BashV3/  @microsoft/akvelon-build-task-team
 
@@ -288,7 +290,11 @@ Tasks/InvokeRestApiV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
+Tasks/JavaToolInstallerV1/     @microsoft/akvelon-build-task-team
+
 Tasks/JenkinsDownloadArtifactsV1/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/JenkinsDownloadArtifactsV2/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 

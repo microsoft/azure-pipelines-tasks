@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
-    "Patch": 2
+    "Minor": 247,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",

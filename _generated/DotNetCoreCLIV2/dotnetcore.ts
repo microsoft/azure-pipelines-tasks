@@ -5,7 +5,6 @@ import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
-
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
@@ -33,7 +32,6 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join(__dirname, "node_modules", "azure-pipelines-tasks-packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         this.setConsoleCodePage();
