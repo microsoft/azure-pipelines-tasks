@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Cargo クレート配布のインストールに使用される Cargo クライアントの認証タスク",
   "loc.instanceNameFormat": "Cargo 認証 $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービスの接続",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "これが設定されている場合は registryNames が必須です。他のすべての入力は無視されます。",
   "loc.input.label.registryNames": "config.toml からのレジストリ名",
   "loc.input.help.registryNames": "認証する config.toml で指定されたレジストリ名のコンマ区切りリスト。これが設定されている場合は workloadIdentityServiceConnection が必須です。他のすべての入力は無視されます。cargoServiceConnections と互換性がありません。",

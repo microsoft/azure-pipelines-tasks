@@ -10,7 +10,7 @@
   "loc.input.help.feedUrl": "これを設定した場合、workloadIdentityServiceConnection が必要です。他のすべての入力は無視されます。nuGetServiceConnections と互換性がありません。フィード URL は NuGet サービス インデックス形式である必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/)",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.workloadIdentityServiceConnection": "これを設定した場合、feedUrl が必要です。他のすべての入力は無視されます。",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービス接続",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.messages.Error_ServiceConnectionExists": "エンドポイントには、すでに既存のサービス接続が存在します",
   "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl と workloadIdentityServiceConnection は、両方とも一緒に設定する必要があります。",
   "loc.messages.Info_AddingFederatedFeedAuth": "サービス接続からフェデレーション資格情報を取得できません",
