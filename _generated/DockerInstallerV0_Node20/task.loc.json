@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 1
   },
   "demands": [],
@@ -65,7 +65,7 @@
     "VerifyDockerInstallation": "ms-resource:loc.messages.VerifyDockerInstallation"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_2": "0.246.1"
+    "Default": "0.247.0",
+    "Node20_229_2": "0.247.1"
   }
 }

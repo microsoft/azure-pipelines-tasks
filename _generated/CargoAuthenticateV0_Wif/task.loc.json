@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -87,8 +87,8 @@
     "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.247.0",
-    "Node20_229_1": "0.247.1",
-    "wif_242": "0.247.2"
+    "Default": "0.247.3",
+    "Node20_229_1": "0.247.4",
+    "wif_242": "0.247.5"
   }
 }
