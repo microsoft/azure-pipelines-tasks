@@ -10,7 +10,7 @@
   "loc.input.help.feedUrl": "Если этот параметр задан, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с nuGetServiceConnections. URL-адрес веб-канала должен быть в формате индекса службы NuGet, например https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
   "loc.input.label.feedUrl": "URL-адрес Azure Artifacts",
   "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задано, требуется feedUrl. Все остальные входные данные игнорируются.",
-  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Пользователь Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra\"",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.messages.Error_ServiceConnectionExists": "Текущее подключение к службе уже существует для конечной точки",
   "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Параметры feedUrl и workloadIdentityServiceConnection должны быть настроены вместе.",
   "loc.messages.Info_AddingFederatedFeedAuth": "Не удалось получить федеративные учетные данные из подключения к службе",
