@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Configuration Import",
   "loc.helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-  "loc.description": "Push key-values to an Azure App Configuration instance",
+  "loc.description": "Import key-values to an Azure App Configuration instance",
   "loc.instanceNameFormat": "Azure App Configuration",
   "loc.group.displayName.AppConfiguration": "AppConfiguration",
   "loc.group.displayName.Source": "Source",
