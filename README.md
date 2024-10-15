@@ -40,7 +40,8 @@ Tasks can also be deployed with an Azure DevOps extension. See [this tutorial](h
 
 ## Verify
 
-Verify pipeline for task https://dev.azure.com/canarytest/PipelineTasks/_build?definitionId=212
+Verify pipeline for task https://dev.azure.com/canarytest/PipelineTasks/_build?definitionId=212. This pipeline
+is integrated in CI check. So it should get triggered by CI check, when PR is created. 
 
 ## Contributing
 
