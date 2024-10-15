@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using BuildConfigGen.Debugging;
 
 namespace BuildConfigGen
@@ -156,19 +155,19 @@ namespace BuildConfigGen
             Dictionary<string, TaskStateStruct> taskVersionInfo = [];
 
             {
-                IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> tasksList = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
+                IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> allTasksList = MakeOptionsReader.ReadMakeOptions(gitRootPath).AsEnumerable()
                     .Where(c => c.Value.Configs.Any()); // only tasks with configs
 
                 IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> tasks;
 
                 if (allTasks)
                 {
-                    tasks = tasksList;
+                    tasks = allTasksList;
                 }
                 else
                 {
                     var taskList = task!.Split(',', '|');
-                    tasks = tasksList.Where(s => taskList.Where(tl => string.Equals(tl, s.Key, StringComparison.OrdinalIgnoreCase)).Any());
+                    tasks = allTasksList.Where(s => taskList.Where(tl => string.Equals(tl, s.Key, StringComparison.OrdinalIgnoreCase)).Any());
                 }
 
                 if (includeLocalPackagesBuildConfig)
@@ -177,7 +176,7 @@ namespace BuildConfigGen
                     var tasksNeedingUpdates = new List<string>();
 
                     // when generating global version, we must enumerate all tasks to generate correct maxPatchForCurrentSprint across all tasks to avoid collisions
-                    foreach (var t in tasksList)
+                    foreach (var t in allTasksList)
                     {
                         taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
