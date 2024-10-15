@@ -6,9 +6,9 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
-import { execSync } from 'child_process';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { spawn, exec } from 'child_process';
 var uuidV4 = require('uuid/v4');
+
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
@@ -20,32 +20,77 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
     return result
 }
 
-function setUpConnectedServiceEnvironmentVariables() {
-    var connectedService = tl.getInput('ConnectedServiceName');
-    if(connectedService) {
-        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
-        if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
-            process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-            process.env.VSTS_ACCESS_TOKEN = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false);
-            tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
-        }
-        else {
-            tl.debug('Connected service is not of type Workload Identity Federation');
-        }
+async function startNamedPiped(pipeName: string, connectedService: string) {
+    const content = `
+            # Create a security descriptor to allow Everyone to access the pipe
+            $pipePath = "/tmp/$pipeName" 
+
+            # Create a named pipe with the specified security
+            $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("${pipeName}","InOut")
+
+            # Set permissions using chmod
+            # bash -c "chmod 777 $pipePath" 
+
+            Write-Host "Waiting for a connection..."
+            $pipe.WaitForConnection()
+
+            Write-Host "Client connected."
+
+            # Send a message to the client
+            $message = "Hello from the server!"
+            $writer = New-Object System.IO.StreamWriter($pipe)
+            $writer.WriteLine($message)
+            $writer.Flush()
+
+            # Close the pipe
+            $writer.Close()
+            $pipe.Close()
+    `;
+    
+    // Spawn the PowerShell process
+    let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true));
+
+    powershell.arg('-ExecutionPolicy')
+                  .arg('Bypass')
+                  .arg('-Command')
+                  .arg(content);
+
+    let options = <tr.IExecOptions>{
+        failOnStdErr: false,
+        errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+        outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+        ignoreReturnCode: true
+    };
+
+    // Execute the PowerShell command and capture the output
+    const result = await powershell.exec(options);
+
+    // Check the result and set the task result
+    if (result === 0) {
+        tl.setResult(tl.TaskResult.Succeeded, `Script executed successfully.`);
+    } else {
+        tl.setResult(tl.TaskResult.Failed, `Script execution failed with exit code ${result}.`);
     }
-    else {
-        tl.debug('No connected service set');
-    }
+    
+    // Handle PowerShell exit
+    powershell.on('close', (code) => {
+        console.log(`PowerShell process exited with code ${code}`);
+    });
+    
+    return powershell;
 }
 
-
 async function run() {
+    let server;
     try {
         // Get inputs.
 
-        setUpConnectedServiceEnvironmentVariables();
+        const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
+        console.log("connectedServiceName: " + connectedServiceName);
+
+        let pipe_name : string = "praval";
+        server = startNamedPiped(pipe_name, connectedServiceName);
+
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
@@ -60,6 +105,7 @@ async function run() {
         let input_arguments: string;
         let input_script: string;
         let input_targetType: string = tl.getInput('targetType') || '';
+        
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile() || !input_filePath.toUpperCase().match(/\.PS1$/)) {
@@ -121,6 +167,40 @@ async function run() {
         } else {
             script = `${input_script}`;
         }
+
+        if (connectedServiceName && connectedServiceName.trim().length > 0) {
+            script = `
+                function Get-Token {
+
+                    $pipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "${pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
+                    try {
+                        $pipe.Connect(5000) # Wait up to 5 seconds for the connection
+                        Write-Host "Connected to the server."
+
+                        $writer = New-Object System.IO.StreamWriter($pipe)
+                        $reader = New-Object System.IO.StreamReader($pipe)
+
+                        # Send a message to the server
+                        $message = "Hello from PowerShell!"
+                        $writer.WriteLine($message)
+                        $writer.Flush()
+
+                        # Read the response
+                        $response = $reader.ReadLine()
+                        Write-Host "Received from server: $response"
+                    }
+                    catch {
+                        Write-Host "Error: $_"
+                    }
+                    finally {
+                        $pipe.Dispose()
+                    }
+                }
+
+                ${script}
+            `;
+        }
+
         if (input_showWarnings) {
             script = `
                 $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
@@ -135,6 +215,9 @@ async function run() {
                 Invoke-Command {${script}} -WarningVariable +warnings;
             `;
         }
+
+        tl.debug(script);
+
         contents.push(script);
         // log with detail to avoid a warning output.
         tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
@@ -211,6 +294,9 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+    }
+    finally {
+        server.kill();
     }
 }
 
