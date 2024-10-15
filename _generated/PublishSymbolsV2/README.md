@@ -89,6 +89,13 @@ Using PAT
 
 ```
 
+
+
+## Verify
+
+Verify pipeline for task https://dev.azure.com/canarytest/PipelineTasks/_build?definitionId=212. This pipeline
+is integrated in CI check. So it should get triggered by CI check, when PR is created. 
+
 ## Known Limitations :
 
 * The task does not support Node v10 starting 07/31/2024.
