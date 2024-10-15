@@ -17,10 +17,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
+    "Minor": 247,
     "Patch": 0
   },
-  "minimumAgentVersion": "2.104.1",
+  "minimumAgentVersion": "2.209.0",
   "groups": [
     {
       "name": "AdditionalDeploymentOptions",
@@ -231,10 +231,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node20": {
+    "Node10": {
       "target": "azurermwebappdeployment.js"
     },
-    "Node10": {
+    "Node16": {
       "target": "azurermwebappdeployment.js"
     }
   },
@@ -391,7 +391,7 @@
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_2": "1.241.1"
+    "Default": "1.247.0",
+    "Node20_229_2": "1.247.1"
   }
 }

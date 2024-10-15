@@ -3,7 +3,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile} from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureEndpoint, AKSClusterAccessProfile} from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 // get kubeconfig file content
 async function getKubeConfigFromAKS(azureSubscriptionEndpoint: string, resourceGroup: string, clusterName: string, useClusterAdmin?: boolean) : Promise<string> {

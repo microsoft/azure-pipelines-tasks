@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 246,
+    "Patch": 1
   },
   "demands": [
     "MSBuild",
@@ -32,6 +32,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "Xamarin has reached end of life, see https://dotnet.microsoft.com/en-us/platform/support/policy/xamarin",
   "inputs": [
     {
       "name": "project",
@@ -262,7 +264,7 @@
     "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
   },
   "_buildConfigMapping": {
-    "Default": "1.231.2",
-    "Node20-225": "1.231.3"
+    "Default": "1.246.0",
+    "Node20-225": "1.246.1"
   }
 }

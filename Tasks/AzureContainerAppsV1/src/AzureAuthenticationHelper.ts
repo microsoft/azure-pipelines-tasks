@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
+import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 
 export class AzureAuthenticationHelper {
 

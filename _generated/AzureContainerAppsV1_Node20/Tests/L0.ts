@@ -6,24 +6,23 @@ import { Done } from 'mocha';
 describe('AzureContainerAppsV1 Suite', function () {
     this.timeout(60000);
 
-    function runValidations(validator: () => void, tr: ttm.MockTestRunner, done: Done) {
+    function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
             validator();
-            done();
         } catch (error) {
             console.log('STDERR', tr.stderr);
             console.log('STDOUT', tr.stdout);
-            done(error);
+            throw error;
         }
     }
 
-    it('Fails for missing required arguments.', (done: Done) => {
+    it('Fails for missing required arguments.', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0FailsForMissingRequiredArguments.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task failed
@@ -38,16 +37,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Fails for appSourcePath provided without acrName', (done: Done) => {
+    it('Fails for appSourcePath provided without acrName', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0FailsForAppSourcePathWithoutAcrName.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task failed
@@ -62,16 +61,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Fails for no service connection argument', (done: Done) => {
+    it('Fails for no service connection argument', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0FailsForNoServiceConnectionArgument.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task failed
@@ -86,16 +85,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with the Oryx++ builder', (done: Done) => {
+    it('Succeeds for creating a Container App with the Oryx++ builder', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithBuilder.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -146,16 +145,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with a Dockerfile', (done: Done) => {
+    it('Succeeds for creating a Container App with a Dockerfile', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithDockerfile.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -201,16 +200,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with a previously built image', (done: Done) => {
+    it('Succeeds for creating a Container App with a previously built image', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithImage.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -245,16 +244,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with a new Container App environment', (done: Done) => {
+    it('Succeeds for creating a Container App with a new Container App environment', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithNewEnvironment.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -292,16 +291,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with a YAML configuration file and an image produced from the Oryx++ builder', (done: Done) => {
+    it('Succeeds for creating a Container App with a YAML configuration file and an image produced from the Oryx++ builder', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithYamlAndBuilder.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -348,16 +347,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for creating a Container App with a YAML configuration file and a previously built image', (done: Done) => {
+    it('Succeeds for creating a Container App with a YAML configuration file and a previously built image', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForCreateWithYamlAndImage.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -388,16 +387,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for updating a Container App with the Oryx++ builder', (done: Done) => {
+    it('Succeeds for updating a Container App with the Oryx++ builder', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForUpdateWithBuilder.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -439,16 +438,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for updating a Container App with a previously built image', (done: Done) => {
+    it('Succeeds for updating a Container App with a previously built image', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForUpdateWithImage.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -474,16 +473,16 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 
-    it('Succeeds for updating a Container App with a YAML configuration file and a previously built image', (done: Done) => {
+    it('Succeeds for updating a Container App with a YAML configuration file and a previously built image', async () => {
         this.timeout(5000);
 
         const tp: string = path.join(__dirname, 'L0SucceedsForUpdateWithYamlAndImage.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         runValidations(() => {
             // Validate the task succeeded
@@ -509,6 +508,6 @@ describe('AzureContainerAppsV1 Suite', function () {
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
-        }, tr, done);
+        }, tr);
     });
 });

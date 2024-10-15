@@ -18,6 +18,11 @@ Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
 # DRI Rotation for @microsoft/release-management-task-team : DRI-ReleaseManagement
+Tasks/AzureAppConfigurationV10/  @microsoft/azure-appconfig-team
+
+Tasks/AzureAppConfigurationPushV10/  @microsoft/azure-appconfig-team
+
+Tasks/AzureAppConfigurationSnapshotV1/  @microsoft/azure-appconfig-team
 
 Tasks/AzureAppServiceManageV0/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -103,7 +108,9 @@ Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
-Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
+Tasks/AzureVmssDeploymentV0/   @microsoft/release-management-task-team @manolerazvan
+
+Tasks/AzureVmssDeploymentV1/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/BashV3/  @microsoft/akvelon-build-task-team
 
@@ -283,7 +290,11 @@ Tasks/InvokeRestApiV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
+Tasks/JavaToolInstallerV1/     @microsoft/akvelon-build-task-team
+
 Tasks/JenkinsDownloadArtifactsV1/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/JenkinsDownloadArtifactsV2/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 246,
     "Patch": 0
   },
   "demands": [],
@@ -25,6 +25,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Docker@0 task is deprecated, please use a newer version of the Docker task",
   "inputs": [
     {
       "name": "containerregistrytype",
@@ -362,7 +364,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_2": "0.241.1"
+    "Default": "0.246.0",
+    "Node20_229_2": "0.246.1"
   }
 }

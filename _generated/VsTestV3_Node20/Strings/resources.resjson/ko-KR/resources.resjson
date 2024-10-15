@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 테스트",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.description": "VsTest(Visual Studio Test) Runner를 사용하여 단위 및 기능 테스트(Selenium, Appium, 코딩된 UI 테스트 등)를 실행합니다. MsTest, xUnit, NUnit, Chutzpah(QUnit, Mocha 및 Jasmine을 사용한 JavaScript 테스트용) 등의 Visual Studio 테스트 어댑터가 있는 테스트 프레임워크를 실행할 수 있습니다. 이 작업(버전 2)을 사용하여 여러 에이전트에 테스트를 배포할 수 있습니다.",
+  "loc.description": "VsTest(Visual Studio Test) Runner를 사용하여 단위 및 기능 테스트(Selenium, Appium, 코딩된 UI 테스트 등)를 실행합니다. MsTest, xUnit, NUnit, Chutzpah(QUnit, Mocha 및 Jasmine을 사용한 JavaScript 테스트용) 등의 Visual Studio 테스트 어댑터가 있는 테스트 프레임워크를 실행할 수 있습니다. 이 작업(버전 2 이상)을 사용하여 여러 에이전트에 테스트를 배포할 수 있습니다.",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li><b>에이전트 작업을 사용하여 테스트 실행:</b> 빌드, 릴리스 및 테스트에 통합 에이전트를 사용할 경우 자동화 에이전트도 테스트 용도로 사용할 수 있습니다. 다중 에이전트 작업 설정을 사용하여 테스트를 분산할 수 있습니다. 다중 구성 작업 설정을 사용하면 여러 구성으로 테스트를 복제할 수 있습니다. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">자세한 정보</a></li><li><b>테스트 영향 분석:</b> 코드 변경의 유효성을 검사하는 데 필요한 테스트만 자동으로 선택하고 실행합니다.</li><li><b>Visual Studio 테스트 플랫폼 설치 관리자 작업</b>을 사용하여 전체 Visual Studio 설치를 요구하지 않고 테스트를 실행합니다.</li></ul>",
   "loc.group.displayName.testSelection": "테스트 선택",

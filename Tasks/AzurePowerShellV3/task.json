@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 242,
-        "Patch": 0
+        "Minor": 246,
+        "Patch": 2
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -37,6 +37,8 @@
         }
     ],
     "minimumAgentVersion": "2.0.0",
+    "deprecated": true,
+    "deprecationMessage": "The AzurePowerShell@3 task is deprecated, please use the latest version of the AzurePowerShell task",
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",

@@ -2,7 +2,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import { Constants } from "../versionutilities";
-let mockery = require('mockery');
+let mockery = require('azure-pipelines-task-lib/lib-mocker');
 
 const version = "2.1.1";
 const installationPath: string = "installationPath"
@@ -52,6 +52,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     warning: function (message) { return tl.warning(message); },
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
     getHttpProxyConfiguration: function () { return ""; },
     getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }

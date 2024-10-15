@@ -1,6 +1,6 @@
 "use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 mockery.enable({
     useCleanCache: true,
     warnOnReplace: false,
@@ -17,6 +17,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     debug: function (message) { return tl.debug(message); },
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
     getHttpProxyConfiguration: function () { return ""; },
     getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }

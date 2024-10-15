@@ -152,7 +152,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         return Array.from(matchingFilesSet).sort();
     }
     catch (err) {
-        tl.error(err);
+        tl.error(err + '');
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     }
 

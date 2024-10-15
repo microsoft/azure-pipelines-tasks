@@ -17,13 +17,14 @@
   },
   "homepage": "https://github.com/Microsoft.com/vsts-tasks#readme",
   "dependencies": {
-    "ssh2": "1.4.0",
-    "ssh2-sftp-client": "7.0.4",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^5.0.0-preview.0",
-    "minimatch": "^3.0.4"
+    "@types/node": "^16.18.105",
+    "azure-pipelines-task-lib": "^4.16.0",
+    "minimatch": "^3.0.4",
+    "ssh2": "1.4.0",
+    "ssh2-sftp-client": "7.0.4"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "4.9.5"
   }
 }

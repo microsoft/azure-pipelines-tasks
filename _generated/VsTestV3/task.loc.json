@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 238,
-    "Patch": 2
+    "Minor": 246,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -49,6 +49,16 @@
   ],
   "inputs": [
     {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
       "name": "testSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testSelector",
@@ -69,7 +79,7 @@
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
+      "defaultValue": "**\\bin\\**\\*test.dll\n**\\bin\\**\\*tests.dll",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
@@ -658,7 +668,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "3.238.2",
-    "Node20_229_4": "3.238.3"
+    "Default": "3.246.0",
+    "Node20_229_4": "3.246.1"
   }
 }

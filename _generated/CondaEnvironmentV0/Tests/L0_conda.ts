@@ -124,8 +124,8 @@ it('fails if `conda` is not found', async function () {
         await uut.condaEnvironment(parameters, Platform.Windows);
 
         throw new Error('should not have succeeded');
-    } catch (e) {
-        assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
+    } catch (err) {
+        assert.strictEqual((err as Error).message, 'loc_mock_CondaNotFound');
         assert(findConda.calledOnceWithExactly(Platform.Windows));
         assert(prependCondaToPath.notCalled);
         assert(createEnvironment.notCalled);

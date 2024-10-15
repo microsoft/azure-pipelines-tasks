@@ -14,11 +14,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 1
+    "Minor": 247,
+    "Patch": 3
   },
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.209.0",
   "groups": [
     {
       "name": "AzureDetails",
@@ -230,7 +230,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_6": "0.241.1"
+    "Default": "0.247.2",
+    "Node20_229_6": "0.247.3"
   }
 }

@@ -15,8 +15,14 @@ import { condaEnvironment } from './conda';
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");
-    } catch (e) {
-        task.error(e.message);
-        task.setResult(task.TaskResult.Failed, e.message);
+    } catch (err) {
+        if (err instanceof Error) {
+            task.error(err.message);
+            task.setResult(task.TaskResult.Failed, err.message);
+        }
+        else {
+            task.error(err + '');
+            task.setResult(task.TaskResult.Failed, err + '');
+        }
     }
 })();

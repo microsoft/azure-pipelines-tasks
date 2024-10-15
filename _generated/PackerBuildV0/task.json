@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 242,
-    "Patch": 2
+    "Minor": 244,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -44,6 +44,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The PackerBuild@0 task is deprecated, please use a newer version of the PackerBuild task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "templateType",
@@ -311,7 +313,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "0.242.2",
-    "Node20_229_6": "0.242.3"
+    "Default": "0.244.0",
+    "Node20_229_6": "0.244.1"
   }
 }

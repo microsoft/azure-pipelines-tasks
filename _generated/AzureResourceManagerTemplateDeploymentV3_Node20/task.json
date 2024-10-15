@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 240,
-    "Patch": 1
+    "Minor": 247,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -246,10 +246,11 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroupsByExplicitSubscription",
-      "parameters": {
-        "subscriptionId": "$(subscriptionName)"
-      }
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "resultSelector": "jsonpath:$.value[*].name"
     },
     {
       "target": "location",
@@ -340,7 +341,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
   },
   "_buildConfigMapping": {
-    "Default": "3.240.0",
-    "Node20_229_2": "3.240.1"
+    "Default": "3.247.2",
+    "Node20_229_2": "3.247.3"
   }
 }

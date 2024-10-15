@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 241,
+    "Minor": 247,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -60,6 +60,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
     {
+      "name": "isFlexConsumption",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isFlexConsumption",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "appName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.appName",
@@ -77,7 +84,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE",
-      "visibleRule": "appType != \"\""
+      "visibleRule": "appType != \"\" && isFlexConsumption = false"
     },
     {
       "name": "resourceGroupName",
@@ -138,7 +145,7 @@
         "PYTHON|3.10": "PYTHON|3.10",
         "PYTHON|3.11": "PYTHON|3.11"
       },
-      "visibleRule": "appType = functionAppLinux",
+      "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
@@ -165,6 +172,7 @@
         "zipDeploy": "Zip Deploy",
         "runFromPackage": "Zip Deploy with Run From Package"
       },
+      "visibleRule": "appType != \"\" && isFlexConsumption = false",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
     }
   ],
@@ -363,10 +371,11 @@
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
     "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
-    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
+    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption",
+    "DeploymentTypeNotSupportedForFlexConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForFlexConsumption"
   },
   "_buildConfigMapping": {
-    "Default": "2.241.0",
-    "Node20_229_9": "2.241.1"
+    "Default": "2.247.0",
+    "Node20_229_9": "2.247.1"
   }
 }

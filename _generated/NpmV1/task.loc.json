@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 244,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -208,7 +208,7 @@
     "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_1": "1.241.1"
+    "Default": "1.244.2",
+    "Node20_229_1": "1.244.3"
   }
 }

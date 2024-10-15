@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
-import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
+import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import util from "./util";
 import Constants from "./constant";
 import { TelemetryEvent } from './telemetry';

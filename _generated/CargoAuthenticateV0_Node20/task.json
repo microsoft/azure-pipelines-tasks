@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 1
+    "Minor": 247,
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -56,10 +56,17 @@
     "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
-    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
+    "ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+    "ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+    "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+    "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_1": "0.241.1"
+    "Default": "0.247.3",
+    "Node20_229_1": "0.247.4",
+    "wif_242": "0.247.5"
   }
 }

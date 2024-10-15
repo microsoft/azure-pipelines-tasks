@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "正在將 AZURE_CONFIG_DIR 環境變數設定為: %s",
   "loc.messages.SettingAzureCloud": "正在將作用中雲端設定為: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 以下的代理程式版本只能使用全域 Azure CLI 設定",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "秘密已過期，請在 %s 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無秘密服務連線。"
 }

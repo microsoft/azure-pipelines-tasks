@@ -28,5 +28,6 @@
   "loc.input.label.optionalArgs": "Argumentos opcionales",
   "loc.input.help.optionalArgs": "Argumentos adicionales pasados a test-cloud.exe.",
   "loc.input.label.publishNUnitResults": "Publicar resultados en Azure Pipelines",
-  "loc.input.help.publishNUnitResults": "Si se selecciona, la opción --nunit-xml se pasará a test-cloud.exe. Los resultados del archivo XML NUnit se publicarán en Azure Pipelines."
+  "loc.input.help.publishNUnitResults": "Si se selecciona, la opción --nunit-xml se pasará a test-cloud.exe. Los resultados del archivo XML NUnit se publicarán en Azure Pipelines.",
+  "loc.messages.DeprecatedTask": "La tarea XamarinTestCloud@1 (Xamarin Test Cloud) está en desuso desde el 11 de enero de 2018 y pronto se retirará. En su lugar, use la tarea AppCenterDistribute@3. Visite https://aka.ms/azdo-deprecated-tasks para obtener más información sobre las tareas en desuso."
 }

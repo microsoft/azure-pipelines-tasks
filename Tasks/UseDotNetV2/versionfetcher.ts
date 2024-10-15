@@ -12,6 +12,19 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
+#if NODE20
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
+
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
+#endif
+
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
     private channels: Channel[];
@@ -20,9 +33,14 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
+        const timeout: number = this.getRequestTimeout();
         var requestOptions: httpInterfaces.IRequestOptions = {
             allowRetries: true,
-            maxRetries: 3
+            maxRetries: 3,
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout
+            }
         };
 
         if (proxyUrl) {
@@ -113,14 +131,14 @@ export class DotNetCoreVersionFetcher {
                             this.channels.push(new Channel(channelRelease));
                         }
                         catch (ex) {
-                            tl.debug("Channel information in releases-index.json was not proper. Error: " + JSON.stringify(ex));
+                            tl.debug("Channel information in releases-index.json was not proper. Error: " + ex.message);
                             // do not fail, try to find version in the available channels.
                         }
                     }
                 });
             })
             .catch((ex) => {
-                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", JSON.stringify(ex));
+                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", ex.message);
             });
     }
 
@@ -200,7 +218,7 @@ export class DotNetCoreVersionFetcher {
                     return utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
                 })
                 .catch((ex) => {
-                    tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, JSON.stringify(ex)));
+                    tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, ex.message));
                     return null;
                 });
         }
@@ -288,7 +306,7 @@ export class DotNetCoreVersionFetcher {
                 }
             }
             catch (ex) {
-                throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
+                throw tl.loc("FailedInDetectingMachineArch", ex.message);
             }
 
             this.machineOsSuffixes = osSuffix;
@@ -301,6 +319,16 @@ export class DotNetCoreVersionFetcher {
 
     private getCurrentDir(): string {
         return __dirname;
+    }
+
+    private getRequestTimeout(): number {
+        let timeout = 60_000 * 5;
+        const inputValue: string = tl.getInput('requestTimeout', false);
+        if (!(Number.isNaN(Number(inputValue)))) {
+            const maxTimeout = 60_000 * 10;
+            timeout = Math.min(parseInt(inputValue), maxTimeout);
+        }
+        return timeout;
     }
 }
 

@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 235,
+    "Minor": 246,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -48,6 +48,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Maven@3 task is deprecated, please use a newer version of the Maven task",
   "inputs": [
     {
       "name": "mavenPOMFile",

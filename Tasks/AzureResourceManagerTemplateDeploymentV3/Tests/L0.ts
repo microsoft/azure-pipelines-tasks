@@ -37,12 +37,12 @@ describe('Azure Resource Manager Template Deployment', function () {
 //  uncomment to get test traces
 //	process.env['TASK_TEST_TRACE'] = "1";
 
-    /*it('Successfully triggered createOrUpdate deployment', (done) => {
+    /*it('Successfully triggered createOrUpdate deployment', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
@@ -53,35 +53,34 @@ describe('Azure Resource Manager Template Deployment', function () {
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });*/
-    it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', (done) => {
+    it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("properly sanitized") > 0, "Parameters should have been sanitized");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
-    it('Create or Update RG, failed on faulty CSM template file', (done) => {
+    it('Create or Update RG, failed on faulty CSM template file', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "faultyCSM.json";
         process.env["csmParametersFile"] = "faultyCSM.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.failed, "Task should have failed");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") == -1, "Task should have failed before calling deployments.createOrUpdate function from azure-sdk");
@@ -89,189 +88,198 @@ describe('Azure Resource Manager Template Deployment', function () {
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
-        done();
     });
-    it('Create or Update RG, succeeded on CSM template file with comments', (done) => {
+    it('Create or Update RG, succeeded on CSM template file with comments', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithComments.json";
         process.env["csmParametersFile"] = "CSMwithComments.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
-    it('createOrUpdate deployment should fail when no template file is found', (done) => {
+    it('createOrUpdate deployment should fail when no template file is found', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMNotThere.json";
         process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("TemplateFilePatternMatchingNoFile") > 0, "should have printed TemplateFilePatternMatchingNoFile")
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+    it('createOrUpdate deployment should fail when multiple template files are found', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMmultiple.json";
         process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("TemplateFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('createOrUpdate deployment should fail when no parameter file is found', (done) => {
+    it('createOrUpdate deployment should fail when no parameter file is found', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSMNotThere.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingNoFile") > 0, "should have printed TemplateParameterFilePatternMatchingNoFile")
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+    it('createOrUpdate deployment should fail when multiple template files are found', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSMmultiple.json";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(!tr.succeeded, "Should have failed");
             assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('Successfully triggered createOrUpdate deployment using bicep file', (done) => {
+    it('Successfully triggered createOrUpdate deployment using bicep file', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithBicep.bicep";
         process.env["csmParametersFile"] = "";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('Successfully triggered createOrUpdate deployment using bicep file with unused params', (done) => {
+    it('Successfully triggered createOrUpdate deployment using bicep file with space in path', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithBicep WithSpaceInPath.bicep";
+        process.env["csmParametersFile"] = "";
+        process.env["deploymentOutputs"] = "someVar";
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+    });
+
+    it('Successfully triggered createOrUpdate deployment using bicep file with unused params', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithBicepWithWarning.bicep";
         process.env["csmParametersFile"] = "";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('Successfully triggered createOrUpdate deployment using bicep file with bicepparam file', (done) => {
+    it('Successfully triggered createOrUpdate deployment using bicep file with bicepparam file', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithBicep.bicep";
         process.env["csmParametersFile"] = "CSMwithBicep.bicepparam";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    it('Successfully triggered createOrUpdate deployment using bicep file with bicepparam file using multiple file extensions', (done) => {
+    it('Successfully triggered createOrUpdate deployment using bicep file with bicepparam file using multiple file extensions', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithBicep.bicep";
         process.env["csmParametersFile"] = "CSMwithBicep.prod.bicepparam";
         process.env["deploymentOutputs"] = "someVar";
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
+        await tr.runAsync();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
-            done();
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
-            done(error);
+            throw error;
         }
     });
 
-    // it('createOrUpdate deployment should fail when bicep file contains error', (done) => {
+    // it('createOrUpdate deployment should fail when bicep file contains error', async () => {
     //     let tp = path.join(__dirname, 'createOrUpdate.js');
     //     process.env["csmFile"] = "CSMwithBicepWithError.bicep";
     //     process.env["csmParametersFile"] = "";
     //     let tr = new ttm.MockTestRunner(tp);
-    //     tr.run();
+    //     await tr.runAsync();
     //     try {
     //         assert(!tr.succeeded, "Should have failed");
     //         assert(tr.stdout.indexOf("This declaration type is not recognized. Specify a parameter, variable, resource, or output declaration.") > 0, "should have printed the error message")
@@ -281,7 +289,7 @@ describe('Azure Resource Manager Template Deployment', function () {
     //     catch (error) {
     //         console.log("STDERR", tr.stderr);
     //         console.log("STDOUT", tr.stdout);
-    //         done(error);
+    //         throw error;
     //     }
     // });
 });

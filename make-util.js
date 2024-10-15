@@ -17,7 +17,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -173,13 +173,20 @@ var buildNodeTask = function (taskPath, outDir) {
         } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
-
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
         cd(taskPath);
     }
 
@@ -332,8 +339,8 @@ exports.ensureTool = ensureTool;
 
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: 'v20.14.0',
-        16: 'v16.17.1',
+        20: 'v20.17.0',
+        16: 'v16.20.2',
         14: 'v14.10.1',
         10: 'v10.24.1',
         6: 'v6.10.3',
@@ -724,6 +731,8 @@ var fileToJson = function (file) {
 exports.fileToJson = fileToJson;
 
 var createResjson = function (task, taskPath) {
+    console.log(`createResjson ${taskPath}`);
+
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
         resources['loc.friendlyName'] = task.friendlyName;
@@ -1682,7 +1691,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
         return Array.from(nodes);
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10 taskName=' + taskName);
     nodes.add(10);
     return Array.from(nodes);
 }
@@ -1769,54 +1778,43 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
+ * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-    const validatingTasks = {};
+    var tasks = taskList.join('|')
+    const programPath = getBuildConfigGenerator(baseConfigToolPath);
+    const args = [
+        "--task",
+        `"${tasks}"`
+    ];
+
+    if (sprintNumber) {
+        args.push("--current-sprint");
+        args.push(sprintNumber);
+    }
     
-    for (const key in makeOptions) {
-        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-
-        makeOptions[key].forEach((taskName) => {
-            if (taskList.indexOf(taskName) ===  -1) return;
-            if (validatingTasks[key]) {
-                validatingTasks[key].push(taskName);
-            } else {
-                validatingTasks[key] = [taskName];
-            }
-        });
+    var writeUpdateArg = "";
+    if(writeUpdates)
+    {
+        writeUpdateArg += " --write-updates";
     }
-    for (const config in validatingTasks) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const args = [
-            "--configs",
-            config,
-            "--task",
-            `"${validatingTasks[config].join('|')}"`
-        ];
 
-        if (sprintNumber) {
-            args.push("--current-sprint");
-            args.push(sprintNumber);
-        }
-        
-        var writeUpdateArg = "";
-        if(writeUpdates)
-        {
-            writeUpdateArg += " --write-updates";
-        }
-
-        var debugAgentDirArg = "";
-        if(debugAgentDir) {
-            debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
-        }
-
-        banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
-        run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+    if(includeLocalPackagesBuildConfig)
+    {
+        writeUpdateArg += " --include-local-packages-build-config";        
     }
+
+    var debugAgentDirArg = "";
+    if(debugAgentDir) {
+        debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
+    }
+
+    banner(`Validating: tasks ${tasks} \n`);
+    run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+
 }
 exports.processGeneratedTasks = processGeneratedTasks;
 
@@ -1904,7 +1902,7 @@ exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
  * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
  * and copy files from generated to source if needed
  */
-function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenTaskPathLocal, includeLocalPackagesBuildConfig, callGenTaskDuringBuild = false) {
     const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
@@ -1914,10 +1912,16 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
     return async function(taskName, ...args) {
         await originalFunction.apply(this, [taskName, ...args]);
 
-        const genTaskPath = path.join(basicGenTaskPath, taskName);
+        var genTaskPath = path.join(basicGenTaskPath, taskName);
+
+        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)) {
+            genTaskPath = path.join(basicGenTaskPathLocal, taskName);
+        };
 
         // if it's not a generated task, we don't need to sync files
-        if (!fs.existsSync(genTaskPath)) return;
+        if (!fs.existsSync(genTaskPath)){
+            return;
+        }
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)

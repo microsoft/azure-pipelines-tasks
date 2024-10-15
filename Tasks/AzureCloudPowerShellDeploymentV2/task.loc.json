@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 242,
+    "Minor": 246,
     "Patch": 0
   },
   "demands": [
@@ -31,6 +31,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AzureCloudPowerShellDeployment task is deprecated as Azure Cloud Services is being retired, see https://aka.ms/cloudservicesretirement",
   "inputs": [
     {
       "name": "ARMConnectedServiceName",

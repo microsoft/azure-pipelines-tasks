@@ -1,7 +1,7 @@
 "use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
 import { HttpClientResponse } from "./mocks/mockedModels"
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 
 mockery.enable({
     useCleanCache: true,
@@ -107,6 +107,17 @@ mockery.registerMock('typed-rest-client/HttpClient', {
             }
         }
     }
+});
+
+mockery.registerMock('azure-pipelines-task-lib/task', {
+    loc: function (locString, param: string[]) { return tl.loc(locString, param); },
+    debug: function (message) { return tl.debug(message); },
+    error: function (errorMessage) { return tl.error(errorMessage); },
+    getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
+    getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
+    setResourcePath: function (path) { return; }
 });
 
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
