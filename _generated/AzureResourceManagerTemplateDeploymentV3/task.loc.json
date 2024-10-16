@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -246,11 +246,14 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
       "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
       "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
       "initialContextTemplate": "{\"skiptoken\": \"\"}",
-      "resultSelector": "jsonpath:$.value[*].name"
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "subscriptionId": "$(subscriptionName)"
+      }
     },
     {
       "target": "location",
@@ -337,7 +340,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   },
   "_buildConfigMapping": {
-    "Default": "3.247.2",
-    "Node20_229_2": "3.247.3"
+    "Default": "3.247.4",
+    "Node20_229_2": "3.247.5"
   }
 }
