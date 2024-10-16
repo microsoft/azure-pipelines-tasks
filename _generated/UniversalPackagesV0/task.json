@@ -2,7 +2,7 @@
   "id": "e0b79640-8625-11e8-91be-db2878ff888a",
   "name": "UniversalPackages",
   "friendlyName": "Universal packages",
-  "description": "Download or publish Universal Packages",
+  "description":"Download or publish Universal Packages",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
   "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages)",

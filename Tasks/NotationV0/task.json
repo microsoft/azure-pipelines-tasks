@@ -3,7 +3,7 @@
   "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
   "name": "Notation",
   "friendlyName": "Notation",
-  "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
+  "description":"Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Notation Developers",

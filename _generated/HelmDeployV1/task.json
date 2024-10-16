@@ -2,7 +2,7 @@
   "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
   "name": "HelmDeploy",
   "friendlyName": "Package and deploy Helm charts",
-  "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+  "description":"Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
   "helpUrl": "https://aka.ms/azpipes-helm-tsg",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
   "category": "Deploy",
@@ -502,11 +502,11 @@
   "outputVariables": [
     {
       "name": "helmExitCode",
-      "description": "Exit code emitted from the execution of specified Helm command"
+      "description":"Exit code emitted from the execution of specified Helm command"
     },
     {
       "name": "helmOutput",
-      "description": "Output emitted from the execution of specified Helm command"
+      "description":"Output emitted from the execution of specified Helm command"
     }
   ],
   "prejobexecution": {

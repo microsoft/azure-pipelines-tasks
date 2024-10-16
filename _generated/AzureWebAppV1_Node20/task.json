@@ -2,7 +2,7 @@
   "id": "18BDE28A-8172-45CB-B204-5CEF1393DBB1",
   "name": "AzureWebApp",
   "friendlyName": "Azure Web App",
-  "description": "Deploy an Azure Web App for Linux or Windows",
+  "description":"Deploy an Azure Web App for Linux or Windows",
   "helpUrl": "https://aka.ms/azurewebapptroubleshooting",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
   "category": "Deploy",
@@ -189,7 +189,7 @@
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected App Service."
+      "description":"Application URL of the selected App Service."
     }
   ],
   "dataSourceBindings": [

@@ -2,7 +2,7 @@
   "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
   "name": "UsePythonVersion",
   "friendlyName": "Use Python version",
-  "description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
+  "description":"Use the specified version of Python from the tool cache, optionally adding it to the PATH",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
   "category": "Tool",
@@ -85,7 +85,7 @@
   "outputVariables": [
     {
       "name": "pythonLocation",
-      "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
+      "description":"The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
     }
   ],
   "execution": {

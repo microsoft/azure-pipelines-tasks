@@ -2,7 +2,7 @@
   "id": "334727F4-9495-4F9D-A391-FC621D671474",
   "name": "GoTool",
   "friendlyName": "Go tool installer",
-  "description": "Find in cache or download a specific version of Go and add it to the PATH",
+  "description":"Find in cache or download a specific version of Go and add it to the PATH",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
   "category": "Tool",

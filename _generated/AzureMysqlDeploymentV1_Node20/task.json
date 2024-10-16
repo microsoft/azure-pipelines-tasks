@@ -2,7 +2,7 @@
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
   "friendlyName": "Azure Database for MySQL deployment",
-  "description": "Run your scripts and make changes to your Azure Database for MySQL",
+  "description":"Run your scripts and make changes to your Azure Database for MySQL",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "category": "Deploy",

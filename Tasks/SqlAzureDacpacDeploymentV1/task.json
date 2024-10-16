@@ -2,7 +2,7 @@
     "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
     "name": "SqlAzureDacpacDeployment",
     "friendlyName": "Azure SQL Database deployment",
-    "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
+    "description":"Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
@@ -332,7 +332,7 @@
     "outputVariables": [
         {
             "name": "SqlDeploymentOutputFile",
-            "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+            "description":"Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
         }
     ],
     "instanceNameFormat": "Azure SQL $(TaskNameSelector)",

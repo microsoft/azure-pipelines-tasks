@@ -2,7 +2,7 @@
   "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
   "name": "JenkinsQueueJob",
   "friendlyName": "Jenkins queue job",
-  "description": "Queue a job on a Jenkins server",
+  "description":"Queue a job on a Jenkins server",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/jenkins-queue-job",
   "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=816956). This task queues a job on a [Jenkins](https://jenkins.io/) server. Full integration capabilities require installation of the [Team Foundation Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Team+Foundation+Server+Plugin) on Jenkins.",
   "category": "Build",
@@ -134,7 +134,7 @@
   "outputVariables": [
     {
       "name": "JENKINS_JOB_ID",
-      "description": "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
+      "description":"The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
     }
   ],
   "execution": {

@@ -2,7 +2,7 @@
   "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
   "name": "InstallAppleCertificate",
   "friendlyName": "Install Apple certificate",
-  "description": "Install an Apple certificate required to build on a macOS agent machine",
+  "description":"Install an Apple certificate required to build on a macOS agent machine",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "category": "Utility",
@@ -128,11 +128,11 @@
   "outputVariables": [
     {
       "name": "signingIdentity",
-      "description": "The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
+      "description":"The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
     },
     {
       "name": "keychainPath",
-      "description": "The path for the keychain file with the certificate."
+      "description":"The path for the keychain file with the certificate."
     }
   ],
   "prejobexecution": {

@@ -2,7 +2,7 @@
   "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
   "name": "GitHubRelease",
   "friendlyName": "GitHub Release",
-  "description": "Create, edit, or delete a GitHub release",
+  "description":"Create, edit, or delete a GitHub release",
   "helpUrl": "https://aka.ms/AA5vv5o",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
   "category": "Utility",

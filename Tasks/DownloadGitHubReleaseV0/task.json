@@ -2,7 +2,7 @@
     "id": "263abc27-4582-4174-8789-af599697778e",
     "name": "DownloadGitHubRelease",
     "friendlyName": "Download GitHub Release",
-    "description": "Downloads a GitHub Release from a repository",
+    "description":"Downloads a GitHub Release from a repository",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",

@@ -2,7 +2,7 @@
   "id": "2a6ca863-f2ce-4f4d-8bcb-15e64608ec4b",
   "name": "DownloadSecureFile",
   "friendlyName": "Download secure file",
-  "description": "Download a secure file to the agent machine",
+  "description":"Download a secure file to the agent machine",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
   "category": "Utility",
@@ -52,7 +52,7 @@
   "outputVariables": [
     {
       "name": "secureFilePath",
-      "description": "The location of the secure file that was downloaded."
+      "description":"The location of the secure file that was downloaded."
     }
   ],
   "prejobexecution": {

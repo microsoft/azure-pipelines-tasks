@@ -2,7 +2,7 @@
     "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
     "name": "ServiceFabricDeploy",
     "friendlyName": "Service Fabric application deployment",
-    "description": "Deploy an Azure Service Fabric application to a cluster",
+    "description":"Deploy an Azure Service Fabric application to a cluster",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",

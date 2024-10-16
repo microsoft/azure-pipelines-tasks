@@ -2,7 +2,7 @@
   "id": "A22A6EB4-FE21-442E-ABCE-5B2B09CFECE3",
   "name": "FuncToolsInstaller",
   "friendlyName": "Install Azure Func Core Tools",
-  "description": "Install Azure Func Core Tools",
+  "description":"Install Azure Func Core Tools",
   "helpUrl": "https://aka.ms/func-tools-installer",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/func-tools-installer)",
   "category": "Tool",

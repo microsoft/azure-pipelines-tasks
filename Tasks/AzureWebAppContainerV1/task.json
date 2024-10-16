@@ -2,7 +2,7 @@
   "id": "15858991-8BAC-4542-99E7-577FEF9B5BE6",
   "name": "AzureWebAppContainer",
   "friendlyName": "Azure Web App for Containers",
-  "description": "Deploy containers to Azure App Service",
+  "description":"Deploy containers to Azure App Service",
   "helpUrl": "https://aka.ms/azurewebappcontainertroubleshooting",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebapponcontainerdeployreadme)",
   "category": "Deploy",
@@ -135,7 +135,7 @@
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected App Service."
+      "description":"Application URL of the selected App Service."
     }
   ],
   "dataSourceBindings": [

@@ -2,7 +2,7 @@
     "id": "39bc2c9b-55b7-4835-89cd-6cc699ef7220",
     "name": "ContainerStructureTest",
     "friendlyName": "Container Structure Test",
-    "description": "Uses container-structure-test (https://github.com/GoogleContainerTools/container-structure-test) to validate the structure of an image based on four categories of tests - command tests, file existence tests, file content tests and metadata tests",
+    "description":"Uses container-structure-test (https://github.com/GoogleContainerTools/container-structure-test) to validate the structure of an image based on four categories of tests - command tests, file existence tests, file content tests and metadata tests",
     "helpUrl": "https://aka.ms/containerstructuretest",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/containerstructuretest)",
     "category": "Test",

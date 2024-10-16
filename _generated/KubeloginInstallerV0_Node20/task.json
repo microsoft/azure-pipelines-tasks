@@ -3,7 +3,7 @@
   "id": "5eeaaa81-40b2-4918-8fc7-e2dfc2318902",
   "name": "KubeloginInstaller",
   "friendlyName": "Kubelogin tool installer",
-  "description": "Helps to install kubelogin",
+  "description":"Helps to install kubelogin",
   "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/kubelogin-installer-v0) or [see the Kubelogin documentation](https://azure.github.io/kubelogin/index.html)",
   "helpUrl": "https://azure.github.io/kubelogin/index.html",
   "category": "Tool",

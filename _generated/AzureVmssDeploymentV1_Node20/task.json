@@ -2,7 +2,7 @@
   "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
   "name": "AzureVmssDeployment",
   "friendlyName": "Azure VM scale set deployment",
-  "description": "Deploy a virtual machine scale set image",
+  "description":"Deploy a virtual machine scale set image",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment",
   "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "category": "Deploy",

@@ -2,7 +2,7 @@
   "id": "E3CF3806-AD30-4EC4-8F1E-8ECD98771AA0",
   "name": "DownloadFileshareArtifacts",
   "friendlyName": "Download artifacts from file share",
-  "description": "Download artifacts from a file share, like \\\\share\\drop",
+  "description":"Download artifacts from a file share, like \\\\share\\drop",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
   "helpMarkDown": "",
   "category": "Utility",

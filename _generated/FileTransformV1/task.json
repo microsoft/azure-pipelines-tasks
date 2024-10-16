@@ -2,7 +2,7 @@
   "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
   "name": "FileTransform",
   "friendlyName": "File transform",
-  "description": "Replace tokens with variable values in XML or JSON configuration files",
+  "description":"Replace tokens with variable values in XML or JSON configuration files",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
   "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",

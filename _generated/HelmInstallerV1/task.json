@@ -2,7 +2,7 @@
   "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
   "name": "HelmInstaller",
   "friendlyName": "Helm tool installer",
-  "description": "Install Helm on an agent machine",
+  "description":"Install Helm on an agent machine",
   "helpUrl": "https://aka.ms/azpipes-helm-installer-tsg",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "category": "Tool",

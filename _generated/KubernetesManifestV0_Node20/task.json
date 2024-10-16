@@ -2,7 +2,7 @@
   "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
   "name": "KubernetesManifest",
   "friendlyName": "Deploy to Kubernetes",
-  "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
+  "description":"Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
   "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "category": "Deploy",
@@ -347,7 +347,7 @@
   "outputVariables": [
     {
       "name": "manifestsBundle",
-      "description": "The location of the manifest bundles created by bake action"
+      "description":"The location of the manifest bundles created by bake action"
     }
   ],
   "execution": {

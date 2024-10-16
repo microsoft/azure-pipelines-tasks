@@ -2,7 +2,7 @@
   "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
   "name": "DecryptFile",
   "friendlyName": "Decrypt file (OpenSSL)",
-  "description": "Decrypt a file using OpenSSL",
+  "description":"Decrypt a file using OpenSSL",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/decrypt-file",
   "helpMarkDown": "",
   "category": "Utility",
