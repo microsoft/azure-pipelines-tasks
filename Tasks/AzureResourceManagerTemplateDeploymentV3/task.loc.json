@@ -246,11 +246,14 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
       "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
       "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
       "initialContextTemplate": "{\"skiptoken\": \"\"}",
-      "resultSelector": "jsonpath:$.value[*].name"
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "subscriptionId": "$(subscriptionName)"
+      }
     },
     {
       "target": "location",
