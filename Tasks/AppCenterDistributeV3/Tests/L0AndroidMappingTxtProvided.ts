@@ -32,6 +32,7 @@ nock('https://example.test')
     .get('/v0.1/apps/testuser/testapp/releases/1')
     .query(true)
     .reply(200, {
+        download_url: 'http://some-url',
         version: '1',
         short_version: '1.0',
     });
