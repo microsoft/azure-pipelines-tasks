@@ -4,6 +4,7 @@ namespace BuildConfigGen
 {
     internal static class GitUtil
     {
+        static (string? gitRoot, IEnumerable<string>? cache) NonIgnoredFileListCache;
 
         public static void GetUntrackedFiles(string taskTarget, out IEnumerable<string> toAdd, out IEnumerable<string> toRemove)
         {
@@ -122,40 +123,75 @@ namespace BuildConfigGen
 
         internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string gitRoot, string taskTarget)
         {
+            // the new version gets the non-ignored files frmo the root, caches and filters based on taskTarget.  It's 6x faster
+            return GetNonIgnoredFileListFromPathInnerIncludingFromGeneratedLocalFilteredByTaskTarget(gitRoot, taskTarget);
+        }
+
+        private static IEnumerable<string> GetNonIgnoredFileListFromPathInnerIncludingFromGeneratedLocalFilteredByTaskTarget(string gitRoot, string taskTarget)
+        {
+            if (!taskTarget.StartsWith(gitRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception($"expected taskTarget={taskTarget} to start with gitRoot={gitRoot}");
+            }
+
+            string taskTargetSubpath = taskTarget.Substring(gitRoot.Length);
+
+            if(NonIgnoredFileListCache.gitRoot is not null)
+            {
+                NonIgnoredFileListCache.gitRoot = gitRoot;
+
+                if(gitRoot!= NonIgnoredFileListCache.gitRoot)
+                {
+                    throw new Exception($"BUG: gitroot={gitRoot} expected to match {NonIgnoredFileListCache.gitRoot}=NonIgnoredFileListCache.gitRoot");
+                }
+            }
+
+            if (NonIgnoredFileListCache.cache is null)
+            {
+                NonIgnoredFileListCache.cache = GetNonIgnoredFileListFromPathInnerIncludingFromGeneratedLocal(gitRoot);
+            }
+
+            return NonIgnoredFileListCache.cache.Where(x => x.StartsWith(taskTargetSubpath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)).Select(x =>
+            {
+                var y = x.Substring(taskTargetSubpath.Length);
+
+                if (y.StartsWith("/") || y.StartsWith(@"\"))
+                {
+                    return y.Substring(1);
+                }
+                else
+                {
+                    throw new Exception($"BUG: expected y={y} to start with / or \\ ");
+                }
+            });
+        }
+
+        private static IEnumerable<string> GetNonIgnoredFileListFromPathInnerIncludingFromGeneratedLocal(string gitRoot)
+        {
             string gitIgnorePathBak = Path.Combine(gitRoot, ".gitignore.bak");
             string gitIgnore = Path.Combine(gitRoot, ".gitignore");
 
-            bool needsGitIgnoreUpdate = taskTarget.Contains("/_generated_local/") || taskTarget.Contains(@"\_generated_local\");
+            string? gitIgnoreContent = File.ReadAllText(gitIgnore);
+            const string genertedLocalPath = "_generated_local/";
 
-            string? gitIgnoreContent = null;
-
-            if (needsGitIgnoreUpdate)
+            if (!gitIgnoreContent.Contains(genertedLocalPath))
             {
-                gitIgnoreContent = File.ReadAllText(gitIgnore);
-                const string genertedLocalPath = "_generated_local/";
-
-                if (!gitIgnoreContent.Contains(genertedLocalPath))
-                {
-                    throw new Exception("Expected " + genertedLocalPath + " in " + gitIgnore);
-                }
-
-                gitIgnoreContent = gitIgnoreContent.Replace(genertedLocalPath, "");
-
-                File.Copy(gitIgnore, gitIgnorePathBak, true);
+                throw new Exception("Expected " + genertedLocalPath + " in " + gitIgnore);
             }
+
+            gitIgnoreContent = gitIgnoreContent.Replace(genertedLocalPath, "");
+
+            File.Copy(gitIgnore, gitIgnorePathBak, true);
 
             try
             {
-                if (needsGitIgnoreUpdate)
-                {
-                    File.WriteAllText(gitIgnore, gitIgnoreContent);
-                }
+                File.WriteAllText(gitIgnore, gitIgnoreContent);
 
-                return GetNonIgnoredFileListFromPathInner(taskTarget);
+                return GetNonIgnoredFileListFromPathInner(gitRoot);
             }
             finally
             {
-                if (needsGitIgnoreUpdate)
+                if (File.Exists(gitIgnorePathBak))
                 {
                     File.Move(gitIgnorePathBak, gitIgnore, true);
                 }
