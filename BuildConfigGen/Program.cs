@@ -109,7 +109,7 @@ namespace BuildConfigGen
             }
 
             string currentDir = Environment.CurrentDirectory;
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
 
             string globalVersionPath = Path.Combine(gitRootPath, @"globalversion.txt");
             TaskVersion? globalVersion = GetGlobalVersion(gitRootPath, globalVersionPath);
@@ -284,6 +284,37 @@ namespace BuildConfigGen
             }
         }
 
+        private static string GetTasksRootPath(string inputCurrentDir)
+        {
+            string? currentDir = inputCurrentDir;
+            string? tasksRootPath = null;
+
+            do
+            {
+                string currentDirGit = Path.Combine(currentDir, ".git");
+
+                if (Directory.Exists(currentDirGit))
+                {
+                    tasksRootPath = currentDir;
+                }
+
+                currentDir = (new DirectoryInfo(currentDir)).Parent?.FullName;
+
+            } while (currentDir != null);
+
+            if (tasksRootPath == null)
+            {
+                throw new Exception($"could not find .git in {currentDir}");
+            }
+
+            if (!File.Exists(Path.Combine(tasksRootPath, "make-options.json")))
+            {
+                throw new Exception($"make-options.json not found in tasksRootPath={tasksRootPath}");
+            }
+
+            return tasksRootPath;
+        }
+
         private static IEnumerable<string> FilterConfigsForTask(string? configs, KeyValuePair<string, MakeOptionsReader.AgentTask> t)
         {
             var configsList = t.Value.Configs.AsEnumerable();
@@ -343,7 +374,7 @@ namespace BuildConfigGen
 
             string currentDir = Environment.CurrentDirectory;
 
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
 
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
             if (!Directory.Exists(taskTargetPath))
@@ -459,8 +490,8 @@ namespace BuildConfigGen
             try
             {
                 string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-                string versionMapFile = GetVersionMapFile(task, gitRootPath, generatedFolder);
+                string gitRootPath = GetTasksRootPath(currentDir);
+                string versionMapFile = GetVersionMapFile(task, generatedFolder);
 
                 string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
                 if (!Directory.Exists(taskTargetPath))
@@ -608,7 +639,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static string GetVersionMapFile(string task, string gitRootPath, string generatedFolder)
+        private static string GetVersionMapFile(string task, string generatedFolder)
         {
             return Path.Combine(generatedFolder, @$"{task}.versionmap.txt");
         }
@@ -1078,7 +1109,7 @@ namespace BuildConfigGen
         private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder)
         {
             string currentDir = Environment.CurrentDirectory;
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
 
             if (!Directory.Exists(taskTargetPath))
@@ -1093,7 +1124,7 @@ namespace BuildConfigGen
 
             bool defaultVersionMatchesSourceVersion;
 
-            string versionMapFile = GetVersionMapFile(task, gitRootPath, generatedFolder);
+            string versionMapFile = GetVersionMapFile(task, generatedFolder);
 
             {
                 TaskVersion? defaultVersion = null;

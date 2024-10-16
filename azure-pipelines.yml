@@ -29,6 +29,10 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: includeLocalPackagesBuildConfig
+  displayName: Flag to build local packages build config
+  type: boolean
+  default: true # temp for testing! check in with false!
 
 variables:
 - name: currentDate
@@ -41,6 +45,9 @@ variables:
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
   value: true
+- name: includeLocalPackagesBuildConfigParameter
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}: '--includeLocalPackagesBuildConfig'
+  ${{ if ne(parameters.includeLocalPackagesBuildConfig, true) }}: ''
 
 
 extends:
