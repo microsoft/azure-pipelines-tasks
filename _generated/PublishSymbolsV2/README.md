@@ -52,7 +52,6 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 
 * **SymbolsArtifactName**: Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)
 
-
 ## How to build task locally:
 
 1) Create new branch from master
@@ -63,7 +62,8 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 6) Run command at root "npm i"
 7) Run command at root "node make.js build --task PublishSymbolsV2"
 8) Refer files generated at "_build" to test locally
-9) Check-in files changed from ".\Tasks\PublishSymbolsV2\" and files generated from "_generated"
+9) Check-in files changed from ".\Tasks\PublishSymbolsV2\" and files generated from "_generated". Do not checkin files from "_build"
+
 
 ```yaml
 
