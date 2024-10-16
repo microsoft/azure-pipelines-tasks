@@ -7,34 +7,36 @@
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "category": "Test",
   "visibility": [
-    "Build"
+      "Build"
   ],
   "runsOn": [
-    "Agent",
-    "DeploymentGroup"
+      "Agent",
+      "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 247,
-    "Patch": 0
+      "Major": 1,
+      "Minor": 247,
+      "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
+  "deprecated": true,
+  "deprecationMessage": "The PublishCodeCoverageResults@1 is deprecated. Users are recommended to switch to task version 2. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task",
   "inputs": [
-    {
-      "name": "codeCoverageTool",
-      "type": "pickList",
-      "label": "Code coverage tool",
-      "required": true,
-      "defaultValue": "JaCoCo",
-      "helpMarkDown": "The tool with which code coverage results are generated.",
-      "options": {
-        "Cobertura": "Cobertura",
-        "JaCoCo": "JaCoCo"
-      }
-    },
+      {
+          "name": "codeCoverageTool",
+          "type": "pickList",
+          "label": "Code coverage tool",
+          "required": true,
+          "defaultValue": "JaCoCo",
+          "helpMarkDown": "The tool with which code coverage results are generated.",
+          "options": {
+              "Cobertura": "Cobertura",
+              "JaCoCo": "JaCoCo"
+          }
+      },
       {
           "name": "summaryFileLocation",
           "type": "string",
