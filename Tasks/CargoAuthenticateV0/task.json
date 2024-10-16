@@ -1,8 +1,8 @@
 {
   "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
   "name": "CargoAuthenticate",
-  "friendlyName": "Cargo authenticate (for task runners)",
-  "description": "Authentication task for the cargo client used for installing Cargo crates distribution",
+  "friendlyName": "Cargo authenticate",
+  "description": "Authentication task for the cargo client used for installing Cargo crates",
   "helpUrl": "",
   "helpMarkDown": "",
   "category": "Package",
@@ -29,7 +29,7 @@
     {
       "name": "cargoServiceConnections",
       "label": "Credentials for registries outside this organization/collection",
-      "helpMarkDown": "Credentials to use for external registries located in the project's config.toml. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+      "helpMarkDown": "Credentials to use for external registries located in the project's config.toml. For registries in this organization/collection, don't specify this attribute; the build’s credentials are used automatically.",
       "type": "connectedService:externalcargorepository",
       "properties": {
         "MultiSelectFlatList": "true"
