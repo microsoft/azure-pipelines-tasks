@@ -273,7 +273,7 @@ namespace BuildConfigGen
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
                 }
 
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(null, skipContentCheck: false);
 
                 foreach (var t in tasks)
                 {
@@ -458,7 +458,7 @@ namespace BuildConfigGen
             return currentSprint;
         }
 
-        private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
+        private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string? task, bool skipContentCheck)
         {
             // if !writeUpdates, error if we have written any updates
             var verifyErrors = ensureUpdateModeVerifier!.GetVerifyErrors(skipContentCheck).ToList();
@@ -472,7 +472,14 @@ namespace BuildConfigGen
                     Console.WriteLine(s);
                 }
 
-                throw new Exception($"Updates needed, please run npm make.js --task {task} ");
+                if (task is null)
+                {
+                    throw new Exception($"Updates needed, please run node make.js");
+                }
+                else
+                {
+                    throw new Exception($"Updates needed, please run node make.js --task {task} ");
+                }
             }
         }
 
