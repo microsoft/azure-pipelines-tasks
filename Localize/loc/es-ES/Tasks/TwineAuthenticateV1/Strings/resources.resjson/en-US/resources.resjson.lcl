@@ -65,10 +65,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+          <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Si se establece, se requiere workloadIdentityServiceConnection. Se omiten todas las demás entradas. No es compatible con pythonUploadServiceConnections. La dirección URL de la fuente debe tener el formato del Registro de carga pypi, por ejemplo, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+            <Val><![CDATA[Si se establece, se requiere azureDevOpsServiceConnection. Se omiten todas las demás entradas. No es compatible con pythonUploadServiceConnections. La dirección URL de la fuente debe tener el formato del Registro de carga pypi, por ejemplo, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -122,10 +125,13 @@
       </Item>
       <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Val><![CDATA['Azure DevOps' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Conexión de servicio "Usuario de Azure DevOps respaldado por id. de carga de trabajo de Entra"]]></Val>
+            <Val><![CDATA[Conexión de servicio de "Azure DevOps"]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
