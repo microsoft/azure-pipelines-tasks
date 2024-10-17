@@ -65,10 +65,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+          <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 설정을 지정하면 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. pythonUploadServiceConnections와 호환되지 않습니다. 피드 URL은 pypi 업로드 레지스트리 형식(예: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/)이어야 합니다.]]></Val>
+            <Val><![CDATA[이 설정을 지정하면 azureDevOpsServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. pythonUploadServiceConnections와 호환되지 않습니다. 피드 URL은 pypi 업로드 레지스트리 형식(예: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/)이어야 합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -122,10 +125,13 @@
       </Item>
       <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Val><![CDATA['Azure DevOps' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['Entra 워크로드 ID 지원 Azure DevOps 사용자' 서비스 연결]]></Val>
+            <Val><![CDATA['Azure DevOps' 서비스 연결]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
