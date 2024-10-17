@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 0
   },
   "runsOn": [
@@ -172,7 +172,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20_229_1": "1.246.1"
+    "Default": "1.247.0",
+    "Node20_229_1": "1.247.1"
   }
 }
