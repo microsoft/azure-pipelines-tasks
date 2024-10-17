@@ -1,8 +1,8 @@
 {
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
-  "friendlyName": "[To be deprecated] Publish code coverage",
-  "description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "friendlyName": "Publish code coverage",
+  "description": "Publish Cobertura or JaCoCo code coverage results from a build",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "category": "Test",
@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 247,
     "Patch": 1
   },
   "demands": [],
@@ -31,7 +31,7 @@
       "label": "Code coverage tool",
       "required": true,
       "defaultValue": "JaCoCo",
-      "helpMarkDown": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+      "helpMarkDown": "The tool with which code coverage results are generated.",
       "options": {
         "Cobertura": "Cobertura",
         "JaCoCo": "JaCoCo"
@@ -109,7 +109,7 @@
     "V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_4": "1.244.1"
+    "Default": "1.247.0",
+    "Node20_229_4": "1.247.1"
   }
 }
