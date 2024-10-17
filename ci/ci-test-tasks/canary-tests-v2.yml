@@ -1,3 +1,21 @@
+parameters:
+- name: includeLocalPackagesBuildConfig
+  displayName: Flag to build local packages build config
+  type: boolean
+  default: false
+
+variables:
+- name: includeLocalPackagesBuildConfigParameter
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}: 
+    value: '--includeLocalPackagesBuildConfig'
+  ${{ else }}:
+    value: ''
+- name: IncludeLocalPackagesBuildConfigTest
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '1'
+  ${{ else }}:
+    value: ''
+
 trigger:
   - master
   - releases/*

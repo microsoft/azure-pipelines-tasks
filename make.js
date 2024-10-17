@@ -1,7 +1,9 @@
 // parse command line options
 var argv = require('minimist')(process.argv.slice(2));
 
-argv.includeLocalPackagesBuildConfig=true;
+if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
+    argv.includeLocalPackagesBuildConfig=true;
+}
 
 // modules
 var fs = require('fs');

@@ -46,9 +46,15 @@ variables:
 - name: system.debug
   value: true
 - name: includeLocalPackagesBuildConfigParameter
-  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}: '--includeLocalPackagesBuildConfig'
-  ${{ if ne(parameters.includeLocalPackagesBuildConfig, true) }}: ''
-
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '--includeLocalPackagesBuildConfig'
+  ${{ else }}:
+    value: ''
+- name: IncludeLocalPackagesBuildConfigTest
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '1'
+  ${{ else }}:
+    value: ''
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
