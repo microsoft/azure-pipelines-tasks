@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "用于安装 Cargo crates 分发版的 cargo 客户端的身份验证任务",
   "loc.instanceNameFormat": "cargo 身份验证 $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "“Entra Workload ID 支持的 Azure DevOps 用户”服务连接",
+  "loc.input.label.workloadIdentityServiceConnection": "“Azure DevOps”服务连接",
   "loc.input.help.workloadIdentityServiceConnection": "如果设置了此设置，则需要 registryNames。已忽略所有其他输入。",
   "loc.input.label.registryNames": "config.toml 中的注册表名称",
   "loc.input.help.registryNames": "在 config.toml 中指定用于身份验证的注册表名称的逗号分隔列表。如果设置此项，则需要 workloadIdentityServiceConnection。已忽略所有其他输入。与 cargoServiceConnections 不兼容。",

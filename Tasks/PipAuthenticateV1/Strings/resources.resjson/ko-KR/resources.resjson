@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "피드 및 인증",
   "loc.input.label.artifactFeeds": "내 피드(아래에서 선택)",
   "loc.input.help.artifactFeeds": "이 조직에 있는, 인증할 피드를 선택합니다.",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra 워크로드 ID 지원 Azure DevOps 사용자' 서비스 연결",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 서비스 연결",
   "loc.input.help.workloadIdentityServiceConnection": "이 설정을 지정하면 feedUrl이 필요합니다. 다른 모든 입력은 무시됩니다.",
   "loc.input.label.feedUrl": "Azure Artifacts 피드 URL.",
   "loc.input.help.feedUrl": "이 설정을 지정하면 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. pythonDownloadServiceConnections와 호환되지 않습니다. ",

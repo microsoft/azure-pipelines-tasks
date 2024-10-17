@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "Branche de production",
   "loc.input.help.production_branch": "Branche de production. Lorsqu'il est spécifié et que l'environnement de déploiement est vide, les déploiements des autres branches seront des environnements d'aperçu.",
   "loc.input.label.data_api_location": "Emplacement de l’API de données",
-  "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail"
+  "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail",
+  "loc.input.label.azure_access_token": "Azure Access Token",
+  "loc.input.help.azure_access_token": "Access token used to authenticate and authorize the deployment",
+  "loc.input.label.default_hostname": "Default Hostname",
+  "loc.input.help.default_hostname": "Default Hostname of the app"
 }

@@ -19,7 +19,7 @@
   "loc.input.label.package": "パッケージまたはフォルダー",
   "loc.input.help.package": "MSBuild で生成されたアプリ サービスのコンテンツが入ったパッケージまたはフォルダー、あるいは圧縮された zip または war ファイルへのファイル パス。<br />変数 ([ビルド](https://docs.microsoft.com/vsts/pipelines/build/variables) |[リリース](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables))、ワイルドカードを使用できます。<br/>たとえば、$(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip または $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war。",
   "loc.input.label.runtimeStack": "ランタイム スタック",
-  "loc.input.help.runtimeStack": "サポートされているランタイム バージョンについては、[こちらのドキュメント] (https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) をご覧ください。`DOCKER|microsoft/azure-functions-*` などの前の値は非推奨であるため、ドロップダウンから新しい値をお使いください。",
+  "loc.input.help.runtimeStack": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.",
   "loc.input.label.startUpCommand": "スタートアップ コマンド ",
   "loc.input.help.startUpCommand": "スタートアップ コマンドを入力してください。例: <br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.customWebConfig": "Python、Node.js、Go、Java アプリ向けの web.config パラメーターを生成する",

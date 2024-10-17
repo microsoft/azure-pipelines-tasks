@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "源和身份验证",
   "loc.input.label.artifactFeeds": "我的源(在下方选择)",
   "loc.input.help.artifactFeeds": "选择要在此组织中进行身份验证的源",
-  "loc.input.label.workloadIdentityServiceConnection": "“Entra Workload ID 支持的 Azure DevOps 用户”服务连接",
+  "loc.input.label.workloadIdentityServiceConnection": "“Azure DevOps” 服务连接",
   "loc.input.help.workloadIdentityServiceConnection": "如果进行了此设置，则需要 feedUrl。所有其他输入将忽略。",
   "loc.input.label.feedUrl": "Azure Artifacts 源 URL。",
   "loc.input.help.feedUrl": "如果进行了此设置，则需要 workloadIdentityServiceConnection。所有其他输入将忽略。与 pythonDownloadServiceConnections 不兼容。",

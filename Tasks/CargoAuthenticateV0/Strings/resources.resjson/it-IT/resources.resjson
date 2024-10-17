@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Attività di autenticazione per il client Cargo usato per l'installazione della distribuzione delle casse Cargo",
   "loc.instanceNameFormat": "Autenticazione cargo $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "Connessione al servizio \"Entra Workload ID-backed Azure DevOps user\"",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "Se questa impostazione è impostata, registryNames è obbligatorio. Tutti gli altri input vengono ignorati.",
   "loc.input.label.registryNames": "Nomi di Registro di sistema da config.toml",
   "loc.input.help.registryNames": "Elenco di nomi di Registro di sistema delimitati da virgole specificati nel file config.toml da autenticare. Se questa impostazione è impostata, è necessario workloadIdentityServiceConnection. Tutti gli altri input vengono ignorati. Non compatibile con cargoServiceConnections.",

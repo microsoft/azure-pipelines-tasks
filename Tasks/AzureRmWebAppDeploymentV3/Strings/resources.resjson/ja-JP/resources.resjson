@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。これを解決するには、Web 配置オプションの追加引数に -allowUntrusted を渡す必要があります。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
   "loc.messages.JarNotSupported": "Jar 配置はこのバージョンではサポートされていません。タスク バージョンをプレビュー モードの '4.*' に変更します",
-  "loc.messages.CorrelationIdForARM": "ARM API 呼び出しの応答からの関連付け ID: %s"
+  "loc.messages.CorrelationIdForARM": "ARM API 呼び出しの応答からの関連付け ID: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service は基本認証を使用しないように構成されています。これには、バージョン 7.1.7225 以降の Web 配置 msdeploy.exe が必要です。更新されたバージョンの msdeploy.exe を含む Visual Studio のバージョンが必要です。詳細については、https://aka.ms/azdo-webapp-msdeploy を参照してください。"
 }

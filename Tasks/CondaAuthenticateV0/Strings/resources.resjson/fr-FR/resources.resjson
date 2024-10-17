@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tâche d’authentification pour le client conda",
   "loc.instanceNameFormat": "Authentification Conda",
+  "loc.input.label.workloadIdentityServiceConnection": "Connexion aux services « Azure DevOps »",
+  "loc.input.help.workloadIdentityServiceConnection": "Si cette option est définie, les informations d'identification seront générées à l'aide de la connexion au service au lieu de l'identité du pipeline de build.",
   "loc.messages.FailedToAddAuthentication": "Nous n’avons pas pu ajouter l’authentification.",
   "loc.messages.AddingAuthChannel": "Ajout de l’authentification pour le jeton %s",
   "loc.messages.Info_AddingFederatedFeedAuth": "Ajout d'informations d'authentification à partir de la connexion de service %s",
