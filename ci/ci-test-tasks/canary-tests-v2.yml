@@ -1,8 +1,8 @@
 parameters:
 - name: includeLocalPackagesBuildConfig
-  displayName: Flag to build local packages build config
+  displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
-  default: false
+  default: false # Note: keep in sync with /azure-pipelines.yml
 
 variables:
 - name: includeLocalPackagesBuildConfigParameter

@@ -30,9 +30,9 @@ parameters:
   type: boolean
   default: false
 - name: includeLocalPackagesBuildConfig
-  displayName: Flag to build local packages build config
+  displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
-  default: true # temp for testing! check in with false!
+  default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
 
 variables:
 - name: currentDate
