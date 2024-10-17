@@ -44,10 +44,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/]]></Val>
+          <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[これを設定した場合、workloadIdentityServiceConnection は必須です。customEndpoint と互換性がありません。フィード URL はnpm レジストリ形式にする必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/)]]></Val>
+            <Val><![CDATA[これが設定されている場合は azureDevOpsServiceConnection が必須です。customEndpoint と互換性がありません。フィード URL は npm レジストリ形式にする必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -101,10 +104,13 @@
       </Item>
       <Item ItemId=";loc.input.label.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          <Val><![CDATA['Azure DevOps' Service Connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービス接続]]></Val>
+            <Val><![CDATA['Azure DevOps' サービス接続]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA['Entra Workload ID-backed Azure DevOps user' Service Connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
