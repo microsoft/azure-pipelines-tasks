@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -196,7 +196,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.0",
-    "Node20_229_2": "1.247.1"
+    "Default": "1.247.2",
+    "Node20_229_2": "1.247.3"
   }
 }
