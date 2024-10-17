@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tâche d’authentification pour le client de marchandises utilisé pour l’installation de la distribution de caisses de marchandises",
   "loc.instanceNameFormat": "$(configFile) d’authentification de marchandises",
-  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "Connexion aux services « Azure DevOps »",
   "loc.input.help.workloadIdentityServiceConnection": "Si cette option est définie, RegistryNames est requis. Toutes les autres entrées sont ignorées.",
   "loc.input.label.registryNames": "Noms de registre de config.toml",
   "loc.input.help.registryNames": "Liste séparée par des virgules des noms de registre spécifiés dans votre config.toml pour l'authentification. Si cette option est définie, workloadIdentityServiceConnection est requis. Toutes les autres entrées sont ignorées. Non compatible avec cargoServiceConnections.",

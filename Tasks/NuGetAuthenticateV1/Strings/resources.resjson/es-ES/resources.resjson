@@ -10,7 +10,7 @@
   "loc.input.help.feedUrl": "Si se establece, se requiere workloadIdentityServiceConnection. Se omiten todas las demás entradas. No compatible con nuGetServiceConnections. La dirección URL de la fuente debe tener el formato de índice del servicio NuGet, por ejemplo, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere feedUrl. Se omiten todas las demás entradas.",
-  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
   "loc.messages.Error_ServiceConnectionExists": "Ya existe una conexión de servicio para el punto de conexión",
   "loc.messages.Error_MissingFeedUrlOrServiceConnection": "FeedUrl y workloadIdentityServiceConnection deben establecerse juntos.",
   "loc.messages.Info_AddingFederatedFeedAuth": "No se pueden obtener las credenciales federadas de la conexión de servicio",
