@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 0
   },
   "demands": [],
@@ -80,6 +80,15 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "suppressGitHubTokenWarning",
+      "type": "boolean",
+      "label": "Supress GitHub token warning",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "Supress GitHub token warning when the token is not provided.",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
@@ -126,7 +135,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20-225": "0.246.1"
+    "Default": "0.247.0",
+    "Node20-225": "0.247.1"
   }
 }
