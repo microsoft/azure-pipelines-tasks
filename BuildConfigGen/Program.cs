@@ -249,6 +249,14 @@ namespace BuildConfigGen
                             }
                         }
                     }
+                    else
+                    {
+                        // if we're not updating local packages, we need to ensure the global version is updated to the task major version. existing patch number is preserved
+                        if (globalVersion is not null)
+                        {
+                            globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                        }
+                    }
 
                     if (globalVersion is not null)
                     {
