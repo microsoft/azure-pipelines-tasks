@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tarea de autenticación para el cliente de carga usado para instalar la distribución de cajas de carga",
   "loc.instanceNameFormat": "autenticación de carga $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
   "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere registryNames. Se omiten todas las demás entradas.",
   "loc.input.label.registryNames": "Nombres del Registro de config.toml",
   "loc.input.help.registryNames": "Lista separada por comas de los nombres del Registro especificados en config.toml para autenticarse. Si se establece, se requiere workloadIdentityServiceConnection. Se omiten todas las demás entradas. No es compatible con cargoServiceConnections.",

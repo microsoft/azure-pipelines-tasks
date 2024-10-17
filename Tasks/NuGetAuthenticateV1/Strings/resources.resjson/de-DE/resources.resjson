@@ -10,7 +10,7 @@
   "loc.input.help.feedUrl": "Wenn diese Option festgelegt ist, ist workloadIdentityServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit nuGetServiceConnections. Die Feed-URL muss im NuGet-Dienstindexformat vorliegen, z. B. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
   "loc.input.label.feedUrl": "Azure Artifacts-URL",
   "loc.input.help.workloadIdentityServiceConnection": "Wenn dies festgelegt ist, ist feedUrl erforderlich. Alle anderen Eingaben werden ignoriert.",
-  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
   "loc.messages.Error_ServiceConnectionExists": "Für den Endpunkt ist bereits eine Dienstverbindung vorhanden.",
   "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Sowohl feedUrl als auch workloadIdentityServiceConnection müssen zusammen festgelegt werden.",
   "loc.messages.Info_AddingFederatedFeedAuth": "Verbundanmeldeinformationen können nicht von der Dienstverbindung abgerufen werden:",
