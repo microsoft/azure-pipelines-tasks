@@ -95,30 +95,6 @@ namespace BuildConfigGen
             toAdd = untrackedOuput2;
             toRemove = untrackedOuputRemove;
         }
-        internal static string GetGitRootPath(string currentDir)
-        {
-            const string args = "rev-parse --git-dir";
-            string path = RunGitCommandScalar(currentDir, args);
-
-            path = FixupPath(path);
-
-            const string gitDir = ".git";
-            if (path.EndsWith(gitDir))
-            {
-                path = path.Substring(0, path.Length - gitDir.Length);
-
-                if (path == "")
-                {
-                    return currentDir;
-                }
-
-                return path;
-            }
-            else
-            {
-                throw new Exception($"expected git {args} to return  ");
-            }
-        }
 
         internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string gitRoot, string taskTarget)
         {

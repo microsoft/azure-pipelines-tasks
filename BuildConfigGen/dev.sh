@@ -36,17 +36,6 @@ function detect_platform_and_runtime_id ()
     fi
 }
 
-function cmd_build ()
-{
-    heading "Building"
-    dotnet build -o bin $SOLUTION_PATH || failed build
-    #change execution flag to allow running with sudo
-    if [[ ("$CURRENT_PLATFORM" == "linux") || ("$CURRENT_PLATFORM" == "darwin") ]]; then
-        chmod +x "bin/BuildConfigGen"
-    fi
-
-}
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 pushd "$SCRIPT_DIR"
 source "$SCRIPT_DIR/Misc/helpers.sh"
@@ -91,6 +80,3 @@ echo "Adding .NET to PATH ${DOTNETSDK_INSTALLDIR}"
 export PATH=${DOTNETSDK_INSTALLDIR}:$PATH
 echo "Path = $PATH"
 echo ".NET Version = $(dotnet --version)"
-
-SOLUTION_PATH="$SCRIPT_DIR/BuildConfigGen.sln"
-cmd_build
