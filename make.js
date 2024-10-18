@@ -237,6 +237,15 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         }
     });
 
+    // Need to validate generated tasks first
+    if (!argv.skipPrebuildSteps)
+    {
+        const makeOptions = fileToJson(makeOptionsPath);
+
+        // Verify generated files across tasks are up-to-date
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
+    }
+
     if (argv.includeLocalPackagesBuildConfig)
     {
         if (!argv.skipPrebuildSteps)
@@ -269,15 +278,6 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             run("npm install", /*inheritStreams:*/true);
             run("node make.js --build", /*inheritStreams:*/true);
         }
-    }
-
-    // Need to validate generated tasks first
-    if (!argv.skipPrebuildSteps)
-    {
-        const makeOptions = fileToJson(makeOptionsPath);
-
-        // Verify generated files across tasks are up-to-date
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
     }
 
     const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
