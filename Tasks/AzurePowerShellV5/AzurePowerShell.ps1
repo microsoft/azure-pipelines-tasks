@@ -89,6 +89,9 @@ try
     $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
     if ($env:system_debug -eq "true") {
         $contents += "`$VerbosePreference = 'continue'"
+        $contents += "`$DebugPreference = 'continue'"
+        # pass env var to dismiss override
+        $env:ENABLE_DEBUG_PREFERENCE = $true
     }
 
     $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken -isPSCore $" + "$input_pwsh"
