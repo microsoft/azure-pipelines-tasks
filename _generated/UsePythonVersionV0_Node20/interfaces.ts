@@ -5,6 +5,7 @@ export interface TaskParameters {
     addToPath: boolean,
     architecture: string,
     githubToken?: string
+    suppressGitHubTokenWarning: boolean
 }
 
 export interface PythonRelease {

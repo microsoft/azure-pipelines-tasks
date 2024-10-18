@@ -47,7 +47,7 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
     const additionalHeaders = {};
     if (parameters.githubToken) {
         additionalHeaders['Authorization'] = auth;
-    } else {
+    } else if (!parameters.suppressGitHubTokenWarning){
         task.warning(task.loc('MissingGithubToken'));
     }
 
