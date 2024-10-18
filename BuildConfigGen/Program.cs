@@ -208,7 +208,7 @@ namespace BuildConfigGen
                         Console.WriteLine($"Global version: maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1");
                     }
 
-                    Console.WriteLine($"Global version update: globalVersion = {globalVersion} maxPatchForCurrentSprint={maxPatchForCurrentSprint}" );
+                    Console.WriteLine($"Global version update: globalVersion = {globalVersion} maxPatchForCurrentSprint={maxPatchForCurrentSprint}");
                 }
                 else
                 {
@@ -535,7 +535,11 @@ namespace BuildConfigGen
 
                 foreach (var config in targetConfigs)
                 {
-                    if (config.useGlobalVersion && !hasGlobalVersion)
+                    if (config.useGlobalVersion && !includeLocalPackagesBuildConfig)
+                    {
+                        Console.WriteLine($"Info: MainUpdateTask: Skipping useGlobalVersion config for task b/c --include-local-packages-build-config. not specified. hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion} includeLocalPackagesBuildConfig={includeLocalPackagesBuildConfig}");
+                    }
+                    else if (config.useGlobalVersion && !hasGlobalVersion)
                     {
                         Console.WriteLine($"Info: MainUpdateTask: Skipping useGlobalVersion config for task b/c GlobalVersion not initialized.  (to opt-in and start producing LocalBuildConfig, run with --include-local-packages-build-config.  hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion}).  Note: this is not an error!");
                     }
