@@ -66,8 +66,8 @@
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[如果設定此選項，則需要 workloadIdentityServiceConnection。忽略所有其他輸入。與 pythonUploadServiceConnections 不相容。摘要 URL 應該為 pypi 上傳登錄格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果設定此選項，則需要 azureDevOpsServiceConnection。忽略所有其他輸入。與 pythonUploadServiceConnections 不相容。摘要 URL 應該為 pypi 上傳登錄格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/]]></Val>
