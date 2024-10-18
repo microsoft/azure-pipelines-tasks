@@ -1747,28 +1747,22 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
+ * Ensure Pre-reqs for buildConfigGen (e.g. dotnet)
  * @param {String} baseConfigToolPath base build config tool path
- * @returns {String} Path to the executed file
  */
-var getBuildConfigGenerator = function (baseConfigToolPath) {
-    var programPath = "";
+var ensureBuildConfigGeneratorPrereqs = function (baseConfigToolPath) {
     var configToolBuildUtility = "";
 
     if (os.platform() === 'win32') {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
     } else {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
     // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
     run(configToolBuildUtility, true);
-
-    return programPath;
 };
-exports.getBuildConfigGenerator = getBuildConfigGenerator;
+exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
 
 /**
  * Function to validate or write generated tasks
@@ -1785,7 +1779,9 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     var tasks = taskList.join('|')
-    const programPath = getBuildConfigGenerator(baseConfigToolPath);
+    ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
+    var programPath = `dotnet run --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+
     const args = [
         "--task",
         `"${tasks}"`

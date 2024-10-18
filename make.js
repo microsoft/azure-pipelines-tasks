@@ -1,6 +1,10 @@
 // parse command line options
 var argv = require('minimist')(process.argv.slice(2));
 
+if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
+    argv.includeLocalPackagesBuildConfig=true;
+}
+
 // modules
 var fs = require('fs');
 var os = require('os');
@@ -237,6 +241,22 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     {
         if (!argv.skipPrebuildSteps)
         {
+            // temp: clone for now prior to merging these as subtrees
+            if (!test('-d', 'task-lib')) {
+                run("git clone https://github.com/microsoft/azure-pipelines-task-lib task-lib");
+            }
+
+            if (!test('-d', 'tasks-common')) {
+                run("git clone https://github.com/microsoft/azure-pipelines-tasks-common-packages tasks-common");
+            }
+
+            cd(taskLibPath);
+            run("git pull");
+
+            cd(tasksCommonPath);
+            run("git pull");
+            // end temp
+
             // build task-lib
             cd(taskLibPath);
             run("npm install", /*inheritStreams:*/true);

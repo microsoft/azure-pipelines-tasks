@@ -29,6 +29,10 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: includeLocalPackagesBuildConfig
+  displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
+  type: boolean
+  default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
 
 variables:
 - name: currentDate
@@ -41,7 +45,16 @@ variables:
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
   value: true
-
+- name: includeLocalPackagesBuildConfigParameter
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '--includeLocalPackagesBuildConfig'
+  ${{ else }}:
+    value: ''
+- name: IncludeLocalPackagesBuildConfigTest
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '1'
+  ${{ else }}:
+    value: ''
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
