@@ -594,7 +594,7 @@ namespace BuildConfigGen
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
                             if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config) || config.isNode)
                             {
-                                var existingLocalPackageVersion = ReadTaskJsonIfExists(taskOutput, taskVersionState, config, "task.json");
+                                var existingLocalPackageVersion = ReadTaskJsonIfExists(taskOutput, "task.json");
 
                                 CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
@@ -909,7 +909,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static string? ReadTaskJsonIfExists(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName)
+        private static string? ReadTaskJsonIfExists(string taskPath, string fileName)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             if(!File.Exists(outputTaskPath))
