@@ -698,6 +698,20 @@ var getExternalsAsync = async function (externals, destRoot) {
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
             var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
 
+            // If nuget doesn't find specific package version, it will download the latest.
+            // We can't specify nuget to fail such request, so we need at least to check version post-factum.
+            const { XMLParser } = require("fast-xml-parser");
+            const parser = new XMLParser();
+
+            const nuspecPath = path.join(packageSource, package.name + '.nuspec');
+            const nuspecXml = fs.readFileSync(nuspecPath);
+            const nuspec = parser.parse(nuspecXml);
+
+            const nuspecVersion = nuspec && nuspec.package && nuspec.package.metadata && nuspec.package.metadata.version;
+            if (nuspecVersion !== package.version) {
+                fail(`Expected version '${package.version}' but got '${nuspecVersion}' for nuget package '${package.name}'`);
+            }
+
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
         }
@@ -1933,19 +1947,23 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-
+            
             if (config) {  
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            const folderPath = path.dirname(dest);
-            if (!fs.existsSync(folderPath)) {
-                console.log(`Creating folder ${folderPath}`);
-                shell.mkdir('-p', folderPath);
-            }
+            // only update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists
+            if(fs.existsSync(dest))
+            {
+                const folderPath = path.dirname(dest);
+                if (!fs.existsSync(folderPath)) {
+                    console.log(`Creating folder ${folderPath}`);
+                    shell.mkdir('-p', folderPath);
+                }
 
-            console.log(`Copying ${candidatePath} to ${dest}`);
-            fs.copyFileSync(candidatePath, dest);
+                console.log(`Copying ${candidatePath} to ${dest}`);
+                fs.copyFileSync(candidatePath, dest);
+            }
         });
     }
 }
