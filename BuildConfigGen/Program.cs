@@ -594,6 +594,8 @@ namespace BuildConfigGen
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
                             if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config) || config.isNode)
                             {
+                                var existingLocalPackageVersion = ReadTaskJsonIfExists(taskOutput, taskVersionState, config, "task.json");
+
                                 CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
                                 if (config.enableBuildConfigOverrides)
@@ -609,8 +611,8 @@ namespace BuildConfigGen
 
                                 WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                 WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
-                                WriteTaskJson(taskOutput, taskVersionState, config, "task.json");
-                                WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json");
+                                WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion);
+                                WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion);
                             }
 
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
@@ -907,8 +909,23 @@ namespace BuildConfigGen
             }
         }
 
+        private static string? ReadTaskJsonIfExists(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName)
+        {
+            string outputTaskPath = Path.Combine(taskPath, fileName);
+            if(!File.Exists(outputTaskPath))
+            {
+                return null;
+            }
 
-        private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName)
+            JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
+
+            var outputTaskNodeObject = outputTaskNode.AsObject();
+
+            // get LocalPackage version from _buildConfigMapping in outputTaskNodeObject (if one exists)
+            return outputTaskNodeObject["_buildConfigMapping"]?.AsObject()?[Config.LocalPackages.constMappingKey]?.GetValue<string>();
+        }
+
+        private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName, string? existingLocalPackageVersion)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
@@ -918,10 +935,6 @@ namespace BuildConfigGen
             outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
 
             var outputTaskNodeObject = outputTaskNode.AsObject();
-
-            // get LocalPackage version from _buildConfigMapping in outputTaskNodeObject (if one exists)
-            var existingLocalPackageVersion = outputTaskNodeObject["_buildConfigMapping"]?.AsObject()?[Config.LocalPackages.constMappingKey]?.GetValue<string>();
-
             outputTaskNodeObject.Remove("_buildConfigMapping");
 
             bool anyVersionsUpdatedExceptForGlobal = taskState.versionsUpdated.Where(x => !x.useGlobalVersion).Any();
