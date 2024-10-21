@@ -609,8 +609,8 @@ namespace BuildConfigGen
 
                                 WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                 WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
-                                WriteTaskJson(taskOutput, taskVersionState.configTaskVersionMapping, config, "task.json");
-                                WriteTaskJson(taskOutput, taskVersionState.configTaskVersionMapping, config, "task.loc.json");
+                                WriteTaskJson(taskOutput, taskVersionState, config, "task.json");
+                                WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json");
                             }
 
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
@@ -908,20 +908,43 @@ namespace BuildConfigGen
         }
 
 
-        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string fileName)
+        private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
-            outputTaskNode["version"]!["Major"] = configTaskVersionMapping[config].Major;
-            outputTaskNode["version"]!["Minor"] = configTaskVersionMapping[config].Minor;
-            outputTaskNode["version"]!["Patch"] = configTaskVersionMapping[config].Patch;
-            outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
+
+            outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[config].Major;
+            outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[config].Minor;
+            outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
+
+            var outputTaskNodeObject = outputTaskNode.AsObject();
+
+            // get LocalPackage version from _buildConfigMapping in outputTaskNodeObject (if one exists)
+            var existingLocalPackageVersion = outputTaskNodeObject["_buildConfigMapping"]?.AsObject()?[Config.LocalPackages.constMappingKey]?.GetValue<string>();
+
+            outputTaskNodeObject.Remove("_buildConfigMapping");
+
+            bool anyVersionsUpdatedExceptForGlobal = taskState.versionsUpdated.Where(x => !x.useGlobalVersion).Any();
 
             JsonObject configMapping = new JsonObject();
-            var configTaskVersionMappingSortedByConfig = configTaskVersionMapping.OrderBy(x => x.Key.name);
+            var configTaskVersionMappingSortedByConfig = taskState.configTaskVersionMapping.OrderBy(x => x.Key.name);
             foreach (var cfg in configTaskVersionMappingSortedByConfig)
             {
-                configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
+                if (!config.useGlobalVersion && cfg.Key.useGlobalVersion && !anyVersionsUpdatedExceptForGlobal)
+                {
+                    // To minimize noise in version control when adding the globalVersion,
+                    // unless the config being generated is the globalVersion (written to _generated_local),
+                    // if no other versions are updated other than the globalVersion,
+                    // don't change the global version in the existing generated file.
+                    if (existingLocalPackageVersion != null)
+                    {
+                        configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
+                    }
+                }
+                else
+                {
+                    configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
+                }
             }
 
             outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
