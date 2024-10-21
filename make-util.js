@@ -1933,19 +1933,23 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-
+            
             if (config) {  
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            const folderPath = path.dirname(dest);
-            if (!fs.existsSync(folderPath)) {
-                console.log(`Creating folder ${folderPath}`);
-                shell.mkdir('-p', folderPath);
-            }
+            // only update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists
+            if(fs.existsSync(dest))
+            {
+                const folderPath = path.dirname(dest);
+                if (!fs.existsSync(folderPath)) {
+                    console.log(`Creating folder ${folderPath}`);
+                    shell.mkdir('-p', folderPath);
+                }
 
-            console.log(`Copying ${candidatePath} to ${dest}`);
-            fs.copyFileSync(candidatePath, dest);
+                console.log(`Copying ${candidatePath} to ${dest}`);
+                fs.copyFileSync(candidatePath, dest);
+            }
         });
     }
 }
