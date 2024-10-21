@@ -106,7 +106,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 

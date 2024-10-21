@@ -109,7 +109,7 @@ namespace BuildConfigGen
             }
 
             string currentDir = Environment.CurrentDirectory;
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
 
             string globalVersionPath = Path.Combine(gitRootPath, @"globalversion.txt");
             TaskVersion? globalVersion = GetGlobalVersion(gitRootPath, globalVersionPath);
@@ -208,7 +208,7 @@ namespace BuildConfigGen
                         Console.WriteLine($"Global version: maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1");
                     }
 
-                    Console.WriteLine($"Global version update: globalVersion = {globalVersion} maxPatchForCurrentSprint={maxPatchForCurrentSprint}" );
+                    Console.WriteLine($"Global version update: globalVersion = {globalVersion} maxPatchForCurrentSprint={maxPatchForCurrentSprint}");
                 }
                 else
                 {
@@ -249,6 +249,14 @@ namespace BuildConfigGen
                             }
                         }
                     }
+                    else
+                    {
+                        // if we're not updating local packages, we need to ensure the global version is updated to the task major version. existing patch number is preserved
+                        if (globalVersion is not null)
+                        {
+                            globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                        }
+                    }
 
                     if (globalVersion is not null)
                     {
@@ -265,7 +273,7 @@ namespace BuildConfigGen
                     ensureUpdateModeVerifier!.WriteAllText(globalVersionPath, globalVersion!.MinorPatchToString(), false);
                 }
 
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError("(global)", skipContentCheck: false);
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(null, skipContentCheck: false);
 
                 foreach (var t in tasks)
                 {
@@ -282,6 +290,37 @@ namespace BuildConfigGen
                     throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
                 }
             }
+        }
+
+        private static string GetTasksRootPath(string inputCurrentDir)
+        {
+            string? currentDir = inputCurrentDir;
+            string? tasksRootPath = null;
+
+            do
+            {
+                string currentDirGit = Path.Combine(currentDir, ".git");
+
+                if (Directory.Exists(currentDirGit))
+                {
+                    tasksRootPath = currentDir;
+                }
+
+                currentDir = (new DirectoryInfo(currentDir)).Parent?.FullName;
+
+            } while (currentDir != null);
+
+            if (tasksRootPath == null)
+            {
+                throw new Exception($"could not find .git in {currentDir}");
+            }
+
+            if (!File.Exists(Path.Combine(tasksRootPath, "make-options.json")))
+            {
+                throw new Exception($"make-options.json not found in tasksRootPath={tasksRootPath}");
+            }
+
+            return tasksRootPath;
         }
 
         private static IEnumerable<string> FilterConfigsForTask(string? configs, KeyValuePair<string, MakeOptionsReader.AgentTask> t)
@@ -343,7 +382,7 @@ namespace BuildConfigGen
 
             string currentDir = Environment.CurrentDirectory;
 
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
 
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
             if (!Directory.Exists(taskTargetPath))
@@ -419,7 +458,7 @@ namespace BuildConfigGen
             return currentSprint;
         }
 
-        private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
+        private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string? task, bool skipContentCheck)
         {
             // if !writeUpdates, error if we have written any updates
             var verifyErrors = ensureUpdateModeVerifier!.GetVerifyErrors(skipContentCheck).ToList();
@@ -433,7 +472,14 @@ namespace BuildConfigGen
                     Console.WriteLine(s);
                 }
 
-                throw new Exception($"Updates needed, please run npm make.js --task {task} ");
+                if (task is null)
+                {
+                    throw new Exception($"Updates needed, please run node make.js");
+                }
+                else
+                {
+                    throw new Exception($"Updates needed, please run node make.js --task {task} ");
+                }
             }
         }
 
@@ -459,8 +505,8 @@ namespace BuildConfigGen
             try
             {
                 string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-                string versionMapFile = GetVersionMapFile(task, gitRootPath, generatedFolder);
+                string gitRootPath = GetTasksRootPath(currentDir);
+                string versionMapFile = GetVersionMapFile(task, generatedFolder);
 
                 string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
                 if (!Directory.Exists(taskTargetPath))
@@ -489,7 +535,11 @@ namespace BuildConfigGen
 
                 foreach (var config in targetConfigs)
                 {
-                    if (config.useGlobalVersion && !hasGlobalVersion)
+                    if (config.useGlobalVersion && !includeLocalPackagesBuildConfig)
+                    {
+                        Console.WriteLine($"Info: MainUpdateTask: Skipping useGlobalVersion config for task b/c --include-local-packages-build-config. not specified. hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion} includeLocalPackagesBuildConfig={includeLocalPackagesBuildConfig}");
+                    }
+                    else if (config.useGlobalVersion && !hasGlobalVersion)
                     {
                         Console.WriteLine($"Info: MainUpdateTask: Skipping useGlobalVersion config for task b/c GlobalVersion not initialized.  (to opt-in and start producing LocalBuildConfig, run with --include-local-packages-build-config.  hasGlobalVersion={hasGlobalVersion} config.useGlobalVersion={config.useGlobalVersion}).  Note: this is not an error!");
                     }
@@ -608,7 +658,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static string GetVersionMapFile(string task, string gitRootPath, string generatedFolder)
+        private static string GetVersionMapFile(string task, string generatedFolder)
         {
             return Path.Combine(generatedFolder, @$"{task}.versionmap.txt");
         }
@@ -1078,7 +1128,7 @@ namespace BuildConfigGen
         private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder)
         {
             string currentDir = Environment.CurrentDirectory;
-            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string gitRootPath = GetTasksRootPath(currentDir);
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
 
             if (!Directory.Exists(taskTargetPath))
@@ -1093,7 +1143,7 @@ namespace BuildConfigGen
 
             bool defaultVersionMatchesSourceVersion;
 
-            string versionMapFile = GetVersionMapFile(task, gitRootPath, generatedFolder);
+            string versionMapFile = GetVersionMapFile(task, generatedFolder);
 
             {
                 TaskVersion? defaultVersion = null;
