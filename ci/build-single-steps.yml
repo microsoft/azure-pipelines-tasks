@@ -50,7 +50,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
 
 # Check diff for task sources

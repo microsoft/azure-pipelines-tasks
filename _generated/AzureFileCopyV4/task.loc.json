@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -301,7 +301,7 @@
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   },
   "_buildConfigMapping": {
-    "Default": "4.246.0",
-    "Node20_229_2": "4.246.1"
+    "Default": "4.247.2",
+    "Node20_229_2": "4.247.3"
   }
 }

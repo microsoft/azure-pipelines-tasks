@@ -35,13 +35,13 @@ export class VersionInstaller {
 
         try {
             try {
-                var downloadPath = await toolLib.downloadTool(downloadUrl)
+                var downloadPath = await toolLib.downloadToolWithRetries(downloadUrl)
             }
             catch (ex) {
                 tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
                 let fallBackUrl = `https://dotnetcli.azureedge.net/dotnet/${this.packageType === "runtime" ? "Runtime" : "Sdk"}/${version}/${downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1)}`;
                 console.log("Using fallback url for download: " + fallBackUrl);
-                var downloadPath = await toolLib.downloadTool(fallBackUrl)
+                var downloadPath = await toolLib.downloadToolWithRetries(fallBackUrl)
             }
 
             // Extract
