@@ -118,10 +118,12 @@ function Initialize-AzConfigNew {
     } 
 
     if ([string]::IsNullOrEmpty($expression)) {
-        Write-Verbose "No need to update the config." 
-    } else {
-        Invoke-Expression "Update-AzConfig $expression -AppliesTo Az -Scope Process"
-    }
+        Write-Verbose "No need to update the config."
+        return
+    } 
+
+    Write-Host "##[command]Update-AzConfig $expression -AppliesTo Az -Scope Process"
+    Invoke-Expression "Update-AzConfig $expression -AppliesTo Az -Scope Process"
 }
 
 # Not used, keep now in case if we need to revert back to the old implementation.
