@@ -918,7 +918,6 @@ namespace BuildConfigGen
             }
 
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
-
             var outputTaskNodeObject = outputTaskNode.AsObject();
 
             // get LocalPackage version from _buildConfigMapping in outputTaskNodeObject (if one exists)
