@@ -12,7 +12,7 @@
   "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
   "loc.input.help.workloadIdentityServiceConnection": "これを設定した場合、feedUrl が必要です。他のすべての入力は無視されます。",
   "loc.input.label.feedUrl": "Azure Artifacts フィード URL。",
-  "loc.input.help.feedUrl": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with pythonUploadServiceConnections. Feed Url should be in the pypi upload registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/",
+  "loc.input.help.feedUrl": "これが設定されている場合は azureDevOpsServiceConnection が必須です。他のすべての入力は無視されます。pythonUploadServiceConnections と互換性がありません。フィード URL は pypi アップロード レジストリ形式にする必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/pypi/upload/)",
   "loc.messages.Info_AddingInternalFeeds": "%s 内部フィードの認証情報を追加しています。",
   "loc.messages.Info_AddingExternalFeeds": "%s 外部エンドポイントの認証情報を追加しています。",
   "loc.messages.Info_AddingAuthForRegistry": "レジストリ %s の構成に認証を追加しています",
