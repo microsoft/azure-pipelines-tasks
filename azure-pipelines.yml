@@ -154,7 +154,7 @@ extends:
           - output: nuget
             packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+            publishVstsFeed: '13ca5264-8393-4755-8e1e-e3af3222afc2/a9b11b1c-20e5-43b9-bde4-f58a69a8980f'
             nuGetFeedType: internal
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
