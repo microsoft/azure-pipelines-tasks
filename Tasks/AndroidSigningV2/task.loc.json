@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 6
   },
   "demands": [
     "JDK"
@@ -31,6 +31,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The AndroidSigning@2 task is deprecated, please use the latest version of the AndroidSigning task",
   "inputs": [
     {
       "name": "files",

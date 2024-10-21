@@ -12,11 +12,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "This task is deprecated as the Duffle project has been archived and is no longer maintained, see https://github.com/cnabio/duffle",
   "inputs": [
     {
       "name": "version",
@@ -50,7 +52,7 @@
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_3": "0.238.1"
+    "Default": "0.246.2",
+    "Node20_229_3": "0.246.3"
   }
 }

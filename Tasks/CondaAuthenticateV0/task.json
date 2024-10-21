@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 238,
+        "Minor": 247,
         "Patch": 0
     },
     "runsOn": [
@@ -28,6 +28,9 @@
     },
     "messages": {
         "FailedToAddAuthentication": "Failed to add authentication.",
-        "AddingAuthChannel": "Adding auth for the token %s"
+        "AddingAuthChannel": "Adding auth for the token %s",
+        "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",
+        "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for service connection %s.",
+        "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
     }
 }

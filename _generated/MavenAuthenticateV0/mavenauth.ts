@@ -4,6 +4,7 @@ import util = require('./mavenutils');
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
+
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
 const backupSettingsXmlName: string = "_settings.xml";
@@ -13,16 +14,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
+    let federatedFeedAuthSuccessCount: number = 0;
     try {
-        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
-        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
-        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
-
-        if(newServerElements.length === 0) {
-            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
-            return;
-        }
-
         let userM2FolderPath: string = "";
 
         if (tl.osType().match(/^Win/)) {
@@ -44,12 +37,25 @@ async function run(): Promise<void> {
 
         if (tl.exist(userSettingsXmlPath)) {
             tl.debug(tl.loc("Info_SettingsXmlRead", userSettingsXmlPath));
-            tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
-            tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
+            if (!tl.getVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH') && !tl.exist(backupSettingsXmlPath)) {
+                tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
+                tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
+            }
             settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath);
         }
         else {
             tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));
+            tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
+        }
+
+
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
+        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
+        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
+
+        if(newServerElements.length === 0) {
+            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            return;
         }
 
         for (let serverElement of newServerElements) {
@@ -65,7 +71,8 @@ async function run(): Promise<void> {
     finally {
         emitTelemetry("Packaging", "MavenAuthenticate", {
             "InternalFeedAuthCount": internalFeedServerElements.length,
-            "ExternalRepoAuthCount": externalServiceEndpointsServerElements.length
+            "ExternalRepoAuthCount": externalServiceEndpointsServerElements.length,
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
         });
     }
 }

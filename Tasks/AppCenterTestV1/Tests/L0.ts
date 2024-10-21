@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AppCenterTest L0 Suite', function () {
-    before(function () {
+    before(async function () {
         //Enable this for output
         //process.env['TASK_TEST_TRACE'] = 1;
 
@@ -16,17 +16,17 @@ describe('AppCenterTest L0 Suite', function () {
         process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_APITOKEN"] = "mytoken123";
     });
 
-    after(function () {
+    after(async function () {
 
     });
 
-    it('Positive path: upload Appium test with service endpoint', function () {
+    it('Positive path: upload Appium test with service endpoint', async function () {
         this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0AppiumPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
         assert(tr.ran("/path/to/appcenter test prepare appium --artifacts-dir " +
@@ -40,13 +40,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run test run");
     });
 
-    it('Positive path: upload Espresso test with service endpoint', function () {
+    it('Positive path: upload Espresso test with service endpoint', async function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0EspressoPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
         assert(tr.ran("/path/to/appcenter test prepare espresso --artifacts-dir " +
@@ -60,13 +60,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run test run");
     });
 
-    it('Positive path: upload Calabash test with service endpoint', function () {
+    it('Positive path: upload Calabash test with service endpoint', async function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0CalabashPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
         assert(tr.ran("/path/to/appcenter test prepare calabash --artifacts-dir " +
@@ -82,13 +82,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run test run");
     });
 
-    it('Positive path: upload XCUITest test with service endpoint', function () {
+    it('Positive path: upload XCUITest test with service endpoint', async function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0CXCUITestPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
         assert(tr.ran("/path/to/appcenter test prepare xcuitest --artifacts-dir " +
@@ -102,13 +102,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run test run");
     });
 
-    it('Positive path: upload UITest with username and password', function () {
+    it('Positive path: upload UITest with username and password', async function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0UITestPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 4, 'Should have run login, logout, test prepare and test run');
         assert(tr.ran("/path/to/appcenter login -u MyUsername -p MyPassword --quiet"),
@@ -128,13 +128,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run test run");
     });
 
-    it('Negative path: with username and password, should always logout even when test run failed', function () {
+    it('Negative path: with username and password, should always logout even when test run failed', async function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0UITestFailRun.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
         assert.equal(tr.invokedToolCount, 3, 'Should have run login, test prepare and logout');
         assert(tr.ran("/path/to/appcenter login -u MyUsername -p MyPassword --quiet"),
@@ -148,13 +148,13 @@ describe('AppCenterTest L0 Suite', function () {
             "Should have run 'run'");
     });
 
-    it('Favor system appcenter cli over bundled cli', function () {
+    it('Favor system appcenter cli over bundled cli', async function () {
         this.timeout(5000);
 
         let tp = path.join(__dirname, 'L0FavorSystemToolPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.failed, 'task should have failed');
 
         assert(tr.invokedToolCount === 1, 'Should have run login only');

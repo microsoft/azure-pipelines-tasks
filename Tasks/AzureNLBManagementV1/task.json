@@ -16,11 +16,13 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 246,
     "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
+  "deprecated": true,
+  "deprecationMessage": "The AzureNLBManagement@01 task is deprecated",
   "inputs": [
     {
       "name": "ConnectedServiceName",

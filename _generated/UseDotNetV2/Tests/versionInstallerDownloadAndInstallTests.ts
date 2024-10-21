@@ -4,7 +4,7 @@ import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 import { Constants } from "../versionutilities";
 import fs = require('fs');
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 var osType = "win";
 
 const installationPath: string = "installationPath"
@@ -28,6 +28,15 @@ mockery.registerMock('typed-rest-client/HttpClient', {
 
 mockery.registerMock('azure-pipelines-tool-lib/tool', {
     downloadTool: function (url: string, fileName?: string): Promise<string> {
+        return Promise<string>((resolve, reject) => {
+            if (process.env["__case__"] == "downloaderror") {
+                reject("downloaderror");
+            }
+
+            resolve("downloadPath");
+        });
+    },
+    downloadToolWithRetries: function (url: string, fileName?: string): Promise<string> {
         return Promise<string>((resolve, reject) => {
             if (process.env["__case__"] == "downloaderror") {
                 reject("downloaderror");
@@ -132,6 +141,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     warning: function (message) { return tl.warning(message); },
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
     getHttpProxyConfiguration: function () { return ""; },
     getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }
@@ -160,6 +170,7 @@ mockery.registerMock('fs', {
 import { VersionInstaller } from "../versioninstaller";
 import { VersionInfo } from "../models";
 import { Promise } from 'q';
+import { downloadToolWithRetries } from 'azure-pipelines-tool-lib';
 let versionInstaller = new VersionInstaller("sdk", installationPath);
 
 let versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");

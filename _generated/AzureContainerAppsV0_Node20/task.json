@@ -18,13 +18,15 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 247,
     "Patch": 1
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Azure Container Apps Deploy",
   "showEnvironmentVariables": false,
+  "deprecated": true,
+  "deprecationMessage": "The AzureContainerApps@0 task is deprecated, please use the latest version of the AzureContainerApps task",
   "inputs": [
     {
       "name": "cwd",
@@ -227,7 +229,7 @@
     "UpdateContainerAppRegistryDetailsFailed": "Unable to update Azure Container App ACR details via 'az containerapp registry set' command."
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_10": "0.238.1"
+    "Default": "0.247.0",
+    "Node20_229_10": "0.247.1"
   }
 }

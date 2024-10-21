@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 247,
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -56,10 +56,17 @@
     "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
-    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
+    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "ConnectionAlreadySetOverwriting": "ms-resource:loc.messages.ConnectionAlreadySetOverwriting",
+    "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.247.3",
+    "Node20_229_1": "0.247.4",
+    "wif_242": "0.247.5"
   }
 }

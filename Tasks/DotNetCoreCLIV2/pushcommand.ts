@@ -9,8 +9,10 @@ import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { RequestOptions } from 'azure-pipelines-tasks-packaging-common/universal/RequestUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
-import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { WebRequest, WebRequestOptions, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { getRequestTimeout } from './Common/utility';
 
 interface EndpointCredentials {
     endpoint: string;
@@ -21,7 +23,14 @@ interface EndpointCredentials {
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+        const timeout: number = getRequestTimeout();
+        const webApiOptions: RequestOptions = { 
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout,
+            } 
+        };
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet, webApiOptions);
     } catch (error) {
         tl.debug('Unable to get packaging URIs');
         logError(error);
@@ -79,7 +88,6 @@ export async function run(): Promise<void> {
 
         let configFile = null;
         let apiKey: string;
-        let credCleanup = () => { return; };
 
         // dotnet nuget push does not currently accept a --config-file parameter
         // so we are going to work around this by creating a temporary working directory for dotnet with
@@ -87,6 +95,11 @@ export async function run(): Promise<void> {
         const tempNuGetConfigDirectory = path.join(NuGetConfigHelper2.getTempNuGetConfigBasePath(), 'NuGet_' + tl.getVariable('build.buildId'));
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, 'nuget.config');
         tl.mkdirP(tempNuGetConfigDirectory);
+        let credCleanup = () => {
+            if (tl.exist(tempNuGetConfigDirectory)) {
+                tl.rmRF(tempNuGetConfigDirectory)
+            }
+        };
 
         let feedUri: string = undefined;
 
@@ -108,7 +121,6 @@ export async function run(): Promise<void> {
             feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             apiKey = 'VSTS';
         } else {
@@ -132,7 +144,6 @@ export async function run(): Promise<void> {
             nuGetConfigHelper.addSourcesToTempNuGetConfig([externalAuth.packageSource]);
             feedUri = externalAuth.packageSource.feedUri;
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             const authType: auth.ExternalAuthType = externalAuth.authType;
             switch (authType) {
@@ -260,7 +271,23 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): P
         "Authorization": "Basic " + token64
     };
 
-    const response = await sendRequest(request);
+    const timeout: number = getRequestTimeout();
+    const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
+    const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+
+    const options: WebRequestOptions = {
+        retryCount: 3,
+        retryIntervalInSeconds: 5,
+        retriableErrorCodes,
+        retriableStatusCodes,
+        retryRequestTimedout: true,
+        socketTimeout: timeout,
+        httpGlobalAgentOptions: {
+            timeout: timeout
+        }
+    };
+
+    const response = await sendRequest(request, options);
 
     if (response.statusCode == 200) {
         if (response.body) {

@@ -29,11 +29,12 @@ export class AuthInfo
         this.authType = authType;
         this.username = username;
         this.password = password;
+        tl.setSecret(password);
     }
 }
 
-export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthInfo[]> {
-    let internalAuthArray: AuthInfo[] = [];
+export async function getInternalAuthInfoArray(inputKey: string): Promise<Set<AuthInfo>> {
+    let internalAuthArray = new Set<AuthInfo>();
     const feedList  = tl.getDelimitedInput(inputKey, ",");
     if (!feedList || feedList.length === 0)
     {
@@ -61,14 +62,14 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
         feed.projectId);
 
     const packageSource = { feedName: feed.feedId, feedUri: feedUri, isInternalSource: true } as IPackageSource;
-    internalAuthArray.push(new AuthInfo(packageSource, AuthType.Token, "build", localAccessToken));
+    internalAuthArray.add(new AuthInfo(packageSource, AuthType.Token, "build", localAccessToken));
 
     return internalAuthArray;
 }
 
-export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthInfo[]>
+export async function getExternalAuthInfoArray(inputKey: string): Promise<Set<AuthInfo>>
 {
-    let externalAuthArray: AuthInfo[] = [];
+    let externalAuthArray = new Set<AuthInfo>();
     let endpointNames = tl.getDelimitedInput(inputKey, ",");
 
     if (!endpointNames || endpointNames.length === 0)
@@ -91,7 +92,7 @@ export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthIn
         case "token":
             const token = externalAuth.parameters["apitoken"];
             tl.debug(tl.loc("Info_AddingTokenAuthEntry", feedUri));
-            externalAuthArray.push(new AuthInfo({
+            externalAuthArray.add(new AuthInfo({
                     feedName: endpointName,
                     feedUri,
                     isInternalSource: false,
@@ -105,7 +106,7 @@ export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthIn
             let username = externalAuth.parameters["username"];
             let password = externalAuth.parameters["password"];
             tl.debug(tl.loc("Info_AddingPasswordAuthEntry", feedUri));
-            externalAuthArray.push(new AuthInfo({
+            externalAuthArray.add(new AuthInfo({
                     feedName: endpointName,
                     feedUri,
                     isInternalSource: false,

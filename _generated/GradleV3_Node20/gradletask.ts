@@ -82,6 +82,13 @@ async function run() {
                 // Clean the report directory before enabling code coverage
                 tl.rmRF(reportDirectory);
 
+                const useJacocoTemplateV2forSingleModule = tl.getPipelineFeature('useJacocoTemplateV2forSingleModule');
+                const useJacocoTemplateV2forMultiModule = tl.getPipelineFeature('useJacocoTemplateV2forMultiModule');
+
+                // Print the status of useJacocoTemplateV2forSingleModule and useJacocoTemplateV2forMultiModule feature flags
+                console.log(`useJacocoTemplateV2forSingleModule: ${useJacocoTemplateV2forSingleModule}`);
+                console.log(`useJacocoTemplateV2forMultiModule: ${useJacocoTemplateV2forMultiModule}`);
+
                 const codeCoverageSettings: ICodeCoverageSettings = {
                     wrapperScript: wrapperScript,
                     isCodeCoverageOpted: isCodeCoverageOpted,
@@ -93,7 +100,9 @@ async function run() {
                     summaryFileName: codeCoveragePreset.summaryFileName,
                     isMultiModule: isMultiModule,
                     gradle5xOrHigher: gradle5xOrHigher,
-                    gradleVersion: gradleVersion
+                    gradleVersion: gradleVersion,
+                    useJacocoTemplateV2forSingleModule: useJacocoTemplateV2forSingleModule,
+                    useJacocoTemplateV2forMultiModule: useJacocoTemplateV2forMultiModule
                 };
 
                 emitTelemetry('TaskHub', 'GradleV3', { codeCoverageSettings: codeCoverageSettings });

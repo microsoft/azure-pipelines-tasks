@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 247,
     "Patch": 0
   },
   "runsOn": [
@@ -24,7 +24,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
-      "helpMarkdown": "Select one or multiple feeds to authenticate.",
+      "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
       "properties": {
         "EditableOptions": "true",
         "MultiSelectFlatList": "true"
@@ -70,13 +70,17 @@
   "messages": {
     "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
     "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
+    "Warning_TokenNotGenerated": "ms-resource:loc.messages.Warning_TokenNotGenerated",
     "Info_GeneratingExternalRepositories": "ms-resource:loc.messages.Info_GeneratingExternalRepositories",
     "Info_GeneratingInternalFeeds": "ms-resource:loc.messages.Info_GeneratingInternalFeeds",
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
     "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
     "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
     "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
     "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
-    "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2"
+    "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2",
+    "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   }
 }

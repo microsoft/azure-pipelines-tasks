@@ -10,6 +10,7 @@
   "loc.input.help.azureSubscription": "为部署选择 Azure 资源管理器订阅。",
   "loc.input.label.appType": "应用类型",
   "loc.input.help.appType": "选择部署的 Azure Function App 类型。",
+  "loc.input.label.isFlexConsumption": "是弹性消耗计划上的函数应用",
   "loc.input.label.appName": "Azure Functions 应用名称",
   "loc.input.help.appName": "输入或选择现有 Azure Functions 应用的名称。列出的函数应用将基于所选应用类型。",
   "loc.input.label.deployToSlotOrASE": "部署到槽或应用服务环境",
@@ -25,7 +26,7 @@
   "loc.input.label.appSettings": "应用设置",
   "loc.input.help.appSettings": "按照语法 -key 值编辑 Web 应用应用程序设置。包含空格的值应括在双引号中。<br /><b>示例</b>: -Port 5000 -RequestTimeout 5000<br />-WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.deploymentMethod": "部署方法",
-  "loc.input.help.deploymentMethod": "选择 Function 应用的部署方法。请注意，Linux 消耗计划应用不支持此配置。",
+  "loc.input.help.deploymentMethod": "选择函数应用的部署方法。请注意，Linux 和弹性消耗应用不支持此配置。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "提供了无效的应用服务包或文件夹路径: %s",
   "loc.messages.SetParamFilenotfound0": "设置的参数文件未找到: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 转换已成功应用",
@@ -176,5 +177,6 @@
   "loc.messages.SyncingFunctionTriggers": "正在同步函数应用的触发器",
   "loc.messages.SyncFunctionTriggersSuccess": "已成功完成函数应用的触发器同步",
   "loc.messages.UpdatedRunFromPackageSettings": "已将 WEBSITE_RUN_FROM_PACKAGE 应用程序设置更新为 %s",
-  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署类型选项不适用于 Linux 消耗计划。"
+  "loc.messages.DeploymentTypeNotSupportedForLinuxConsumption": "部署类型选项不适用于 Linux 消耗计划。",
+  "loc.messages.DeploymentTypeNotSupportedForFlexConsumption": "部署类型选项不适用于弹性消耗。"
 }

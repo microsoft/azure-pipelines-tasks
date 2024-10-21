@@ -12,11 +12,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "This task is deprecated as the Duffle project has been archived and is no longer maintained, see https://github.com/cnabio/duffle",
   "inputs": [
     {
       "name": "version",

@@ -1,6 +1,9 @@
 $rollForwardTable = @{
     "5.0.0" = "5.1.1";
 };
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
 
 function Get-SavedModuleContainerPath {
     return $env:SystemDrive + "\Modules";
@@ -34,13 +37,7 @@ function Update-PSModulePathForHostedAgent {
             $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -moduleName:'Azure'
         }
 
-        if ($authScheme -eq 'ServicePrincipal' -or $authScheme -eq 'ManagedServiceIdentity' -or $authScheme -eq '') {
-            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-        }
-        elseif ($authScheme -eq 'WorkloadIdentityFederation') {
+        if ($authScheme -eq 'WorkloadIdentityFederation' -or $featureFlags.retireAzureRM) {
             if ($targetAzurePs) {
                 $hostedAgentAzureAzModulePath = (Get-SavedModuleContainerPath) + "\az_" + $targetAzurePs
             }
@@ -48,6 +45,11 @@ function Update-PSModulePathForHostedAgent {
                 $hostedAgentAzureAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -moduleName:'Az'
             }
             $env:PSModulePath = $hostedAgentAzureAzModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+        } elseif ($authScheme -eq 'ServicePrincipal' -or $authScheme -eq '') {
+            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
         }
         else {

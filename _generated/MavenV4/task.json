@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 235,
+    "Minor": 247,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -49,6 +49,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "mavenPOMFile",
       "aliases": [
@@ -517,7 +527,7 @@
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
   },
   "_buildConfigMapping": {
-    "Default": "4.235.0",
-    "Node20-225": "4.235.1"
+    "Default": "4.247.0",
+    "Node20-225": "4.247.1"
   }
 }

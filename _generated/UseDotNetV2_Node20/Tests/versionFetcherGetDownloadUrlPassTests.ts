@@ -2,7 +2,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
-var mockery = require('mockery');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 var osType = "win";
 
 mockery.enable({
@@ -61,6 +61,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     debug: function (message) { return tl.debug(message); },
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
     getHttpProxyConfiguration: function () { return ""; },
     getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }

@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 247,
     "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
@@ -67,6 +67,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "command",
       "type": "pickList",
@@ -262,7 +272,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityRestore",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +484,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityPack",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityPack",
       "required": "false",
       "groupName": "packAdvanced",
@@ -495,6 +505,14 @@
       "required": "false",
       "groupName": "generalAdvanced",
       "visibleRule": "command != restore && command != push && command != pack"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "dataSourceBindings": [
@@ -587,7 +605,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_2": "2.238.3"
+    "Default": "2.247.2",
+    "Node20_229_2": "2.247.3"
   }
 }

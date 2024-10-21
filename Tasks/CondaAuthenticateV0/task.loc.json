@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 247,
     "Patch": 0
   },
   "runsOn": [
@@ -28,6 +28,9 @@
   },
   "messages": {
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel"
+    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
   }
 }

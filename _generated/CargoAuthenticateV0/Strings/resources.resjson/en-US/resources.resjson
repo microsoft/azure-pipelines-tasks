@@ -13,5 +13,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
   "loc.messages.AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
   "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
-  "loc.messages.AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+  "loc.messages.AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
+  "loc.messages.ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+  "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
 }

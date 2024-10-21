@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 247,
     "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
@@ -67,6 +67,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "command",
       "type": "pickList",
@@ -191,9 +201,9 @@
         "vstsFeed"
       ],
       "type": "pickList",
-      "label": "Use packages from this Azure Artifacts feed",
+      "label": "Use packages from this Azure Artifacts feed. Select from the dropdown or enter [project name/]feed name.",
       "defaultValue": "",
-      "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
+      "helpMarkDown": "Include the selected feed in the generated NuGet.config.\n\nFormat:\n* For organization-scoped feeds: `FeedName`\n* For project-scoped feeds: `ProjectName/FeedName`",
       "required": "false",
       "groupName": "restoreAuth",
       "visibleRule": "selectOrConfig = select",
@@ -262,7 +272,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "Verbosity",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "Specifies the amount of detail displayed in the output.",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +484,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "Verbosity",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "Specifies the amount of detail displayed in the output.",
       "required": "false",
       "groupName": "packAdvanced",
@@ -495,6 +505,14 @@
       "required": "false",
       "groupName": "generalAdvanced",
       "visibleRule": "command != restore && command != push && command != pack"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "Set timeout for package download request",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes)."
     }
   ],
   "dataSourceBindings": [
@@ -587,7 +605,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_2": "2.238.3"
+    "Default": "2.247.2",
+    "Node20_229_2": "2.247.3"
   }
 }

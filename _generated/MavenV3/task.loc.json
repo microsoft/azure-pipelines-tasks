@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 235,
+    "Minor": 247,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -48,6 +48,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Maven@3 task is deprecated, please use a newer version of the Maven task",
   "inputs": [
     {
       "name": "mavenPOMFile",
@@ -517,7 +519,7 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "3.235.0",
-    "Node20-225": "3.235.1"
+    "Default": "3.247.0",
+    "Node20-225": "3.247.1"
   }
 }

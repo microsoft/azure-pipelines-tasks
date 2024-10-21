@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import {addTillerTlsSettings} from "./../tlssetting";
 
-export function addArguments(helmCli: helmcli) : void {
+export async function addArguments(helmCli: helmcli) : Promise<void> {
     var waitForTiller = tl.getBoolInput('waitForExecution', false);
     var canaryimage = tl.getBoolInput('canaryimage', false);
     var upgradeTiller = tl.getBoolInput('upgradetiller', false);
