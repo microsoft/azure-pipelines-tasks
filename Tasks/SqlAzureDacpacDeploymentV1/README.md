@@ -89,7 +89,7 @@ The parameters of the task are described in details, including examples, to show
 
 - **DACPAC File\*:** Location of the DACPAC file on the automation agent or on a UNC path that is accessible to the automation agent like, \\BudgetIT\Web\Deploy\FabrikamDB.dacpac. Predefined [system variables](https://msdn.microsoft.com/Library/vs/alm/Build/scripts/variables) like, $(agent.releaseDirectory), can be also used here. Be sure to specify the full path like $(Build.Repository.LocalPath)\BudgetIT\Fabrikam.dacpac.
 
-- **Publish Profile:** Publish profile provide fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share that is accessible by the automation agent. As described for the DACAC file location, system variables or wildcards can be also used here. This is an optional parameter.
+- **Publish Profile:** Publish profile provide fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share that is accessible by the automation agent. As described for the DACPAC file location, system variables or wildcards can be also used here. This is an optional parameter.
 
 - **Additional SqlPackage.exe Arguments:** Additional SqlPackage.exe arguments that will be applied when creating or updating the Azure SQL Database like:
     /p:IgnoreAnsiNulls=True /p:IgnoreComments=True
