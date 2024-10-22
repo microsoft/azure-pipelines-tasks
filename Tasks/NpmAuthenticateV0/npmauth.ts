@@ -147,7 +147,29 @@ async function main(): Promise<void> {
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
-        if (endpointRegistries && endpointRegistries.length > 0) {
+
+#if WIF
+        if(entraWifServiceConnectionName){
+            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
+            if(!token){
+                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
+            }
+
+            // If a registry is found, but we previously added credentials for it warn and overwrite
+            if (endpointsArray.includes(RegistryURLString)) {
+                tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
+                tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
+            }
+            console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+            registry = new npmregistry.NpmRegistry(RegistryURLString, token, true)
+            let url = URL.parse(RegistryURLString);
+            addedRegistry.push(url);
+            npmrcFile = clearFileOfReferences(npmrc, npmrcFile, url, addedRegistry);
+            federatedFeedAuthSuccessCount++;
+        }
+#endif
+
+        if (!registry && endpointRegistries && endpointRegistries.length > 0) {
             for (let serviceEndpoint of endpointRegistries) {
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);
@@ -161,31 +183,10 @@ async function main(): Promise<void> {
             }
         }
 
-#if WIF
-        if(!registry && entraWifServiceConnectionName){
+        if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                    let localURL = URL.parse(localRegistry.url);
-                    //console.log(tl.loc("AddingLocalFederatedCredentials"));
-                    registry = localRegistry;
-                    const feedTenant = await getFeedTenantId(registry.url);
-                    let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-                    if(token){
-                        registry.auth = token
-                        addedRegistry.push(localURL);
-                        npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
-                        federatedFeedAuthSuccessCount++;
-                        break;
-                    }
-                }
-            }
-        }
-#endif
-
-        if (!registry && !entraWifServiceConnectionName) {
-            for (let localRegistry of LocalNpmRegistries) {
-                if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                    // If a registry is found, but we previously added credentials for it, skip it
+                    // If a registry is found, but we previously added credentials for it warn and overwrite
                     if (endpointsArray.includes(localRegistry.url)) {
                         tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                         tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
