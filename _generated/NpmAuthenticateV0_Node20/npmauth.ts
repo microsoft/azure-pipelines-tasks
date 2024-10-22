@@ -80,6 +80,9 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
+    const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
+    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+
 
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
@@ -118,7 +121,7 @@ async function main(): Promise<void> {
         }
 
 
-        if (!registry) {
+        if (!registry && !entraWifServiceConnectionName) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it

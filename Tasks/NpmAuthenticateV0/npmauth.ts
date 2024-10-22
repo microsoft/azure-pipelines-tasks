@@ -83,10 +83,10 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-#if WIF
     const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
+#if WIF
     // Skip npmrc parsing if we are using feed url and wif service connection
     if (feedUrl && entraWifServiceConnectionName) {
         tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
@@ -182,7 +182,7 @@ async function main(): Promise<void> {
         }
 #endif
 
-        if (!registry) {
+        if (!registry && !entraWifServiceConnectionName) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it

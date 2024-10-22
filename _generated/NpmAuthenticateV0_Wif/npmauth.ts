@@ -176,7 +176,7 @@ async function main(): Promise<void> {
             }
         }
 
-        if (!registry) {
+        if (!registry && !entraWifServiceConnectionName) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
                     // If a registry is found, but we previously added credentials for it, skip it
