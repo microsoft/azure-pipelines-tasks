@@ -116,6 +116,8 @@ async function main(): Promise<void> {
                 }
             }
         }
+
+
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
@@ -162,6 +164,7 @@ main().catch(error => {
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
 });
+
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;

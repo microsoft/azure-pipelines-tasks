@@ -120,7 +120,7 @@ async function main(): Promise<void> {
         }
         return;
     }
-    else if (feedUrl || entraWifServiceConnectionName) {
+    else if (feedUrl && !entraWifServiceConnectionName) {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 #endif
@@ -160,6 +160,28 @@ async function main(): Promise<void> {
                 }
             }
         }
+
+#if WIF
+        if(!registry && entraWifServiceConnectionName){
+            for (let localRegistry of LocalNpmRegistries) {
+                if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
+                    let localURL = URL.parse(localRegistry.url);
+                    //console.log(tl.loc("AddingLocalFederatedCredentials"));
+                    registry = localRegistry;
+                    const feedTenant = await getFeedTenantId(registry.url);
+                    let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
+                    if(token){
+                        registry.auth = token
+                        addedRegistry.push(localURL);
+                        npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
+                        federatedFeedAuthSuccessCount++;
+                        break;
+                    }
+                }
+            }
+        }
+#endif
+
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
@@ -206,6 +228,7 @@ main().catch(error => {
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
 });
+
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
