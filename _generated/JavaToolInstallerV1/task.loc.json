@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 4
   },
   "satisfies": [
     "Java",
@@ -229,7 +229,7 @@
     "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.2",
-    "Node20_229_14": "1.247.3"
+    "Default": "1.247.4",
+    "Node20_229_14": "1.247.5"
   }
 }
