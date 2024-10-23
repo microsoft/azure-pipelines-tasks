@@ -13,13 +13,16 @@ import { usePythonVersion } from './usepythonversion';
         const addToPath = task.getBoolInput('addToPath', true);
         const architecture = task.getInput('architecture', true);
         const githubToken = task.getInput('githubToken', false);
+        const suppressGitHubTokenWarning = task.getBoolInput('suppressGitHubTokenWarning', false);
+        
         await usePythonVersion({
             versionSpec,
             allowUnstable,
             disableDownloadFromRegistry,
             addToPath,
             architecture,
-            githubToken
+            githubToken,
+            suppressGitHubTokenWarning
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");
