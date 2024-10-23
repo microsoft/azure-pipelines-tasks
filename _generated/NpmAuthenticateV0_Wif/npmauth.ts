@@ -123,11 +123,6 @@ async function main(): Promise<void> {
 
         if (feedUrl && entraWifServiceConnectionName){
             if (util.toNerfDart(npmrcparser.NormalizeRegistry(feedUrl)) == util.toNerfDart(RegistryURLString)) {
-                // If a registry is found, but we previously added credentials for it warn and overwrite
-                if (endpointsArray.includes(RegistryURLString)) {
-                    tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
-                    tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
-                }
                 console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
                 registry =  new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true);
                 let url = URL.parse(RegistryURLString);
@@ -137,11 +132,6 @@ async function main(): Promise<void> {
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
             }
         } else if (!feedUrl && entraWifServiceConnectionName){
-            // If a registry is found, but we previously added credentials for it warn and overwrite
-            if (endpointsArray.includes(RegistryURLString)) {
-                tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
-                tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
-            }
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             registry = new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true)
             let url = URL.parse(RegistryURLString);
