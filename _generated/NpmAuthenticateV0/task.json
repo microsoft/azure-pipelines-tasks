@@ -78,7 +78,7 @@
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-    "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+    "MissingFeedUrlOrServiceConnection": "If feed url is provided, the 'azure devops' service connection must be provided and cannot be empty.",
     "SkippingParsingNpmrc": "Skipping parsing npmrc",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."

@@ -155,7 +155,7 @@ async function main(): Promise<void> {
                 tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
                 tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
             }
-            console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+            console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             registry = new npmregistry.NpmRegistry(RegistryURLString, token, true)
             let url = URL.parse(RegistryURLString);
             addedRegistry.push(url);
