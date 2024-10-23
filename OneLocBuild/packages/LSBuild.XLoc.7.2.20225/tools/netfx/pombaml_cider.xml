@@ -1,0 +1,127 @@
+ <BamlLocalization>
+    <Group Name="Misc">
+        <Localizability Target="*.*" />
+
+     <Group Name="Language">
+        <Localizability Target="*.Language" Category="Text" Readable="True" Modifiable="True"/>
+     </Group>  
+
+     <Group Name="Font">
+          <Localizability Target="*.FontFamily"/>
+          <Localizability Target="*.FontSize"/>
+          <Localizability Target="*.FontStretch" Category="None" Modifiable="False" Readable="True"/>
+          <Localizability Target="*.FontStyle" Category="None" Modifiable="False" Readable="True"/>
+          <Localizability Target="*.FontWeight" Category="None" Modifiable="False" Readable="True"/>
+      </Group>     
+
+      <Group Name="Height">
+           <Localizability Target="*.Height" Category="None" Modifiable="False" Readable="True"/>
+      </Group>
+
+      <Group Name="Width">
+           <Localizability Target="*.Width" Category="None" Modifiable="False" Readable="True"/>
+      </Group>         
+
+      <Group Name="Margin">
+           <Localizability Target="*.Margin"  Category="None" Modifiable="False" Readable="True"/>
+           <Localizability Target="*.Padding" Category="None" Modifiable="False" Readable="True"/>
+      </Group>
+
+      <Group Name="Hyperlink">
+           <Localizability Target="*.NavigateUri" />
+      </Group>    
+
+      <Group Name="Alignment">
+           <Localizability Target="*.VerticalAlignment"    Category="None" Modifiable="False" Readable="True"/>
+           <Localizability Target="*.HorizontalAlignment"  Category="None" Modifiable="False" Readable="True"/>
+           <Localizability Target="*.TextAlignment"        Readable="True" Modifiable="False"/>
+      </Group>         
+
+      <Group Name="Text">
+          <Localizability Target="*.Text" Category="Text"/>
+          <Localizability Target="*.Title" Category="Text"/> 
+          <Localizability Target="*.ToolTip"/>
+          <Localizability Target="*.Gesture"/>
+          <Localizability Target="*.Header" />
+          <Localizability Target="*.WindowTitle"/> 
+      </Group>
+
+      <Namespace Name="System.Windows" Alias="">
+         <Group Name="Misc">
+             <Localizability Target="Window.$Content" Readable="True"/>
+        </Group>
+      </Namespace> 
+ 
+      <Namespace Name="System.Windows.Controls" Alias="">
+        <Group Name="Text">
+           <Localizability Target="Button.$Content" RecognizesAccessKey="true"/>
+           <Localizability Target="Button.Content"  RecognizesAccessKey="true"/>
+           <Localizability Target="ToggleButton.$Content" RecognizesAccessKey="true"/>
+           <Localizability Target="ToggleButton.Content"  RecognizesAccessKey="true"/>
+           <Localizability Target="RepeatButton.$Content" RecognizesAccessKey="true"/>
+           <Localizability Target="RepeatButton.Content"  RecognizesAccessKey="true"/>
+           <Localizability Target="HeaderedContentControl.Header" RecognizesAccessKey="true"/>
+           <Localizability Target="Label.$Content" RecognizesAccessKey="true"/>
+           <Localizability Target="Label.Content" RecognizesAccessKey="true"/>
+           <Localizability Target="TextBlock.$Content" />
+           <Localizability Target="TextBlock.Text" />
+           <Localizability Target="TextBox.$Content" />
+           <Localizability Target="TextBox.Text" />
+           <Localizability Target="ToolTip.$Content"/>
+           <Localizability Target="AccessText.Text" RecognizesAccessKey="True" />
+           <Localizability Target="AccessText.$Content" RecognizesAccessKey="True" />
+           <Localizability Target="CheckBox.$Content" RecognizesAccessKey="true"/>
+           <Localizability Target="CheckBox.Content"  RecognizesAccessKey="true"/>
+           <Localizability Target="ComboBox.$Content"/>
+           <Localizability Target="ComboBoxItem.$Content"/>
+           <Localizability Target="ContextMenu.$Content" RecognizesAccessKey="True"/>
+           <Localizability Target="ContextMenu.Header" RecognizesAccessKey="True"/>
+           <Localizability Target="MenuItem.InputGestureText"/>	   
+           <Localizability Target="MenuItem.$Content" RecognizesAccessKey="True"/>	   
+           <Localizability Target="MenuItem.Header" RecognizesAccessKey="True"/>
+           <Localizability Target="Menu.Header" RecognizesAccessKey="True"/>
+           <Localizability Target="RadioButton.$Content" RecognizesAccessKey="True"/>
+           <Localizability Target="RadioButton.Content" RecognizesAccessKey="True"/>
+           <Localizability Target="TabItem.Header" RecognizesAccessKey="True"/>
+           <Localizability Target="HeaderedContentControl.$Content"/>
+           <Localizability Target="HeaderedContentControl.Content"/>
+           <Localizability Target="HeaderedItemsControl.Header" RecognizesAccessKey="True"/>
+           <Localizability Target="HeaderedItemsControl.$Content"/>
+        </Group>
+        <Group Name="Controls">
+           <Localizability Target="Border.$Content" Category="None" Readable="True"/>	
+           <Localizability Target="ContentControl.$Content" Readable="True"/>
+           <Localizability Target="ControlTemplate.$Content" Readable="True"/>
+           <Localizability Target="DockPanel.$Content" Category="None" Readable="True"/>
+           <Localizability Target="ScrollViewer.$Content" Readable="True"/>
+           <Localizability Target="Grid.$Content" Category="None" Readable="True"/>
+       </Group>
+       <Group Name="Font">
+           <Localizability Target="*.TextDecorations"/>
+       </Group>  
+      </Namespace>
+
+      <Namespace Name="System.Windows.Controls.Primitives" Alias="">	
+          <Group Name="Controls">
+            <Localizability Target="Popup.$Content" />
+          </Group>
+          <Group Name="Text">
+            <Localizability Target="*.ToolTip" />
+          </Group>
+      </Namespace>
+
+      <Namespace Name="System" Alias="">
+         <Localizability Target="Double.$Content" Readable="False" Modifiable="False"/>
+         
+        <Group Name="Text">
+           <Localizability Target="String.$Content" Category="Text" Modifiable="True" Readable="True"/>  	         
+        </Group> 
+      </Namespace>         
+      
+      <Namespace Name="System.Windows.Documents" Alias="">
+        <Group Name="Text">
+           <Localizability Target="TextPanel.$Content" /> 
+        </Group>
+      </Namespace>  
+  </Group>
+</BamlLocalization>
