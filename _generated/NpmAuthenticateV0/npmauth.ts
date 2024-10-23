@@ -80,10 +80,6 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
-    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-
-
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -103,7 +99,10 @@ async function main(): Promise<void> {
     }
 
     let addedRegistry = [];
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
+    let npmrcRegistries = npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
+
+
+    for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
 

@@ -81,46 +81,6 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    const feedUrl = npmrcparser.NormalizeRegistry(tl.getInput("feedUrl"));
-    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-
-    // Skip npmrc parsing if we are using feed url and wif service connection
-    if (feedUrl && entraWifServiceConnectionName) {
-        tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-        const feedTenant = await getFeedTenantId(feedUrl);
-        let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-        if (token)
-        {
-            const nerfed = util.toNerfDart(feedUrl);
-            const auth = `${nerfed}:_authToken=${token}`;
-            tl.debug(tl.loc('AddingAuthRegistry', feedUrl));
-            npmutil.appendToNpmrc(npmrc, os.EOL + auth + os.EOL);
-            tl.debug(tl.loc('SuccessfulAppend'));
-            npmrcFile.push(os.EOL + auth + os.EOL);
-            federatedFeedAuthSuccessCount++;
-            tl.debug(tl.loc('SuccessfulPush'));    
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
-            console.log(tl.loc("SkippingParsingNpmrc"));
-
-            if (endpointsArray.includes(feedUrl)){
-                tl.warning(tl.loc('DuplicateCredentials', feedUrl));
-            }
-
-            else {
-                endpointsArray.push(feedUrl);
-                tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
-            }
-        } 
-        else
-        {
-            throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
-        }
-        return;
-    }
-    else if (feedUrl && !entraWifServiceConnectionName) {
-        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
-    }
-
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -140,27 +100,55 @@ async function main(): Promise<void> {
     }
 
     let addedRegistry = [];
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
+    let npmrcRegistries = npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
+
+    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+    const federatedAuthToken = await getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
+
+    const feedUrl = tl.getInput("feedUrl");
+    if (feedUrl && !entraWifServiceConnectionName) {
+        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
+    }
+
+    if(feedUrl){
+        npmrcRegistries = npmrcRegistries.filter(x=> util.toNerfDart(x) == util.toNerfDart(npmrcparser.NormalizeRegistry(feedUrl)));
+        if(npmrcRegistries.length == 0){
+            throw new Error(tl.loc("IgnoringRegistry", feedUrl));
+        }
+    }
+
+    for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
 
-        if(entraWifServiceConnectionName){
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
-            if(!token){
-                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName)); 
+        if (feedUrl && entraWifServiceConnectionName){
+            if (util.toNerfDart(npmrcparser.NormalizeRegistry(feedUrl)) == util.toNerfDart(RegistryURLString)) {
+                // If a registry is found, but we previously added credentials for it warn and overwrite
+                if (endpointsArray.includes(RegistryURLString)) {
+                    tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
+                    tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
+                }
+                console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+                registry =  new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true);
+                let url = URL.parse(RegistryURLString);
+                addedRegistry.push(url);
+                npmrcFile = clearFileOfReferences(npmrc, npmrcFile, url, addedRegistry);
+                federatedFeedAuthSuccessCount++;
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
             }
-
+        } else if (!feedUrl && entraWifServiceConnectionName){
             // If a registry is found, but we previously added credentials for it warn and overwrite
             if (endpointsArray.includes(RegistryURLString)) {
                 tl.warning(tl.loc('DuplicateCredentials', RegistryURLString));
                 tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
             }
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            registry = new npmregistry.NpmRegistry(RegistryURLString, token, true)
+            registry = new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true)
             let url = URL.parse(RegistryURLString);
             addedRegistry.push(url);
             npmrcFile = clearFileOfReferences(npmrc, npmrcFile, url, addedRegistry);
             federatedFeedAuthSuccessCount++;
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
         }
 
         if (!registry && endpointRegistries && endpointRegistries.length > 0) {
@@ -242,3 +230,15 @@ function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, adde
     return redoneFile;
 }
 
+async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string){
+    if(!adoServiceConnection){
+        return undefined;
+    }
+
+    let federatedAuthToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
+    if(!federatedAuthToken){
+        throw new Error(tl.loc("FailedToGetServiceConnectionAuth", adoServiceConnection)); 
+    }
+
+    return federatedAuthToken;
+}
