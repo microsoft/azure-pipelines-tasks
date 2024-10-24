@@ -49,7 +49,6 @@
     }
   },
   "messages": {
-    "Error_InternalFeedsNotSupported": "FeedUrl must belong to an external organization. To authenticate to a feed in your organization with a 'Azure DevOps' service connection type, remove the `feedUrl` input.",
     "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
     "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",

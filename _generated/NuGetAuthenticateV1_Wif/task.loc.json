@@ -75,7 +75,6 @@
     }
   },
   "messages": {
-    "Error_InternalFeedsNotSupported": "ms-resource:loc.messages.Error_InternalFeedsNotSupported",
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
