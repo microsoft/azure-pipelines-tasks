@@ -260,6 +260,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             }
 
             cd(taskLibPath);
+            run("git checkout dev/merlynop/mockfix");
             run("git pull");
 
             cd(tasksCommonPath);
