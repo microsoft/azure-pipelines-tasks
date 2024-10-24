@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "フィードと認証",
   "loc.input.label.artifactFeeds": "マイ フィード (以下を選択)",
   "loc.input.help.artifactFeeds": "この組織内に存在する、認証対象のフィードを選択します",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービス接続",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
   "loc.input.help.workloadIdentityServiceConnection": "これを設定した場合、feedUrl が必要です。他のすべての入力は無視されます。",
   "loc.input.label.feedUrl": "Azure Artifacts フィード URL。",
   "loc.input.help.feedUrl": "これを設定した場合、workloadIdentityServiceConnection が必要です。他のすべての入力は無視されます。pythonDownloadServiceConnections と互換性がありません。",

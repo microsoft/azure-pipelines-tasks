@@ -86,3 +86,5 @@
 *.PDF   diff=astextplain
 *.rtf   diff=astextplain
 *.RTF   diff=astextplain
+
+*.lcl text=auto

@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "摘要與驗證",
   "loc.input.label.artifactFeeds": "我的摘要 (於下方選取)",
   "loc.input.help.artifactFeeds": "選取此組織內要驗證的摘要",
-  "loc.input.label.workloadIdentityServiceConnection": "採用 Entra 工作負載 ID 的 Azure DevOps 使用者服務連線",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 服務連線",
   "loc.input.help.workloadIdentityServiceConnection": "如設定此選項，則需要 feedUrl。忽略所有其他輸入。",
   "loc.input.label.feedUrl": "Azure Artifacts 摘要 URL。",
   "loc.input.help.feedUrl": "如設定此選項，則需要 workloadIdentityServiceConnection。忽略所有其他輸入。與 pythonDownloadServiceConnections 不相容。",

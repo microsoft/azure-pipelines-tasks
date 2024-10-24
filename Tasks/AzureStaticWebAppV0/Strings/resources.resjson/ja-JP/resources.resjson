@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "運用ブランチ",
   "loc.input.help.production_branch": "運用ブランチ。指定され、デプロイ環境が空の場合、他のブランチからのデプロイはプレビュー環境になります",
   "loc.input.label.data_api_location": "データ API の場所",
-  "loc.input.help.data_api_location": "作業ディレクトリを基準とした Data API ソース ファイルのディレクトリの場所"
+  "loc.input.help.data_api_location": "作業ディレクトリを基準とした Data API ソース ファイルのディレクトリの場所",
+  "loc.input.label.azure_access_token": "Azure アクセス トークン",
+  "loc.input.help.azure_access_token": "デプロイの認証と承認に使用されるアクセス トークン",
+  "loc.input.label.default_hostname": "既定のホスト名",
+  "loc.input.help.default_hostname": "アプリの既定のホスト名"
 }
