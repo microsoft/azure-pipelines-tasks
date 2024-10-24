@@ -8,12 +8,11 @@ import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool';
 import { IAnalysisTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/IAnalysisTool';
-import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import { getExecOptions, setJavaHome, setGradleOpts, getGradleVersion } from './Modules/environment';
-import { configureWrapperScript, isMultiModuleProject } from './Modules/project-configuration';
-import { enableCodeCoverageAsync, publishTestResults, publishCodeCoverageResultsAsync, resolveCodeCoveragePreset } from './Modules/code-coverage';
-import { ICodeAnalysisResult, ICodeCoveragePreset, ICodeCoverageSettings, IPublishCodeCoverageSettings, ITaskResult } from './interfaces';
+import { getExecOptions, setJavaHome, setGradleOpts } from './Modules/environment';
+import { configureWrapperScript } from './Modules/project-configuration';
+import { publishTestResults } from './Modules/publish-test-results';
+import { ICodeAnalysisResult, ITaskResult } from './interfaces';
 import { resolveTaskResult } from './Modules/utils';
 
 async function run() {
@@ -29,19 +28,13 @@ async function run() {
         tl.cd(workingDirectory);
 
         const javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
-        const codeCoverageTool: string = tl.getInput('codeCoverageTool');
-        const failIfCodeCoverageEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const publishJUnitResults: boolean = tl.getBoolInput('publishJUnitResults');
         const testResultsFiles: string = tl.getInput('testResultsFiles', true);
         const inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
-        const isCodeCoverageOpted: boolean = (typeof codeCoverageTool !== 'undefined' && codeCoverageTool && codeCoverageTool.toLowerCase() !== 'none');
         const buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
 
         //START: Get gradleRunner ready to run
         let gradleRunner: ToolRunner = tl.tool(wrapperScript);
-        if (isCodeCoverageOpted && inputTasks.indexOf('clean') === -1) {
-            gradleRunner.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
-        }
         gradleRunner.line(tl.getInput('options', false));
         gradleRunner.arg(inputTasks);
         //END: Get gb ready to run
@@ -53,61 +46,6 @@ async function run() {
         const gradleOptions: string = tl.getInput('gradleOpts');
         setGradleOpts(gradleOptions);
 
-        // START: Enable code coverage (if desired)
-        const reportDirectoryName: string = 'CCReport43F6D5EF';
-        const reportDirectory: string = path.join(workingDirectory, reportDirectoryName);
-
-        let summaryFile: string = '';
-        let reportingTaskName: string = '';
-
-        try {
-            if (isCodeCoverageOpted) {
-                tl.debug('Option to enable code coverage was selected and is being applied.');
-                const classFilter: string = tl.getInput('classFilter');
-                const classFilesDirectories: string = tl.getInput('classFilesDirectories');
-
-                // START: determine isMultiModule
-                const isMultiModule: boolean = isMultiModuleProject(wrapperScript);
-                const codeCoveragePreset: ICodeCoveragePreset = resolveCodeCoveragePreset(codeCoverageTool, isMultiModule);
-
-                summaryFile = path.join(reportDirectory, codeCoveragePreset.summaryFileName);
-                reportingTaskName = codeCoveragePreset.reportingTaskName;
-                // END: determine isMultiModule
-
-                // Determine gradle version
-                const gradleVersion: string = getGradleVersion(wrapperScript);
-
-                // Clean the report directory before enabling code coverage
-                tl.rmRF(reportDirectory);
-
-
-                const codeCoverageSettings: ICodeCoverageSettings = {
-                    wrapperScript: wrapperScript,
-                    isCodeCoverageOpted: isCodeCoverageOpted,
-                    classFilter: classFilter,
-                    classFilesDirectories: classFilesDirectories,
-                    codeCoverageTool: codeCoverageTool,
-                    workingDirectory: workingDirectory,
-                    reportDirectoryName: reportDirectoryName,
-                    summaryFileName: codeCoveragePreset.summaryFileName,
-                    isMultiModule: isMultiModule,
-                    gradleVersion: gradleVersion
-                };
-
-                emitTelemetry('TaskHub', 'GradleV4', { codeCoverageSettings: codeCoverageSettings });
-
-                await enableCodeCoverageAsync(codeCoverageSettings);
-            }
-
-            tl.debug('Enabled code coverage successfully');
-        } catch (err) {
-            tl.warning(`Failed to enable code coverage: ${err}`);
-        }
-
-        if (reportingTaskName && reportingTaskName !== '') {
-            gradleRunner.arg(reportingTaskName);
-        }
-        // END: Enable code coverage (if desired)
 
         const codeAnalysisTools: IAnalysisTool[] = [
             new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
@@ -147,17 +85,8 @@ async function run() {
         tl.debug('Processing code analysis results');
         codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-        // We should always publish test results and code coverage
+        // We should always publish test results
         publishTestResults(publishJUnitResults, testResultsFiles);
-
-        const publishCodeCoverageSettings: IPublishCodeCoverageSettings = {
-            isCodeCoverageOpted: isCodeCoverageOpted,
-            failIfCoverageEmpty: failIfCodeCoverageEmpty,
-            codeCoverageTool: codeCoverageTool,
-            summaryFile: summaryFile,
-            reportDirectory: reportDirectory
-        };
-        await publishCodeCoverageResultsAsync(publishCodeCoverageSettings);
 
         const taskResult: ITaskResult = resolveTaskResult(codeAnalysisResult);
         tl.setResult(taskResult.status, taskResult.message);

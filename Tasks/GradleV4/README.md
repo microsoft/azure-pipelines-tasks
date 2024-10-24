@@ -17,14 +17,6 @@ Use the next three options to manage your JUnit test results in Azure Pipelines
 
 - **Test Run Title :** This option will appear if you select the `Publish to Azure Pipelines/TFS` option. Here provide a name for the Test Run
 
-#### Code Coverage
-Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/Azure Pipelines
-
-- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported.
-
-- **Class Inclusion/Exclusion Filters :** This option is enabled only when you select one tool in the above option. Provide a 
-comma separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.
-
 #### Advanced
 Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Path
 
