@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -49,6 +49,7 @@
     }
   },
   "messages": {
+    "Error_InternalFeedsNotSupported": "ms-resource:loc.messages.Error_InternalFeedsNotSupported",
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
