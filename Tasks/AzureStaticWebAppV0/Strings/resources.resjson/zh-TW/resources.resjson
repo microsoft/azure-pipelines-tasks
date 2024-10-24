@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "實際執行分支",
   "loc.input.help.production_branch": "實際執行分支。當指定與部署環境為空白時，來自其他分支的部署會是預覽環境",
   "loc.input.label.data_api_location": "資料 API 位置",
-  "loc.input.help.data_api_location": "資料 API 原始檔相對於工作目錄的目錄位置"
+  "loc.input.help.data_api_location": "資料 API 原始檔相對於工作目錄的目錄位置",
+  "loc.input.label.azure_access_token": "Azure 存取權杖",
+  "loc.input.help.azure_access_token": "用來驗證及授權部署的存取權杖",
+  "loc.input.label.default_hostname": "預設主機名稱",
+  "loc.input.help.default_hostname": "應用程式的預設主機名稱"
 }

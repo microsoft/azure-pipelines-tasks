@@ -6,7 +6,7 @@
   "loc.input.label.packageType": "Paquete para instalar",
   "loc.input.help.packageType": "Seleccione si debe instalarse solo el entorno de ejecución o el SDK completo.",
   "loc.input.label.version": "Versión",
-  "loc.input.help.version": "Especifique la versión exacta del entorno de ejecución o el SDK de .NET Core que se va a instalar.<br/>Busque el valor de \"version-sdk\" para instalar el SDK o de \"version-runtime\" para instalar el entorno de ejecución de cualquier versión [aquí] (https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTA: La tarea no funcionará con las nuevas versiones de .NET Core. Actualice a la versión 2.\\* de la tarea para descargar las últimas versiones de .NET Core.**",
+  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
   "loc.messages.ToolFailed": "No se pudo instalar la herramienta: %s",
   "loc.messages.ImplicitVersionNotSupported": "La versión debe ser válida y explícita: %s",
   "loc.messages.getMachinePlatformFailed": "Error al obtener los detalles de la plataforma de máquina. Error: %s.",

@@ -55,7 +55,7 @@
   "loc.input.label.sqAnalysisEnabled": "Выполнить анализ SonarQube или SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Этот параметр был изменен с версии 1 задачи **Maven** для использования расширений Marketplace [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) и [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Включите его, чтобы запустить [анализ SonarQube или SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) после выполнения целей в поле **Цели**. Первой должна быть запущена цель **install** или **package**. Также необходимо добавить задачу **Подготовить конфигурацию анализа** из одного из расширений в конвейер сборки перед этой задачей Maven.",
   "loc.input.label.isJacocoCoverageReportXML": "Использовать XML-отчеты Jacoco для анализа SonarQube",
-  "loc.input.help.isJacocoCoverageReportXML": "Использовать XML-отчеты Jacoco для анализа SonarQube. [Дополнительные сведения] (https://docs.sonarqube.org/latest/analysis/coverage/)",
+  "loc.input.help.isJacocoCoverageReportXML": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
   "loc.input.label.sqMavenPluginVersionChoice": "Версия сканера SonarQube для Maven",
   "loc.input.help.sqMavenPluginVersionChoice": "Используемая версия подключаемого модуля SonarQube Maven. Можно использовать последнюю версию или версию, указанную в файле pom.xml.",
   "loc.input.label.checkstyleAnalysisEnabled": "Запустить Checkstyle",

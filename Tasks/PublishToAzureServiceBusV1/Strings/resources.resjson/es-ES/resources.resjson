@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "Clave donde quiere que esté la signatura en las propiedades del mensaje. Si se deja en blanco, el valor predeterminado es \"signature\" en las propiedades del mensaje",
   "loc.input.label.waitForCompletion": "Esperar a que finalice la tarea",
   "loc.input.help.waitForCompletion": "Si es true, esta tarea esperará al evento TaskCompleted durante el tiempo de espera de tarea especificado.",
-  "loc.input.label.useDataContractSerializer": "Utilizar serializador de contratos de datos .NET",
+  "loc.input.label.useDataContractSerializer": "Uso del serializador de contrato de datos de .NET",
   "loc.input.help.useDataContractSerializer": "Para obtener más información, vaya a la documentación de la tarea."
 }
