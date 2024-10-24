@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -53,6 +53,7 @@
     }
   },
   "messages": {
+    "Error_InternalFeedsNotSupported": "ms-resource:loc.messages.Error_InternalFeedsNotSupported",
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
@@ -60,8 +61,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.0",
-    "Node20_229_1": "1.247.1",
-    "wif_242": "1.247.2"
+    "Default": "1.247.3",
+    "Node20_229_1": "1.247.4",
+    "wif_242": "1.247.5"
   }
 }

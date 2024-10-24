@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 5
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -75,6 +75,7 @@
     }
   },
   "messages": {
+    "Error_InternalFeedsNotSupported": "FeedUrl must belong to an external organization. To authenticate to a feed in your organization with a 'Azure DevOps' service connection type, remove the `feedUrl` input.",
     "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
     "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
@@ -82,8 +83,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
   },
   "_buildConfigMapping": {
-    "Default": "1.247.0",
-    "Node20_229_1": "1.247.1",
-    "wif_242": "1.247.2"
+    "Default": "1.247.3",
+    "Node20_229_1": "1.247.4",
+    "wif_242": "1.247.5"
   }
 }
