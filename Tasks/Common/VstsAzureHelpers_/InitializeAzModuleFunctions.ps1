@@ -1,6 +1,5 @@
 $featureFlags = @{
-    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useFixedAzConfigInit = [System.Convert]::ToBoolean($env:USE_FIXED_AZ_CONFIG_INIT)
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
 }
 
 # Dot source Utility functions.
@@ -64,7 +63,7 @@ function Initialize-AzModule {
 }
 
 function Initialize-AzConfig {
-    if ($featureFlags.useFixedAzConfigInit) {
+    if ([System.Convert]::ToBoolean($env:USE_FIXED_AZ_CONFIG_INIT)) {
         Initialize-AzConfigNew
     } else {
         Initialize-AzConfigOld
@@ -94,6 +93,8 @@ function Initialize-AzConfigOld {
 }
 
 function Initialize-AzConfigNew {
+    Write-Verbose "Initializing Az Config."
+
     if (![bool](Get-Command Get-AzConfig -ErrorAction SilentlyContinue)) {
         Write-Verbose "Get-AzConfig cmdlet is not available."
         return         
@@ -105,16 +106,17 @@ function Initialize-AzConfigNew {
     }
 
     $expression = ""
-    $config = Get-AzConfig -AppliesTo Az -Scope CurrentUser
+    Write-Host "##[command]Get-AzConfig -AppliesTo Az -Scope Process"
+    $config = Get-AzConfig -AppliesTo Az -Scope Process
 
     $configValue = $config | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
-    if ($null -ne $configValue -and $configValue.Value -ne $false) {
-        $expression += "-DisplayBreakingChangeWarning $false "       
+    if ($null -eq $configValue -or $configValue.Value -ne $false) {
+        $expression += "-DisplayBreakingChangeWarning `$false "       
     }
 
     $configValue = $config | Where-Object { $_.Key -eq "CheckForUpgrade" }  
-    if ($null -ne $configValue -and $configValue.Value -ne $false) {
-        $expression += "-CheckForUpgrade $false "       
+    if ($null -eq $configValue -or $configValue.Value -ne $false) {
+        $expression += "-CheckForUpgrade `$false "       
     } 
 
     if ([string]::IsNullOrEmpty($expression)) {
@@ -122,7 +124,7 @@ function Initialize-AzConfigNew {
         return
     } 
 
-    Write-Host "##[command]Update-AzConfig $expression -AppliesTo Az -Scope Process"
+    Write-Host "##[command]Invoke-Expression `"Update-AzConfig $expression -AppliesTo Az -Scope Process`""
     Invoke-Expression "Update-AzConfig $expression -AppliesTo Az -Scope Process"
 }
 
