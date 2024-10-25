@@ -31,7 +31,7 @@ async function main(): Promise<void> {
         }
         // If the user doesn't provide a feedUrl, use the Azure Devops service connection to replace the Build Service
         else if (!feedUrl && entraWifServiceConnectionName) {
-            //configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
+            configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
             return;
         }  
         else if (feedUrl) {
