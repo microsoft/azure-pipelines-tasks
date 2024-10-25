@@ -633,7 +633,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
             }  catch (e) {
                 console.error(e);
                 //process.exit(1);
-                results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
+                results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
             }
         }
     }
@@ -705,7 +705,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     var hasErrors = false;
     results.forEach(({ task, result }) => {
         hasErrors = true;
-        console.log(`Task: ${task.name}, Result: ${result}`);
+        console.log(`Task: ${task}, Result: ${result}`);
     });    
 
     if (hasErrors) {
