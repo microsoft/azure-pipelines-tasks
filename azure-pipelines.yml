@@ -95,7 +95,7 @@ extends:
       - job: build_all_windows
         displayName: Build all tasks (Windows)
         condition: eq(variables.os, 'Windows_NT')
-        timeoutInMinutes: 360
+        timeoutInMinutes: 1440 # AntiMalware takes 3 hours to scan tasks.zip
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
