@@ -33,6 +33,10 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
+- name: skip_tests
+  displayName: skipTests (Not for production use)
+  type: boolean
+  default: false
 
 variables:
 - name: currentDate
@@ -56,7 +60,10 @@ variables:
   ${{ else }}:
     value: ''
 - name: tasksSkipTests
-  value: false    
+  ${{ if eq(parameters.skip_tests, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
