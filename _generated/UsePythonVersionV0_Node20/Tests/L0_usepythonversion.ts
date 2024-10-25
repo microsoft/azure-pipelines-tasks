@@ -50,7 +50,8 @@ it('sets PATH correctly on Linux', async function () {
         allowUnstable: true,
         addToPath: true,
         architecture: 'x64',
-        githubToken: 'testgithubtoken'
+        githubToken: 'testgithubtoken',
+        suppressGitHubTokenWarning: false
     };
 
     await uut.usePythonVersion(parameters, Platform.Linux);
@@ -84,7 +85,8 @@ it('sets PATH correctly on Windows', async function () {
         allowUnstable: true,
         addToPath: true,
         architecture: 'x64',
-        githubToken: 'testgithubtoken'
+        githubToken: 'testgithubtoken',
+        suppressGitHubTokenWarning: false
     };
 
     await uut.usePythonVersion(parameters, Platform.Windows);

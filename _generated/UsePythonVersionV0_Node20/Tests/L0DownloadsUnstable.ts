@@ -6,14 +6,13 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-const TEST_GITHUB_TOKEN = 'testtoken';
 
 taskRunner.setInput('versionSpec', '3.11.x');
 taskRunner.setInput('disableDownloadFromRegistry', 'false');
 taskRunner.setInput('allowUnstable', 'true');
 taskRunner.setInput('addToPath', 'true');
 taskRunner.setInput('architecture', 'x64');
-taskRunner.setInput('githubToken', TEST_GITHUB_TOKEN);
+taskRunner.setInput('suppressGitHubTokenWarning', 'true');
 
 // `getVariable` is not supported by `TaskLibAnswers`
 process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
