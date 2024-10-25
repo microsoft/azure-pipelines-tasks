@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "Веб-каналы и проверка подлинности",
   "loc.input.label.artifactFeeds": "Мои веб-каналы (выберите ниже)",
   "loc.input.help.artifactFeeds": "Выберите веб-каналы для проверки подлинности, присутствующие в этой организации",
-  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Пользователь Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra\"",
+  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
   "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задано, требуется feedUrl. Все остальные входные данные игнорируются.",
   "loc.input.label.feedUrl": "URL-адрес веб-каналов Azure Artifacts.",
   "loc.input.help.feedUrl": "Если этот параметр задано, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с pythonDownloadServiceConnections. ",

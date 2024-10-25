@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "Rama de producción",
   "loc.input.help.production_branch": "Rama de producción. Cuando se especifica y el entorno de implementación está vacío, las implementaciones de otras ramas serán entornos de vista previa.",
   "loc.input.label.data_api_location": "Ubicación de la API de datos",
-  "loc.input.help.data_api_location": "Ubicación del directorio de los archivos de origen API de datos en relación con el directorio de trabajo"
+  "loc.input.help.data_api_location": "Ubicación del directorio de los archivos de origen API de datos en relación con el directorio de trabajo",
+  "loc.input.label.azure_access_token": "Token de acceso de Azure",
+  "loc.input.help.azure_access_token": "Token de acceso usado para autenticar y autorizar la implementación",
+  "loc.input.label.default_hostname": "Nombre de host predeterminado",
+  "loc.input.help.default_hostname": "Nombre de host predeterminado de la aplicación"
 }
