@@ -703,9 +703,9 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     }
 
     var hasErrors = false;
-    results.forEach(({ task, result }) => {
+    results.forEach(({ taskName, result }) => {
         hasErrors = true;
-        console.log(`Task: ${task}, Result: ${result}`);
+        console.log(`Task: ${taskName}, Result: ${result}`);
     });    
 
     if (hasErrors) {
