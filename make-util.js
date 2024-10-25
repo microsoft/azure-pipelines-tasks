@@ -1952,8 +1952,10 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            // only update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists
-            if(fs.existsSync(dest))
+            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
+            const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
+
+            if(fs.existsSync(dest) || isPackageLock)
             {
                 const folderPath = path.dirname(dest);
                 if (!fs.existsSync(folderPath)) {
