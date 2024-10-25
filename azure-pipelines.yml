@@ -55,6 +55,8 @@ variables:
     value: '1'
   ${{ else }}:
     value: ''
+- name: tasksSkipTests
+  value: false    
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
