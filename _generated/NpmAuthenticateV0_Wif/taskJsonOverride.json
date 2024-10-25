@@ -4,7 +4,7 @@
       "name": "workloadIdentityServiceConnection",
       "aliases": ["azureDevOpsServiceConnection"],
       "label": "'Azure DevOps' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
+      "helpMarkDown": "Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
