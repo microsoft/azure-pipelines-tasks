@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "Feeds und Authentifizierung",
   "loc.input.label.artifactFeeds": "Meine Feeds (Auswahl unten)",
   "loc.input.help.artifactFeeds": "Wählen Sie Feeds für die Authentifizierung innerhalb dieser Organisation aus.",
-  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Entra Workload ID-gesicherter Azure-DevOps Benutzer“",
+  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
   "loc.input.help.workloadIdentityServiceConnection": "Wenn dies festgelegt ist, ist feedUrl erforderlich. Alle anderen Eingaben werden ignoriert.",
   "loc.input.label.feedUrl": "Azure Artifacts-Feeds-URL.",
   "loc.input.help.feedUrl": "Wenn dies festgelegt ist, ist workloadIdentityServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit pythonDownloadServiceConnections. ",
