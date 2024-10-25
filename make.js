@@ -623,12 +623,12 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;
                 }
                 else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                 }
             }  catch (e) {
                 console.error(e);
@@ -661,7 +661,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
             // setup the version of node to run the tests
             await util.installNodeAsync(argv.node);
             try{
-                run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+                run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
             }catch(e){
                 console.error(e);
                 results.push({ taskName: 'commonLibraryTests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
@@ -680,7 +680,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
         await util.installNodeAsync(argv.node);
         try
         {
-            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+            run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
         }catch(e){
             console.error(e);
             results.push({ taskName: 'common tests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });

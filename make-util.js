@@ -8,6 +8,7 @@ var path = require('path');
 var process = require('process');
 var semver = require('semver');
 var shell = require('shelljs');
+const { XMLParser } = require("fast-xml-parser");
 const Downloader = require("nodejs-file-downloader");
 
 // global paths
@@ -288,7 +289,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
 }
 exports.matchCopy = matchCopy;
 
-var run = function (cl, inheritStreams, noHeader) {
+var run = function (cl, inheritStreams, noHeader, throwOnError) {
     if (!noHeader) {
         console.log();
         console.log('> ' + cl);
@@ -306,13 +307,19 @@ var run = function (cl, inheritStreams, noHeader) {
         if (!inheritStreams) {
             console.error(err.output ? err.output.toString() : err.message);
         }
-
-        process.exit(1);
+        
+        if(throwOnError)
+        {
+            throw new Error('Failed to run: ' + cl + ' exit code: ' + err.status);
+        }else{
+            process.exit(1);
+        }
     }
 
     return (output || '').toString().trim();
 }
 exports.run = run;
+
 
 var ensureTool = function (name, versionArgs, validate) {
     console.log(name + ' tool:');
@@ -700,7 +707,6 @@ var getExternalsAsync = async function (externals, destRoot) {
 
             // If nuget doesn't find specific package version, it will download the latest.
             // We can't specify nuget to fail such request, so we need at least to check version post-factum.
-            const { XMLParser } = require("fast-xml-parser");
             const parser = new XMLParser();
 
             const nuspecPath = path.join(packageSource, package.name + '.nuspec');
@@ -1952,10 +1958,11 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
+            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
+            const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
 
-            if(fs.existsSync(dest) || isPackageLock)
+            if(fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap)
             {
                 const folderPath = path.dirname(dest);
                 if (!fs.existsSync(folderPath)) {
