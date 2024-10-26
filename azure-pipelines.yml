@@ -64,6 +64,11 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: DEPLOY_ALL_TASKSVAR
+  ${{ if eq(parameters.deploy_all_tasks, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
