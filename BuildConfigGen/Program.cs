@@ -549,7 +549,7 @@ namespace BuildConfigGen
 
                         if (config.enableBuildConfigOverrides)
                         {
-                            EnsureBuildConfigFileOverrides(config, taskTargetPath);
+                            EnsureBuildConfigFileOverrides(config, taskTargetPath, generatedFolder, task);
                         }
 
                         try
@@ -600,7 +600,7 @@ namespace BuildConfigGen
 
                                 if (config.enableBuildConfigOverrides)
                                 {
-                                    CopyConfigOverrides(gitRootPath, taskTargetPath, taskOutput, config);
+                                    CopyConfigOverrides(gitRootPath, taskTargetPath, taskOutput, config, generatedFolder, task);
                                 }
 
                                 // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
@@ -620,7 +620,7 @@ namespace BuildConfigGen
 
                             if (config.isNode)
                             {
-                                GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath);
+                                GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath, generatedFolder, task);
 
                                 string buildConfigPackageJsonPath = Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json");
 
@@ -781,7 +781,7 @@ namespace BuildConfigGen
             return hasPreprocessorDirectives;
         }
 
-        private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
+        private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath, string generatedFolder, string taskName)
         {
             if (!config.enableBuildConfigOverrides)
             {
@@ -789,7 +789,7 @@ namespace BuildConfigGen
             }
 
             string path, readmeFile;
-            GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out readmeFile);
+            GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out readmeFile, generatedFolder, taskName);
 
             if (!Directory.Exists(path))
             {
@@ -799,7 +799,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory", suppressValidationErrorIfTargetPathDoesntExist: !Knob.Default.SourceDirectoriesMustContainPlaceHolders);
         }
 
-        private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
+        private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile, string generatedFolder, string taskName)
         {
             string directoryName = config.name;
 
@@ -813,11 +813,20 @@ namespace BuildConfigGen
                 directoryName = config.overriddenDirectoryName;
             }
 
-            path = Path.Combine(taskTargetPath, buildConfigs, directoryName);
-            readmeFile = Path.Combine(taskTargetPath, buildConfigs, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
+            if (config.useGlobalVersion)
+            {
+                // for global version, place artifacts in _generated (such as package-lock)
+                path = Path.Combine(generatedFolder, buildConfigs, taskName, directoryName);
+                readmeFile = Path.Combine(generatedFolder, buildConfigs, taskName, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
+            }
+            else
+            {
+                path = Path.Combine(taskTargetPath, buildConfigs, directoryName);
+                readmeFile = Path.Combine(taskTargetPath, buildConfigs, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
+            }
         }
 
-        private static void CopyConfigOverrides(string gitRootPath, string taskTargetPath, string taskOutput, Config.ConfigRecord config)
+        private static void CopyConfigOverrides(string gitRootPath, string taskTargetPath, string taskOutput, Config.ConfigRecord config, string generatedFolder, string taskName)
         {
             if (!config.enableBuildConfigOverrides)
             {
@@ -825,7 +834,7 @@ namespace BuildConfigGen
             }
 
             string overridePathForBuildConfig;
-            GetBuildConfigFileOverridePaths(config, taskTargetPath, out overridePathForBuildConfig, out _);
+            GetBuildConfigFileOverridePaths(config, taskTargetPath, out overridePathForBuildConfig, out _, generatedFolder, taskName);
 
             bool doCopy;
             if (Knob.Default.SourceDirectoriesMustContainPlaceHolders)

@@ -307,7 +307,7 @@ var run = function (cl, inheritStreams, noHeader, throwOnError) {
         if (!inheritStreams) {
             console.error(err.output ? err.output.toString() : err.message);
         }
-        
+
         if(throwOnError)
         {
             throw new Error('Failed to run: ' + cl + ' exit code: ' + err.status);
@@ -1955,7 +1955,11 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
             
             if (config) {  
-                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+                if(config==="LocalPackages"){
+                    dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
+                }else{
+                    dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+                }
             }
             
             // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
