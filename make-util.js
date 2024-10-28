@@ -698,6 +698,20 @@ var getExternalsAsync = async function (externals, destRoot) {
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
             var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
 
+            // If nuget doesn't find specific package version, it will download the latest.
+            // We can't specify nuget to fail such request, so we need at least to check version post-factum.
+            const { XMLParser } = require("fast-xml-parser");
+            const parser = new XMLParser();
+
+            const nuspecPath = path.join(packageSource, package.name + '.nuspec');
+            const nuspecXml = fs.readFileSync(nuspecPath);
+            const nuspec = parser.parse(nuspecXml);
+
+            const nuspecVersion = nuspec && nuspec.package && nuspec.package.metadata && nuspec.package.metadata.version;
+            if (nuspecVersion !== package.version) {
+                fail(`Expected version '${package.version}' but got '${nuspecVersion}' for nuget package '${package.name}'`);
+            }
+
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
         }
@@ -1747,28 +1761,22 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
+ * Ensure Pre-reqs for buildConfigGen (e.g. dotnet)
  * @param {String} baseConfigToolPath base build config tool path
- * @returns {String} Path to the executed file
  */
-var getBuildConfigGenerator = function (baseConfigToolPath) {
-    var programPath = "";
+var ensureBuildConfigGeneratorPrereqs = function (baseConfigToolPath) {
     var configToolBuildUtility = "";
 
     if (os.platform() === 'win32') {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
     } else {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
     // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
     run(configToolBuildUtility, true);
-
-    return programPath;
 };
-exports.getBuildConfigGenerator = getBuildConfigGenerator;
+exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
 
 /**
  * Function to validate or write generated tasks
@@ -1785,7 +1793,9 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     var tasks = taskList.join('|')
-    const programPath = getBuildConfigGenerator(baseConfigToolPath);
+    ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
+    var programPath = `dotnet run --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+
     const args = [
         "--task",
         `"${tasks}"`
@@ -1937,19 +1947,23 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-
+            
             if (config) {  
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            const folderPath = path.dirname(dest);
-            if (!fs.existsSync(folderPath)) {
-                console.log(`Creating folder ${folderPath}`);
-                shell.mkdir('-p', folderPath);
-            }
+            // only update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists
+            if(fs.existsSync(dest))
+            {
+                const folderPath = path.dirname(dest);
+                if (!fs.existsSync(folderPath)) {
+                    console.log(`Creating folder ${folderPath}`);
+                    shell.mkdir('-p', folderPath);
+                }
 
-            console.log(`Copying ${candidatePath} to ${dest}`);
-            fs.copyFileSync(candidatePath, dest);
+                console.log(`Copying ${candidatePath} to ${dest}`);
+                fs.copyFileSync(candidatePath, dest);
+            }
         });
     }
 }

@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 0
   },
   "demands": [],
@@ -59,7 +59,7 @@
     "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_3": "0.246.1"
+    "Default": "0.247.0",
+    "Node20_229_3": "0.247.1"
   }
 }

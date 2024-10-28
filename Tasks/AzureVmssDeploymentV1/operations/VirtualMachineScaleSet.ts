@@ -84,7 +84,8 @@ export default class VirtualMachineScaleSet {
                     autoUpgradeMinorVersion: true,
                     settings: {
                         "commandToExecute": customScriptInfo.command,
-                        "fileUris": customScriptInfo.blobUris
+                        "fileUris": customScriptInfo.blobUris,
+                        "managedIdentity":{}
                     },
                     protectedSettings: {
                         "storageAccountName": customScriptInfo.storageAccount.name

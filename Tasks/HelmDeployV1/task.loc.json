@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 4
   },
   "demands": [],
   "groups": [
@@ -485,7 +485,7 @@
     {
       "target": "azureResourceGroupForACR",
       "endpointId": "$(azureSubscriptionEndpointForACR)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
