@@ -5,8 +5,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gradletask.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-//  need to detect current dir (e.g. for Node20 it will be GradleV4_Node20\Tests)
-// __dirname - Current Dir(GradleV4\Tests)
+//  need to detect current dir (e.g. for Node20 it will be GradleV3_Node20\Tests)
+// __dirname - Current Dir(GradleV3\Tests)
 const gradleFolder = path.basename(path.join(__dirname, '..'))
 
  //escape for Windows directories
@@ -18,7 +18,6 @@ let taskReportValidBuildDirReplaced: string = path.join(taskReportValidDir, 'bui
 let taskReportValidBuildSonarDir: string = path.join(taskReportValidBuildDir, 'sonar');
 let taskReportValidBuildSonarDirReplaced: string = path.join(taskReportValidBuildDir, 'sonar').replace(/\\/g, '/');
 let taskReportValidBuildSonarReportTaskTextDirReplaced: string = path.join(taskReportValidBuildSonarDir, 'report-task.txt').replace(/\\/g, '/');
-let ccReportDirReplaced: string = path.join(__dirname, 'CCReport43F6D5EF', 'coverage.xml').replace(/\\/g, '/');
 
 //Env vars in the mock framework must replace '.' with '_'
 //replace with mock of setVariable when task-lib has the support
@@ -83,9 +82,6 @@ let myAnswers: string = `{
       ]
    },
    "stats":{
-      "${ccReportDirReplaced}":{
-         "isFile":true
-      },
       "${sqAnalysisDirReplaced}":{
          "isFile":true
       },

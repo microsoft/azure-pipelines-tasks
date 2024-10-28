@@ -15,6 +15,8 @@ import { publishTestResults } from './Modules/publish-test-results';
 import { ICodeAnalysisResult, ITaskResult } from './interfaces';
 import { resolveTaskResult } from './Modules/utils';
 
+
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));

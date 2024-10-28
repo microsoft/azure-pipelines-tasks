@@ -14,7 +14,6 @@ let taskReportValidBuildDirReplaced: string = path.join(taskReportValidDir, 'bui
 let taskReportValidBuildSonarDir: string = path.join(taskReportValidBuildDir, 'sonar');
 let taskReportValidBuildSonarDirReplaced: string = path.join(taskReportValidBuildDir, 'sonar').replace(/\\/g, '/');
 let taskReportValidBuildSonarReportTaskTextDirReplaced: string = path.join(taskReportValidBuildSonarDir, 'report-task.txt').replace(/\\/g, '/');
-let ccReportDirReplaced: string = path.join(__dirname, 'CCReport43F6D5EF', 'coverage.xml').replace(/\\/g, '/');
 
 //Env vars in the mock framework must replace '.' with '_'
 //replace with mock of setVariable when task-lib has the support
@@ -74,9 +73,6 @@ let myAnswers: string = `{
       ]
    },
    "stats":{
-      "${ccReportDirReplaced}":{
-         "isFile":true
-      },
       "${sqAnalysisDirReplaced}":{
          "isFile":true
       },

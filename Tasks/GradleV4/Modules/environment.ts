@@ -89,27 +89,6 @@ export function setGradleOpts(gradleOptions: string): void {
     }
 }
 
-/**
- * Determine Gradle version by running ./gradlew --version
- * @param {string} wrapperScript - Relative path from the repository root to the Gradle Wrapper script.
- * @returns {string} Gradle version
- */
-export function getGradleVersion(wrapperScript: string): string {
-    const gradleVersionRunner: ToolRunner = tl.tool(wrapperScript);
-    gradleVersionRunner.arg('--version');
-
-    const gradleOutput: string = gradleVersionRunner.execSync().stdout;
-    const gradleVersion: string = extractGradleVersion(gradleOutput);
-
-    if (gradleVersion === 'unknown'){
-        tl.warning(tl.loc('UnableToExtractGradleVersion'));
-    }
-
-    tl.debug(`Gradle version: ${gradleVersion}`);
-
-    return gradleVersion;
-}
-
 export function extractGradleVersion(str: string): string {
     const regex = /^Gradle (?<version>\d+\.\d+(?:\.\d+)?.*$)/m;
     const match = str.match(regex);

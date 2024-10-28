@@ -21,14 +21,12 @@ let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';
 
 let gradleFile: string = `/${gradleFolder}/node_modules/azure-pipelines-tasks-codeanalysis-common/sonar.gradle`;
-let ccCoverageXmlFile: string = 'CCReport43F6D5EF/coverage.xml';
 let checkstyleFile: string = `/${gradleFolder}/node_modules/azure-pipelines-tasks-codeanalysis-common/checkstyle.gradle`;
 let findbugsFile: string = `/${gradleFolder}/node_modules/azure-pipelines-tasks-codeanalysis-common/findbugs.gradle`;
 let pmdFile: string = `/${gradleFolder}/node_modules/azure-pipelines-tasks-codeanalysis-common/pmd.gradle`;
 // Fix up argument paths for Windows
 if (isWindows) {
     gradleFile = `\\${gradleFolder}\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\sonar.gradle`;
-    ccCoverageXmlFile = 'CCReport43F6D5EF\\coverage.xml';
     checkstyleFile = `\\${gradleFolder}\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\checkstyle.gradle`;
     findbugsFile = `\\${gradleFolder}\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\findbugs.gradle`;
     pmdFile = `\\${gradleFolder}\\node_modules\\azure-pipelines-tasks-codeanalysis-common\\pmd.gradle`;

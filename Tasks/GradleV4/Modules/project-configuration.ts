@@ -1,31 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
-/**
- * Check to determine if project multi module or not
- * @param {string} wrapperScript - The `gradlew` script to execute
- * @returns {boolean} `true` if project is multi module, otherwise `false`
- */
-export function isMultiModuleProject(wrapperScript: string): boolean {
-    const gradleBuild: ToolRunner = tl.tool(wrapperScript);
-    gradleBuild.arg('properties');
-    gradleBuild.line(tl.getInput('options', false));
-
-    const data: string = gradleBuild.execSync().stdout;
-    if (typeof data !== 'undefined' && data) {
-        const regex: RegExp = new RegExp('subprojects: .*');
-        const subProjects: RegExpExecArray = regex.exec(data);
-        tl.debug('Data: ' + subProjects);
-
-        if (typeof subProjects !== 'undefined' && subProjects && subProjects.length > 0) {
-            tl.debug('Sub Projects info: ' + subProjects.toString());
-            return (subProjects.join(',').toLowerCase() !== 'subprojects: []');
-        }
-    }
-    return false;
-}
 
 /**
  * Configure wrapper script:

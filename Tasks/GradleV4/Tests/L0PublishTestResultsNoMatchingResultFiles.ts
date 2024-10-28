@@ -13,7 +13,6 @@ tr.setInput('javaHomeSelection', 'JDKVersion');
 tr.setInput('jdkVersion', 'default');
 tr.setInput('publishJUnitResults', 'true');
 tr.setInput('testResultsFiles', '*InvalidTestFilter*.xml');
-tr.setInput('codeCoverageTool', 'None');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
