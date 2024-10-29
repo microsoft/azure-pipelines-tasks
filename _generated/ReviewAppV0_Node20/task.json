@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 248,
     "Patch": 1
   },
   "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
@@ -63,7 +63,7 @@
     "CreatedDynamicResource": "A dynamic resource is created using %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_12": "0.246.1"
+    "Default": "0.248.0",
+    "Node20_229_12": "0.248.1"
   }
 }

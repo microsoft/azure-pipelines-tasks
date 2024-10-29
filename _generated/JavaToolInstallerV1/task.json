@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 4
+    "Minor": 248,
+    "Patch": 0
   },
   "satisfies": [
     "Java",
@@ -229,7 +229,7 @@
     "ErrorCleaningFolder": "Folder cleaning error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.4",
-    "Node20_229_14": "1.247.5"
+    "Default": "1.248.0",
+    "Node20_229_14": "1.248.1"
   }
 }
