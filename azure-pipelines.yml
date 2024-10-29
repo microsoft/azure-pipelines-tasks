@@ -125,6 +125,7 @@ extends:
       # Publish
       - job: publish
         displayName: Publish
+        timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
         condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
