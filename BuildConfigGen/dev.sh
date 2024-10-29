@@ -37,7 +37,7 @@ function detect_platform_and_runtime_id ()
 }
 
 SCRIPT_DIR=$1
-pushd $SCRIPT_DIR
+pushd "$SCRIPT_DIR"
 source "$SCRIPT_DIR/Misc/helpers.sh"
 DOTNETSDK_INSTALLDIR=$2
 DOTNETSDK_VERSION=$3
