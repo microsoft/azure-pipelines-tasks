@@ -1,5 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    enableDebugPref = [System.Convert]::ToBoolean($env:ENABLE_DEBUG_PREFERENCE)
 }
 
 # Private module-scope variables.
@@ -7,7 +8,7 @@ $script:azureModule = $null
 $script:azureRMProfileModule = $null
 
 # Override the DebugPreference.
-if ($global:DebugPreference -eq 'Continue') {
+if ($global:DebugPreference -eq 'Continue' -and $featureFlags.enableDebugPref -ne $true) {
     Write-Verbose '$OVERRIDING $global:DebugPreference from ''Continue'' to ''SilentlyContinue''.'
     $global:DebugPreference = 'SilentlyContinue'
 }
