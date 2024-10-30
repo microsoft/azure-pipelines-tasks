@@ -2,8 +2,84 @@
 param()
 
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_ 
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk 
+Import-Module $PSScriptRoot\ps_modules\TlsHelper_ 
 
 . $PSScriptRoot\helpers.ps1
+
+function StartNamedPiped($connectedServiceName) {
+    # Create a named pipe with the specified security
+    $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("praval1","InOut")
+
+    Write-Host "Waiting for a connection..."
+    $pipe.WaitForConnection()
+
+    Write-Host "Client connected."
+
+    # Read data from the pipe
+    $reader = New-Object System.IO.StreamReader($pipe)
+    while ($true) {
+        $line = $reader.ReadLine()
+        if ($line -eq $null) { break }
+        
+        $response = Get-ConnectedServiceNameAccessToken -connectedServiceName $connectedServiceName
+        Write-Host "Received: $line"
+        Write-Host "Sending response: $response"
+        
+        # Send the response back to the client
+        $writer = New-Object System.IO.StreamWriter($pipe)
+        $writer.WriteLine($response)
+        $writer.Flush()
+    }
+
+    # Close the pipe
+    $reader.Close()
+    $pipe.Close()
+}
+
+class MyClass {
+
+    [string] GetConnectedServiceNameAccessToken()
+    {
+        Set-PSDebug -Trace 1
+        $DebugPreference = "Continue"
+
+        try {
+            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+        Write-Host " ConnectionServiceName : ${connectedServiceName}"
+
+        $accessToken = @{
+            token_type = $null
+            access_token = $null
+            expires_on = $null
+        }
+
+        Write-Host "endpoint for connectedServiceName: $connectedServiceName";
+        $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+        Write-Host "endpoint: $vstsEndpoint";
+
+        $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+            -connectedServiceNameARM $connectedServiceName `
+            -scope "499b84ac-1321-427f-aa17-267ca6975798"
+
+        $accessToken.token_type = $result.TokenType
+        $accessToken.access_token = $result.AccessToken
+        $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
+
+        Write-Host  "Get-ConnectedServiceNameAccessToken: Received accessToken";
+        Write-Host $accessToken.token_type
+        Write-Host $accessToken.access_token
+        Write-Host $accessToken.expires_on
+        
+        return "Success"
+        } catch {
+            Write-Host $_
+            return "Failed"
+        }
+    }
+}
 
 function Get-ActionPreference {
     param (
@@ -33,6 +109,39 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $vstsAccessTok = $vstsEndpoint.auth.parameters.AccessToken
+    $env:vstsAccessTok = $vstsAccessTok
+
+    # Create a runspace to handle the Get-DerivedValue function
+    $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+    $runspacePool.Open()
+    
+    $myObject = [MyClass]::new()
+
+    # Create a PowerShell instance within the runspace pool
+    $psRunspace = [powershell]::Create().AddScript({
+        param($obj)
+        try {
+            $result = $obj.GetConnectedServiceNameAccessToken()
+            return $result
+        } catch {
+            return $_
+        }    
+    }).AddArgument($myObject)
+    
+    $a = [System.AppDomain]::CurrentDomain
+    Write-Host "[System.AppDomain]::CurrentDomain $a"
+
+    $psRunspace.RunspacePool = $runspacePool
+    $asyncResult = $psRunspace.BeginInvoke()
+    $derivedValue = $psRunspace.EndInvoke($asyncResult)
+
+    # $myObject.GetConnectedServiceNameAccessToken()
+
+    # Output the derived value
+    Write-Output "The derived value is: $derivedValue"
+    
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
     $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Default'
@@ -133,6 +242,40 @@ try {
     $joinedContents = [System.String]::Join(
         ([System.Environment]::NewLine),
         $contents);
+
+    if (![string]::IsNullOrEmpty($connectedServiceName)) {
+        $joinedContents = '
+
+            $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "praval1", [System.IO.Pipes.PipeDirection]::InOut)
+            $AzDoTokenPipe.Connect(5000) # Wait up to 5 seconds for the connection
+            Write-Host "Connected to the server."
+            
+            function Get-AzDoToken {
+                try {
+                    $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+                    $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
+
+                    $input = "Get-AzDoToken"
+
+                    # Send command to the server
+                    $writer.WriteLine($input)
+                    $writer.Flush()
+
+                    # Read response from the server
+                    $response = $reader.ReadLine()
+                    Write-Host "Server response: $response"
+                    
+                }
+                catch {
+                    Write-Host "Error: $_"
+                }
+            }
+            
+            ' + $joinedContents;
+    }   
+
+    Write-Host $joinedContents
+
     if ($input_showWarnings) {
         $joinedContents = '
             $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];

@@ -164,9 +164,6 @@ function Get-EnvironmentAuthUrl {
     )
 
     $stringOb = $endpoint | Out-String
-    Write-Host $stringOb    
-    Write-Host $endpoint.Data
-    Write-Host $endpoint.Data.activeDirectoryAuthority
 
     $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl } 
 
@@ -182,10 +179,6 @@ function Get-EnvironmentAuthUrl {
             $envAuthUrl = if ($useMSAL) { $script:defaultEnvironmentMSALAuthUri } else { $script:defaultEnvironmentADALAuthUri }
         }
     }
-
-    Write-Host "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
-    Write-Host "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
-    Write-Host "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
 
     return $envAuthUrl
 }
@@ -362,16 +355,12 @@ function Build-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
     )
 
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
-    Write-Host $clientId
     $tenantId = $endpoint.Auth.Parameters.TenantId
-    Write-Host $tenantId
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint -useMSAL $true
-    Write-Host $envAuthUrl
 
     try {
         # load the MSAL library
@@ -390,10 +379,10 @@ function Build-MSALInstance {
         elseif ($endpoint.Auth.Scheme -eq $wifConnection) {
             Write-Verbose "MSAL - WorkloadIdentityFederation is used";
 
-            if ([string]::IsNullOrWhiteSpace($vstsAccessToken)) {
-                $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-                $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-            }
+            $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+            $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+
+            Write-Verbose "ServiceConnectionId ${connectedServiceNameARM} and vstsAccessToken ${vstsAccessToken}"
 
             $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
@@ -419,13 +408,12 @@ function Get-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
     )
 
     # build MSAL if instance does not exist
     if ($null -eq $script:msalClientInstance) {
-        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
+        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM
     }
 
     return $script:msalClientInstance
@@ -1389,10 +1377,12 @@ function Get-VstsFederatedToken {
     $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
 
     $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
+    Write-Verbose "vsServiceDll ${vsServicesDll}"
     if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
         Write-Verbose "$vsServicesDll not found."
         throw
     }
+
     try {
         Add-Type -LiteralPath $vsServicesDll
     } catch {
@@ -1410,12 +1400,27 @@ function Get-VstsFederatedToken {
         Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
         return $null
     }
-    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+
+    try{
+        $a = [System.AppDomain]::CurrentDomain
+        Write-Host "[System.AppDomain]::CurrentDomain $a"
+        [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+    } catch {
+        Write-Verbose "CurrentDomain exception : $_"
+    }
+    
 
     $taskHttpClient = $null;
     try {
         Write-Verbose "Trying again to construct the HTTP client."
+        Write-Verbose "Trying with the external token"
+        $vstsAccessToken = $env:vstsAccessTok
+        Write-Verbose "Token : $vstsAccessToken"
+
         $federatedCredential = New-Object Microsoft.VisualStudio.Services.OAuth.VssOAuthAccessTokenCredential($vstsAccessToken)
+
+        Write-Verbose "Post : federatedCredential $federatedCredential"
+
         $uri = Get-VstsTaskVariable -Name 'System.CollectionUri' -Require
         $vssCredentials = New-Object Microsoft.VisualStudio.Services.Common.VssCredentials(
             (New-Object Microsoft.VisualStudio.Services.Common.WindowsCredential($false)), # Do not use default credentials.
@@ -1458,20 +1463,20 @@ function Get-AccessTokenMSALWithCustomScope {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $scope,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+        [string][Parameter(Mandatory=$false)] $scope
     )
 
-    if ([string]::IsNullOrWhiteSpace($vstsAccessToken)) {
+    try {
         Get-MSALInstance $endpoint $connectedServiceNameARM
-    } else {
-        Write-Host "yo"
-        Get-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
+        Write-Host "Get-MSALInstance completed"  
+    } catch {
+        Write-Host "Get-MSALInstance failed with $_"
     }
-     
+
     # prepare MSAL scopes
     [string] $resourceId = $scope + "/.default"
     $scopes = [Collections.Generic.List[string]]@($resourceId)
+
     try {
         Write-Verbose "Fetching Access Token - MSAL"
         $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()

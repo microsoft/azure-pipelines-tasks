@@ -6,9 +6,86 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
-import { spawn, exec } from 'child_process';
 var uuidV4 = require('uuid/v4');
+const { exec } = require('child_process');
+import * as msal from "@azure/msal-node";
+import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+import * as net from 'net';
 
+export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+
+  // workloadidentityfederation
+  const authorizationScheme = tl
+    .getEndpointAuthorizationSchemeRequired(connectedService)
+    .toLowerCase();
+
+  // get token using workload identity federation or managed service identity
+  if (authorizationScheme !== "workloadidentityfederation") {
+    throw new Error(`Authorization scheme ${authorizationScheme} is not supported.`);
+  }
+
+  // use azure devops webapi to get federated token using service connection
+  var servicePrincipalId: string =
+    tl.getEndpointAuthorizationParameterRequired(connectedService, "serviceprincipalid");
+
+  var servicePrincipalTenantId: string =
+    tl.getEndpointAuthorizationParameterRequired(connectedService, "tenantid");
+
+  const authorityUrl =
+    tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
+
+  tl.debug(`Getting federated token for service connection ${connectedService}`);
+
+  var federatedToken: string = await getFederatedToken(connectedService);
+
+  tl.debug(`Got federated token for service connection ${connectedService}`);
+
+  // exchange federated token for service principal token (below)
+  return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
+}
+
+async function getAccessTokenFromFederatedToken(
+    servicePrincipalId: string,
+    servicePrincipalTenantId: string,
+    federatedToken: string,
+    authorityUrl: string
+  ): Promise<string> {
+    const AzureDevOpsResourceId = "499b84ac-1321-427f-aa17-267ca6975798";
+  
+    // use msal to get access token using service principal with federated token
+    tl.debug(`Using authority url: ${authorityUrl}`);
+    tl.debug(`Using resource: ${AzureDevOpsResourceId}`);
+  
+    const config: msal.Configuration = {
+      auth: {
+        clientId: servicePrincipalId,
+        authority: `${authorityUrl.replace(/\/+$/, "")}/${servicePrincipalTenantId}`,
+        clientAssertion: federatedToken,
+      },
+      system: {
+        loggerOptions: {
+          loggerCallback: (level, message, containsPii) => {
+            tl.debug(message);
+          },
+          piiLoggingEnabled: false,
+          logLevel: msal.LogLevel.Verbose,
+        },
+      },
+    };
+  
+    const app = new msal.ConfidentialClientApplication(config);
+  
+    const request: msal.ClientCredentialRequest = {
+      scopes: [`${AzureDevOpsResourceId}/.default`],
+      skipCache: true,
+    };
+  
+    const result = await app.acquireTokenByClientCredential(request);
+  
+    tl.debug(`Got access token for service principal ${servicePrincipalId}`);
+  
+    return result?.accessToken;
+}
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
@@ -22,6 +99,7 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
 
 async function startNamedPiped(pipeName: string, connectedService: string) {
     const content = `
+
             # Create a security descriptor to allow Everyone to access the pipe
             $pipePath = "/tmp/$pipeName" 
 
@@ -34,26 +112,67 @@ async function startNamedPiped(pipeName: string, connectedService: string) {
             Write-Host "Waiting for a connection..."
             $pipe.WaitForConnection()
 
+            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsAzureRestHelpers_ -Force
+            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsAzureHelpers_ -Force
+            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsTaskSdk -Force
+            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/TlsHelper_ -Force
+
+            $connectedServiceName = "${connectedService}"
+
+
             Write-Host "Client connected."
 
-            # Send a message to the client
-            $message = "Hello from the server!"
-            $writer = New-Object System.IO.StreamWriter($pipe)
-            $writer.WriteLine($message)
-            $writer.Flush()
+            # Read data from the pipe
+            $reader = New-Object System.IO.StreamReader($pipe)
+            while ($true) {
+                Write-Host "Hey"
+                $line = $reader.ReadLine()
+                if ($line -eq $null) { break }
+                
+                $response = $line
+                Write-Host "Received: $line"
+                Write-Host "Sending response: $response"
+
+                $accessToken = @{
+                    token_type = $null
+                    access_token = $null
+                    expires_on = $null
+                }
+
+                try {
+                    Write-Host "endpoint for connectedServiceName: $connectedServiceName";
+                    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+                    Write-Host "endpoint: $endpoint";
+
+                    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint -connectedServiceNameARM $connectedServiceName -scope "499b84ac-1321-427f-aa17-267ca6975798"
+
+                    $accessToken.token_type = $result.TokenType
+                    $accessToken.access_token = $result.AccessToken
+                    $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
+
+                    Write-Host "Get-ConnectedServiceNameAccessToken: Received accessToken";
+                } catch {
+                    Write-Host $_
+                }
+                
+
+                Write-Host $accessToken;
+                
+                # Send the response back to the client
+                $writer = New-Object System.IO.StreamWriter($pipe)
+                $writer.WriteLine($accessToken)
+                $writer.Flush()
+            }
 
             # Close the pipe
-            $writer.Close()
+            $reader.Close()
             $pipe.Close()
     `;
     
     // Spawn the PowerShell process
     let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true));
 
-    powershell.arg('-ExecutionPolicy')
-                  .arg('Bypass')
-                  .arg('-Command')
-                  .arg(content);
+    powershell.arg('-Command').arg(content);
 
     let options = <tr.IExecOptions>{
         failOnStdErr: false,
@@ -80,16 +199,32 @@ async function startNamedPiped(pipeName: string, connectedService: string) {
     return powershell;
 }
 
+function findPowerShellPath(): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+        const command = 'which pwsh';
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error finding PowerShell: ${stderr}`);
+                resolve(null);
+            } else {
+                resolve(stdout.trim());
+            }
+        });
+    });
+}
+
 async function run() {
-    let server;
     try {
         // Get inputs.
 
         const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
         console.log("connectedServiceName: " + connectedServiceName);
+        // getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
 
         let pipe_name : string = "praval";
-        server = startNamedPiped(pipe_name, connectedServiceName);
+        startNamedPiped(pipe_name, connectedServiceName);
+
 
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
@@ -170,30 +305,29 @@ async function run() {
 
         if (connectedServiceName && connectedServiceName.trim().length > 0) {
             script = `
+
+                $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "${pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
+                $AzDoTokenPipe.Connect(10000) # Wait up to 5 seconds for the connection
+                Write-Host "Connected to the server."
+                
                 function Get-Token {
-
-                    $pipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "${pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
                     try {
-                        $pipe.Connect(5000) # Wait up to 5 seconds for the connection
-                        Write-Host "Connected to the server."
+                        $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+                        $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
 
-                        $writer = New-Object System.IO.StreamWriter($pipe)
-                        $reader = New-Object System.IO.StreamReader($pipe)
+                        $input = "Input"
 
-                        # Send a message to the server
-                        $message = "Hello from PowerShell!"
-                        $writer.WriteLine($message)
+                        # Send command to the server
+                        $writer.WriteLine($input)
                         $writer.Flush()
 
-                        # Read the response
+                        # Read response from the server
                         $response = $reader.ReadLine()
-                        Write-Host "Received from server: $response"
+                        Write-Host "Server response: $response"
+                        
                     }
                     catch {
                         Write-Host "Error: $_"
-                    }
-                    finally {
-                        $pipe.Dispose()
                     }
                 }
 
@@ -294,9 +428,6 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
-    }
-    finally {
-        server.kill();
     }
 }
 

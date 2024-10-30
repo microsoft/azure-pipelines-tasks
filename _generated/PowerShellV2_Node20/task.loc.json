@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
-    "Patch": 11
+    "Minor": 248,
+    "Patch": 45
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -273,7 +273,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "2.247.10",
-    "Node20-225": "2.247.11"
+    "Default": "2.248.44",
+    "Node20-225": "2.248.45"
   }
 }
