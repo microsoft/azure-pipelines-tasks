@@ -68,10 +68,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          <Val><![CDATA[Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se questa impostazione è impostata, feedUrl è obbligatorio. Le connessioni al servizio per organizzazioni esterne/raccolte ed endpoint personalizzati non sono compatibili.]]></Val>
+            <Val><![CDATA[Credenziali da utilizzare per i registri che individuano il file .npmrc di un progetto. Usa con feedUrl per specificare le credenziali usate per il singolo registro in un file .npmrc. Non compatibile con customEndpoint.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -254,10 +257,13 @@
       </Item>
       <Item ItemId=";loc.messages.MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          <Val><![CDATA[If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L'URL del feed e la connessione al servizio devono essere impostati e non possono essere vuoti.]]></Val>
+            <Val><![CDATA[Se viene specificato l'URL del feed, la connessione al servizio 'Azure DevOps' deve essere specificata e non può essere vuota.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -68,10 +68,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          <Val><![CDATA[Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[如果設定此選項，則需要 feedUrl。外部組織/集合和自訂端點的服務連線不相容。]]></Val>
+            <Val><![CDATA[要用於找到專案 .npmrc 檔案之登錄的認證。搭配 feedUrl 使用，以指定用於 .npmrc 檔案中單一登錄的認證。與 customEndpoint 不相容。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -254,10 +257,13 @@
       </Item>
       <Item ItemId=";loc.messages.MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          <Val><![CDATA[If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[摘要 URL 和服務連線都必須設定，且不能是空的。]]></Val>
+            <Val><![CDATA[如果提供摘要 URL，則必須提供「Azure DevOps」服務連線，而且不能是空的。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
