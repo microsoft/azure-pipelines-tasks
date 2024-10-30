@@ -16,8 +16,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 247,
+    "Major": 5,
+    "Minor": 248,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -30,11 +30,6 @@
     {
       "name": "junitTestResults",
       "displayName": "JUnit Test Results",
-      "isExpanded": true
-    },
-    {
-      "name": "codeCoverage",
-      "displayName": "Code Coverage",
       "isExpanded": true
     },
     {
@@ -125,87 +120,6 @@
       "groupName": "junitTestResults",
       "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
       "visibleRule": "publishJUnitResults = true"
-    },
-    {
-      "name": "codeCoverageTool",
-      "aliases": [
-        "codeCoverageToolOption"
-      ],
-      "type": "pickList",
-      "label": "Code coverage tool",
-      "required": false,
-      "groupName": "codeCoverage",
-      "defaultValue": "None",
-      "helpMarkDown": "Select the code coverage tool.",
-      "options": {
-        "None": "None",
-        "Cobertura": "Cobertura",
-        "JaCoCo": "JaCoCo"
-      }
-    },
-    {
-      "name": "classFilter",
-      "aliases": [
-        "codeCoverageClassFilter"
-      ],
-      "type": "string",
-      "label": "Class inclusion/exclusion filters",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
-      "visibleRule": "codeCoverageTool != None"
-    },
-    {
-      "name": "classFilesDirectories",
-      "aliases": [
-        "codeCoverageClassFilesDirectories"
-      ],
-      "type": "string",
-      "label": "Class files directories",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
-      "visibleRule": "codeCoverageTool = JaCoCo"
-    },
-    {
-      "name": "srcDirectories",
-      "aliases": [
-        "codeCoverageSourceDirectories"
-      ],
-      "type": "string",
-      "label": "Source files directories",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "This field is required for a multi-module project. Specify a comma-separated list of relative paths from the Maven POM file to source code directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
-      "visibleRule": "codeCoverageTool = JaCoCo"
-    },
-    {
-      "name": "failIfCoverageEmpty",
-      "aliases": [
-        "codeCoverageFailIfEmpty"
-      ],
-      "type": "boolean",
-      "label": "Fail when code coverage results are missing",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "Fail the build if code coverage did not produce any results to publish.",
-      "visibleRule": "codeCoverageTool != None"
-    },
-    {
-      "name": "restoreOriginalPomXml",
-      "aliases": [
-        "codeCoverageRestoreOriginalPomXml"
-      ],
-      "type": "boolean",
-      "label": "Restore original pom.xml after task execution",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "Code coverage modifies pom.xml to produce results. Use this option if you need to keep original pom.xml.",
-      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "javaHomeSelection",
@@ -364,16 +278,6 @@
       "helpMarkDown": "This option has changed from version 1 of the **Maven** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task."
     },
     {
-      "name": "isJacocoCoverageReportXML",
-      "type": "boolean",
-      "label": "Use XML Jacoco reports for SonarQube analysis",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "CodeAnalysis",
-      "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
-      "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
-    },
-    {
       "name": "sqMavenPluginVersionChoice",
       "type": "radio",
       "label": "SonarQube scanner for Maven version",
@@ -519,7 +423,6 @@
     "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
     "UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
     "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
-    "NoCodeCoverage": "No code coverage results were found to publish.",
     "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
     "EffectivePomInvalid": "Could not parse the effective POM.",
     "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",

@@ -16,8 +16,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 247,
+    "Major": 5,
+    "Minor": 248,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -30,11 +30,6 @@
     {
       "name": "junitTestResults",
       "displayName": "ms-resource:loc.group.displayName.junitTestResults",
-      "isExpanded": true
-    },
-    {
-      "name": "codeCoverage",
-      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
       "isExpanded": true
     },
     {
@@ -125,87 +120,6 @@
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.allowBrokenSymbolicLinks",
       "visibleRule": "publishJUnitResults = true"
-    },
-    {
-      "name": "codeCoverageTool",
-      "aliases": [
-        "codeCoverageToolOption"
-      ],
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.codeCoverageTool",
-      "required": false,
-      "groupName": "codeCoverage",
-      "defaultValue": "None",
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
-      "options": {
-        "None": "None",
-        "Cobertura": "Cobertura",
-        "JaCoCo": "JaCoCo"
-      }
-    },
-    {
-      "name": "classFilter",
-      "aliases": [
-        "codeCoverageClassFilter"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.classFilter",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
-      "visibleRule": "codeCoverageTool != None"
-    },
-    {
-      "name": "classFilesDirectories",
-      "aliases": [
-        "codeCoverageClassFilesDirectories"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.classFilesDirectories",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
-    },
-    {
-      "name": "srcDirectories",
-      "aliases": [
-        "codeCoverageSourceDirectories"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.srcDirectories",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
-      "visibleRule": "codeCoverageTool = JaCoCo"
-    },
-    {
-      "name": "failIfCoverageEmpty",
-      "aliases": [
-        "codeCoverageFailIfEmpty"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
-      "visibleRule": "codeCoverageTool != None"
-    },
-    {
-      "name": "restoreOriginalPomXml",
-      "aliases": [
-        "codeCoverageRestoreOriginalPomXml"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.restoreOriginalPomXml",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "codeCoverage",
-      "helpMarkDown": "ms-resource:loc.input.help.restoreOriginalPomXml",
-      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "javaHomeSelection",
@@ -364,16 +278,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
-      "name": "isJacocoCoverageReportXML",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isJacocoCoverageReportXML",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.isJacocoCoverageReportXML",
-      "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
-    },
-    {
       "name": "sqMavenPluginVersionChoice",
       "type": "radio",
       "label": "ms-resource:loc.input.label.sqMavenPluginVersionChoice",
@@ -519,7 +423,6 @@
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",

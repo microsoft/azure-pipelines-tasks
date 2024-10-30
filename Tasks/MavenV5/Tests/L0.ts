@@ -309,32 +309,6 @@ describe("Maven L0 Suite", function () {
         assert(testRunner.createdErrorIssue("Unhandled: Input required: javaHomeSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
     });
 
-    it('run maven with code coverage enabled and restore original pom.xml after', async function() {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-        const testPath = path.join(__dirname, 'L0RestoreOriginalPomXml.js');
-        const testRunner = new MockTestRunner(testPath);
-
-        await testRunner.runAsync();
-
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml package');
-
-        const readOriginalPomXmlLogIndex = testRunner.stdout.indexOf('Reading original pom.xml');
-        assert(readOriginalPomXmlLogIndex !== -1, 'should have read original pom.xml');
-        const wroteModifiedPomXmlLogIndex = testRunner.stdout.indexOf('Writing modified pom.xml contents');
-        assert(wroteModifiedPomXmlLogIndex !== -1, 'should have written modified pom.xml contents');
-        const wroteOriginalPomXmlLogIndex = testRunner.stdout.indexOf('Writing original pom.xml contents');
-        assert(wroteOriginalPomXmlLogIndex !== -1, 'should have written original pom.xml contents');
-
-        assert(readOriginalPomXmlLogIndex < wroteModifiedPomXmlLogIndex, 'it shouldn\'t have saved pom.xml before writing modified pom.xml contents');
-        assert(wroteModifiedPomXmlLogIndex < wroteOriginalPomXmlLogIndex, 'it shouldn\'t have restored original pom.xml before writing modified pom.xml contents');
-
-        assert(testRunner.invokedToolCount === 4, 'should have run maven exactly 4 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length === 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
-    });
-
     it('run maven with spotbugs plugin enabled', async function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
         const testPath = path.join(__dirname, 'L0SpotbugsPlugin.js');
