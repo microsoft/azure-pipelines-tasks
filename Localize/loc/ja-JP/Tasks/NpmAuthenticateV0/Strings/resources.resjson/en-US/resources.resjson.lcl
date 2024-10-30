@@ -68,10 +68,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          <Val><![CDATA[Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[これが設定されている場合は feedUrl が必須です。外部組織/コレクションおよびカスタム エンドポイントのサービス接続に互換性がありません。]]></Val>
+            <Val><![CDATA[プロジェクトの .npmrc ファイルにあるレジストリに使用する資格情報。feedUrl と共に使用して、.npmrc ファイルの中で、単一のレジストリに使用される資格情報を指定します。customEndpoint とは互換性がありません。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -254,10 +257,13 @@
       </Item>
       <Item ItemId=";loc.messages.MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          <Val><![CDATA[If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[フィード URL とサービス接続の両方を設定する必要があり、これらを空にすることはできません。]]></Val>
+            <Val><![CDATA[フィード URL を指定する場合は、'Azure DevOps' サービス接続を指定する必要があり、また、これを空にすることはできません。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

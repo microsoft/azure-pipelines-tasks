@@ -68,10 +68,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          <Val><![CDATA[Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Если этот параметр задан, требуется feedUrl. Подключения к службам для внешних организаций/коллекции и настраиваемых конечных точек несовместимы.]]></Val>
+            <Val><![CDATA[Учетные данные для использования в реестрах, расположенных в NPMRC-файле проекта. Используйте с feedUrl, чтобы указать учетные данные, применяемые для одного реестра в файле NPMRC. Несовместимо с customEndpoint.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -254,10 +257,13 @@
       </Item>
       <Item ItemId=";loc.messages.MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          <Val><![CDATA[If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Необходимо настроить и URL-адрес веб-канала, и подключение к службе. Они не могут быть пустыми.]]></Val>
+            <Val><![CDATA[Если указан URL-адрес канала, необходимо указать подключение службы "Azure DevOps" и оно не может быть пустым.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

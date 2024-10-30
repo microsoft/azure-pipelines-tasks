@@ -68,10 +68,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          <Val><![CDATA[Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 설정을 지정하면 feedUrl이 필요합니다. 외부 조직/컬렉션 및 사용자 지정 엔드포인트에 대한 서비스 연결은 호환되지 않습니다.]]></Val>
+            <Val><![CDATA[프로젝트의 .npmrc 파일을 찾은 레지스트리에 사용할 자격 증명입니다. feedUrl과 함께 사용하여 .npmrc 파일의 단일 레지스트리에 사용되는 자격 증명을 지정합니다. customEndpoint와 호환되지 않습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -254,10 +257,13 @@
       </Item>
       <Item ItemId=";loc.messages.MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          <Val><![CDATA[If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[피드 URL과 서비스 연결을 모두 설정해야 하며 비워 둘 수 없습니다.]]></Val>
+            <Val><![CDATA[피드 URL이 제공되면 'Azure DevOps' 서비스 연결을 제공해야 하며 비워 둘 수 없습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
