@@ -632,7 +632,6 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
                 }
             }  catch (e) {
                 console.error(e);
-                //process.exit(1);
                 results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
             }
         }
