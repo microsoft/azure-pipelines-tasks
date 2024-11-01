@@ -79,7 +79,7 @@ function Initialize-AzConfigOld {
             if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                 Write-Verbose "Supressing breaking changes warnings of Az module."
                 Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
-                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az  -Scope Process
+                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
             } else {
                 Write-Verbose "Update-AzConfig cmdlet is not available."
             }                            
@@ -95,37 +95,37 @@ function Initialize-AzConfigOld {
 function Initialize-AzConfigNew {
     Write-Verbose "Initializing Az Config."
 
-    if (![bool](Get-Command Get-AzConfig -ErrorAction SilentlyContinue)) {
-        Write-Verbose "Get-AzConfig cmdlet is not available."
-        return         
-    } 
-
     if (![bool](Get-Command Update-AzConfig -ErrorAction SilentlyContinue)) {
         Write-Verbose "Update-AzConfig cmdlet is not available."
         return
     }
 
-    $expression = ""
-    Write-Host "##[command]Get-AzConfig -AppliesTo Az -Scope Process"
-    $config = Get-AzConfig -AppliesTo Az -Scope Process
-
-    $configValue = $config | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
-    if ($null -eq $configValue -or $configValue.Value -ne $false) {
-        $expression += "-DisplayBreakingChangeWarning `$false "       
+    try {
+        # This should be the first Az command to prevent possible StackOverflow that might occur within the Az module
+        Write-Host "##[command]Update-AzConfig -CheckForUpgrade $false -AppliesTo Az -Scope Process"
+        Update-AzConfig -CheckForUpgrade $false -AppliesTo Az -Scope Process
+    }
+    catch {
+        # This might happen when current Az module does not support CheckForUpgrade yet. It should be safe to continue.
+        Write-Verbose "Failed to disable CheckForUpgrade." 
     }
 
-    $configValue = $config | Where-Object { $_.Key -eq "CheckForUpgrade" }  
-    if ($null -eq $configValue -or $configValue.Value -ne $false) {
-        $expression += "-CheckForUpgrade `$false "       
+    if (![bool](Get-Command Get-AzConfig -ErrorAction SilentlyContinue)) {
+        Write-Verbose "Get-AzConfig cmdlet is not available."
+        return         
     } 
 
-    if ([string]::IsNullOrEmpty($expression)) {
+    Write-Host "##[command]Get-AzConfig -AppliesTo Az"
+    $configValue = Get-AzConfig -AppliesTo Az | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
+    if ($null -eq $configValue -or $configValue.Value -eq $false) {
         Write-Verbose "No need to update the config."
-        return
+        return    
     } 
 
-    Write-Host "##[command]Invoke-Expression `"Update-AzConfig $expression -AppliesTo Az -Scope Process`""
-    Invoke-Expression "Update-AzConfig $expression -AppliesTo Az -Scope Process"
+    Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process"
+    Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
+
+    Write-Verbose "Az Config initialized."
 }
 
 # Not used, keep now in case if we need to revert back to the old implementation.
