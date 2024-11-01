@@ -33,6 +33,14 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
+- name: skip_tests
+  displayName: skipTests (Not for production use)
+  type: boolean
+  default: false
+- name: publishToDistributedTaskTest
+  displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
+  type: boolean
+  default: false  
 
 variables:
 - name: currentDate
@@ -55,6 +63,16 @@ variables:
     value: '1'
   ${{ else }}:
     value: ''
+- name: tasksSkipTests
+  ${{ if eq(parameters.skip_tests, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
+- name: DEPLOY_ALL_TASKSVAR
+  ${{ if eq(parameters.deploy_all_tasks, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -86,7 +104,7 @@ extends:
       - job: build_all_windows
         displayName: Build all tasks (Windows)
         condition: eq(variables.os, 'Windows_NT')
-        timeoutInMinutes: 360
+        timeoutInMinutes: 1440 # AntiMalware takes 3 hours to scan tasks.zip
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
@@ -111,6 +129,7 @@ extends:
       # Publish
       - job: publish
         displayName: Publish
+        timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
         condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
@@ -154,7 +173,10 @@ extends:
           - output: nuget
             packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+            ${{ if eq(parameters.publishToDistributedTaskTest, true) }}:
+              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
+            ${{ else }}:
+              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
             nuGetFeedType: internal
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
