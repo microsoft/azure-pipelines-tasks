@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "화물 상자 배포를 설치하는 데 사용되는 화물 클라이언트에 대한 인증 작업",
   "loc.instanceNameFormat": "화물 인증 $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra 워크로드 ID 지원 Azure DevOps 사용자' 서비스 연결",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 서비스 연결",
   "loc.input.help.workloadIdentityServiceConnection": "이 설정을 지정하는 경우 registryNames가 필요합니다. 다른 모든 입력은 무시됩니다.",
   "loc.input.label.registryNames": "config.toml의 레지스트리 이름",
   "loc.input.help.registryNames": "인증할 config.toml에 지정된 레지스트리 이름의 쉼표로 구분된 목록입니다. 이 설정을 지정하는 경우 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. cargoServiceConnections와 호환되지 않습니다.",
