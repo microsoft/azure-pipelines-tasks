@@ -16,6 +16,10 @@ steps:
   inputs:
     versionSpec: 6.0.0
 
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
 # npm install
 - script: npm install
   displayName: npm install
