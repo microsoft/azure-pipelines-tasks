@@ -28,7 +28,6 @@ if (-not $featureFlags.retireAzureRM) {
 . $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/InitializeAzModuleFunctions.ps1
 . $PSScriptRoot/PsModuleUtility.ps1
-. $PSScriptRoot/AzDoHelpers.ps1
 
 # This is the only public function.
 function Initialize-Azure {
@@ -97,4 +96,3 @@ if (-not $featureFlags.retireAzureRM) {
 Export-ModuleMember -Function Initialize-AzModule
 Export-ModuleMember -Function Disconnect-AzureAndClearContext
 Export-ModuleMember -Function Update-PSModulePathForHostedAgentWithLatestModule
-Export-ModuleMember -Function Get-AzDOToken

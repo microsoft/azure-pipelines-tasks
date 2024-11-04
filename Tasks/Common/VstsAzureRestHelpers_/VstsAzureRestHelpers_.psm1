@@ -163,8 +163,6 @@ function Get-EnvironmentAuthUrl {
         [Parameter(Mandatory = $false)] $useMSAL = $false
     )
 
-    $stringOb = $endpoint | Out-String
-
     $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl } 
 
     if ([string]::IsNullOrEmpty($envAuthUrl)) {
@@ -179,6 +177,10 @@ function Get-EnvironmentAuthUrl {
             $envAuthUrl = if ($useMSAL) { $script:defaultEnvironmentMSALAuthUri } else { $script:defaultEnvironmentADALAuthUri }
         }
     }
+
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
 
     return $envAuthUrl
 }
@@ -1290,7 +1292,6 @@ function Get-AzureLoadBalancerDetails {
 }
 
 function Get-AzureRMLoadBalancerFrontendIpConfigDetails {
-
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
 
@@ -1378,6 +1379,7 @@ function Get-VstsFederatedToken {
 
     $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
     Write-Verbose "vsServiceDll ${vsServicesDll}"
+
     if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
         Write-Verbose "$vsServicesDll not found."
         throw
@@ -1401,13 +1403,10 @@ function Get-VstsFederatedToken {
         return $null
     }
 
-    try{
-        $a = [System.AppDomain]::CurrentDomain
-        Write-Host "[System.AppDomain]::CurrentDomain $a"
-        [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
-    } catch {
-        Write-Verbose "CurrentDomain exception : $_"
-    }
+    $a = [System.AppDomain]::CurrentDomain
+    Write-Host "[System.AppDomain]::CurrentDomain $a"
+    
+    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
     
 
     $taskHttpClient = $null;
