@@ -3,13 +3,17 @@ import utils = require('../utils');
 import constants = require('../constants');
 import { execGradleBuild } from '../testLibExecutor';
 
-export async function executeGradleTests(testsToBeExecuted: string[]):Promise<number> {
+export async function executeGradleTests(testsToBeExecuted: string[], gradleFilePath?: string): Promise<number> {
 
     //public doc link: https://docs.gradle.org/current/userguide/command_line_interface.html
     //gradle command like "gradlew clean test --tests <package.className.testName> --tests <package.className.testName>"
 
     const executable = constants.GRADLE_EXECUTABLE;
     let args: string[] = [];
+
+    if (gradleFilePath) {
+        args.push('-p', gradleFilePath);
+    }
 
     args.push('test');  
 

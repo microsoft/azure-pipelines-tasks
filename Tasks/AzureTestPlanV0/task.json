@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 250,
     "Patch": 0
   },
   "preview": true,
@@ -124,6 +124,22 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "Fail the task if no result files are found."
+    },
+    {
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "Add custom pom file path for java-maven if needed",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Add custom pom file path for java-maven if needed"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "Add custom gradle file path for java-maven if needed",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Add custom pom file path for java-maven if needed"
     }
   ],
   "dataSourceBindings": [

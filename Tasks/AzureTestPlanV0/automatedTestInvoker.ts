@@ -9,6 +9,8 @@ import { executeJestTests } from './Invokers/jestinvoker';
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
     const testLanguage = tl.getInput('testLanguageInput', true);
+    const pomFilePath = tl.getInput('pomFilePath');
+    const gradleFilePath = tl.getInput('gradleFilePath');
 
     let exitStatusCode = 0;
     let exitCode = 0;
@@ -20,13 +22,13 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
 
         switch (testLanguage) {
             case 'Java-Maven':
-                exitCode = await executeMavenTests(testsToBeExecuted);
+                exitCode = await executeMavenTests(testsToBeExecuted, pomFilePath);
                 tl.debug(`Execution Status Code for Maven: ${exitCode}`);
                 ciData["isJavaMavenExecution"] = true;
                 break;
 
             case 'Java-Gradle':
-                exitCode = await executeGradleTests(testsToBeExecuted);
+                exitCode = await executeGradleTests(testsToBeExecuted, gradleFilePath);
                 tl.debug(`Execution Status Code for Gradle: ${exitCode}`);
                 ciData["isJavaGradleExecution"] = true;
                 break;
