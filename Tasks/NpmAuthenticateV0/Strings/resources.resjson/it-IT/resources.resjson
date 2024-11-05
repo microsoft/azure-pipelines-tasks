@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "Credenziali per i registri esterni a questa organizzazione/raccolta",
   "loc.input.help.customEndpoint": "Credenziali da usare per i registri esterni situati nel file del progetto con estensione npmrc. Per i registri in questa organizzazione/raccolta lasciare vuoto il campo. Verranno usate automaticamente le credenziali della compilazione.",
   "loc.input.label.workloadIdentityServiceConnection": "Connessione al servizio 'Azure DevOps'",
-  "loc.input.help.workloadIdentityServiceConnection": "Se questa impostazione è impostata, feedUrl è obbligatorio. Le connessioni al servizio per organizzazioni esterne/raccolte ed endpoint personalizzati non sono compatibili.",
+  "loc.input.help.workloadIdentityServiceConnection": "Credenziali da utilizzare per i registri che individuano il file .npmrc di un progetto. Usa con feedUrl per specificare le credenziali usate per il singolo registro in un file .npmrc. Non compatibile con customEndpoint.",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.feedUrl": "Con questa impostazione è necessario azureDevOpsServiceConnection. Non compatibile con customEndpoint. L'URL del feed deve essere nel formato registro npm, ad esempio https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "Sono state trovate le credenziali di compilazione",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "Aggiunta di informazioni di autenticazione dalla connessione al servizio %s per il feed %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "L'autenticazione per il feed %s è stata aggiunta.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Non è possibile ottenere le credenziali federate dalla connessione al servizio: %s.",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "L'URL del feed e la connessione al servizio devono essere impostati e non possono essere vuoti.",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Se viene specificato l'URL del feed, la connessione al servizio 'Azure DevOps' deve essere specificata e non può essere vuota.",
   "loc.messages.SkippingParsingNpmrc": "L'analisi di npmrc verrà ignorata",
   "loc.messages.DuplicateCredentials": "L'autenticazione per il '%s' del Registro di sistema è stata impostata in precedenza. Sovrascrittura con nuova configurazione.",
   "loc.messages.FoundEndpointCredentials": "Trovate credenziali impostate per la connessione al servizio '%s'."
