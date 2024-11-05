@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "Credenciales para registros fuera de esta organización o colección",
   "loc.input.help.customEndpoint": "Credenciales que deben usarse para registros externos que están en el archivo .npmrc del proyecto. Para registros en esta organización o colección, deje este valor en blanco; se usarán automáticamente las credenciales de la compilación.",
   "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
-  "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere feedUrl. Las conexiones de servicio para organizaciones o colecciones externas y puntos de conexión personalizados no son compatibles.",
+  "loc.input.help.workloadIdentityServiceConnection": "Las credenciales que se usan para los registros se encuentran en el archivo .npmrc de un proyecto. Se usan con feedUrl para especificar las credenciales usadas para el registro único en un archivo .npmrc. No es compatible con customEndpoint.",
   "loc.input.label.feedUrl": "Dirección URL de Azure Artifacts",
   "loc.input.help.feedUrl": "Si se establece, se requiere azureDevOpsServiceConnection. No es compatible con customEndpoint. La dirección URL de la fuente debe tener el formato de registro npm, por ejemplo, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "Credenciales de compilación encontradas",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "Agregando información de autenticación de la conexión de servicio %s para la fuente %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Se agregó correctamente la autenticación para la fuente %s.",
   "loc.messages.FailedToGetServiceConnectionAuth": "No se pueden obtener las credenciales federadas de la conexión de servicio: %s.",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "Tanto la dirección URL de la fuente como la conexión de servicio deben establecerse y no pueden estar vacías.",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Si se proporciona la dirección URL de la fuente de distribución, debe proporcionarse la conexión del servicio \"Azure DevOps\" y no puede estar vacía.",
   "loc.messages.SkippingParsingNpmrc": "Omitiendo análisis de npmrc",
   "loc.messages.DuplicateCredentials": "La autenticación para el registro \"%s\" se estableció previamente. Sobrescribiendo con la nueva configuración.",
   "loc.messages.FoundEndpointCredentials": "Se encontraron credenciales establecidas para la conexión de servicio \"%s\"."

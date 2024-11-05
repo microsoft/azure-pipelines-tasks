@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "此組織/集合外部登錄的認證",
   "loc.input.help.customEndpoint": "要用於專案 .npmrc 中外部登錄的認證。針對此組織/集合中的登錄，請將此欄位保留空白，系統會自動使用組建的認證。",
   "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 服務連線",
-  "loc.input.help.workloadIdentityServiceConnection": "如果設定此選項，則需要 feedUrl。外部組織/集合和自訂端點的服務連線不相容。",
+  "loc.input.help.workloadIdentityServiceConnection": "要用於找到專案 .npmrc 檔案之登錄的認證。搭配 feedUrl 使用，以指定用於 .npmrc 檔案中單一登錄的認證。與 customEndpoint 不相容。",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.feedUrl": "如果設定此選項，則需要 azureDevOpsServiceConnection。與 customEndpoint 不相容。摘要 URL 應該為 npm 登錄格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "找到組建認證",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "正在新增摘要 %s 的服務連線 %s 驗證資訊",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "已成功為摘要 %s 新增驗證。",
   "loc.messages.FailedToGetServiceConnectionAuth": "無法取得服務連線的同盟認證: %s。",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "摘要 URL 和服務連線都必須設定，且不能是空的。",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "如果提供摘要 URL，則必須提供「Azure DevOps」服務連線，而且不能是空的。",
   "loc.messages.SkippingParsingNpmrc": "正在略過剖析 npmrc",
   "loc.messages.DuplicateCredentials": "登錄 '%s' 的驗證先前已設定。正在使用新設定覆寫。",
   "loc.messages.FoundEndpointCredentials": "找到 '%s' 服務連線的設定認證。"
