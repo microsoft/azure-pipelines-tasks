@@ -124,7 +124,7 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
 
     if (![System.Convert]::ToBoolean($env:DISABLE_INSTALL_MODULE_FIX)) {
         # This is a workaround for the issue where Clear-AzContext removes Install-Module command from the session 
-        $null = ConvertTo-SecureString "dummy string" -AsPlainText -Force
+        $null = ConvertTo-SecureString $serviceConnectionId -AsPlainText -Force
     }    
 }
 else {
