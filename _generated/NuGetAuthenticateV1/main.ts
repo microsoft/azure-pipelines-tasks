@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { installCredProviderToUserProfile, configureCredProvider} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
+import { installCredProviderToUserProfile, configureCredProvider, configureCredProviderForSameOrganizationFeeds} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'

@@ -17,10 +17,9 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 246,
+    "Minor": 248,
     "Patch": 1
   },
-  "preview": "true",
   "releaseNotes": "More optimized task fields that allow users to enable any/all of the transformation (XML), variable substitution (JSON and XML) features in a single task instance.</br>Task fails when any of the configured transformation/substitution is NOT applied or when the task is no-op.",
   "instanceNameFormat": "File Transform: $(Package)",
   "groups": [
@@ -40,12 +39,21 @@
       "helpMarkDown": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
     },
     {
+      "name": "enableXmlTransform",
+      "type": "boolean",
+      "label": "XML transformation",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
+    },
+    {
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "XML Transformation rules",
       "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
       "required": false,
-      "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>"
+      "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
+      "visibleRule": "enableXmlTransform == true"
     },
     {
       "name": "jsonTargetFiles",
@@ -114,7 +122,7 @@
     "FileTranformationNotEnabled": "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_3": "2.246.1"
+    "Default": "2.248.0",
+    "Node20_229_3": "2.248.1"
   }
 }

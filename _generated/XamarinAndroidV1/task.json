@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 248,
     "Patch": 0
   },
   "demands": [
@@ -260,7 +260,7 @@
     "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20-225": "1.246.1"
+    "Default": "1.248.0",
+    "Node20-225": "1.248.1"
   }
 }

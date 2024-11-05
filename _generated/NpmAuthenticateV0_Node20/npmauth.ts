@@ -80,7 +80,6 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
@@ -100,10 +99,15 @@ async function main(): Promise<void> {
     }
 
     let addedRegistry = [];
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
+    let npmrcRegistries = npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
+
+
+    for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
-        if (endpointRegistries && endpointRegistries.length > 0) {
+
+
+        if (!registry && endpointRegistries && endpointRegistries.length > 0) {
             for (let serviceEndpoint of endpointRegistries) {
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);
@@ -116,10 +120,11 @@ async function main(): Promise<void> {
                 }
             }
         }
+
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                    // If a registry is found, but we previously added credentials for it, skip it
+                    // If a registry is found, but we previously added credentials for it warn and overwrite
                     if (endpointsArray.includes(localRegistry.url)) {
                         tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                         tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
@@ -162,6 +167,7 @@ main().catch(error => {
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
 });
+
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
