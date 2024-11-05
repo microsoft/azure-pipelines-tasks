@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 248,
     "Patch": 0
   },
   "satisfies": [
@@ -140,7 +140,7 @@
     "ParsedVersion": "ms-resource:loc.messages.ParsedVersion"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.0",
-    "Node20_229_4": "1.246.1"
+    "Default": "1.248.0",
+    "Node20_229_4": "1.248.1"
   }
 }
