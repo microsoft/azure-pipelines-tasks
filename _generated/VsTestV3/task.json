@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 248,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -428,6 +428,16 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "Disable publishing test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
+    },
+    {
       "name": "failOnMinTestsNotRun",
       "type": "boolean",
       "label": "Fail the task if a minimum number of tests are not run.",
@@ -668,7 +678,7 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d"
   },
   "_buildConfigMapping": {
-    "Default": "3.248.0",
-    "Node20_229_4": "3.248.1"
+    "Default": "3.248.2",
+    "Node20_229_4": "3.248.3"
   }
 }
