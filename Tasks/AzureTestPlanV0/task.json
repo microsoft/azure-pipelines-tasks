@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
+    "Minor": 260,
     "Patch": 0
   },
   "preview": true,
@@ -85,6 +85,24 @@
       }
     },
     {
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "Pom file path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Add custom file path of pom file incase it is not pom.xml at root directory",
+      "visibleRule": "testLanguageInput = Java-Maven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "Gradle file path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Add custom file path of gradle build file incase it is not build.gradle at root directory",
+      "visibleRule": "testLanguageInput = Java-Gradle"
+    },
+    {
       "name": "mergeTestResults",
       "type": "boolean",
       "label": "Merge test results",
@@ -124,22 +142,6 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "Fail the task if no result files are found."
-    },
-    {
-      "name": "pomFilePath",
-      "type": "string",
-      "label": "Add custom pom file path for java-maven if needed",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Add custom pom file path for java-maven if needed"
-    },
-    {
-      "name": "gradleFilePath",
-      "type": "string",
-      "label": "Add custom gradle file path for java-maven if needed",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Add custom pom file path for java-maven if needed"
     }
   ],
   "dataSourceBindings": [
