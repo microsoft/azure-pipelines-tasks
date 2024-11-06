@@ -12,7 +12,7 @@ export async function executeGradleTests(testsToBeExecuted: string[], gradleFile
     let args: string[] = [];
 
     if (gradleFilePath) {
-        args.push('-p', gradleFilePath);
+        args.push('-b', gradleFilePath);
     }
 
     args.push('test');  
