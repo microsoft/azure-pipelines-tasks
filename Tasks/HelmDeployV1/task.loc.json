@@ -181,7 +181,6 @@
         "logout": "logout",
         "ls": "ls",
         "package": "package",
-        "push": "push",
         "rollback": "rollback",
         "upgrade": "upgrade",
         "uninstall": "uninstall"
