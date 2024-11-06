@@ -260,6 +260,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             }
 
             cd(taskLibPath);
+            run("git checkout dev/merlynop/mockfix");
             run("git pull");
 
             cd(tasksCommonPath);
@@ -589,7 +590,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
-    async function runTaskTests(taskName) {
+    async function runTaskTests(taskName, results) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
@@ -622,19 +623,21 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;
                 }
                 else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                 }
             }  catch (e) {
                 console.error(e);
-                process.exit(1);
+                results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
             }
         }
     }
+
+    const results = [];
 
     // Run tests for each task that exists
     const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
@@ -642,7 +645,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     for (const taskName of allTasks) {
         var taskPath = path.join(buildTasksPath, taskName);
         if (fs.existsSync(taskPath)) {
-            await runTaskTests(taskName);
+            await runTaskTests(taskName, results);
         }
     };
 
@@ -656,7 +659,12 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
         if (specs.length > 0) {
             // setup the version of node to run the tests
             await util.installNodeAsync(argv.node);
-            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+            try{
+                run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+            }catch(e){
+                console.error(e);
+                results.push({ taskName: 'commonLibraryTests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
+            }
         } else {
             console.warn("No common library tests found");
         }
@@ -669,7 +677,13 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     if (specs.length > 0) {
         // setup the version of node to run the tests
         await util.installNodeAsync(argv.node);
-        run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+        try
+        {
+            run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+        }catch(e){
+            console.error(e);
+            results.push({ taskName: 'common tests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
+        }
     } else {
         console.warn("No common tests found");
     }
@@ -685,6 +699,17 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
         util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
     } catch (e) {
         console.log('Error while generating coverage report')
+    }
+
+    var hasErrors = false;
+    results.forEach(({ taskName, result }) => {
+        hasErrors = true;
+        console.log(`Task: ${taskName}, Result: ${result}`);
+    });    
+
+    if (hasErrors) {
+        console.log('Errors occurred during tests');
+        process.exit(1);
     }
 }
 
