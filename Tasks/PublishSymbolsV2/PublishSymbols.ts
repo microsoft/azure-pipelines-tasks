@@ -26,6 +26,7 @@ interface IClientToolOptions {
     requestName: string;
     sourcePathListFileName: string;
     symbolServiceUri: string;
+    manifest: string;
 }
 
 export async function run(clientToolFilePath: string): Promise<void> {
@@ -37,7 +38,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
-        const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
+        const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+        const manifest = tl.getInput("Manifest", false); 
         tl.debug("connectedServiceName: " + connectedServiceName);
 
         if(connectedServiceName){
@@ -111,7 +113,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
                     personalAccessToken,
                     requestName,
                     sourcePathListFileName,
-                    symbolServiceUri
+                    symbolServiceUri,
+                    manifest
                 } as IClientToolOptions;
 
                 let toolRunnerOptions = clientToolRunner.getClientToolOptions();
@@ -154,6 +157,10 @@ function publishSymbolsUsingClientTool(
         "--name", options.requestName,
         "--directory", sourcePath
     );
+
+    if (options.manifest) {
+        command.push("--manifest", options.manifest);
+    }
 
     if (options.expirationInDays) {
         command.push("--expirationInDays", options.expirationInDays);
