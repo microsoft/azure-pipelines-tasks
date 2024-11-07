@@ -21,13 +21,13 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
         }
 
         switch (testLanguage) {
-            case 'Java-Maven':
+            case 'JavaMaven':
                 exitCode = await executeMavenTests(testsToBeExecuted, pomFilePath);
                 tl.debug(`Execution Status Code for Maven: ${exitCode}`);
                 ciData["isJavaMavenExecution"] = true;
                 break;
 
-            case 'Java-Gradle':
+            case 'JavaGradle':
                 exitCode = await executeGradleTests(testsToBeExecuted, gradleFilePath);
                 tl.debug(`Execution Status Code for Gradle: ${exitCode}`);
                 ciData["isJavaGradleExecution"] = true;

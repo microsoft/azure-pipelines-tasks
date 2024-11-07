@@ -77,8 +77,8 @@
       "label": "Select Test framework language",
       "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
+        "JavaMaven": "JavaMaven",
+        "JavaGradle": "JavaGradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
@@ -89,18 +89,18 @@
       "type": "string",
       "label": "Pom file path",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "Add custom file path of pom file incase it is not pom.xml at root directory",
-      "visibleRule": "testLanguageInput = Java-Maven"
+      "visibleRule": "testLanguageInput = JavaMaven"
     },
     {
       "name": "gradleFilePath",
       "type": "string",
       "label": "Gradle file path",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "Add custom file path of gradle build file incase it is not build.gradle at root directory",
-      "visibleRule": "testLanguageInput = Java-Gradle"
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "mergeTestResults",
