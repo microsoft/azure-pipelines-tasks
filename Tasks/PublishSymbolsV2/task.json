@@ -55,7 +55,7 @@
       "label": "Manifest",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The manifest to refer the pdb files to publish."
+      "helpMarkDown": "The path to a file containing more symbol client keys to publish."
     },
     {
       "name": "IndexSources",
@@ -254,6 +254,7 @@
     "UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
     "UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
     "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'.",
-    "NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
+    "NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later.",
+    "ManifestFileNotFound": "Manifest file not found at '{0}'."
   }
 }

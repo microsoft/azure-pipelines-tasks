@@ -40,6 +40,9 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
         const connectedServiceName = tl.getInput("ConnectedServiceName", false);
         const manifest = tl.getInput("Manifest", false); 
+        if(manifest && !fileExists(manifest)) {
+            throw new Error(tl.loc("ManifestFileNotFound", manifest));
+        }
         tl.debug("connectedServiceName: " + connectedServiceName);
 
         if(connectedServiceName){
@@ -144,6 +147,15 @@ export async function run(clientToolFilePath: string): Promise<void> {
     } finally {
         process.env.SYMBOL_PAT_AUTH_TOKEN = '';
     }
+}
+
+function fileExists(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function publishSymbolsUsingClientTool(
