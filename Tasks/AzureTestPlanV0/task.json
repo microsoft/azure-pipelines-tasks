@@ -77,8 +77,8 @@
       "label": "Select Test framework language",
       "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
-        "JavaMaven": "JavaMaven",
-        "JavaGradle": "JavaGradle",
+        "JavaMaven": "Java-Maven",
+        "JavaGradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
