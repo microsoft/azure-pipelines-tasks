@@ -90,7 +90,7 @@
       "label": "Pom file path",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Add custom file path of pom file incase it is not pom.xml at root directory",
+      "helpMarkDown": "Relative path from the repository root to the Maven POM file.",
       "visibleRule": "testLanguageInput = JavaMaven"
     },
     {
@@ -99,7 +99,7 @@
       "label": "Gradle file path",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Add custom file path of gradle build file incase it is not build.gradle at root directory",
+      "helpMarkDown": "Relative path from the repository root to the build.gradle file.",
       "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
