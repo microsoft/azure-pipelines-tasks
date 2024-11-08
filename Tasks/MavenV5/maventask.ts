@@ -131,6 +131,7 @@ async function execBuild() {
     setUpConnectedServiceEnvironmentVariables();
 
     var userRunFailed: boolean = false;
+    var codeAnalysisFailed: boolean = false;
 
     // Setup tool runner that executes Maven only to retrieve its version
     var mvnGetVersion = tl.tool(mvnExec);
@@ -279,11 +280,19 @@ async function execBuild() {
             console.error(err.message);
             // Looks like: "Code analysis failed."
             console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
+            codeAnalysisFailed = true;
         })
         .then(function () {
             // 5. Always publish test results even if tests fail, causing this task to fail.
             if (publishJUnitResults === true) {
                 publishJUnitTestResults(testResultsFiles);
+            }
+            // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+            if (userRunFailed || codeAnalysisFailed) {
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");// Set task failure
+            }
+            else {
+                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded.");// Set task success
             }
             // Do not force an exit as publishing results is async and it won't have finished
         })
