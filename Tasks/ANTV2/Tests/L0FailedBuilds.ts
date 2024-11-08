@@ -11,7 +11,6 @@ runner.setInput('javaHomeSelection', 'JDKVersion');
 runner.setInput('jdkVersion', 'default');
 runner.setInput('testResultsFiles', '**/TEST-*.xml');
 runner.setInput('publishJUnitResults', 'true');
-runner.setInput('codeCoverageTool', 'None');
 
 runner.setAnswers(answers.failAnswers);
 
