@@ -258,6 +258,8 @@ Tasks/GradleV2/    @microsoft/akvelon-build-task-team
 
 Tasks/GradleV3/    @microsoft/akvelon-build-task-team
 
+Tasks/GradleV4/    @microsoft/akvelon-build-task-team
+
 Tasks/GruntV0/     @microsoft/akvelon-build-task-team
 
 Tasks/GulpV0/      @microsoft/akvelon-build-task-team
