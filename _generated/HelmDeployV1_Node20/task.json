@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 5
+    "Minor": 248,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -181,7 +181,6 @@
         "logout": "logout",
         "ls": "ls",
         "package": "package",
-        "push": "push",
         "rollback": "rollback",
         "upgrade": "upgrade",
         "uninstall": "uninstall"
@@ -574,7 +573,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.4",
-    "Node20_229_3": "1.247.5"
+    "Default": "1.248.0",
+    "Node20_229_3": "1.248.1"
   }
 }
