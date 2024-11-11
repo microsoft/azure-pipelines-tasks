@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Authentifizierungsaufgabe für den Cargo-Client zum Installieren der Verteilung von Cargo-Kisten",
   "loc.instanceNameFormat": "Cargo-Authentifizierung für $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Entra Workload ID-gesicherter Azure-DevOps Benutzer“",
+  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
   "loc.input.help.workloadIdentityServiceConnection": "Wenn dies festgelegt ist, ist \"registryNames\" erforderlich. Alle anderen Eingaben werden ignoriert.",
   "loc.input.label.registryNames": "Registrierungsnamen aus \"config.toml\"",
   "loc.input.help.registryNames": "Durch Trennzeichen getrennte Liste von Registrierungsnamen, die in \"config.toml\" für die Authentifizierung angegeben sind. Wenn diese Option festgelegt ist, ist workloadIdentityServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit cargoServiceConnections.",
