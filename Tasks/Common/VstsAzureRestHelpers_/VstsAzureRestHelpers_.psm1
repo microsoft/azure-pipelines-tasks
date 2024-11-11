@@ -386,7 +386,7 @@ function Build-MSALInstance {
 
             Write-Verbose "ServiceConnectionId ${connectedServiceNameARM} and vstsAccessToken ${vstsAccessToken}"
 
-            $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+            $oidc_token = Get-VstsFederatedTokenModified -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
             $msalClientInstance = $clientBuilder.WithClientAssertion($oidc_token).Build()
         }
@@ -1360,6 +1360,47 @@ function ConvertTo-Pfx {
     return $pfxFilePath, $pfxFilePassword
 }
 
+function Get-VstsFederatedTokenModified {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$serviceConnectionId,
+        [Parameter(Mandatory=$true)]
+        [string]$vstsAccessToken
+    )
+
+    $planId = Get-VstsTaskVariable -Name 'System.PlanId' -Require
+    $jobId = Get-VstsTaskVariable -Name 'System.JobId' -Require
+    $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
+    $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
+
+    # Construct the API URL
+    $url = "https://dev.azure.com/prsinghal1/$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
+    Write-Verbose $url
+    
+    $headers = @{
+        "Authorization" = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($vstsAccessToken)"))
+        "Content-Type"  = "application/json"
+    }
+    
+        # Make the POST request to generate the OIDC token
+    $response = Invoke-WebRequest -Uri $url -Method Post -Headers $headers -Body $body
+
+    Write-Verbose "Response : $response"
+
+    # Parse the response content to extract the OIDC token
+    $responseContent = $response.Content | ConvertFrom-Json
+    Write-Verbose "responseContent : $responseContent"
+    $oidcToken = $responseContent.oidcToken  # The token field contains the OIDC token
+
+
+    if ($null -eq $oidcToken -or $oidcToken -eq [string]::Empty) {
+        Write-Verbose "Failed to create OIDC token."
+        throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
+    }
+    Write-Verbose "Token generated $oidcToken"
+    return $oidcToken
+}
+
 function Get-VstsFederatedToken {
     param(
         [Parameter(Mandatory=$true)]
@@ -1370,51 +1411,49 @@ function Get-VstsFederatedToken {
 
     $OMDirectory = $PSScriptRoot
 
-    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
-    if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
-        Write-Verbose "$newtonsoftDll not found."
-        throw
-    }
-    $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
+    # $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    # if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
+    #     Write-Verbose "$newtonsoftDll not found."
+    #     throw
+    # }
+    # Write-Verbose "newtonsoftDll ${newtonsoftDll}"
+    # $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
 
-    $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
-    Write-Verbose "vsServiceDll ${vsServicesDll}"
+    # $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
+    # Write-Verbose "vsServiceDll ${vsServicesDll}"
 
-    if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
-        Write-Verbose "$vsServicesDll not found."
-        throw
-    }
+    # if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
+    #     Write-Verbose "$vsServicesDll not found."
+    #     throw
+    # }
 
-    try {
-        Add-Type -LiteralPath $vsServicesDll
-    } catch {
-        # The requested type may successfully load now even though the assembly itself is not fully loaded.
-        Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
-    }
+    # try {
+    #     Add-Type -LiteralPath $vsServicesDll
+    # } catch {
+    #     # The requested type may successfully load now even though the assembly itself is not fully loaded.
+    #     Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
+    # }
 
-    $onAssemblyResolve = [System.ResolveEventHandler] {
-        param($sender, $e)
+    # $onAssemblyResolve = [System.ResolveEventHandler] {
+    #     param($sender, $e)
 
-        if ($e.Name -like 'Newtonsoft.Json, *') {
-            return $jsAssembly
-        }
+    #     if ($e.Name -like 'Newtonsoft.Json, *') {
+    #         return $Global:jsAssembly
+    #     }
 
-        Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
-        return $null
-    }
+    #     Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
+    #     return $null
+    # }
 
-    $a = [System.AppDomain]::CurrentDomain
-    Write-Host "[System.AppDomain]::CurrentDomain $a"
+    # $a = [System.AppDomain]::CurrentDomain
+    # Write-Host "[System.AppDomain]::CurrentDomain $a"
     
-    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+    # [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
     
 
     $taskHttpClient = $null;
     try {
         Write-Verbose "Trying again to construct the HTTP client."
-        Write-Verbose "Trying with the external token"
-        $vstsAccessToken = $env:vstsAccessTok
-        Write-Verbose "Token : $vstsAccessToken"
 
         $federatedCredential = New-Object Microsoft.VisualStudio.Services.OAuth.VssOAuthAccessTokenCredential($vstsAccessToken)
 
@@ -1467,9 +1506,9 @@ function Get-AccessTokenMSALWithCustomScope {
 
     try {
         Get-MSALInstance $endpoint $connectedServiceNameARM
-        Write-Host "Get-MSALInstance completed"  
+        Write-Verbose "Get-MSALInstance completed"  
     } catch {
-        Write-Host "Get-MSALInstance failed with $_"
+        Write-Verobse "Get-MSALInstance failed with $_"
     }
 
     # prepare MSAL scopes
