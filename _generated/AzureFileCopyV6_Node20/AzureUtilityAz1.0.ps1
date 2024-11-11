@@ -18,6 +18,7 @@ function Get-AzureStorageAccountResourceGroupName {
                 # Attempt to get the Azure Storage Account details
                 $azureStorageAccountResourceDetails = Az.Storage\Get-AzStorageAccount -ErrorAction Stop |
                     Where-Object { $_.StorageAccountName -eq $storageAccountName }
+                Write-Verbose "[Azure Call] Retrieved resource details successfully for Azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"    
                 # If successful, exit the loop
                 break
             }
@@ -38,7 +39,7 @@ function Get-AzureStorageAccountResourceGroupName {
                 }
             }
         }
-        Write-Verbose "[Azure Call] Retrieved resource details successfully for Azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+        
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
         if ([string]::IsNullOrEmpty($azureResourceGroupName)) {
             Write-Verbose "(ARM) Storage account: $storageAccountName not found"
