@@ -49,7 +49,7 @@
   "loc.messages.JS_InvalidFilePath": "Не удалось найти файл скрипта в указанном расположении: \"%s\". Убедитесь, что скрипт существует по указанному пути. Если требуется использовать встроенный скрипт, укажите входные данные \"Расположение скрипта\" как inlineScript.",
   "loc.messages.JS_InvalidErrorActionPreference": "Недопустимое значение ErrorActionPreference \"%s\". Возможные значения: Stop, Continue или SilentlyContinue",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI",
-  "loc.messages.UnacceptedScriptLocationValue": "%s не является допустимым значением для входных данных задачи \"Расположение скрипта\" (scriptLocation в YAML). Значение может быть равно inlineScript либо scriptPath",
+  "loc.messages.UnacceptedScriptLocationValue": "%s не является допустимым значением для входных данных задачи \"Расположение сценария\" (scriptLocation в YAML). Значением может быть \"inlineScript\" или \"scriptPath\"",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion.",
   "loc.messages.ProxyConfig": "Инструмент az настроен на использование %s в качестве прокси-сервера",
   "loc.messages.FailedToRefreshAzSession": "При попытке обновить сеанс az-cli произошла следующая ошибка: %s",
