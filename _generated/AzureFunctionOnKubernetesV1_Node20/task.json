@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 3
+    "Minor": 249,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -200,7 +200,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.2",
-    "Node20_229_2": "1.247.3"
+    "Default": "1.249.0",
+    "Node20_229_2": "1.249.1"
   }
 }
