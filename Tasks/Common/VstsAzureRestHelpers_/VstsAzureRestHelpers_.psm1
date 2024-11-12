@@ -1368,13 +1368,18 @@ function Get-VstsFederatedTokenModified {
         [string]$vstsAccessToken
     )
 
+    $uri = Get-VstsTaskVariable -Name 'System.CollectionUri' -Require
     $planId = Get-VstsTaskVariable -Name 'System.PlanId' -Require
     $jobId = Get-VstsTaskVariable -Name 'System.JobId' -Require
     $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
     $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
+    Write-Host "URI $uri"
+    Write-Verbose "URI $uri"
+
+
     # Construct the API URL
-    $url = "https://dev.azure.com/prsinghal1/$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
+    $url = $uri + "$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
     Write-Verbose $url
     
     $headers = @{

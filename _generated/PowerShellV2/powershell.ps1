@@ -13,22 +13,45 @@ class ADOToken {
 
     [void] StartNamedPiped() {
         # Create a named pipe with the specified security
-        $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("praval1","InOut")
+        $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("PowershellV2TaskPipe","InOut")
 
-        # Write-Verbose "Waiting for a connection..."
+        Write-Host "Waiting for a connection..."
         $pipe.WaitForConnection()
     
-        Write-Verbose "Client connected."
+        Write-Host "Client connected."
     
         # Read data from the pipe
         $reader = New-Object System.IO.StreamReader($pipe)
         while ($true) {
             $line = $reader.ReadLine()
             if ($null -eq $line) { break }
+            if($line -eq "Stop-Pipe") {break}
             
-            $response = $this.GetConnectedServiceNameAccessToken()
-            Write-Verbose "Received: $line"
-            Write-Verbose "Sending response: $response"
+            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+
+            if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
+                Write-Host "No Service connection was found, returning the System Access Token"
+                $response = $(System.AccessToken);
+            }
+
+            $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+
+            $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+                -connectedServiceNameARM $connectedServiceName `
+                -scope "499b84ac-1321-427f-aa17-267ca6975798"
+
+            $access_token = $result.AccessToken
+
+            if ($null -eq $access_token -or $access_token -eq [string]::Empty) {
+                throw
+            }
+
+            Write-Host "Successfully generated the ADO Access token for Service Connection : $connectedServiceName"
+            $response = $access_token
+
+            #$response = $this.GetConnectedServiceNameAccessToken()
+            
+            Write-Host "Sending response: $response"
             
             # Send the response back to the client
             $writer = New-Object System.IO.StreamWriter($pipe)
@@ -37,15 +60,21 @@ class ADOToken {
         }
     
         # Close the pipe
+        Write-Host "Closing the pipe"
         $reader.Close()
         $pipe.Close()
     }
 
     [string] GetConnectedServiceNameAccessToken()
     {
+        Set-PSDebug -Trace 1
+        $DebugPreference = "Continue"
         try {
-        
+            Write-Verbose "Inside GetConnectedServiceNameAccessToken"
+            Write-Host "Inside GetConnectedServiceNameAccessToken"
             [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+            Write-Verbose "Inside $connectedServiceName"
+            Write-Host "Inside $connectedServiceName"
 
             if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
                 Write-Verbose "No Service connection was found, returning the System Access Token"
@@ -111,6 +140,7 @@ try {
     $psRunspace = [powershell]::Create().AddScript({
         param($obj)
         try {
+            Set-PSDebug -Trace 1
             $result = $obj.StartNamedPiped()
             return $result
         } catch {
@@ -121,7 +151,7 @@ try {
     $psRunspace.RunspacePool = $runspacePool
     $psRunspace.BeginInvoke()
 
-    Write-Verbose "After invoking runspace"
+    Start-Sleep -Seconds 5
     
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -225,9 +255,9 @@ try {
         $contents);
 
     $joinedContents = '
-
-        $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "praval1", [System.IO.Pipes.PipeDirection]::InOut)
-        $AzDoTokenPipe.Connect(5000) # Wait up to 5 seconds for the connection
+        
+        $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "PowershellV2TaskPipe", [System.IO.Pipes.PipeDirection]::InOut)
+        $AzDoTokenPipe.Connect(10000)
         Write-Host "Connected to the server."
         
         function Get-AzDoToken {
@@ -236,24 +266,22 @@ try {
                 $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
 
                 $input = "Get-AzDoToken"
-
+                
                 # Send command to the server
                 $writer.WriteLine($input)
                 $writer.Flush()
-
+                
                 # Read response from the server
                 $response = $reader.ReadLine()
                 Write-Host "Server response: $response"
-                
             }
             catch {
                 Write-Host "Error in Get-AzDoToken: $_"
+                return $(System.AccessToken)
             }
         }
         
         ' + $joinedContents;
-
-    Write-Host $joinedContents
 
     if ($input_showWarnings) {
         $joinedContents = '
@@ -267,6 +295,15 @@ try {
             };
             Invoke-Command {' + $joinedContents + '} -WarningVariable +warnings';
     }
+
+    $joinedContents = 'try { '+ $joinedContents + '}
+        finally {
+            $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+            $input = "Stop-Pipe"
+            # Send command to the server
+            $writer.WriteLine($input)
+            $writer.Flush()
+        }'
 
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
@@ -307,6 +344,7 @@ try {
     $global:ErrorActionPreference = 'Continue'
     $failed = $false
 
+    Set-PSDebug -Trace 1
     # Run the script.
     Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
@@ -322,7 +360,6 @@ try {
                 $failed = $true
                 $inError = $true
                 $null = $errorLines.AppendLine("$($_.Exception.Message)")
-
                 # Write to verbose to mitigate if the process hangs.
                 Write-Verbose "STDERR: $($_.Exception.Message)"
             }
@@ -336,7 +373,6 @@ try {
                         Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
-
                 Write-Host "$_"
             }
         }
