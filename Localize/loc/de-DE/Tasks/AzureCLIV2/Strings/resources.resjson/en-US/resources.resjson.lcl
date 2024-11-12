@@ -488,10 +488,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnacceptedScriptLocationValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
+          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be 'inlineScript' or 'scriptPath']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA["%s" ist kein gültiger Wert für die Aufgabeneingabe für den Skriptspeicherort ("scriptLocation" in YAML). Der Wert kann entweder "inlineScript"oder "scriptPath" lauten.]]></Val>
+            <Val><![CDATA[%s ist kein gültiger Wert für die Taskeingabe „Script Location“ (scriptLocation in YAML). Der Wert kann entweder „inlineScript“ oder „scriptPath“ sein.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
