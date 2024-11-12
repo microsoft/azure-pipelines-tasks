@@ -40,6 +40,9 @@ steps:
     GITHUB_PAT: $(GitHubPAT)
   displayName: Verify min agent demands
 
+- script: node ./ci/verify-registries.js
+  displayName: Verify registries
+
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
