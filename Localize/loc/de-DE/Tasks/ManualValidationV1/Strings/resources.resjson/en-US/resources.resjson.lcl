@@ -40,6 +40,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.allowApproversToApproveTheirOwnRuns" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this is true, approver will be able to approve their own run]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wenn dies zutrifft, kann die genehmigende Person ihre eigene Ausführung genehmigen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.]]></Val>
@@ -72,6 +81,15 @@
           <Val><![CDATA[Reject or resume this manual validation automatically after it is pending for the specified timeout or 30 days, whichever is earlier.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Hiermit wird diese manuelle Überprüfung automatisch abgelehnt oder fortgesetzt, wenn sie für das angegebene Zeitlimit oder seit 30 Tagen aussteht, je nachdem, was zuerst eintritt.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.allowApproversToApproveTheirOwnRuns" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allow approvers to approve their own run]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Genehmigern erlauben, ihre eigenen Ausführungen zu genehmigen]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
