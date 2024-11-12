@@ -49,7 +49,7 @@
   "loc.messages.JS_InvalidFilePath": "Die Skriptdatei wurde am angegebenen Skriptspeicherort nicht gefunden: \"%s\". Überprüfen Sie, ob das Skript im angegebenen Pfad vorhanden ist. Wenn Sie ein Inlineskript verwenden möchten, geben Sie den Skriptspeicherort als \"inlineScript\" an.",
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference \"%s\" ungültig. Der Wert muss \"Stop\", \"Continue\" oder \"SilentlyContinue\" sein.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden.",
-  "loc.messages.UnacceptedScriptLocationValue": "\"%s\" ist kein gültiger Wert für die Aufgabeneingabe für den Skriptspeicherort (\"scriptLocation\" in YAML). Der Wert kann entweder \"inlineScript\"oder \"scriptPath\" lauten.",
+  "loc.messages.UnacceptedScriptLocationValue": "%s ist kein gültiger Wert für die Taskeingabe „Script Location“ (scriptLocation in YAML). Der Wert kann entweder „inlineScript“ oder „scriptPath“ sein.",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion.",
   "loc.messages.ProxyConfig": "Das az-Tool ist für die Verwendung von „%s“ als Proxyserver konfiguriert.",
   "loc.messages.FailedToRefreshAzSession": "Fehler beim Aktualisieren der AZ-CLI-Sitzung: %s",
