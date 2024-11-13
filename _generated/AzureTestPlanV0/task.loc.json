@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 248,
     "Patch": 0
   },
   "preview": true,
@@ -77,12 +77,30 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
+        "JavaMaven": "Java-Maven",
+        "JavaGradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
       }
+    },
+    {
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pomFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pomFilePath",
+      "visibleRule": "testLanguageInput = JavaMaven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gradleFilePath",
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "mergeTestResults",
@@ -178,7 +196,7 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20-225": "0.246.1"
+    "Default": "0.248.0",
+    "Node20-225": "0.248.1"
   }
 }
