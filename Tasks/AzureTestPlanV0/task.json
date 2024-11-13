@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 248,
     "Patch": 0
   },
   "preview": true,
@@ -77,12 +77,30 @@
       "label": "Select Test framework language",
       "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
+        "JavaMaven": "Java-Maven",
+        "JavaGradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
       }
+    },
+    {
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "Pom file path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Relative path from the repository root to the Maven POM file.",
+      "visibleRule": "testLanguageInput = JavaMaven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "Gradle file path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Relative path from the repository root to the build.gradle file.",
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "mergeTestResults",
