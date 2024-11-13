@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
+    "Minor": 249,
     "Patch": 2
   },
   "runsOn": [
@@ -114,8 +114,8 @@
     "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   },
   "_buildConfigMapping": {
-    "Default": "0.248.0",
-    "Node20_229_1": "0.248.1",
-    "wif_242": "0.248.2"
+    "Default": "0.249.0",
+    "Node20_229_1": "0.249.1",
+    "wif_242": "0.249.2"
   }
 }
