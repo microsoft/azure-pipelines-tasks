@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 246,
-    "Patch": 1
+    "Minor": 248,
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -672,7 +672,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "3.246.0",
-    "Node20_229_4": "3.246.1"
+    "Default": "3.248.2",
+    "Node20_229_4": "3.248.3"
   }
 }

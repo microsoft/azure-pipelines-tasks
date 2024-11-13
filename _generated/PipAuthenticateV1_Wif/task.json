@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 247,
+    "Minor": 248,
     "Patch": 2
   },
   "runsOn": [
@@ -130,8 +130,8 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.0",
-    "Node20_229_1": "1.247.1",
-    "wif_242": "1.247.2"
+    "Default": "1.248.0",
+    "Node20_229_1": "1.248.1",
+    "wif_242": "1.248.2"
   }
 }
