@@ -5,9 +5,13 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_ 
 Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk 
-Import-Module $PSScriptRoot\ps_modules\TlsHelper_ 
+Import-Module $PSScriptRoot\ps_modules\TlsHelper_
+
+# Install-Module -Name "Az.Accounts" -PassThru -Force
+# Import-Module Az.Accounts
 
 . $PSScriptRoot\helpers.ps1
+
 
 class ADOToken {
 
@@ -42,16 +46,30 @@ class ADOToken {
 
             $access_token = $result.AccessToken
 
+            $response = $access_token
+
             if ($null -eq $access_token -or $access_token -eq [string]::Empty) {
                 throw
             }
 
-            Write-Host "Successfully generated the ADO Access token for Service Connection : $connectedServiceName"
-            $response = $access_token
-
-            #$response = $this.GetConnectedServiceNameAccessToken()
+            Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
             
-            Write-Host "Sending response: $response"
+            # Set-PSDebug -Trace 1
+
+            # $tenantId = $vstsEndpoint.Auth.Parameters.TenantId
+            # $accountId = $vstsEndpoint.Auth.Parameters.ServicePrincipalId
+            # Write-Host "-AccessToken $access_token -Tenant $tenantId -AccountId $accountId"
+
+            
+
+            # Enable-AzContextAutoSave -Scope Process
+            # Connect-AzAccount -AccessToken $access_token -Tenant $tenantId -AccountId $accountId -ErrorAction Stop
+
+            # $AdoApiToken = Get-AzAccessToken -ResourceUrl "499b84ac-1321-427f-aa17-267ca6975798"
+
+            # $response = $AdoApiToken
+            
+            # Write-Host "Sending response: $AdoApiToken"
             
             # Send the response back to the client
             $writer = New-Object System.IO.StreamWriter($pipe)
@@ -91,7 +109,10 @@ class ADOToken {
                 throw
             }
 
-            Write-Verbose "Successfully generated the ADO Access token for Service Connection : $connectedServiceName"
+            Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+
+            
+
             return $access_token
 
         } catch {
@@ -254,6 +275,7 @@ try {
     $joinedContents = '
         
         $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "PowershellV2TaskPipe", [System.IO.Pipes.PipeDirection]::InOut)
+        Write-Host "Trying connect to the server."
         $AzDoTokenPipe.Connect(10000)
         Write-Host "Connected to the server."
         
