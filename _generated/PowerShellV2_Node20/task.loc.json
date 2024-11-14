@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 248,
-    "Patch": 123
+    "Patch": 221
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -41,7 +41,7 @@
       "aliases": [
         "azureSubscription"
       ],
-      "type": "connectedService:AzureRM",
+      "type": "connectedService:workloadidentityuser",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
@@ -273,7 +273,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "2.248.122",
-    "Node20-225": "2.248.123"
+    "Default": "2.248.220",
+    "Node20-225": "2.248.221"
   }
 }

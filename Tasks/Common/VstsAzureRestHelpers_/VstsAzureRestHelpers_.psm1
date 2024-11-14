@@ -1416,44 +1416,44 @@ function Get-VstsFederatedToken {
 
     $OMDirectory = $PSScriptRoot
 
-    # $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
-    # if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
-    #     Write-Verbose "$newtonsoftDll not found."
-    #     throw
-    # }
-    # Write-Verbose "newtonsoftDll ${newtonsoftDll}"
-    # $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
+    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
+        Write-Verbose "$newtonsoftDll not found."
+        throw
+    }
+    Write-Verbose "newtonsoftDll ${newtonsoftDll}"
+    $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
 
-    # $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
-    # Write-Verbose "vsServiceDll ${vsServicesDll}"
+    $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
+    Write-Verbose "vsServiceDll ${vsServicesDll}"
 
-    # if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
-    #     Write-Verbose "$vsServicesDll not found."
-    #     throw
-    # }
+    if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
+        Write-Verbose "$vsServicesDll not found."
+        throw
+    }
 
-    # try {
-    #     Add-Type -LiteralPath $vsServicesDll
-    # } catch {
-    #     # The requested type may successfully load now even though the assembly itself is not fully loaded.
-    #     Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
-    # }
+    try {
+        Add-Type -LiteralPath $vsServicesDll
+    } catch {
+        # The requested type may successfully load now even though the assembly itself is not fully loaded.
+        Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
+    }
 
-    # $onAssemblyResolve = [System.ResolveEventHandler] {
-    #     param($sender, $e)
+    $onAssemblyResolve = [System.ResolveEventHandler] {
+        param($sender, $e)
 
-    #     if ($e.Name -like 'Newtonsoft.Json, *') {
-    #         return $Global:jsAssembly
-    #     }
+        if ($e.Name -like 'Newtonsoft.Json, *') {
+            return $Global:jsAssembly
+        }
 
-    #     Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
-    #     return $null
-    # }
+        Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
+        return $null
+    }
 
-    # $a = [System.AppDomain]::CurrentDomain
-    # Write-Host "[System.AppDomain]::CurrentDomain $a"
+    $a = [System.AppDomain]::CurrentDomain
+    Write-Host "[System.AppDomain]::CurrentDomain $a"
     
-    # [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
     
 
     $taskHttpClient = $null;

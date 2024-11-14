@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 248,
-    "Patch": 122
+    "Patch": 220
   },
   "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "minimumAgentVersion": "2.115.0",
@@ -41,7 +41,7 @@
       "aliases": [
         "azureSubscription"
       ],
-      "type": "connectedService:AzureRM",
+      "type": "connectedService:workloadidentityuser",
       "label": "Azure Resource Manager connection",
       "defaultValue": "",
       "helpMarkDown": "Select an Azure Resource Manager service connection"

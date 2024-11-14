@@ -7,117 +7,62 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk 
 Import-Module $PSScriptRoot\ps_modules\TlsHelper_
 
-# Install-Module -Name "Az.Accounts" -PassThru -Force
-# Import-Module Az.Accounts
-
 . $PSScriptRoot\helpers.ps1
-
 
 class ADOToken {
 
     [void] StartNamedPiped() {
-        # Create a named pipe with the specified security
-        $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("PowershellV2TaskPipe","InOut")
+        try 
+        {
+            $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("PowershellV2TaskPipe","InOut")
 
-        Write-Host "Waiting for a connection..."
-        $pipe.WaitForConnection()
-    
-        Write-Host "Client connected."
-    
-        # Read data from the pipe
-        $reader = New-Object System.IO.StreamReader($pipe)
-        while ($true) {
-            $line = $reader.ReadLine()
-            if ($null -eq $line) { break }
-            if($line -eq "Stop-Pipe") {break}
+            $global:waitForPipe = $false
             
-            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+            Write-Host "Pipe Waiting for a connection..."
+            $pipe.WaitForConnection()
+            Write-Host "Client connected."
+        
+            $reader = New-Object System.IO.StreamReader($pipe)
+            while ($true) {
+                $line = $reader.ReadLine()
+                if ($null -eq $line) { break }
+                if($line -eq "Stop-Pipe") {break}
+                
+                [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+            
+                $token = ""
+                if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
+                    Write-Host "No Service connection was found, returning the System Access Token"
+                    $token = "$(System.AccessToken)";
+                } 
+                else 
+                {
+                    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
-            if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                Write-Host "No Service connection was found, returning the System Access Token"
-                $response = $(System.AccessToken);
+                    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+                        -connectedServiceNameARM $connectedServiceName `
+                        -scope "499b84ac-1321-427f-aa17-267ca6975798"
+
+                    $token = $result.AccessToken
+                }
+
+                if ($null -eq $token -or $token -eq [string]::Empty) {
+                    Write-Host "Generated token found to be null, returning the System Access Token"
+                    $token = "$(System.AccessToken)";
+                } else {
+                    Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                }
+
+                $writer = New-Object System.IO.StreamWriter($pipe)
+                $writer.WriteLine($token)
+                $writer.Flush()
             }
-
-            $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-
-            $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-                -connectedServiceNameARM $connectedServiceName `
-                -scope "499b84ac-1321-427f-aa17-267ca6975798"
-
-            $access_token = $result.AccessToken
-
-            $response = $access_token
-
-            if ($null -eq $access_token -or $access_token -eq [string]::Empty) {
-                throw
-            }
-
-            Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-            
-            # Set-PSDebug -Trace 1
-
-            # $tenantId = $vstsEndpoint.Auth.Parameters.TenantId
-            # $accountId = $vstsEndpoint.Auth.Parameters.ServicePrincipalId
-            # Write-Host "-AccessToken $access_token -Tenant $tenantId -AccountId $accountId"
-
-            
-
-            # Enable-AzContextAutoSave -Scope Process
-            # Connect-AzAccount -AccessToken $access_token -Tenant $tenantId -AccountId $accountId -ErrorAction Stop
-
-            # $AdoApiToken = Get-AzAccessToken -ResourceUrl "499b84ac-1321-427f-aa17-267ca6975798"
-
-            # $response = $AdoApiToken
-            
-            # Write-Host "Sending response: $AdoApiToken"
-            
-            # Send the response back to the client
-            $writer = New-Object System.IO.StreamWriter($pipe)
-            $writer.WriteLine($response)
-            $writer.Flush()
-        }
-    
-        # Close the pipe
-        Write-Host "Closing the pipe"
-        $reader.Close()
-        $pipe.Close()
-    }
-
-    [string] GetConnectedServiceNameAccessToken()
-    {
-        try {
-            Write-Verbose "Inside GetConnectedServiceNameAccessToken"
-            Write-Host "Inside GetConnectedServiceNameAccessToken"
-            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
-            Write-Verbose "Inside $connectedServiceName"
-            Write-Host "Inside $connectedServiceName"
-
-            if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                Write-Verbose "No Service connection was found, returning the System Access Token"
-                return $(System.AccessToken);
-            }
-
-            $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-
-            $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-                -connectedServiceNameARM $connectedServiceName `
-                -scope "499b84ac-1321-427f-aa17-267ca6975798"
-
-            $access_token = $result.AccessToken
-
-            if ($null -eq $access_token -or $access_token -eq [string]::Empty) {
-                throw
-            }
-
-            Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-
-            
-
-            return $access_token
-
+        
+            Write-Host "Closing the pipe"
+            $reader.Close()
+            $pipe.Close()
         } catch {
-            Write-Verbose "Failed to create ADO access token with message $_, returning the System Access Token"
-            return $(System.AccessToken)
+            Write-Host "Something went wrong $_"
         }
     }
 }
@@ -153,6 +98,8 @@ try {
     # Create a runspace to handle the Get-DerivedValue function
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
     $runspacePool.Open()
+
+    $global:waitForPipe = $true
     
     $myObject = [ADOToken]::new()
     # Create a PowerShell instance within the runspace pool
@@ -167,9 +114,15 @@ try {
     }).AddArgument($myObject)
 
     $psRunspace.RunspacePool = $runspacePool
+    Write-Host "Starting Pipe......."
     $psRunspace.BeginInvoke()
 
-    Start-Sleep -Seconds 5
+    while($global:waitForPipe) {
+        Write-Host "Waiting for the pipe to start......."
+        Start-Sleep -Seconds 1
+    }
+    Start-Sleep -Seconds 1
+
     
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -290,13 +243,12 @@ try {
                 $writer.WriteLine($input)
                 $writer.Flush()
                 
-                # Read response from the server
                 $response = $reader.ReadLine()
-                Write-Host "Server response: $response"
+                return $response
             }
             catch {
                 Write-Host "Error in Get-AzDoToken: $_"
-                return $(System.AccessToken)
+                return "$(System.AccessToken)"
             }
         }
         
@@ -429,5 +381,9 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
+    # Clean up runspace resources
+    $psRunspace.Dispose()
+    $runspacePool.Close()
+    $runspacePool.Dispose()
     Trace-VstsLeavingInvocation $MyInvocation
 }
