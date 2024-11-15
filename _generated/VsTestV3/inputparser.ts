@@ -172,8 +172,6 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
     tl.debug("TestResultsFolder: " + resultsDir);
     addResultsDirectoryToTelemetry(resultsDir);
-
-    inputDataContract.TestReportingSettings.DonotPublishTestResults = tl.getBoolInput('donotPublishTestResults');
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
