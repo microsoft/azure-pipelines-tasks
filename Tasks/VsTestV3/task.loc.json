@@ -428,6 +428,16 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "Disable publishing test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
+    },
+    {
       "name": "failOnMinTestsNotRun",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnMinTestsNotRun",
