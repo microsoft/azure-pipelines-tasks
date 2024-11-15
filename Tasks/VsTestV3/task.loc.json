@@ -433,7 +433,7 @@
       "label": "Disable publishing test results",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
+      "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
       "groupName": "reportingOptions",
       "visibleRule": "runInParallel = false"
     },
