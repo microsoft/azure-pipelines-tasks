@@ -430,7 +430,7 @@
     {
       "name": "donotPublishTestResults",
       "type": "boolean",
-      "label": "Disable publishing test results",
+      "label": "ms-resource:loc.input.label.donotPublishTestResults",
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
