@@ -14,8 +14,8 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 246,
-    "Patch": 5
+    "Minor": 248,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -30,7 +30,7 @@
   "inputs": [
     {
       "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
       "label": "GitHub connection (OAuth or PAT)",
       "defaultValue": "",
       "required": true,
@@ -350,7 +350,7 @@
     "SeeMoreText": "See More"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.4",
-    "Node20_229_3": "1.246.5"
+    "Default": "1.248.0",
+    "Node20_229_3": "1.248.1"
   }
 }
