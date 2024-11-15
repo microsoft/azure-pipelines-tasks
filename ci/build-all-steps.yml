@@ -60,7 +60,7 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
-- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
 
 - powershell: ./ci/set-sprint-variables.ps1
