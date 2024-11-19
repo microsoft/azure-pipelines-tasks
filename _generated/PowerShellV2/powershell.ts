@@ -7,12 +7,65 @@ import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
-const { exec } = require('child_process');
 import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
-import * as net from 'net';
+import { spawnSync } from 'child_process';
 
-export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+const ts2PsPipePath = '/tmp/ts2ps';
+const ps2TsPipePath = '/tmp/ps2ts';
+
+spawnSync('mkfifo', [ts2PsPipePath]);
+spawnSync('mkfifo', [ps2TsPipePath])
+
+process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken');
+
+async function startNamedPiped() {
+    const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
+    console.log("connectedServiceName: " + connectedServiceName);
+    
+    const pipeStream = fs.createReadStream(ps2TsPipePath);
+    const writeStream = fs.createWriteStream(ts2PsPipePath);
+
+    pipeStream.on('data', async (data) => {
+        const trimmedData = data.toString('utf8').trim();
+        console.log(`Received from PowerShell: ${trimmedData}`);
+        var systemAccessToken = tl.getVariable('System.AccessToken');
+        process.env.System_Access_Token_PSV2_Task = systemAccessToken;
+
+        if (trimmedData == 'Get-AzDoToken') {
+            try {
+                if(connectedServiceName && connectedServiceName.trim().length > 0) {
+                    const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
+                    console.log(`Successfully fetched the ADO access token for ${connectedServiceName}`);
+                    writeStream.write(token + "\n");
+                } else {
+                    console.log(`No Service Connection found, returning empty token`);
+                    writeStream.write(systemAccessToken + "\n");
+                }
+            } catch(err) {
+                console.log(`Token generation failed with error message ${err.message}`);
+                writeStream.write(systemAccessToken + "\n");
+            }
+        } else {
+            console.log('Pipe reading ended');
+            writeStream.close();
+            pipeStream.close();
+            fs.unlinkSync(ts2PsPipePath);
+            fs.unlinkSync(ps2TsPipePath);
+        }
+    });
+
+    
+    pipeStream.on('error', (err) => {
+        console.error('Error with pipe stream:', err);
+        writeStream.close();
+        pipeStream.close();
+        fs.unlinkSync(ts2PsPipePath);
+        fs.unlinkSync(ps2TsPipePath);
+    });
+}
+
+async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
 
   // workloadidentityfederation
   const authorizationScheme = tl
@@ -97,134 +150,11 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
     return result
 }
 
-async function startNamedPiped(pipeName: string, connectedService: string) {
-    const content = `
-
-            # Create a security descriptor to allow Everyone to access the pipe
-            $pipePath = "/tmp/$pipeName" 
-
-            # Create a named pipe with the specified security
-            $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("${pipeName}","InOut")
-
-            # Set permissions using chmod
-            # bash -c "chmod 777 $pipePath" 
-
-            Write-Host "Waiting for a connection..."
-            $pipe.WaitForConnection()
-
-            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsAzureRestHelpers_ -Force
-            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsAzureHelpers_ -Force
-            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/VstsTaskSdk -Force
-            Import-Module /home/vsts/work/_tasks/PowerShell_e213ff0f-5d5c-4791-802d-52ea3e7be1f1/2.247.56/ps_modules/TlsHelper_ -Force
-
-            $connectedServiceName = "${connectedService}"
-
-
-            Write-Host "Client connected."
-
-            # Read data from the pipe
-            $reader = New-Object System.IO.StreamReader($pipe)
-            while ($true) {
-                Write-Host "Hey"
-                $line = $reader.ReadLine()
-                if ($line -eq $null) { break }
-                
-                $response = $line
-                Write-Host "Received: $line"
-                Write-Host "Sending response: $response"
-
-                $accessToken = @{
-                    token_type = $null
-                    access_token = $null
-                    expires_on = $null
-                }
-
-                try {
-                    Write-Host "endpoint for connectedServiceName: $connectedServiceName";
-                    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-                    Write-Host "endpoint: $endpoint";
-
-                    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint -connectedServiceNameARM $connectedServiceName -scope "499b84ac-1321-427f-aa17-267ca6975798"
-
-                    $accessToken.token_type = $result.TokenType
-                    $accessToken.access_token = $result.AccessToken
-                    $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
-
-                    Write-Host "Get-ConnectedServiceNameAccessToken: Received accessToken";
-                } catch {
-                    Write-Host $_
-                }
-                
-
-                Write-Host $accessToken;
-                
-                # Send the response back to the client
-                $writer = New-Object System.IO.StreamWriter($pipe)
-                $writer.WriteLine($accessToken)
-                $writer.Flush()
-            }
-
-            # Close the pipe
-            $reader.Close()
-            $pipe.Close()
-    `;
-    
-    // Spawn the PowerShell process
-    let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true));
-
-    powershell.arg('-Command').arg(content);
-
-    let options = <tr.IExecOptions>{
-        failOnStdErr: false,
-        errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
-        outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
-        ignoreReturnCode: true
-    };
-
-    // Execute the PowerShell command and capture the output
-    const result = await powershell.exec(options);
-
-    // Check the result and set the task result
-    if (result === 0) {
-        tl.setResult(tl.TaskResult.Succeeded, `Script executed successfully.`);
-    } else {
-        tl.setResult(tl.TaskResult.Failed, `Script execution failed with exit code ${result}.`);
-    }
-    
-    // Handle PowerShell exit
-    powershell.on('close', (code) => {
-        console.log(`PowerShell process exited with code ${code}`);
-    });
-    
-    return powershell;
-}
-
-function findPowerShellPath(): Promise<string | null> {
-    return new Promise((resolve, reject) => {
-        const command = 'which pwsh';
-
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error finding PowerShell: ${stderr}`);
-                resolve(null);
-            } else {
-                resolve(stdout.trim());
-            }
-        });
-    });
-}
-
 async function run() {
     try {
-        // Get inputs.
+        // Get inputs
 
-        const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
-        console.log("connectedServiceName: " + connectedServiceName);
-        // getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
-
-        let pipe_name : string = "praval";
-        startNamedPiped(pipe_name, connectedServiceName);
-
+        startNamedPiped();
 
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
@@ -303,37 +233,35 @@ async function run() {
             script = `${input_script}`;
         }
 
-        if (connectedServiceName && connectedServiceName.trim().length > 0) {
-            script = `
+        script = `
+            # Open the FIFO for writing
+            
+            $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}')
+            $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}')
 
-                $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "${pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
-                $AzDoTokenPipe.Connect(10000) # Wait up to 5 seconds for the connection
-                Write-Host "Connected to the server."
-                
-                function Get-Token {
-                    try {
-                        $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
-                        $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
+            function Get-AzDoToken {
+                try {
+                    $pipeWriter.WriteLine('Get-AzDoToken')
+                    $pipeWriter.Flush()
 
-                        $input = "Input"
+                    $token = $pipeReader.ReadLine()
+                    $token = $token.Trim()
 
-                        # Send command to the server
-                        $writer.WriteLine($input)
-                        $writer.Flush()
-
-                        # Read response from the server
-                        $response = $reader.ReadLine()
-                        Write-Host "Server response: $response"
-                        
-                    }
-                    catch {
-                        Write-Host "Error: $_"
-                    }
+                    if ($null -eq $token -or $token -eq [string]::Empty) {
+                        Write-Host "empty response was found, returning the System Access Token"
+                        $token = $env:System_Access_Token_PSV2_Task
+                    } 
+                    return $token
+                } 
+                catch {
+                    Write-Host "Error in Get-AzDoToken: $_"
+                    $token = $env:System_Access_Token_PSV2_Task
+                    return $token
                 }
+            }
 
-                ${script}
-            `;
-        }
+            ${script}
+        `;
 
         if (input_showWarnings) {
             script = `
@@ -350,11 +278,23 @@ async function run() {
             `;
         }
 
-        tl.debug(script);
+        script =   `
+            try { 
+                ${script}
+            }
+            finally {
+                # Close the streams
+                $pipeWriter.WriteLine('Close')
+                $pipeWriter.Flush()
+                $pipeWriter.Close()
+                $pipeReader.Close()
+            }`
 
         contents.push(script);
         // log with detail to avoid a warning output.
         tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
+        
+        console.log(script)
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -428,6 +368,10 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+    } finally {
+        const pipeStream = fs.createWriteStream(ps2TsPipePath);
+        pipeStream.write('Close');
+        pipeStream.close();
     }
 }
 

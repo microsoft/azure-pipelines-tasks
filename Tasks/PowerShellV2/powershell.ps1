@@ -9,13 +9,12 @@ Import-Module $PSScriptRoot\ps_modules\TlsHelper_
 
 . $PSScriptRoot\helpers.ps1
 
+$global:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+
 class ADOToken {
 
     [void] StartNamedPiped() {
-        try 
-        {
             $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("PowershellV2TaskPipe","InOut")
-
             $global:waitForPipe = $false
             
             Write-Host "Pipe Waiting for a connection..."
@@ -23,47 +22,54 @@ class ADOToken {
             Write-Host "Client connected."
         
             $reader = New-Object System.IO.StreamReader($pipe)
+            
             while ($true) {
                 $line = $reader.ReadLine()
                 if ($null -eq $line) { break }
                 if($line -eq "Stop-Pipe") {break}
                 
-                [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+                try {
+                    [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
             
-                $token = ""
-                if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                    Write-Host "No Service connection was found, returning the System Access Token"
-                    $token = "$(System.AccessToken)";
-                } 
-                else 
-                {
-                    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+                    $global:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+                    
+                    $token = ""
 
-                    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-                        -connectedServiceNameARM $connectedServiceName `
-                        -scope "499b84ac-1321-427f-aa17-267ca6975798"
+                    if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
+                        Write-Host "No Service connection was found, returning the System Access Token"
+                        $token = $global:SystemAccessTokenPowershellV2
+                    } 
+                    else 
+                    {
+                        $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
-                    $token = $result.AccessToken
+                        $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+                            -connectedServiceNameARM $connectedServiceName `
+                            -scope "499b84ac-1321-427f-aa17-267ca6975798"
+
+                        $token = $result.AccessToken
+
+                        if ($null -eq $token -or $token -eq [string]::Empty) {
+                            Write-Host "Generated token found to be null, returning the System Access Token"
+                            $token = $global:SystemAccessTokenPowershellV2
+                        } else {
+                            Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                        }
+                    }                    
                 }
-
-                if ($null -eq $token -or $token -eq [string]::Empty) {
-                    Write-Host "Generated token found to be null, returning the System Access Token"
-                    $token = "$(System.AccessToken)";
-                } else {
-                    Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                catch {
+                    Write-Host "Failed to generate token with message $_, returning the System Access Token"
+                    $token = $global:SystemAccessTokenPowershellV2
+                } finally {
+                    $writer = New-Object System.IO.StreamWriter($pipe)
+                    $writer.WriteLine($token)
+                    $writer.Flush()
                 }
-
-                $writer = New-Object System.IO.StreamWriter($pipe)
-                $writer.WriteLine($token)
-                $writer.Flush()
             }
         
             Write-Host "Closing the pipe"
             $reader.Close()
             $pipe.Close()
-        } catch {
-            Write-Host "Something went wrong $_"
-        }
     }
 }
 
@@ -248,7 +254,7 @@ try {
             }
             catch {
                 Write-Host "Error in Get-AzDoToken: $_"
-                return "$(System.AccessToken)"
+                return $global:SystemAccessTokenPowershellV2
             }
         }
         
