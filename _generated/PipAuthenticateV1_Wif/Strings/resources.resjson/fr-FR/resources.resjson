@@ -6,7 +6,7 @@
   "loc.group.displayName.feedAuthentication": "Flux et authentification",
   "loc.input.label.artifactFeeds": "Mes flux (à sélectionner ci-dessous)",
   "loc.input.help.artifactFeeds": "Sélectionner les flux d'authentification dans cette organisation",
-  "loc.input.label.workloadIdentityServiceConnection": "Connexion de service « Prise en charge de l’ID de charge de travail Azure DevOps utilisateur »",
+  "loc.input.label.workloadIdentityServiceConnection": "Connexion au service « Azure DevOps »",
   "loc.input.help.workloadIdentityServiceConnection": "Si ce paramètre est défini, feedUrl est obligatoire. Toutes les autres entrées sont ignorées.",
   "loc.input.label.feedUrl": "URL des flux Azure Artifacts",
   "loc.input.help.feedUrl": "Si ce paramètre est défini, workloadIdentityServiceConnection est obligatoire. Toutes les autres entrées sont ignorées. Non compatible avec pythonDownloadServiceConnections. ",
