@@ -15,7 +15,10 @@ const ts2PsPipePath = '/tmp/ts2ps';
 const ps2TsPipePath = '/tmp/ps2ts';
 
 spawnSync('mkfifo', [ts2PsPipePath]);
-spawnSync('mkfifo', [ps2TsPipePath])
+spawnSync('mkfifo', [ps2TsPipePath]);
+
+spawnSync('chmod', ['600', ts2PsPipePath]);
+spawnSync('chmod', ['600', ps2TsPipePath]);
 
 process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken');
 
@@ -293,8 +296,6 @@ async function run() {
         contents.push(script);
         // log with detail to avoid a warning output.
         tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
-        
-        console.log(script)
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);

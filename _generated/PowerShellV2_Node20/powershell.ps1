@@ -1,77 +1,13 @@
 [CmdletBinding()]
 param()
 
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_ 
-Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk 
-Import-Module $PSScriptRoot\ps_modules\TlsHelper_
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module Microsoft.PowerShell.Security -Global
 
 . $PSScriptRoot\helpers.ps1
 
-$global:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
-
-class ADOToken {
-
-    [void] StartNamedPiped() {
-            $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("PowershellV2TaskPipe","InOut")
-            $global:waitForPipe = $false
-            
-            Write-Host "Pipe Waiting for a connection..."
-            $pipe.WaitForConnection()
-            Write-Host "Client connected."
-        
-            $reader = New-Object System.IO.StreamReader($pipe)
-            
-            while ($true) {
-                $line = $reader.ReadLine()
-                if ($null -eq $line) { break }
-                if($line -eq "Stop-Pipe") {break}
-                
-                try {
-                    [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
-            
-                    $global:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
-                    
-                    $token = ""
-
-                    if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                        Write-Host "No Service connection was found, returning the System Access Token"
-                        $token = $global:SystemAccessTokenPowershellV2
-                    } 
-                    else 
-                    {
-                        $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-
-                        $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-                            -connectedServiceNameARM $connectedServiceName `
-                            -scope "499b84ac-1321-427f-aa17-267ca6975798"
-
-                        $token = $result.AccessToken
-
-                        if ($null -eq $token -or $token -eq [string]::Empty) {
-                            Write-Host "Generated token found to be null, returning the System Access Token"
-                            $token = $global:SystemAccessTokenPowershellV2
-                        } else {
-                            Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-                        }
-                    }                    
-                }
-                catch {
-                    Write-Host "Failed to generate token with message $_, returning the System Access Token"
-                    $token = $global:SystemAccessTokenPowershellV2
-                } finally {
-                    $writer = New-Object System.IO.StreamWriter($pipe)
-                    $writer.WriteLine($token)
-                    $writer.Flush()
-                }
-            }
-        
-            Write-Host "Closing the pipe"
-            $reader.Close()
-            $pipe.Close()
-    }
-}
+$env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
 function Get-ActionPreference {
     param (
@@ -97,39 +33,139 @@ function Get-ActionPreference {
     return $result
 }
 
+class FileBasedToken {
+    [void] run($filePath) {
+        $signalFromUserScript = "Global\SignalFromUserScript"
+        $signalFromTask = "Global\SignalFromTask"
+        $exitSignal = "Global\ExitSignal"
+
+        $eventFromB = $null
+        $eventFromA = $null
+        $eventExit = $null
+
+        try {
+            $eventFromB = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
+            $eventFromA = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+            $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+
+            # Ensure the output file has restricted permissions
+            if (-not (Test-Path $filePath)) {
+                New-Item -Path $filePath -ItemType File -Force
+                $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+
+                # Create a new ACL that only grants access to the current user
+                $acl = Get-Acl $filePath
+                $acl.SetAccessRuleProtection($true, $false)  # Disable inheritance
+                $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+                    $currentUser, "FullControl", "Allow"
+                )
+                $acl.SetAccessRule($rule)
+
+                # Apply the ACL to the file
+                Set-Acl -Path $filePath -AclObject $acl
+            }
+
+            Write-Debug "Task: Waiting for signals..."
+
+            # Infinite loop to wait for signals and respond
+            while ($true) {
+                try {
+                    # Wait for either UserScript signal or Exit signal
+                    $index = [System.Threading.WaitHandle]::WaitAny(@($eventFromB, $eventExit))
+
+                    if ($index -eq 0) {
+                        # Signal from UserScript
+                        try {
+
+                            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+        
+                            $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+                            
+                            $token = ""
+        
+                            if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
+                                Write-Host "No Service connection was found, returning the System Access Token"
+                                $token = $env:SystemAccessTokenPowershellV2
+                            } 
+                            else 
+                            {
+                                $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+        
+                                $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+                                    -connectedServiceNameARM $connectedServiceName `
+                                    -scope "499b84ac-1321-427f-aa17-267ca6975798"
+        
+                                $token = $result.AccessToken
+        
+                                if ($null -eq $token -or $token -eq [string]::Empty) {
+                                    Write-Debug "Generated token found to be null, returning the System Access Token"
+                                    $token = $env:SystemAccessTokenPowershellV2
+                                } else {
+                                    Write-Debug "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                                }
+                            }
+                            $token | Set-Content -Path $filePath
+                            Write-Debug "Task: Wrote output to file at $token"                   
+                        }
+                        catch {
+                            Write-Debug "Failed to generate token with message $_, returning the System Access Token"
+                            $token = $env:SystemAccessTokenPowershellV2
+                            $token | Set-Content -Path $filePath
+                            Write-Debug "Task: Wrote output to file at $token" 
+                        }
+
+                        # Signal UserScript to read the file
+                        $eventFromA.Set()
+                    } elseif ($index -eq 1) {
+                        # Exit signal received
+                        Write-Host "Task: Exit signal received. Exiting loop..."
+                        break
+                    }
+                } catch {
+                    Write-Host "Error occurred while waiting for signals: $_"
+                }
+            }
+        } catch {
+            Write-Host "Critical error in Task: $_"
+        } finally {
+            # Cleanup resources
+            if ($null -ne $eventFromB ) { $eventFromB.Dispose() }
+            if ($null -ne $eventFromA) { $eventFromA.Dispose() }
+            if ($null -ne $eventExit) { $eventExit.Dispose() }
+            Write-Host "Task: Resources cleaned up. Exiting."
+        }
+    }
+}
+
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
+    $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
+    Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
+    $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
+
     # Create a runspace to handle the Get-DerivedValue function
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
     $runspacePool.Open()
-
-    $global:waitForPipe = $true
     
-    $myObject = [ADOToken]::new()
+    $myObject = [FileBasedToken]::new()
     # Create a PowerShell instance within the runspace pool
     $psRunspace = [powershell]::Create().AddScript({
-        param($obj)
+        param($obj, $filePath)
         try {
-            $result = $obj.StartNamedPiped()
-            return $result
+            return $obj.run($filePath)
         } catch {
             return $_
         }    
-    }).AddArgument($myObject)
+    }).AddArgument($myObject).AddArgument($tokenfilePath)
 
     $psRunspace.RunspacePool = $runspacePool
-    Write-Host "Starting Pipe......."
     $psRunspace.BeginInvoke()
 
-    while($global:waitForPipe) {
-        Write-Host "Waiting for the pipe to start......."
-        Start-Sleep -Seconds 1
-    }
-    Start-Sleep -Seconds 1
+    Start-Sleep 5
 
-    
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
     $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Default'
@@ -231,34 +267,58 @@ try {
         ([System.Environment]::NewLine),
         $contents);
 
+    
     $joinedContents = '
-        
-        $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "PowershellV2TaskPipe", [System.IO.Pipes.PipeDirection]::InOut)
-        Write-Host "Trying connect to the server."
-        $AzDoTokenPipe.Connect(10000)
-        Write-Host "Connected to the server."
-        
-        function Get-AzDoToken {
-            try {
-                $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
-                $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
+    
+        # Define file path and event names
+        $outputFile = "' + $tokenfilePath + '"
+        $signalFromB = "Global\SignalFromUserScript"
+        $signalFromA = "Global\SignalFromTask"
+  
+        $eventFromB = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromB)
+        $eventFromA = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromA)
 
-                $input = "Get-AzDoToken"
+        function Get-AzDoTokenHelper {
+            Write-Debug "User Script: Starting process to notify Task and read output."
+
+            [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
+
+            try {
+                # Signal Task to generate access token
+                $eventFromB.Set()
+                Write-Debug "User Script: Notified Task to generate access token."
+
+                # Wait for Task to finish processing
+                $receivedResponseBool = $eventFromA.WaitOne(60000) # Wait for up to 60 seconds
                 
-                # Send command to the server
-                $writer.WriteLine($input)
-                $writer.Flush()
-                
-                $response = $reader.ReadLine()
-                return $response
-            }
+                if (!$receivedResponseBool) {  
+                    Write-Debug "User Script: Timeout waiting for Task to respond."
+                }
+                else {
+                    try {
+                        [string]$powershellv2AccessToken = (Get-Content -Path $outputFile).Trim()
+                        Write-Debug "UserScript : Read output from file"
+                        $tokenResponse = $powershellv2AccessToken
+                    } catch {
+                        Write-Debug "Error reading the output file: $_"
+                    }
+                }
+            } 
             catch {
-                Write-Host "Error in Get-AzDoToken: $_"
-                return $global:SystemAccessTokenPowershellV2
+                Write-Host "Error occurred in Get-AzDoTokenHelper : $_"
             }
+
+            return $tokenResponse
+        }
+
+        function Get-AzDoToken {
+            $token = Get-AzDoTokenHelper
+            $token = $token | Out-String
+            $token = $token.Substring(4).Trim()
+            return $token
         }
         
-        ' + $joinedContents;
+    ' + $joinedContents
 
     if ($input_showWarnings) {
         $joinedContents = '
@@ -272,15 +332,6 @@ try {
             };
             Invoke-Command {' + $joinedContents + '} -WarningVariable +warnings';
     }
-
-    $joinedContents = 'try { '+ $joinedContents + '}
-        finally {
-            $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
-            $input = "Stop-Pipe"
-            # Send command to the server
-            $writer.WriteLine($input)
-            $writer.Flush()
-        }'
 
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
@@ -320,7 +371,7 @@ try {
     # Switch to "Continue".
     $global:ErrorActionPreference = 'Continue'
     $failed = $false
-
+    
     # Run the script.
     Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
@@ -387,9 +438,10 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    # Clean up runspace resources
-    $psRunspace.Dispose()
-    $runspacePool.Close()
-    $runspacePool.Dispose()
+    # Signal Script A to exit
+    $exitSignal = "Global\ExitSignal"
+    $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+    $eventExit.Set()
+    Write-Host "Exit signal sent to Task."
     Trace-VstsLeavingInvocation $MyInvocation
 }
