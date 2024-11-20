@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 246,
+    "Minor": 249,
     "Patch": 0
   },
   "demands": [
@@ -428,6 +428,16 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.donotPublishTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
+    },
+    {
       "name": "failOnMinTestsNotRun",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnMinTestsNotRun",
@@ -668,7 +678,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "3.246.0",
-    "Node20_229_4": "3.246.1"
+    "Default": "3.249.0",
+    "Node20_229_4": "3.249.1"
   }
 }

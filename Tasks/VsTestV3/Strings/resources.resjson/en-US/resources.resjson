@@ -90,6 +90,8 @@
   "loc.input.label.rerunMaxAttempts": "Maximum # of attempts",
   "loc.input.help.rerunMaxAttempts": "Specify the maximum # of times a failed test should be retried. If a test passes before the maximum # of attempts is reached, it will not be rerun further.",
   "loc.messages.VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
+  "loc.input.label.donotPublishTestResults": "Disable publishing test results",
+  "loc.input.help.donotPublishTestResults": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
   "loc.messages.VstestFailedReturnCode": "VsTest task failed.",
   "loc.messages.VstestPassedReturnCode": "VsTest task succeeded.",
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
