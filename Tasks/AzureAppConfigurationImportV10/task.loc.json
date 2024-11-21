@@ -3,13 +3,13 @@
   "name": "AzureAppConfigurationImport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline",
+  "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-import-task",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 247,
+    "Minor": 249,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
