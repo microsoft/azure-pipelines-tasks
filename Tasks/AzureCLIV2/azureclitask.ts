@@ -223,6 +223,7 @@ export class azureclitask {
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
+            let authParam: string = null;
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
@@ -231,6 +232,7 @@ export class azureclitask {
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
+                authParam = "--certificate";
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
@@ -238,6 +240,7 @@ export class azureclitask {
             }
             else {
                 tl.debug('key based endpoint');
+                authParam = "--password";
                 cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
                 this.servicePrincipalKey = cliPassword;
             }
@@ -246,10 +249,10 @@ export class azureclitask {
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             if (visibleAzLogin) {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             }
             else {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
             }
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
