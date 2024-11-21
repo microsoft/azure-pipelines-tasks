@@ -31,7 +31,7 @@ async function startNamedPiped() {
 
     pipeStream.on('data', async (data) => {
         const trimmedData = data.toString('utf8').trim();
-        console.log(`Received from PowerShell: ${trimmedData}`);
+        console.debug(`Received from PowerShell: ${trimmedData}`);
         var systemAccessToken = tl.getVariable('System.AccessToken');
         process.env.System_Access_Token_PSV2_Task = systemAccessToken;
 
@@ -39,22 +39,26 @@ async function startNamedPiped() {
             try {
                 if(connectedServiceName && connectedServiceName.trim().length > 0) {
                     const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
-                    console.log(`Successfully fetched the ADO access token for ${connectedServiceName}`);
+                    console.debug(`Successfully fetched the ADO access token for ${connectedServiceName}`);
                     writeStream.write(token + "\n");
                 } else {
-                    console.log(`No Service Connection found, returning empty token`);
+                    console.debug(`No Service Connection found, returning empty token`);
                     writeStream.write(systemAccessToken + "\n");
                 }
             } catch(err) {
-                console.log(`Token generation failed with error message ${err.message}`);
+                console.debug(`Token generation failed with error message ${err.message}`);
                 writeStream.write(systemAccessToken + "\n");
             }
         } else {
-            console.log('Pipe reading ended');
-            writeStream.close();
-            pipeStream.close();
-            fs.unlinkSync(ts2PsPipePath);
-            fs.unlinkSync(ps2TsPipePath);
+            try {
+                console.debug('Pipe reading ended');
+                writeStream.close();
+                pipeStream.close();
+                fs.unlinkSync(ts2PsPipePath);
+                fs.unlinkSync(ps2TsPipePath);
+            } catch(err) {
+                console.debug(`Cleanup failed : ${err.message}`);
+            } 
         }
     });
 

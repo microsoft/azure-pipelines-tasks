@@ -118,21 +118,21 @@ class FileBasedToken {
                         $eventFromA.Set()
                     } elseif ($index -eq 1) {
                         # Exit signal received
-                        Write-Host "Task: Exit signal received. Exiting loop..."
+                        Write-Debug "Task: Exit signal received. Exiting loop..."
                         break
                     }
                 } catch {
-                    Write-Host "Error occurred while waiting for signals: $_"
+                    Write-Debug "Error occurred while waiting for signals: $_"
                 }
             }
         } catch {
-            Write-Host "Critical error in Task: $_"
+            Write-Debug "Critical error in Task: $_"
         } finally {
             # Cleanup resources
             if ($null -ne $eventFromB ) { $eventFromB.Dispose() }
             if ($null -ne $eventFromA) { $eventFromA.Dispose() }
             if ($null -ne $eventExit) { $eventExit.Dispose() }
-            Write-Host "Task: Resources cleaned up. Exiting."
+            Write-Debug "Task: Resources cleaned up. Exiting."
         }
     }
 }
@@ -278,15 +278,15 @@ try {
         $eventFromB = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromB)
         $eventFromA = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromA)
 
-        function Get-AzDoTokenHelper {
+        function Get-AzDoToken {
             Write-Debug "User Script: Starting process to notify Task and read output."
 
             [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
 
             try {
                 # Signal Task to generate access token
-                $eventFromB.Set()
-                Write-Debug "User Script: Notified Task to generate access token."
+                $tmp = $eventFromB.Set()
+                Write-Debug "User Script: Notified Task to generate access token $tmp."
 
                 # Wait for Task to finish processing
                 $receivedResponseBool = $eventFromA.WaitOne(60000) # Wait for up to 60 seconds
@@ -309,13 +309,6 @@ try {
             }
 
             return $tokenResponse
-        }
-
-        function Get-AzDoToken {
-            $token = Get-AzDoTokenHelper
-            $token = $token | Out-String
-            $token = $token.Substring(4).Trim()
-            return $token
         }
         
     ' + $joinedContents
@@ -441,7 +434,7 @@ finally {
     # Signal Script A to exit
     $exitSignal = "Global\ExitSignal"
     $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-    $eventExit.Set()
-    Write-Host "Exit signal sent to Task."
+    $tmp = $eventExit.Set()
+    Write-Debug "Exit signal sent to Task $tmp."
     Trace-VstsLeavingInvocation $MyInvocation
 }
