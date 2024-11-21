@@ -120,6 +120,11 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
         sevenZip.arg('-mx=' + mapSevenZipCompressionLevel(sevenZipCompression));
     }
 
+    const decoderCompatibility = tl.getInput('decoderCompatibility', false);
+    if (win && decoderCompatibility) {
+        sevenZip.arg('-myv=' + decoderCompatibility);
+    }
+
     sevenZip.arg(archive);
 
     const fileList: string = createFileList(files);

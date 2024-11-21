@@ -81,6 +81,16 @@
       }
     },
     {
+      "name": "decoderCompatibility",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.decoderCompatibility",
+      "required": false,
+      "defaultValue": 1602,
+      "helpMarkDown": "ms-resource:loc.input.help.decoderCompatibility",
+      "groupName": "archive",
+      "visibleRule": "archiveType = 7z"
+    },
+    {
       "name": "tarCompression",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.tarCompression",

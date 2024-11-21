@@ -81,6 +81,16 @@
       }
     },
     {
+      "name": "decoderCompatibility",
+      "type": "int",
+      "label": "7z decoder compatibility",
+      "required": false,
+      "defaultValue": 1602,
+      "helpMarkDown": "Optionally choose to set decoder compatibility version for 7z archive creating. It should be 4-digit number that represents the version of 7-Zip without a dot. (default: 1602)",
+      "groupName": "archive",
+      "visibleRule": "archiveType = 7z"
+    },
+    {
       "name": "tarCompression",
       "type": "pickList",
       "label": "Tar compression",
