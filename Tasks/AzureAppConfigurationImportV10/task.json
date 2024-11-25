@@ -283,7 +283,7 @@
         "InvalidTagsWithSample": "Invalid format for parameter 'Tags'. Sample 'Tags': {\"name1\": \"value1\", \"name2\":, \"value2\"}.",
         "InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
         "InvalidTypeInTags": "Invalid type in parameter 'Tags'. Only strings supported",
-        "AzureAppConfigurationPushTaskStartingUp": "Azure App Configuration Import Task is starting up...",
+        "AzureAppConfigurationImportTaskStartingUp": "Azure App Configuration Import Task is starting up...",
         "AzureSubscriptionTitle": "Azure Subscription:",
         "AppConfigurationEndpointTitle": "App Configuration Endpoint:",
         "StrictTitle": "Strict:",

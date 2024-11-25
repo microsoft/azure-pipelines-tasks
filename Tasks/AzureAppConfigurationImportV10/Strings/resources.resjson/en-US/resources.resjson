@@ -45,7 +45,7 @@
   "loc.messages.InvalidTagsWithSample": "Invalid format for parameter 'Tags'. Sample 'Tags': {\"name1\": \"value1\", \"name2\":, \"value2\"}.",
   "loc.messages.InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
   "loc.messages.InvalidTypeInTags": "Invalid type in parameter 'Tags'. Only strings supported",
-  "loc.messages.AzureAppConfigurationPushTaskStartingUp": "Azure App Configuration Import Task is starting up...",
+  "loc.messages.AzureAppConfigurationImportTaskStartingUp": "Azure App Configuration Import Task is starting up...",
   "loc.messages.AzureSubscriptionTitle": "Azure Subscription:",
   "loc.messages.AppConfigurationEndpointTitle": "App Configuration Endpoint:",
   "loc.messages.StrictTitle": "Strict:",

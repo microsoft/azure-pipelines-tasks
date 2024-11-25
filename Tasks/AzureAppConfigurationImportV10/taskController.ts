@@ -39,7 +39,7 @@ export class TaskController {
         
         const format: string = this._taskParameters.useFilePathExtension ? this._taskParameters.filePath.split('.').pop().toLowerCase() : this._taskParameters.fileFormat;
 
-        console.log(tl.loc("AzureAppConfigurationPushTaskStartingUp"));
+        console.log(tl.loc("AzureAppConfigurationImportTaskStartingUp"));
         console.log(tl.loc("AzureSubscriptionTitle"), this._taskParameters.endpoint.subscriptionName);
         console.log(tl.loc("AppConfigurationEndpointTitle"), this._taskParameters.configStoreUrl);
         console.log(tl.loc("StrictTitle"), this._taskParameters.strict);
