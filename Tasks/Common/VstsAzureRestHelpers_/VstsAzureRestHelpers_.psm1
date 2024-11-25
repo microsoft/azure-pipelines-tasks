@@ -386,7 +386,7 @@ function Build-MSALInstance {
 
             Write-Verbose "ServiceConnectionId ${connectedServiceNameARM} and vstsAccessToken ${vstsAccessToken}"
 
-            $oidc_token = Get-VstsFederatedTokenModified -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+            $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
             $msalClientInstance = $clientBuilder.WithClientAssertion($oidc_token).Build()
         }

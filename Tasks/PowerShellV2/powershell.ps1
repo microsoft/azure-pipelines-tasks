@@ -1,13 +1,13 @@
 [CmdletBinding()]
 param()
 
-Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Global
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -Global
 Import-Module Microsoft.PowerShell.Security -Global
 
 . $PSScriptRoot\helpers.ps1
-
-$env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+. $PSScriptRoot\accessTokenHelper.ps1
 
 function Get-ActionPreference {
     param (
@@ -33,114 +33,12 @@ function Get-ActionPreference {
     return $result
 }
 
-class FileBasedToken {
-    [void] run($filePath) {
-        $signalFromUserScript = "Global\SignalFromUserScript"
-        $signalFromTask = "Global\SignalFromTask"
-        $exitSignal = "Global\ExitSignal"
-
-        $eventFromB = $null
-        $eventFromA = $null
-        $eventExit = $null
-
-        try {
-            $eventFromB = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
-            $eventFromA = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
-            $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-
-            # Ensure the output file has restricted permissions
-            if (-not (Test-Path $filePath)) {
-                New-Item -Path $filePath -ItemType File -Force
-                $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-
-                # Create a new ACL that only grants access to the current user
-                $acl = Get-Acl $filePath
-                $acl.SetAccessRuleProtection($true, $false)  # Disable inheritance
-                $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-                    $currentUser, "FullControl", "Allow"
-                )
-                $acl.SetAccessRule($rule)
-
-                # Apply the ACL to the file
-                Set-Acl -Path $filePath -AclObject $acl
-            }
-
-            Write-Debug "Task: Waiting for signals..."
-
-            # Infinite loop to wait for signals and respond
-            while ($true) {
-                try {
-                    # Wait for either UserScript signal or Exit signal
-                    $index = [System.Threading.WaitHandle]::WaitAny(@($eventFromB, $eventExit))
-
-                    if ($index -eq 0) {
-                        # Signal from UserScript
-                        try {
-
-                            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
-        
-                            $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
-                            
-                            $token = ""
-        
-                            if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                                Write-Host "No Service connection was found, returning the System Access Token"
-                                $token = $env:SystemAccessTokenPowershellV2
-                            } 
-                            else 
-                            {
-                                $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-        
-                                $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-                                    -connectedServiceNameARM $connectedServiceName `
-                                    -scope "499b84ac-1321-427f-aa17-267ca6975798"
-        
-                                $token = $result.AccessToken
-        
-                                if ($null -eq $token -or $token -eq [string]::Empty) {
-                                    Write-Debug "Generated token found to be null, returning the System Access Token"
-                                    $token = $env:SystemAccessTokenPowershellV2
-                                } else {
-                                    Write-Debug "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-                                }
-                            }
-                            $token | Set-Content -Path $filePath
-                            Write-Debug "Task: Wrote output to file at $token"                   
-                        }
-                        catch {
-                            Write-Debug "Failed to generate token with message $_, returning the System Access Token"
-                            $token = $env:SystemAccessTokenPowershellV2
-                            $token | Set-Content -Path $filePath
-                            Write-Debug "Task: Wrote output to file at $token" 
-                        }
-
-                        # Signal UserScript to read the file
-                        $eventFromA.Set()
-                    } elseif ($index -eq 1) {
-                        # Exit signal received
-                        Write-Debug "Task: Exit signal received. Exiting loop..."
-                        break
-                    }
-                } catch {
-                    Write-Debug "Error occurred while waiting for signals: $_"
-                }
-            }
-        } catch {
-            Write-Debug "Critical error in Task: $_"
-        } finally {
-            # Cleanup resources
-            if ($null -ne $eventFromB ) { $eventFromB.Dispose() }
-            if ($null -ne $eventFromA) { $eventFromA.Dispose() }
-            if ($null -ne $eventExit) { $eventExit.Dispose() }
-            Write-Debug "Task: Resources cleaned up. Exiting."
-        }
-    }
-}
-
 
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
+
+    $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
     Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
@@ -149,6 +47,7 @@ try {
     # Create a runspace to handle the Get-DerivedValue function
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
     $runspacePool.Open()
+    
     
     $myObject = [FileBasedToken]::new()
     # Create a PowerShell instance within the runspace pool
