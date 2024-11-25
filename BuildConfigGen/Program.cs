@@ -89,7 +89,7 @@ namespace BuildConfigGen
                 Console.WriteLine(e2.ToString());
                 Console.ForegroundColor = restore;
                 Console.WriteLine();
-                Console.WriteLine("An exception occured generating configs. Exception message below: (full callstack above)");
+                Console.WriteLine("An exception occured generating configs.  [MSFT internal only: questions/problems please refer to https://aka.ms/ado/taskseng] Exception message below: (full callstack above)");
                 Console.WriteLine(e2.Message);
 
                 Environment.Exit(1);
@@ -1178,7 +1178,10 @@ namespace BuildConfigGen
             {
                 string targetPath = Path.Combine(taskOutput, ".npmrc");
                 ensureUpdateModeVerifier!.WriteAllText(targetPath, @"scripts-prepend-node-path=true
-", false);
+
+registry=https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
+
+always-auth=true", false);
             }
         }
 
