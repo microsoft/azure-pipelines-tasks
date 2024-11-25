@@ -121,7 +121,7 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
     }
 
     const decoderCompatibility = tl.getInput('decoderCompatibility', false);
-    if (win && decoderCompatibility) {
+    if (win && decoderCompatibility && archiveType == '7z') {
         sevenZip.arg('-myv=' + decoderCompatibility);
     }
 
