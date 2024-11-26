@@ -55,19 +55,24 @@ function Global:Get-WiscAccessTokenPSV2Task {
     $token = $result.AccessToken
 
     if ($null -eq $token -or $token -eq [string]::Empty) {
-        Write-Host "Generated token found to be null, returning the System Access Token"
+        Write-Output "Generated token found to be null, returning the System Access Token"
         $token = $env:SystemAccessTokenPowershellV2
     } else {
-        Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+        Write-Output "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
     }
     
     return $token
 }
 New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessTokenPSV2Task' -Scope Global
 
-class TokenHandler {
-    [void] run($filePath) {
-        
+$tokenHandler = [PSCustomObject]@{
+
+    TokenHandler = {
+        param(
+            [Parameter(Mandatory=$true)]
+            [string]$filePath
+        )
+
         $signalFromUserScript = "Global\SignalFromUserScript"
         $signalFromTask = "Global\SignalFromTask"
         $exitSignal = "Global\ExitSignal"
@@ -124,7 +129,7 @@ class TokenHandler {
                         catch {
                             Write-Host "Failed to generate token with message $_, returning the System Access Token"
                             $token = $env:SystemAccessTokenPowershellV2
-                             
+                                
                         } finally {
                             $token | Set-Content -Path $filePath
                             Write-Host "Task: Wrote access token to file"
