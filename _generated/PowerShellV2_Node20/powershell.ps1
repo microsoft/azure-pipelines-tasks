@@ -12,7 +12,7 @@ Import-Module Microsoft.PowerShell.Security -Global
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
-        [string] 
+        [string]
         $VstsInputName,
 
         [Parameter()]
@@ -54,6 +54,7 @@ try {
         param($obj, $filePath)
         try {
             $obj.run($filePath)
+            Start-Sleep 10
         } catch {
             Write-Error $_
         }    
@@ -262,7 +263,7 @@ try {
     # Switch to "Continue".
     $global:ErrorActionPreference = 'Continue'
     $failed = $false
-    
+
     # Run the script.
     Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
@@ -278,6 +279,7 @@ try {
                 $failed = $true
                 $inError = $true
                 $null = $errorLines.AppendLine("$($_.Exception.Message)")
+
                 # Write to verbose to mitigate if the process hangs.
                 Write-Verbose "STDERR: $($_.Exception.Message)"
             }
@@ -291,6 +293,7 @@ try {
                         Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
+                
                 Write-Host "$_"
             }
         }
@@ -329,14 +332,13 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    try {
-        # Signal Script A to exit
-        $exitSignal = "Global\ExitSignal"
-        $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-        $tmp = $eventExit.Set()
-        Write-Debug "Exit signal sent to Task $tmp."
-        Trace-VstsLeavingInvocation $MyInvocation
-    } catch {
-        Write-Host "Error while exiting with message $_"
-    }
+    Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.psm1 | ForEach-Object { . $_.FullName }
+    Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.ps1 | ForEach-Object { . $_.FullName }
+
+    # Signal Script A to exit
+    $exitSignal = "Global\ExitSignal"
+    $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+    $tmp = $eventExit.Set()
+    Write-Debug "Exit signal sent to Task $tmp."
+    Trace-VstsLeavingInvocation $MyInvocation
 }
