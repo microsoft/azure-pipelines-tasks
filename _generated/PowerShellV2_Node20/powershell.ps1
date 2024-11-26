@@ -1,14 +1,18 @@
 [CmdletBinding()]
 param()
 
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Global
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -Global
+Import-Module Microsoft.PowerShell.Security -Global
 
 . $PSScriptRoot\helpers.ps1
+. $PSScriptRoot\accessTokenHelper.ps1
 
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
-        [string]
+        [string] 
         $VstsInputName,
 
         [Parameter()]
@@ -32,6 +36,34 @@ function Get-ActionPreference {
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
+
+    $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+
+    $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
+    Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
+    $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
+
+    # Create a runspace to handle the Async communication between the Task and User Script for Access Token
+    $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+    $runspacePool.Open()
+    
+    
+    $tokenHandler = [TokenHandler]::new()
+    # Create a PowerShell instance within the runspace pool
+    $psRunspace = [powershell]::Create().AddScript({
+        param($obj, $filePath)
+        try {
+            $obj.run($filePath)
+        } catch {
+            Write-Error $_
+        }    
+    }).AddArgument($tokenHandler).AddArgument($tokenfilePath)
+
+    $psRunspace.RunspacePool = $runspacePool
+    $psRunspace.BeginInvoke()
+
+    # Wait for the async runspace to start and get ready to listen to User scripts requests
+    Start-Sleep 10
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -133,6 +165,52 @@ try {
     $joinedContents = [System.String]::Join(
         ([System.Environment]::NewLine),
         $contents);
+
+    
+    $joinedContents = '
+    
+        # Define file path and event names
+        $outputFile = "' + $tokenfilePath + '"
+        $signalFromUserScript = "Global\SignalFromUserScript"
+        $signalFromTask = "Global\SignalFromTask"
+  
+        $eventFromUserScript = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
+        $eventFromTask = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+
+        function Get-AzDoToken {
+            Write-Debug "User Script: Starting process to notify Task and read output."
+
+            [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
+
+            try {
+                # Signal Task to generate access token
+                $tmp = $eventFromUserScript.Set()
+                Write-Debug "User Script: Notified Task to generate access token $tmp."
+
+                # Wait for Task to finish processing
+                $receivedResponseBool = $eventFromTask.WaitOne(60000) # Wait for up to 60 seconds
+                
+                if (!$receivedResponseBool) {  
+                    Write-Debug "User Script: Timeout waiting for Task to respond."
+                }
+                else {
+                    try {
+                        [string]$powershellv2AccessToken = (Get-Content -Path $outputFile).Trim()
+                        Write-Debug "UserScript : Read output from file"
+                        $tokenResponse = $powershellv2AccessToken
+                    } catch {
+                        Write-Debug "Error reading the output file: $_"
+                    }
+                }
+            } 
+            catch {
+                Write-Host "Error occurred in Get-AzDoTokenHelper : $_"
+            }
+            return $tokenResponse
+        }
+        
+    ' + $joinedContents
+
     if ($input_showWarnings) {
         $joinedContents = '
             $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
@@ -184,7 +262,7 @@ try {
     # Switch to "Continue".
     $global:ErrorActionPreference = 'Continue'
     $failed = $false
-
+    
     # Run the script.
     Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
@@ -200,7 +278,6 @@ try {
                 $failed = $true
                 $inError = $true
                 $null = $errorLines.AppendLine("$($_.Exception.Message)")
-
                 # Write to verbose to mitigate if the process hangs.
                 Write-Verbose "STDERR: $($_.Exception.Message)"
             }
@@ -214,7 +291,6 @@ try {
                         Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
-
                 Write-Host "$_"
             }
         }
@@ -253,5 +329,14 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    Trace-VstsLeavingInvocation $MyInvocation
+    try {
+        # Signal Script A to exit
+        $exitSignal = "Global\ExitSignal"
+        $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+        $tmp = $eventExit.Set()
+        Write-Debug "Exit signal sent to Task $tmp."
+        Trace-VstsLeavingInvocation $MyInvocation
+    } catch {
+        Write-Host "Error while exiting with message $_"
+    }
 }
