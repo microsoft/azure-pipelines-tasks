@@ -94,11 +94,11 @@ async function getAccessTokenViaWorkloadIdentityFederation(connectedService: str
   const authorityUrl =
     tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
 
-  tl.debug(`Getting federated token for service connection ${connectedService}`);
+  console.log(`Getting federated token for service connection ${connectedService}`);
 
   var federatedToken: string = await getFederatedToken(connectedService);
 
-  tl.debug(`Got federated token for service connection ${connectedService}`);
+  console.log(`Got federated token for service connection ${connectedService}`);
 
   // exchange federated token for service principal token (below)
   return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
@@ -142,7 +142,7 @@ async function getAccessTokenFromFederatedToken(
   
     const result = await app.acquireTokenByClientCredential(request);
   
-    tl.debug(`Got access token for service principal ${servicePrincipalId}`);
+    console.log(`Got access token for service principal ${servicePrincipalId}`);
   
     return result?.accessToken;
 }
@@ -159,16 +159,18 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
 
 async function run() {
     try {
-        // Get inputs
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         startNamedPiped();
 
+        // Get inputs
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
         let input_verbosePreference: string = getActionPreference('verbosePreference', 'Default');
         let input_debugPreference: string = getActionPreference('debugPreference', 'Default');
         let input_progressPreference: string = getActionPreference('progressPreference', 'SilentlyContinue');
+
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -177,7 +179,6 @@ async function run() {
         let input_arguments: string;
         let input_script: string;
         let input_targetType: string = tl.getInput('targetType') || '';
-        
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile() || !input_filePath.toUpperCase().match(/\.PS1$/)) {
@@ -280,7 +281,6 @@ async function run() {
                         }
                     }
                 };
-                Get-ChildItem -Recurse $PSScriptRoot | Select Fullname 
                 Invoke-Command {${script}} -WarningVariable +warnings;
             `;
         }
@@ -360,8 +360,6 @@ async function run() {
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
         }
-
-
 
         // Fail on stderr.
         if (stderrFailure) {
