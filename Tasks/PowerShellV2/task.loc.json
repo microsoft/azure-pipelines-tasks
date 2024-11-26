@@ -42,9 +42,9 @@
         "azureDevOpsServiceConnection"
       ],
       "type": "connectedService:workloadidentityuser",
-      "label": "Azure DevOps Service Connection",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
-      "helpMarkDown": "Select an Azure DevOps Service Connection service connection"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "targetType",
