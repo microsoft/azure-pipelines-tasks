@@ -55,10 +55,10 @@ function Global:Get-WiscAccessTokenPSV2Task {
     $token = $result.AccessToken
 
     if ($null -eq $token -or $token -eq [string]::Empty) {
-        Write-Host "Generated token found to be null, returning the System Access Token"
+        Write-Output "Generated token found to be null, returning the System Access Token"
         $token = $env:SystemAccessTokenPowershellV2
     } else {
-        Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+        Write-Output "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
     }
     
     return $token
