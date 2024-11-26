@@ -290,7 +290,7 @@ export default class VirtualMachineScaleSet {
             return <azureModel.VMExtensionMetadata>{
                 type: "CustomScriptExtension",
                 publisher: "Microsoft.Compute",
-                typeHandlerVersion: "1.0"
+                typeHandlerVersion: "1.10"
             }
         } else if (osType === "Linux") {
             return <azureModel.VMExtensionMetadata>{
