@@ -46,14 +46,12 @@ try {
     # Create a runspace to handle the Async communication between the Task and User Script for Access Token
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
     $runspacePool.Open()
-    
-    
-    $tokenHandler = [TokenHandler]::new()
+
     # Create a PowerShell instance within the runspace pool
     $psRunspace = [powershell]::Create().AddScript({
-        param($obj, $filePath)
+        param($tokenHandler,$filePath)
         try {
-            $obj.run($filePath)
+            $tokenHandler.Greet.Invoke($tokenfilePath)
             Start-Sleep 10
         } catch {
             Write-Error $_
@@ -293,7 +291,7 @@ try {
                         Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
-                
+
                 Write-Host "$_"
             }
         }
