@@ -7,7 +7,6 @@ Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -Global
 Import-Module Microsoft.PowerShell.Security -Global
 
 . $PSScriptRoot\helpers.ps1
-. $PSScriptRoot\accessTokenHelper.ps1
 
 function Get-ActionPreference {
     param (
@@ -47,14 +46,13 @@ try {
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
     $runspacePool.Open()
 
-    # Create a PowerShell instance within the runspace pool
+    . $PSScriptRoot\accessTokenHelper.ps1
     $psRunspace = [powershell]::Create().AddScript({
         param($tokenHandler,$filePath)
         try {
-            $tokenHandler.Greet.Invoke($tokenfilePath)
-            Start-Sleep 10
+            $tokenHandler.TokenHandler.Invoke($filePath)
         } catch {
-            Write-Error $_
+            Write-Error $_ 
         }    
     }).AddArgument($tokenHandler).AddArgument($tokenfilePath)
 
@@ -167,14 +165,12 @@ try {
 
     
     $joinedContents = '
-    
-        # Define file path and event names
         $outputFile = "' + $tokenfilePath + '"
         $signalFromUserScript = "Global\SignalFromUserScript"
         $signalFromTask = "Global\SignalFromTask"
   
-        $eventFromUserScript = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
-        $eventFromTask = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+        $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
+        $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
 
         function Get-AzDoToken {
             Write-Debug "User Script: Starting process to notify Task and read output."
@@ -203,7 +199,7 @@ try {
                 }
             } 
             catch {
-                Write-Host "Error occurred in Get-AzDoTokenHelper : $_"
+                Write-Debug "Error occurred in Get-AzDoTokenHelper : $_"
             }
             return $tokenResponse
         }
@@ -335,7 +331,7 @@ finally {
 
     # Signal Script A to exit
     $exitSignal = "Global\ExitSignal"
-    $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+    $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
     $tmp = $eventExit.Set()
     Write-Debug "Exit signal sent to Task $tmp."
     Trace-VstsLeavingInvocation $MyInvocation
