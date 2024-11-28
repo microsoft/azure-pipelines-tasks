@@ -49,7 +49,7 @@
   "loc.messages.JS_InvalidFilePath": "지정한 스크립트 위치 '%s'에서 스크립트 파일을 찾을 수 없습니다. 지정한 경로에 스크립트가 있는지 확인하세요. 인라인 스크립트를 사용하려면 입력 '스크립트 위치'를 'inlineScript'로 지정합니다.",
   "loc.messages.JS_InvalidErrorActionPreference": "잘못된 ErrorActionPreference '%s'입니다. 값은 'Stop', 'Continue', 'SilentlyContinue' 중 하나여야 합니다.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 이전의 에이전트 버전에서는 전역 Azure CLI 구성만 사용할 수 있습니다.",
-  "loc.messages.UnacceptedScriptLocationValue": "%s은(는) '스크립트 위치'(YAML의 scriptLocation) 작업 입력에 유효한 값이 아닙니다. 값은 be'inlineScript' 또는 'scriptPath' 중 하나일 수 있습니다.",
+  "loc.messages.UnacceptedScriptLocationValue": "%s은(는) 작업 입력 '스크립트 위치'(YAML의 scriptLocation)에 유효한 값이 아닙니다. 값은 'inlineScript'이거나 'scriptPath'일 수 있습니다.",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "비밀이 만료되었습니다. %s에서 서비스 연결을 업데이트하세요. 비밀 없는 서비스 연결로의 변환에 대한 자세한 정보는 https://aka.ms/azdo-rm-workload-identity-conversion을 참고하세요.",
   "loc.messages.ProxyConfig": "az 도구가 %s을(를) 프록시 서버로 사용하도록 구성되어 있습니다.",
   "loc.messages.FailedToRefreshAzSession": "az-cli 세션을 새로 고치는 동안 %s 오류가 발생했습니다.",

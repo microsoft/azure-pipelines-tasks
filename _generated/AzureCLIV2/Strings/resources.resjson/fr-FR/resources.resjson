@@ -49,7 +49,7 @@
   "loc.messages.JS_InvalidFilePath": "Le fichier de script est introuvable à l'emplacement de script spécifié : '%s'. Vérifiez que le script existe dans le chemin spécifié. Si vous souhaitez utiliser un script inline, indiquez 'inlineScript' pour 'Script Location'.",
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' non valide. La valeur doit correspondre à 'Stop', 'Continue' ou 'SilentlyContinue'",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Pour une version d'agent < 2.115.0, seule la configuration Azure CLI globale peut être utilisée",
-  "loc.messages.UnacceptedScriptLocationValue": "%s n'est pas une valeur valide pour l'entrée de tâche 'Script Location' (scriptLocation en YAML). La valeur peut être 'inlineScript' ou 'scriptPath'",
+  "loc.messages.UnacceptedScriptLocationValue": "%s n’est pas une valeur valide pour l’entrée de tâche « Emplacement du script » (scriptLocation dans YAML). La valeur peut être 'inlineScript' ou 'scriptPath'",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expiré, mettez à jour la connexion de service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret.",
   "loc.messages.ProxyConfig": "l’outil az est configuré pour utiliser %s comme serveur proxy",
   "loc.messages.FailedToRefreshAzSession": "L’erreur suivante s’est produite lors de la tentative d’actualisation de la session az-cli : %s",
