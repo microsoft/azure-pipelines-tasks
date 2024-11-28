@@ -12,7 +12,6 @@ function Global:Get-VstsFederatedTokenPSV2Task {
     $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
     $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
-    # Construct the API URL
     $url = $uri + "$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
     
     $headers = @{
@@ -20,20 +19,20 @@ function Global:Get-VstsFederatedTokenPSV2Task {
         "Content-Type"  = "application/json"
     }
     
-    # Make the POST request to generate the OIDC token
+    # POST request to generate the OIDC token
     $response = Invoke-WebRequest -Uri $url -Method Post -Headers $headers -Body $body
 
     # Parse the response content to extract the OIDC token
     $responseContent = $response.Content | ConvertFrom-Json
-    $oidcToken = $responseContent.oidcToken  # The token field contains the OIDC token
+    $oidcToken = $responseContent.oidcToken
 
 
     if ($null -eq $oidcToken -or $oidcToken -eq [string]::Empty) {
-        Write-Host "Failed to create OIDC token."
+        Write-Verbose "Failed to create OIDC token."
         throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
     }
 
-    Write-Host "OIDC Token generated Successfully"
+    Write-Verbose "OIDC Token generated Successfully"
     return $oidcToken
 }
 New-Alias -Name 'Get-VstsFederatedToken' -Value 'Global:Get-VstsFederatedTokenPSV2Task' -Scope Global
@@ -55,10 +54,10 @@ function Global:Get-WiscAccessTokenPSV2Task {
     $token = $result.AccessToken
 
     if ($null -eq $token -or $token -eq [string]::Empty) {
-        Write-Output "Generated token found to be null, returning the System Access Token"
+        Write-Verbose "Generated token found to be null, returning the System Access Token"
         $token = $env:SystemAccessTokenPowershellV2
     } else {
-        Write-Output "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+        Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
     }
     
     return $token
@@ -82,10 +81,10 @@ $tokenHandler = [PSCustomObject]@{
         $eventExit = $null
 
         try {
-            $eventFromUserScript = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
-            $eventFromTask = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
-            $eventExit = [System.Threading.EventWaitHandle]::new($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-
+            $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
+            $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+            $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+            
             # Ensure the output file has restricted permissions
             if (-not (Test-Path $filePath)) {
                 New-Item -Path $filePath -ItemType File -Force
@@ -101,9 +100,12 @@ $tokenHandler = [PSCustomObject]@{
 
                 # Apply the ACL to the file
                 Set-Acl -Path $filePath -AclObject $acl
+            } else {
+                Write-Error "Token File not found"
+                throw "Token File not found"
             }
 
-            Write-Host "Task: Waiting for signals..."
+            Write-Verbose "Task: Waiting for signals..."
 
             # Infinite loop to wait for signals and respond
             while ($true) {
@@ -112,6 +114,7 @@ $tokenHandler = [PSCustomObject]@{
                     $index = [System.Threading.WaitHandle]::WaitAny(@($eventFromUserScript, $eventExit))
 
                     if ($index -eq 0) {
+
                         # Signal from UserScript
                         $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
                         $token = ""
@@ -119,41 +122,42 @@ $tokenHandler = [PSCustomObject]@{
                             [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
 
                             if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                                Write-Host "No Service connection was found, returning the System Access Token"
+                                Write-Verbose "No Service connection was found, returning the System Access Token"
                                 $token = $env:SystemAccessTokenPowershellV2
                             } else {
                                 $token = Get-WiscAccessTokenPSV2Task -connectedServiceName $connectedServiceName  
-                                Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-                            }                
+                                Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                            }           
                         }
                         catch {
-                            Write-Host "Failed to generate token with message $_, returning the System Access Token"
+                            Write-Verbose "Failed to generate token with message $_, returning the System Access Token"
                             $token = $env:SystemAccessTokenPowershellV2
                                 
                         } finally {
                             $token | Set-Content -Path $filePath
-                            Write-Host "Task: Wrote access token to file"
+                            Write-Verbose "Task: Wrote access token to file"
                         }
 
                         # Signal UserScript to read the file
                         $eventFromTask.Set()
                     } elseif ($index -eq 1) {
                         # Exit signal received
-                        Write-Host "Task: Exit signal received. Exiting loop..."
+                        Write-Verbose "Task: Exit signal received. Exiting loop..."
                         break
                     }
                 } catch {
-                    Write-Host "Error occurred while waiting for signals: $_"
+                    Write-Verbose "Error occurred while waiting for signals: $_"
                 }
             }
         } catch {
-            Write-Host "Critical error in Task: $_"
+            Write-Verbose "Critical error in Task: $_"
+            throw $_
         } finally {
             # Cleanup resources
             if ($null -ne $eventFromUserScript ) { $eventFromUserScript.Dispose() }
             if ($null -ne $eventFromTask) { $eventFromTask.Dispose() }
             if ($null -ne $eventExit) { $eventExit.Dispose() }
-            Write-Host "Task: Resources cleaned up. Exiting."
+            Write-Verbose "Task: Resources cleaned up. Exiting."
         }
     }
 }
