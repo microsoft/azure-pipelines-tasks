@@ -199,7 +199,7 @@ export class azureclitask {
 
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            const versionMatch = azVersionResultOutput.stdout.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+            const versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
 
             if (!versionMatch || versionMatch.length < 2) {
                 tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
