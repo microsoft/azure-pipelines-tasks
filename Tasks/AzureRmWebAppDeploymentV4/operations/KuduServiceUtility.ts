@@ -16,6 +16,7 @@ const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
 const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
+const VSTS_ONE_DEPLOY: string = 'VSTS_ONE_DEPLOY';
 const VSTS_DEPLOY: string = 'VSTS';
 
 export class KuduServiceUtility {
@@ -158,7 +159,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingZipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
+    public async deployUsingZipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any, addChecksumHeader?: boolean): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
            
@@ -176,7 +177,47 @@ export class KuduServiceUtility {
             var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
 
-            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters, addChecksumHeader);
+           
+            await this._processDeploymentResponse(deploymentDetails);
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, false);
+            }
+           
+            console.log(tl.loc('PackageDeploymentSuccess'));
+            return deploymentDetails.id;
+        }
+        catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
+    public async deployUsingOneDeploy(packagePath: string, isClean: boolean, appOffline?: boolean, customMessage?: any, packageType?:string, addChecksumHeader?: boolean): Promise<string> {
+        try {
+            console.log(tl.loc('PackageDeploymentInitiatedWithOneDeploy'));
+
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, true);
+                tl.debug('Wait for 5 seconds for app_offline to take effect');
+                await webClient.sleepFor(5);
+            }
+
+            if (!packageType){
+                packageType = 'Zip'
+            }
+
+            let queryParameters: Array<string> = [
+                'async=true',
+                'deployer=' + VSTS_ONE_DEPLOY,
+                'type=' + packageType,
+                'clean=' + isClean
+            ];
+           
+            var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
+            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+
+            let deploymentDetails = await this._appServiceKuduService.oneDeploy(packagePath, queryParameters, addChecksumHeader);
            
             await this._processDeploymentResponse(deploymentDetails);
             if(appOffline) {
@@ -195,7 +236,7 @@ export class KuduServiceUtility {
     public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-           
+
             let queryParameters: Array<string> = [
                 'deployer=' +   VSTS_DEPLOY
             ];

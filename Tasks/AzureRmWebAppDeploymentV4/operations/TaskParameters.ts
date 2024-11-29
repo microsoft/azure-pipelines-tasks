@@ -109,6 +109,10 @@ export class TaskParametersUtility {
                 taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
             }
         }
+        else if(taskParameters.isLinuxApp) {
+            taskParameters.DeploymentType = this.getDeploymentType(tl.getInput('DeploymentType', false));
+            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+        }
         else {
             // Retry Attempt is passed by default
             taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
