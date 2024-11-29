@@ -1,6 +1,7 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
@@ -47,7 +48,11 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            Utility.throwIfError(tl.execSync("az", "--version"));
+
+            const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
+            Utility.throwIfError(azVersionResult);
+            this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+
             // set az cli config dir
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
@@ -190,14 +195,14 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
     private static tenantId: string = null;
+    private static isSupportCertificateParameter: boolean = false;
 
-    private static isAzVersionGreaterOrEqual(versionToCompare) {
+    private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            const result = tl.execSync("az", "--version");
-            const versionMatch = result.stdout.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+            const versionMatch = azVersionResultOutput.stdout.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
 
             if (!versionMatch || versionMatch.length < 2) {
-                tl.error(`Can't parse az version from: ${result}`);                
+                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
                 return false;
             }
 
@@ -261,7 +266,7 @@ export class azureclitask {
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
-                if(azureclitask.isAzVersionGreaterOrEqual("2.66.0")) {
+                if(this.isSupportCertificateParameter) {
                     authParam = "--certificate";
                 }
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
