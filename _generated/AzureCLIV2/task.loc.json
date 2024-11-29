@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 249,
-    "Patch": 5
+    "Patch": 7
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -226,7 +226,7 @@
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
   },
   "_buildConfigMapping": {
-    "Default": "2.249.5",
-    "Node20_229_2": "2.249.6"
+    "Default": "2.249.7",
+    "Node20_229_2": "2.249.8"
   }
 }
