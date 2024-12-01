@@ -243,40 +243,35 @@ async function run() {
         }
 
         script = `
-            # Open the FIFO for writing
-
-            $pipeWriter = $null
-            $pipeReader = $null
-
+            $pipeWriter = $null;
+            $pipeReader = $null;
             try {
-                $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}')
-                $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}') 
+                $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
+                $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
             } catch {
-                Write-Verbose "Error in connecting to the pipes." 
+                Write-Verbose "Error in connecting to the pipes."; 
             }
             
-
             function Get-AzDoToken {
                 try {
-                    $pipeWriter.WriteLine('Get-AzDoToken')
-                    $pipeWriter.Flush()
+                    $pipeWriter.WriteLine('Get-AzDoToken');
+                    $pipeWriter.Flush();
 
-                    $token = $pipeReader.ReadLine()
-                    $token = $token.Trim()
+                    $token = $pipeReader.ReadLine();
+                    $token = $token.Trim();
 
                     if ($null -eq $token -or $token -eq [string]::Empty) {
-                        Write-Host "empty response was found, returning the System Access Token"
-                        $token = $env:System_Access_Token_PSV2_Task
+                        Write-Host "empty response was found, returning the System Access Token";
+                        $token = $env:System_Access_Token_PSV2_Task;
                     } 
-                    return $token
+                    return $token;
                 } 
                 catch {
-                    Write-Host "Error in Get-AzDoToken: $_"
-                    $token = $env:System_Access_Token_PSV2_Task
-                    return $token
+                    Write-Host "Error in Get-AzDoToken: $_";
+                    $token = $env:System_Access_Token_PSV2_Task;
+                    return $token;
                 }
             }
-
             ${script}
         `;
 
@@ -299,14 +294,13 @@ async function run() {
                 ${script}
             }
             finally {
-                # Close the streams
                 if($pipeWriter) {
-                    $pipeWriter.WriteLine('Close')
-                    $pipeWriter.Flush()
-                    $pipeWriter.Close()
+                    $pipeWriter.WriteLine('Close');
+                    $pipeWriter.Flush();
+                    $pipeWriter.Close();
                 } 
                 if($pipeReader) {
-                    $pipeReader.Close()
+                    $pipeReader.Close();
                 }
             }`
 
