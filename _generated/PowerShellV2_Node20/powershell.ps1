@@ -51,6 +51,7 @@ try {
         param($tokenHandler,$filePath)
         try {
             $tokenHandler.TokenHandler.Invoke($filePath)
+            Start-Sleep 20
         } catch {
             Write-Error $_ 
         }    
@@ -173,33 +174,33 @@ try {
         $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
 
         function Get-AzDoToken {
-            Write-Debug "User Script: Starting process to notify Task and read output."
+            Write-Verbose "User Script: Starting process to notify Task and read output."
 
             [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
 
             try {
                 # Signal Task to generate access token
                 $tmp = $eventFromUserScript.Set()
-                Write-Debug "User Script: Notified Task to generate access token $tmp."
+                Write-Verbose "User Script: Notified Task to generate access token $tmp."
 
                 # Wait for Task to finish processing
-                $receivedResponseBool = $eventFromTask.WaitOne(60000) # Wait for up to 60 seconds
+                $receivedResponseBool = $eventFromTask.WaitOne(15000) # Wait for up to 15 seconds
                 
                 if (!$receivedResponseBool) {  
-                    Write-Debug "User Script: Timeout waiting for Task to respond."
+                    Write-Verbose "User Script: Timeout waiting for Task to respond."
                 }
                 else {
                     try {
                         [string]$powershellv2AccessToken = (Get-Content -Path $outputFile).Trim()
-                        Write-Debug "UserScript : Read output from file"
+                        Write-Verbose "UserScript : Read output from file"
                         $tokenResponse = $powershellv2AccessToken
                     } catch {
-                        Write-Debug "Error reading the output file: $_"
+                        Write-Verbose "Error reading the output file: $_"
                     }
                 }
             } 
             catch {
-                Write-Debug "Error occurred in Get-AzDoTokenHelper : $_"
+                Write-Verbose "Error occurred in Get-AzDoTokenHelper : $_"
             }
             return $tokenResponse
         }
@@ -332,7 +333,6 @@ finally {
     # Signal Script A to exit
     $exitSignal = "Global\ExitSignal"
     $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-    $tmp = $eventExit.Set()
-    Write-Debug "Exit signal sent to Task $tmp."
+    $output = $eventExit.Set()
     Trace-VstsLeavingInvocation $MyInvocation
 }

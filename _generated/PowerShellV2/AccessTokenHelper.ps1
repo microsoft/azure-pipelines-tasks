@@ -41,23 +41,28 @@ function Global:Get-WiscAccessTokenPSV2Task {
     param(
         [Parameter(Mandatory=$true)]
         [string]$connectedServiceName
-    )
-
-    $token = $env:SystemAccessTokenPowershellV2
-    
+    ) 
     $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
     $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
         -connectedServiceNameARM $connectedServiceName `
         -scope "499b84ac-1321-427f-aa17-267ca6975798"
 
-    $token = $result.AccessToken
+    $token = $null
+    $expirationTime = $null
+    if($result) {
+        $token = $result.AccessToken
+        $expirationTime = $([math]::Round(([DateTime]::Parse($result.ExpiresOn) - [DateTime]::Now).TotalMinutes))
+    }
 
     if ($null -eq $token -or $token -eq [string]::Empty) {
         Write-Verbose "Generated token found to be null, returning the System Access Token"
         $token = $env:SystemAccessTokenPowershellV2
     } else {
         Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+        if($expirationTime) {
+            Write-Host "Generated access token with expiration time of $expirationTime minutes."
+        }   
     }
     
     return $token
@@ -140,24 +145,28 @@ $tokenHandler = [PSCustomObject]@{
 
                         # Signal UserScript to read the file
                         $eventFromTask.Set()
+                        
                     } elseif ($index -eq 1) {
                         # Exit signal received
-                        Write-Verbose "Task: Exit signal received. Exiting loop..."
                         break
                     }
                 } catch {
-                    Write-Verbose "Error occurred while waiting for signals: $_"
+                    Write-Debug "Error occurred while waiting for signals: $_"
                 }
             }
         } catch {
-            Write-Verbose "Critical error in Task: $_"
+            Write-Debug "Critical error in Task: $_"
             throw $_
         } finally {
-            # Cleanup resources
-            if ($null -ne $eventFromUserScript ) { $eventFromUserScript.Dispose() }
-            if ($null -ne $eventFromTask) { $eventFromTask.Dispose() }
-            if ($null -ne $eventExit) { $eventExit.Dispose() }
-            Write-Verbose "Task: Resources cleaned up. Exiting."
+            try {
+                if ($null -ne $eventFromUserScript ) { $eventFromUserScript.Dispose() }
+                if ($null -ne $eventFromTask) { $eventFromTask.Dispose() }
+                if ($null -ne $eventExit) { $eventExit.Dispose() }
+            } catch {
+                // do nothing
+            }
+            
+            Write-Debug "Task: Resources cleaned up. Exiting."
         }
     }
 }
