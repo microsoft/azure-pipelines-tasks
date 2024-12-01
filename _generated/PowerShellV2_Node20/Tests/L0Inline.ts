@@ -30,7 +30,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
         '/fakecwd' : true,
         'path/to/powershell': true,
-        'temp/path': true,
+        'temp/path': true
+    },
+    'exist' : {
+        '/tmp/ts2ps': false,
+        '/tmp/ps2ts': false
     },
     'which': {
         'powershell': 'path/to/powershell'
