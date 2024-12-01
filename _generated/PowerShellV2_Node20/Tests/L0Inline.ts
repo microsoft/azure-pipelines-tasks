@@ -31,8 +31,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '/fakecwd' : true,
         'path/to/powershell': true,
         'temp/path': true,
-        '/tmp/ts2ps' : true,
-        '/tmp/ps2ts' : true
     },
     'which': {
         'powershell': 'path/to/powershell'
