@@ -9,16 +9,17 @@ import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
 import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { spawnSync } from 'child_process';
+import cp = require('child_process');
 
 const ts2PsPipePath = '/tmp/ts2ps';
 const ps2TsPipePath = '/tmp/ps2ts';
 
-spawnSync('mkfifo', [ts2PsPipePath]);
-spawnSync('mkfifo', [ps2TsPipePath]);
+cp.spawnSync('mkfifo', [ts2PsPipePath]);
+cp.spawnSync('mkfifo', [ps2TsPipePath]);
 
-spawnSync('chmod', ['600', ts2PsPipePath]);
-spawnSync('chmod', ['600', ps2TsPipePath]);
+cp.spawnSync('chmod', ['600', ts2PsPipePath]);
+cp.spawnSync('chmod', ['600', ps2TsPipePath]);
+
 
 process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken');
 
@@ -62,13 +63,13 @@ async function startNamedPiped() {
         }
     });
 
-    
+
     pipeStream.on('error', (err) => {
-        console.error('Error with pipe stream:', err);
-        writeStream.close();
-        pipeStream.close();
-        fs.unlinkSync(ts2PsPipePath);
-        fs.unlinkSync(ps2TsPipePath);
+            console.error('Error with pipe stream:', err);
+            writeStream.close();
+            pipeStream.close();
+            fs.unlinkSync(ts2PsPipePath);
+            fs.unlinkSync(ps2TsPipePath);
     });
 }
 
@@ -161,7 +162,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        startNamedPiped();
+        //startNamedPiped();
 
         // Get inputs
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
@@ -243,9 +244,17 @@ async function run() {
 
         script = `
             # Open the FIFO for writing
+
+            $pipeWriter = $null
+            $pipeReader = $null
+
+            try {
+                $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}')
+                $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}') 
+            } catch {
+                Write-Verbose "Error in connecting to the pipes." 
+            }
             
-            $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}')
-            $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}')
 
             function Get-AzDoToken {
                 try {
@@ -291,10 +300,14 @@ async function run() {
             }
             finally {
                 # Close the streams
-                $pipeWriter.WriteLine('Close')
-                $pipeWriter.Flush()
-                $pipeWriter.Close()
-                $pipeReader.Close()
+                if($pipeWriter) {
+                    $pipeWriter.WriteLine('Close')
+                    $pipeWriter.Flush()
+                    $pipeWriter.Close()
+                } 
+                if($pipeReader) {
+                    $pipeReader.Close()
+                }
             }`
 
         contents.push(script);
@@ -372,9 +385,16 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     } finally {
-        const pipeStream = fs.createWriteStream(ps2TsPipePath);
-        pipeStream.write('Close');
-        pipeStream.close();
+        try {
+            const pipeStream = fs.createWriteStream(ps2TsPipePath);
+            if(pipeStream != null) {
+                pipeStream.write('Close');
+                pipeStream.close();
+            }
+        } catch (err) {
+            console.log("error caught in exiting");
+        }
+        
     }
 }
 

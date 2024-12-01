@@ -1,5 +1,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import { ReadStream, WriteStream } from 'fs';
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'powershell.js');
@@ -29,7 +30,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
         '/fakecwd' : true,
         'path/to/powershell': true,
-        'temp/path': true
+        'temp/path': true,
+        '/tmp/ts2ps' : true,
+        '/tmp/ps2ts' : true
     },
     'which': {
         'powershell': 'path/to/powershell'
@@ -68,7 +71,30 @@ fsClone.writeFileSync = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
+fsClone.unlinkSync = function(path) {
+    console.log('Mock UnlinkSync');
+}
+fsClone.createReadStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fsClone.createWriteStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fs.ReadStream.on = function(data, data1) {
+    console.log('Mock Readstream On')
+    return;
+}
 tmr.registerMock('fs', fsClone);
+
+// Moc Child Process
+const cp = require('child_process');
+const cpClone = Object.assign({}, cp);
+cpClone.spawnSync = function(cmd, args) {
+    console.log('Mock SpawnSync');
+}
+tmr.registerMock('child_process', cpClone);
 
 // Mock uuidv4
 tmr.registerMock('uuid/v4', function () {
