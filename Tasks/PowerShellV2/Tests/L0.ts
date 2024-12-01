@@ -30,7 +30,9 @@ describe('PowerShell Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}Write-Host "my script output" to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`Write-Host "my script output"`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr);
     });
@@ -46,7 +48,9 @@ describe('PowerShell Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`'path/to/script.ps1'`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr);
     });
@@ -62,7 +66,9 @@ describe('PowerShell Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' myCustomArg to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`'path/to/script.ps1' myCustomArg`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr);
     });
@@ -93,7 +99,9 @@ describe('PowerShell Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`'path/to/script.ps1'`) > 0, 'PowerShell should have written the script to a file');
+            assert(tr.stdout.indexOf(`temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
             assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr);
     });

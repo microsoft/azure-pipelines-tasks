@@ -63,13 +63,17 @@ async function startNamedPiped() {
         }
     });
 
-
     pipeStream.on('error', (err) => {
+        try {
             console.error('Error with pipe stream:', err);
             writeStream.close();
             pipeStream.close();
             fs.unlinkSync(ts2PsPipePath);
             fs.unlinkSync(ps2TsPipePath);
+        }
+        catch {
+            console.debug(`Cleanup failed : ${err.message}`);
+        }
     });
 }
 
@@ -162,8 +166,11 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        //startNamedPiped();
-
+        if(tl.exist(ts2PsPipePath) && tl.exist(ps2TsPipePath))
+        {
+            startNamedPiped();
+        }
+        
         // Get inputs
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
@@ -245,6 +252,7 @@ async function run() {
         script = `
             $pipeWriter = $null;
             $pipeReader = $null;
+
             try {
                 $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
                 $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
@@ -306,7 +314,7 @@ async function run() {
 
         contents.push(script);
         // log with detail to avoid a warning output.
-        // tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
+        tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -327,7 +335,6 @@ async function run() {
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
         //                                    // encode the BOM into its UTF8 binary sequence.
-
         // Run the script.
         //
         // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
@@ -388,7 +395,6 @@ async function run() {
         } catch (err) {
             console.log("error caught in exiting");
         }
-        
     }
 }
 
