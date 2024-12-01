@@ -29,7 +29,7 @@ function Global:Get-VstsFederatedTokenPSV2Task {
 
     if ($null -eq $oidcToken -or $oidcToken -eq [string]::Empty) {
         Write-Verbose "Failed to create OIDC token."
-        throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
+        throw (New-Object System.Exception("CouldNotGenerateOidcToken"))
     }
 
     Write-Verbose "OIDC Token generated Successfully"
