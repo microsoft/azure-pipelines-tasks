@@ -254,7 +254,6 @@
   },
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
-    "CouldNotGenerateOidcToken": "ms-resource:loc.messages.CouldNotGenerateOidcToken",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "JS_InvalidActionPreference": "ms-resource:loc.messages.JS_InvalidActionPreference",

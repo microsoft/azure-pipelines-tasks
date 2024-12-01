@@ -258,7 +258,6 @@
   },
   "messages": {
     "GeneratingScript": "Generating script.",
-    "CouldNotGenerateOidcToken": "Could not generate a client assertion for federated login.",
     "JS_ExitCode": "PowerShell exited with code '%s'.",
     "JS_FormattedCommand": "Formatted command: %s",
     "JS_InvalidActionPreference": "Invalid action preference for %s: '%s'. The value must be one of: %s",
