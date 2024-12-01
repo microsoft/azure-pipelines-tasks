@@ -25,71 +25,67 @@ process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken')
 
 async function startNamedPiped() {
     const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
-    console.log("connectedServiceName: " + connectedServiceName);
+    tl.debug("connectedServiceName: " + connectedServiceName);
     
     const pipeStream = fs.createReadStream(ps2TsPipePath);
     const writeStream = fs.createWriteStream(ts2PsPipePath);
 
     pipeStream.on('data', async (data) => {
-        const trimmedData = data.toString('utf8').trim();
-        console.debug(`Received from PowerShell: ${trimmedData}`);
+        const command = data.toString('utf8').trim();
+        tl.debug(`Received from PowerShell: ${command}`);
         var systemAccessToken = tl.getVariable('System.AccessToken');
         process.env.System_Access_Token_PSV2_Task = systemAccessToken;
 
-        if (trimmedData == 'Get-AzDoToken') {
+        if (command == 'Get-AzDoToken') {
             try {
                 if(connectedServiceName && connectedServiceName.trim().length > 0) {
                     const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
-                    console.log(`Successfully fetched the ADO access token for ${connectedServiceName}`);
+                    tl.debug(`Successfully fetched the ADO access token for ${connectedServiceName}`);
                     writeStream.write(token + "\n");
                 } else {
-                    console.log(`No Service Connection found, returning empty token`);
+                    tl.debug(`No Service Connection found, returning empty token`);
                     writeStream.write(systemAccessToken + "\n");
                 }
             } catch(err) {
-                console.log(`Token generation failed with error message ${err.message}`);
+                tl.debug(`Token generation failed with error message ${err.message}`);
                 writeStream.write(systemAccessToken + "\n");
             }
         } else {
             try {
-                console.debug('Pipe reading ended');
+                tl.debug('Pipe reading ended');
                 writeStream.close();
                 pipeStream.close();
                 fs.unlinkSync(ts2PsPipePath);
                 fs.unlinkSync(ps2TsPipePath);
             } catch(err) {
-                console.debug(`Cleanup failed : ${err.message}`);
+                tl.debug(`Cleanup failed : ${err.message}`);
             } 
         }
     });
 
     pipeStream.on('error', (err) => {
         try {
-            console.error('Error with pipe stream:', err);
+            tl.debug('Error with pipe stream:' + err);
             writeStream.close();
             pipeStream.close();
             fs.unlinkSync(ts2PsPipePath);
             fs.unlinkSync(ps2TsPipePath);
         }
-        catch {
-            console.debug(`Cleanup failed : ${err.message}`);
+        catch(err) {
+            tl.debug(`Cleanup failed : ${err.message}`);
         }
     });
 }
 
 async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
-
-  // workloadidentityfederation
   const authorizationScheme = tl
     .getEndpointAuthorizationSchemeRequired(connectedService)
     .toLowerCase();
 
-  // get token using workload identity federation or managed service identity
   if (authorizationScheme !== "workloadidentityfederation") {
     throw new Error(`Authorization scheme ${authorizationScheme} is not supported.`);
   }
 
-  // use azure devops webapi to get federated token using service connection
   var servicePrincipalId: string =
     tl.getEndpointAuthorizationParameterRequired(connectedService, "serviceprincipalid");
 
@@ -99,11 +95,9 @@ async function getAccessTokenViaWorkloadIdentityFederation(connectedService: str
   const authorityUrl =
     tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
 
-  console.log(`Getting federated token for service connection ${connectedService}`);
-
+  tl.debug(`Getting federated token for service connection ${connectedService}`);
   var federatedToken: string = await getFederatedToken(connectedService);
-
-  console.log(`Got federated token for service connection ${connectedService}`);
+  tl.debug(`Got federated token for service connection ${connectedService}`);
 
   // exchange federated token for service principal token (below)
   return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
@@ -146,9 +140,14 @@ async function getAccessTokenFromFederatedToken(
     };
   
     const result = await app.acquireTokenByClientCredential(request);
-  
-    console.log(`Got access token for service principal ${servicePrincipalId}`);
-  
+
+    tl.debug(`Got access token for service principal ${servicePrincipalId}`);
+
+    if(result?.expiresOn) {
+        const minutes = (result.expiresOn.getTime() - new Date().getTime())/60000;
+        console.log(`Generated access token with expiration time of ${minutes} minutes.`);
+    }
+    
     return result?.accessToken;
 }
 
@@ -269,13 +268,13 @@ async function run() {
                     $token = $token.Trim();
 
                     if ($null -eq $token -or $token -eq [string]::Empty) {
-                        Write-Host "empty response was found, returning the System Access Token";
+                        Write-Verbose "empty response was found, returning the System Access Token";
                         $token = $env:System_Access_Token_PSV2_Task;
                     } 
                     return $token;
                 } 
                 catch {
-                    Write-Host "Error in Get-AzDoToken: $_";
+                    Write-Verbose "Error in Get-AzDoToken: $_";
                     $token = $env:System_Access_Token_PSV2_Task;
                     return $token;
                 }
@@ -393,7 +392,7 @@ async function run() {
                 pipeStream.close();
             }
         } catch (err) {
-            console.log("error caught in exiting");
+            tl.debug("error caught in exiting");
         }
     }
 }
