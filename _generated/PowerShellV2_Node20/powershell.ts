@@ -11,8 +11,8 @@ import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 import cp = require('child_process');
 
-const ts2PsPipePath = '/tmp/ts2ps';
-const ps2TsPipePath = '/tmp/ps2ts';
+const ts2PsPipePath = '/tmp/ts2ps' + uuidV4();
+const ps2TsPipePath = '/tmp/ps2ts' + uuidV4();
 
 cp.spawnSync('mkfifo', [ts2PsPipePath]);
 cp.spawnSync('mkfifo', [ps2TsPipePath]);
