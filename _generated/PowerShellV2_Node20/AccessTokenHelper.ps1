@@ -158,17 +158,14 @@ $tokenHandler = [PSCustomObject]@{
             }
         } catch {
             Write-Debug "Critical error in Task: $_"
-            throw $_
         } finally {
             try {
                 if ($null -ne $eventFromUserScript ) { $eventFromUserScript.Dispose() }
                 if ($null -ne $eventFromTask) { $eventFromTask.Dispose() }
                 if ($null -ne $eventExit) { $eventExit.Dispose() }
             } catch {
-                // do nothing
+                # do nothing
             }
-            
-            Write-Debug "Task: Resources cleaned up. Exiting."
         }
     }
 }

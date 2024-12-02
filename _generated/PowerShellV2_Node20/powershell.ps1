@@ -55,7 +55,7 @@ try {
         param($tokenHandler,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
         try {
             $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
-            Start-Sleep 20
+            #Start-Sleep 20
         } catch {
             Write-Error $_ 
         }    
@@ -331,11 +331,16 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.psm1 | ForEach-Object { . $_.FullName }
-    Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.ps1 | ForEach-Object { . $_.FullName }
+    try {
+        Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.psm1 | ForEach-Object { . $_.FullName }
+        Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.ps1 | ForEach-Object { . $_.FullName }
 
-    # Signal Task to exit
-    $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-    $output = $eventExit.Set()
-    Trace-VstsLeavingInvocation $MyInvocation
+        # Signal Task to exit
+        $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+        $output = $eventExit.Set()
+        Trace-VstsLeavingInvocation $MyInvocation
+    } catch {
+        # do nothing
+    }
+    
 }
