@@ -1,12 +1,16 @@
 [CmdletBinding()]
 param()
 
-Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Global
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
-Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -Global
-Import-Module Microsoft.PowerShell.Security -Global
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
+Import-Module Microsoft.PowerShell.Security
 
 . $PSScriptRoot\helpers.ps1
+
+$signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
+$signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
+$exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
 
 function Get-ActionPreference {
     param (
@@ -48,20 +52,20 @@ try {
 
     . $PSScriptRoot\accessTokenHelper.ps1
     $psRunspace = [powershell]::Create().AddScript({
-        param($tokenHandler,$filePath)
+        param($tokenHandler,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
         try {
-            $tokenHandler.TokenHandler.Invoke($filePath)
+            $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
             Start-Sleep 20
         } catch {
             Write-Error $_ 
         }    
-    }).AddArgument($tokenHandler).AddArgument($tokenfilePath)
+    }).AddArgument($tokenHandler).AddArgument($tokenfilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal)
 
     $psRunspace.RunspacePool = $runspacePool
     $psRunspace.BeginInvoke()
 
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 10
+    Start-Sleep 20
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -167,8 +171,8 @@ try {
     
     $joinedContents = '
         $outputFile = "' + $tokenfilePath + '"
-        $signalFromUserScript = "Global\SignalFromUserScript"
-        $signalFromTask = "Global\SignalFromTask"
+        $signalFromUserScript = "' + $signalFromUserScript + '"
+        $signalFromTask = "' + $signalFromTask + '"
   
         $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
         $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
@@ -330,8 +334,7 @@ finally {
     Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.psm1 | ForEach-Object { . $_.FullName }
     Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.ps1 | ForEach-Object { . $_.FullName }
 
-    # Signal Script A to exit
-    $exitSignal = "Global\ExitSignal"
+    # Signal Task to exit
     $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
     $output = $eventExit.Set()
     Trace-VstsLeavingInvocation $MyInvocation

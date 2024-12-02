@@ -74,12 +74,14 @@ $tokenHandler = [PSCustomObject]@{
     TokenHandler = {
         param(
             [Parameter(Mandatory=$true)]
-            [string]$filePath
+            [string]$filePath,
+            [Parameter(Mandatory=$true)]
+            [string]$signalFromUserScript,
+            [Parameter(Mandatory=$true)]
+            [string]$signalFromTask,
+            [Parameter(Mandatory=$true)]
+            [string]$exitSignal
         )
-
-        $signalFromUserScript = "Global\SignalFromUserScript"
-        $signalFromTask = "Global\SignalFromTask"
-        $exitSignal = "Global\ExitSignal"
 
         $eventFromUserScript = $null
         $eventFromTask = $null
@@ -145,7 +147,7 @@ $tokenHandler = [PSCustomObject]@{
 
                         # Signal UserScript to read the file
                         $eventFromTask.Set()
-                        
+
                     } elseif ($index -eq 1) {
                         # Exit signal received
                         break
