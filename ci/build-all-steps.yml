@@ -21,6 +21,10 @@ steps:
   inputs:
     versionSpec: 20.x
 
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
 # npm install
 - script: npm install
   displayName: npm install
@@ -35,6 +39,9 @@ steps:
   env:
     GITHUB_PAT: $(GitHubPAT)
   displayName: Verify min agent demands
+
+- script: node ./ci/verify-registries.js
+  displayName: Verify registries
 
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
@@ -52,6 +59,9 @@ steps:
       eq(variables['build.reason'], 'PullRequest'),
       ne(variables['numTasks'], 0)
     )
+
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables

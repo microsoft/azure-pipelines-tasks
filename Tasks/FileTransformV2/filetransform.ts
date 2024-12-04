@@ -10,7 +10,8 @@ async function main() {
     tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
-    let xmlTransformation = tl.getBoolInput('enableXmlTransform', false);
+    const osType = tl.getPlatform();
+    let xmlTransformation = osType === tl.Platform.Windows ? tl.getBoolInput('enableXmlTransform', false) : false;
     let xmlTransformationRules = tl.getDelimitedInput('xmlTransformationRules', '\n', false);
     let xmlTargetFiles = tl.getDelimitedInput('xmlTargetFiles', '\n', false);
     let jsonTargetFiles = tl.getDelimitedInput('jsonTargetFiles', '\n', false);

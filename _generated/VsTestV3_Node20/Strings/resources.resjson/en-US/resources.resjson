@@ -73,6 +73,8 @@
   "loc.input.help.configuration": "Build configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload test attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing run level attachments.",
+  "loc.input.label.donotPublishTestResults": "Disable publishing test results",
+  "loc.input.help.donotPublishTestResults": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
   "loc.input.label.failOnMinTestsNotRun": "Fail the task if a minimum number of tests are not run.",
   "loc.input.help.failOnMinTestsNotRun": "Selecting this option will fail the task if specified minimum number of tests is not run.",
   "loc.input.label.minimumExpectedTests": "Minimum # of tests",
