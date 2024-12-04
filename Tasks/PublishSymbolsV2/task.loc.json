@@ -52,10 +52,10 @@
     {
       "name": "Manifest",
       "type": "string",
-      "label": "Manifest",
+      "label": "ms-resource:loc.input.label.Manifest",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The path to a file containing more symbol client keys to publish."
+      "helpMarkDown": "ms-resource:loc.input.help.Manifest"
     },
     {
       "name": "IndexSources",
