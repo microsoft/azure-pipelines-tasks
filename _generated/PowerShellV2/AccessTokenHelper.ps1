@@ -149,6 +149,7 @@ $tokenHandler = [PSCustomObject]@{
                         $eventFromTask.Set()
 
                     } elseif ($index -eq 1) {
+                        Write-Host "Exiting the loop"
                         # Exit signal received
                         break
                     }
