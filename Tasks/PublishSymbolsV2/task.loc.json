@@ -50,6 +50,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
     },
     {
+      "name": "Manifest",
+      "type": "string",
+      "label": "Manifest",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The path to a file containing more symbol client keys to publish."
+    },
+    {
       "name": "IndexSources",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.IndexSources",
