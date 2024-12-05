@@ -33,6 +33,8 @@ export async function executeMavenTests(testsToBeExecuted: string[], pomFilePath
         args.push(pomFilePath);
     }
 
+    args.push('-Dmaven.test.failure.ignore=true');
+
     tl.debug("Executing java maven tests with executable : " + executable);
     tl.debug("Executing java maven tests with args :" + args);
 
