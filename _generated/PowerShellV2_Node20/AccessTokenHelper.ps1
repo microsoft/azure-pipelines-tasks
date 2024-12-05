@@ -91,7 +91,7 @@ $tokenHandler = [PSCustomObject]@{
             $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
             $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
             $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-            
+
             # Ensure the output file has restricted permissions
             if (-not (Test-Path $filePath)) {
                 New-Item -Path $filePath -ItemType File -Force
@@ -146,7 +146,7 @@ $tokenHandler = [PSCustomObject]@{
                         }
 
                         # Signal UserScript to read the file
-                        $eventFromTask.Set()
+                        $tmp = $eventFromTask.Set()
 
                     } elseif ($index -eq 1) {
                         Write-Host "Exiting the loop"
