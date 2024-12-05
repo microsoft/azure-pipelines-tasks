@@ -6,6 +6,8 @@
   "loc.releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "loc.group.displayName.preferenceVariables": "Preference Variables",
   "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.ConnectedServiceName": "Azure DevOps Service Connection",
+  "loc.input.help.ConnectedServiceName": "Select an Azure DevOps Service Connection service connection",
   "loc.input.label.targetType": "Type",
   "loc.input.help.targetType": "Target script type: File Path or Inline",
   "loc.input.label.filePath": "Script Path",
