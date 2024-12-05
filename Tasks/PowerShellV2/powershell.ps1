@@ -55,19 +55,18 @@ try {
         param($tokenHandler,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
         try {
             $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
-            Start-Sleep 60
+            #Start-Sleep 60
             return 1
-            
         } catch {
-            Write-Host $_ 
+            return $_ 
         }    
     }).AddArgument($tokenHandler).AddArgument($tokenfilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal)
 
     $psRunspace.RunspacePool = $runspacePool
-    $rsoutput = $psRunspace.BeginInvoke()
+    $psRunspace.BeginInvoke()
 
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 10
+    Start-Sleep 15
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -334,12 +333,13 @@ catch {
 }
 finally {
     try {
-        # Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.psm1 | ForEach-Object { . $_.FullName }
-        # Get-ChildItem -Path "$PSScriptRoot\ps_modules\VstsTaskSdk" -Filter *.ps1 | ForEach-Object { . $_.FullName }
         # Signal Task to exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
+        Trace-VstsLeavingInvocation $MyInvocation
     } catch {
-        Write-Host "Some error $_"
+        Write-Host "Full Exception Object: $_"
+        Write-Host "Error Object $($_.ErrorDetails)"
+        Write-Host "Exception Object $($_.Exception)"
     }
 }
