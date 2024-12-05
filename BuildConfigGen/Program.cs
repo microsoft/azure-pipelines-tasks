@@ -170,6 +170,8 @@ namespace BuildConfigGen
                     tasks = allTasksList.Where(s => taskList.Where(tl => string.Equals(tl, s.Key, StringComparison.OrdinalIgnoreCase)).Any());
                 }
 
+                bool globalVersionBump = false;
+
                 if (includeLocalPackagesBuildConfig)
                 {
                     Console.WriteLine("Updating global version...");
@@ -204,7 +206,10 @@ namespace BuildConfigGen
                     bool anyTaskVersionUpdated = taskVersionInfo.Values.Any(x => x.versionsUpdated.Any());
                     bool noCurrentGlobalVersion = globalVersion is null;
                     bool maxPatchForCurrentSprintGreaterOrEqualToGlobalPatch = globalVersion is not null && maxPatchForCurrentSprint >= globalVersion.Patch;
-                    if (anyTaskVersionUpdated || noCurrentGlobalVersion || maxPatchForCurrentSprintGreaterOrEqualToGlobalPatch)
+
+                    globalVersionBump = anyTaskVersionUpdated || noCurrentGlobalVersion || maxPatchForCurrentSprintGreaterOrEqualToGlobalPatch;
+
+                    if (globalVersionBump)
                     {
                         maxPatchForCurrentSprint = maxPatchForCurrentSprint + 1;
 
@@ -239,16 +244,19 @@ namespace BuildConfigGen
                         }
                         else
                         {
-                            if (globalVersion.Minor == currentSprint)
+                            if (globalVersionBump)
                             {
-                                globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
-                                globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
-                            }
-                            else
-                            {
-                                // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
-                                globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
-                                globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                                if (globalVersion.Minor == currentSprint)
+                                {
+                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
+                                    globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                                }
+                                else
+                                {
+                                    // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
+                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                                    globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                                }
                             }
                         }
                     }
