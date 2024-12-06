@@ -33,7 +33,7 @@ export async function executeMavenTests(testsToBeExecuted: string[], pomFilePath
         args.push(pomFilePath);
     }
 
-    //for returning success exit code incase of test failure and later we detect test failure from PTR command
+    //for returning success exit code incase of test failure and later we detect test failure from PTR command, documentation: https://maven.apache.org/surefire/maven-failsafe-plugin/verify-mojo.html, https://maven.apache.org/archives/maven-1.x/plugins/test/announcements/announcement-1.8.txt
     args.push('-Dmaven.test.failure.ignore=true');
 
     tl.debug("Executing java maven tests with executable : " + executable);
