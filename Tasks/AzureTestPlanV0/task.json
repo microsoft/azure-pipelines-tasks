@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 249,
-    "Patch": 5
+    "Minor": 250,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -123,7 +123,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "Fail if there are test failures",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
     },
