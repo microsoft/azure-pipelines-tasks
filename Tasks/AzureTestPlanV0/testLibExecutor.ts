@@ -44,18 +44,24 @@ function getMavenExec() {
 function getExecOptions(output?: { stdout: string}): tr.IExecOptions {
     var env = process.env;
 
-    var execOptions = output ? <tr.IExecOptions>{
+    var execOptions: tr.IExecOptions = output
+    ? {
         env: env,
         outStream: new Writable({
             write(chunk, encoding, callback) {
-                output.stdout += chunk.toString();
-                process.stdout.write(chunk); // Stream to console
-                callback();
+                try {
+                    output.stdout += chunk.toString();
+                    process.stdout.write(chunk);
+                    callback();
+                } catch (error) {
+                    callback(error);
+                }
             },
-        })
-    } : <tr.IExecOptions>{
-        env: env
+        }),
     }
+    : {
+        env: env,
+    };
 
     return execOptions;
 }
@@ -169,6 +175,7 @@ export async function execGradleBuild(args: string[]): Promise<number> {
         // Gradle build succeeded
         return 0; // Return 0 indicating success
     } catch (err) {
+        // we read stdout and return success incase of error due to test failure as later we detect test failure from PTR command
         if (runnerOutput.stdout.includes('There were failing tests')) {
             return 0;
         }
