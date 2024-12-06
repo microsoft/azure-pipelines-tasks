@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
+    "Minor": 250,
     "Patch": 0
   },
   "preview": true,
@@ -123,7 +123,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
@@ -196,7 +196,8 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.248.0",
-    "Node20-225": "0.248.1"
+    "Default": "0.250.0",
+    "LocalPackages": "0.249.4",
+    "Node20-225": "0.250.1"
   }
 }
