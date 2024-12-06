@@ -33,6 +33,7 @@ export async function executeMavenTests(testsToBeExecuted: string[], pomFilePath
         args.push(pomFilePath);
     }
 
+    //for returning success exit code incase of test failure and later we detect test failure from PTR command
     args.push('-Dmaven.test.failure.ignore=true');
 
     tl.debug("Executing java maven tests with executable : " + executable);
