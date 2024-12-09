@@ -13,6 +13,8 @@ async function run() {
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
+        console.log('existssync?', fs.existsSync(script));
+
         if (fs.existsSync(script)) {
             script = `exec bash ${script}`;
             console.log('script content', fs.readFileSync(script, 'utf-8'));
