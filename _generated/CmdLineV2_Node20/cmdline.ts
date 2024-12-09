@@ -15,6 +15,7 @@ async function run() {
 
         if (fs.existsSync(script)) {
             script = `exec bash ${script}`;
+            console.log('script content', fs.readFileSync(script, 'utf-8'));
         }
 
         // Write the script to disk.
