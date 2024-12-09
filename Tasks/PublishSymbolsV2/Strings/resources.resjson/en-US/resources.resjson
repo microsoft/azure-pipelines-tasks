@@ -10,6 +10,8 @@
   "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Search pattern",
   "loc.input.help.SearchPattern": "The pattern used to discover the pdb files to publish.",
+  "loc.input.label.Manifest": "Manifest",
+  "loc.input.help.Manifest": "The path to a file containing more symbol client keys to publish.",
   "loc.input.label.IndexSources": "Index sources",
   "loc.input.help.IndexSources": "Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents.",
   "loc.input.label.PublishSymbols": "Publish symbols",
@@ -73,5 +75,6 @@
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
   "loc.messages.Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'.",
-  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
+  "loc.messages.NodeVersionSupport": "Node v{0} is no longer supported starting 08/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later.",
+  "loc.messages.ManifestFileNotFound": "Manifest file not found at '{0}'."
 }
