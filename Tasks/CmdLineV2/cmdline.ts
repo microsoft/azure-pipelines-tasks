@@ -57,6 +57,7 @@ async function run() {
 
         ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGTERM', 'EXIT'].forEach((signal) => {
             process.on(signal, () => {
+                console.log('cmdlinev2 signal received', signal);
                 bash.killChildProcess(signal as NodeJS.Signals);
             });
         });
