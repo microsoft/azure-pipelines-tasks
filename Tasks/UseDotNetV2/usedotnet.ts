@@ -18,6 +18,7 @@ function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
 
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
+    let checkDotnetCLI: boolean = tl.getBoolInput('checkDotnetCLI');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
     let vsVersionSpec = tl.getInput('vsVersion');
@@ -31,12 +32,21 @@ async function run() {
     let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
     // Check if we want install dotnet
     if (versionSpec || (useGlobalJson && packageType == "sdk")) {
+        let isDotnetInstalled = false;
+
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
-        await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
-        tl.prependPath(installationPath);
-        // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
-        tl.setVariable('DOTNET_ROOT', installationPath);
+
+        // check is dotnet installed via dotnet cli 
+        if (checkDotnetCLI) isDotnetInstalled = await isCompatibleDotnetVersionInstalled(versionSpec, vsVersionSpec, useGlobalJson, packageType, workingDirectory, includePreviewVersions);
+
+        if (!isDotnetInstalled) {
+            await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
+            tl.prependPath(installationPath);
+            // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
+            tl.setVariable('DOTNET_ROOT', installationPath);
+        }
+
         // By default disable Multi Level Lookup unless user wants it enabled.
         tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
@@ -46,6 +56,55 @@ async function run() {
     // Install NuGet version specified by user or 4.9.6 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
+}
+
+/**
+ * 
+ * @param versionSpec The version the user want to install.
+ * @param vsVersionSpec Compatible Visual Studio version.
+ * @param useGlobalJson A switch so we know if the user have `global.json` files and want use that. If this is true only SDK is possible!
+ * @param packageType The installation type for the installation. Only `sdk` and `runtime` are valid options
+ * @param workingDirectory This is only relevant if the `useGlobalJson` switch is `true`. It will set the root directory for the search of `global.json`
+ * @param includePreviewVersions Define if the installer also search for preview version
+ * @returns { Promise<boolean> } - true if dotnet installed, otherwise - false
+ */
+async function isCompatibleDotnetVersionInstalled(versionSpec: string, vsVersionSpec: string, useGlobalJson: boolean, packageType: string, workingDirectory: string, includePreviewVersions: boolean): Promise<boolean> {
+    let versionFetcher = new DotNetCoreVersionFetcher();
+    
+    if (useGlobalJson && packageType == "sdk") {
+        let globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
+        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
+        return checkVersionInDotnetCLI(versionsToInstall, packageType);
+    } else if (versionSpec) {
+        let versionSpecParts = new VersionParts(versionSpec);
+        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, vsVersionSpec, packageType, includePreviewVersions);
+        return checkVersionInDotnetCLI(versionInfo, packageType);
+    }
+    
+    return false;
+}
+
+function checkVersionInDotnetCLI(versionInfo: VersionInfo | VersionInfo[], packageType: string): boolean {
+    let versions: VersionInfo[];
+    if (!Array.isArray(versionInfo)) versions = [ versionInfo ];
+    else versions = versionInfo;
+    const dotnetPath = tl.which('dotnet', false);
+    if (!dotnetPath) return false;
+    const dotnet = tl.tool(dotnetPath);
+    
+    if (packageType === "sdk") {
+        dotnet.arg('--list-sdks');
+    } else {
+        dotnet.arg('--list-runtimes');
+    }
+
+    const result = dotnet.execSync();
+    if (result.code !== 0) return false;
+    const stdout = result.stdout;
+
+    const notFoundedversions = versions.filter(version => !stdout.includes(version.getVersion()));
+
+    return notFoundedversions.length === 0;
 }
 
 /**
