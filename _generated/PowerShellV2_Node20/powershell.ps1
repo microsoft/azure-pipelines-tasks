@@ -1,9 +1,16 @@
 [CmdletBinding()]
 param()
 
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
+Import-Module Microsoft.PowerShell.Security
 
 . $PSScriptRoot\helpers.ps1
+
+$signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
+$signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
+$exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
 
 function Get-ActionPreference {
     param (
@@ -32,6 +39,34 @@ function Get-ActionPreference {
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
+
+    $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+
+    $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
+    Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
+    $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
+
+    # Create a runspace to handle the Async communication between the Task and User Script for Access Token
+    $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+    $runspacePool.Open()
+
+    . $PSScriptRoot\accessTokenHelper.ps1
+    $psRunspace = [powershell]::Create().AddScript({
+        param($tokenHandler,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
+        try {
+            $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
+            #Start-Sleep 60
+            return 1
+        } catch {
+            return $_ 
+        }    
+    }).AddArgument($tokenHandler).AddArgument($tokenfilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal)
+
+    $psRunspace.RunspacePool = $runspacePool
+    $psRunspace.BeginInvoke()
+
+    # Wait for the async runspace to start and get ready to listen to User scripts requests
+    Start-Sleep 15
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -133,6 +168,50 @@ try {
     $joinedContents = [System.String]::Join(
         ([System.Environment]::NewLine),
         $contents);
+
+    
+    $joinedContents = '
+        $outputFile = "' + $tokenfilePath + '"
+        $signalFromUserScript = "' + $signalFromUserScript + '"
+        $signalFromTask = "' + $signalFromTask + '"
+  
+        $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
+        $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+
+        function Get-AzDoToken {
+            Write-Verbose "User Script: Starting process to notify Task and read output."
+
+            [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
+
+            try {
+                # Signal Task to generate access token
+                $tmp = $eventFromUserScript.Set()
+                Write-Verbose "User Script: Notified Task to generate access token $tmp."
+
+                # Wait for Task to finish processing
+                $receivedResponseBool = $eventFromTask.WaitOne(15000) # Wait for up to 15 seconds
+                
+                if (!$receivedResponseBool) {  
+                    Write-Verbose "User Script: Timeout waiting for Task to respond."
+                }
+                else {
+                    try {
+                        [string]$powershellv2AccessToken = (Get-Content -Path $outputFile).Trim()
+                        Write-Verbose "UserScript : Read output from file"
+                        $tokenResponse = $powershellv2AccessToken
+                    } catch {
+                        Write-Verbose "Error reading the output file: $_"
+                    }
+                }
+            } 
+            catch {
+                Write-Verbose "Error occurred in Get-AzDoTokenHelper : $_"
+            }
+            return $tokenResponse
+        }
+        
+    ' + $joinedContents
+
     if ($input_showWarnings) {
         $joinedContents = '
             $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
@@ -253,5 +332,14 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    Trace-VstsLeavingInvocation $MyInvocation
+    try {
+        # Signal Task to exit
+        $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+        $output = $eventExit.Set()
+        Trace-VstsLeavingInvocation $MyInvocation
+    } catch {
+        Write-Host "Full Exception Object: $_"
+        Write-Host "Error Object $($_.ErrorDetails)"
+        Write-Host "Exception Object $($_.Exception)"
+    }
 }

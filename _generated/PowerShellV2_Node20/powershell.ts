@@ -7,6 +7,149 @@ import { validateFileArgs } from './helpers';
 import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
+import * as msal from "@azure/msal-node";
+import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+import cp = require('child_process');
+
+const ts2PsPipePath = '/tmp/ts2ps' + uuidV4();
+const ps2TsPipePath = '/tmp/ps2ts' + uuidV4();
+
+cp.spawnSync('mkfifo', [ts2PsPipePath]);
+cp.spawnSync('mkfifo', [ps2TsPipePath]);
+
+cp.spawnSync('chmod', ['600', ts2PsPipePath]);
+cp.spawnSync('chmod', ['600', ps2TsPipePath]);
+
+
+process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken');
+
+async function startNamedPiped() {
+    const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
+    tl.debug("connectedServiceName: " + connectedServiceName);
+    
+    const pipeStream = fs.createReadStream(ps2TsPipePath);
+    const writeStream = fs.createWriteStream(ts2PsPipePath);
+
+    pipeStream.on('data', async (data) => {
+        const command = data.toString('utf8').trim();
+        tl.debug(`Received from PowerShell: ${command}`);
+        var systemAccessToken = tl.getVariable('System.AccessToken');
+        process.env.System_Access_Token_PSV2_Task = systemAccessToken;
+
+        if (command == 'Get-AzDoToken') {
+            try {
+                if(connectedServiceName && connectedServiceName.trim().length > 0) {
+                    const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
+                    tl.debug(`Successfully fetched the ADO access token for ${connectedServiceName}`);
+                    writeStream.write(token + "\n");
+                } else {
+                    tl.debug(`No Service Connection found, returning empty token`);
+                    writeStream.write(systemAccessToken + "\n");
+                }
+            } catch(err) {
+                tl.debug(`Token generation failed with error message ${err.message}`);
+                writeStream.write(systemAccessToken + "\n");
+            }
+        } else {
+            try {
+                tl.debug('Pipe reading ended');
+                writeStream.close();
+                pipeStream.close();
+                fs.unlinkSync(ts2PsPipePath);
+                fs.unlinkSync(ps2TsPipePath);
+            } catch(err) {
+                tl.debug(`Cleanup failed : ${err.message}`);
+            } 
+        }
+    });
+
+    pipeStream.on('error', (err) => {
+        try {
+            tl.debug('Error with pipe stream:' + err);
+            writeStream.close();
+            pipeStream.close();
+            fs.unlinkSync(ts2PsPipePath);
+            fs.unlinkSync(ps2TsPipePath);
+        }
+        catch(err) {
+            tl.debug(`Cleanup failed : ${err.message}`);
+        }
+    });
+}
+
+async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+  const authorizationScheme = tl
+    .getEndpointAuthorizationSchemeRequired(connectedService)
+    .toLowerCase();
+
+  if (authorizationScheme !== "workloadidentityfederation") {
+    throw new Error(`Authorization scheme ${authorizationScheme} is not supported.`);
+  }
+
+  var servicePrincipalId: string =
+    tl.getEndpointAuthorizationParameterRequired(connectedService, "serviceprincipalid");
+
+  var servicePrincipalTenantId: string =
+    tl.getEndpointAuthorizationParameterRequired(connectedService, "tenantid");
+
+  const authorityUrl =
+    tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
+
+  tl.debug(`Getting federated token for service connection ${connectedService}`);
+  var federatedToken: string = await getFederatedToken(connectedService);
+  tl.debug(`Got federated token for service connection ${connectedService}`);
+
+  // exchange federated token for service principal token (below)
+  return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
+}
+
+async function getAccessTokenFromFederatedToken(
+    servicePrincipalId: string,
+    servicePrincipalTenantId: string,
+    federatedToken: string,
+    authorityUrl: string
+  ): Promise<string> {
+    const AzureDevOpsResourceId = "499b84ac-1321-427f-aa17-267ca6975798";
+  
+    // use msal to get access token using service principal with federated token
+    tl.debug(`Using authority url: ${authorityUrl}`);
+    tl.debug(`Using resource: ${AzureDevOpsResourceId}`);
+  
+    const config: msal.Configuration = {
+      auth: {
+        clientId: servicePrincipalId,
+        authority: `${authorityUrl.replace(/\/+$/, "")}/${servicePrincipalTenantId}`,
+        clientAssertion: federatedToken,
+      },
+      system: {
+        loggerOptions: {
+          loggerCallback: (level, message, containsPii) => {
+            tl.debug(message);
+          },
+          piiLoggingEnabled: false,
+          logLevel: msal.LogLevel.Verbose,
+        },
+      },
+    };
+  
+    const app = new msal.ConfidentialClientApplication(config);
+  
+    const request: msal.ClientCredentialRequest = {
+      scopes: [`${AzureDevOpsResourceId}/.default`],
+      skipCache: true,
+    };
+  
+    const result = await app.acquireTokenByClientCredential(request);
+
+    tl.debug(`Got access token for service principal ${servicePrincipalId}`);
+
+    if(result?.expiresOn) {
+        const minutes = (result.expiresOn.getTime() - new Date().getTime())/60000;
+        console.log(`Generated access token with expiration time of ${minutes} minutes.`);
+    }
+    
+    return result?.accessToken;
+}
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
@@ -22,7 +165,12 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        // Get inputs.
+        if(tl.exist(ts2PsPipePath) && tl.exist(ps2TsPipePath))
+        {
+            startNamedPiped();
+        }
+        
+        // Get inputs
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
@@ -99,6 +247,41 @@ async function run() {
         } else {
             script = `${input_script}`;
         }
+
+        script = `
+            $pipeWriter = $null;
+            $pipeReader = $null;
+
+            try {
+                $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
+                $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
+            } catch {
+                Write-Verbose "Error in connecting to the pipes."; 
+            }
+            
+            function Get-AzDoToken {
+                try {
+                    $pipeWriter.WriteLine('Get-AzDoToken');
+                    $pipeWriter.Flush();
+
+                    $token = $pipeReader.ReadLine();
+                    $token = $token.Trim();
+
+                    if ($null -eq $token -or $token -eq [string]::Empty) {
+                        Write-Verbose "empty response was found, returning the System Access Token";
+                        $token = $env:System_Access_Token_PSV2_Task;
+                    } 
+                    return $token;
+                } 
+                catch {
+                    Write-Verbose "Error in Get-AzDoToken: $_";
+                    $token = $env:System_Access_Token_PSV2_Task;
+                    return $token;
+                }
+            }
+            ${script}
+        `;
+
         if (input_showWarnings) {
             script = `
                 $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
@@ -112,6 +295,22 @@ async function run() {
                 Invoke-Command {${script}} -WarningVariable +warnings;
             `;
         }
+
+        script =   `
+            try { 
+                ${script}
+            }
+            finally {
+                if($pipeWriter) {
+                    $pipeWriter.WriteLine('Close');
+                    $pipeWriter.Flush();
+                    $pipeWriter.Close();
+                } 
+                if($pipeReader) {
+                    $pipeReader.Close();
+                }
+            }`
+
         contents.push(script);
         // log with detail to avoid a warning output.
         tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
@@ -135,7 +334,6 @@ async function run() {
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
         //                                    // encode the BOM into its UTF8 binary sequence.
-
         // Run the script.
         //
         // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
@@ -186,6 +384,16 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+    } finally {
+        try {
+            const pipeStream = fs.createWriteStream(ps2TsPipePath);
+            if(pipeStream != null) {
+                pipeStream.write('Close');
+                pipeStream.close();
+            }
+        } catch (err) {
+            tl.debug("error caught in exiting");
+        }
     }
 }
 
