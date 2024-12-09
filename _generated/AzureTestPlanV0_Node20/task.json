@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
-    "Patch": 1
+    "Minor": 250,
+    "Patch": 3
   },
   "preview": true,
   "demands": [],
@@ -36,11 +36,11 @@
     },
     {
       "name": "testPlan",
-      "type": "pickList",
+      "type": "string",
       "label": "Test plan",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a test plan containing test suites with test cases.",
+      "helpMarkDown": "Type or paste the test plan ID containing test suites with test cases.",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -123,7 +123,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "Fail if there are test failures",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
     },
@@ -145,16 +145,6 @@
     }
   ],
   "dataSourceBindings": [
-    {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
     {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",
@@ -200,7 +190,8 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.248.0",
-    "Node20-225": "0.248.1"
+    "Default": "0.250.2",
+    "LocalPackages": "0.249.4",
+    "Node20-225": "0.250.3"
   }
 }

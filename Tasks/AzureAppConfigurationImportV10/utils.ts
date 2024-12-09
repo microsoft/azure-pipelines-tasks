@@ -6,7 +6,7 @@ export class Utils {
 
         const taskVersion: string = `${TaskManifestData.version.Major}.${TaskManifestData.version.Minor}.${TaskManifestData.version.Patch}`;
 
-        const userAgent: string = `AzurePipelines.AzureAppConfiguration.Push/${taskVersion}`;
+        const userAgent: string = `AzurePipelines.AzureAppConfiguration.Import/${taskVersion}`;
 
         // webClient.WebRequest will load environment variable as user-agent.
         return userAgent;
