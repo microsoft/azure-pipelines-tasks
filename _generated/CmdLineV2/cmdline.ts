@@ -14,7 +14,7 @@ async function run() {
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         if (fs.existsSync(script)) {
-            script = `exec ${script}`;
+            script = `exec bash ${script}`;
         }
 
         // Write the script to disk.
@@ -36,10 +36,7 @@ async function run() {
 
         // Create the tool runner.
         console.log('========================== Starting Command Output ===========================');
-        let bash = tl.tool(tl.which('bash', true))
-            .arg('--noprofile')
-            .arg(`--norc`)
-            .arg(filePath);
+        let bash = tl.tool(tl.which('bash', true)).arg(filePath);
         let options: tr.IExecOptions = {
             cwd: workingDirectory,
             failOnStdErr: false,
