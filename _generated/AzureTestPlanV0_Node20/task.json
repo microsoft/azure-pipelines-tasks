@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 250,
-    "Patch": 5
+    "Patch": 7
   },
   "preview": true,
   "demands": [],
@@ -103,14 +103,6 @@
       "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "Merge test results",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
-    },
-    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "Upload test results files",
@@ -190,8 +182,8 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.250.4",
+    "Default": "0.250.6",
     "LocalPackages": "0.249.4",
-    "Node20-225": "0.250.5"
+    "Node20-225": "0.250.7"
   }
 }

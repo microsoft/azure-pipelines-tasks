@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 250,
-    "Patch": 5
+    "Patch": 7
   },
   "preview": true,
   "demands": [],
@@ -103,14 +103,6 @@
       "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.mergeTestResults",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
-    },
-    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishRunAttachments",
@@ -190,8 +182,8 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.250.4",
+    "Default": "0.250.6",
     "LocalPackages": "0.249.4",
-    "Node20-225": "0.250.5"
+    "Node20-225": "0.250.7"
   }
 }
