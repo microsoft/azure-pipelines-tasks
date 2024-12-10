@@ -53,7 +53,6 @@
         "AzureWebAppContainerV1",
         "AzureVmssDeploymentV0",
         "AzureVmssDeploymentV1",
-        "AzureTestPlanV0",
         "BashV3",
         "BatchScriptV1",
         "CacheBetaV0",
