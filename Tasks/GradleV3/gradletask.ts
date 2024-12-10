@@ -55,12 +55,28 @@ async function run() {
         const gradleOptions: string = tl.getInput('gradleOpts');
         setGradleOpts(gradleOptions);
 
+        // START: Warn users to move to Gradle V4 Task if using gradle version 6.x or higher
+        // Get Gradle Version of wrapper Script
+        const gradleVersion: string = getGradleVersion(wrapperScript);
+
+        // Get Major version from gradleVersionCheck
+        const majorVersion: string = gradleVersion.split('.')[0];
+
+        // If major version is greater than 6, warn the users to move to Gradle V4 Task
+        if (parseInt(majorVersion) >= 6) {
+            tl.debug('Major version >= 6 detected.');
+            tl.warning('The Gradle V3 Task will stop supporting gradle version 6.x and higher. To use gradle version 6.x or higher, please migrate to the Gradle V4 Task.');
+        }
+        // END: Warn users to move to Gradle V4 Task if using gradle version 6.x or higher
+        
+        
         // START: Enable code coverage (if desired)
         const reportDirectoryName: string = 'CCReport43F6D5EF';
         const reportDirectory: string = path.join(workingDirectory, reportDirectoryName);
 
         let summaryFile: string = '';
         let reportingTaskName: string = '';
+
 
         try {
             if (isCodeCoverageOpted) {
@@ -76,8 +92,6 @@ async function run() {
                 reportingTaskName = codeCoveragePreset.reportingTaskName;
                 // END: determine isMultiModule
 
-                // Determine gradle version
-                const gradleVersion: string = getGradleVersion(wrapperScript);
 
                 // Clean the report directory before enabling code coverage
                 tl.rmRF(reportDirectory);
