@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
-    "Patch": 0
+    "Minor": 250,
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -36,7 +36,7 @@
     },
     {
       "name": "testPlan",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
       "required": true,
@@ -123,7 +123,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
@@ -145,16 +145,6 @@
     }
   ],
   "dataSourceBindings": [
-    {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
     {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",

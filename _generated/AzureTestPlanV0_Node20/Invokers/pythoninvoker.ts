@@ -4,7 +4,7 @@ import constants = require('../constants');
 
 export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
-    const discoveryArgs: string[] = ['--collect-only'];
+    const discoveryArgs: string[] = ['--collect-only', '-q'];
     const discoveryResult = await runPytestCommand(discoveryArgs);
 
     if (discoveryResult.status !== 0) {
@@ -14,9 +14,17 @@ export async function executePythonTests(testsToBeExecuted: string[]):Promise<nu
 
     // Extract discovered tests from stdout
     const discoveredTests: string[] = extractDiscoveredTests(discoveryResult.stdout ?? '');
+    testsToBeExecuted = testsToBeExecuted.map(transformTestStrings);
 
     // Find common tests between testsToBeExecuted and discovered tests
     const testsToRun: string[] = testsToBeExecuted.filter(test => discoveredTests.indexOf(test) !== -1);
+
+    // Variables for debug console logs
+    const testsToBeExecutedString: string = testsToBeExecuted.join(", ");
+    const testsToRunString: string = testsToRun.join(", ");
+
+    tl.debug(`Tests to executed are: ${testsToBeExecutedString}`);
+    tl.debug(`Tests to run are: ${testsToRunString}`);
 
     if (testsToRun.length === 0) {
         tl.warning("No common tests found between specified tests and discovered tests.");
@@ -57,7 +65,7 @@ async function runPytestCommand(args: string[]): Promise<SpawnResult> {
     }
 }
 
-function extractDiscoveredTests(output) {
+function extractOldDiscoveredTests(output) {
     const testNames = [];
     let currentPackage = '';
     let currentModule = '';
@@ -86,4 +94,34 @@ function extractDiscoveredTests(output) {
     }
     tl.debug("Discovered tests : " + testNames);
     return testNames;
+}
+
+function extractDiscoveredTests(output: string) {
+    const testNames = [];
+
+    const lines = output.split('\n');
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if(line && line.includes(".py")){
+            testNames.push(line);
+        }
+    }
+    tl.debug("Discovered tests : " + testNames);
+    return testNames;
+}
+
+function transformTestStrings(test: string): string {
+        // Remove any leading or trailing whitespace
+        test = test.trim();
+
+        // Replace '.' with '/' for the directory structure
+        // Replace the last part of the string with '.py'
+        test = test.replace(/\./g, '/').replace(/\.([^/]+)$/, '.py');
+
+        // Add the `::` before the test function name
+        const parts = test.split('/');
+        const functionName = parts.pop(); // Remove the function name
+        const testFile = parts.join('/'); // Join back the file path
+        return `${testFile}.py::${functionName}`; // Format as required
 }
