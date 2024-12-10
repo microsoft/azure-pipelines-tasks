@@ -6,7 +6,7 @@
   "loc.input.label.testSelector": "Test cases to be executed",
   "loc.input.help.testSelector": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
   "loc.input.label.testPlan": "Test plan",
-  "loc.input.help.testPlan": "Select a test plan containing test suites with test cases.",
+  "loc.input.help.testPlan": "Type or paste the test plan ID containing test suites with test cases.",
   "loc.input.label.testSuite": "Test suite",
   "loc.input.help.testSuite": "Select one or more test suites containing test cases.",
   "loc.input.label.testConfiguration": "Test configuration",
