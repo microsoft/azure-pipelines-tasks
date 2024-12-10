@@ -25,7 +25,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
     try{
         const testRunner = "JUnit";
         const testResultsFiles: string[] = ["**/TEST-*.xml"];
-        const mergeResults = tl.getInput('mergeTestResults');
+        const mergeResults = constants.MERGE_TEST_RESULTS;
         const platform = "any cpu";
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
