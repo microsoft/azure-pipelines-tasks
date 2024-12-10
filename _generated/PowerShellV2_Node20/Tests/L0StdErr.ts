@@ -80,7 +80,30 @@ fsClone.writeFileSync = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
+fsClone.unlinkSync = function(path) {
+    console.log('Mock UnlinkSync');
+}
+fsClone.createReadStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fsClone.createWriteStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fs.ReadStream.on = function(data, data1) {
+    console.log('Mock Readstream On')
+    return;
+}
 tmr.registerMock('fs', fsClone);
+
+// Moc Child Process
+const cp = require('child_process');
+const cpClone = Object.assign({}, cp);
+cpClone.spawnSync = function(cmd, args) {
+    console.log('Mock SpawnSync');
+}
+tmr.registerMock('child_process', cpClone);
 
 // Mock uuidv4
 tmr.registerMock('uuid/v4', function () {

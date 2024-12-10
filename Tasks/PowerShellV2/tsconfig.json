@@ -1,6 +1,12 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs"
-    }
+        "module": "commonjs",
+        "target": "es6",
+        "sourceMap":true,
+        "skipLibCheck": true,
+        "esModuleInterop": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
