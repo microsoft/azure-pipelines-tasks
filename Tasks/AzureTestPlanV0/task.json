@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 250,
-    "Patch": 2
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -101,14 +101,6 @@
       "required": false,
       "helpMarkDown": "Relative path from the repository root to the build.gradle file.",
       "visibleRule": "testLanguageInput = JavaGradle"
-    },
-    {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "Merge test results",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
     },
     {
       "name": "publishRunAttachments",
