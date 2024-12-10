@@ -14,21 +14,7 @@ async function run() {
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         if (fs.existsSync(script)) {
-            script = `
-signal_caught() {
-    echo "Script cancellation in temp.sh by SIGINT"
-    #   echo "Signal is $1"
-    kill -$1 $(jobs -p)
-    exit 0
-}
-trap 'signal_caught 2' 2
-trap 'signal_caught SIGINT' SIGINT
-trap 'signal_caught TERM' TERM
-trap 'signal_caught EXIT' EXIT
-trap 'signal_caught SIGTERM' SIGTERM
-trap 'signal_caught SIGKILL' SIGKILL
-echo "Intermediate temp.sh script pid is $$"
-exec bash ${script} & wait;`;
+            script = `exec ${script}`;
         }
 
         // Write the script to disk.
