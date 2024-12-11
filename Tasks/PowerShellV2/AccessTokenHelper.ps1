@@ -31,7 +31,7 @@ function Global:Get-VstsFederatedTokenPSV2Task {
         Write-Verbose "Failed to create OIDC token."
         throw (New-Object System.Exception("CouldNotGenerateOidcToken"))
     }
-
+    
     Write-Verbose "OIDC Token generated Successfully"
     return $oidcToken
 }
@@ -44,7 +44,7 @@ function Global:Get-WiscAccessTokenPSV2Task {
     ) 
     $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
-    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+        $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
         -connectedServiceNameARM $connectedServiceName `
         -scope "499b84ac-1321-427f-aa17-267ca6975798"
 
@@ -69,19 +69,15 @@ function Global:Get-WiscAccessTokenPSV2Task {
 }
 New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessTokenPSV2Task' -Scope Global
 
-$tokenHandler = [PSCustomObject]@{
-
-    TokenHandler = {
-        param(
-            [Parameter(Mandatory=$true)]
-            [string]$filePath,
-            [Parameter(Mandatory=$true)]
-            [string]$signalFromUserScript,
-            [Parameter(Mandatory=$true)]
-            [string]$signalFromTask,
-            [Parameter(Mandatory=$true)]
-            [string]$exitSignal
-        )
+class TokenHandler {
+    handle($s)
+    {
+        $array = $s -split '::'
+        Write-Host $array
+        [string]$filePath = $array[0]
+        [string]$signalFromUserScript = $array[1]
+        [string]$signalFromTask = $array[2]
+        [string]$exitSignal = $array[3]
 
         $eventFromUserScript = $null
         $eventFromTask = $null
