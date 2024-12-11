@@ -54,6 +54,12 @@ export async function getLatestVersionTag(): Promise<string> {
   request.headers = request.headers || {};
   request.headers['User-Agent'] = userAgent;
 
+  if (taskLib.getBoolFeatureFlag('USE_AUTHORIZATION_FOR_API_CALL')){
+  const token = getGithubEndPointToken();
+  if (token) {
+    request.headers['Authorization'] = 'token ' + token;
+  }
+  }
   const response = await webClient.sendRequest(request);
   return response.body['tag_name'];
 }
@@ -84,6 +90,12 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     request.method = 'GET';
     request.headers = request.headers || {};
     request.headers['User-Agent'] = userAgent;
+    if (taskLib.getBoolFeatureFlag('CUSE_AUTHORIZATION_FOR_API_CALL')){
+    const token = getGithubEndPointToken();
+    if (token) {
+        request.headers['Authorization'] = 'token ' + token;
+    }
+  }
 
     const response = await webClient.sendRequest(request);
 
@@ -132,6 +144,36 @@ export async function unzipRelease(zipPath: string): Promise<string> {
   catch (err) {
     throw new Error(taskLib.loc('Err_ExtractionFailed', err));
   }
+}
+
+function getGithubEndPointToken(): string {
+  try{
+  const githubEndpoint = taskLib.getInput("gitHubConnection", false);
+  const githubEndpointObject = taskLib.getEndpointAuthorization(githubEndpoint, true);
+  let githubEndpointToken: string = null;
+
+  if (!!githubEndpointObject) {
+    taskLib.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+
+    if (githubEndpointObject.scheme === 'PersonalAccessToken') {
+      githubEndpointToken = githubEndpointObject.parameters.accessToken
+    } else if (githubEndpointObject.scheme === 'OAuth'){
+      // scheme: 'OAuth'
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken
+    } else if (githubEndpointObject.scheme === 'Token'){
+      // scheme: 'Token'
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken
+    } else if (githubEndpointObject.scheme) {
+      throw new Error(taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
+    }
+  }
+
+  return githubEndpointToken;
+}
+catch(error)
+{
+  throw new Error(taskLib.loc("Failed to retrieve GitHub endpoint token:", error.message));
+}
 }
 
 export function getKubeloginPath(inputPath: string, fileName: string): string | undefined {
