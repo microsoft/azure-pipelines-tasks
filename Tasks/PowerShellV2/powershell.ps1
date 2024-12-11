@@ -44,9 +44,7 @@ try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
     $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
-    $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
-    Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
-    $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
+    $pipeName = $([System.Guid]::NewGuid())
 
     $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
     . $accessTokenHelperFilePath
@@ -54,8 +52,7 @@ try {
     try {
         $ts = New-Object System.Threading.ParameterizedThreadStart([TokenHandler]::new(), [TokenHandler]::new().GetType().GetMethod("handle").MethodHandle.GetFunctionPointer());
         $thread = [System.Threading.Thread]::new($ts);
-        $arg = "$tokenfilePath::$signalFromUserScript::$signalFromTask::$exitSignal"
-        $thread.Start($arg);
+        $thread.Start($pipeName);
     }
     catch {
         Write-Host "Something failed ; $_"
@@ -167,46 +164,33 @@ try {
 
     
     $joinedContents = '
-        $outputFile = "' + $tokenfilePath + '"
-        $signalFromUserScript = "' + $signalFromUserScript + '"
-        $signalFromTask = "' + $signalFromTask + '"
-  
-        $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
-        $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
+    
+    $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "' + ${pipeName}  + '", [System.IO.Pipes.PipeDirection]::InOut)
+    Write-Host "Trying connect to the server."
+    $AzDoTokenPipe.Connect(20000)
+    Write-Host "Connected to the server."
+    
+    function Get-AzDoToken {
+        try {
+            $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+            $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
 
-        function Get-AzDoToken {
-            Write-Verbose "User Script: Starting process to notify Task and read output."
-
-            [string]$tokenResponse = $env:SystemAccessTokenPowershellV2
-
-            try {
-                # Signal Task to generate access token
-                $tmp = $eventFromUserScript.Set()
-                Write-Verbose "User Script: Notified Task to generate access token $tmp."
-
-                # Wait for Task to finish processing
-                $receivedResponseBool = $eventFromTask.WaitOne(15000) # Wait for up to 15 seconds
-                
-                if (!$receivedResponseBool) {  
-                    Write-Verbose "User Script: Timeout waiting for Task to respond."
-                }
-                else {
-                    try {
-                        [string]$powershellv2AccessToken = (Get-Content -Path $outputFile).Trim()
-                        Write-Verbose "UserScript : Read output from file"
-                        $tokenResponse = $powershellv2AccessToken
-                    } catch {
-                        Write-Verbose "Error reading the output file: $_"
-                    }
-                }
-            } 
-            catch {
-                Write-Verbose "Error occurred in Get-AzDoTokenHelper : $_"
-            }
-            return $tokenResponse
+            $input = "Get-AzDoToken"
+            
+            # Send command to the server
+            $writer.WriteLine($input)
+            $writer.Flush()
+            
+            $response = $reader.ReadLine()
+            return $response
         }
-        
-    ' + $joinedContents
+        catch {
+            Write-Host "Error in Get-AzDoToken: $_"
+            return $env:SystemAccessTokenPowershellV2
+        }
+    }
+    
+    ' + $joinedContents;
 
     if ($input_showWarnings) {
         $joinedContents = '
@@ -220,6 +204,17 @@ try {
             };
             Invoke-Command {' + $joinedContents + '} -WarningVariable +warnings';
     }
+
+    $joinedContents = 'try { '+ $joinedContents + '}
+        finally {
+            $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+            $input = "Stop-Pipe"
+            # Send command to the server
+            $writer.WriteLine($input)
+            $writer.Flush()
+        }'
+
+    Write-Host $joinedContents
 
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
@@ -328,14 +323,5 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
-    try {
-        # Signal Task to exit
-        $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-        $output = $eventExit.Set()
-        Trace-VstsLeavingInvocation $MyInvocation
-    } catch {
-        Write-Host "Full Exception Object: $_"
-        Write-Host "Error Object $($_.ErrorDetails)"
-        Write-Host "Exception Object $($_.Exception)"
-    }
+    Trace-VstsLeavingInvocation $MyInvocation
 }
