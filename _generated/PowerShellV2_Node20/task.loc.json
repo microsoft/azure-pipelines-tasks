@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 250,
-    "Patch": 73
+    "Patch": 119
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -273,8 +273,8 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "2.250.72",
+    "Default": "2.250.118",
     "LocalPackages": "2.249.4",
-    "Node20-225": "2.250.73"
+    "Node20-225": "2.250.119"
   }
 }

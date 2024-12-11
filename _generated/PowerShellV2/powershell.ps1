@@ -1,16 +1,20 @@
 [CmdletBinding()]
 param()
 
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
-Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
 Import-Module Microsoft.PowerShell.Security
+
+Add-Type -AssemblyName "System.Threading"
+Add-Type -AssemblyName "System"
 
 . $PSScriptRoot\helpers.ps1
 
 $signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
 $signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
 $exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
+$env:praval = ""
 
 function Get-ActionPreference {
     param (
@@ -39,7 +43,6 @@ function Get-ActionPreference {
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
-
     $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
@@ -47,26 +50,26 @@ try {
     $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
 
     # Create a runspace to handle the Async communication between the Task and User Script for Access Token
-    $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
-    $runspacePool.Open()
+    # $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+    # $runspacePool.Open()
 
-    . $PSScriptRoot\accessTokenHelper.ps1
-    $psRunspace = [powershell]::Create().AddScript({
-        param($tokenHandler,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
-        try {
-            $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal)
-            #Start-Sleep 60
-            return 1
-        } catch {
-            return $_ 
-        }    
-    }).AddArgument($tokenHandler).AddArgument($tokenfilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal)
+    $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
+    . $accessTokenHelperFilePath
 
-    $psRunspace.RunspacePool = $runspacePool
-    $psRunspace.BeginInvoke()
+    try {
+        $ts = New-Object System.Threading.ParameterizedThreadStart([TokenHandler]::new(), [TokenHandler]::new().GetType().GetMethod("handle").MethodHandle.GetFunctionPointer());
+        $thread = [System.Threading.Thread]::new($ts);
+        $arg = "$tokenfilePath::$signalFromUserScript::$signalFromTask::$exitSignal"
+        $thread.Start($arg);
+    }
+    catch {
+        Write-Host "Something failed ; $_"
+    }
+    
 
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 15
+    Start-Sleep 30
+    
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -336,6 +339,9 @@ finally {
         # Signal Task to exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
+        # $output = $psRunspace.EndInvoke($runspaceOutput)
+        # Write-Host $output
+        Write-Host $env:praval
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"
