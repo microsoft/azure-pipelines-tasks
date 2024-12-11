@@ -90,7 +90,7 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     request.method = 'GET';
     request.headers = request.headers || {};
     request.headers['User-Agent'] = userAgent;
-    if (taskLib.getBoolFeatureFlag('CUSE_AUTHORIZATION_FOR_API_CALL')){
+    if (taskLib.getBoolFeatureFlag('USE_AUTHORIZATION_FOR_API_CALL')){
     const token = getGithubEndPointToken();
     if (token) {
         request.headers['Authorization'] = 'token ' + token;
