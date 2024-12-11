@@ -62,7 +62,7 @@ try {
     }
 
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 20
+    Start-Sleep 30
     
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
