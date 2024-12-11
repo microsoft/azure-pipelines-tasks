@@ -14,7 +14,6 @@ Add-Type -AssemblyName "System"
 $signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
 $signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
 $exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
-$env:praval = ""
 
 function Get-ActionPreference {
     param (
@@ -49,10 +48,6 @@ try {
     Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
     $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
 
-    # Create a runspace to handle the Async communication between the Task and User Script for Access Token
-    # $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
-    # $runspacePool.Open()
-
     $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
     . $accessTokenHelperFilePath
 
@@ -68,7 +63,7 @@ try {
     
 
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 30
+    Start-Sleep 20
     
 
     # Get inputs.
@@ -339,9 +334,6 @@ finally {
         # Signal Task to exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
-        # $output = $psRunspace.EndInvoke($runspaceOutput)
-        # Write-Host $output
-        Write-Host $env:praval
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"
