@@ -43,6 +43,11 @@ export async function run(clientToolFilePath: string): Promise<void> {
         if(manifest && !fileExists(manifest)) {
             throw new Error(tl.loc("ManifestFileNotFound", manifest));
         }
+        else
+        {
+            tl.debug("Manifest file found at: " + manifest);
+        }
+
         tl.debug("connectedServiceName: " + connectedServiceName);
 
         if(connectedServiceName){
@@ -172,6 +177,7 @@ function publishSymbolsUsingClientTool(
 
     if (options.manifest) {
         command.push("--manifest", options.manifest);
+        tl.debug("Manifest: " + options.manifest);
     }
 
     if (options.expirationInDays) {
