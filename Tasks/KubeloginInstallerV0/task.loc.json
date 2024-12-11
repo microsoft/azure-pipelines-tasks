@@ -32,12 +32,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.kubeloginVersion"
     },
     {
-      "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
-      "label": "GitHub Connection",
-      "defaultValue": "",
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
       "required": false,
-      "helpMarkDown": "A GitHub connection is needed to prevent anonymous requests limits to the Github API for [Azure/kubelogin](https://github.com/azure/kubelogin) from impacting the installation. Leaving this empty may cause failures if the request limit is reached. This connection does not require ANY permissions."
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
     }
   ],
   "execution": {
