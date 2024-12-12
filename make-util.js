@@ -463,7 +463,7 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
 
     var crypto = require('crypto');
-    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+    var newScrubbedUrl = crypto.createHash('sha256').update(scrubbedUrl).digest('hex');
 
     var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
