@@ -32,12 +32,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.kubeloginVersion"
     },
     {
-      "name": "namespace",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.namespace",
-      "required": false,
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
     }
   ],
   "execution": {
