@@ -1,4 +1,7 @@
-function Global:Get-VstsFederatedTokenPSV2Task {
+Import-Module Microsoft.PowerShell.Security
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
+
+function Global:Get-VstsFederatedTokenPS2Task {
     param(
         [Parameter(Mandatory=$true)]
         [string]$serviceConnectionId,
@@ -13,7 +16,8 @@ function Global:Get-VstsFederatedTokenPSV2Task {
     $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
     $url = $uri + "$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
-    
+    $env:praval = $env:praval + "`n" + $url
+
     $headers = @{
         "Authorization" = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($vstsAccessToken)"))
         "Content-Type"  = "application/json"
@@ -26,42 +30,55 @@ function Global:Get-VstsFederatedTokenPSV2Task {
     $responseContent = $response.Content | ConvertFrom-Json
     $oidcToken = $responseContent.oidcToken
 
-
     if ($null -eq $oidcToken -or $oidcToken -eq [string]::Empty) {
-        Write-Verbose "Failed to create OIDC token."
+        $env:praval = $env:praval + "`n" + "Failed to create OIDC token."
         throw (New-Object System.Exception("CouldNotGenerateOidcToken"))
     }
     
-    Write-Verbose "OIDC Token generated Successfully"
+    $env:praval = $env:praval + "`n" + "OIDC Token generated Successfully"
     return $oidcToken
 }
-New-Alias -Name 'Get-VstsFederatedToken' -Value 'Global:Get-VstsFederatedTokenPSV2Task' -Scope Global
+New-Alias -Name 'Get-VstsFederatedToken' -Value 'Global:Get-VstsFederatedTokenPS2Task' -Scope Global
 
 function Global:Get-WiscAccessTokenPSV2Task {
     param(
-        [Parameter(Mandatory=$true)]
-        [string]$connectedServiceName
-    ) 
-    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+        $taskDict
+    )
 
-        $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
-        -connectedServiceNameARM $connectedServiceName `
-        -scope "499b84ac-1321-427f-aa17-267ca6975798"
+    $clientId = $taskDict["ClientId"]
+    $envAuthUrl = $taskDict["EnvAuthUrl"]
+    $tenantId = $taskDict["TenantId"]
+    $connectedServiceName = $taskDict["ConnectedServiceName"]
+    $vstsAccessToken = $taskDict["VstsAccessToken"]
+            
+    Add-Type -Path "$PSScriptRoot\ps_modules\VstsAzureRestHelpers_\msal\Microsoft.Identity.Client.dll"
+    $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId).WithAuthority($envAuthUrl, $tenantId)
+
+    $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $env:praval = $env:praval + "`n" + "oidc_token $oidc_token"
+    $msalClientInstance = $clientBuilder.WithClientAssertion($oidc_token).Build()
+
+    $scope = "499b84ac-1321-427f-aa17-267ca6975798"
+    [string] $resourceId = $scope + "/.default"
+    $scopes = [Collections.Generic.List[string]]@($resourceId)
+
+    $env:praval = $env:praval + "`n" + "Fetching Access Token - MSAL"
+    $tokenResult = $msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
 
     $token = $null
     $expirationTime = $null
-    if($result) {
-        $token = $result.AccessToken
-        $expirationTime = $([math]::Round(([DateTime]::Parse($result.ExpiresOn) - [DateTime]::Now).TotalMinutes))
+    if($tokenResult) {
+        $token = $tokenResult.AccessToken
+        $expirationTime = $([math]::Round(([DateTime]::Parse($tokenResult.ExpiresOn) - [DateTime]::Now).TotalMinutes))
     }
 
     if ($null -eq $token -or $token -eq [string]::Empty) {
-        Write-Verbose "Generated token found to be null, returning the System Access Token"
+        $env:praval = $env:praval + "`n" + "Generated token found to be null, returning the System Access Token"
         $token = $env:SystemAccessTokenPowershellV2
     } else {
-        Write-Verbose "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+        $env:praval = $env:praval + "`n" + "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
         if($expirationTime) {
-            Write-Host "Generated access token with expiration time of $expirationTime minutes."
+            $env:praval = $env:praval + "`n" + "Generated access token with expiration time of $expirationTime minutes."
         }   
     }
     
@@ -69,15 +86,20 @@ function Global:Get-WiscAccessTokenPSV2Task {
 }
 New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessTokenPSV2Task' -Scope Global
 
-class TokenHandler {
-    handle($s)
-    {
-        $array = $s -split '::'
-        Write-Host $array
-        [string]$filePath = $array[0]
-        [string]$signalFromUserScript = $array[1]
-        [string]$signalFromTask = $array[2]
-        [string]$exitSignal = $array[3]
+$tokenHandler = [PSCustomObject]@{
+
+    TokenHandler = {
+        param(
+            [Parameter(Mandatory=$true)]
+            [string]$filePath,
+            [Parameter(Mandatory=$true)]
+            [string]$signalFromUserScript,
+            [Parameter(Mandatory=$true)]
+            [string]$signalFromTask,
+            [Parameter(Mandatory=$true)]
+            [string]$exitSignal,
+            $taskDict
+        )
 
         $eventFromUserScript = $null
         $eventFromTask = $null
@@ -104,13 +126,14 @@ class TokenHandler {
                 # Apply the ACL to the file
                 Set-Acl -Path $filePath -AclObject $acl
             } else {
-                $env:praval = $env:praval + "`n" +  "Token File not found"
+                $env:praval = $env:praval + "`n" + "Token File not found"
                 throw "Token File not found"
             }
 
-            $env:praval = $env:praval + "`n" +  "Task: Waiting for signals..."
-            Write-Host "Task: Waiting for signals..."
-
+            Write-Host "1-Task: Waiting for signals..."
+            Write-Verbose "2-Task: Waiting for signals..."
+            $env:praval = $env:praval + "`n" + "Task: Waiting for signals..."
+            $env:StartTask = "true"
             # Infinite loop to wait for signals and respond
             while ($true) {
                 try {
@@ -120,53 +143,41 @@ class TokenHandler {
                     if ($index -eq 0) {
 
                         # Signal from UserScript
-                        $env:SystemAccessTokenPowershellV2 = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
-                        Write-Host $env:SystemAccessTokenPowershellV2
-
                         $token = ""
                         try {
-                            [string]$connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
-                            $env:praval = $env:praval + "`n" + "ConnectedServiceName $connectedServiceName"
-                            Write-Host "ConnectedServiceName $connectedServiceName"
+                            [string]$connectedServiceName = $taskDict["ConnectedServiceName"]
 
                             if ($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
-                                $env:praval = $env:praval + "`n" +  "No Service connection was found, returning the System Access Token"
+                                $env:praval = $env:praval + "`n" + "No Service connection was found, returning the System Access Token"
                                 $token = $env:SystemAccessTokenPowershellV2
-                                Write-Host "No Service connection was found, returning the System Access Token"
                             } else {
-                                $token = Get-WiscAccessTokenPSV2Task -connectedServiceName $connectedServiceName  
-                                $env:praval = $env:praval + "`n" +   "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
-                                Write-Host "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
+                                $token = Get-WiscAccessTokenPSV2Task -connectedServiceName $connectedServiceName -taskDict $taskDict  
+                                $env:praval = $env:praval + "`n" + "Successfully generated the Azure Access token for Service Connection : $connectedServiceName"
                             }           
                         }
                         catch {
-                            $env:praval = $env:praval + "`n" +  "Failed to generate token with message $_, returning the System Access Token"
-                            Write-Host "Failed to generate token with message $_, returning the System Access Token"
+                            $env:praval = $env:praval + "`n" + "Failed to generate token with message $_, returning the System Access Token"
                             $token = $env:SystemAccessTokenPowershellV2
                                 
                         } finally {
                             $token | Set-Content -Path $filePath
-                            $env:praval = $env:praval + "`n" +  "Task: Wrote access token to file"
-                            Write-Host "Task: Wrote access token to file"
+                            $env:praval = $env:praval + "`n" + "Task: Wrote access token to file"
                         }
 
                         # Signal UserScript to read the file
                         $tmp = $eventFromTask.Set()
 
                     } elseif ($index -eq 1) {
-                        $env:praval = $env:praval + "`n" +  "Exiting the loop"
-                        Write-Host "Exiting the loop"
+                        $env:praval = $env:praval + "`n" + "Exiting the loop"
                         # Exit signal received
                         break
                     }
                 } catch {
-                    $env:praval = $env:praval + "`n" +  "Error occurred while waiting for signals: $_"
-                    Write-Host "Error occurred while waiting for signals: $_"
+                    $env:praval = $env:praval + "`n" + "Error occurred while waiting for signals: $_"
                 }
             }
         } catch {
             $env:praval = $env:praval + "`n" + "Critical error in Task: $_"
-            Write-Host "Critical error in Task: $_"
         } finally {
             try {
                 if ($null -ne $eventFromUserScript ) { $eventFromUserScript.Dispose() }

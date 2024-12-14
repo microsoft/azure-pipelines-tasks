@@ -1,19 +1,78 @@
 [CmdletBinding()]
 param()
-
 Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
-Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 Import-Module Microsoft.PowerShell.Security
-
-Add-Type -AssemblyName "System.Threading"
-Add-Type -AssemblyName "System"
 
 . $PSScriptRoot\helpers.ps1
 
 $signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
 $signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
 $exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
+$env:praval = ""
+
+$defaultEnvironmentMSALAuthUri = "https://login.microsoftonline.com/"
+$defaultEnvironmentADALAuthUri = "https://login.windows.net/"
+$azureStack = "AzureStack"
+
+function Get-EnvironmentAuthUrl {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [Parameter(Mandatory = $false)] $useMSAL = $false
+    )
+
+    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
+
+    if ([string]::IsNullOrEmpty($envAuthUrl)) {
+        if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - azureStack is used"
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+            $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+        }
+        else {
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - fallback is used"
+            # fallback
+            $envAuthUrl = if ($useMSAL) { $defaultEnvironmentMSALAuthUri } else { $defaultEnvironmentADALAuthUri }
+        }
+    }
+
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
+
+    return $envAuthUrl
+}
+
+function Get-TaskDictionary {
+    $dictionary = @{}
+
+    $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+    $dictionary["ConnectedServiceName"] = $connectedServiceName
+    Write-Verbose "connectedServiceName : $connectedServiceName"
+
+    if($null -eq $connectedServiceName -or $connectedServiceName -eq [string]::Empty) {
+        return $dictionary
+    }
+
+    $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+    $dictionary["ClientId"] = $endpoint.Auth.Parameters.ServicePrincipalId
+    $dictionary["TenantId"] = $endpoint.Auth.Parameters.TenantId
+    $dictionary["EnvAuthUrl"] = Get-EnvironmentAuthUrl -endpoint $endpoint -useMSAL $true
+
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $dictionary["VstsAccessToken"] = $vstsEndpoint.auth.parameters.AccessToken
+
+    return $dictionary
+}
+
+function Get-EnvDictionary {
+    $envVars = @{}
+    [System.Environment]::GetEnvironmentVariables().GetEnumerator() | ForEach-Object {
+        $envVars[$_.Key] = $_.Value
+    }
+    return $envVars
+}
 
 function Get-ActionPreference {
     param (
@@ -48,24 +107,40 @@ try {
     Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
     $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
 
+     # Create a runspace to handle the Async communication between the Task and User Script for Access Token
+     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+     $runspacePool.Open()
+
     $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
-    . $accessTokenHelperFilePath
+    $taskDict = Get-TaskDictionary
+    $envVars = Get-EnvDictionary
 
-    try {
-        $ts = New-Object System.Threading.ParameterizedThreadStart([TokenHandler]::new(), [TokenHandler]::new().GetType().GetMethod("handle").MethodHandle.GetFunctionPointer());
-        $thread = [System.Threading.Thread]::new($ts);
-        $arg = "$tokenfilePath::$signalFromUserScript::$signalFromTask::$exitSignal"
-        $thread.Start($arg);
-    }
-    catch {
-        Write-Host "Something failed ; $_"
-    }
-    
+    $psRunspace = [powershell]::Create().AddScript({
+        param($accessTokenHelperFilePath,$filePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars)
+        try {
+            $envVars.GetEnumerator() | ForEach-Object {
+                [System.Environment]::SetEnvironmentVariable($_.Key, $_.Value, [System.EnvironmentVariableTarget]::Process)
+            }
 
+            . $accessTokenHelperFilePath
+            $tokenHandler.TokenHandler.Invoke($filePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict)
+            return $env:praval
+        } catch {
+            $env:praval = $env:praval + " " + $_ 
+            return $env:praval
+        }    
+    }).AddArgument($accessTokenHelperFilePath).AddArgument($tokenfilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal).AddArgument($taskDict).AddArgument($envVars)
+
+    $psRunspace.RunspacePool = $runspacePool
+    $rsoutput = $psRunspace.BeginInvoke()
+
+    while ($env:StartTask -ne "true") {
+        Start-Sleep 5
+        Write-Host "Waiting....."
+    }
     # Wait for the async runspace to start and get ready to listen to User scripts requests
-    Start-Sleep 20
+    Start-Sleep 5
     
-
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
     $input_warningPreference = Get-ActionPreference -VstsInputName 'warningPreference' -DefaultAction 'Default'
@@ -334,6 +409,8 @@ finally {
         # Signal Task to exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
+        Write-Host $psRunspace.EndInvoke($rsoutput)
+        Write-Host $env:praval
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"
