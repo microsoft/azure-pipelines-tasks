@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 250,
+    "Patch": 191
   },
   "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "minimumAgentVersion": "2.115.0",
@@ -36,6 +36,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
+      "type": "connectedService:workloadidentityuser",
+      "label": "Azure DevOps Service Connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure DevOps Service Connection service connection"
+    },
     {
       "name": "targetType",
       "type": "radio",
@@ -263,7 +273,8 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "2.247.0",
-    "Node20-225": "2.247.1"
+    "Default": "2.250.190",
+    "LocalPackages": "2.249.4",
+    "Node20-225": "2.250.191"
   }
 }

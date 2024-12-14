@@ -1,9 +1,13 @@
 [CmdletBinding()]
 param()
 
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module Microsoft.PowerShell.Security
 
 . $PSScriptRoot\helpers.ps1
+$env:praval = ""
+$env:startTask = ""
 
 function Get-ActionPreference {
     param (
@@ -29,9 +33,118 @@ function Get-ActionPreference {
     return $result
 }
 
+function Get-EnvironmentAuthUrl {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [Parameter(Mandatory = $false)] $useMSAL = $false
+    )
+
+    $defaultEnvironmentMSALAuthUri = "https://login.microsoftonline.com/"
+    $defaultEnvironmentADALAuthUri = "https://login.windows.net/"
+    $azureStack = "AzureStack"
+
+    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
+
+    if ([string]::IsNullOrEmpty($envAuthUrl)) {
+        if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - azureStack is used"
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+            $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+        }
+        else {
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - fallback is used"
+            # fallback
+            $envAuthUrl = if ($useMSAL) { $defaultEnvironmentMSALAuthUri } else { $defaultEnvironmentADALAuthUri }
+        }
+    }
+
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
+
+    return $envAuthUrl
+}
+
+function Get-TaskDictionary {
+    $dictionary = @{}
+
+    $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+    $dictionary["ConnectedServiceName"] = $connectedServiceName
+    Write-Verbose "connectedServiceName : $connectedServiceName"
+
+    $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+    $dictionary["ClientId"] = $endpoint.Auth.Parameters.ServicePrincipalId
+    $dictionary["TenantId"] = $endpoint.Auth.Parameters.TenantId
+    $dictionary["EnvAuthUrl"] = Get-EnvironmentAuthUrl -endpoint $endpoint -useMSAL $true
+
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $dictionary["VstsAccessToken"] = $vstsEndpoint.auth.parameters.AccessToken
+
+    return $dictionary
+}
+
+function Get-EnvDictionary {
+    $envVars = @{}
+    [System.Environment]::GetEnvironmentVariables().GetEnumerator() | ForEach-Object {
+        $envVars[$_.Key] = $_.Value
+    }
+    return $envVars
+}
+
+function RunTokenHandler {
+    param (
+        $pipeName
+    )
+
+    $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
+    $runspacePool.Open()
+
+    $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
+    $taskDict = Get-TaskDictionary
+    $envVars = Get-EnvDictionary
+
+    $psRunspace = [powershell]::Create().AddScript({
+        param($accessTokenHelperFilePath, $pipeName, $taskDict, $envVars)
+        try {
+            # Copying the env variables from parent runspace to the child runspace.
+            $envVars.GetEnumerator() | ForEach-Object {
+                [System.Environment]::SetEnvironmentVariable($_.Key, $_.Value, [System.EnvironmentVariableTarget]::Process)
+            }
+
+            . $accessTokenHelperFilePath
+            $tokenHandler.Run.Invoke($pipeName, $taskDict)
+            return 1
+        } catch {
+            $env:praval = $env:praval + " " + $_ 
+            return $_
+        }    
+    }).AddArgument($accessTokenHelperFilePath).AddArgument($PipeName).AddArgument($taskDict).AddArgument($envVars)
+
+    $psRunspace.RunspacePool = $runspacePool
+    $psRunspace.BeginInvoke()
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
+    $systemAccessToken = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
+
+    $pipeName = "PowerShellV2TaskNamedPipe-" + [System.Guid]::NewGuid().ToString()
+    Write-Host "PipeName : $pipeName"
+
+    $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
+    Write-Host $connectedServiceName
+
+    if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
+        RunTokenHandler -pipeName $pipeName
+        Write-Host $env:praval
+
+        while($env:startTask -ne "true") {
+            Write-Host $env:praval
+            Start-Sleep 10
+        }
+    }
 
     # Get inputs.
     $input_errorActionPreference = Get-ActionPreference -VstsInputName 'errorActionPreference' -DefaultAction 'Stop'
@@ -146,6 +259,71 @@ try {
             Invoke-Command {' + $joinedContents + '} -WarningVariable +warnings';
     }
 
+    if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
+        $joinedContents = '
+
+        try 
+        {
+            $AzDoTokenPipe = New-Object System.IO.Pipes.NamedPipeClientStream(".", "' + $pipeName  + '", [System.IO.Pipes.PipeDirection]::InOut)
+            Write-Host "Trying connect to the server."
+            $AzDoTokenPipe.Connect(60000)
+            Write-Host "Connected to the server."
+        
+            function Get-AzDoToken {
+                Write-Host "Received Token Request"
+                $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+                $reader = New-Object System.IO.StreamReader($AzDoTokenPipe)
+
+                $input = "Get-AzDoToken"
+                
+                # Send command to the server
+                $writer.WriteLine($input)
+                $writer.Flush()
+                
+                $response = $reader.ReadLine()
+                $result = $response | ConvertFrom-Json
+
+                if (![string]::IsNullOrWhiteSpace($result["Token"])) {
+                    $expTime = $result["Expiration"]
+                    Write-Host "Access Token Generated with expiration time of $expTime seconds"
+                    return $result["Token"]
+                }
+                else 
+                {
+                    throw $result["ErrorMessage"]
+                }
+            }
+
+            ' + $joinedContents + '
+        }
+        finally 
+        {
+            try {
+                $writer = New-Object System.IO.StreamWriter($AzDoTokenPipe)
+                $writer.WriteLine("Stop-Pipe")
+                $writer.Flush()
+
+                $writer.Dispose()
+                $AzDoTokenPipe.Dipose()
+            }
+            catch
+            {
+                # Do nothing
+            }
+        }'
+    } 
+    else {
+        $joinedContents = '
+        
+        function Get-AzDoToken {
+            return "' + $systemAccessToken + '" 
+        }
+
+        ' + $joinedContents;
+    }
+
+    Write-Host $joinedContents
+
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
@@ -253,5 +431,7 @@ catch {
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
+    Start-Sleep 10
+    Write-Host $env:praval
     Trace-VstsLeavingInvocation $MyInvocation
 }
