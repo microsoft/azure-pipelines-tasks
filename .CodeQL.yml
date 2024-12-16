@@ -9,7 +9,7 @@ path_classifiers:
     # Always enclose the expression in double quotes if it includes *.
     - Tests
     - Tests-Legacy
-    - "Task/**/Tests"
+    - "Tasks/**/Tests"
 
   # The default behavior is to tag all files created during the
   # build as `generated`. Results are hidden for generated code. You can tag 
