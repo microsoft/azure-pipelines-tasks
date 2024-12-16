@@ -51,6 +51,10 @@ function Global:Get-WiscAccessTokenPSV2Task {
     $connectedServiceName = $taskDict["ConnectedServiceName"]
     $vstsAccessToken = $taskDict["VstsAccessToken"]
             
+    $a = Get-ChildItem $PSScriptRoot -Recurse
+
+    $env:praval = $env:praval + "`n" + $a
+
     Add-Type -Path "$PSScriptRoot\msal\Microsoft.Identity.Client.dll"
     $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId).WithAuthority($envAuthUrl, $tenantId)
 
@@ -82,7 +86,7 @@ New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessToken
 
 $tokenHandler = [PSCustomObject]@{
 
-    TokenHandler = {
+    Run = {
         param(
             [Parameter(Mandatory=$true)]
             [string]$filePath,

@@ -87,7 +87,7 @@ function RunTokenHandler {
     $envVars = Get-EnvDictionary
 
     $psRunspace = [powershell]::Create().AddScript({
-        param($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars)
+        param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars)
         try {
             # Copying the env variables from parent runspace to the child runspace.
             $envVars.GetEnumerator() | ForEach-Object {
@@ -99,7 +99,7 @@ function RunTokenHandler {
         } catch {
             $env:praval = $env:praval + " " + $_ 
         }    
-    }).AddArgument($tokenFilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal).AddArgument($taskDict).AddArgument($envVars)
+    }).AddArgument($accessTokenHelperFilePath).AddArgument($tokenFilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal).AddArgument($taskDict).AddArgument($envVars)
 
     $psRunspace.RunspacePool = $runspacePool
     $psRunspace.BeginInvoke()
@@ -148,6 +148,7 @@ try {
     if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
         RunTokenHandler -tokenFilePath $tokenfilePath -signalFromUserScript $signalFromUserScript -signalFromTask $signalFromTask -exitSignal $exitSignal
         Start-Sleep 30
+        Write-Host $env:praval
     }
     
     # Get inputs.
@@ -271,7 +272,7 @@ try {
                 # Wait for Task to finish processing
                 $receivedResponseBool = $eventFromTask.WaitOne(20000) # Wait for up to 20 seconds
                 
-                if (!receivedResponseBool) {
+                if (!$receivedResponseBool) {
                     throw
                 }
 
@@ -428,7 +429,7 @@ finally {
         # Signal Task to exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
-        Write-Host $psRunspace.EndInvoke($rsoutput)
+        Write-Host $env:praval
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"

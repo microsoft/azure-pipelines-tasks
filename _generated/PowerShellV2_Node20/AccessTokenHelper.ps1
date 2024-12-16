@@ -82,7 +82,7 @@ New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessToken
 
 $tokenHandler = [PSCustomObject]@{
 
-    TokenHandler = {
+    Run = {
         param(
             [Parameter(Mandatory=$true)]
             [string]$filePath,
