@@ -68,7 +68,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
                 return true;
             }
         }
-    }
+    },
 };
 tmr.setAnswers(a);
 tmr.registerMockExport('IssueSource', { TaskInternal: "TaskInternal", CustomerScript: "CustomerScript" });
@@ -96,14 +96,6 @@ fs.ReadStream.on = function(data, data1) {
     return;
 }
 tmr.registerMock('fs', fsClone);
-
-// Moc Child Process
-const cp = require('child_process');
-const cpClone = Object.assign({}, cp);
-cpClone.spawnSync = function(cmd, args) {
-    console.log('Mock SpawnSync');
-}
-tmr.registerMock('child_process', cpClone);
 
 // Mock uuidv4
 tmr.registerMock('uuid/v4', function () {

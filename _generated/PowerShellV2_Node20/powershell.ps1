@@ -46,7 +46,7 @@ function Get-TaskDictionary {
 
     $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
     $dictionary["ConnectedServiceName"] = $connectedServiceName
-    Write-Verbose "connectedServiceName : $connectedServiceName"
+    Write-Verbose "Azure Devops Service Connection Name : $connectedServiceName"
 
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
     $dictionary["ClientId"] = $endpoint.Auth.Parameters.ServicePrincipalId
@@ -56,15 +56,13 @@ function Get-TaskDictionary {
     $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
     $dictionary["VstsAccessToken"] = $vstsEndpoint.auth.parameters.AccessToken
 
-    return $dictionary
-}
+    $dictionary["Uri"] = Get-VstsTaskVariable -Name 'System.CollectionUri' -Require
+    $dictionary["PlanId"] = Get-VstsTaskVariable -Name 'System.PlanId' -Require
+    $dictionary["JobId"] = Get-VstsTaskVariable -Name 'System.JobId' -Require
+    $dictionary["Hub"] = Get-VstsTaskVariable -Name 'System.HostType' -Require
+    $dictionary["ProjectId"] = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
-function Get-EnvDictionary {
-    $envVars = @{}
-    [System.Environment]::GetEnvironmentVariables().GetEnumerator() | ForEach-Object {
-        $envVars[$_.Key] = $_.Value
-    }
-    return $envVars
+    return $dictionary
 }
 
 function RunTokenHandler {
@@ -76,7 +74,11 @@ function RunTokenHandler {
         [Parameter(Mandatory=$true)]
         $signalFromTask,
         [Parameter(Mandatory=$true)]
-        $exitSignal
+        $exitSignal,
+        [Parameter(Mandatory=$true)]
+        $waitSignal,
+        [Parameter(Mandatory=$true)]
+        $sharedVar
     )
 
     $runspacePool = [runspacefactory]::CreateRunspacePool(1, 1)
@@ -87,19 +89,23 @@ function RunTokenHandler {
     $envVars = Get-EnvDictionary
 
     $psRunspace = [powershell]::Create().AddScript({
-        param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars)
+        param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars, $waitSignal, $sharedVar)
         try {
-            # Copying the env variables from parent runspace to the child runspace.
-            $envVars.GetEnumerator() | ForEach-Object {
-                [System.Environment]::SetEnvironmentVariable($_.Key, $_.Value, [System.EnvironmentVariableTarget]::Process)
-            }
-
             . $accessTokenHelperFilePath
-            $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict)
+            $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitSignal, $sharedVar)
         } catch {
             $env:praval = $env:praval + " " + $_ 
         }    
-    }).AddArgument($accessTokenHelperFilePath).AddArgument($tokenFilePath).AddArgument($signalFromUserScript).AddArgument($signalFromTask).AddArgument($exitSignal).AddArgument($taskDict).AddArgument($envVars)
+    }).
+    AddArgument($accessTokenHelperFilePath).
+    AddArgument($tokenFilePath).
+    AddArgument($signalFromUserScript).
+    AddArgument($signalFromTask).
+    AddArgument($exitSignal).
+    AddArgument($taskDict).
+    AddArgument($envVars).
+    AddArgument($waitSignal).
+    AddArgument($sharedVar)
 
     $psRunspace.RunspacePool = $runspacePool
     $psRunspace.BeginInvoke()
@@ -132,6 +138,7 @@ function Get-ActionPreference {
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
+
     $systemAccessToken = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
@@ -141,14 +148,29 @@ try {
     $signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
     $signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
     $exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
+    $waitSignalForRunspaceToBeReady = "Global\WaitForRunspaceToBeReady" + [System.Guid]::NewGuid().ToString()
 
     $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
-    Write-Host $connectedServiceName
 
     if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
-        RunTokenHandler -tokenFilePath $tokenfilePath -signalFromUserScript $signalFromUserScript -signalFromTask $signalFromTask -exitSignal $exitSignal
-        Start-Sleep 30
-        Write-Host $env:praval
+        $sharedVar = "EnvVar_" + [System.Guid]::NewGuid().ToString("N")
+        [System.Environment]::SetEnvironmentVariable($sharedVar, "wait", [System.EnvironmentVariableTarget]::Process)
+
+        RunTokenHandler `
+            -tokenFilePath $tokenFilePath `
+            -signalFromUserScript $signalFromUserScript `
+            -signalFromTask $signalFromTask `
+            -exitSignal $exitSignal `
+            -waitSignal $waitSignalForRunspaceToBeReady `
+            -sharedVar $sharedVar
+
+        $waitSignal = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $waitSignalForRunspaceToBeReady)
+        $sharedVarValue = $null
+        do {
+            $res = $waitSignal.Set()
+            Start-Sleep 1
+            $sharedVarValue = [System.Environment]::GetEnvironmentVariable($sharedVar)
+        } while ($sharedVarValue -eq "wait")
     }
     
     # Get inputs.
@@ -263,35 +285,29 @@ try {
             $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
 
             function Get-AzDoToken {
-                Write-Verbose "User Script: Starting process to notify Task and read output."
-
                 # Signal Task to generate access token
                 $tmp = $eventFromUserScript.Set()
-                Write-Verbose "User Script: Notified Task to generate access token $tmp."
+                Write-Debug "User Script: Notified Task to generate access token $tmp."
 
                 # Wait for Task to finish processing
-                $receivedResponseBool = $eventFromTask.WaitOne(20000) # Wait for up to 20 seconds
+                $receivedResponseBool = $eventFromTask.WaitOne(30000) # Wait for up to 30 seconds
                 
                 if (!$receivedResponseBool) {
-                    throw
+                    throw "Request timed out"
                 }
 
                 [string]$response = (Get-Content -Path $outputFile).Trim()
-                Write-Verbose "UserScript : Read output from file"
-
                 $result = $response | ConvertFrom-Json
 
-                if (![string]::IsNullOrWhiteSpace($result["Token"])) {
-                    $expTime = $result["Expiration"]
+                if (![string]::IsNullOrWhiteSpace($result.Token)) {
+                    $expTime = $result.ExpirationPeriod
                     Write-Host "Access Token Generated with expiration time of $expTime seconds"
-                    return $result["Token"]
+                    return $result.Token
                 }
-                else 
+                else
                 {
-                    throw $result["ErrorMessage"]
+                    throw $result.ExceptionMessage
                 }
-
-                return $powershellv2AccessToken
             }
             
         ' + $joinedContents

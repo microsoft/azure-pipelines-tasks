@@ -14,15 +14,6 @@ import cp = require('child_process');
 const ts2PsPipePath = '/tmp/ts2ps' + uuidV4();
 const ps2TsPipePath = '/tmp/ps2ts' + uuidV4();
 
-cp.spawnSync('mkfifo', [ts2PsPipePath]);
-cp.spawnSync('mkfifo', [ps2TsPipePath]);
-
-cp.spawnSync('chmod', ['600', ts2PsPipePath]);
-cp.spawnSync('chmod', ['600', ps2TsPipePath]);
-
-
-process.env.System_Access_Token_PSV2_Task = tl.getVariable('System.AccessToken');
-
 async function startNamedPiped() {
     const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
     tl.debug("connectedServiceName: " + connectedServiceName);
@@ -33,22 +24,15 @@ async function startNamedPiped() {
     pipeStream.on('data', async (data) => {
         const command = data.toString('utf8').trim();
         tl.debug(`Received from PowerShell: ${command}`);
-        var systemAccessToken = tl.getVariable('System.AccessToken');
-        process.env.System_Access_Token_PSV2_Task = systemAccessToken;
 
         if (command == 'Get-AzDoToken') {
             try {
-                if(connectedServiceName && connectedServiceName.trim().length > 0) {
-                    const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
-                    tl.debug(`Successfully fetched the ADO access token for ${connectedServiceName}`);
-                    writeStream.write(token + "\n");
-                } else {
-                    tl.debug(`No Service Connection found, returning empty token`);
-                    writeStream.write(systemAccessToken + "\n");
-                }
+                const token = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
+                tl.debug(`Successfully fetched the ADO access token for ${connectedServiceName}`);
+                writeStream.write(token + "\n");
             } catch(err) {
                 tl.debug(`Token generation failed with error message ${err.message}`);
-                writeStream.write(systemAccessToken + "\n");
+                writeStream.write("exception: " + err.message + "\n");
             }
         } else {
             try {
@@ -162,11 +146,21 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
 }
 
 async function run() {
+
+    const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+    const systemAccessToken = tl.getVariable('System.AccessToken');
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        if(tl.exist(ts2PsPipePath) && tl.exist(ps2TsPipePath))
+        if(connectedServiceName && connectedServiceName.trim().length > 0)
         {
+            cp.spawnSync('mkfifo', [ts2PsPipePath]);
+            cp.spawnSync('mkfifo', [ps2TsPipePath]);
+
+            cp.spawnSync('chmod', ['600', ts2PsPipePath]);
+            cp.spawnSync('chmod', ['600', ps2TsPipePath]);
+
             startNamedPiped();
         }
         
@@ -248,40 +242,8 @@ async function run() {
             script = `${input_script}`;
         }
 
-        script = `
-            $pipeWriter = $null;
-            $pipeReader = $null;
-
-            try {
-                $pipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
-                $pipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
-            } catch {
-                Write-Verbose "Error in connecting to the pipes."; 
-            }
-            
-            function Get-AzDoToken {
-                try {
-                    $pipeWriter.WriteLine('Get-AzDoToken');
-                    $pipeWriter.Flush();
-
-                    $token = $pipeReader.ReadLine();
-                    $token = $token.Trim();
-
-                    if ($null -eq $token -or $token -eq [string]::Empty) {
-                        Write-Verbose "empty response was found, returning the System Access Token";
-                        $token = $env:System_Access_Token_PSV2_Task;
-                    } 
-                    return $token;
-                } 
-                catch {
-                    Write-Verbose "Error in Get-AzDoToken: $_";
-                    $token = $env:System_Access_Token_PSV2_Task;
-                    return $token;
-                }
-            }
-            ${script}
-        `;
-
+        
+        
         if (input_showWarnings) {
             script = `
                 $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
@@ -296,21 +258,51 @@ async function run() {
             `;
         }
 
-        script =   `
-            try { 
-                ${script}
-            }
-            finally {
-                if($pipeWriter) {
-                    $pipeWriter.WriteLine('Close');
-                    $pipeWriter.Flush();
-                    $pipeWriter.Close();
-                } 
-                if($pipeReader) {
-                    $pipeReader.Close();
-                }
-            }`
+        if(connectedServiceName && connectedServiceName.trim().length > 0) {
+            script = `
+                $ps2TsPipeWriter = $null
+                $ts2PsPipeReader = $null
 
+                try {
+                    $ps2TsPipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
+                    $ts2PsPipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
+
+                    function Get-AzDoToken {
+                        $ps2TsPipeWriter.WriteLine('Get-AzDoToken');
+                        $ps2TsPipeWriter.Flush();
+
+                        $token = $ts2PsPipeReader.ReadLine();
+                        $token = $token.Trim();
+
+                        if ($token.StartsWith("exception:")) {
+                            throw $token
+                        } 
+
+                        return $token;
+                    }
+
+                    ${script}
+                } finally {
+                    if($ps2TsPipeWriter) {
+                        $ps2TsPipeWriter.WriteLine('Close');
+                        $ps2TsPipeWriter.Flush();
+                        $ps2TsPipeWriter.Close();
+                    } 
+                    if($ts2PsPipeReader) {
+                        $ts2PsPipeReader.Close();
+                    }
+                }
+            `;
+        } else {
+            script = `
+                function Get-AzDoToken {
+                    return "${systemAccessToken}"
+                }
+                
+                ${script}
+            `;
+        }
+        
         contents.push(script);
         // log with detail to avoid a warning output.
         tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
@@ -323,6 +315,8 @@ async function run() {
             contents.push(`    exit $LASTEXITCODE`);
             contents.push(`}`);
         }
+
+        
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
@@ -385,14 +379,16 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     } finally {
-        try {
-            const pipeStream = fs.createWriteStream(ps2TsPipePath);
-            if(pipeStream != null) {
-                pipeStream.write('Close');
-                pipeStream.close();
+        if(connectedServiceName && connectedServiceName.trim().length > 0) {
+            try {
+                const pipeStream = fs.createWriteStream(ps2TsPipePath);
+                if(pipeStream != null) {
+                    pipeStream.write('Close');
+                    pipeStream.close();
+                }
+            } catch (err) {
+                tl.debug("error caught in exiting");
             }
-        } catch (err) {
-            tl.debug("error caught in exiting");
         }
     }
 }

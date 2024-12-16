@@ -4,16 +4,17 @@ Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
 function Global:Get-VstsFederatedTokenPS2Task {
     param(
         [Parameter(Mandatory=$true)]
-        [string]$serviceConnectionId,
+        $taskDict,
         [Parameter(Mandatory=$true)]
         [string]$vstsAccessToken
     )
 
-    $uri = Get-VstsTaskVariable -Name 'System.CollectionUri' -Require
-    $planId = Get-VstsTaskVariable -Name 'System.PlanId' -Require
-    $jobId = Get-VstsTaskVariable -Name 'System.JobId' -Require
-    $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
-    $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
+    $serviceConnectionId = $taskDict["ConnectedServiceName"] 
+    $uri = $taskDict["Uri"] 
+    $planId = $taskDict["PlanId"]
+    $jobId = $taskDict["JobId"]
+    $hub = $taskDict["Hub"]
+    $projectId = $taskDict["ProjectId"]
 
     $url = $uri + "$projectId/_apis/distributedtask/hubs/$hub/plans/$planId/jobs/$jobId/oidctoken?serviceConnectionId=$serviceConnectionId&api-version=7.1-preview.1"
     $env:praval = $env:praval + "`n" + $url
@@ -50,15 +51,14 @@ function Global:Get-WiscAccessTokenPSV2Task {
     $tenantId = $taskDict["TenantId"]
     $connectedServiceName = $taskDict["ConnectedServiceName"]
     $vstsAccessToken = $taskDict["VstsAccessToken"]
-            
-    $a = Get-ChildItem $PSScriptRoot -Recurse
 
     $env:praval = $env:praval + "`n" + $a
 
-    Add-Type -Path "$PSScriptRoot\msal\Microsoft.Identity.Client.dll"
+    Add-Type -Path "$PSScriptRoot\ps_modules\VstsAzureRestHelpers_\msal\Microsoft.Identity.Client.dll"
+
     $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId).WithAuthority($envAuthUrl, $tenantId)
 
-    $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $oidc_token = Get-VstsFederatedToken -taskDict $taskDict -vstsAccessToken $vstsAccessToken
     $env:praval = $env:praval + "`n" + "oidc_token $oidc_token"
     $msalClientInstance = $clientBuilder.WithClientAssertion($oidc_token).Build()
 
@@ -96,17 +96,24 @@ $tokenHandler = [PSCustomObject]@{
             [string]$signalFromTask,
             [Parameter(Mandatory=$true)]
             [string]$exitSignal,
-            $taskDict
+            [Parameter(Mandatory=$true)]
+            $taskDict,
+            [Parameter(Mandatory=$true)]
+            $waitSignal,
+            [Parameter(Mandatory=$true)]
+            $sharedVar
         )
 
         $eventFromUserScript = $null
         $eventFromTask = $null
         $eventExit = $null
+        $eventTaskWaitToExecute = $null
 
         try {
             $eventFromUserScript = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromUserScript)
             $eventFromTask = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $signalFromTask)
             $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+            $eventTaskWaitToExecute = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $waitSignal)
 
             # Ensure the output file has restricted permissions
             if (-not (Test-Path $filePath)) 
@@ -137,7 +144,7 @@ $tokenHandler = [PSCustomObject]@{
             while ($true) {
                 try {
                     # Wait for either UserScript signal or Exit signal
-                    $index = [System.Threading.WaitHandle]::WaitAny(@($eventFromUserScript, $eventExit))
+                    $index = [System.Threading.WaitHandle]::WaitAny(@($eventFromUserScript, $eventTaskWaitToExecute, $eventExit))
 
                     if ($index -eq 0) 
                     {
@@ -170,7 +177,11 @@ $tokenHandler = [PSCustomObject]@{
                         $res = $eventFromTask.Set()
 
                     } 
-                    elseif ($index -eq 1) 
+                    elseif ($index -eq 1) {
+                        [System.Environment]::SetEnvironmentVariable($sharedVar, "start", [System.EnvironmentVariableTarget]::Process)
+                        $env:praval = $env:praval + "`n" + "SharedDict Set" 
+                    }
+                    elseif ($index -eq 2) 
                     {
                         $env:praval = $env:praval + "`n" + "Exiting the loop"
                         # Exit signal received
