@@ -12,6 +12,17 @@
             "options": "-R"
           }
         ]
+      },
+      {
+        "name": "Microsoft.Identity.Client",
+        "version": "4.48.0",
+        "repository": "https://www.nuget.org/api/v2/",
+        "cp": [
+            {
+                "source": "lib/net45/Microsoft.Identity.Client.dll",
+                "dest": "msal"
+            }
+        ]
       }
     ]
   },
@@ -29,14 +40,6 @@
   "common": [
     {
       "module": "../Common/Sanitizer",
-      "type": "ps"
-    },
-    {
-      "module": "../Common/VstsAzureRestHelpers_",
-      "type": "ps"
-    },
-    {
-      "module": "../Common/TlsHelper_",
       "type": "ps"
     }
   ]
