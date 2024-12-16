@@ -65,6 +65,15 @@ function Get-TaskDictionary {
     return $dictionary
 }
 
+# This method runs a parallel runspace asynchronously
+# Inside this runspace, we are dot source the AccessTokenHandler which is responsible for
+# handling the access token requests for input ADO service connection received from User script via Get-AzDoToken
+# $tokenFilePath : Shared file between user script and task script. The generated token is written to this file. The file is access controlled.
+# $signalFromUserScript : Name of the event received from user script via Get-AzDoToken indicating a token request
+# $signalFromTask : Name of the event sent by TokenHandler to Get-AzDoToken indicating the token is generated and ready to be read from the shared file.
+# $exitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler indicating the end of the task and exit.
+# $waitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler to verify if the token handler is ready to handle request.
+# sharedVar : It is an env var. When TokenHandler is ready & a wait signal is received, it will set this env var $sharedVar to "start" from "wait"
 function RunTokenHandler {
     param (
         [Parameter(Mandatory=$true)]
@@ -76,7 +85,7 @@ function RunTokenHandler {
         [Parameter(Mandatory=$true)]
         $exitSignal,
         [Parameter(Mandatory=$true)]
-        $waitSignal,
+        $waitForTokenHandlerSignal,
         [Parameter(Mandatory=$true)]
         $sharedVar
     )
@@ -86,13 +95,12 @@ function RunTokenHandler {
 
     $accessTokenHelperFilePath = "$PSScriptRoot\AccessTokenHelper.ps1"
     $taskDict = Get-TaskDictionary
-    $envVars = Get-EnvDictionary
 
     $psRunspace = [powershell]::Create().AddScript({
-        param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $envVars, $waitSignal, $sharedVar)
+        param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitForTokenHandlerSignal, $sharedVar)
         try {
             . $accessTokenHelperFilePath
-            $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitSignal, $sharedVar)
+            $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitForTokenHandlerSignal, $sharedVar)
         } catch {
             $env:praval = $env:praval + " " + $_ 
         }    
@@ -103,8 +111,7 @@ function RunTokenHandler {
     AddArgument($signalFromTask).
     AddArgument($exitSignal).
     AddArgument($taskDict).
-    AddArgument($envVars).
-    AddArgument($waitSignal).
+    AddArgument($waitForTokenHandlerSignal).
     AddArgument($sharedVar)
 
     $psRunspace.RunspacePool = $runspacePool
@@ -141,19 +148,30 @@ try {
 
     $systemAccessToken = Get-VstsTaskVariable -Name 'System.AccessToken' -Require
 
+    # Shared file between user script and task script. The generated token is written to this file. The file is access controlled.
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
     Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
     $tokenfilePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).txt")
 
+    # $signalFromUserScript : Name of the event received from user script via Get-AzDoToken indicating a token request
     $signalFromUserScript = "Global\SignalFromUserScript" + [System.Guid]::NewGuid().ToString()
+
+    # $signalFromTask : Name of the event sent by TokenHandler to Get-AzDoToken indicating the token is generated and ready to be read from the shared file.
     $signalFromTask = "Global\SignalFromTask" + [System.Guid]::NewGuid().ToString()
+
+    # $exitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler indicating the end of the task and exit.
     $exitSignal = "Global\ExitSignal" + [System.Guid]::NewGuid().ToString()
+
+    # $waitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler to verify if the token handler is ready to handle request.
     $waitSignalForRunspaceToBeReady = "Global\WaitForRunspaceToBeReady" + [System.Guid]::NewGuid().ToString()
 
     $connectedServiceName = (Get-VstsInput -Name ConnectedServiceName)
 
+    # Only run the TokenHandler logic if the input ADO Service Connection is provided
     if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
-        $sharedVar = "EnvVar_" + [System.Guid]::NewGuid().ToString("N")
+
+        # It is an env var. When TokenHandler is ready & a wait signal is received, it will set this env var $sharedVar to "start" from "wait"
+        $sharedVar = "PowershellV2Task_EnvVar_" + [System.Guid]::NewGuid().ToString("N")
         [System.Environment]::SetEnvironmentVariable($sharedVar, "wait", [System.EnvironmentVariableTarget]::Process)
 
         RunTokenHandler `
@@ -161,13 +179,17 @@ try {
             -signalFromUserScript $signalFromUserScript `
             -signalFromTask $signalFromTask `
             -exitSignal $exitSignal `
-            -waitSignal $waitSignalForRunspaceToBeReady `
+            -waitForTokenHandlerSignal $waitSignalForRunspaceToBeReady `
             -sharedVar $sharedVar
 
-        $waitSignal = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $waitSignalForRunspaceToBeReady)
+        # The below logic prevents the task script from executing further until the TokenHandler in the child runspace is ready to handle request.
+        # Every second, we are sending the waitForTokenHandlerSignal to the tokenHandler
+        # Once the tokenHandler is ready, it will read the waitForTokenHandlerSignal and modify the Env Var $sharedVar to "start" from "wait"
+        # then we can let the task script proceed.     
+        $waitForTokenHandlerSignal = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $waitSignalForRunspaceToBeReady)
         $sharedVarValue = $null
         do {
-            $res = $waitSignal.Set()
+            $res = $waitForTokenHandlerSignal.Set()
             Start-Sleep 1
             $sharedVarValue = [System.Environment]::GetEnvironmentVariable($sharedVar)
         } while ($sharedVarValue -eq "wait")
@@ -274,7 +296,17 @@ try {
         ([System.Environment]::NewLine),
         $contents);
 
-    
+    # Get-AzDoToken function returns an access token for an ADO service conn if the service conn is provided as input
+        # When the user script calls the Get-AzDoToken with ADO service conn set in task inputs,
+        # an event eventFromUserScript is sent to the tokenHandler in the task script,
+        # tokenHandler on receiving this event would 
+            # generate token
+            # write it to shared outputFile
+            # send eventFromTask indicating the token is ready to be read from the shared outputFile
+            # Incase there is an error while token generation, the error message is written to the shared outputFile.
+        # after sending the eventFromUserScript, the Get-AzDoToken method waits for 60 seconds for the tokenHandler to respond
+            # if no event is received, an exception is thrown.
+    # If the ADO service connection is not provided as input, the default System.AccessToken is returned. 
     if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
         $joinedContents = '
             $outputFile = "' + $tokenfilePath + '"
@@ -290,7 +322,7 @@ try {
                 Write-Debug "User Script: Notified Task to generate access token $tmp."
 
                 # Wait for Task to finish processing
-                $receivedResponseBool = $eventFromTask.WaitOne(30000) # Wait for up to 30 seconds
+                $receivedResponseBool = $eventFromTask.WaitOne(60000) # Wait for up to 60 seconds
                 
                 if (!$receivedResponseBool) {
                     throw "Request timed out"
@@ -442,10 +474,11 @@ catch {
 }
 finally {
     try {
-        # Signal Task to exit
+        # This signal is sent to the TokenHandler to break the infinite loop and exit
         $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
         $output = $eventExit.Set()
-        Write-Host $env:praval
+        
+        Write-Verbose $env:praval
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"

@@ -84,6 +84,23 @@ function Global:Get-WiscAccessTokenPSV2Task {
 }
 New-Alias -Name 'Get-WiscAccessTokenPSV2Task' -Value 'Global:Get-WiscAccessTokenPSV2Task' -Scope Global
 
+# This is the main tokenHandler object
+# It is responsible for handling the access token requests for input ADO service connection received from User script via Get-AzDoToken
+
+# $filePath : Shared file between user script and task script. The generated token is written to this file. The file is access controlled.
+# $signalFromUserScript : Name of the event received from user script via Get-AzDoToken indicating a token request
+# $signalFromTask : Name of the event sent by TokenHandler to Get-AzDoToken indicating the token is generated and ready to be read from the shared file.
+# $exitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler indicating the end of the task and exit.
+# $taskDict : Pre-Fetched values from the main runspace required for token generation
+# $waitSignal : Name of the event sent by the Main runspace of the taskScript to the token handler to verify if the token handler is ready to handle request.
+# sharedVar : It is an env var. When TokenHandler is ready & a wait signal is received, it will set this env var $sharedVar to "start" from "wait"
+
+# The run method 
+# First creates the shared file with path value equal to $filePath and set the access control restricted to current user only.
+# Runs an infinite loop, inside that it listens to the various signals/events received from user script and the main runspace of task script.
+# eventFromUserScript : It indicates an event from user script requesting token
+# eventTaskWaitToExecute : It indicates an event from main task runspace to set the Env Var $sharedVar to "start" from "wait"
+# exitSignal : It indicates an event from main task runspace to break the infinite loop and exit.
 $tokenHandler = [PSCustomObject]@{
 
     Run = {
@@ -115,7 +132,6 @@ $tokenHandler = [PSCustomObject]@{
             $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
             $eventTaskWaitToExecute = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $waitSignal)
 
-            # Ensure the output file has restricted permissions
             if (-not (Test-Path $filePath)) 
             {
                 New-Item -Path $filePath -ItemType File -Force
@@ -128,8 +144,6 @@ $tokenHandler = [PSCustomObject]@{
                     $currentUser, "FullControl", "Allow"
                 )
                 $acl.SetAccessRule($rule)
-
-                # Apply the ACL to the file
                 Set-Acl -Path $filePath -AclObject $acl
             } 
             else 
