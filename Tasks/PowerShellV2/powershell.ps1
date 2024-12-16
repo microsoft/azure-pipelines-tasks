@@ -301,7 +301,7 @@ try {
 
                 if (![string]::IsNullOrWhiteSpace($result.Token)) {
                     $expTime = $result.ExpirationPeriod
-                    Write-Host "Access Token Generated with expiration time of $expTime seconds"
+                    Write-Host "Access Token Generated with expiration time of $expTime minutes"
                     return $result.Token
                 }
                 else

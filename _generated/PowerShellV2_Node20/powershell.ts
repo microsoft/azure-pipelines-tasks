@@ -11,15 +11,19 @@ import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 import cp = require('child_process');
 
-const ts2PsPipePath = '/tmp/ts2ps' + uuidV4();
-const ps2TsPipePath = '/tmp/ps2ts' + uuidV4();
+const taskToUserScriptPipePath = '/tmp/ts2us' + uuidV4();
+const userScriptToTaskPipePath = '/tmp/us2ts' + uuidV4();
 
-async function startNamedPiped() {
-    const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
-    tl.debug("connectedServiceName: " + connectedServiceName);
-    
-    const pipeStream = fs.createReadStream(ps2TsPipePath);
-    const writeStream = fs.createWriteStream(ts2PsPipePath);
+/*
+    This method is responsible for serving the access token requests from user script received via Get-AzDoToken method
+    - The pipestream would keep listening to the 'Get-AzDoToken' requests
+        - For each request, it would generate the access token for the input ADO service connection and write it to the taskToUserScriptPipe
+        - If any exception is occurred during token generation, it would be written to the pipe with prefix "exception:"
+    - It terminates once any request other than 'Get-AzDoToken' comes it to.   
+*/
+async function tokenHandler(connectedServiceName : string) {
+    const pipeStream = fs.createReadStream(userScriptToTaskPipePath);
+    const writeStream = fs.createWriteStream(taskToUserScriptPipePath);
 
     pipeStream.on('data', async (data) => {
         const command = data.toString('utf8').trim();
@@ -39,8 +43,8 @@ async function startNamedPiped() {
                 tl.debug('Pipe reading ended');
                 writeStream.close();
                 pipeStream.close();
-                fs.unlinkSync(ts2PsPipePath);
-                fs.unlinkSync(ps2TsPipePath);
+                fs.unlinkSync(taskToUserScriptPipePath);
+                fs.unlinkSync(userScriptToTaskPipePath);
             } catch(err) {
                 tl.debug(`Cleanup failed : ${err.message}`);
             } 
@@ -52,8 +56,8 @@ async function startNamedPiped() {
             tl.debug('Error with pipe stream:' + err);
             writeStream.close();
             pipeStream.close();
-            fs.unlinkSync(ts2PsPipePath);
-            fs.unlinkSync(ps2TsPipePath);
+            fs.unlinkSync(taskToUserScriptPipePath);
+            fs.unlinkSync(userScriptToTaskPipePath);
         }
         catch(err) {
             tl.debug(`Cleanup failed : ${err.message}`);
@@ -153,15 +157,17 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        // Only run the token handler logic if an ADO Service connection is provided as an input.
         if(connectedServiceName && connectedServiceName.trim().length > 0)
         {
-            cp.spawnSync('mkfifo', [ts2PsPipePath]);
-            cp.spawnSync('mkfifo', [ps2TsPipePath]);
+            // FIFO pipes for comm between the Task and User Script for Service connection Access token
+            cp.spawnSync('mkfifo', [taskToUserScriptPipePath]);
+            cp.spawnSync('mkfifo', [userScriptToTaskPipePath]);
 
-            cp.spawnSync('chmod', ['600', ts2PsPipePath]);
-            cp.spawnSync('chmod', ['600', ps2TsPipePath]);
+            cp.spawnSync('chmod', ['600', taskToUserScriptPipePath]);
+            cp.spawnSync('chmod', ['600', userScriptToTaskPipePath]);
 
-            startNamedPiped();
+            tokenHandler(connectedServiceName);
         }
         
         // Get inputs
@@ -258,38 +264,50 @@ async function run() {
             `;
         }
 
+        /*
+            Adding a utility called Get-AzDoToken
+            - when an ADO Service connection is provided as an input, this function would return an access token for the same.
+                - To get the access token, user script will call this method,
+                - this method would write the request to the $us2tsPipeWriter pipe,
+                - the async TokenHandler(above) running as part of task script will read this request,
+                - after reading the request, it will generate the token and write it to the ts2usPipeReader pipe,
+                - if there were any errors/exception in generate the token, the exception message will be written starting with "exception:"
+                - this method will read the response from the TokenHandler and if not an exception message, return the token,
+                - otherwise throw an exception was the message.  
+            - If no ADO service connection is provided, this function returns the System.AccessToken. 
+        */
         if(connectedServiceName && connectedServiceName.trim().length > 0) {
             script = `
-                $ps2TsPipeWriter = $null
-                $ts2PsPipeReader = $null
+                $us2tsPipeWriter = $null
+                $ts2usPipeReader = $null
 
                 try {
-                    $ps2TsPipeWriter = [System.IO.StreamWriter]::new('${ps2TsPipePath}');
-                    $ts2PsPipeReader = [System.IO.StreamReader]::new('${ts2PsPipePath}');
+                    $us2tsPipeWriter = [System.IO.StreamWriter]::new('${userScriptToTaskPipePath}');
+                    $ts2usPipeReader = [System.IO.StreamReader]::new('${taskToUserScriptPipePath}');
 
                     function Get-AzDoToken {
-                        $ps2TsPipeWriter.WriteLine('Get-AzDoToken');
-                        $ps2TsPipeWriter.Flush();
+                        $us2tsPipeWriter.WriteLine('Get-AzDoToken');
+                        $us2tsPipeWriter.Flush();
 
-                        $token = $ts2PsPipeReader.ReadLine();
-                        $token = $token.Trim();
+                        $response = $ts2usPipeReader.ReadLine();
+                        $response = $response.Trim();
 
-                        if ($token.StartsWith("exception:")) {
-                            throw $token
+                        if ($response.StartsWith("exception:")) {
+                            throw $response
                         } 
 
-                        return $token;
+                        return $response;
                     }
 
                     ${script}
                 } finally {
-                    if($ps2TsPipeWriter) {
-                        $ps2TsPipeWriter.WriteLine('Close');
-                        $ps2TsPipeWriter.Flush();
-                        $ps2TsPipeWriter.Close();
+                    if($us2tsPipeWriter) {
+                        $us2tsPipeWriter.WriteLine('Close');
+                        $us2tsPipeWriter.Flush();
+                        $us2tsPipeWriter.Close();
                     } 
-                    if($ts2PsPipeReader) {
-                        $ts2PsPipeReader.Close();
+                    if($ts2usPipeReader) {
+                        $ts2usPipeReader.Close();
                     }
                 }
             `;
@@ -315,8 +333,6 @@ async function run() {
             contents.push(`    exit $LASTEXITCODE`);
             contents.push(`}`);
         }
-
-        
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
@@ -378,18 +394,6 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
-    } finally {
-        if(connectedServiceName && connectedServiceName.trim().length > 0) {
-            try {
-                const pipeStream = fs.createWriteStream(ps2TsPipePath);
-                if(pipeStream != null) {
-                    pipeStream.write('Close');
-                    pipeStream.close();
-                }
-            } catch (err) {
-                tl.debug("error caught in exiting");
-            }
-        }
     }
 }
 
