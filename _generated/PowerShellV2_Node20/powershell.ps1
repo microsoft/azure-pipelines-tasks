@@ -474,11 +474,12 @@ catch {
 }
 finally {
     try {
-        # This signal is sent to the TokenHandler to break the infinite loop and exit
-        $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
-        $output = $eventExit.Set()
-        
-        Write-Verbose $env:praval
+        if (![string]::IsNullOrWhiteSpace($connectedServiceName)) {
+            # This signal is sent to the TokenHandler to break the infinite loop and exit
+            $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
+            $output = $eventExit.Set()
+            Write-Verbose $env:praval
+        }
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
         Write-Host "Full Exception Object: $_"
