@@ -4,6 +4,7 @@ import fs = require('fs');
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import { Writable } from 'stream';
 
 var isWindows = os.type().match(/^Win/);
 
@@ -40,11 +41,29 @@ function getMavenExec() {
     return mvnExec;
 }
 
-function getExecOptions(): tr.IExecOptions {
+function getExecOptions(output?: { stdout: string}): tr.IExecOptions {
     var env = process.env;
-    return <tr.IExecOptions>{
+
+    var execOptions: tr.IExecOptions = output
+    ? {
+        env: env,
+        outStream: new Writable({
+            write(chunk, encoding, callback) {
+                try {
+                    output.stdout += chunk.toString();
+                    process.stdout.write(chunk);
+                    callback();
+                } catch (error) {
+                    callback(error);
+                }
+            },
+        }),
+    }
+    : {
         env: env,
     };
+
+    return execOptions;
 }
 
 /**Maven orchestration occurs as follows:
@@ -149,12 +168,17 @@ export async function execGradleBuild(args: string[]): Promise<number> {
     gradleRunner.arg('clean');
     gradleRunner.arg(args);
 
+    let runnerOutput = { stdout: ''};
+
     try {
-        await gradleRunner.exec(getExecOptions());
+        await gradleRunner.exec(getExecOptions(runnerOutput));
         // Gradle build succeeded
         return 0; // Return 0 indicating success
     } catch (err) {
-        console.error(err.message);
+        // we read stdout and return success incase of error due to test failure as later we detect test failure from PTR command
+        if (runnerOutput.stdout.includes('There were failing tests')) {
+            return 0;
+        }
         tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set the step result to Failed
         return 1; // Return 1 indicating failure
     }

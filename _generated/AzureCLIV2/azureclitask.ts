@@ -1,6 +1,7 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
@@ -37,7 +38,11 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            Utility.throwIfError(tl.execSync("az", "--version"));
+
+            const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
+            Utility.throwIfError(azVersionResult);
+            this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+
             // set az cli config dir
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
@@ -180,6 +185,37 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
     private static tenantId: string = null;
+    private static isSupportCertificateParameter: boolean = false;
+
+    private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
+        try {
+            const versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+
+            if (!versionMatch || versionMatch.length < 2) {
+                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
+                return false;
+            }
+
+            const currentVersion = versionMatch[1];
+            tl.debug(`Current Azure CLI version: ${currentVersion}`);
+
+            // Parse both versions into major, minor, patch components
+            const [currentMajor, currentMinor, currentPatch] = currentVersion.split('.').map(Number);
+            const [compareMajor, compareMinor, comparePatch] = versionToCompare.split('.').map(Number);
+
+            // Compare versions
+            if (currentMajor > compareMajor) return true;
+            if (currentMajor < compareMajor) return false;
+
+            if (currentMinor > compareMinor) return true;
+            if (currentMinor < compareMinor) return false;
+
+            return currentPatch >= comparePatch;
+        } catch (error) {
+            tl.error(`Error checking Azure CLI version: ${error.message}`);
+            return false;
+        }
+    }
 
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
@@ -211,6 +247,7 @@ export class azureclitask {
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
+            let authParam: string = "--password";
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
@@ -219,6 +256,9 @@ export class azureclitask {
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
+                if(this.isSupportCertificateParameter) {
+                    authParam = "--certificate";
+                }
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
@@ -234,10 +274,10 @@ export class azureclitask {
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             if (visibleAzLogin) {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             }
             else {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
             }
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
