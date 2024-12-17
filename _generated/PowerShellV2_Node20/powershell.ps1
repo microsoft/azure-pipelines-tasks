@@ -6,8 +6,6 @@ Import-Module Microsoft.PowerShell.Security
 
 . $PSScriptRoot\helpers.ps1
 
-$env:praval = ""
-
 function Get-EnvironmentAuthUrl {
     [CmdletBinding()]
     param(
@@ -98,12 +96,8 @@ function RunTokenHandler {
 
     $psRunspace = [powershell]::Create().AddScript({
         param($accessTokenHelperFilePath, $tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitForTokenHandlerSignal, $sharedVar)
-        try {
-            . $accessTokenHelperFilePath
-            $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitForTokenHandlerSignal, $sharedVar)
-        } catch {
-            $env:praval = $env:praval + " " + $_ 
-        }    
+        . $accessTokenHelperFilePath
+        $tokenHandler.Run.Invoke($tokenFilePath, $signalFromUserScript, $signalFromTask, $exitSignal, $taskDict, $waitForTokenHandlerSignal, $sharedVar)  
     }).
     AddArgument($accessTokenHelperFilePath).
     AddArgument($tokenFilePath).
@@ -478,7 +472,6 @@ finally {
             # This signal is sent to the TokenHandler to break the infinite loop and exit
             $eventExit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::AutoReset, $exitSignal)
             $output = $eventExit.Set()
-            Write-Verbose $env:praval
         }
         Trace-VstsLeavingInvocation $MyInvocation
     } catch {
