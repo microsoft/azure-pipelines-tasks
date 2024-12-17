@@ -16,8 +16,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 247,
+    "Major": 5,
+    "Minor": 249,
     "Patch": 0
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -634,6 +634,8 @@
     "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
     "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
     "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+    "PackageDeploymentInitiatedWithOneDeploy": "Package deployment using One Deploy initiated.",
+    "OneDeployWithIncrementalDeploymentOption": "Deploying using incremental deployment.",
     "WarPackageDeploymentInitiated": "Package deployment using WAR Deploy initiated.",
     "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
     "GoExeNameNotPresent": "Go exe name is not present",

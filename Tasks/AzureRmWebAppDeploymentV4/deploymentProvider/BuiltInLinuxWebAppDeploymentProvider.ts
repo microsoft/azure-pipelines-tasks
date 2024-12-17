@@ -3,6 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import { DeploymentType } from '../operations/TaskParameters';
 
 var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
@@ -52,19 +53,37 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
+
+        var zipDeploy: boolean = this.taskParams.DeploymentType === DeploymentType.zipDeploy;
+        var isClean: boolean = !this.taskParams.AdditionalArguments.includes("-clean:false");
+        if (!zipDeploy && !isClean) {
+            console.log(tl.loc('OneDeployWithIncrementalDeploymentOption'));
+        }
         
         switch(packageType){
             case PackageType.folder:
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
-                    { slotName: this.appService.getSlot() });
+                if (zipDeploy) {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
+                        { slotName: this.appService.getSlot() }, true);
+                }
+                else {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(archivedWebPackage, isClean, this.taskParams.TakeAppOfflineFlag, 
+                        { slotName: this.appService.getSlot() }, 'Zip', true);
+                }
                     
             break;
             case PackageType.zip:
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
+                if (zipDeploy) {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
+                        { slotName: this.appService.getSlot() }, true);
+                }
+                else {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(this.taskParams.Package.getPath(), isClean, this.taskParams.TakeAppOfflineFlag, 
+                        { slotName: this.appService.getSlot() }, 'Zip', true);
+                }
                 
             break;
 
@@ -74,8 +93,14 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
                 var webPackage = output.webDeployPkg;
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
+                if (zipDeploy) {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
+                        { slotName: this.appService.getSlot() }, true);
+                }
+                else {
+                    this.zipDeploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, isClean, this.taskParams.TakeAppOfflineFlag,
+                        { slotName: this.appService.getSlot() }, 'Jar', true);
+                }
                
             break;
 
