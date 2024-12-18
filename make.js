@@ -446,7 +446,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir, isServerBuild);
+                    buildNodeTask(modPath, modOutDir, isServerBuild, !argv.npmInstallOnly);
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -508,7 +508,7 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
 
     // build Node task
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir, isServerBuild);
+        buildNodeTask(taskPath, outDir, isServerBuild, !argv.npmInstallOnly);
     }
 
     // remove the hashes for the common packages, they change every build
@@ -529,10 +529,14 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
         fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
     }
 
-    // copy default resources and any additional resources defined in the task's make.json
-    console.log();
-    console.log('> copying task resources');
-    copyTaskResources(taskMake, taskPath, outDir);
+    if(argv.npmInstallOnly) {
+        console.warn('> Skipping copying task resources for task ' + taskName + " due to --npmInstallOnly specified");
+    } else {
+        // copy default resources and any additional resources defined in the task's make.json
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
+    }
 
     if (removeNodeModules) {
         const taskNodeModulesPath = path.join(taskPath, 'node_modules');

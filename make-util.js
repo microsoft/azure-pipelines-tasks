@@ -154,7 +154,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir, isServerBuild) {
+var buildNodeTask = function (taskPath, outDir, isServerBuild, npmInstallOnly) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -191,14 +191,18 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         cd(taskPath);
     }
 
-    // Use the tsc version supplied by the task if it is available, otherwise use the global default.
-    if (overrideTscPath) {
-        var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
-        // Don't include typescript in node_modules
-        rm("-rf", overrideTscPath);
+    if(npmInstallOnly) {
+        // Use the tsc version supplied by the task if it is available, otherwise use the global default.
+        if (overrideTscPath) {
+            var tscExec = path.join(overrideTscPath, "bin", "tsc");
+            run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+            // Don't include typescript in node_modules
+            rm("-rf", overrideTscPath);
+        } else {
+            run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        }
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        console.warn("> Skipping node tsc for task  due to --npmInstallOnly specified");
     }
 
     cd(originalDir);
