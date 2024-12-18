@@ -349,5 +349,9 @@
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
     "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
     "UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
+  },
+  "_buildConfigMapping": {
+    "Default": "4.250.0",
+    "Node20-225": "4.250.1"
   }
 }

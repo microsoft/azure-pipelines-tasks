@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 249,
-    "Patch": 0
+    "Minor": 250,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
@@ -355,7 +355,7 @@
     "UnableToExtractGradleVersion": "ms-resource:loc.messages.UnableToExtractGradleVersion"
   },
   "_buildConfigMapping": {
-    "Default": "4.248.0",
-    "Node20-225": "4.249.0"
+    "Default": "4.250.0",
+    "Node20-225": "4.250.1"
   }
 }

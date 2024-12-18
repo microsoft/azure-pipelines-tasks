@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 249,
-    "Patch": 0
+    "Minor": 250,
+    "Patch": 1
   },
   "releaseNotes": "The Code Coverage option is deprecated. Refer to the [PublishCodeCoverageResultsV2 Task] (https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines) to get code coverage results.",
   "demands": [],
@@ -355,7 +355,7 @@
     "UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
   },
   "_buildConfigMapping": {
-    "Default": "4.248.0",
-    "Node20-225": "4.249.0"
+    "Default": "4.250.0",
+    "Node20-225": "4.250.1"
   }
 }
