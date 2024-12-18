@@ -27,14 +27,7 @@ export async function executePythonTests(testsToBeExecuted: string[]):Promise<nu
             tl.debug(`Test ${test} not found in discovered tests`);
         }
         else{
-            try{
-                testsToRun.push(testStringtoFQNMap.get(test));
-            }
-            catch (err){
-                console.log(err);
-                console.log(String(err));
-                testsToRun.concat([`'${testStringtoFQNMap.get(test)}'`]);
-            }
+            testsToRun.push(testStringtoFQNMap.get(test));
         }
     }
 
