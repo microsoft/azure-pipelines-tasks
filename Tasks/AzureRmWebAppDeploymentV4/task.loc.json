@@ -16,8 +16,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 247,
+    "Major": 5,
+    "Minor": 249,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -634,6 +634,8 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "PackageDeploymentInitiatedWithOneDeploy": "ms-resource:loc.messages.PackageDeploymentInitiatedWithOneDeploy",
+    "OneDeployWithIncrementalDeploymentOption": "ms-resource:loc.messages.OneDeployWithIncrementalDeploymentOption",
     "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
