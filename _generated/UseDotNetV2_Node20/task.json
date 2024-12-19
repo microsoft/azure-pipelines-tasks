@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 248,
+    "Minor": 250,
     "Patch": 1
   },
   "satisfies": [
@@ -78,6 +78,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)"
+    },
+    {
+      "name": "checkDotnetCLI",
+      "type": "boolean",
+      "label": "Check is version installed via dotnet",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Select if you want to check is version already installed via dotnet CLI",
+      "groupName": "advanced"
     },
     {
       "name": "includePreviewVersions",
@@ -207,7 +216,8 @@
     "DepricatedVersionNetCore": "NET Core version you specfied %s is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy."
   },
   "_buildConfigMapping": {
-    "Default": "2.248.0",
-    "Node20_229_3": "2.248.1"
+    "Default": "2.250.0",
+    "LocalPackages": "2.249.4",
+    "Node20_229_3": "2.250.1"
   }
 }
