@@ -47,6 +47,7 @@
         "AzureResourceManagerTemplateDeploymentV3",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
+        "AzureRmWebAppDeploymentV5",
         "AzureSpringCloudV0",
         "AzureStaticWebAppV0",
         "AzureWebAppV1",
