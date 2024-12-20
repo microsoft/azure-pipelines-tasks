@@ -157,11 +157,9 @@ function getGithubEndPointToken(): string {
 
     switch (githubEndpointObject.scheme) {
       case 'PersonalAccessToken':
-        console.log("pat...");
         githubEndpointToken = githubEndpointObject.parameters.accessToken;
         break;
       case 'OAuth':
-        console.log("Oauth...");
         githubEndpointToken = githubEndpointObject.parameters.accessToken;
         break;
       case 'Token':
