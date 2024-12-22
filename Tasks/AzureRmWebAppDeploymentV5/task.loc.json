@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 249,
+    "Minor": 250,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -34,6 +34,12 @@
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
       "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+    },
+    {
+      "name": "AdditionalDeploymentOptionsLinux",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsLinux",
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind = webAppLinux"
     },
     {
       "name": "PostDeploymentAction",
@@ -448,6 +454,29 @@
       "defaultValue": "",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+    },
+    {
+      "name": "DeploymentTypeLinux",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentTypeLinux",
+      "defaultValue": "oneDeploy",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptionsLinux",
+      "options": {
+        "oneDeploy": "One Deploy",
+        "zipDeploy": "Zip Deploy"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentTypeLinux"
+    },
+    {
+      "name": "CleanDeploymentFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanDeploymentFlag",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "AdditionalDeploymentOptionsLinux",
+      "visibleRule": "DeploymentTypeLinux == oneDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.CleanDeploymentFlag"
     }
   ],
   "outputVariables": [

@@ -3,7 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
-import { DeploymentType } from '../operations/TaskParameters';
+import { DeploymentTypeLinux } from '../operations/TaskParameters';
 
 var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
@@ -54,8 +54,8 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             await this.kuduServiceUtility.warmpUp();
         }
 
-        var zipDeploy: boolean = this.taskParams.DeploymentType === DeploymentType.zipDeploy;
-        var isClean: boolean = !this.taskParams.AdditionalArguments.includes("-clean:false");
+        var zipDeploy: boolean = this.taskParams.DeploymentTypeLinux === DeploymentTypeLinux.zipDeploy;
+        var isClean: boolean = this.taskParams.CleanDeploymentFlag;
         if (!zipDeploy && !isClean) {
             console.log(tl.loc('OneDeployWithIncrementalDeploymentOption'));
         }
