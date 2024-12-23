@@ -1,4 +1,9 @@
-﻿$CopyJob = {
+﻿$featureFlags = @{
+    ModifyNumberOfRetriesInRobocopy = [System.Convert]::ToBoolean($env:MODIFY_NUMBER_OF_RETRIES_IN_ROBOCOPY)
+} 
+$ModifyRoboCopyRetries= $featureFlags.ModifyNumberOfRetriesInRobocopy
+
+$CopyJob = {
 param (
     [string]$fqdn, 
     [string]$sourcePath,
@@ -101,7 +106,12 @@ param (
 
     function Clean-Target
     {
-        $cleanupArgument = "/NOCOPY /E /PURGE" 
+        if(-not $ModifyRoboCopyRetries){
+          $cleanupArgument = "/NOCOPY /E /PURGE" 
+        }
+        else{
+          $cleanupArgument = "/NOCOPY /E /PURGE /R:3 " 
+        }
         $guid = [GUID]::NewGuid()
         $tempDirectory = "$scriptRoot\temp$guid" 
         New-Item -ItemType Directory -Force -Path $tempDirectory         
@@ -128,7 +138,12 @@ param (
         [switch]$fileCopy
         )
     {
-        $robocopyParameters = "/COPY:DAT "
+        if(-not $ModifyRoboCopyRetries){
+          $robocopyParameters = "/COPY:DAT "
+        }
+        else{
+          $robocopyParameters = "/COPY:DAT /R:3 "
+        }
 
         if(-not $fileCopy.IsPresent)
         {
