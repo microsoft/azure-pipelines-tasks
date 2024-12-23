@@ -38,10 +38,14 @@ export class VersionInstaller {
                 var downloadPath = await toolLib.downloadToolWithRetries(downloadUrl)
             }
             catch (ex) {
-                tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
-                let fallBackUrl = `https://dotnetcli.azureedge.net/dotnet/${this.packageType === "runtime" ? "Runtime" : "Sdk"}/${version}/${downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1)}`;
-                console.log("Using fallback url for download: " + fallBackUrl);
-                var downloadPath = await toolLib.downloadToolWithRetries(fallBackUrl)
+                try {
+                    console.log("download exception");
+                    tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
+                    var downloadPath = await this.downloadFromFallbackUrl("https://builds.dotnet.microsoft.com/dotnet", this.packageType, version, downloadUrl);
+                } catch(ex) {
+                    tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
+                    var downloadPath = await this.downloadFromFallbackUrl("https://dotnetcli.azureedge.net/dotnet", this.packageType, version, downloadUrl);
+                }
             }
 
             // Extract
@@ -174,6 +178,13 @@ export class VersionInstaller {
         }
 
         throw tl.loc("FileNameNotCorrectCompleteFileName", name);
+    }
+
+    private async downloadFromFallbackUrl(fallBackUrl: string, packageType: string, version: string, downloadUrl: string) : Promise<string> {
+        let url = `${fallBackUrl}/${packageType === "runtime" ? "Runtime" : "Sdk"}/${version}/${downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1)}`;
+        console.log("Using fallback url for download: " + url);
+        var downloadPath = await toolLib.downloadToolWithRetries(url)
+        return downloadPath;
     }
 
     private packageType: string;
