@@ -320,4 +320,4 @@ export class DotNetCoreVersionFetcher {
     }
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";

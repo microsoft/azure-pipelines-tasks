@@ -8,7 +8,7 @@
   "loc.input.label.packageType": "インストールするパッケージ",
   "loc.input.help.packageType": "ランタイムのみをインストールするか、SDK をインストールするかを選択してください。",
   "loc.input.label.version": "バージョン",
-  "loc.input.help.version": "インストールする .NET Core SDK またはランタイムのバージョンを指定します。<br/>バージョンは以下の形式で指定できます<li>2.x   => メジャー バージョンが最新のものをインストールします。</li><li>2.2.x => メジャー バージョンとマイナー バージョンが最新のものをインストールします</li><li>2.2.104 => バージョンが正確に一致するものをインストールします</li><br/>SDK またはランタイムをインストールするために release.json で `version` の値を探します。その major.minor バージョンの releases.json へのリンクは [**releases-index ファイル**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json)から分かります。たとえば、2.2 バージョンの releases.json へのリンクは https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json です",
+  "loc.input.help.version": "インストールする .NET Core SDK またはランタイムのバージョンを指定します。<br/>バージョンは以下の形式で指定できます<li>2.x   => メジャー バージョンが最新のものをインストールします。</li><li>2.2.x => メジャー バージョンとマイナー バージョンが最新のものをインストールします</li><li>2.2.104 => バージョンが正確に一致するものをインストールします</li><br/>SDK またはランタイムをインストールするために release.json で `version` の値を探します。その major.minor バージョンの releases.json へのリンクは [**releases-index ファイル**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)から分かります。たとえば、2.2 バージョンの releases.json へのリンクは https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json です",
   "loc.input.label.includePreviewVersions": "プレビュー バージョンを含める",
   "loc.input.help.includePreviewVersions": "2.2.x を検索するときのように最新バージョンを検索するときにプレビュー バージョンを含める場合に選択します。次のように正確なバージョンを指定する場合、この設定は無視されます: 3.0.100-preview3-010431",
   "loc.input.label.installationPath": ".Net Core をインストールするパス",
