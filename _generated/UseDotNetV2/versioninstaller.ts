@@ -39,7 +39,6 @@ export class VersionInstaller {
             }
             catch (ex) {
                 try {
-                    console.log("download exception");
                     tl.warning(tl.loc("CouldNotDownload", downloadUrl, ex));
                     var downloadPath = await this.downloadFromFallbackUrl("https://builds.dotnet.microsoft.com/dotnet", this.packageType, version, downloadUrl);
                 } catch(ex) {

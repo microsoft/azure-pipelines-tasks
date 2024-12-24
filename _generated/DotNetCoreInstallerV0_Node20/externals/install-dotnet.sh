@@ -658,22 +658,22 @@ install_dotnet() {
     say_verbose "Zip path: $zip_path"
 
     say "Downloading link: $download_link"
-    download "$download_link" $zip_path || fallback_download_failed=true
+    download "$download_link" $zip_path || download_failed=true
 
     say_verbose "download_failed: $download_failed"
-    say_verbose "valid_legacy_download_link: $valid_legacy_download_link"
 
-    if [ "$fallback_download_failed" = true ]; then
+    if [ "$download_failed" = true ]; then
         say "Cannot download: $download_link"
         download_link=$fallback_download_link
         zip_path=$(mktemp $temporary_file_template)
         say_verbose "Fallback zip path: $zip_path"
         say "Downloading fallback link: $download_link"
-        download "$download_link" $zip_path || download_failed=true
+        download "$download_link" $zip_path || fallback_download_failed=true
     fi
 
+    say_verbose "valid_legacy_download_link: $valid_legacy_download_link"
     #  if the download fails, download the legacy_download_link
-    if [ "$download_failed" = true ] && [ "$valid_legacy_download_link" = true ]; then
+    if [ "$fallback_download_failed" = true ] && [ "$valid_legacy_download_link" = true ]; then
         say "Cannot download: $download_link"
         download_link=$legacy_download_link
         zip_path=$(mktemp $temporary_file_template)

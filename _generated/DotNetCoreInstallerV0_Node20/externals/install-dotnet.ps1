@@ -495,7 +495,7 @@ catch {
         Say "Downloading fallback link: $FallbackDownloadLink"
         DownloadFile -Uri $FallbackDownloadLink -OutPath $ZipPath
     } catch {
-        Say "Cannot download: $DownloadLink"
+        Say "Cannot download: $FallbackDownloadLink"
         $DownloadLink = $LegacyDownloadLink
         $ZipPath = [System.IO.Path]::GetTempFileName()
         Say-Verbose "Legacy zip path: $ZipPath"
