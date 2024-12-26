@@ -1,12 +1,13 @@
 {
   "rm": [
-      {
-          "items": [
-              "node_modules/https-proxy-agent/node_modules/agent-base",
-              "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base"
-          ],
-          "options": "-Rf"
-      }
+    {
+      "items": [
+        "node_modules/https-proxy-agent/node_modules/agent-base",
+        "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
+        "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
+      ],
+      "options": "-Rf"
+    }
   ],
   "common": [
     {
@@ -106,6 +107,14 @@
         "archiveName": "symbol.zip",
         "url": "https://vstsagenttools.blob.core.windows.net/tools/symstore/2/symbol.zip",
         "dest": "./"
+      },
+      {
+        "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/c.zip",
+        "dest": "./ArtifactsCredProvider/"
+      },
+      {
+        "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/n6.zip",
+        "dest": "./ArtifactsCredProviderNet6/"
       }
     ]
   },

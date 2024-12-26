@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 250,
-    "Patch": 2
+    "Minor": 251,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,23 @@
     }
   ],
   "inputs": [
+    {
+      "name": "AzureDevOpsServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "helpMarkDown": "Name of the AzureDevOps service connection."
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "Reinstall the credential provider even if already installed",
+      "defaultValue": "false",
+      "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
+    },
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
@@ -258,7 +275,7 @@
     "ManifestFileNotFound": "Manifest file not found at '{0}'."
   },
   "_buildConfigMapping": {
-    "Default": "2.250.2",
-    "Node20_229_14": "2.250.3"
+    "Default": "2.251.0",
+    "Node20_229_14": "2.251.1"
   }
 }

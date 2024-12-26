@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 250,
-    "Patch": 3
+    "Minor": 251,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,24 @@
     }
   ],
   "inputs": [
+    {
+      "name": "AzureDevOpsServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureDevOpsServiceConnection",
+      "label": "ms-resource:loc.input.label.AzureDevOpsServiceConnection"
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
+    },
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
@@ -266,7 +284,7 @@
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "2.250.2",
-    "Node20_229_14": "2.250.3"
+    "Default": "2.251.0",
+    "Node20_229_14": "2.251.1"
   }
 }

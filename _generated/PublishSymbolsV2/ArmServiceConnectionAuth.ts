@@ -1,5 +1,4 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if(nodeVersion < 16) {
@@ -9,7 +8,7 @@ if(nodeVersion < 16) {
 import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
-export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+export async function getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(connectedService: string): Promise<string> {
 
   // workloadidentityfederation
   const authorizationScheme = tl
