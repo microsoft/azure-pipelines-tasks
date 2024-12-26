@@ -9,7 +9,7 @@ if(nodeVersion < 16) {
 import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
-export async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
+export async function getAccessTokenViaWIFederationUsingADOServiceConnection(connectedService: string): Promise<string> {
 
   // workloadidentityfederation
   const authorizationScheme = tl

@@ -26,6 +26,15 @@
   ],
   "inputs": [
     {
+      "name": "AzureDevOpsServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "Azure Resource Manager connection",

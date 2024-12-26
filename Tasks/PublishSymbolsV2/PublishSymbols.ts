@@ -5,7 +5,8 @@ import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/univers
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import { getAccessTokenViaWorkloadIdentityFederation } from './Auth';
+import * as ARMserviceConnectionAuth from './ArmServiceConnectionAuth';
+import * as ADOserviceConnectionAuth from './ADOServiceConnectionAuth';
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if(nodeVersion < 16) {
@@ -39,6 +40,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
         const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+        const azureDevOpsServiceConnection = tl.getInput("AzureDevOpsServiceConnection", false);
         const manifest = tl.getInput("Manifest", false); 
         if(manifest && !fileExists(manifest)) {
             throw new Error(tl.loc("ManifestFileNotFound", manifest));
@@ -50,9 +52,13 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
         tl.debug("connectedServiceName: " + connectedServiceName);
 
-        if(connectedServiceName){
+        if(azureDevOpsServiceConnection){
+            tl.debug("AzureDevOpsServiceConnection: " + azureDevOpsServiceConnection);
+            personalAccessToken = await ADOserviceConnectionAuth.getAccessTokenViaWIFederationUsingADOServiceConnection(connectedServiceName);
+        }
+        else if(connectedServiceName){
             tl.debug("connectedServiceName: " + connectedServiceName);
-            personalAccessToken = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
+            personalAccessToken = await ARMserviceConnectionAuth.getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(connectedServiceName);
         }
         else if (AsAccountName) {
             tl.debug("AsAccountName: " + AsAccountName);
