@@ -1,85 +1,55 @@
-import * as tl from "azure-pipelines-task-lib/task";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
-
-const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
-if(nodeVersion < 16) {
-    tl.error(tl.loc('NodeVersionSupport', nodeVersion));
-}
-
-import * as msal from "@azure/msal-node";
-import { getFederatedToken } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
+import { default as fetch } from 'node-fetch';
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 
 export async function getAccessTokenViaWIFederationUsingADOServiceConnection(connectedService: string): Promise<string> {
 
-  // workloadidentityfederation
-  const authorizationScheme = tl
-    .getEndpointAuthorizationSchemeRequired(connectedService)
-    .toLowerCase();
+  let forceReinstallCredentialProvider = null;
+  try {
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-  // get token using workload identity federation or managed service identity
-  if (authorizationScheme !== "workloadidentityfederation") {
-    throw new Error(`Authorization scheme ${authorizationScheme} is not supported.`);
+    const ADOResponse: { oidcToken: String } = await (await fetch(process.env["SYSTEM_OIDCREQUESTURI"] + "?api-version=7.1&serviceConnectionId=" + connectedService, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + process.env["SYSTEM_ACCESSTOKEN"]
+      }
+    })).json() as { oidcToken: String };
+
+    let tenant = tl.getEndpointAuthorizationParameterRequired(connectedService, "TenantId");
+    let entraURI = "https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token"; // let entraURI = "https://login.windows-ppe.net/"+tenant+"/oauth2/v2.0/token";
+
+    let clientId = tl.getEndpointAuthorizationParameterRequired(connectedService, "ServicePrincipalId");
+
+    let body = {
+      'scope': "499b84ac-1321-427f-aa17-267ca6975798/.default",
+      'client_id': clientId,
+      'client_assertion_type': "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+      'client_assertion': ADOResponse.oidcToken,
+      'grant_type': "client_credentials"
+    };
+    let formBody = Object.keys(body)
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
+      .join('&');
+
+    const entraResponse: { access_token: string } = await (await fetch(entraURI, {
+      method: 'POST',
+      body: formBody,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })).json() as { access_token: string };
+
+    return await entraResponse.access_token;
+
+  } catch (error) {
+    tl.setResult(tl.TaskResult.Failed, error);
+
+  } finally {
+
+    emitTelemetry("ArtifactCore", "PublishSymbolsV2", {
+      'PublishSymbolsV2.ForceReinstallCredentialProvider': forceReinstallCredentialProvider
+    });
   }
-
-  // use azure devops webapi to get federated token using service connection
-  var servicePrincipalId: string =
-    tl.getEndpointAuthorizationParameterRequired(connectedService, "serviceprincipalid");
-
-  var servicePrincipalTenantId: string =
-    tl.getEndpointAuthorizationParameterRequired(connectedService, "tenantid");
-
-  const authorityUrl =
-    tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
-
-  tl.debug(`Getting federated token for service connection ${connectedService}`);
-
-  var federatedToken: string = await getFederatedToken(connectedService);
-
-  tl.debug(`Got federated token for service connection ${connectedService}`);
-
-  // exchange federated token for service principal token (below)
-  return await getAccessTokenFromFederatedToken(servicePrincipalId, servicePrincipalTenantId, federatedToken, authorityUrl);
-}
-
-async function getAccessTokenFromFederatedToken(
-  servicePrincipalId: string,
-  servicePrincipalTenantId: string,
-  federatedToken: string,
-  authorityUrl: string
-): Promise<string> {
-  const AzureDevOpsResourceId = "499b84ac-1321-427f-aa17-267ca6975798";
-
-  // use msal to get access token using service principal with federated token
-  tl.debug(`Using authority url: ${authorityUrl}`);
-  tl.debug(`Using resource: ${AzureDevOpsResourceId}`);
-
-  const config: msal.Configuration = {
-    auth: {
-      clientId: servicePrincipalId,
-      authority: `${authorityUrl.replace(/\/+$/, "")}/${servicePrincipalTenantId}`,
-      clientAssertion: federatedToken,
-    },
-    system: {
-      loggerOptions: {
-        loggerCallback: (level, message, containsPii) => {
-          tl.debug(message);
-        },
-        piiLoggingEnabled: false,
-        logLevel: msal.LogLevel.Verbose,
-      },
-    },
-  };
-
-  const app = new msal.ConfidentialClientApplication(config);
-
-  const request: msal.ClientCredentialRequest = {
-    scopes: [`${AzureDevOpsResourceId}/.default`],
-    skipCache: true,
-  };
-
-  const result = await app.acquireTokenByClientCredential(request);
-
-  tl.debug(`Got access token for service principal ${servicePrincipalId}`);
-
-  return result?.accessToken;
 }

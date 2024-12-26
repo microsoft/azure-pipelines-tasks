@@ -5,7 +5,7 @@ import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/univers
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import * as ARMserviceConnectionAuth from './ArmServiceConnectionAuth';
+import * as ARMServiceConnectionAuth from './ARMServiceConnectionAuth';
 import * as ADOserviceConnectionAuth from './ADOServiceConnectionAuth';
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -39,7 +39,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
-        const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+        const armConnectedServiceName = tl.getInput("ConnectedServiceName", false);
         const azureDevOpsServiceConnection = tl.getInput("AzureDevOpsServiceConnection", false);
         const manifest = tl.getInput("Manifest", false); 
         if(manifest && !fileExists(manifest)) {
@@ -50,15 +50,18 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.debug("Manifest file found at: " + manifest);
         }
 
-        tl.debug("connectedServiceName: " + connectedServiceName);
+        tl.debug("connectedServiceName: " + armConnectedServiceName);
+        tl.debug("AzureDevOpsServiceConnection: " + azureDevOpsServiceConnection);
 
         if(azureDevOpsServiceConnection){
+            //AzureDevOps service connection
             tl.debug("AzureDevOpsServiceConnection: " + azureDevOpsServiceConnection);
-            personalAccessToken = await ADOserviceConnectionAuth.getAccessTokenViaWIFederationUsingADOServiceConnection(connectedServiceName);
+            personalAccessToken = await ADOserviceConnectionAuth.getAccessTokenViaWIFederationUsingADOServiceConnection(azureDevOpsServiceConnection);
         }
-        else if(connectedServiceName){
-            tl.debug("connectedServiceName: " + connectedServiceName);
-            personalAccessToken = await ARMserviceConnectionAuth.getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(connectedServiceName);
+        else if(armConnectedServiceName){
+            //ARM service connection
+            tl.debug("connectedServiceName: " + armConnectedServiceName);
+            personalAccessToken = await ARMserviceConnectionAuth.getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(armConnectedServiceName);
         }
         else if (AsAccountName) {
             tl.debug("AsAccountName: " + AsAccountName);

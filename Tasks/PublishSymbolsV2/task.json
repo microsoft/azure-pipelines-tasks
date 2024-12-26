@@ -32,7 +32,15 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "True"
-      }
+      },
+      "helpMarkDown": "Name of the AzureDevOps service connection."
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "Reinstall the credential provider even if already installed",
+      "defaultValue": "false",
+      "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
     },
     {
       "name": "ConnectedServiceName",

@@ -26,6 +26,21 @@
   ],
   "inputs": [
     {
+      "name": "AzureDevOpsServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "label": "ms-resource:loc.input.label.AzureDevOpsServiceConnection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AzureDevOpsServiceConnection"
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ForceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ForceReinstallCredentialProvider"
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
@@ -255,6 +270,7 @@
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
     "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport",
-    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound"
+    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
+    "AzureDevOpsServiceConnection": "ms-resource:loc.messages.AzureDevOpsServiceConnection"
   }
 }
