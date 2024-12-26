@@ -1,5 +1,4 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if(nodeVersion < 16) {

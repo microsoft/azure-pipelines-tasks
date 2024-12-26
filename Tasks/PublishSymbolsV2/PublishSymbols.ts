@@ -5,7 +5,7 @@ import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/univers
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import * as ARMServiceConnectionAuth from './ARMServiceConnectionAuth';
+import * as ArmServiceConnectionAuth from './ArmServiceConnectionAuth';
 import * as ADOserviceConnectionAuth from './ADOServiceConnectionAuth';
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -61,7 +61,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
         else if(armConnectedServiceName){
             //ARM service connection
             tl.debug("connectedServiceName: " + armConnectedServiceName);
-            personalAccessToken = await ARMserviceConnectionAuth.getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(armConnectedServiceName);
+            personalAccessToken = await ArmServiceConnectionAuth.getAccessTokenViaWorkloadIdentityFederationUsingARMServiceConnection(armConnectedServiceName);
         }
         else if (AsAccountName) {
             tl.debug("AsAccountName: " + AsAccountName);

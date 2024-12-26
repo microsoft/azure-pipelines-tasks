@@ -1,4 +1,3 @@
-import { default as fetch } from 'node-fetch';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
