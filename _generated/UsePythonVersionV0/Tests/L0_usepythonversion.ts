@@ -98,3 +98,33 @@ it('sets PATH correctly on Windows', async function () {
     assert(prependPathSafe.calledWithExactly(expectedUserScripts));
     assert(prependPathSafe.calledThrice);
 });
+
+it('sets PATH correctly on Mac', async function () {
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
+
+    const findLocalTool = sinon.stub().returns('findLocalTool');
+    libMocker.registerMock('azure-pipelines-tool-lib/tool', {
+        findLocalTool
+    });
+
+    const prependPathSafe = sinon.spy();
+    libMocker.registerMock('./toolutil', {
+        prependPathSafe
+    });
+
+    const uut = reload();
+    const parameters: TaskParameters = {
+        versionSpec: '3.6',
+        disableDownloadFromRegistry: false,
+        allowUnstable: true,
+        addToPath: true,
+        architecture: 'arm64',
+        githubToken: 'testgithubtoken'
+    };
+
+    await uut.usePythonVersion(parameters, Platform.MacOS);
+    assert(findLocalTool.calledOnceWithExactly('Python', '3.6', 'arm64'));
+    assert(prependPathSafe.calledWithExactly('findLocalTool'));
+    assert(prependPathSafe.calledWithExactly(path.join('findLocalTool', 'bin')));
+    assert(prependPathSafe.calledTwice);
+});

@@ -78,7 +78,8 @@
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     }
   ],
@@ -89,10 +90,6 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
