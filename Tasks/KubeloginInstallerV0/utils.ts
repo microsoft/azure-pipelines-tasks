@@ -146,31 +146,39 @@ export async function unzipRelease(zipPath: string): Promise<string> {
 }
 
 function getGithubEndPointToken(): string {
-    const githubEndpoint = taskLib.getInput("gitHubConnection", false);
-    const githubEndpointObject = taskLib.getEndpointAuthorization(githubEndpoint, true);
-    let githubEndpointToken: string = null;
+  const githubEndpoint = taskLib.getInput("gitHubConnection", false);
+  const githubEndpointObject = taskLib.getEndpointAuthorization(githubEndpoint, true);
+  let githubEndpointToken: string = null;
 
-    if (!githubEndpointObject) {
-      throw new Error(taskLib.loc("Failed to retrieve GitHub endpoint object."));
-    }
-    taskLib.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+  if (!githubEndpointObject) {
+    throw new GitHubEndpointError(taskLib.loc("Failed to retrieve GitHub endpoint object."));
+  }
+  taskLib.debug("Endpoint scheme: " + githubEndpointObject.scheme);
 
-    switch (githubEndpointObject.scheme) {
-      case 'PersonalAccessToken':
-        githubEndpointToken = githubEndpointObject.parameters.accessToken;
-        break;
-      case 'OAuth':
-        githubEndpointToken = githubEndpointObject.parameters.accessToken;
-        break;
-      case 'Token':
-        githubEndpointToken = githubEndpointObject.parameters.accessToken;
-        break;
-      default:
-        throw new Error(
-          taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme)
-        );
-    }
-    return githubEndpointToken;   
+  switch (githubEndpointObject.scheme) {
+    case 'PersonalAccessToken':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    case 'OAuth':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    case 'Token':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    default:
+      throw new Error(
+        taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme)
+      );
+  }
+  return githubEndpointToken;
+}
+
+class GitHubEndpointError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GitHubEndpointError";
+    Object.setPrototypeOf(this, GitHubEndpointError.prototype);
+  }
 }
 
 export function getKubeloginPath(inputPath: string, fileName: string): string | undefined {
