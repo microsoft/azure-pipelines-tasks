@@ -154,7 +154,7 @@ function getGithubEndPointToken(): string {
   let githubEndpointToken: string = null;
 
   if (!githubEndpointObject) {
-    throw new GitHubEndpointError(taskLib.loc("Failed to retrieve GitHub endpoint object."));
+    throw new GitHubEndpointObjectError(taskLib.loc("Failed to retrieve GitHub endpoint object."));
   }
   taskLib.debug("Endpoint scheme: " + githubEndpointObject.scheme);
 
@@ -169,18 +169,26 @@ function getGithubEndPointToken(): string {
       githubEndpointToken = githubEndpointObject.parameters.accessToken;
       break;
     default:
-      throw new Error(
+      throw new GitHubEndpointSchemeError(
         taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme)
       );
   }
   return githubEndpointToken;
 }
 
-class GitHubEndpointError extends Error {
+class GitHubEndpointObjectError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "GitHubEndpointError";
-    Object.setPrototypeOf(this, GitHubEndpointError.prototype);
+    this.name = "GitHubEndpointObjectError";
+    Object.setPrototypeOf(this, GitHubEndpointObjectError.prototype);
+  }
+}
+
+class GitHubEndpointSchemeError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GitHubEndpointSchemeError";
+    Object.setPrototypeOf(this, GitHubEndpointSchemeError.prototype);
   }
 }
 
