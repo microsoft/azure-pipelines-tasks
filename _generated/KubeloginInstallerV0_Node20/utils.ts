@@ -53,6 +53,9 @@ function addAuthorizationHeaderIfEnabled(request: webClient.WebRequest): void {
     if (token) {
       request.headers['Authorization'] = 'token ' + token;
     }
+    else {
+      taskLib.warning('The GitHub token is empty. API calls may fail without proper authentication');
+    }
   }
 }
 
