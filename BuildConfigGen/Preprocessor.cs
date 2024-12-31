@@ -1,4 +1,6 @@
-﻿using System;
+﻿// todo: ban #elseif - it makes merging configs hard!  Fortunantly, it's not used.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
