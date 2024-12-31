@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+﻿// todo:
+// 1. do NOT erase non-merged pre-processor e..g #if WIF in TwineAuthenticateV1
+// 2. investigate / think about: what if the latest version of the task is not being merged?  Is there a scenerio where we can 'erase' the latest version and then unknownly someone could bump a task into that version w/a  collsions?
+
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
