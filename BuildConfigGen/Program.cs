@@ -2,7 +2,6 @@
 // 1. keep version of config being merged (only bump version if needed!)
 //     2. we'll assume that any configs needed for the 'merged' buildconfig are enabled
 //        this means, we won't bump version even if the build config version is 'lower' than the base version
-// 2. if there is a 'default' config in _generated and it's the last config for the task, we'll clean that up as well
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -186,7 +185,7 @@ namespace BuildConfigGen
                     // when generating global version, we must enumerate all tasks to generate correct maxPatchForCurrentSprint across all tasks to avoid collisions
                     foreach (var t in allTasksList)
                     {
-                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
                         UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
@@ -228,7 +227,7 @@ namespace BuildConfigGen
                 {
                     foreach (var t in tasks)
                     {
-                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct([], []));
+                        taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
                         UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
@@ -616,14 +615,15 @@ namespace BuildConfigGen
                             taskConfigPath = Path.Combine(taskOutput, "task.json");
                             var taskConfigExists = File.Exists(taskConfigPath);
 
-                      
+
                             // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                            if (versionUpdated 
-                                || taskConfigExists 
-                                || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config) 
+                            if (versionUpdated
+                                || taskConfigExists
+                                || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config)
                                 || config.isNode
-                                || config.mergeToBase)
+                                || config.mergeToBase
+                                || taskVersionState.OnlyHasDefault)
                             {
                                 if (config.mergeToBase)
                                 {
@@ -635,32 +635,44 @@ namespace BuildConfigGen
                                     taskOutput = taskTargetPath;
                                 }
 
-                                var existingLocalPackageVersion = ReadTaskJsonIfExists(taskOutput, "task.json");
-
-                                CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
-
-                                if (config.enableBuildConfigOverrides)
+                                // remove 'base' generated config if it's the only one that exists (e.g. the others were merged)
+                                // this will erase any #else directives in the base config (as they are obsolete after merging)
+                                if (config.isDefault && taskVersionState.OnlyHasDefault)
                                 {
-                                    CopyConfigOverrides(gitRootPath, taskTargetPath, taskOutput, config, generatedFolder, task);
+                                    if (taskConfigExists)
+                                    {
+                                        ensureUpdateModeVerifier.DeleteDirectoryRecursive(taskOutput);
+                                    }
                                 }
-
-                                // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
-                                // don't check content as preprocessor hasn't run
-                                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
-
-                                HandlePreprocessingInTarget(gitRootPath, taskOutput, config, validateAndWriteChanges: true, hasDirectives: out _);
-
-                                WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
-                                WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
-
-                                if (!config.mergeToBase)
+                                else
                                 {
-                                    WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion);
-                                    WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion);
-                                }
+                                    var existingLocalPackageVersion = ReadTaskJsonIfExists(taskOutput, "task.json");
 
-                                WriteTaskJsonNodeExecutionHandler(taskOutput, config, "task.json");
-                                WriteTaskJsonNodeExecutionHandler(taskOutput, config, "task.loc.json");
+                                    CopyConfig(gitRootPath, taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+
+                                    if (config.enableBuildConfigOverrides)
+                                    {
+                                        CopyConfigOverrides(gitRootPath, taskTargetPath, taskOutput, config, generatedFolder, task);
+                                    }
+
+                                    // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
+                                    // don't check content as preprocessor hasn't run
+                                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                                    HandlePreprocessingInTarget(gitRootPath, taskOutput, config, validateAndWriteChanges: true, hasDirectives: out _);
+
+                                    WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
+                                    WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
+
+                                    if (!config.mergeToBase)
+                                    {
+                                        WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion);
+                                        WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion);
+                                    }
+
+                                    WriteTaskJsonNodeExecutionHandler(taskOutput, config, "task.json");
+                                    WriteTaskJsonNodeExecutionHandler(taskOutput, config, "task.loc.json");
+                                }
                             }
 
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
@@ -683,6 +695,7 @@ namespace BuildConfigGen
 
                                 WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs);
                             }
+
                         }
                         finally
                         {
@@ -695,7 +708,7 @@ namespace BuildConfigGen
                 }
 
                 // delay updating version map file until after buildconfigs generated
-                WriteVersionMapFile(versionMapFile, taskVersionState.configTaskVersionMapping, targetConfigs: targetConfigs);
+                WriteVersionMapFile(versionMapFile, taskVersionState, targetConfigs: targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -969,7 +982,7 @@ namespace BuildConfigGen
         private static string? ReadTaskJsonIfExists(string taskPath, string fileName)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
-            if(!File.Exists(outputTaskPath))
+            if (!File.Exists(outputTaskPath))
             {
                 return null;
             }
@@ -1267,7 +1280,7 @@ always-auth=true", false);
                     throw new Exception($"inputVersion={inputVersion} version specified in task taskTargetPath={taskTargetPath} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile {versionMapFile} and globalVersionPath={globalVersionPath}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
                 }
             }
-            
+
             bool mergingConfig = false;
 
             // copy the mappings.  As we go check if any configs not mapped. If so, invalidate.
@@ -1503,9 +1516,9 @@ always-auth=true", false);
             }
         }
 
-        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void WriteVersionMapFile(string versionMapFile, TaskStateStruct taskStateStruct, HashSet<Config.ConfigRecord> targetConfigs)
         {
-            if (targetConfigs.Where(c => !c.isDefault && !c.useGlobalVersion).Any())
+            if (targetConfigs.Where(c => !c.isDefault && !c.useGlobalVersion && !c.mergeToBase).Any())
             {
                 StringBuilder sb = new StringBuilder();
                 using (var sw = new StringWriter(sb))
@@ -1514,7 +1527,7 @@ always-auth=true", false);
                     {
                         if (!config.useGlobalVersion && !config.mergeToBase) // do not write globalVersion configs to task-specific, skip mergeToBase configs
                         {
-                            sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
+                            sw.WriteLine(string.Concat(config.constMappingKey, "|", taskStateStruct.configTaskVersionMapping[config]));
                         }
                     }
                 }
@@ -1524,6 +1537,13 @@ always-auth=true", false);
             else
             {
                 Console.WriteLine($"Not writing {versionMapFile} because there are no configs for task which are not Default or useGlobalVersion");
+
+                ensureUpdateModeVerifier!.DeleteFile(versionMapFile, addVerifyErrorIfExists: false, removed: out bool removed);
+
+                if (removed)
+                {
+                    Console.WriteLine($"Removing existing {versionMapFile}");
+                }
             }
         }
 
@@ -1673,16 +1693,26 @@ always-auth=true", false);
 
     }
 
-    internal record struct TaskStateStruct(Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated)
+    // todo rename - as this is not a struct.  (refactor in a seperate PR)
+    internal class TaskStateStruct
     {
-        public static implicit operator (Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated)(TaskStateStruct value)
-        {
-            return (value.configTaskVersionMapping, value.versionsUpdated);
-        }
+        // todo - fix case
+        public Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping { get; }
 
-        public static implicit operator TaskStateStruct((Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Program.Config.ConfigRecord> versionsUpdated) value)
+        // todo - fix case
+        public HashSet<Program.Config.ConfigRecord> versionsUpdated { get; }
+
+        public bool OnlyHasDefault
         {
-            return new TaskStateStruct(value.configTaskVersionMapping, value.versionsUpdated);
+            get
+            {
+                return this.configTaskVersionMapping.Where(x => !x.Key.mergeToBase && x.Key.isDefault).Count() == 1;
+            }
+        }
+        public TaskStateStruct()
+        {
+            this.configTaskVersionMapping = [];
+            this.versionsUpdated = [];
         }
     }
 }

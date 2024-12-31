@@ -351,6 +351,30 @@ namespace BuildConfigGen
             return targetFile;
         }
 
+        internal void DeleteFile(string targetFile, bool addVerifyErrorIfExists, out bool removed)
+        {
+            removed = false;
+            bool verify = UseVerifyOnlyForFile(targetFile);
+
+            if (verify)
+            {
+                removed = true;
+
+                if (File.Exists(targetFile) && addVerifyErrorIfExists)
+                {
+                    VerifyErrors.Add($"Expected file {targetFile} to not exist");
+                }
+            }
+            else
+            {
+                if (File.Exists(targetFile))
+                {
+                    removed = true;
+                    File.Delete(targetFile);
+                }
+            }
+        }
+
         internal void DeleteDirectoryRecursive(string path)
         {
             bool verify = UseVerifyOnlyForPath(path);
