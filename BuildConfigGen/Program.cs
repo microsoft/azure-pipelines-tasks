@@ -623,7 +623,7 @@ namespace BuildConfigGen
                                 || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config)
                                 || config.isNode
                                 || config.mergeToBase
-                                || taskVersionState.OnlyHasDefault)
+                                || taskVersionState.OnlyHasDefaultOrGlobalVersion)
                             {
                                 if (config.mergeToBase)
                                 {
@@ -637,7 +637,7 @@ namespace BuildConfigGen
 
                                 // remove 'base' generated config if it's the only one that exists (e.g. the others were merged)
                                 // this will erase any #else directives in the base config (as they are obsolete after merging)
-                                if (config.isDefault && taskVersionState.OnlyHasDefault)
+                                if (config.isDefault && taskVersionState.OnlyHasDefaultOrGlobalVersion)
                                 {
                                     if (taskConfigExists)
                                     {
@@ -947,7 +947,8 @@ namespace BuildConfigGen
                     Console.WriteLine($"Checking if {file} has preprocessor directives ...");
                 }
 
-                Preprocessor.Preprocess(file, ensureUpdateModeVerifier!.FileReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processedOutput, out var validationErrors, out madeChanges);
+                bool retainOtherPreprocessingInstructions = config.mergeToBase;
+                Preprocessor.Preprocess(file, ensureUpdateModeVerifier!.FileReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, retainOtherPreprocessingInstructions, out string processedOutput, out var validationErrors, out madeChanges);
 
                 if (validateAndWriteChanges)
                 {
@@ -1724,11 +1725,25 @@ always-auth=true", false);
         // todo - fix case
         public HashSet<Program.Config.ConfigRecord> versionsUpdated { get; }
 
-        public bool OnlyHasDefault
+        public bool OnlyHasDefaultOrGlobalVersion
         {
             get
             {
-                return this.configTaskVersionMapping.Where(x => !x.Key.mergeToBase && x.Key.isDefault).Count() == 1;
+                var result = this.configTaskVersionMapping.Where(x => !x.Key.mergeToBase && !x.Key.useGlobalVersion);
+
+                if (result.Count() == 1)
+                {
+                    if(!result.Single().Key.isDefault)
+                    {
+                        throw new Exception("BUG: expected only Default config to be present");
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         public TaskStateStruct()
