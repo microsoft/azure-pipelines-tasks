@@ -1,9 +1,4 @@
-﻿// mergbased todo:
-// 1. keep version of config being merged (only bump version if needed!)
-//     2. we'll assume that any configs needed for the 'merged' buildconfig are enabled
-//        this means, we won't bump version even if the build config version is 'lower' than the base version
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -1285,7 +1280,7 @@ always-auth=true", false);
                 }
             }
 
-            bool mergingConfig = false;
+            Config.ConfigRecord? mergingConfig = null;
 
             // copy the mappings.  As we go check if any configs not mapped. If so, invalidate.
             bool allConfigsMappedAndValid = true;
@@ -1295,14 +1290,17 @@ always-auth=true", false);
                 {
                     if (config.mergeToBase)
                     {
-                        mergingConfig = true;
+                        if (mergingConfig is not null)
+                        {
+                            throw new Exception($"Multiple configs for task being merged.  This is not supported.  task={task} mergingConfig.name={mergingConfig.name}");
+                        }
+
                         // versionMap contains a version that needs to be merged to base
                         allConfigsMappedAndValid = false;
+                        mergingConfig = config;
                     }
-                    else
-                    {
-                        taskState.configTaskVersionMapping.Add(config, versionMap[config.constMappingKey]);
-                    }
+
+                    taskState.configTaskVersionMapping.Add(config, versionMap[config.constMappingKey]);
                 }
                 else
                 {
@@ -1348,11 +1346,25 @@ always-auth=true", false);
 
                 taskState.configTaskVersionMapping.Clear();
 
-                if (defaultVersionMatchesSourceVersion && !mergingConfig)
+                if (defaultVersionMatchesSourceVersion)
                 {
-                    // scenerio:  No task changes, adding a new config(s)
-                    // retain existing versions to reduce changes
-                    taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);
+                    if (mergingConfig is null)
+                    {
+                        // scenerio:  No task changes, adding a new config(s)
+                        // retain existing versions to reduce changes
+                        taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);             
+                    }
+                    else
+                    {
+                        // scenerio:  No task changes, merging task to base
+                        // base version updated to merging config version.
+                        if(!old.TryGetValue(mergingConfig, out var mergingConfigVersion))
+                        {
+                            throw new Exception($"Merging config {mergingConfig.name} not found in version map");
+                        }
+
+                        taskState.configTaskVersionMapping.Add(Config.Default, mergingConfigVersion);
+                    }
 
                     foreach (var config in targetConfigs)
                     {
