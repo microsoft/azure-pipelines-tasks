@@ -615,7 +615,6 @@ namespace BuildConfigGen
                             taskConfigPath = Path.Combine(taskOutput, "task.json");
                             var taskConfigExists = File.Exists(taskConfigPath);
 
-
                             // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
                             if (versionUpdated
@@ -1210,6 +1209,11 @@ namespace BuildConfigGen
             {
                 foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                 {
+                    if(pathToRemoveFromOutput.StartsWith(buildConfigs))
+                    {
+                        continue;
+                    }
+
                     // todo: handle .npmrc properly -- ensure it's content validated properly if written by buildconfiggen
                     if (pathToRemoveFromOutput == ".npmrc")
                     {
