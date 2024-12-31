@@ -246,40 +246,23 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
     }
 
-    if (argv.includeLocalPackagesBuildConfig)
-    {
-        if (!argv.skipPrebuildSteps)
-        {
-            // temp: clone for now prior to merging these as subtrees
-            if (!test('-d', 'task-lib')) {
-                run("git clone https://github.com/microsoft/azure-pipelines-task-lib task-lib");
-            }
-
-            if (!test('-d', 'tasks-common')) {
-                run("git clone https://github.com/microsoft/azure-pipelines-tasks-common-packages tasks-common");
-            }
-
-            cd(taskLibPath);
-            run("git checkout dev/merlynop/mockfix");
-            run("git pull");
-
-            cd(tasksCommonPath);
-            run("git pull");
-            // end temp
-
-            // build task-lib
-            cd(taskLibPath);
-            run("npm install", /*inheritStreams:*/true);
-            run("node make.js build", /*inheritStreams:*/true);
-
-            
-            await util.installNodeAsync('20');
-            // build task-lib
-            cd(tasksCommonPath);
-            run("npm install", /*inheritStreams:*/true);
-            run("node make.js --build", /*inheritStreams:*/true);
-        }
+    // temp: clone for now prior to merging these as subtrees
+    if (!test('-d', 'task-lib')) {
+        run("git clone https://github.com/microsoft/azure-pipelines-task-lib task-lib");
     }
+
+    cd(taskLibPath);
+    run("git checkout users/v-ivandu/remove-shelljs");
+    run("git pull");
+
+    // build task-lib
+    cd(taskLibPath);
+    run("npm install", /*inheritStreams:*/true);
+    run("node make.js build", /*inheritStreams:*/true);
+
+    
+    await util.installNodeAsync('20');
+    // build task-lib
 
     const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
 
