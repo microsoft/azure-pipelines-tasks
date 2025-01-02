@@ -377,8 +377,14 @@ var installNodeAsync = async function (nodeVersion) {
     var nodeUrl = 'https://nodejs.org/dist';
     switch (platform) {
         case 'darwin':
-            var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
-            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            var arch = run('uname -m')
+            var nodeMajorVersionNumber = parseInt(nodeVersion.match(/\d+/)[0], 10);
+            if (nodeMajorVersionNumber < 16) { // arm64 support started since node16
+                arch = 'x64'
+            }
+
+            var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-' + arch + '.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-' + arch, 'bin'))
             break;
         case 'linux':
             var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
