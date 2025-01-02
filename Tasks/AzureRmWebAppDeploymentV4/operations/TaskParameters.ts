@@ -10,6 +10,11 @@ export enum DeploymentType {
     warDeploy
 }
 
+export enum DeploymentTypeLinux {
+    oneDeploy,
+    zipDeploy
+}
+
 type AdditionalArgumentsTelemetry = {
     deploymentMethod: DeploymentType;
     doubleQuoteCount: number;
@@ -109,6 +114,10 @@ export class TaskParametersUtility {
                 taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
             }
         }
+        else if(taskParameters.isLinuxApp) {
+            taskParameters.DeploymentTypeLinux = this.getDeploymentTypeLinux(tl.getInput('DeploymentTypeLinux', false));
+            taskParameters.CleanDeploymentFlag = tl.getBoolInput('CleanDeploymentFlag', false);
+        }
         else {
             // Retry Attempt is passed by default
             taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
@@ -157,6 +166,13 @@ export class TaskParametersUtility {
             case "zipDeploy": return DeploymentType.zipDeploy;
             case "runFromZip": return DeploymentType.runFromZip;
             case "warDeploy": return DeploymentType.warDeploy;
+        }
+    }
+
+    private static getDeploymentTypeLinux(type): DeploymentTypeLinux {
+        switch(type) {
+            case "oneDeploy": return DeploymentTypeLinux.oneDeploy;
+            case "zipDeploy": return DeploymentTypeLinux.zipDeploy;
         }
     }
 
@@ -272,6 +288,8 @@ export interface TaskParameters {
     XmlVariableSubstitution?: boolean;
     UseWebDeploy?: boolean;
     DeploymentType?: DeploymentType;
+    DeploymentTypeLinux?: DeploymentTypeLinux;
+    CleanDeploymentFlag?: boolean;
     RemoveAdditionalFilesFlag?: boolean;
     SetParametersFile?: string;
     ExcludeFilesFromAppDataFlag?: boolean;
