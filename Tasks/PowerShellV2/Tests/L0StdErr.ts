@@ -68,7 +68,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
                 return true;
             }
         }
-    }
+    },
 };
 tmr.setAnswers(a);
 tmr.registerMockExport('IssueSource', { TaskInternal: "TaskInternal", CustomerScript: "CustomerScript" });
@@ -79,6 +79,21 @@ const fsClone = Object.assign({}, fs);
 fsClone.writeFileSync = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
+}
+fsClone.unlinkSync = function(path) {
+    console.log('Mock UnlinkSync');
+}
+fsClone.createReadStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fsClone.createWriteStream = function(path) {
+    console.log('Mock CreateReadStream');
+    return null;
+}
+fs.ReadStream.on = function(data, data1) {
+    console.log('Mock Readstream On')
+    return;
 }
 tmr.registerMock('fs', fsClone);
 
