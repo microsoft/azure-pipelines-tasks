@@ -48,7 +48,7 @@
     },
     {
       "name": "TargetFolder",
-      "type": "string",
+      "type": "filePath",
       "label": "Target Folder",
       "defaultValue": "",
       "required": true,
