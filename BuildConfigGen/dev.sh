@@ -32,7 +32,7 @@ function detect_platform_and_runtime_id ()
         fi
 
     elif [[ "$CURRENT_PLATFORM" == 'darwin' ]]; then
-        DETECTED_RUNTIME_ID='osx-$(uname -m)'
+        DETECTED_RUNTIME_ID="osx-$(uname -m)"
     fi
 }
 

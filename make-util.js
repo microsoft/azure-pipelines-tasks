@@ -378,7 +378,8 @@ var installNodeAsync = async function (nodeVersion) {
     switch (platform) {
         case 'darwin':
             var arch = run('uname -m')
-            if (nodeVersion <= versions[14]) { // arm64 support started since node16
+            var nodeMajorVersionNumber = parseInt(nodeVersion.match(/\d+/)[0], 10);
+            if (nodeMajorVersionNumber < 16) { // arm64 support started since node16
                 arch = 'x64'
             }
 
