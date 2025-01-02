@@ -12,6 +12,8 @@
   "loc.input.help.archiveType": "Specify the compression scheme used.  To create <b>`foo.jar`</b>, for example, choose <b>`zip`</b> for the compression, and specify <b>`foo.jar`</b> as the archive file to create.  For all tar files (including compressed ones), choose <b>`tar`</b>.",
   "loc.input.label.sevenZipCompression": "7z compression",
   "loc.input.help.sevenZipCompression": "Optionally choose a compression level, or choose <b>`None`</b> to create an uncompressed 7z file.",
+  "loc.input.label.decoderCompatibility": "7z decoder compatibility",
+  "loc.input.help.decoderCompatibility": "Optionally choose to set decoder compatibility version for 7z archive creating. It should be 4-digit number that represents the version of 7-Zip without a dot. (default: 1602)",
   "loc.input.label.tarCompression": "Tar compression",
   "loc.input.help.tarCompression": "Optionally choose a compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
   "loc.input.label.archiveFile": "Archive file to create",
