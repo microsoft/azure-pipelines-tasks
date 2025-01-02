@@ -1,7 +1,4 @@
-﻿// todo:
-// 2. investigate / think about: what if the latest version of the task is not being merged?  Is there a scenerio where we can 'erase' the latest version and then unknownly someone could bump a task into that version w/a  collsions?
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -1208,7 +1205,7 @@ namespace BuildConfigGen
             {
                 foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                 {
-                    if(pathToRemoveFromOutput.StartsWith(buildConfigs))
+                    if (pathToRemoveFromOutput.StartsWith(buildConfigs))
                     {
                         continue;
                     }
@@ -1356,15 +1353,20 @@ always-auth=true", false);
                     {
                         // scenerio:  No task changes, adding a new config(s)
                         // retain existing versions to reduce changes
-                        taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);             
+                        taskState.configTaskVersionMapping.Add(Config.Default, inputVersion);
                     }
                     else
                     {
                         // scenerio:  No task changes, merging task to base
                         // base version updated to merging config version.
-                        if(!old.TryGetValue(mergingConfig, out var mergingConfigVersion))
+                        if (!old.TryGetValue(mergingConfig, out var mergingConfigVersion))
                         {
                             throw new Exception($"Merging config {mergingConfig.name} not found in version map");
+                        }
+
+                        if (inputVersion > mergingConfigVersion)
+                        {
+                            throw new Exception($"Merging config {mergingConfig.name} version {mergingConfigVersion} is less than input version {inputVersion}.  This is not currently supported.  To resolve the issue, bump the task version.");
                         }
 
                         taskState.configTaskVersionMapping.Add(Config.Default, mergingConfigVersion);
@@ -1730,7 +1732,7 @@ always-auth=true", false);
 
                 if (result.Count() == 1)
                 {
-                    if(!result.Single().Key.isDefault)
+                    if (!result.Single().Key.isDefault)
                     {
                         throw new Exception("BUG: expected only Default config to be present");
                     }
