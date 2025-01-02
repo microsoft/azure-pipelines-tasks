@@ -1,8 +1,5 @@
 ﻿// todo:
-// 1. do NOT erase non-merged pre-processor e..g #if WIF in TwineAuthenticateV1
 // 2. investigate / think about: what if the latest version of the task is not being merged?  Is there a scenerio where we can 'erase' the latest version and then unknownly someone could bump a task into that version w/a  collsions?
-// 3. handle verify.  (We only want the merge behavior when writing updates -- it should not be enforced by verify for tasks with unmerged configs)
-//  4. if we can, we should verify that tasks are unmodified by the merge.  (but I don't think we can)
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
