@@ -97,6 +97,8 @@ Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-servi
 
 Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
+
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
