@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 248,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "Run a Python script",
@@ -107,6 +107,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

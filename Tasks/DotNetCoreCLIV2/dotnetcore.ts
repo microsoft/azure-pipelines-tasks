@@ -5,7 +5,6 @@ import fs = require("fs");
 import ltx = require("ltx");
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
-#if NODE20
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
     require("dns").setDefaultResultOrder("ipv4first");
@@ -16,7 +15,6 @@ if (nodeVersion > 19) {
     require("net").setDefaultAutoSelectFamily(false);
     tl.debug("Set default auto select family to false");
 }
-#endif
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
