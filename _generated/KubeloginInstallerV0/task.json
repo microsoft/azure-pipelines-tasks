@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 251,
     "Patch": 0
   },
   "demands": [],
@@ -30,6 +30,14 @@
       "label": "kubelogin version",
       "defaultValue": "latest",
       "helpMarkDown": "The version of kubelogin to use"
+    },
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
+      "label": "GitHub Connection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "A GitHub connection is needed to prevent anonymous requests limits to the Github API for [Azure/kubelogin](https://github.com/azure/kubelogin) from impacting the installation. Leaving this empty may cause failures if the request limit is reached. This connection does not require ANY permissions."
     }
   ],
   "execution": {
@@ -59,7 +67,7 @@
     "Info_KubeloginDownloading": "Downloading kubelogin"
   },
   "_buildConfigMapping": {
-    "Default": "0.247.0",
-    "Node20_229_3": "0.247.1"
+    "Default": "0.251.0",
+    "Node20_229_3": "0.251.1"
   }
 }
