@@ -8,7 +8,6 @@ import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/web
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
-#if NODE20
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
     require("dns").setDefaultResultOrder("ipv4first");
@@ -19,7 +18,6 @@ if (nodeVersion > 19) {
     require("net").setDefaultAutoSelectFamily(false);
     tl.debug("Set default auto select family to false");
 }
-#endif
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 const AZ_SESSION_REFRESH_INTERVAL_MS: number = 480000; // 8 minutes, 2 minutes before IdToken expiry date
 
@@ -346,13 +344,11 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
-#if NODE20
         // since node19 default node's GlobalAgent has timeout 5sec
         // keepAlive is set to true to avoid creating default node's GlobalAgent
         const webApiOptions = {
             keepAlive: true
         }
-#endif
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
@@ -361,11 +357,7 @@ export class azureclitask {
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
-#if NODE20
         const connection = new WebApi(uri, authHandler, webApiOptions);
-#else
-        const connection = new WebApi(uri, authHandler);
-#endif
         const api: ITaskApi = await connection.getTaskApi();
         const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {

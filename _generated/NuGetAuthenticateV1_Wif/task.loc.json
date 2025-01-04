@@ -82,8 +82,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.3",
-    "Node20_229_1": "1.247.4",
+    "Default": "1.247.4",
+    "LocalPackages": "1.249.4",
     "wif_242": "1.247.5"
   }
 }

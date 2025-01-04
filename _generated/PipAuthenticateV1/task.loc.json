@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 248,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -102,8 +102,8 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.248.0",
-    "Node20_229_1": "1.248.1",
+    "Default": "1.248.1",
+    "LocalPackages": "1.249.4",
     "wif_242": "1.248.2"
   }
 }

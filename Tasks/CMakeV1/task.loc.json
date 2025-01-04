@@ -22,7 +22,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -62,6 +62,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "cmaketask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "cmaketask.js",
       "argumentFormat": ""
     }

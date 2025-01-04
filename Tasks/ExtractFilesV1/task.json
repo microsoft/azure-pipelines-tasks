@@ -20,7 +20,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 2
+    "Patch": 3
   },
   "instanceNameFormat": "Extract files $(message)",
   "inputs": [
@@ -75,6 +75,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "extractfilestask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "extractfilestask.js",
       "argumentFormat": ""
     }

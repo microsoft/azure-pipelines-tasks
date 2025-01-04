@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "demands": [],
@@ -35,6 +35,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "src//opatoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "src//opatoolinstaller.js",
       "argumentFormat": ""
     }

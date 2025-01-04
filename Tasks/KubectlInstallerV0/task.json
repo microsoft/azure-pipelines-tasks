@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -36,6 +36,10 @@
       "target": "src//kubectltoolinstaller.js"
     },
     "Node16": {
+      "target": "src//kubectltoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "src//kubectltoolinstaller.js",
       "argumentFormat": ""
     }

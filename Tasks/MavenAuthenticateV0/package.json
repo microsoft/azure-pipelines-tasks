@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
     "@types/q": "^1.5.2",
@@ -28,6 +28,6 @@
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

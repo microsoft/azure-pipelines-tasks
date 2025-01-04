@@ -1,7 +1,7 @@
 {
   "name": "helm-deploy-tests",
   "version": "1.0.0",
-  "description": "Azure Pipelines Helm Deploy V0 Task Tests",
+  "description": "Azure Pipelines Helm Deploy V1 Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

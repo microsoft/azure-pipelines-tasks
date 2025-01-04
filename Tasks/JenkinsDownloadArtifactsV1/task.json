@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 3
   },
   "groups": [
     {
@@ -275,6 +275,10 @@
       "argumentFormat": ""
     },
     "Node10": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     }
