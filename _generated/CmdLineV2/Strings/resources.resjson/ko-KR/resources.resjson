@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "명령줄",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Linux 및 macOS에서는 Bash, Windows에서는 cmd.exe를 사용하여 명령줄 스크립트를 실행합니다.",
+  "loc.instanceNameFormat": "명령줄 스크립트",
+  "loc.releaseNotes": "스크립트 작업 일관성입니다. 여러 줄에 대한 지원이 추가되었습니다.",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.script": "스크립트",
+  "loc.input.label.workingDirectory": "작업 디렉터리",
+  "loc.input.label.failOnStderr": "표준 오류 시 실패",
+  "loc.input.help.failOnStderr": "true일 경우 StandardError 스트림에 오류가 작성되면 이 작업은 실패하게 됩니다.",
+  "loc.messages.GeneratingScript": "스크립트를 생성 중입니다.",
+  "loc.messages.JS_ExitCode": "Bash가 코드 '%s'(으)로 종료되었습니다.",
+  "loc.messages.JS_Stderr": "Bash가 표준 오류 스트림에 하나 이상의 줄을 썼습니다.",
+  "loc.messages.PS_ExitCode": "cmd.exe가 코드 '{0}'(으)로 종료되었습니다.",
+  "loc.messages.PS_UnableToDetermineExitCode": "예기치 않은 예외가 발생했습니다. cmd.exe의 종료 코드를 확인할 수 없습니다.",
+  "loc.messages.ScriptContents": "스크립트 내용:"
+}

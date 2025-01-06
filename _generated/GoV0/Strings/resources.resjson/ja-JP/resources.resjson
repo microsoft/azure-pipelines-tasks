@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "移動",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Go アプリケーションを取得、ビルド、テストするか、カスタムの Go コマンドを実行します",
+  "loc.instanceNameFormat": "go $(コマンド)",
+  "loc.group.displayName.advanced": "詳細設定",
+  "loc.input.label.command": "コマンド",
+  "loc.input.help.command": "実行する Go コマンドを選択します。この一覧にないコマンドを使用するには、[カスタム] を選択します。",
+  "loc.input.label.customCommand": "カスタム コマンド",
+  "loc.input.help.customCommand": "実行するカスタム Go コマンド。たとえば、'go version' を実行するには、'version' と入力します。",
+  "loc.input.label.arguments": "引数",
+  "loc.input.help.arguments": "選択したコマンドに対するオプションの引数です。たとえば、'go build' コマンドの build-time 引数。",
+  "loc.input.label.workingDirectory": "作業ディレクトリ",
+  "loc.input.help.workingDirectory": "コマンドが実行される作業ディレクトリです。空の場合は、リポジトリ (ビルドの場合) または成果物 (リリースの場合) のルートが使用され、これは '$(System.DefaultWorkingDirectory)' の値です。",
+  "loc.messages.TaskFailedWithError": "Go タスクは次のエラーで失敗しました: %s"
+}

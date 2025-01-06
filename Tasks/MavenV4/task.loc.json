@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 249,
-    "Patch": 6
+    "Patch": 5
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -484,10 +484,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "maventask.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "maventask.js",
       "argumentFormat": ""
     }

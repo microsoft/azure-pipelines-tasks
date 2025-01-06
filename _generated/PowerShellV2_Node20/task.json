@@ -1,0 +1,269 @@
+{
+  "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+  "name": "PowerShell",
+  "friendlyName": "PowerShell",
+  "description": "Run a PowerShell script on Linux, macOS, or Windows",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 247,
+    "Patch": 1
+  },
+  "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
+  "minimumAgentVersion": "2.115.0",
+  "showEnvironmentVariables": true,
+  "groups": [
+    {
+      "name": "preferenceVariables",
+      "displayName": "Preference Variables",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "targetType",
+      "type": "radio",
+      "label": "Type",
+      "required": false,
+      "defaultValue": "filePath",
+      "helpMarkDown": "Target script type: File Path or Inline",
+      "options": {
+        "filePath": "File Path",
+        "inline": "Inline"
+      }
+    },
+    {
+      "name": "filePath",
+      "type": "filePath",
+      "label": "Script Path",
+      "visibleRule": "targetType = filePath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "Arguments",
+      "visibleRule": "targetType = filePath",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+    },
+    {
+      "name": "script",
+      "type": "multiLine",
+      "label": "Script",
+      "visibleRule": "targetType = inline",
+      "required": true,
+      "defaultValue": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "20000"
+      },
+      "helpMarkDown": ""
+    },
+    {
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "warningPreference",
+      "type": "pickList",
+      "label": "WarningPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$WarningPreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "informationPreference",
+      "type": "pickList",
+      "label": "InformationPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$InformationPreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "verbosePreference",
+      "type": "pickList",
+      "label": "VerbosePreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "debugPreference",
+      "type": "pickList",
+      "label": "DebugPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "progressPreference",
+      "type": "pickList",
+      "label": "ProgressPreference",
+      "required": false,
+      "defaultValue": "silentlyContinue",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "When not `Default`, prepends the line `$ProgressPreference = 'VALUE'` at the top of your script.",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "Fail on Standard Error",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "showWarnings",
+      "type": "boolean",
+      "label": "Show warnings as Azure DevOps warnings",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, and your script writes a warnings - they are shown as warnings also in pipeline logs",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ignoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "Ignore $LASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "pwsh",
+      "type": "boolean",
+      "label": "Use PowerShell Core",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "Working Directory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Working directory where the script is run.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "runScriptInSeparateScope",
+      "type": "boolean",
+      "label": "Run script in the separate scope",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "PowerShell Script",
+  "execution": {
+    "PowerShell3": {
+      "target": "powershell.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GeneratingScript": "Generating script.",
+    "JS_ExitCode": "PowerShell exited with code '%s'.",
+    "JS_FormattedCommand": "Formatted command: %s",
+    "JS_InvalidActionPreference": "Invalid action preference for %s: '%s'. The value must be one of: %s",
+    "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
+    "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+    "JS_InvalidTargetType": "Invalid target type '%s'. The value must be one of: 'filepath' or 'inline'",
+    "PS_ExitCode": "PowerShell exited with code '{0}'.",
+    "PS_FormattedCommand": "Formatted command: {0}",
+    "PS_InvalidActionPreference": "Invalid action preference for {0}: '{1}'. The value must be one of: {2}",
+    "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
+    "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
+    "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.247.0",
+    "Node20-225": "2.247.1"
+  }
+}

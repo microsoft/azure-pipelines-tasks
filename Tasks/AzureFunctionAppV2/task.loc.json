@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -218,10 +218,6 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
-    },
-    "Node20_1": {
-      "target": "azurermwebappdeployment.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Go 도구 설치 관리자",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=867581) 또는 [Go 설명서 참조](https://golang.org/doc/)",
+  "loc.description": "캐시에서 찾거나, 특정 버전의 Go를 다운로드하여 PATH에 추가합니다.",
+  "loc.instanceNameFormat": "Go $(version) 사용",
+  "loc.group.displayName.advanced": "고급",
+  "loc.input.label.version": "버전",
+  "loc.input.help.version": "(필요한 경우) 다운로드하여 사용할 Go 버전입니다(예: 1.9.3).",
+  "loc.input.label.goPath": "GOPATH",
+  "loc.input.help.goPath": "GOPATH 환경 변수에 대한 사용자 지정 값입니다.",
+  "loc.input.label.goBin": "GOBIN",
+  "loc.input.help.goBin": "GOBIN 환경 변수에 대한 사용자 지정 값입니다.",
+  "loc.messages.FailedToDownload": "Go 버전 %s을(를) 다운로드하지 못했습니다. 버전이 유효한지 확인하고 다른 문제를 모두 해결하세요. 오류: %s",
+  "loc.messages.TempDirNotSet": "'Agent.TempDirectory' 환경 변수를 설정해야 합니다."
+}

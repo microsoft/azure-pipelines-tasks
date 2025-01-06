@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 249,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -342,10 +342,6 @@
       "argumentFormat": ""
     },
     "Node10": {
-      "target": "dockercompose.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }

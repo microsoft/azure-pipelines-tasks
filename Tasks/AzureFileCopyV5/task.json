@@ -14,7 +14,7 @@
   "version": {
     "Major": 5,
     "Minor": 249,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -242,10 +242,6 @@
     },
     "Node10": {
       "target": "PreJobExecutionAzureFileCopy.js"
-    },
-    "Node20_1": {
-      "target": "PreJobExecutionAzureFileCopy.js",
-      "argumentFormat": ""
     }
   },
   "execution": {

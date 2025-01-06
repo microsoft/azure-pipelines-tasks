@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "檢閱應用程式",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "在部署階段提供者下使用此工作動態地建立資源",
+  "loc.instanceNameFormat": "使用 - $(resourceName) 建立的動態資源",
+  "loc.releaseNotes": "在部署階段提供者下使用此工作動態地建立資源",
+  "loc.input.label.resourceName": "資源名稱",
+  "loc.input.help.resourceName": "環境中現有資源的名稱，將用於資源類型資訊",
+  "loc.input.label.baseEnvironmentName": "環境名稱",
+  "loc.input.label.reviewResourceName": "檢閱資源名稱",
+  "loc.messages.CreatedDynamicResource": "使用 %s 建立的動態資源"
+}

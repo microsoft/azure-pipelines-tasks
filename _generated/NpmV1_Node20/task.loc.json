@@ -1,0 +1,218 @@
+{
+  "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
+  "name": "Npm",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 248,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "displayName": "ms-resource:loc.group.displayName.customRegistries",
+      "name": "customRegistries",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = ci || command = custom"
+    },
+    {
+      "name": "publishRegistries",
+      "displayName": "ms-resource:loc.group.displayName.publishRegistries",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
+    },
+    {
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "advanced",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = ci || command = publish"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "command",
+      "label": "ms-resource:loc.input.label.command",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "type": "pickList",
+      "required": true,
+      "options": {
+        "ci": "ci",
+        "install": "install",
+        "publish": "publish",
+        "custom": "custom"
+      },
+      "defaultValue": "install"
+    },
+    {
+      "name": "workingDir",
+      "label": "ms-resource:loc.input.label.workingDir",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDir",
+      "type": "filePath"
+    },
+    {
+      "groupName": "advanced",
+      "name": "verbose",
+      "label": "ms-resource:loc.input.label.verbose",
+      "helpMarkDown": "ms-resource:loc.input.help.verbose",
+      "type": "boolean"
+    },
+    {
+      "name": "customCommand",
+      "label": "ms-resource:loc.input.label.customCommand",
+      "helpMarkDown": "ms-resource:loc.input.help.customCommand",
+      "type": "string",
+      "visibleRule": "command = custom",
+      "required": true
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customRegistry",
+      "label": "ms-resource:loc.input.label.customRegistry",
+      "helpMarkDown": "ms-resource:loc.input.help.customRegistry",
+      "type": "radio",
+      "options": {
+        "useNpmrc": "Registries in my .npmrc",
+        "useFeed": "Registry I select here"
+      },
+      "defaultValue": "useNpmrc"
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customFeed",
+      "label": "ms-resource:loc.input.label.customFeed",
+      "helpMarkDown": "ms-resource:loc.input.help.customFeed",
+      "type": "pickList",
+      "visibleRule": "customRegistry = useFeed",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customEndpoint",
+      "label": "ms-resource:loc.input.label.customEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
+      "type": "connectedService:externalnpmregistry",
+      "visibleRule": "customRegistry = useNpmrc",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishRegistry",
+      "label": "ms-resource:loc.input.label.publishRegistry",
+      "helpMarkDown": "ms-resource:loc.input.help.publishRegistry",
+      "type": "radio",
+      "options": {
+        "useExternalRegistry": "External npm registry (including other accounts/collections)",
+        "useFeed": "Registry I select here"
+      },
+      "defaultValue": "useExternalRegistry"
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishFeed",
+      "label": "ms-resource:loc.input.label.publishFeed",
+      "helpMarkDown": "ms-resource:loc.input.help.publishFeed",
+      "type": "pickList",
+      "visibleRule": "publishRegistry = useFeed",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && publishRegistry = useFeed"
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishEndpoint",
+      "label": "ms-resource:loc.input.label.publishEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.publishEndpoint",
+      "type": "connectedService:externalnpmregistry",
+      "visibleRule": "publishRegistry = useExternalRegistry",
+      "required": true
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "customFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "publishFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "npm.js"
+    },
+    "Node16": {
+      "target": "npm.js"
+    },
+    "Node20_1": {
+      "target": "npm.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
+    "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
+    "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",
+    "MultipleProjectConfigs": "ms-resource:loc.messages.MultipleProjectConfigs",
+    "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
+    "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
+    "SavingFile": "ms-resource:loc.messages.SavingFile",
+    "RestoringFile": "ms-resource:loc.messages.RestoringFile",
+    "PublishFeed": "ms-resource:loc.messages.PublishFeed",
+    "PublishExternal": "ms-resource:loc.messages.PublishExternal",
+    "UseFeed": "ms-resource:loc.messages.UseFeed",
+    "UseNpmrc": "ms-resource:loc.messages.UseNpmrc",
+    "PublishRegistry": "ms-resource:loc.messages.PublishRegistry",
+    "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
+    "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
+    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
+    "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
+    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
+    "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
+    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
+    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.248.0",
+    "Node20_229_1": "1.248.1"
+  }
+}

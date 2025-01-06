@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -52,10 +52,6 @@
     },
     "Node16": {
       "target": "src//dockertoolinstaller.js"
-    },
-    "Node20_1": {
-      "target": "src//dockertoolinstaller.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

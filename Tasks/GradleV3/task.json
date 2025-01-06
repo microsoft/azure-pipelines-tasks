@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [],
@@ -382,10 +382,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "gradletask.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }

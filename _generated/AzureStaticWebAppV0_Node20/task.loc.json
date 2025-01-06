@@ -1,0 +1,199 @@
+{
+  "id": "18aad896-e191-4720-88d6-8ced4806941a",
+  "name": "AzureStaticWebApp",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://aka.ms/swadocs",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 248,
+    "Patch": 1
+  },
+  "preview": true,
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory",
+        "rootDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
+      "name": "app_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.app_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.app_location"
+    },
+    {
+      "name": "app_build_command",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.app_build_command",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.app_build_command"
+    },
+    {
+      "name": "output_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.output_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.output_location"
+    },
+    {
+      "name": "api_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.api_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.api_location"
+    },
+    {
+      "name": "api_build_command",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.api_build_command",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.api_build_command"
+    },
+    {
+      "name": "routes_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.routes_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.routes_location"
+    },
+    {
+      "name": "config_file_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.config_file_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.config_file_location"
+    },
+    {
+      "name": "skip_app_build",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skip_app_build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.skip_app_build"
+    },
+    {
+      "name": "skip_api_build",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skip_api_build",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.skip_api_build"
+    },
+    {
+      "name": "is_static_export",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.is_static_export",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.is_static_export"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.verbose",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.verbose"
+    },
+    {
+      "name": "build_timeout_in_minutes",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.build_timeout_in_minutes",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.build_timeout_in_minutes"
+    },
+    {
+      "name": "azure_static_web_apps_api_token",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azure_static_web_apps_api_token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.azure_static_web_apps_api_token"
+    },
+    {
+      "name": "deployment_environment",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployment_environment",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.deployment_environment"
+    },
+    {
+      "name": "production_branch",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.production_branch",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.production_branch"
+    },
+    {
+      "name": "data_api_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.data_api_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.data_api_location"
+    },
+    {
+      "name": "azure_access_token",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azure_access_token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.azure_access_token"
+    },
+    {
+      "name": "default_hostname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.default_hostname",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.default_hostname"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.248.0",
+    "Node20_229_8": "0.248.1"
+  }
+}

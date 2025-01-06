@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -55,10 +55,6 @@
     },
     "Node16": {
       "target": "mavenauth.js"
-    },
-    "Node20_1": {
-      "target": "mavenauth.js",
-      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -67,10 +63,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "cleanup.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }
@@ -92,8 +84,8 @@
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.247.1",
-    "LocalPackages": "0.249.4",
+    "Default": "0.247.0",
+    "Node20_229_1": "0.247.1",
     "wif_242": "0.247.2"
   }
 }

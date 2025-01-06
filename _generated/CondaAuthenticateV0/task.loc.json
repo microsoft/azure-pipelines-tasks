@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -24,10 +24,6 @@
     },
     "Node16": {
       "target": "condaauthenticatemain.js"
-    },
-    "Node20_1": {
-      "target": "condaauthenticatemain.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -38,8 +34,8 @@
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.247.1",
-    "LocalPackages": "0.249.4",
+    "Default": "0.247.0",
+    "Node20_229_1": "0.247.1",
     "wif_242": "0.247.2"
   }
 }

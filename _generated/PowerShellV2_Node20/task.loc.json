@@ -1,0 +1,269 @@
+{
+  "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+  "name": "PowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 247,
+    "Patch": 1
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "2.115.0",
+  "showEnvironmentVariables": true,
+  "groups": [
+    {
+      "name": "preferenceVariables",
+      "displayName": "ms-resource:loc.group.displayName.preferenceVariables",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "targetType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.targetType",
+      "required": false,
+      "defaultValue": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.targetType",
+      "options": {
+        "filePath": "File Path",
+        "inline": "Inline"
+      }
+    },
+    {
+      "name": "filePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.filePath",
+      "visibleRule": "targetType = filePath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.filePath"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "visibleRule": "targetType = filePath",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "script",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.script",
+      "visibleRule": "targetType = inline",
+      "required": true,
+      "defaultValue": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "20000"
+      },
+      "helpMarkDown": ""
+    },
+    {
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.errorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "warningPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.warningPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.warningPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "informationPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.informationPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.informationPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "verbosePreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosePreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.verbosePreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "debugPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.debugPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.debugPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "progressPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.progressPreference",
+      "required": false,
+      "defaultValue": "silentlyContinue",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.progressPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "showWarnings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.showWarnings",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.showWarnings",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ignoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreLASTEXITCODE",
+      "groupName": "advanced"
+    },
+    {
+      "name": "pwsh",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pwsh",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.pwsh",
+      "groupName": "advanced"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "runScriptInSeparateScope",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runScriptInSeparateScope",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.runScriptInSeparateScope",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "powershell.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
+    "JS_InvalidActionPreference": "ms-resource:loc.messages.JS_InvalidActionPreference",
+    "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "JS_InvalidTargetType": "ms-resource:loc.messages.JS_InvalidTargetType",
+    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
+    "PS_FormattedCommand": "ms-resource:loc.messages.PS_FormattedCommand",
+    "PS_InvalidActionPreference": "ms-resource:loc.messages.PS_InvalidActionPreference",
+    "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
+    "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
+    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.247.0",
+    "Node20-225": "2.247.1"
+  }
+}

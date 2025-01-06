@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 2
   },
   "demands": [],
   "satisfies": [
@@ -87,10 +87,6 @@
     },
     "Node16": {
       "target": "src//helmtoolinstaller.js"
-    },
-    "Node20_1": {
-      "target": "src//helmtoolinstaller.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

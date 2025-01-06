@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 250,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -455,10 +455,6 @@
     },
     "Node10": {
       "target": "src//kubernetes.js"
-    },
-    "Node20_1": {
-      "target": "src//kubernetes.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

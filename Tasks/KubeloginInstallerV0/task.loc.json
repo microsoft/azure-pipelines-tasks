@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -38,10 +38,6 @@
     },
     "Node10": {
       "target": "kubelogin.js"
-    },
-    "Node20_1": {
-      "target": "kubelogin.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

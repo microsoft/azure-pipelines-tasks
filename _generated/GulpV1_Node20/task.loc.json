@@ -1,0 +1,188 @@
+{
+  "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
+  "name": "gulp",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": true,
+  "version": {
+    "Major": 1,
+    "Minor": 246,
+    "Patch": 1
+  },
+  "demands": [
+    "node.js"
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "junitTestResults",
+      "displayName": "ms-resource:loc.group.displayName.junitTestResults",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": true
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "gulpFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.gulpFile",
+      "defaultValue": "gulpfile.js",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gulpFile"
+    },
+    {
+      "name": "targets",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.targets",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.targets",
+      "required": false
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "required": false
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "gulpjs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gulpjs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gulpjs",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "defaultValue": "false",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "enableCodeCoverage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableCodeCoverage",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.enableCodeCoverage"
+    },
+    {
+      "name": "testFramework",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testFramework",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "Mocha",
+      "helpMarkDown": "ms-resource:loc.input.help.testFramework",
+      "options": {
+        "Mocha": "Mocha",
+        "Jasmine": "Jasmine"
+      },
+      "visibleRule": "enableCodeCoverage = true"
+    },
+    {
+      "name": "srcFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcFiles",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcFiles",
+      "visibleRule": "enableCodeCoverage = true"
+    },
+    {
+      "name": "testFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testFiles",
+      "defaultValue": "test/*.js",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.testFiles",
+      "visibleRule": "enableCodeCoverage = true"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "gulptask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "gulptask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "gulptask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GulpNotInstalled": "ms-resource:loc.messages.GulpNotInstalled",
+    "GulpReturnCode": "ms-resource:loc.messages.GulpReturnCode",
+    "GulpFailed": "ms-resource:loc.messages.GulpFailed",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "IstanbulFailed": "ms-resource:loc.messages.IstanbulFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.246.0",
+    "Node20-225": "1.246.1"
+  }
+}
