@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -83,10 +83,6 @@
     "Node16": {
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "preinstallprovprofile.js",
-      "argumentFormat": ""
     }
   },
   "execution": {
@@ -97,10 +93,6 @@
     "Node16": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "installprovprofile.js",
-      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -109,10 +101,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "postinstallprovprofile.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 0
   },
   "satisfies": [
     "VsTest"
@@ -111,10 +111,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "vstestplatformtoolinstaller.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "vstestplatformtoolinstaller.js",
       "argumentFormat": ""
     }

@@ -301,12 +301,18 @@ async function run() {
     }
    
     let ftpClient: ftp.Client;
+#if NODE20
     let error: any | undefined;
+#endif
     try {
         ftpClient = await getFtpClient(ftpOptions);
     } catch (err) {
+#if NODE20
         error = err;
         tl.error(error);
+#else
+        tl.error(err);
+#endif
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
         return;
     }
@@ -323,8 +329,12 @@ async function run() {
                 return;
             } catch (err) {
                 e = err;
+#if NODE20
                 error = err;
                 tl.warning(error);
+#else
+                tl.warning(err);
+#endif
                 ftpClient.close();
 
                 await sleep(1000);
@@ -391,8 +401,12 @@ async function run() {
 
         console.log(tl.loc("UploadSucceedMsg", tracker.getSuccessStatusMessage()));
     } catch (err) {
+#if NODE20
         error = err;
         tl.error(error);
+#else
+        tl.error(err);
+#endif
         console.log(tracker.getFailureStatusMessage());
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     } finally {

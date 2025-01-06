@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -42,10 +42,6 @@
     },
     "Node16": {
       "target": "npmauth.js"
-    },
-    "Node20_1": {
-      "target": "npmauth.js",
-      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -54,10 +50,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "npmauthcleanup.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }

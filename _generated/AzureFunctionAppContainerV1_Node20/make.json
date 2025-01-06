@@ -1,0 +1,22 @@
+{
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-webdeployment-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
+                "node_modules/https-proxy-agent/node_modules/agent-base"
+            ],
+            "options": "-Rf"
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "ctt.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/ctt/1.6/ctt.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}

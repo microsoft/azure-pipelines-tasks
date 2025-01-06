@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -73,10 +73,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "pipauthenticatemain.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }

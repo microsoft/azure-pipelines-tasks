@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -137,10 +137,6 @@
       "target": "deployiiswebapp.js"
     },
     "Node16": {
-      "target": "deployiiswebapp.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "deployiiswebapp.js",
       "argumentFormat": ""
     }

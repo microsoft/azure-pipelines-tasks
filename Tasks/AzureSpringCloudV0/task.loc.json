@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -310,10 +310,6 @@
     },
     "Node10": {
       "target": "azurespringappsdeployment.js"
-    },
-    "Node20_1": {
-      "target": "azurespringappsdeployment.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

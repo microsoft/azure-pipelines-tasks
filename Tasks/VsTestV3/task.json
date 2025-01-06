@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 249,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -572,10 +572,6 @@
     },
     "Node16": {
       "target": "runvstest.js"
-    },
-    "Node20_1": {
-      "target": "runvstest.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

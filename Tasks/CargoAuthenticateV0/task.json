@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -41,10 +41,6 @@
       "target": "cargoauthenticatemain.js"
     },
     "Node16": {
-      "target": "cargoauthenticatemain.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
     }

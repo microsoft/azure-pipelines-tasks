@@ -2,7 +2,7 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": "--all-tasks --write-updates"
+      "commandLineArgs": "--task \"MavenV3|MavenV4\" --include-local-packages-build-config --write-updates"
     }
   }
 }

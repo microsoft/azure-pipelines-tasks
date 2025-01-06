@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -61,10 +61,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "predownloadsecurefile.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "predownloadsecurefile.js",
       "argumentFormat": ""
     }

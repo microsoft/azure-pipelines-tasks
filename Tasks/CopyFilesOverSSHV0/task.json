@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -152,10 +152,6 @@
   ],
   "execution": {
     "Node16": {
-      "target": "copyfilesoverssh.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }

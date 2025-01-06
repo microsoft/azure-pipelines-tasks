@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Публикация результатов теста",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "Опубликовать результаты тестов в Azure Pipelines",
+  "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.testRunner": "Формат результатов теста",
+  "loc.input.help.testRunner": "Формат файлов результатов тестирования, создаваемых выбранным вами средством выполнения тестов, например JUnit, VSTest, XUnit V2 и NUnit.",
+  "loc.input.label.testResultsFiles": "Файлы результатов тестов",
+  "loc.input.help.testResultsFiles": "Путь к файлам результатов тестов. Можно использовать подстановочные знаки. Пример: **/TEST-*.xml для всех XML-файлов, имена которых начинаются с \"TEST-\".",
+  "loc.input.label.mergeTestResults": "Объединение результатов теста",
+  "loc.input.help.mergeTestResults": "Чтобы объединить результаты из всех файлов результатов тестов в один тестовый запуск в Azure Pipelines, установите этот флажок. Чтобы создать тестовый запуск для каждого файла результатов теста, снимите этот флажок.",
+  "loc.input.label.testRunTitle": "Заголовок тестового запуска",
+  "loc.input.help.testRunTitle": "Укажите имя для тестового запуска.",
+  "loc.input.label.platform": "Платформа",
+  "loc.input.help.platform": "Платформа, для которой выполнялись тесты.",
+  "loc.input.label.configuration": "Конфигурация",
+  "loc.input.help.configuration": "Конфигурация, для которой выполнялись тесты.",
+  "loc.input.label.publishRunAttachments": "Отправить тестовые вложения",
+  "loc.input.help.publishRunAttachments": "Участвовать или отказаться от участия в публикации вложений уровня тестового запуска."
+}

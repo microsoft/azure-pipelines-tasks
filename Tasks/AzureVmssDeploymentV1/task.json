@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 249,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -166,11 +166,11 @@
   ],
   "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "execution": {
-    "Node16": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20_1": {
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 3
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -43,10 +43,6 @@
       "target": "src//duffle.js"
     },
     "Node16": {
-      "target": "src//duffle.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "src//duffle.js",
       "argumentFormat": ""
     }

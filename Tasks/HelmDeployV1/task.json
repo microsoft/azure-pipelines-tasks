@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 250,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -515,10 +515,6 @@
     },
     "Node10": {
       "target": "src//downloadsecurefiles.js"
-    },
-    "Node20_1": {
-      "target": "src//downloadsecurefiles.js",
-      "argumentFormat": ""
     }
   },
   "execution": {
@@ -528,10 +524,6 @@
     },
     "Node10": {
       "target": "src//helm.js"
-    },
-    "Node20_1": {
-      "target": "src//helm.js",
-      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -541,10 +533,6 @@
     },
     "Node10": {
       "target": "src//deletesecurefiles.js"
-    },
-    "Node20_1": {
-      "target": "src//deletesecurefiles.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

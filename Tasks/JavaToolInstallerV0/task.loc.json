@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 3
+    "Patch": 2
   },
   "satisfies": [
     "Java",
@@ -166,10 +166,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "javatoolinstaller.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
     }

@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Conda environment",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Create and activate a Conda environment",
+  "loc.instanceNameFormat": "Conda Environment $(environmentName)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.environmentName": "Environment name",
+  "loc.input.help.environmentName": "Name of the Conda environment to create and activate.",
+  "loc.input.label.packageSpecs": "Package specs",
+  "loc.input.help.packageSpecs": "Space-delimited list of packages to install when creating the environment.",
+  "loc.input.label.updateConda": "Update to the latest Conda",
+  "loc.input.help.updateConda": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable.",
+  "loc.input.label.createOptions": "Environment creation options",
+  "loc.input.help.createOptions": "Space-delimited list of other options to pass to the `conda create` command.",
+  "loc.input.label.cleanEnvironment": "Clean the environment",
+  "loc.input.help.cleanEnvironment": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment.",
+  "loc.messages.CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
+  "loc.messages.CreateFailed": "Failed to create Conda environment %s: %s",
+  "loc.messages.CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
+  "loc.messages.ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
+  "loc.messages.PlatformNotRecognized": "Platform not recognized"
+}

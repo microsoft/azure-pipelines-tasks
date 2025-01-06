@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Environnement Conda",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Créer et activer un environnement Conda",
+  "loc.instanceNameFormat": "Environnement Conda $(environmentName)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.environmentName": "Nom de l'environnement",
+  "loc.input.help.environmentName": "Nom de l'environnement Conda à créer et à activer.",
+  "loc.input.label.packageSpecs": "Spécifications du package",
+  "loc.input.help.packageSpecs": "Liste de packages délimités par des espaces à installer au moment de la création de l'environnement.",
+  "loc.input.label.updateConda": "Mettre à jour vers la dernière version de Conda",
+  "loc.input.help.updateConda": "Mettez à jour Conda vers la dernière version. Cela s'applique à l'installation de Conda située dans 'PATH' ou dans le chemin spécifié par la variable d'environnement 'CONDA'.",
+  "loc.input.label.createOptions": "Options de création de l'environnement",
+  "loc.input.help.createOptions": "Liste d'options supplémentaires délimitées par des espaces à passer à la commande 'conda create'.",
+  "loc.input.label.cleanEnvironment": "Nettoyer l'environnement",
+  "loc.input.help.cleanEnvironment": "Si l'environnement existe déjà, supprimez-le, puis recréez-le. En l'absence de sélection, la tâche réactive un environnement existant.",
+  "loc.messages.CleanEnvironment": "Environnement existant trouvé : %s. Le paramètre \"Nettoyer l'environnement\" de la tâche est défini. Suppression...",
+  "loc.messages.CreateFailed": "Échec de la création de l'environnement Conda %s : %s",
+  "loc.messages.CondaNotFound": "L'exécutable 'conda' est introuvable sur le système. Demandez à votre administrateur d'installer Miniconda ou Anaconda. Ajoutez ensuite l'exécutable 'conda' à 'PATH', ou définissez la variable d'environnement 'CONDA' en fonction de la racine de l'installation.",
+  "loc.messages.ReactivateExistingEnvironment": "Environnement existant trouvé : %s. Le paramètre \"Nettoyer l'environnement\" de la tâche n'est pas défini. Réactivation...",
+  "loc.messages.PlatformNotRecognized": "Plateforme non reconnue"
+}

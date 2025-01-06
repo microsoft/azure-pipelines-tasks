@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@types/node": "^20.11.0",
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^4.4.0",
+    "azure-pipelines-tasks-codecoverage-tools": "^3.219.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
+  "name": "Npm",
+  "friendlyName": "npm",
+  "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 248,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "instanceNameFormat": "npm $(command)",
+  "groups": [
+    {
+      "displayName": "Custom registries and authentication",
+      "name": "customRegistries",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = ci || command = custom"
+    },
+    {
+      "name": "publishRegistries",
+      "displayName": "Destination registry and authentication",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
+    },
+    {
+      "displayName": "Advanced",
+      "name": "advanced",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = ci || command = publish"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "command",
+      "label": "Command",
+      "helpMarkDown": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\\\), and surround the escaped string with double quotes (\").",
+      "type": "pickList",
+      "required": true,
+      "options": {
+        "ci": "ci",
+        "install": "install",
+        "publish": "publish",
+        "custom": "custom"
+      },
+      "defaultValue": "install"
+    },
+    {
+      "name": "workingDir",
+      "label": "Working folder that contains package.json",
+      "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
+      "type": "filePath"
+    },
+    {
+      "groupName": "advanced",
+      "name": "verbose",
+      "label": "Verbose logging",
+      "helpMarkDown": "Select to print more information to the console on run",
+      "type": "boolean"
+    },
+    {
+      "name": "customCommand",
+      "label": "Command and arguments",
+      "helpMarkDown": "Custom command to run, e.g. \"dist-tag ls mypackage\".",
+      "type": "string",
+      "visibleRule": "command = custom",
+      "required": true
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customRegistry",
+      "label": "Registries to use",
+      "helpMarkDown": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
+      "type": "radio",
+      "options": {
+        "useNpmrc": "Registries in my .npmrc",
+        "useFeed": "Registry I select here"
+      },
+      "defaultValue": "useNpmrc"
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customFeed",
+      "label": "Use packages from this Azure Artifacts/TFS registry",
+      "helpMarkDown": "Include the selected feed in the generated .npmrc.",
+      "type": "pickList",
+      "visibleRule": "customRegistry = useFeed",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customEndpoint",
+      "label": "Credentials for registries outside this organization/collection",
+      "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+      "type": "connectedService:externalnpmregistry",
+      "visibleRule": "customRegistry = useNpmrc",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishRegistry",
+      "label": "Registry location",
+      "helpMarkDown": "Registry the command will target.",
+      "type": "radio",
+      "options": {
+        "useExternalRegistry": "External npm registry (including other accounts/collections)",
+        "useFeed": "Registry I select here"
+      },
+      "defaultValue": "useExternalRegistry"
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishFeed",
+      "label": "Target registry",
+      "helpMarkDown": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
+      "type": "pickList",
+      "visibleRule": "publishRegistry = useFeed",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "Publish pipeline metadata",
+      "defaultValue": true,
+      "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+      "visibleRule": "command = publish && publishRegistry = useFeed"
+    },
+    {
+      "groupName": "publishRegistries",
+      "name": "publishEndpoint",
+      "label": "External Registry",
+      "helpMarkDown": "Credentials to use for publishing to an external registry.",
+      "type": "connectedService:externalnpmregistry",
+      "visibleRule": "publishRegistry = useExternalRegistry",
+      "required": true
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "customFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "publishFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "npm.js"
+    },
+    "Node16": {
+      "target": "npm.js"
+    },
+    "Node20_1": {
+      "target": "npm.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundBuildCredentials": "Found build credentials",
+    "NoBuildCredentials": "Could not find build credentials",
+    "UnknownCommand": "Unknown command: %s",
+    "MultipleProjectConfigs": "More than one project .npmrc found in $s",
+    "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
+    "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+    "SavingFile": "Saving file %s",
+    "RestoringFile": "Restoring file %s",
+    "PublishFeed": "Publishing to internal feed",
+    "PublishExternal": "Publishing to external registry",
+    "UseFeed": "Using internal feed",
+    "UseNpmrc": "Using registries in .npmrc",
+    "PublishRegistry": "Publishing to registry: %s",
+    "UsingRegistry": "Using registry: %s",
+    "AddingAuthRegistry": "Adding auth for registry: %s",
+    "FoundLocalRegistries": "Found %d registries in this organization/collection",
+    "ForcePackagingUrl": "Packaging collection URL forced to: %s",
+    "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
+    "NpmFailed": "Npm failed with return code: %s",
+    "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
+    "TestDebugLog": "Trying debug log location: %s",
+    "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
+    "RestoringProjectNpmrc": "Restoring project .npmrc",
+    "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
+    "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+    "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.248.0",
+    "Node20_229_1": "1.248.1"
+  }
+}

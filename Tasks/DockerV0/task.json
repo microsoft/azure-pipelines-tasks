@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -348,10 +348,6 @@
     },
     "Node10": {
       "target": "container.js"
-    },
-    "Node20_1": {
-      "target": "container.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

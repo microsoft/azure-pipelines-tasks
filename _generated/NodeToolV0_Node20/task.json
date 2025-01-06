@@ -1,0 +1,140 @@
+{
+  "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
+  "name": "NodeTool",
+  "friendlyName": "Node.js tool installer",
+  "description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) or [see the Node documentation](https://nodejs.org/docs/latest/api/documentation.html)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 247,
+    "Patch": 1
+  },
+  "satisfies": [
+    "Node",
+    "npm",
+    "node.js"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "Use Node $(versionSpec)",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "versionSource",
+      "type": "radio",
+      "label": "Source of version",
+      "required": true,
+      "defaultValue": "spec",
+      "options": {
+        "spec": "Specify Node version",
+        "fromFile": "Get version from file"
+      }
+    },
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "Version Spec",
+      "defaultValue": "6.x",
+      "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
+      "visibleRule": "versionSource = spec"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "Path to the .nvmrc file",
+      "helpMarkDown": "File path to get version.  Example: src/.nvmrc",
+      "visibleRule": "versionSource = fromFile"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "Check for Latest Version",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
+    },
+    {
+      "name": "force32bit",
+      "type": "boolean",
+      "label": "Use 32 bit version on x64 agents",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
+    },
+    {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "Set source for Node.js binaries",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "Set retry count when nodes downloads failed",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times."
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "Set delay between retries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option to set the delay between retries in milliseconds. The default value is 1000 milliseconds."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH"
+      ]
+    }
+  },
+  "messages": {
+    "ToolFailed": "Tool install failed: %s",
+    "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+    "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+    "UnexpectedOS": "Unexpected OS %s",
+    "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.247.0",
+    "Node20-225": "0.247.1"
+  }
+}

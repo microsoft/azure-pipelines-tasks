@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -76,10 +76,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "usenode.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "usenode.js",
       "argumentFormat": ""
     }

@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 4
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -44,10 +44,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
