@@ -54,8 +54,8 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.247.0",
-    "Node20_229_1": "0.247.1",
+    "Default": "0.247.1",
+    "LocalPackages": "0.249.4",
     "wif_242": "0.247.2"
   }
 }

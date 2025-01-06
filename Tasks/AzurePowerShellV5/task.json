@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 251,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -188,6 +188,10 @@
       "argumentFormat": ""
     },
     "Node10": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }
