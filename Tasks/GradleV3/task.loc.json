@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
@@ -382,6 +382,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }
