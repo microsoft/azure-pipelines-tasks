@@ -47,6 +47,18 @@ export function isLatestVersion(version: string): boolean {
   return v === 'latest' || v === '*' || v === '';
 }
 
+function addAuthorizationHeaderIfEnabled(request: webClient.WebRequest): void {
+  if (taskLib.getBoolFeatureFlag('USE_AUTHORIZATION_FOR_API_CALL')) {
+    const token = getGithubEndPointToken();
+    if (token) {
+      request.headers['Authorization'] = 'token ' + token;
+    }
+    else {
+      taskLib.warning('The GitHub token is empty. API calls may fail without proper authentication');
+    }
+  }
+}
+
 export async function getLatestVersionTag(): Promise<string> {
   let request = new webClient.WebRequest();
   request.uri = 'https://api.github.com/repos/' + KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/latest';
@@ -54,6 +66,7 @@ export async function getLatestVersionTag(): Promise<string> {
   request.headers = request.headers || {};
   request.headers['User-Agent'] = userAgent;
 
+  addAuthorizationHeaderIfEnabled(request);
   const response = await webClient.sendRequest(request);
   return response.body['tag_name'];
 }
@@ -85,6 +98,7 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     request.headers = request.headers || {};
     request.headers['User-Agent'] = userAgent;
 
+    addAuthorizationHeaderIfEnabled(request);
     const response = await webClient.sendRequest(request);
 
     const releaseUrl: string =
@@ -131,6 +145,50 @@ export async function unzipRelease(zipPath: string): Promise<string> {
   }
   catch (err) {
     throw new Error(taskLib.loc('Err_ExtractionFailed', err));
+  }
+}
+
+function getGithubEndPointToken(): string {
+  const githubEndpoint = taskLib.getInput("gitHubConnection", false);
+  const githubEndpointObject = taskLib.getEndpointAuthorization(githubEndpoint, true);
+  let githubEndpointToken: string = null;
+
+  if (!githubEndpointObject) {
+    throw new GitHubEndpointObjectError(taskLib.loc("Failed to retrieve GitHub endpoint object."));
+  }
+  taskLib.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+
+  switch (githubEndpointObject.scheme) {
+    case 'PersonalAccessToken':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    case 'OAuth':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    case 'Token':
+      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      break;
+    default:
+      throw new GitHubEndpointSchemeError(
+        taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme)
+      );
+  }
+  return githubEndpointToken;
+}
+
+class GitHubEndpointObjectError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GitHubEndpointObjectError";
+    Object.setPrototypeOf(this, GitHubEndpointObjectError.prototype);
+  }
+}
+
+class GitHubEndpointSchemeError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GitHubEndpointSchemeError";
+    Object.setPrototypeOf(this, GitHubEndpointSchemeError.prototype);
   }
 }
 
