@@ -14,8 +14,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 250,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",

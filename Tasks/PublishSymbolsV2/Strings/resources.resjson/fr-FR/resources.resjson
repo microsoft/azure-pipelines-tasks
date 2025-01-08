@@ -4,8 +4,6 @@
   "loc.description": "Indexer du code source et publier des symboles sur un partage de fichiers ou un serveur de symboles Azure Artifacts",
   "loc.instanceNameFormat": "Chemin de publication des symboles",
   "loc.group.displayName.advanced": "Avancé",
-  "loc.input.label.ConnectedServiceName": "Connexion Azure Resource Manager",
-  "loc.input.help.ConnectedServiceName": "Nom de la connexion au service Azure Resource Manager. Actuellement, le type d’authentification pris en charge est uniquement la fédération d’identités de charge de travail.",
   "loc.input.label.SymbolsFolder": "Chemin d'accès du dossier de symboles",
   "loc.input.help.SymbolsFolder": "Chemin du dossier de recherche des fichiers de symboles. La valeur par défaut est $(Build.SourcesDirectory). Sinon, spécifiez un chemin associé à une racine. Exemple : $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Modèle de recherche",

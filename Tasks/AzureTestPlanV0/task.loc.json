@@ -14,11 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 250,
-<<<<<<< HEAD
-    "Patch": 0
-=======
     "Patch": 10
->>>>>>> master
   },
   "preview": true,
   "demands": [],

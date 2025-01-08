@@ -1,22 +1,4 @@
 {
-<<<<<<< HEAD
-    "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
-    "name": "Kubernetes",
-    "friendlyName": "Kubectl",
-    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
-    "helpUrl": "https://aka.ms/azpipes-kubectl-tsg",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 250,
-        "Patch": 0
-=======
   "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
   "name": "Kubernetes",
   "friendlyName": "Kubectl",
@@ -42,7 +24,6 @@
       "displayName": "Kubernetes Cluster",
       "isExpanded": true,
       "visibleRule": "command != logout"
->>>>>>> master
     },
     {
       "name": "commands",
