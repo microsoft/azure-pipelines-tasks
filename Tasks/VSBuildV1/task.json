@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 248,
+    "Minor": 249,
     "Patch": 0
   },
   "demands": [
@@ -31,10 +31,10 @@
     {
       "name": "solution",
       "type": "filePath",
-      "label": "Solution",
+      "label": "Solution or project",
       "defaultValue": "**\\*.sln",
       "required": true,
-      "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
+      "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run. Wildcards can be used. For example, `**\\*.sln` for all sln files in all sub folders."
     },
     {
       "name": "vsVersion",
