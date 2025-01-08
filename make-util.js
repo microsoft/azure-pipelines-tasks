@@ -379,6 +379,10 @@ var installNodeAsync = async function (nodeVersion) {
         case 'darwin':
             var arch = run('uname -m')
             var nodeMajorVersionNumber = parseInt(nodeVersion.match(/\d+/)[0], 10);
+            if (isNaN(nodeMajorVersionNumber)) {
+                console.debug("Couldn't parse Node version; falling back to use version Node 14.");
+                nodeMajorVersionNumber = 14
+            }
             if (nodeMajorVersionNumber < 16) { // arm64 support started since node16
                 arch = 'x64'
             }
