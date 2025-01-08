@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "Informations d'identification des registres situés en dehors de cette organisation/collection",
   "loc.input.help.customEndpoint": "Informations d'identification à utiliser pour les registres externes situés dans le fichier .npmrc du projet. Pour les registres présents dans cette organisation/collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
   "loc.input.label.workloadIdentityServiceConnection": "Connexion au service « Azure DevOps »",
-  "loc.input.help.workloadIdentityServiceConnection": "Si ce paramètre est défini, feedUrl est obligatoire. Les connexions de service pour les organisations/collections externes et les points de terminaison personnalisés ne sont pas compatibles.",
+  "loc.input.help.workloadIdentityServiceConnection": "Informations d’identification à utiliser pour les registres qui ont localisé le fichier .npmrc d’un projet. Utilisez feedUrl pour spécifier les informations d’identification utilisées pour le registre unique dans un fichier .npmrc. Non compatible avec customEndpoint.",
   "loc.input.label.feedUrl": "URL Azure Artifacts",
   "loc.input.help.feedUrl": "Si cette option est définie, workloadIdentityServiceConnection est requis. Non compatible avec customEndpoint. L’URL du flux doit être au format registre npm, par exemple, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "Informations d'identification de build trouvées",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "Ajout d’informations d’authentification à partir des %s de connexion de service pour les %s de flux",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Authentification ajoutée pour le flux %s.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Impossible d’obtenir les informations d’identification fédérées à partir de la connexion de service : %s.",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "L’URL du flux et la connexion de service doivent être définies et ne peuvent pas être vides.",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Si l’URL du flux est fournie, la connexion de service « Azure DevOps » doit être fournie et ne peut pas être vide.",
   "loc.messages.SkippingParsingNpmrc": "Analyse npmrc ignorée",
   "loc.messages.DuplicateCredentials": "L’authentification du registre « %s » a été précédemment définie. Remplacement par une nouvelle configuration.",
   "loc.messages.FoundEndpointCredentials": "Informations d’identification définies pour la connexion de service « %s »."
