@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
     "name": "AzureVmssDeployment",
     "friendlyName": "Azure VM scale set deployment",
@@ -16,6 +17,33 @@
         "Major": 1,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+  "name": "AzureVmssDeployment",
+  "friendlyName": "Azure VM scale set deployment",
+  "description": "Deploy a virtual machine scale set image",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
+  "category": "Deploy",
+  "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 249,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.209.0",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "Azure Details",
+      "isExpanded": true
+>>>>>>> master
     },
     "demands": [],
     "minimumAgentVersion": "2.209.0",

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "1E244D32-2DD4-4165-96FB-B7441CA9331E",
     "name": "AzureKeyVault",
     "friendlyName": "Azure Key Vault",
@@ -16,6 +17,41 @@
         "Major": 1,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "1E244D32-2DD4-4165-96FB-B7441CA9331E",
+  "name": "AzureKeyVault",
+  "friendlyName": "Azure Key Vault",
+  "description": "Download Azure Key Vault secrets",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-key-vault",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "category": "Deploy",
+  "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 249,
+    "Patch": 2
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureKeyVault@1 task is deprecated, please use the latest version of the AzureKeyVault task",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Azure subscription for the key vault"
+>>>>>>> master
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",

@@ -1,11 +1,11 @@
 
-ci/  @microsoft/akvelon-build-task-team
+ci/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/AndroidSigningV2/    @microsoft/akvelon-build-task-team
+Tasks/AndroidSigningV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
+Tasks/AndroidSigningV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/ANTV1/   @microsoft/akvelon-build-task-team
+Tasks/ANTV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE
 
@@ -15,12 +15,12 @@ Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms    @DergachevE
 
 Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE
 
-Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
+Tasks/ArchiveFilesV2/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI Rotation for @microsoft/release-management-task-team : DRI-ReleaseManagement
-Tasks/AzureAppConfigurationV10/  @microsoft/azure-appconfig-team
+Tasks/AzureAppConfigurationExportV10/  @microsoft/azure-appconfig-team
 
-Tasks/AzureAppConfigurationPushV10/  @microsoft/azure-appconfig-team
+Tasks/AzureAppConfigurationImportV10/  @microsoft/azure-appconfig-team
 
 Tasks/AzureAppConfigurationSnapshotV1/  @microsoft/azure-appconfig-team
 
@@ -112,9 +112,9 @@ Tasks/AzureVmssDeploymentV0/   @microsoft/release-management-task-team @manolera
 
 Tasks/AzureVmssDeploymentV1/   @microsoft/release-management-task-team @manolerazvan
 
-Tasks/BashV3/  @microsoft/akvelon-build-task-team
+Tasks/BashV3/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/BatchScriptV1/  @microsoft/akvelon-build-task-team
+Tasks/BatchScriptV1/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/CacheV2/       @johnterickson
 
@@ -128,11 +128,11 @@ Tasks/ChefV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/ChefKnifeV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/CMakeV1/  @microsoft/akvelon-build-task-team
+Tasks/CMakeV1/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/CmdLineV2/   @microsoft/akvelon-build-task-team
+Tasks/CmdLineV2/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/CocoaPodsV0/     @microsoft/akvelon-build-task-team
+Tasks/CocoaPodsV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/Common/artifacts-common/     @microsoft/azure-artifacts-packages
 
@@ -172,23 +172,23 @@ Tasks/Common/webdeployment-common/   @microsoft/release-management-task-team @ma
 
 Tasks/CondaAuthenticateV0/      @microsoft/azure-artifacts-packages
 
-Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
+Tasks/CondaEnvironmentV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
+Tasks/CondaEnvironmentV1/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/ContainerBuildV0/    @microsoft/release-management-task-team @manolerazvan
 
-Tasks/CopyFilesV2/  @microsoft/akvelon-build-task-team
+Tasks/CopyFilesV2/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/CopyFilesOverSSHV0/  @microsoft/akvelon-build-task-team
+Tasks/CopyFilesOverSSHV0/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/CUrlUploaderV2/  @microsoft/akvelon-build-task-team
+Tasks/CUrlUploaderV2/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/DecryptFileV1/  @microsoft/akvelon-build-task-team
+Tasks/DecryptFileV1/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DelayV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DeleteFilesV1/   @microsoft/akvelon-build-task-team
+Tasks/DeleteFilesV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DeployVisualStudioTestAgentV2/    @rasunkar  @microsoft\adoautotest
 
@@ -204,11 +204,11 @@ Tasks/DockerComposeV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreCLIV2/     @microsoft/akvelon-build-task-team @DergachevE 
+Tasks/DotNetCoreCLIV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
 
-Tasks/DotNetCoreInstallerV0/   @microsoft/akvelon-build-task-team @DergachevE 
+Tasks/DotNetCoreInstallerV0/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
 
-Tasks/DotNetCoreInstallerV1/   @microsoft/akvelon-build-task-team @DergachevE 
+Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -230,19 +230,19 @@ Tasks/DownloadPipelineArtifactV1/      @carl-tanner @fadnavistanmay @b-barthel @
 
 Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/DownloadSecureFileV1/    @microsoft/akvelon-build-task-team
+Tasks/DownloadSecureFileV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DuffleInstallerV0/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ExtractFilesV1/      @microsoft/akvelon-build-task-team
+Tasks/ExtractFilesV1/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/FileTransformV1/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/FileTransformV2/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/FtpUploadV1/     @microsoft/akvelon-build-task-team
+Tasks/FtpUploadV1/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/FtpUploadV2/     @microsoft/akvelon-build-task-team
+Tasks/FtpUploadV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/FuncToolsInstallerV0/     @microsoft/release-management-task-team @manolerazvan 
 
@@ -256,15 +256,15 @@ Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan
 
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/GradleV2/    @microsoft/akvelon-build-task-team
+Tasks/GradleV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/GradleV3/    @microsoft/akvelon-build-task-team
+Tasks/GradleV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/GruntV0/     @microsoft/akvelon-build-task-team
+Tasks/GruntV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/GulpV0/      @microsoft/akvelon-build-task-team
+Tasks/GulpV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/GulpV1/      @microsoft/akvelon-build-task-team
+Tasks/GulpV1/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/HelmDeployV0/       @microsoft/release-management-task-team @manolerazvan 
 
@@ -280,23 +280,23 @@ Tasks/IISWebAppDeploymentOnMachineGroupV0/    @microsoft/release-management-task
 
 Tasks/IISWebAppManagementOnMachineGroupV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/InstallAppleCertificateV2/   @microsoft/akvelon-build-task-team
+Tasks/InstallAppleCertificateV2/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/InstallAppleProvisioningProfileV1/   @microsoft/akvelon-build-task-team
+Tasks/InstallAppleProvisioningProfileV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/InstallSSHKeyV0/     @microsoft/akvelon-build-task-team
+Tasks/InstallSSHKeyV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/InvokeRestApiV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
+Tasks/JavaToolInstallerV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/JavaToolInstallerV1/     @microsoft/akvelon-build-task-team
+Tasks/JavaToolInstallerV1/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/JenkinsDownloadArtifactsV1/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/JenkinsDownloadArtifactsV2/   @microsoft/release-management-task-team @manolerazvan
 
-Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
+Tasks/JenkinsQueueJobV2/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/KubectlInstallerV0/  @microsoft/release-management-task-team @manolerazvan 
 
@@ -318,19 +318,19 @@ Tasks/ManualValidationV1/      @microsoft/release-management-task-team @manolera
 
 Tasks/MavenAuthenticateV0/     @microsoft/azure-artifacts-packages
 
-Tasks/MavenV2/     @microsoft/akvelon-build-task-team
+Tasks/MavenV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/MavenV3/     @microsoft/akvelon-build-task-team
+Tasks/MavenV3/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/MavenV4/     @microsoft/akvelon-build-task-team
+Tasks/MavenV4/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
+Tasks/MSBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/MysqlDeploymentOnMachineGroupV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
+Tasks/NodeToolV0/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI rotation: Azure Container Registry / Triage
 Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT
@@ -369,7 +369,7 @@ Tasks/PipAuthenticateV0/     @microsoft/azure-artifacts-packages
 
 Tasks/PipAuthenticateV1/     @microsoft/azure-artifacts-packages
 
-Tasks/PowerShellV2/    @microsoft/akvelon-build-task-team
+Tasks/PowerShellV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/PowerShellOnTargetMachinesV1/  @microsoft/release-management-task-team @manolerazvan 
 
@@ -377,7 +377,7 @@ Tasks/PowerShellOnTargetMachinesV2/  @microsoft/release-management-task-team @ma
 
 Tasks/PowerShellOnTargetMachinesV3/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/PublishBuildArtifactsV1/     @microsoft/akvelon-build-task-team
+Tasks/PublishBuildArtifactsV1/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/PublishCodeCoverageResultsV1/    @rasunkar  @microsoft\adoautotest
 
@@ -401,9 +401,9 @@ Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @m
 
 Tasks/PublishToAzureServiceBusV2/     @microsoft/release-management-task-team @manolerazvan
 
-Tasks/PyPIPublisherV0/     @microsoft/akvelon-build-task-team
+Tasks/PyPIPublisherV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/PythonScriptV0/      @microsoft/akvelon-build-task-team
+Tasks/PythonScriptV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/QueryWorkItemsV0/    @microsoft/release-management-task-team @manolerazvan 
 
@@ -425,7 +425,7 @@ Tasks/ServiceFabricPowerShellV1/  @microsoft/release-management-task-team @manol
 
 Tasks/ServiceFabricUpdateManifestsV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ShellScriptV2/ @microsoft/akvelon-build-task-team
+Tasks/ShellScriptV2/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/SqlAzureDacpacDeploymentV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -433,7 +433,7 @@ Tasks/SqlDacpacDeploymentOnMachineGroupV0/    @microsoft/release-management-task
 
 Tasks/SqlServerDacpacDeployment/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/SshV0/   @microsoft/akvelon-build-task-team
+Tasks/SshV0/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/TwineAuthenticateV0/     @microsoft/azure-artifacts-packages
 
@@ -441,15 +441,15 @@ Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
-Tasks/UseDotNetV2/     @microsoft/akvelon-build-task-team @DergachevE
+Tasks/UseDotNetV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE
 
-Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
+Tasks/UseNodeV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/UsePythonVersionV0/      @microsoft/akvelon-build-task-team
+Tasks/UsePythonVersionV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/UseRubyVersionV0/    @microsoft/akvelon-build-task-team
+Tasks/UseRubyVersionV0/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/VSBuildV1/   @microsoft/akvelon-build-task-team
+Tasks/VSBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
 
@@ -463,10 +463,10 @@ Tasks/WindowsMachineFileCopyV1/   @microsoft/release-management-task-team @manol
 
 Tasks/WindowsMachineFileCopyV2/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/XamarinAndroidV1/    @microsoft/akvelon-build-task-team
+Tasks/XamarinAndroidV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/XamariniOSV2/     @microsoft/akvelon-build-task-team
+Tasks/XamariniOSV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/XamarinTestCloudV1/      @microsoft/akvelon-build-task-team
+Tasks/XamarinTestCloudV1/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/XcodeV5/ @microsoft/akvelon-build-task-team
+Tasks/XcodeV5/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani

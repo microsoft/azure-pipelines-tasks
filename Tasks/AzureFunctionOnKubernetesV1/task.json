@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
     "name": "AzureFunctionOnKubernetes",
     "friendlyName": "Azure Function on Kubernetes",
@@ -16,6 +17,32 @@
         "Major": 1,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+  "name": "AzureFunctionOnKubernetes",
+  "friendlyName": "Azure Function on Kubernetes",
+  "description": "Deploy Azure function to Kubernetes cluster.",
+  "helpUrl": "https://aka.ms/func-k8s",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 250,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "serviceConnections",
+      "displayName": "Service Connections",
+      "isExpanded": true
+>>>>>>> master
     },
     "demands": [],
     "groups": [

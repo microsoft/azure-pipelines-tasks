@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "DotNetCoreInstaller",
     "friendlyName": ".NET Core SDK/runtime installer",
@@ -15,6 +16,44 @@
         "Major": 0,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": ".NET Core SDK/runtime installer",
+  "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 250,
+    "Patch": 0
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
+  "deprecated": true,
+  "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "Package to install",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+>>>>>>> master
     },
     "satisfies": [
         "DotNetCore"

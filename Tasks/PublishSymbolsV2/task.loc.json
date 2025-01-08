@@ -14,7 +14,11 @@
   "version": {
     "Major": 2,
     "Minor": 250,
+<<<<<<< HEAD
     "Patch": 0
+=======
+    "Patch": 2
+>>>>>>> master
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -48,6 +52,14 @@
       "defaultValue": "**/bin/**/*.pdb",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
+    },
+    {
+      "name": "Manifest",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Manifest",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Manifest"
     },
     {
       "name": "IndexSources",
@@ -246,6 +258,7 @@
     "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
-    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport"
+    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport",
+    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound"
   }
 }

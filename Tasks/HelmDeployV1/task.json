@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
@@ -15,6 +16,32 @@
         "Major": 1,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+  "name": "HelmDeploy",
+  "friendlyName": "Package and deploy Helm charts",
+  "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 250,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "cluster",
+      "displayName": "Kubernetes Cluster",
+      "isExpanded": true,
+      "visibleRule": "command != logout && command != package"
+>>>>>>> master
     },
     "demands": [],
     "groups": [

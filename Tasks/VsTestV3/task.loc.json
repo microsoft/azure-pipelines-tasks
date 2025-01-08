@@ -17,7 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
+<<<<<<< HEAD
     "Minor": 250,
+=======
+    "Minor": 249,
+>>>>>>> master
     "Patch": 0
   },
   "demands": [
@@ -426,6 +430,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.donotPublishTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
     },
     {
       "name": "failOnMinTestsNotRun",

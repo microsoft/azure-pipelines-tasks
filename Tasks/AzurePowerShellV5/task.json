@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
@@ -19,6 +20,35 @@
         "Major": 5,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+  "name": "AzurePowerShell",
+  "friendlyName": "Azure PowerShell",
+  "description": "Run a PowerShell script within an Azure environment",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 5,
+    "Minor": 251,
+    "Patch": 0
+  },
+  "releaseNotes": "Added support for Az Module and cross platform agents.",
+  "groups": [
+    {
+      "name": "AzurePowerShellVersionOptions",
+      "displayName": "Azure PowerShell version options",
+      "isExpanded": true
+>>>>>>> master
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [

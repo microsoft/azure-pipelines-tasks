@@ -26,6 +26,7 @@ interface IClientToolOptions {
     requestName: string;
     sourcePathListFileName: string;
     symbolServiceUri: string;
+    manifest: string;
 }
 
 export async function run(clientToolFilePath: string): Promise<void> {
@@ -37,7 +38,16 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
-        const connectedServiceName = tl.getInput("ConnectedServiceName", false);        
+        const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+        const manifest = tl.getInput("Manifest", false); 
+        if(manifest && !fileExists(manifest)) {
+            throw new Error(tl.loc("ManifestFileNotFound", manifest));
+        }
+        else
+        {
+            tl.debug("Manifest file found at: " + manifest);
+        }
+
         tl.debug("connectedServiceName: " + connectedServiceName);
 
         if(connectedServiceName){
@@ -111,7 +121,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
                     personalAccessToken,
                     requestName,
                     sourcePathListFileName,
-                    symbolServiceUri
+                    symbolServiceUri,
+                    manifest
                 } as IClientToolOptions;
 
                 let toolRunnerOptions = clientToolRunner.getClientToolOptions();
@@ -143,6 +154,15 @@ export async function run(clientToolFilePath: string): Promise<void> {
     }
 }
 
+function fileExists(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 function publishSymbolsUsingClientTool(
     sourcePath: string,
     options: IClientToolOptions,
@@ -154,6 +174,11 @@ function publishSymbolsUsingClientTool(
         "--name", options.requestName,
         "--directory", sourcePath
     );
+
+    if (options.manifest) {
+        command.push("--manifest", options.manifest);
+        tl.debug("Manifest: " + options.manifest);
+    }
 
     if (options.expirationInDays) {
         command.push("--expirationInDays", options.expirationInDays);

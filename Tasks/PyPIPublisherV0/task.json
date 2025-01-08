@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
     "name": "PyPIPublisher",
     "friendlyName": "PyPI publisher",
@@ -16,6 +17,38 @@
         "Major": 0,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
+  "name": "PyPIPublisher",
+  "friendlyName": "PyPI publisher",
+  "description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pypi-publisher",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "category": "Package",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 249,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.0.0",
+  "instanceNameFormat": "Package and publish to PyPI",
+  "inputs": [
+    {
+      "name": "serviceEndpoint",
+      "aliases": [
+        "pypiConnection"
+      ],
+      "type": "connectedService:generic",
+      "label": "PyPI service connection",
+      "required": true,
+      "helpMarkDown": "A generic service connection for connecting to the package index."
+>>>>>>> master
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Package and publish to PyPI",

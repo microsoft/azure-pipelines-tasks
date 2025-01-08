@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceManagerTemplateDeployment",
     "friendlyName": "ARM template deployment",
@@ -16,6 +17,33 @@
         "Major": 3,
         "Minor": 250,
         "Patch": 0
+=======
+  "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+  "name": "AzureResourceManagerTemplateDeployment",
+  "friendlyName": "ARM template deployment",
+  "description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
+  "category": "Deploy",
+  "releaseNotes": "- Added support for bicepparam.",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 3,
+    "Minor": 250,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.119.1",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "Azure Details",
+      "isExpanded": true
+>>>>>>> master
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",

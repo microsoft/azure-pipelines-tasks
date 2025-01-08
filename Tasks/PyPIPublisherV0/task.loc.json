@@ -14,7 +14,11 @@
   "demands": [],
   "version": {
     "Major": 0,
+<<<<<<< HEAD
     "Minor": 250,
+=======
+    "Minor": 249,
+>>>>>>> master
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",

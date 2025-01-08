@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
     "name": "FileTransform",
     "friendlyName": "File transform",
@@ -116,5 +117,35 @@
         "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
         "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
         "FileTranformationNotEnabled": "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
+=======
+  "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
+  "name": "FileTransform",
+  "friendlyName": "File transform",
+  "description": "Replace tokens with variable values in XML or JSON configuration files",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
+  "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://aka.ms/AA5xp1v)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 2,
+    "Minor": 249,
+    "Patch": 0
+  },
+  "releaseNotes": "More optimized task fields that allow users to enable any/all of the transformation (XML), variable substitution (JSON and XML) features in a single task instance.</br>Task fails when any of the configured transformation/substitution is NOT applied or when the task is no-op.",
+  "instanceNameFormat": "File Transform: $(Package)",
+  "groups": [
+    {
+      "name": "VariableSubstitution",
+      "displayName": "Variable Substitution",
+      "isExpanded": true
+>>>>>>> master
     }
 }

@@ -29,6 +29,12 @@ steps:
 - script: npm install
   displayName: npm install
 
+- script: |
+    echo "##[error]PRs from fork repositories forbidden. Create PR directly."
+    exit 1
+  displayName: Check Is Forked PR
+  condition: eq(variables['SYSTEM.PULLREQUEST.ISFORK'], 'true')
+
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
@@ -59,6 +65,9 @@ steps:
       eq(variables['build.reason'], 'PullRequest'),
       ne(variables['numTasks'], 0)
     )
+
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
