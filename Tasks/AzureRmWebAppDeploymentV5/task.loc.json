@@ -687,6 +687,7 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
-    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth",
+    "RunFromPackageAppsetting": "ms-resource:loc.messages.RunFromPackageAppsetting"
   }
 }
