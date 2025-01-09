@@ -9,6 +9,7 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
@@ -204,7 +205,8 @@ export class KuduServiceUtility {
             }
 
             if (!packageType){
-                packageType = 'Zip'
+                tl.debug('No package type provided. Defaulting to zip package type');
+                packageType = PackageType[PackageType.zip];
             }
 
             let queryParameters: Array<string> = [
@@ -246,7 +248,7 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
          
             console.log(tl.loc('PackageDeploymentSuccess'));
-            console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
+            console.log(tl.loc('RunFromPackageAppsetting'));
             
         }
         catch(error) {
