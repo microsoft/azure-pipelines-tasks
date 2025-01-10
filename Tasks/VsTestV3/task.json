@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
+    "Minor": 251,
     "Patch": 0
   },
   "demands": [
@@ -416,6 +416,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Build configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "Custom Logger Configuration",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "You can use this option if you want to use a custom logger. Provide the logger and parameters it accepts",
       "groupName": "reportingOptions"
     },
     {

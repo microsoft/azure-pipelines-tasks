@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
+    "Minor": 251,
     "Patch": 1
   },
   "demands": [
@@ -419,6 +419,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customLoggerConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customLoggerConfig",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishRunAttachments",
@@ -682,7 +691,8 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "3.249.0",
-    "Node20_229_4": "3.249.1"
+    "Default": "3.251.0",
+    "LocalPackages": "3.249.4",
+    "Node20_229_4": "3.251.1"
   }
 }

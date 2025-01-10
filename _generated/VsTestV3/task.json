@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
+    "Minor": 251,
     "Patch": 0
   },
   "demands": [
@@ -419,6 +419,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "Custom Logger Configuration",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "You can use this option if you want to use a custom logger. Provide the logger and parameters it accepts",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "Upload test attachments",
@@ -678,7 +687,8 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d"
   },
   "_buildConfigMapping": {
-    "Default": "3.249.0",
-    "Node20_229_4": "3.249.1"
+    "Default": "3.251.0",
+    "LocalPackages": "3.249.4",
+    "Node20_229_4": "3.251.1"
   }
 }

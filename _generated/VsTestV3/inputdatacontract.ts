@@ -28,6 +28,7 @@ export interface TestReportingSettings {
     TestSourceSettings : TestSourceSettings;
     ExecutionStatusSettings : ExecutionStatusSettings;
     DonotPublishTestResults : boolean;
+    CustomLoggerConfig : string;
 }
 
 export interface TestSelectionSettings {
