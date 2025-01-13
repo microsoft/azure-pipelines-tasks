@@ -554,7 +554,10 @@ namespace BuildConfigGen
                     ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
                 }
 
-                foreach (var config in targetConfigs)
+                // we need to ensure merges occur first, as the changes may cascade to other configs (e.g. Default), if there are multiple
+                var targetConfigsWithMergeToBaseOrderedFirst = targetConfigs.OrderBy(x => x.mergeToBase ? 0 : 1);
+
+                foreach (var config in targetConfigsWithMergeToBaseOrderedFirst)
                 {
                     if (config.useGlobalVersion && !includeLocalPackagesBuildConfig)
                     {

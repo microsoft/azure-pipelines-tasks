@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 249,
+    "Minor": 251,
     "Patch": 0
   },
   "demands": [],
@@ -224,6 +224,8 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UploadingToStorageBlobsAuthenticationFailed": "ms-resource:loc.messages.UploadingToStorageBlobsAuthenticationFailed",
+    "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication"
   }
 }
