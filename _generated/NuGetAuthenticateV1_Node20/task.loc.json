@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 247,
     "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
@@ -60,8 +60,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.3",
-    "Node20_229_1": "1.246.4",
-    "wif_242": "1.246.5"
+    "Default": "1.247.3",
+    "Node20_229_1": "1.247.4",
+    "wif_242": "1.247.5"
   }
 }

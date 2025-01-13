@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "驗證工作，適用於裝運貨櫃配送的貨運客戶",
   "loc.instanceNameFormat": "貨物驗證 $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 服務連線",
+  "loc.input.help.workloadIdentityServiceConnection": "如果已設定，則需要 registryNames。忽略所有其他輸入。",
+  "loc.input.label.registryNames": "來自 config.toml 的登錄名稱",
+  "loc.input.help.registryNames": "以逗號分隔的 config.toml 中指定的登錄名稱清單，以進行驗證。如果設定此選項，則需要 workloadIdentityServiceConnection。忽略所有其他輸入。與 cargoServiceConnections 不相容。",
   "loc.input.label.configFile": "要驗證的 config.toml 檔案",
   "loc.input.help.configFile": "config.toml 檔案的路徑，指定您要使用的登錄。請選取檔案而非資料夾，例如 \"/.cargo/config.toml\"。",
   "loc.input.label.cargoServiceConnections": "此組織/集合外部登錄的認證",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "您選取的 config.toml 檔案必須包含登錄表格",
   "loc.messages.AuthenticatingThisConfigToml": "為在 %s 的 config.toml 檔案中列出的登錄新增驗證",
   "loc.messages.AddingAuthRegistry": "正在新增登錄的驗證: 具有權杖名稱的 %s: %s",
-  "loc.messages.AddingAuthExternalRegistry": "正在新增外部登錄的驗證: 具有權杖名稱的 %s: %s"
+  "loc.messages.AddingAuthExternalRegistry": "正在新增外部登錄的驗證: 具有權杖名稱的 %s: %s",
+  "loc.messages.ConnectionAlreadySet": "登錄 %s 已經有 %s 連線的驗證設定。",
+  "loc.messages.ConnectionAlreadySetOverwriting": "登錄 %s 已經有 %s 連線的驗證設定。正在覆寫現有的驗證。",
+  "loc.messages.AuthTelemetry": "已驗證 %s 內部摘要、%s 外部存放庫，以及 %s 的同盟服務連線",
+  "loc.messages.FailedToGetServiceConnectionAuth": "無法取得服務連線的同盟認證: %s。",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "登錄名稱和服務連線都必須設定，且不能是空的。",
+  "loc.messages.RegistryNotFound": "登錄名稱輸入 '%s' 未對應 config.toml 中的任何登錄"
 }

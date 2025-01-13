@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 246,
-    "Patch": 3
+    "Minor": 251,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -215,7 +215,8 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "4.246.2",
-    "Node20_229_2": "4.246.3"
+    "Default": "4.251.0",
+    "LocalPackages": "4.249.4",
+    "Node20_229_2": "4.251.1"
   }
 }

@@ -220,10 +220,18 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
 
     const hostName: string = options.serverEndpointUrl.hostname!;
     const portStr: string = options.serverEndpointUrl.port!;
-    let port: number = 21;
+    let port: number;
+
     if (portStr) {
         // port not explicitly specified, use default
         port = parseInt(portStr);
+    } else if (secure === "implicit") {
+        // port for implicit FTPS
+        port = 990;
+    }
+    else {
+        // port for FTP and explicit FTPS
+        port = 21;
     }
 
     console.log(tl.loc("ConnectPort", hostName, port));

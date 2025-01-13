@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 250,
+    "Patch": 10
   },
   "preview": true,
   "demands": [],
@@ -36,7 +36,7 @@
     },
     {
       "name": "testPlan",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
       "required": true,
@@ -77,20 +77,30 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
+        "JavaMaven": "Java-Maven",
+        "JavaGradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
       }
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.mergeTestResults",
-      "defaultValue": "false",
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pomFilePath",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
+      "helpMarkDown": "ms-resource:loc.input.help.pomFilePath",
+      "visibleRule": "testLanguageInput = JavaMaven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gradleFilePath",
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "publishRunAttachments",
@@ -105,7 +115,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
@@ -127,16 +137,6 @@
     }
   ],
   "dataSourceBindings": [
-    {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
     {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",
@@ -178,7 +178,8 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20-225": "0.246.1"
+    "Default": "0.250.10",
+    "LocalPackages": "0.249.4",
+    "Node20-225": "0.250.11"
   }
 }

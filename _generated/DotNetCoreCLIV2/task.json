@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -505,6 +505,14 @@
       "required": "false",
       "groupName": "generalAdvanced",
       "visibleRule": "command != restore && command != push && command != pack"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "Set timeout for package download request",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes)."
     }
   ],
   "dataSourceBindings": [
@@ -593,7 +601,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_2": "2.246.1"
+    "Default": "2.247.2",
+    "Node20_229_2": "2.247.3"
   }
 }

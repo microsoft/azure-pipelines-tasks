@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 249,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -130,7 +130,7 @@
     "InvalidKeyVaultName": "%s is an invalid KeyVault name."
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_2": "2.246.1"
+    "Default": "2.249.2",
+    "Node20_229_2": "2.249.3"
   }
 }

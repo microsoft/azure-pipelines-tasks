@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 251,
     "Patch": 1
   },
   "demands": [],
@@ -30,6 +30,14 @@
       "label": "ms-resource:loc.input.label.kubeloginVersion",
       "defaultValue": "latest",
       "helpMarkDown": "ms-resource:loc.input.help.kubeloginVersion"
+    },
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
     }
   ],
   "execution": {
@@ -63,7 +71,7 @@
     "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_3": "0.246.1"
+    "Default": "0.251.0",
+    "Node20_229_3": "0.251.1"
   }
 }

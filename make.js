@@ -1,6 +1,10 @@
 // parse command line options
 var argv = require('minimist')(process.argv.slice(2));
 
+if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
+    argv.includeLocalPackagesBuildConfig=true;
+}
+
 // modules
 var fs = require('fs');
 var os = require('os');
@@ -56,7 +60,9 @@ var packagePath = path.join(__dirname, '_package');
 var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
+var genTaskPathLocal = path.join(__dirname, '_generated_local');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
+var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
@@ -122,14 +128,27 @@ if (argv.task) {
 // note, currently the ts runner igores this setting and will always run.
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
-function getTaskList(taskList) {
+function getTaskList(taskList, includeLocalPackagesBuildConfig) {
     let tasksToBuild = taskList;
 
     if (!fs.existsSync(genTaskPath)) return tasksToBuild;
 
-    const generatedTaskFolders = fs.readdirSync(genTaskPath)
-        .filter((taskName) => {
-            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+    var generatedTaskFolders = fs.readdirSync(genTaskPath);
+
+    if(includeLocalPackagesBuildConfig)
+    {
+        if(fs.existsSync(genTaskPathLocal))
+        {
+            generatedTaskFolders = generatedTaskFolders.concat(fs.readdirSync(genTaskPathLocal));
+        }
+    }
+
+    generatedTaskFolders = generatedTaskFolders.filter((taskName) => {
+            return !taskName.endsWith(".versionmap.txt") 
+                && (
+                        (((includeLocalPackagesBuildConfig && fs.existsSync(path.join(genTaskPath, taskName))) || !includeLocalPackagesBuildConfig) && fs.statSync(path.join(genTaskPath, taskName)).isDirectory()) 
+                        || (includeLocalPackagesBuildConfig && fs.statSync(path.join(genTaskPathLocal, taskName)).isDirectory())
+                );
         });
 
     taskList.forEach((taskName) => {
@@ -218,22 +237,6 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    if (argv.includeLocalPackagesBuildConfig)
-    {
-        if (!argv.skipPrebuildSteps)
-        {
-            // build task-lib
-            cd(taskLibPath);
-            run("node make.js build", /*inheritStreams:*/true);
-
-            
-            await util.installNodeAsync('20');
-            // build task-lib
-            cd(tasksCommonPath);
-            run("node make.js --build", /*inheritStreams:*/true);
-        }
-    }
-
     // Need to validate generated tasks first
     if (!argv.skipPrebuildSteps)
     {
@@ -243,13 +246,48 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
     }
 
-    const allTasks = getTaskList(taskList);
+    if (argv.includeLocalPackagesBuildConfig)
+    {
+        if (!argv.skipPrebuildSteps)
+        {
+            // temp: clone for now prior to merging these as subtrees
+            if (!test('-d', 'task-lib')) {
+                run("git clone https://github.com/microsoft/azure-pipelines-task-lib task-lib");
+            }
+
+            if (!test('-d', 'tasks-common')) {
+                run("git clone https://github.com/microsoft/azure-pipelines-tasks-common-packages tasks-common");
+            }
+
+            cd(taskLibPath);
+            run("git checkout dev/merlynop/mockfix");
+            run("git pull");
+
+            cd(tasksCommonPath);
+            run("git pull");
+            // end temp
+
+            // build task-lib
+            cd(taskLibPath);
+            run("npm install", /*inheritStreams:*/true);
+            run("node make.js build", /*inheritStreams:*/true);
+
+            
+            await util.installNodeAsync('20');
+            // build task-lib
+            cd(tasksCommonPath);
+            run("npm install", /*inheritStreams:*/true);
+            run("node make.js --build", /*inheritStreams:*/true);
+        }
+    }
+
+    const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
 
     // Wrap build function  to store files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, writeUpdatedsFromGenTasks);
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, genTaskPathLocal, argv.includeLocalPackagesBuildConfig, writeUpdatedsFromGenTasks);
     const { allTasksNode20, allTasksDefault } = allTasks.
         reduce((res, taskName) => {
-            if (getNodeVersion(taskName) == 20) {
+            if (getNodeVersion(taskName, argv.includeLocalPackagesBuildConfig) == 20) {
                 res.allTasksNode20.push(taskName)
             } else {
                 res.allTasksDefault.push(taskName)
@@ -278,14 +316,26 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         rm('-Rf', genTaskCommonPath);
     }
 
+    if (fs.existsSync(genTaskCommonPathLocal))
+    {
+        rm('-Rf', genTaskCommonPathLocal);
+    }
+
     banner('Build successful', true);
 }
 
-function getNodeVersion (taskName) {
+function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
     let taskPath = tasksPath;
     // if task exists inside gen folder prefere it
     if (fs.existsSync(path.join(genTaskPath, taskName))) {
         taskPath = genTaskPath;
+    } 
+    else if(includeLocalPackagesBuildConfig)
+    {
+        if(fs.existsSync(path.join(genTaskPathLocal, taskName)))
+        {
+            taskPath = genTaskPathLocal;
+        }
     }
 
     // get node runner from task.json
@@ -293,7 +343,6 @@ function getNodeVersion (taskName) {
     if (handlers.includes(20)) return 20;
 
     return 10;
-
 }
 
 async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBuild = false) {
@@ -303,11 +352,20 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
 
     // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
     var taskPath = path.join(genTaskPath, taskName);
+    var localTaskPath = path.join(genTaskPathLocal, taskName);
     if (fs.existsSync(taskPath)) {
         // Need to add all tasks which starts with task name
         console.log('Found generated task: ' + taskName);
         isGeneratedTask = true;
-    } else {
+    } 
+    else if (argv.includeLocalPackagesBuildConfig && fs.existsSync(localTaskPath))
+    {
+        console.log('Found local generated task: ' + taskName);
+        isGeneratedTask = true;
+        taskPath = localTaskPath;
+    } 
+    else 
+    {
         taskPath = path.join(tasksPath, taskName);
     }
 
@@ -366,10 +424,17 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
             if (!test('-d', modOutDir)) {
                 banner('Building module ' + modPath, true);
 
-                // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
+                // Ensure that Common folder exists for _generated or _generated_local tasks, otherwise copy it from Tasks folder
                 if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
                     cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
                 }
+                
+                if(argv.includeLocalPackagesBuildConfig)
+                {
+                    if (!fs.existsSync(genTaskCommonPathLocal) && isGeneratedTask) {
+                        cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPathLocal);
+                    }
+                }   
 
                 mkdir('-p', modOutDir);
 
@@ -525,7 +590,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
-    async function runTaskTests(taskName) {
+    async function runTaskTests(taskName, results) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
@@ -558,27 +623,29 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;
                 }
                 else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
                 }
             }  catch (e) {
                 console.error(e);
-                process.exit(1);
+                results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
             }
         }
     }
 
+    const results = [];
+
     // Run tests for each task that exists
-    const allTasks = getTaskList(taskList);
+    const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
 
     for (const taskName of allTasks) {
         var taskPath = path.join(buildTasksPath, taskName);
         if (fs.existsSync(taskPath)) {
-            await runTaskTests(taskName);
+            await runTaskTests(taskName, results);
         }
     };
 
@@ -592,7 +659,12 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
         if (specs.length > 0) {
             // setup the version of node to run the tests
             await util.installNodeAsync(argv.node);
-            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+            try{
+                run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+            }catch(e){
+                console.error(e);
+                results.push({ taskName: 'commonLibraryTests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
+            }
         } else {
             console.warn("No common library tests found");
         }
@@ -605,7 +677,13 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     if (specs.length > 0) {
         // setup the version of node to run the tests
         await util.installNodeAsync(argv.node);
-        run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+        try
+        {
+            run('mocha ' + specs.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+        }catch(e){
+            console.error(e);
+            results.push({ taskName: 'common tests', result: `NodeVersion: ${nodeVersion} Error: ${error.message}` });
+        }
     } else {
         console.warn("No common tests found");
     }
@@ -621,6 +699,17 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
         util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
     } catch (e) {
         console.log('Error while generating coverage report')
+    }
+
+    var hasErrors = false;
+    results.forEach(({ taskName, result }) => {
+        hasErrors = true;
+        console.log(`Task: ${taskName}, Result: ${result}`);
+    });    
+
+    if (hasErrors) {
+        console.log('Errors occurred during tests');
+        process.exit(1);
     }
 }
 

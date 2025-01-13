@@ -17,10 +17,9 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 246,
+    "Minor": 249,
     "Patch": 1
   },
-  "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -40,12 +39,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.folderPath"
     },
     {
+      "name": "enableXmlTransform",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableXmlTransform",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.enableXmlTransform"
+    },
+    {
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
       "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules"
+      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
+      "visibleRule": "enableXmlTransform == true"
     },
     {
       "name": "jsonTargetFiles",
@@ -114,7 +122,7 @@
     "FileTranformationNotEnabled": "ms-resource:loc.messages.FileTranformationNotEnabled"
   },
   "_buildConfigMapping": {
-    "Default": "2.246.0",
-    "Node20_229_3": "2.246.1"
+    "Default": "2.249.0",
+    "Node20_229_3": "2.249.1"
   }
 }

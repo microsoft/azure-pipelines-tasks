@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Attività di autenticazione per il client Cargo usato per l'installazione della distribuzione delle casse Cargo",
   "loc.instanceNameFormat": "Autenticazione cargo $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "Connessione al servizio 'Azure DevOps'",
+  "loc.input.help.workloadIdentityServiceConnection": "Se questa impostazione è impostata, registryNames è obbligatorio. Tutti gli altri input vengono ignorati.",
+  "loc.input.label.registryNames": "Nomi di Registro di sistema da config.toml",
+  "loc.input.help.registryNames": "Elenco di nomi di Registro di sistema delimitati da virgole specificati nel file config.toml da autenticare. Se questa impostazione è impostata, è necessario workloadIdentityServiceConnection. Tutti gli altri input vengono ignorati. Non compatibile con cargoServiceConnections.",
   "loc.input.label.configFile": "file config.toml da autenticare",
   "loc.input.help.configFile": "Percorso del file config.toml che specifica i registri da usare. Selezionare il file, non la cartella, ad esempio \"/.cargo/config.toml\".",
   "loc.input.label.cargoServiceConnections": "Credenziali per i registri esterni a questa organizzazione/raccolta",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "Il file config.toml selezionato deve contenere la tabella dei registri",
   "loc.messages.AuthenticatingThisConfigToml": "Aggiunta dell'autenticazione per il registro di sistema elencata in questo file config.toml in %s",
   "loc.messages.AddingAuthRegistry": "Aggiunta dell'autenticazione per il registro di sistema: %s con nome token: %s",
-  "loc.messages.AddingAuthExternalRegistry": "Aggiunta dell'autenticazione per il registro di sistema esterno: %s con nome token: %s"
+  "loc.messages.AddingAuthExternalRegistry": "Aggiunta dell'autenticazione per il registro di sistema esterno: %s con nome token: %s",
+  "loc.messages.ConnectionAlreadySet": "Il Registro di sistema %s ha già l'autenticazione impostata per una connessione %s.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Il Registro di sistema %s ha già l'autenticazione impostata per una connessione %s. Sovrascrittura dell'autenticazione esistente.",
+  "loc.messages.AuthTelemetry": "Sono stati autenticati %s feed interni, %s repository esterni e %s connessioni al servizio federato",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Non è possibile ottenere le credenziali federate dalla connessione al servizio: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Il nome del Registro di sistema e la connessione al servizio devono essere impostati e non possono essere vuoti.",
+  "loc.messages.RegistryNotFound": "L'input dei nomi di Registro di sistema '%s' non corrisponde ad alcun Registro di sistema in config.toml"
 }

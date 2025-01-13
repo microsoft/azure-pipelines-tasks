@@ -628,6 +628,9 @@ calculate_vars() {
     download_link=$(construct_download_link $azure_feed $channel $normalized_architecture $specific_version)
     say_verbose "download_link=$download_link"
 
+    fallback_download_link=$(construct_download_link $fallback_azure_feed $channel $normalized_architecture $specific_version)
+    say_verbose "fallback_download_link=$fallback_download_link"
+
     legacy_download_link=$(construct_legacy_download_link $azure_feed $channel $normalized_architecture $specific_version) || valid_legacy_download_link=false
 
     if [ "$valid_legacy_download_link" = true ]; then
@@ -643,6 +646,7 @@ calculate_vars() {
 install_dotnet() {
     eval $invocation
     local download_failed=false
+    local fallback_download_failed=false 
 
     if is_dotnet_package_installed $install_root "sdk" $specific_version; then
         say ".NET SDK version $specific_version is already installed."
@@ -656,8 +660,20 @@ install_dotnet() {
     say "Downloading link: $download_link"
     download "$download_link" $zip_path || download_failed=true
 
+    say_verbose "download_failed: $download_failed"
+
+    if [ "$download_failed" = true ]; then
+        say "Cannot download: $download_link"
+        download_link=$fallback_download_link
+        zip_path=$(mktemp $temporary_file_template)
+        say_verbose "Fallback zip path: $zip_path"
+        say "Downloading fallback link: $download_link"
+        download "$download_link" $zip_path || fallback_download_failed=true
+    fi
+
+    say_verbose "valid_legacy_download_link: $valid_legacy_download_link"
     #  if the download fails, download the legacy_download_link
-    if [ "$download_failed" = true ] && [ "$valid_legacy_download_link" = true ]; then
+    if [ "$fallback_download_failed" = true ] && [ "$valid_legacy_download_link" = true ]; then
         say "Cannot download: $download_link"
         download_link=$legacy_download_link
         zip_path=$(mktemp $temporary_file_template)
@@ -682,7 +698,8 @@ install_dir="<auto>"
 architecture="<auto>"
 dry_run=false
 no_path=false
-azure_feed="https://dotnetcli.azureedge.net/dotnet"
+fallback_azure_feed="https://dotnetcli.azureedge.net/dotnet"
+azure_feed="https://builds.dotnet.microsoft.com/dotnet"
 uncached_feed="https://dotnetcli.blob.core.windows.net/dotnet"
 verbose=false
 shared_runtime=false

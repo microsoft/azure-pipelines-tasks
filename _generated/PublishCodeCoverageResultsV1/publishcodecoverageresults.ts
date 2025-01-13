@@ -10,10 +10,7 @@ async function run() {
     try {
         // Initialize localization
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-
-        // Log warning for PCCR V1 task deprecation
-        tl.warning(tl.loc('V1TaskDeprecationNotice'));
-
+        
         // Get input values
         const codeCoverageTool = tl.getInput('codeCoverageTool', true);
         const summaryFileLocation = tl.getInput('summaryFileLocation', true);

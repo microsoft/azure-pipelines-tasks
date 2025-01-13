@@ -7,8 +7,10 @@
   "loc.input.help.notifyUsers": "Envíe un correo electrónico de validación manual pendiente a usuarios (o grupos) específicos. Solo los usuarios especificados en los aprobadores pueden actuar en una validación manual.",
   "loc.input.label.approvers": "Aprobadores",
   "loc.input.help.approvers": "Especifique usuarios, grupos o equipos de proyecto separados por comas para actuar en una validación manual. En ausencia de entrada, los usuarios con permiso para crear colas podrán actuar.",
+  "loc.input.label.allowApproversToApproveTheirOwnRuns": "Permitir que los aprobadores aprueben sus propias ejecuciones",
+  "loc.input.help.allowApproversToApproveTheirOwnRuns": "Si es true, el aprobador podrá aprobar su propia ejecución",
   "loc.input.label.instructions": "Instrucciones",
   "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la validación manual. En función de ellas, el usuario tomará una decisión informada sobre esta validación manual.",
   "loc.input.label.onTimeout": "Al agotarse el tiempo de espera",
-  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
+  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
 }
