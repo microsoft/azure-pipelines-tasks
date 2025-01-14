@@ -87,7 +87,14 @@ async function acquireGo(version: string): Promise<string> {
 
 function getFileName(version: string): string {
     let platform: string = osPlat == "win32" ? "windows" : osPlat;
-    let arch: string = osArch == "x64" ? "amd64" : "386";
+    let arch: string;
+    if (osArch == "x64") {
+        arch = "amd64";
+    } else if (osArch == "arm64") {
+        arch = "arm64";
+    } else {
+        arch = "386";
+    }
     let ext: string = osPlat == "win32" ? "zip" : "tar.gz";
     let filename: string = util.format("go%s.%s-%s.%s", version, platform, arch, ext);
     return filename;
