@@ -29,7 +29,7 @@ Examples:
   - To install 2.2.1 runtime, use 2.2.1
   - To install 3.0.100-preview3-010431 sdk, use 3.0.100-preview3-010431
   - To install latest patch version of 2.1 sdk, use 2.1.x
-  - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json).
+  - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json).
 
 
 * **Include Preview Versions**: Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431
