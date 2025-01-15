@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "ShellTestTask",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2132213) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
+  "loc.description": "dummy text",
+  "loc.instanceNameFormat": "Bash Script",
+  "loc.releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.sourcePath": "source Path",
+  "loc.input.help.sourcePath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.destinationPath": "dest Path",
+  "loc.input.help.destinationPath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.messages.GeneratingScript": "Generating script.",
+  "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
+  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
+  "loc.messages.JS_FormattedCommand": "Formatted command: %s",
+  "loc.messages.JS_InvalidFilePath": "Invalid file path '%s'.",
+  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
+  "loc.messages.JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
+  "loc.messages.JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+}
