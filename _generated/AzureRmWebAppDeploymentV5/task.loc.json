@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 251,
+    "Minor": 252,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -691,7 +691,7 @@
     "RunFromPackageAppsetting": "ms-resource:loc.messages.RunFromPackageAppsetting"
   },
   "_buildConfigMapping": {
-    "Default": "5.251.0",
-    "Node20-225": "5.251.1"
+    "Default": "5.252.0",
+    "Node20-225": "5.252.1"
   }
 }
