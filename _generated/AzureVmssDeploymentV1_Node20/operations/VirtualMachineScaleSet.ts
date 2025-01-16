@@ -115,6 +115,9 @@ export default class VirtualMachineScaleSet {
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
+            if (error.statusCode && error.statusCode == 403) {
+                throw tl.loc("UploadingToStorageBlobsAuthenticationFailed", this.taskParameters.customScriptsStorageAccount );
+            }
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
         }
 
@@ -264,6 +267,9 @@ export default class VirtualMachineScaleSet {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
                 if (error) {
+                    if (error.statusCode && error.statusCode == 403) {
+                        return reject(tl.loc("SettingVMExtensionFailedwithAuthentication", utils.getError(error) , this.taskParameters.vmssName));
+                    }
                     return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
                 }
 
