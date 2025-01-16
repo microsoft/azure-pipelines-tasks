@@ -30,7 +30,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 #### Code Analysis
 
-- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](https://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
+- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](https://devblogs.microsoft.com/devops/the-gradle-build-task-now-supports-sonarqube-analysis/)
 
 - **Run Checkstyle :** You can choose to run the Checkstyle static code analysis tool, which checks the compliance of your source code with coding rules. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
 
