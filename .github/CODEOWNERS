@@ -262,6 +262,8 @@ Tasks/GradleV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/GradleV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
+Tasks/GradleV4/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
+
 Tasks/GruntV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/GulpV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
