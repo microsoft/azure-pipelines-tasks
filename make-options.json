@@ -47,6 +47,7 @@
         "AzureResourceManagerTemplateDeploymentV3",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
+        "AzureRmWebAppDeploymentV5",
         "AzureSpringCloudV0",
         "AzureStaticWebAppV0",
         "AzureWebAppV1",
@@ -273,7 +274,8 @@
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
-        "OpenPolicyAgentInstallerV0"
+        "OpenPolicyAgentInstallerV0",
+        "AzureRmWebAppDeploymentV5"
     ],
     "Node20_229_1": [
         "CargoAuthenticateV0",
