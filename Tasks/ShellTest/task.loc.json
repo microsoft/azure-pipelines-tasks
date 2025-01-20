@@ -1,0 +1,88 @@
+{
+  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6590000",
+  "name": "ShellTest2",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 252,
+    "Patch": 3
+  },
+  "demands": [
+    "sh"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "LS cmd",
+      "displayName": "ms-resource:loc.group.displayName.LS cmd",
+      "isExpanded": false
+    },
+    {
+      "name": "Move cmd",
+      "displayName": "ms-resource:loc.group.displayName.Move cmd",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.sourcePath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.sourcePath"
+    },
+    {
+      "name": "destinationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.destinationPath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPath"
+    },
+    {
+      "name": "directoryPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.directoryPath",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.directoryPath"
+    },
+    {
+      "name": "changeDirectoryPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.changeDirectoryPath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.changeDirectoryPath"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "ShellTest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "ShellTest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
+    "BashFailed": "ms-resource:loc.messages.BashFailed",
+    "BashFailedWithCode137": "ms-resource:loc.messages.BashFailedWithCode137"
+  }
+}

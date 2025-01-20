@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Shell Test",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Run a shell script using Bash",
+  "loc.instanceNameFormat": "Shell Script $(scriptPath)",
+  "loc.group.displayName.LS cmd": "LS_cmd",
+  "loc.group.displayName.Move cmd": "Move_cmd",
+  "loc.input.label.sourcePath": "source Path",
+  "loc.input.help.sourcePath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.destinationPath": "dest Path",
+  "loc.input.help.destinationPath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.directoryPath": "directory Path for LS cmd",
+  "loc.input.help.directoryPath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.changeDirectoryPath": "change Directory path",
+  "loc.input.help.changeDirectoryPath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.messages.BashReturnCode": "Bash exited with return code: %d",
+  "loc.messages.BashFailed": "Bash failed with error: %s",
+  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+}

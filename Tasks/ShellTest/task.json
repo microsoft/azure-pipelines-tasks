@@ -1,0 +1,88 @@
+{
+  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6590000",
+  "name": "ShellTest2",
+  "friendlyName": "Shell Test",
+  "description": "Run a shell script using Bash",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 252,
+    "Patch": 3
+  },
+  "demands": [
+    "sh"
+  ],
+  "instanceNameFormat": "Shell Script $(scriptPath)",
+  "groups": [
+    {
+      "name": "LS cmd",
+      "displayName": "LS_cmd",
+      "isExpanded": false
+    },
+    {
+      "name": "Move cmd",
+      "displayName": "Move_cmd",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+        {
+            "name": "sourcePath",
+            "type": "filePath",
+            "label": "source Path",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "destinationPath",
+            "type": "filePath",
+            "label": "dest Path",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "directoryPath",
+            "type": "filePath",
+            "label": "directory Path for LS cmd",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+          "name": "changeDirectoryPath",
+          "type": "filePath",
+          "label": "change Directory path",
+          "required": true,
+          "defaultValue": "",
+          "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+      }
+    ],
+  "execution": {
+    "Node10": {
+      "target": "ShellTest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "ShellTest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BashReturnCode": "Bash exited with return code: %d",
+    "BashFailed": "Bash failed with error: %s",
+    "BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+  }
+}
