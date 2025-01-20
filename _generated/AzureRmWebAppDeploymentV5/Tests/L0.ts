@@ -34,7 +34,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     KuduServiceTests.KuduServiceTests();
     ResourcesTests.ResourcesTests(); 
 
-    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 DeploymentFactoryTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'DeploymentFactoryTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -55,7 +55,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 AzureRmWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'AzureRmWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -71,7 +71,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 BuiltInLinuxWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 BuiltInLinuxWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'BuiltInLinuxWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -93,7 +93,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 ContainerWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 ContainerWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'ContainerWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -113,7 +113,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppRunFromZipProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 WindowsWebAppRunFromZipProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppRunFromZipProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -136,7 +136,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 WindowsWebAppWarDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppWarDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -156,7 +156,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppZipDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 WindowsWebAppZipDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppZipDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -178,7 +178,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWebDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 WindowsWebAppWebDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppWebDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -201,7 +201,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 PublishProfileWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 PublishProfileWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'PublishProfileWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -217,7 +217,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV5 Validate TaskParameters', (done: MochaDone) => {
         let tp = path.join(__dirname,'TaskParametersTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {

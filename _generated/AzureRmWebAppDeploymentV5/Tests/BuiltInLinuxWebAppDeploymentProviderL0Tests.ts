@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib');
 import { BuiltInLinuxWebAppDeploymentProvider } from '../deploymentProvider/BuiltInLinuxWebAppDeploymentProvider'
-import { TaskParametersUtility, TaskParameters } from '../operations/TaskParameters';
+import { TaskParametersUtility, TaskParameters, DeploymentTypeLinux } from '../operations/TaskParameters';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockLinuxAppSettings }  from "./mock_utils";
@@ -24,6 +24,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForPreDeploymentSteps_BuiltInLinuxWebApp() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for built in linux web app should succeeded');
@@ -35,6 +36,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForPreDeploymentStepsWithSlotEnabled_BuiltInLinuxWebApp() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
@@ -48,6 +50,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForUpdateDeploymentStatus_BuiltInLinuxWebApp() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
@@ -59,6 +62,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForDeployWebAppStep_BuiltInLinuxWebApp_ZipPackage() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
@@ -71,6 +75,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForDeployWebAppStep_BuiltInLinuxWebApp_FolderPackage() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.folder};
             taskParameters.Package.getPath = () :string => { return "webAppPkg" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
@@ -85,6 +90,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForDeployWebAppStep_BuiltInLinuxWebApp_WarPackage() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
@@ -99,6 +105,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
     public static async testForDeployWebAppStep_BuiltInLinuxWebApp_JarPackage() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeploymentTypeLinux = DeploymentTypeLinux.zipDeploy;
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.jar};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.jar" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
