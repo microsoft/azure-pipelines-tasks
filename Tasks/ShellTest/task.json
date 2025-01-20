@@ -26,50 +26,93 @@
   "instanceNameFormat": "Shell Script $(scriptPath)",
   "groups": [
     {
-      "name": "LS cmd",
-      "displayName": "LS_cmd",
+      "name": "LS",
+      "displayName": "LS",
       "isExpanded": false
     },
     {
-      "name": "Move cmd",
-      "displayName": "Move_cmd",
+      "name": "Move",
+      "displayName": "Move",
+      "isExpanded": false
+    },
+    {
+      "name": "Remove",
+      "displayName": "Remove",
+      "isExpanded": false
+    },
+    {
+      "name": "ChangeDirectory",
+      "displayName": "Change Directory",
+      "isExpanded": false
+    },
+    {
+      "name": "Copy",
+      "displayName": "Copy",
       "isExpanded": false
     }
   ],
   "inputs": [
-        {
-            "name": "sourcePath",
-            "type": "filePath",
-            "label": "source Path",
-            "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
-        },
-        {
-            "name": "destinationPath",
-            "type": "filePath",
-            "label": "dest Path",
-            "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
-        },
-        {
-            "name": "directoryPath",
-            "type": "filePath",
-            "label": "directory Path for LS cmd",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
-        },
-        {
-          "name": "changeDirectoryPath",
-          "type": "filePath",
-          "label": "change Directory path",
-          "required": true,
-          "defaultValue": "",
-          "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
-      }
-    ],
+    {
+      "name": "sourcePath",
+      "type": "filePath",
+      "label": "source Path",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "Copy",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "destinationPath",
+      "type": "filePath",
+      "label": "dest Path",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "Copy",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "directoryPath",
+      "type": "filePath",
+      "label": "directory Path for LS cmd",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "changeDirectoryPath",
+      "type": "filePath",
+      "label": "change Directory path",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "removePath",
+      "type": "filePath",
+      "label": "path for file to remove via rmrf",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "moveSourcePath",
+      "type": "filePath",
+      "label": "source Path for Move cmd",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Move",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    },
+    {
+      "name": "moveDestinationPath",
+      "type": "filePath",
+      "label": "dest Path for Move cmd",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Move",
+      "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+    }
+  ],
   "execution": {
     "Node10": {
       "target": "ShellTest.js",

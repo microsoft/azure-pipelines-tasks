@@ -26,13 +26,28 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "LS cmd",
-      "displayName": "ms-resource:loc.group.displayName.LS cmd",
+      "name": "LS",
+      "displayName": "ms-resource:loc.group.displayName.LS",
       "isExpanded": false
     },
     {
-      "name": "Move cmd",
-      "displayName": "ms-resource:loc.group.displayName.Move cmd",
+      "name": "Move",
+      "displayName": "ms-resource:loc.group.displayName.Move",
+      "isExpanded": false
+    },
+    {
+      "name": "Remove",
+      "displayName": "ms-resource:loc.group.displayName.Remove",
+      "isExpanded": false
+    },
+    {
+      "name": "ChangeDirectory",
+      "displayName": "ms-resource:loc.group.displayName.ChangeDirectory",
+      "isExpanded": false
+    },
+    {
+      "name": "Copy",
+      "displayName": "ms-resource:loc.group.displayName.Copy",
       "isExpanded": false
     }
   ],
@@ -43,6 +58,7 @@
       "label": "ms-resource:loc.input.label.sourcePath",
       "required": true,
       "defaultValue": "",
+      "groupName": "Copy",
       "helpMarkDown": "ms-resource:loc.input.help.sourcePath"
     },
     {
@@ -51,6 +67,7 @@
       "label": "ms-resource:loc.input.label.destinationPath",
       "required": true,
       "defaultValue": "",
+      "groupName": "Copy",
       "helpMarkDown": "ms-resource:loc.input.help.destinationPath"
     },
     {
@@ -68,6 +85,32 @@
       "required": true,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.changeDirectoryPath"
+    },
+    {
+      "name": "removePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.removePath",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.removePath"
+    },
+    {
+      "name": "moveSourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.moveSourcePath",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Move",
+      "helpMarkDown": "ms-resource:loc.input.help.moveSourcePath"
+    },
+    {
+      "name": "moveDestinationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.moveDestinationPath",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Move",
+      "helpMarkDown": "ms-resource:loc.input.help.moveDestinationPath"
     }
   ],
   "execution": {

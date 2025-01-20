@@ -44,8 +44,8 @@ function changeWorkingDirectory(): void {
 
 function move() {
     try {
-        const sourcePath: string | undefined = tl.getInput('sourcePath', true);
-        const destinationPath: string | undefined = tl.getInput('destinationPath', true);
+        const sourcePath: string | undefined = tl.getInput('moveSourcePath', true);
+        const destinationPath: string | undefined = tl.getInput('moveDestinationPath', true);
 
         if (!sourcePath || !destinationPath) {
             throw new Error('Source path and destination path are required.');
@@ -71,14 +71,7 @@ function move() {
     }
 }
 
-function run() {
-    // move();
-    console.log("---------------LS------------------");
-    ls();
-    console.log("---------------CD------------------");
-    changeWorkingDirectory();
-    console.log("---------------LS------------------");
-}
+
 
 function TestLScmd() {
     const directoryPath: string | undefined = tl.getInput('directoryPath', true);
@@ -161,7 +154,7 @@ function Test_pushD_and_popD() {
         tl.setResult(tl.TaskResult.Failed, `The  path ${newPath} does not exist.`);
     }
     console.log('Current working directory after pushd :', process.cwd());
-    
+
 
     // Pop the last directory off the stack
     console.log("-------------popd-------------");
@@ -188,7 +181,7 @@ function Test_pushD_and_popD() {
     console.log('Current working directory after pushd :', process.cwd());
 }
 
-function cp_cmd(){
+function cp_cmd() {
     const sourcePath: string | undefined = tl.getInput('sourcePath', true);
     const destinationPath: string | undefined = tl.getInput('destinationPath', true);
 
@@ -213,7 +206,75 @@ function cp_cmd(){
 }
 
 
+function Test_cp_cmd() {
+    // Example usage of cp function with different variations
+
+    // Copy a file from source to destination
+    tl.cp('C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt');
+    console.log('Copied file from source to destination');
+
+    // Copy a directory recursively
+    tl.cp('-r', 'C:/Source/Directory', 'C:/Destination/Directory');
+    console.log('Copied directory recursively');
+
+    // Copy a file with force option
+    tl.cp('-f', 'C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt');
+    console.log('Copied file with force option');
+
+    // Copy a file with no-clobber option
+    tl.cp('-n', 'C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt');
+    console.log('Copied file with no-clobber option');
+
+    // Copy a file with recursive, force, and no-clobber options
+    // tl.cp('-rnf', 'C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt');
+    // console.log('Copied file with recursive, force, and no-clobber options');
+
+    // Copy a file with options and continue on error
+    tl.cp('C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt', '-r', true);
+    console.log('Copied file with options and continue on error');
+
+    // Copy a file with options, continue on error, and retry count
+    tl.cp('C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt', '-f', true, 3);
+    console.log('Copied file with options, continue on error, and retry count');
+
+    // Copy a file with options as the first parameter
+    // tl.cp('-', 'C:/Source/Path/file.txt', 'C:/Destination/Path/file.txt', true, 3);
+    // console.log('Copied file with options as the first parameter, continue on error, and retry count');
+}
+
+function Test_rmRF_cmd() {
+    const removePath: string | undefined = tl.getInput('removePath', true);
+    if (!removePath ) {
+        throw new Error('remove path is required.');
+    }
+    if (!fs.existsSync(removePath)) {
+        throw new Error(`Source file does not exist: ${removePath}`);
+    }
+    tl.rmRF(removePath);
+    console.log(`Removed file: ${removePath}`);
+}
+
 // TestLScmd();
-// Test_pushD_and_popD();
+// 
 // changeWorkingDirectory();
-cp_cmd();
+// cp_cmd();
+// Test_rmRF_cmd();
+// move();
+
+function run() {
+    // move();
+    console.log("------------------------------------------LS-------------------------------------------");
+    ls();    
+    console.log("--------------------------------------pushD_and_popD--------------------------------------");
+    Test_pushD_and_popD();
+    console.log("-------------------------------------------cp_cmd---------------------------------------");
+    cp_cmd();
+    console.log("-------------------------------------------move------------------------------------------");
+    move();
+    console.log("------------------------------------------rmRF_cmd---------------------------------------");
+    Test_rmRF_cmd();
+    console.log("------------------------------------------CD--------------------------------------------");
+    changeWorkingDirectory();
+}
+
+run();
