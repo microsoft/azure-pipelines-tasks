@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 252,
-    "Patch": 3
+    "Patch": 5
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -734,7 +734,7 @@
     "RunFromPackageAppsetting": "ms-resource:loc.messages.RunFromPackageAppsetting"
   },
   "_buildConfigMapping": {
-    "Default": "5.252.0",
-    "Node20-225": "5.252.3"
+    "Default": "5.252.4",
+    "Node20-225": "5.252.5"
   }
 }
