@@ -9,6 +9,7 @@ import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";
 import * as nugetPublish from "./nugetpublisher";
 import * as nugetRestore from "./nugetrestore";
+import * as ubuntuDetectionHelper from "./UbuntuDetectionHelper";
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
 
@@ -21,6 +22,10 @@ async function main(): Promise<void> {
     let nugetVersion: string;
     let msBuildVersion: string;
     try {
+        if (ubuntuDetectionHelper.detectUbuntu24()) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_IncompatibleUbuntuVersion"));
+            return;
+        }
         msBuildVersion = await nuGetGetter.getMSBuildVersionString();
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
                     || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
