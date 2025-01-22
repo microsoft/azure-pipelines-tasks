@@ -545,7 +545,7 @@
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.",
     "LIB_WhichNotFound_Linux": "Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.",
-    "Error_IncompatibleUbuntuVersion": "Detected agent uses Ubuntu 22.04 or newer and could not find mono. See [link] for more information."
+    "Error_IncompatibleUbuntuVersion": "The task has failed because you are using Ubuntu 22.04 without mono. See [link] for more information."
   },
   "_buildConfigMapping": {
     "Default": "2.252.0",

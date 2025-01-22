@@ -2,7 +2,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as tl from "azure-pipelines-task-lib/task";
 
-export function detectUbuntu2204WithoutMono(): boolean {
+export function detectUnsupportedUbuntuVersion(): boolean {
     const platform = os.platform();
     if (platform === 'linux') {
         const lbsContents = _readLinuxVersionFile();
