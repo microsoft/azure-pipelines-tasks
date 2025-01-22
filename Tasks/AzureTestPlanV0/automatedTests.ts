@@ -5,44 +5,68 @@ import { publishAutomatedTestResult } from './publishAutomatedTests';
 import { ciDictionary } from './ciEventLogger';
 import { SimpleTimer } from './SimpleTimer';
 import * as constant from './constants';
+import { IOperationResult } from './Interface/AzureTestPlanTaskInterfaces';
 
-export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<number> {
-  let listOfTestsToBeExecuted: string[] = testPlanInfo.listOfFQNOfTestCases;
-  let testInvokerStatusCode = 0;
+export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
+    let listOfTestsToBeExecuted: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
+    let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
 
-  if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
-    tl.debug('Invoking test execution for tests: ' + listOfTestsToBeExecuted);
-
-    var simpleTimer = new SimpleTimer(constant.AUTOMATED_EXECUTION);
-    simpleTimer.start();
-    try {
-      testInvokerStatusCode = await testInvoker(listOfTestsToBeExecuted, ciData);
-    } catch (err) {
-      tl.debug(`Unable to invoke automated test execution. Err:( ${err} )`);
-      testInvokerStatusCode = 1;
-    }
-    simpleTimer.stop(ciData);
-
-    simpleTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
-    simpleTimer.start();
-    try {
-      await publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
-    } catch (err) {
-      tl.error(`Error while publishing automated Test Results with err : ( ${err} )`);
-      testInvokerStatusCode = 1;
-    }
-    simpleTimer.stop(ciData);
-
-    tl.debug(`Execution Status Code for test Invoker: ${testInvokerStatusCode}`);
-    return testInvokerStatusCode;
-  } else {
-    console.log('No automated tests found for given test plan inputs ');
-    if (testSelectorInput === 'automatedTests') {
-      tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
-      return 1;
+    if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
+        automatedTestInvokerResult = await executeTests(listOfTestsToBeExecuted, ciData);
+        
+        if(!automatedTestInvokerResult.returnCode){
+            automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
+        }
     } else {
-      tl.setResult(tl.TaskResult.Succeeded, 'Successfully triggered manual test execution');
-      return 0;
+        automatedTestInvokerResult = handleNoTestsFound(testSelectorInput);
     }
-  }
+
+    return automatedTestInvokerResult;
 }
+
+async function executeTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary): Promise<IOperationResult> {
+    let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+    let executionTimer = new SimpleTimer(constant.AUTOMATED_EXECUTION);
+
+    tl.debug('Invoking test execution for tests: ' + listOfTestsToBeExecuted);
+    executionTimer.start();
+
+    try {
+        automatedTestInvokerResult.returnCode = await testInvoker(listOfTestsToBeExecuted, ciData);
+    } catch (err) {
+        automatedTestInvokerResult.returnCode = 1;
+        automatedTestInvokerResult.errorMessage = err.message || String(err);
+    }
+    finally{
+        executionTimer.stop(ciData);
+    }
+
+    return automatedTestInvokerResult;
+}
+
+async function publishResults(testPlanInfo: TestPlanData, ciData: ciDictionary, automatedTestInvokerResult: IOperationResult): Promise<IOperationResult> {
+    let publishingTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
+    publishingTimer.start();
+
+    try {
+        await publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
+    } catch (err) {
+        automatedTestInvokerResult.returnCode = 1;
+        automatedTestInvokerResult.errorMessage = err.message || String(err);
+    }
+    finally{
+        publishingTimer.stop(ciData);
+    }
+
+    return automatedTestInvokerResult;
+}
+
+function handleNoTestsFound(testSelectorInput: string): IOperationResult {
+    if (testSelectorInput === 'automatedTests') {
+        return { returnCode: 1, errorMessage: tl.loc('ErrorFailTaskOnNoAutomatedTestsFound') };
+    } else {
+        console.log('No automated tests found for given test plan inputs ');
+        return { returnCode: 0, errorMessage: '' };
+    }
+}
+

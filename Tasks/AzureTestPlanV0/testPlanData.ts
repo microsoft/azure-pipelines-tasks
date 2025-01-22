@@ -1,15 +1,12 @@
-﻿import { Console } from "console";
-import tl = require('azure-pipelines-task-lib/task');
+﻿import tl = require('azure-pipelines-task-lib/task');
 import apim = require('azure-devops-node-api');
-import { WorkItemDetails, TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
+import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanInterfaces');
-import { RunCreateModel, TestRun, ShallowReference, TestPlan, TestCaseResult, TestResultCreateModel, TestCaseMetadata2, TestCaseReference2 } from 'azure-devops-node-api/interfaces/TestInterfaces';
-import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
+import {TestCaseResult} from 'azure-devops-node-api/interfaces/TestInterfaces';
 import constants = require('./constants');
-import { ITestResultsApi } from "azure-devops-node-api/TestResultsApi";
+import { getVstsWepApi } from './ApiHelper';
 
-const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
+export const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
 
 export interface TestPlanData {
     listOfFQNOfTestCases: string[];
@@ -185,12 +182,9 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
 export async function getTestCaseListAsync(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string): Promise<PagedList<TestCase>> {
 
-    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-    let projectId = tl.getVariable('System.TeamProjectId');
-    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
-    let vsts: apim.WebApi = new apim.WebApi(url, auth);
+    let vsts: apim.WebApi = await getVstsWepApi();
     let testPlanApi = await vsts.getTestPlanApi();
+    let projectId = tl.getVariable('System.TeamProjectId');
 
     tl.debug("Fetching test case list for test plan:" + testPlanId + " ,test suite id:" + testSuiteId + " ,test configuration id:" + testConfigurationId);
 
@@ -202,89 +196,6 @@ export async function getTestCaseListAsync(testPlanId: number, testSuiteId: numb
         testConfigurationId,
         null,
         continuationToken)
-
 }
 
-export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<ManualTestRunData> {
-
-    const manualTestRunResponse: ManualTestRunData = { testRunId: 0, runUrl: "" };
-
-    const testRunRequestBody = prepareRunModel(testPlanInfo);
-
-    try {
-
-        let projectId = tl.getVariable('System.TeamProjectId');
-        var testResultsApi = await getTestResultApiClient();
-
-        let testRunResponse = await createManualTestRunAsync(testResultsApi, testRunRequestBody, projectId);
-        console.log("Test run created with id: ", testRunResponse.id);
-
-        let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfManualTestPoints, projectId, testRunResponse.id);
-        console.log("Test results created for run id: ", testResultsResponse[0].testRun);
-
-        manualTestRunResponse.testRunId = testRunResponse.id;
-        manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
-    }
-
-    catch(error) {
-        tl.error("Error while creating manual test run :" + error);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnCreateRunFailure'));
-    }
-
-    return manualTestRunResponse;
-}
-
-export function prepareRunModel(testPlanInfo: TestPlanData): RunCreateModel{
-
-    // some create run params may change on based of requirement
-    let buildId = tl.getVariable('Build.BuildId');
-    let testPointIds: number[] = testPlanInfo.listOfManualTestPoints.map(testPoint => parseInt(testPoint.testPoint.id));
-    let testPlanId = testPlanInfo.testPlanId;
-    let testConfigurationId = testPlanInfo.testConfigurationId;
-
-    const currentUtcTime = new Date().toUTCString();
-    console.log("date:...", currentUtcTime);
-
-    const testRunRequestBody: RunCreateModel = {
-        automated: false,
-        name: 'Manual test run',
-        plan: { id: testPlanId.toString() },
-        configurationIds: [testConfigurationId],
-        pointIds: testPointIds,
-        build: { id: buildId },
-        iteration: "manual"
-    };
-
-    return testRunRequestBody;
-}
-
-export async function createManualTestResultsAsync(testResultsApi:ITestResultsApi, testResultsRequest: TestCaseResult[], projectId, testRunId): Promise<TestCaseResult[]> {
-    return testResultsApi.addTestResultsToTestRun(
-        testResultsRequest,
-        projectId,
-        testRunId)
-    
-}
-
-export async function createManualTestRunAsync(testResultsApi:ITestResultsApi, testRunRequest: RunCreateModel, projectId): Promise<TestRun> {
-
-    tl.debug("Creating manual test run");
-
-    return testResultsApi.createTestRun(
-        testRunRequest,
-        projectId)
-
-}
-
-export async function getTestResultApiClient(){
-    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-
-    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
-    let vsts: apim.WebApi = new apim.WebApi(url, auth);
-    let testResultsApi = await vsts.getTestResultsApi();
-
-    console.log("Test result api client created");
-    return testResultsApi;
-}
 
