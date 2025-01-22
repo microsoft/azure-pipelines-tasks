@@ -2,14 +2,14 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as tl from "azure-pipelines-task-lib/task";
 
-export function detectUbuntu24(): boolean {
+export function detectUbuntu2204WithoutMono(): boolean {
     const platform = os.platform();
     if (platform === 'linux') {
         const lbsContents = _readLinuxVersionFile();
         const distribution = _parseLinuxDistribution(lbsContents);
         if (distribution === 'Ubuntu') {
             const version = parseFloat(_parseUbuntuVersion(lbsContents));
-            if (version >= 24) {
+            if (version >= 22.04) {
                 try {
                     tl.which('mono', true);
                 }

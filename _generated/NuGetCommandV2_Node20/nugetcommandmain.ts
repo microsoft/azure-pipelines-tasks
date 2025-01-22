@@ -22,7 +22,7 @@ async function main(): Promise<void> {
     let nugetVersion: string;
     let msBuildVersion: string;
     try {
-        if (ubuntuDetectionHelper.detectUbuntu24()) {
+        if (ubuntuDetectionHelper.detectUbuntu2204WithoutMono()) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_IncompatibleUbuntuVersion"));
             return;
         }
