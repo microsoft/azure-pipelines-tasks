@@ -2,7 +2,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { manualTestsFlow } from './Manual Flow/manualTests'
 import { getTestPlanData, TestPlanData } from './testPlanData'
 import { automatedTestsFlow } from './automatedTests'
-import { publishEvent, ciDictionary } from './ciEventLogger';
+import { publishEvent, ciDictionary } from './Common/ciEventLogger';
 import { IOperationResult } from './Interface/AzureTestPlanTaskInterfaces';
 
 function setupCiData(testSelectorInput: string, testPlanInfo: TestPlanData) {

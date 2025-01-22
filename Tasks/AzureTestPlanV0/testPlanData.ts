@@ -3,8 +3,8 @@ import apim = require('azure-devops-node-api');
 import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import {TestCaseResult} from 'azure-devops-node-api/interfaces/TestInterfaces';
-import constants = require('./constants');
-import { getVstsWepApi } from './ApiHelper';
+import constants = require('./Common/constants');
+import { getVstsWepApi } from './Common/ApiHelper';
 
 export const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
 

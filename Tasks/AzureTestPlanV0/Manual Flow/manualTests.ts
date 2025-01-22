@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { TestPlanData, ManualTestRunData } from '../testPlanData';
-import { createManualTestResultsAsync, createManualTestRun, createManualTestRunAsync, getTestResultApiClient, prepareRunModel } from '../ApiHelper';
-import { ciDictionary } from '../ciEventLogger';
-import * as constant from '../constants';
-import { SimpleTimer } from '../SimpleTimer';
+import { getTestResultApiClient, prepareRunModel } from '../Common/ApiHelper';
+import { ciDictionary } from '../Common/ciEventLogger';
+import * as constant from '../Common/constants';
+import { SimpleTimer } from '../Common/SimpleTimer';
 import { IOperationResult } from '../Interface/AzureTestPlanTaskInterfaces';
 import { TestCaseResult, TestRun } from 'azure-devops-node-api/interfaces/TestInterfaces';
 

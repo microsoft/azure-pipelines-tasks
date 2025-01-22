@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { testInvoker } from './automatedTestInvoker';
 import { TestPlanData } from './testPlanData';
-import { publishAutomatedTestResult } from './publishAutomatedTests';
-import { ciDictionary } from './ciEventLogger';
-import { SimpleTimer } from './SimpleTimer';
-import * as constant from './constants';
+import { publishAutomatedTestResult } from './Common/publishAutomatedTests';
+import { ciDictionary } from './Common/ciEventLogger';
+import { SimpleTimer } from './Common/SimpleTimer';
+import * as constant from './Common/constants';
 import { IOperationResult } from './Interface/AzureTestPlanTaskInterfaces';
 
 export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {

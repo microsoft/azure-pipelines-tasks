@@ -2,7 +2,7 @@ import * as tl from 'azure-pipelines-task-lib/task'
 import { executePythonTests } from './Invokers/pythoninvoker'
 import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
-import { ciDictionary } from './ciEventLogger';
+import { ciDictionary } from './Common/ciEventLogger';
 import { executeGoTests } from './Invokers/goinvoker';
 import { executeJestTests } from './Invokers/jestinvoker';
 
