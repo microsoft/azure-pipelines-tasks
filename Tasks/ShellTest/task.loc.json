@@ -56,7 +56,7 @@
       "name": "sourcePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.sourcePath",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "groupName": "Copy",
       "helpMarkDown": "ms-resource:loc.input.help.sourcePath"
@@ -65,7 +65,7 @@
       "name": "destinationPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.destinationPath",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "groupName": "Copy",
       "helpMarkDown": "ms-resource:loc.input.help.destinationPath"
@@ -82,7 +82,7 @@
       "name": "changeDirectoryPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.changeDirectoryPath",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.changeDirectoryPath"
     },

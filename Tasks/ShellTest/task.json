@@ -56,7 +56,7 @@
       "name": "sourcePath",
       "type": "filePath",
       "label": "source Path",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "groupName": "Copy",
       "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
@@ -65,7 +65,7 @@
       "name": "destinationPath",
       "type": "filePath",
       "label": "dest Path",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "groupName": "Copy",
       "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
@@ -82,7 +82,7 @@
       "name": "changeDirectoryPath",
       "type": "filePath",
       "label": "change Directory path",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
     },
