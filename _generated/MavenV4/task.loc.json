@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 245,
-    "Patch": 0
+    "Minor": 249,
+    "Patch": 5
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -49,6 +49,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "mavenPOMFile",
       "aliases": [
@@ -227,6 +237,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.21": "JDK 21",
         "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
@@ -517,7 +528,8 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "4.245.0",
-    "Node20-225": "4.245.1"
+    "Default": "4.249.5",
+    "LocalPackages": "4.249.4",
+    "Node20-225": "4.249.6"
   }
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 3
+    "Minor": 249,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -366,7 +366,7 @@
     "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20_229_2": "0.243.3"
+    "Default": "0.249.0",
+    "Node20_229_2": "0.249.1"
   }
 }

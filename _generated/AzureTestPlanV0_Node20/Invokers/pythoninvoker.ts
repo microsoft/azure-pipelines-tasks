@@ -4,7 +4,7 @@ import constants = require('../constants');
 
 export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
-    const discoveryArgs: string[] = ['--collect-only'];
+    const discoveryArgs: string[] = ['--collect-only', '-q'];
     const discoveryResult = await runPytestCommand(discoveryArgs);
 
     if (discoveryResult.status !== 0) {
@@ -14,9 +14,32 @@ export async function executePythonTests(testsToBeExecuted: string[]):Promise<nu
 
     // Extract discovered tests from stdout
     const discoveredTests: string[] = extractDiscoveredTests(discoveryResult.stdout ?? '');
+    var testStringtoFQNMap: Map<string, string> = new Map<string, string>();
+
+    for(let test of discoveredTests){ 
+        testStringtoFQNMap.set(transformTestStrings(test), test);
+    }
+
+    var testsToRun: string[] = [];
+
+    for(let test of testsToBeExecuted){
+        if(!testStringtoFQNMap.has(test)){
+            tl.debug(`Test ${test} not found in discovered tests`);
+        }
+        else{
+            testsToRun.push(testStringtoFQNMap.get(test));
+        }
+    }
 
     // Find common tests between testsToBeExecuted and discovered tests
-    const testsToRun: string[] = testsToBeExecuted.filter(test => discoveredTests.indexOf(test) !== -1);
+    //const testsToRun: string[] = testsToBeExecuted.filter(test => discoveredTests.indexOf(test) !== -1);
+
+    // Variables for debug console logs
+    const testsToBeExecutedString: string = testsToBeExecuted.join(", ");
+    const testsToRunString: string = testsToRun.join(", ");
+
+    tl.debug(`Tests to executed are: ${testsToBeExecutedString}`);
+    tl.debug(`Tests to run are: ${testsToRunString}`);
 
     if (testsToRun.length === 0) {
         tl.warning("No common tests found between specified tests and discovered tests.");
@@ -57,33 +80,43 @@ async function runPytestCommand(args: string[]): Promise<SpawnResult> {
     }
 }
 
-function extractDiscoveredTests(output) {
-    const testNames = [];
-    let currentPackage = '';
-    let currentModule = '';
-    let currentClass = '';
-
-    const lines = output.split('\n');
+function extractDiscoveredTests(output: string): string[] {
+    var testNames: string[] = [];
+    var lines: string[] = output.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-
-        if (line.startsWith('<Package')) {
-            currentPackage = line.match(/<Package (.*?)>/)[1];
-        } else if (line.startsWith('<Module')) {
-            currentModule = line.match(/<Module (.*?)>/)[1];
-        } else if (line.startsWith('<UnitTestCase')) {
-            currentClass = line.match(/<UnitTestCase (.*?)>/)[1];
-        } else if (line.startsWith('<TestCaseFunction')) {
-            const functionName = line.match(/<TestCaseFunction (.*?)>/)[1];
-            let fullyQualifiedName = '';
-            if (currentPackage !== '') {
-                fullyQualifiedName += currentPackage + '/';
-            }
-            fullyQualifiedName += `${currentModule}::${currentClass}::${functionName}`;
-            testNames.push(fullyQualifiedName);
+        if(line && line.includes(".py")){
+            testNames.push(line);
         }
     }
     tl.debug("Discovered tests : " + testNames);
     return testNames;
+}
+
+// Input is like Folder/SubFolder/TestClass.py::TestSubClass::TestSubSubClass::test_method_name
+// Output is lke Folder.SubFolder.TestClass.TestSubClass.TestSubSubClass.test_method_name
+function transformTestStrings(automatedTestName: string): string {
+        // Remove any leading or trailing whitespace
+        automatedTestName = automatedTestName.trim();
+        let updatedAutomatedTestName: string = automatedTestName;
+
+        const index = automatedTestName.indexOf("::");
+        if(index !== -1) {
+            let testFilePath = automatedTestName.substring(0, index);
+            let testMethod = automatedTestName.substring(index + 2);
+
+            //Check if testfilePath is a python file
+            if(testFilePath.endsWith(".py")) {
+                testFilePath = testFilePath.slice(0, -3).replace(/\//g, '.');
+
+                //Do the same replace with :: to . in testMethod
+                testMethod = testMethod.replace(/::/g, '.');
+
+                //Finally generate updatedAutomatedTestName
+                updatedAutomatedTestName = testFilePath + "." + testMethod;
+            }
+        }
+
+        return updatedAutomatedTestName;
 }

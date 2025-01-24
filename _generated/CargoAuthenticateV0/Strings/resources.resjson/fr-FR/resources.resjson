@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tâche d’authentification pour le client de marchandises utilisé pour l’installation de la distribution de caisses de marchandises",
   "loc.instanceNameFormat": "$(configFile) d’authentification de marchandises",
+  "loc.input.label.workloadIdentityServiceConnection": "Connexion aux services « Azure DevOps »",
+  "loc.input.help.workloadIdentityServiceConnection": "Si cette option est définie, RegistryNames est requis. Toutes les autres entrées sont ignorées.",
+  "loc.input.label.registryNames": "Noms de registre de config.toml",
+  "loc.input.help.registryNames": "Liste séparée par des virgules des noms de registre spécifiés dans votre config.toml pour l'authentification. Si cette option est définie, workloadIdentityServiceConnection est requis. Toutes les autres entrées sont ignorées. Non compatible avec cargoServiceConnections.",
   "loc.input.label.configFile": "fichier config.toml à authentifier",
   "loc.input.help.configFile": "Chemin du fichier config.toml qui spécifie les registres à utiliser. Sélectionnez le fichier, pas le dossier. Exemple : « /.cargo/config.toml ».",
   "loc.input.label.cargoServiceConnections": "Informations d’identification des registres situés en dehors de cette organisation/collection",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "Le fichier config.toml que vous avez sélectionné doit contenir la table des registres",
   "loc.messages.AuthenticatingThisConfigToml": "Ajout de l’authentification pour le Registre répertorié dans ce fichier config.toml au %s",
   "loc.messages.AddingAuthRegistry": "Ajout de l’authentification pour le Registre : %s avec le nom de jeton : %s",
-  "loc.messages.AddingAuthExternalRegistry": "Ajout de l’authentification pour le Registre externe : %s avec le nom de jeton : %s"
+  "loc.messages.AddingAuthExternalRegistry": "Ajout de l’authentification pour le Registre externe : %s avec le nom de jeton : %s",
+  "loc.messages.ConnectionAlreadySet": "Le registre %s a déjà défini l'authentification pour une connexion %s.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Le registre %s a déjà défini l'authentification pour une connexion %s. Écraser l'authentification existante.",
+  "loc.messages.AuthTelemetry": "Flux internes %s authentifiés, référentiels externes %s et connexions de services fédérés %s",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Impossible d'obtenir les informations d'identification fédérées à partir de la connexion au service : %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Le nom du registre et la connexion au service doivent être définis et ne peuvent pas être vides.",
+  "loc.messages.RegistryNotFound": "Les noms de registre saisis « %s » ne correspondent à aucun registre dans config.toml"
 }

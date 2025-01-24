@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 245,
+    "Minor": 251,
     "Patch": 0
   },
   "satisfies": [
@@ -105,6 +105,14 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "execution": {
@@ -195,7 +203,8 @@
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   },
   "_buildConfigMapping": {
-    "Default": "2.245.0",
-    "Node20_229_3": "2.245.1"
+    "Default": "2.251.0",
+    "LocalPackages": "2.249.4",
+    "Node20_229_3": "2.251.1"
   }
 }

@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "Branche de production",
   "loc.input.help.production_branch": "Branche de production. Lorsqu'il est spécifié et que l'environnement de déploiement est vide, les déploiements des autres branches seront des environnements d'aperçu.",
   "loc.input.label.data_api_location": "Emplacement de l’API de données",
-  "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail"
+  "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail",
+  "loc.input.label.azure_access_token": "Jeton d’accès Azure",
+  "loc.input.help.azure_access_token": "Jeton d’accès utilisé pour authentifier et autoriser le déploiement",
+  "loc.input.label.default_hostname": "Nom d’hôte par défaut",
+  "loc.input.help.default_hostname": "Nom d’hôte par défaut de l’application"
 }

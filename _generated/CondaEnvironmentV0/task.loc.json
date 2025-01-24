@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
+    "Minor": 247,
     "Patch": 0
   },
   "demands": [],
@@ -87,7 +87,7 @@
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20-225": "0.244.1"
+    "Default": "0.247.0",
+    "Node20-225": "0.247.1"
   }
 }

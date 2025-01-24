@@ -67,9 +67,18 @@ async function main(): Promise<void> {
         fs.writeFileSync(indexFile, JSON.stringify(npmrcTable));
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
-
+    
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
+    } catch (error) {
+        tl.debug('Unable to get packaging URIs');
+        util.logError(error);
+        throw error;
+    }
+    // Getting local registries will also save normalized registries in the npmrc
+    let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
-
 
     let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
@@ -89,23 +98,17 @@ async function main(): Promise<void> {
         }));
     }
 
-    let packagingLocation: pkgLocationUtils.PackagingLocation;
-    try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
-    } catch (error) {
-        tl.debug('Unable to get packaging URIs');
-        util.logError(error);
-        throw error;
-    }
-    let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
-
     let addedRegistry = [];
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
+    let npmrcRegistries = npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
+
+
+    for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
-        if (endpointRegistries && endpointRegistries.length > 0) {
-            for (let serviceEndpoint of endpointRegistries) {
 
+
+        if (!registry && endpointRegistries && endpointRegistries.length > 0) {
+            for (let serviceEndpoint of endpointRegistries) {
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
@@ -117,10 +120,11 @@ async function main(): Promise<void> {
                 }
             }
         }
+
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
-                    // If a registry is found, but we previously added credentials for it, skip it
+                    // If a registry is found, but we previously added credentials for it warn and overwrite
                     if (endpointsArray.includes(localRegistry.url)) {
                         tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                         tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
@@ -163,6 +167,7 @@ main().catch(error => {
         "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
     });
 });
+
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;

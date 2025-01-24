@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 1
+    "Minor": 250,
+    "Patch": 11
   },
   "preview": true,
   "demands": [],
@@ -36,11 +36,11 @@
     },
     {
       "name": "testPlan",
-      "type": "pickList",
+      "type": "string",
       "label": "Test plan",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a test plan containing test suites with test cases.",
+      "helpMarkDown": "Type or paste the test plan ID containing test suites with test cases.",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -77,20 +77,30 @@
       "label": "Select Test framework language",
       "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
+        "JavaMaven": "Java-Maven",
+        "JavaGradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go",
         "Jest": "Jest"
       }
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "Merge test results",
-      "defaultValue": "false",
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "Pom file path",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
+      "helpMarkDown": "Relative path from the repository root to the Maven POM file.",
+      "visibleRule": "testLanguageInput = JavaMaven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "Gradle file path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Relative path from the repository root to the build.gradle file.",
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "publishRunAttachments",
@@ -105,7 +115,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "Fail if there are test failures",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
     },
@@ -127,16 +137,6 @@
     }
   ],
   "dataSourceBindings": [
-    {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
     {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",
@@ -182,7 +182,8 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.0",
-    "Node20-225": "0.243.1"
+    "Default": "0.250.10",
+    "LocalPackages": "0.249.4",
+    "Node20-225": "0.250.11"
   }
 }

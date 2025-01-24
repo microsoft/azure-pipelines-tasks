@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
+    "Minor": 248,
     "Patch": 1
   },
   "runsOn": [
@@ -65,8 +65,8 @@
     "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.245.0",
-    "Node20_229_1": "0.245.1",
-    "wif_242": "0.245.2"
+    "Default": "0.248.0",
+    "Node20_229_1": "0.248.1",
+    "wif_242": "0.248.2"
   }
 }

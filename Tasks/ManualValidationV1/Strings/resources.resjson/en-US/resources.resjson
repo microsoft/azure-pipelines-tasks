@@ -7,6 +7,8 @@
   "loc.input.help.notifyUsers": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.",
   "loc.input.label.approvers": "Approvers",
   "loc.input.help.approvers": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.",
+  "loc.input.label.allowApproversToApproveTheirOwnRuns": "Allow approvers to approve their own run",
+  "loc.input.help.allowApproversToApproveTheirOwnRuns": "If this is true, approver will be able to approve their own run",
   "loc.input.label.instructions": "Instructions",
   "loc.input.help.instructions": "These instructions will be shown to the user for resuming or rejecting the manual validation. Based on these instructions the user will take an informed decision about this manual validation.",
   "loc.input.label.onTimeout": "On timeout",

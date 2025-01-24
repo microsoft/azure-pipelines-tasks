@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 248,
     "Patch": 2
   },
   "runsOn": [
@@ -28,7 +28,10 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
+      "label": "'Azure DevOps' Service Connection",
       "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
@@ -127,8 +130,8 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.244.0",
-    "Node20_229_1": "1.244.1",
-    "wif_242": "1.244.2"
+    "Default": "1.248.0",
+    "Node20_229_1": "1.248.1",
+    "wif_242": "1.248.2"
   }
 }

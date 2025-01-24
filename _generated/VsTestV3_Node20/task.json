@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 245,
+    "Minor": 249,
     "Patch": 1
   },
   "demands": [
@@ -48,6 +48,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -418,6 +428,16 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "Disable publishing test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
+    },
+    {
       "name": "failOnMinTestsNotRun",
       "type": "boolean",
       "label": "Fail the task if a minimum number of tests are not run.",
@@ -662,7 +682,7 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d"
   },
   "_buildConfigMapping": {
-    "Default": "3.245.0",
-    "Node20_229_4": "3.245.1"
+    "Default": "3.249.0",
+    "Node20_229_4": "3.249.1"
   }
 }

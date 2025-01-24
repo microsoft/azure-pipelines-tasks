@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 244,
-    "Patch": 2
+    "Minor": 250,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -87,7 +87,8 @@
     "ScriptContents": "ms-resource:loc.messages.ScriptContents"
   },
   "_buildConfigMapping": {
-    "Default": "2.244.2",
-    "Node20-225": "2.244.3"
+    "Default": "2.250.0",
+    "LocalPackages": "2.249.4",
+    "Node20-225": "2.250.1"
   }
 }

@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -52,7 +52,7 @@
     "DownloadStableVersionFailed": "Can not download Duffle stable version file from %s. Falling back to %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.244.0",
-    "Node20_229_3": "0.244.1"
+    "Default": "0.246.2",
+    "Node20_229_3": "0.246.3"
   }
 }

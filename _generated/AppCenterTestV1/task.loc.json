@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 249,
+    "Patch": 5
   },
   "minimumAgentVersion": "2.206.1",
   "groups": [
@@ -499,7 +499,8 @@
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_7": "1.241.1"
+    "Default": "1.249.5",
+    "LocalPackages": "1.249.4",
+    "Node20_229_7": "1.249.6"
   }
 }

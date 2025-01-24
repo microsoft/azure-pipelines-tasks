@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 243,
+    "Minor": 248,
     "Patch": 0
   },
   "preview": true,
@@ -160,6 +160,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.data_api_location"
+    },
+    {
+      "name": "azure_access_token",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azure_access_token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.azure_access_token"
+    },
+    {
+      "name": "default_hostname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.default_hostname",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.default_hostname"
     }
   ],
   "execution": {

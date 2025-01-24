@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Cargo クレート配布のインストールに使用される Cargo クライアントの認証タスク",
   "loc.instanceNameFormat": "Cargo 認証 $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
+  "loc.input.help.workloadIdentityServiceConnection": "これが設定されている場合は registryNames が必須です。他のすべての入力は無視されます。",
+  "loc.input.label.registryNames": "config.toml からのレジストリ名",
+  "loc.input.help.registryNames": "認証する config.toml で指定されたレジストリ名のコンマ区切りリスト。これが設定されている場合は workloadIdentityServiceConnection が必須です。他のすべての入力は無視されます。cargoServiceConnections と互換性がありません。",
   "loc.input.label.configFile": "認証するための config.toml ファイル",
   "loc.input.help.configFile": "使用するレジストリを指定する config.toml ファイルへのパス。フォルダーではなくファイルを選択します。例: \"/.cargo/config.toml\"。",
   "loc.input.label.cargoServiceConnections": "この組織/コレクション外のレジストリの資格情報",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "選択した config.toml ファイルには registries テーブルが含まれている必要があります",
   "loc.messages.AuthenticatingThisConfigToml": "%s にあるこの config.toml ファイルにリストされているレジストリの認証を追加しています",
   "loc.messages.AddingAuthRegistry": "レジストリの認証を追加しています: %s (トークン名: %s)",
-  "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)"
+  "loc.messages.AddingAuthExternalRegistry": "外部レジストリの認証を追加しています: %s (トークン名: %s)",
+  "loc.messages.ConnectionAlreadySet": "レジストリ %s は、%s 接続の認証が既に設定されています。",
+  "loc.messages.ConnectionAlreadySetOverwriting": "レジストリ %s は、%s 接続の認証が既に設定されています。既存の認証を上書きしています。",
+  "loc.messages.AuthTelemetry": "認証された %s 個の内部フィード、%s 個の外部リポジトリ、%s 個のフェデレーション サービス接続",
+  "loc.messages.FailedToGetServiceConnectionAuth": "サービス接続からフェデレーション資格情報を取得できません: %s。",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "レジストリ名とサービス接続は、両方とも設定する必要があり、空にすることはできません。",
+  "loc.messages.RegistryNotFound": "レジストリ名の入力 '%s' は、config.toml 内のいずれのレジストリにも対応していません。"
 }

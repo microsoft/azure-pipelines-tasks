@@ -4,7 +4,7 @@ import utils = require('../utils');
 import constants = require('../constants');
 import { execMavenBuild } from '../testLibExecutor';
 
-export async function executeMavenTests(testsToBeExecuted: string[]):Promise<number> {
+export async function executeMavenTests(testsToBeExecuted: string[], pomFilePath?: string):Promise<number> {
 
     //public doc link: https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html
     //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
@@ -27,6 +27,14 @@ export async function executeMavenTests(testsToBeExecuted: string[]):Promise<num
         args.push('test');
         args.push(combinedTestArgs);
     }
+
+    if (pomFilePath) {
+        args.push('-f');
+        args.push(pomFilePath);
+    }
+
+    //for returning success exit code incase of test failure and later we detect test failure from PTR command, documentation: https://maven.apache.org/surefire/maven-failsafe-plugin/verify-mojo.html, https://maven.apache.org/archives/maven-1.x/plugins/test/announcements/announcement-1.8.txt
+    args.push('-Dmaven.test.failure.ignore=true');
 
     tl.debug("Executing java maven tests with executable : " + executable);
     tl.debug("Executing java maven tests with args :" + args);

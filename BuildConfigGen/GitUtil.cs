@@ -95,34 +95,52 @@ namespace BuildConfigGen
             toAdd = untrackedOuput2;
             toRemove = untrackedOuputRemove;
         }
-        internal static string GetGitRootPath(string currentDir)
+
+        internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string gitRoot, string taskTarget)
         {
-            const string args = "rev-parse --git-dir";
-            string path = RunGitCommandScalar(currentDir, args);
+            string gitIgnorePathBak = Path.Combine(gitRoot, ".gitignore.bak");
+            string gitIgnore = Path.Combine(gitRoot, ".gitignore");
 
-            path = FixupPath(path);
+            bool needsGitIgnoreUpdate = taskTarget.Contains("/_generated_local/") || taskTarget.Contains(@"\_generated_local\");
 
-            const string gitDir = ".git";
-            if (path.EndsWith(gitDir))
+            string? gitIgnoreContent = null;
+
+            if (needsGitIgnoreUpdate)
             {
-                path = path.Substring(0, path.Length - gitDir.Length);
+                gitIgnoreContent = File.ReadAllText(gitIgnore);
+                const string genertedLocalPath = "_generated_local/";
 
-                if (path == "")
+                if (!gitIgnoreContent.Contains(genertedLocalPath))
                 {
-                    return currentDir;
+                    throw new Exception("Expected " + genertedLocalPath + " in " + gitIgnore);
                 }
 
-                return path;
+                gitIgnoreContent = gitIgnoreContent.Replace(genertedLocalPath, "");
+
+                File.Copy(gitIgnore, gitIgnorePathBak, true);
             }
-            else
+
+            try
             {
-                throw new Exception($"expected git {args} to return  ");
+                if (needsGitIgnoreUpdate)
+                {
+                    File.WriteAllText(gitIgnore, gitIgnoreContent);
+                }
+
+                return GetNonIgnoredFileListFromPathInner(taskTarget);
+            }
+            finally
+            {
+                if (needsGitIgnoreUpdate)
+                {
+                    File.Move(gitIgnorePathBak, gitIgnore, true);
+                }
             }
         }
 
-        internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string taskTarget)
+        private static IEnumerable<string> GetNonIgnoredFileListFromPathInner(string taskTarget)
         {
-            if(!Directory.Exists(taskTarget))
+            if (!Directory.Exists(taskTarget))
             {
                 throw new Exception($"{nameof(taskTarget)}=={taskTarget} doesn't exist");
             }
@@ -136,7 +154,6 @@ namespace BuildConfigGen
 
             return paths;
         }
-
 
         private static IEnumerable<string> GitLsFiles(string taskTarget)
         {
