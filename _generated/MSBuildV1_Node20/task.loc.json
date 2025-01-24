@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
-    "Patch": 3
+    "Minor": 252,
+    "Patch": 1
   },
   "demands": [
     "msbuild"
@@ -197,7 +197,8 @@
     "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "1.246.2",
-    "Node20-225": "1.246.3"
+    "Default": "1.252.0",
+    "LocalPackages": "1.249.4",
+    "Node20-225": "1.252.1"
   }
 }
