@@ -19,8 +19,8 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 2,
-    "Minor": 246,
-    "Patch": 2
+    "Minor": 249,
+    "Patch": 0
   },
   "groups": [
     {
@@ -79,6 +79,16 @@
         "fastest": "Fastest",
         "none": "None"
       }
+    },
+    {
+      "name": "decoderCompatibility",
+      "type": "int",
+      "label": "7z decoder compatibility",
+      "required": false,
+      "defaultValue": 1602,
+      "helpMarkDown": "Optionally choose to set decoder compatibility version for 7z archive creating. It should be 4-digit number that represents the version of 7-Zip without a dot. (default: 1602)",
+      "groupName": "archive",
+      "visibleRule": "archiveType = 7z"
     },
     {
       "name": "tarCompression",
