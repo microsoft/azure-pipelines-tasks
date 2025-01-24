@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-import utils = require('../utils');
-import constants = require('../constants');
+import utils = require('../Common/utils');
+import constants = require('../Common/constants');
 import tr = require("azure-pipelines-task-lib/toolrunner");
 import { executeGoCommand } from '../testLibExecutor';
 

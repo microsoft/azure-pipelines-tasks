@@ -3,10 +3,11 @@ import { manualTestsFlow } from './Manual Flow/manualTests'
 import { getTestPlanData, TestPlanData } from './testPlanData'
 import { automatedTestsFlow } from './automatedTests'
 import { publishEvent, ciDictionary } from './Common/ciEventLogger';
-import { IOperationResult } from './Interface/AzureTestPlanTaskInterfaces';
+import { IOperationResult } from './Interface/IOperationResult';
+import { newAutomatedTestsFlow } from './Automated Flow/automatedFlow';
 
 function setupCiData(testSelectorInput: string, testPlanInfo: TestPlanData) {
-    var ciData: ciDictionary = {
+    let ciData: ciDictionary = {
         TestSelector: testSelectorInput,
         totalNumOfManualTestPoint: testPlanInfo.listOfManualTestPoints.length,
         totalNumOfAutomatedTestPoint: testPlanInfo.listOfAutomatedTestPoints.length,
@@ -21,7 +22,7 @@ export async function run() {
     const testSelectorInput = tl.getInput('testSelector');
     console.log('Test Selector selected : ' + testSelectorInput);
 
-    var testPlanInfo: TestPlanData;
+    let testPlanInfo: TestPlanData;
     try {
         testPlanInfo = await getTestPlanData();
     } catch (err) {
@@ -29,10 +30,12 @@ export async function run() {
         return 1;
     }
 
-    var ciData: ciDictionary = setupCiData(testSelectorInput, testPlanInfo);
+    let ciData: ciDictionary = setupCiData(testSelectorInput, testPlanInfo);
 
-    var manualFlowResult: IOperationResult;
-    var automatedFlowResult: IOperationResult;
+    let manualFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
+    let automatedFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
+    const myEnvVar = tl.getVariable('Use_NewAutomatedFlow');
+    console.log(`The value of Use_NewAutomatedFlow is: ${myEnvVar}`);
 
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {
@@ -46,9 +49,17 @@ export async function run() {
     }
 
     if (testSelectorInput.includes('automatedTests')) {
-        automatedFlowResult = await automatedTestsFlow(testPlanInfo, testSelectorInput, ciData);
-        tl.debug(`Execution Status Code for Automated Test Flow is ${automatedFlowResult.returnCode}`);
-        ciData["automatedTestFlowReturnCode"] = automatedFlowResult.returnCode;
+        if(myEnvVar){
+            automatedFlowResult = await newAutomatedTestsFlow(testPlanInfo, testSelectorInput, ciData);
+            tl.debug(`Execution Status Code for Automated Test Flow is ${automatedFlowResult.returnCode}`);
+            ciData["automatedTestFlowReturnCode"] = automatedFlowResult.returnCode;
+        }
+        else{
+            automatedFlowResult = await automatedTestsFlow(testPlanInfo, testSelectorInput, ciData);
+            tl.debug(`Execution Status Code for Automated Test Flow is ${automatedFlowResult.returnCode}`);
+            ciData["automatedTestFlowReturnCode"] = automatedFlowResult.returnCode;
+
+        }
     }
 
     if( manualFlowResult.returnCode || automatedFlowResult.returnCode){

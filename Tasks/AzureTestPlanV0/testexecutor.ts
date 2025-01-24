@@ -1,8 +1,4 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as semver from "semver"
 import { spawnSync } from 'child_process'
-import tl = require('azure-pipelines-task-lib/task');
 
 export async function spawn(executable: string, args: string[]): Promise<SpawnResult> {
 

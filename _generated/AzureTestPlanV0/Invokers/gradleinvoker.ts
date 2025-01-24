@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-import utils = require('../utils');
-import constants = require('../constants');
+import utils = require('../Common/utils');
+import constants = require('../Common/constants');
 import { execGradleBuild } from '../testLibExecutor';
 
 export async function executeGradleTests(testsToBeExecuted: string[], gradleFilePath?: string): Promise<number> {

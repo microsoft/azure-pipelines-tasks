@@ -82,7 +82,7 @@ export async function execMavenBuild(args: string[]): Promise<number> {
 
     try {
         // 1. Check that Maven exists by executing it to retrieve its version.
-        await mvnGetVersion.exec();
+        await mvnGetVersion.execAsync();
 
         // Setup Maven Executable to run list of test runs provided as input
         var mvnRun = tl.tool(mvnExec);
@@ -90,7 +90,7 @@ export async function execMavenBuild(args: string[]): Promise<number> {
         mvnRun.arg(args);
 
         // 3. Run Maven. Compilation or test errors will cause this to fail.
-        await mvnRun.exec(getExecOptions());
+        await mvnRun.execAsync(getExecOptions());
 
         // Maven build succeeded
         return 0; // Return 0 indicating success

@@ -5,7 +5,7 @@ import { publishAutomatedTestResult } from './Common/publishAutomatedTests';
 import { ciDictionary } from './Common/ciEventLogger';
 import { SimpleTimer } from './Common/SimpleTimer';
 import * as constant from './Common/constants';
-import { IOperationResult } from './Interface/AzureTestPlanTaskInterfaces';
+import { IOperationResult } from './Interface/IOperationResult';
 
 export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
     let listOfTestsToBeExecuted: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];

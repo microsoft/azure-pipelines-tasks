@@ -4,12 +4,11 @@ import { getTestResultApiClient, prepareRunModel } from '../Common/ApiHelper';
 import { ciDictionary } from '../Common/ciEventLogger';
 import * as constant from '../Common/constants';
 import { SimpleTimer } from '../Common/SimpleTimer';
-import { IOperationResult } from '../Interface/AzureTestPlanTaskInterfaces';
+import { IOperationResult } from '../Interface/IOperationResult';
 import { TestCaseResult, TestRun } from 'azure-devops-node-api/interfaces/TestInterfaces';
 
 export async function manualTestsFlow(testPlanInfo: TestPlanData, ciData: ciDictionary):Promise<IOperationResult> {
-
-    let manualTestRun: ManualTestRunData = { testRunId: 0, runUrl: "" };
+    
     let simpleTimer = new SimpleTimer(constant.MANUALTESTS_PUBLISHING);
     let manualFlowResult: IOperationResult = { returnCode: 0, errorMessage: "" };
     let projectId = tl.getVariable('System.TeamProjectId');
@@ -33,8 +32,8 @@ export async function manualTestsFlow(testPlanInfo: TestPlanData, ciData: ciDict
             testRunResponse.id);
 
         console.log("Test run created with id: ", testRunResponse.id);
-        console.log("Test results created for run id: ", testResultsResponse[0].testRun);
-        console.log('Test run url: ', manualTestRun.runUrl);
+        console.log("Test results created for run id: ", testResultsResponse[0].testRun.id);
+        console.log('Test run url: ', testRunResponse.url);
     }
     catch (error) {
         manualFlowResult.errorMessage = error.message || String(error);

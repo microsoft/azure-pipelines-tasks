@@ -82,7 +82,7 @@ export async function execMavenBuild(args: string[]): Promise<number> {
 
     try {
         // 1. Check that Maven exists by executing it to retrieve its version.
-        await mvnGetVersion.exec();
+        await mvnGetVersion.execAsync();
 
         // Setup Maven Executable to run list of test runs provided as input
         var mvnRun = tl.tool(mvnExec);
@@ -90,7 +90,7 @@ export async function execMavenBuild(args: string[]): Promise<number> {
         mvnRun.arg(args);
 
         // 3. Run Maven. Compilation or test errors will cause this to fail.
-        await mvnRun.exec(getExecOptions());
+        await mvnRun.execAsync(getExecOptions());
 
         // Maven build succeeded
         return 0; // Return 0 indicating success
@@ -102,22 +102,10 @@ export async function execMavenBuild(args: string[]): Promise<number> {
 }
 
 function getGradlewExec() {
-    const gradlewExecFileSearchPattern: string[] = ["**/gradlew"];
+    const gradlewExecFileSearchPattern: string = "**/gradlew";
     let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-
-    if (tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(workingDirectory))) {
-        workingDirectory = path.join(tl.getVariable('System.DefaultWorkingDirectory'), workingDirectory);
-    }
-
-    tl.debug(workingDirectory);
-
-    const findOptions = <tl.FindOptions>{
-        allowBrokenSymbolicLinks: true,
-        followSpecifiedSymbolicLink: true,
-        followSymbolicLinks: true
-    };
-
-    const gradlewPath = tl.findMatch(workingDirectory, gradlewExecFileSearchPattern, findOptions);
+    let os = tl.getVariable('Agent.OS');
+    const gradlewPath = tl.findMatch(workingDirectory, gradlewExecFileSearchPattern);
 
     if (gradlewPath.length == 0) {
         tl.setResult(tl.TaskResult.Failed, "Missing gradlew file");
@@ -131,8 +119,8 @@ function getGradlewExec() {
         tl.debug(gradlewExec);
     }
 
-    if (isWindows) {
-        tl.debug('Append .bat extension name to gradlew script.');
+    if (os == 'Windows_NT') {
+        tl.debug('Append .bat extension name to gradlew script for windows agent');
         gradlewExec += '.bat';
     }
 

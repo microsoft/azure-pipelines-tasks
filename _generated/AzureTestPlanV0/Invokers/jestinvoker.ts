@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-import utils = require('../utils');
-import constants = require('../constants');
+import utils = require('../Common/utils');
+import constants = require('../Common/constants');
 import { executeJestCommand } from '../testLibExecutor';
 
 //Jest command like: >set JEST_JUNIT_OUTPUT_NAME=TEST-Jest0-junit.xml
