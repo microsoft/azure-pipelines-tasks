@@ -65,6 +65,8 @@ export class MavenTestExecutor implements ITestExecutor {
             args.push('test');
             args.push(combinedTestArgs);
         }
+
+        args.push('-ntp');
     
         if (this.pomFilePath) {
             args.push('-f');

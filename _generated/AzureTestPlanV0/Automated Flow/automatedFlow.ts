@@ -7,6 +7,7 @@ import { TestPlanData } from '../testPlanData';
 import * as constant from '../Common/constants';
 import { ITestExecutor } from '../Interface/ITestExecutor';
 import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExecutor';
+import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 
 export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
     let listOfTestsToBeExecuted: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
@@ -42,6 +43,7 @@ function getTestExecutor(testLanguage: string): ITestExecutor{
                     break;
     
                 case 'JavaGradle':
+                    testExecutor = new GradleTestExecutor();
                     break;
     
                 case 'Python':

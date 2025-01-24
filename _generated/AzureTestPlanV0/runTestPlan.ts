@@ -7,7 +7,7 @@ import { IOperationResult } from './Interface/IOperationResult';
 import { newAutomatedTestsFlow } from './Automated Flow/automatedFlow';
 
 function setupCiData(testSelectorInput: string, testPlanInfo: TestPlanData) {
-    var ciData: ciDictionary = {
+    let ciData: ciDictionary = {
         TestSelector: testSelectorInput,
         totalNumOfManualTestPoint: testPlanInfo.listOfManualTestPoints.length,
         totalNumOfAutomatedTestPoint: testPlanInfo.listOfAutomatedTestPoints.length,
@@ -22,7 +22,7 @@ export async function run() {
     const testSelectorInput = tl.getInput('testSelector');
     console.log('Test Selector selected : ' + testSelectorInput);
 
-    var testPlanInfo: TestPlanData;
+    let testPlanInfo: TestPlanData;
     try {
         testPlanInfo = await getTestPlanData();
     } catch (err) {
@@ -30,10 +30,10 @@ export async function run() {
         return 1;
     }
 
-    var ciData: ciDictionary = setupCiData(testSelectorInput, testPlanInfo);
+    let ciData: ciDictionary = setupCiData(testSelectorInput, testPlanInfo);
 
-    var manualFlowResult: IOperationResult;
-    var automatedFlowResult: IOperationResult;
+    let manualFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
+    let automatedFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
     const myEnvVar = tl.getVariable('Use_NewAutomatedFlow');
     console.log(`The value of Use_NewAutomatedFlow is: ${myEnvVar}`);
 
