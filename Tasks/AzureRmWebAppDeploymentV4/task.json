@@ -16,8 +16,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 247,
+    "Major": 5,
+    "Minor": 250,
     "Patch": 0
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -34,6 +34,12 @@
       "displayName": "Additional Deployment Options",
       "isExpanded": false,
       "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+    },
+    {
+      "name": "AdditionalDeploymentOptionsLinux",
+      "displayName": "Additional Deployment Options",
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind = webAppLinux"
     },
     {
       "name": "PostDeploymentAction",
@@ -448,6 +454,29 @@
       "defaultValue": "",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: pipeline variables are excluded in substitution."
+    },
+    {
+      "name": "DeploymentTypeLinux",
+      "type": "pickList",
+      "label": "Deployment method",
+      "defaultValue": "oneDeploy",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptionsLinux",
+      "options": {
+        "oneDeploy": "One Deploy",
+        "zipDeploy": "Zip Deploy"
+      },
+      "helpMarkDown": "Choose the deployment method for the app."
+    },
+    {
+      "name": "CleanDeploymentFlag",
+      "type": "boolean",
+      "label": "Enable clean deployment",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "AdditionalDeploymentOptionsLinux",
+      "visibleRule": "DeploymentTypeLinux == oneDeploy",
+      "helpMarkDown": "Deployment mode for complete sync (clean) deployment"
     }
   ],
   "outputVariables": [
@@ -634,6 +663,8 @@
     "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
     "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
     "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+    "PackageDeploymentInitiatedWithOneDeploy": "Package deployment using One Deploy initiated.",
+    "OneDeployWithIncrementalDeploymentOption": "Deploying using incremental deployment.",
     "WarPackageDeploymentInitiated": "Package deployment using WAR Deploy initiated.",
     "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
     "GoExeNameNotPresent": "Go exe name is not present",
