@@ -8,6 +8,7 @@ import * as constant from '../Common/constants';
 import { ITestExecutor } from '../Interface/ITestExecutor';
 import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExecutor';
 import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
+import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
 
 export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
     let listOfTestsToBeExecuted: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
@@ -47,6 +48,7 @@ function getTestExecutor(testLanguage: string): ITestExecutor{
                     break;
     
                 case 'Python':
+                    testExecutor = new PythonTestExecutor();
                     break;
     
                 case 'Go':
