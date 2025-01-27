@@ -550,15 +550,6 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-    },
-    {
-      "target": "RuntimeStack",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
-      "parameters": {
-        "osTypeSelected": "Linux"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
