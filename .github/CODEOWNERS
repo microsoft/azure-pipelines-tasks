@@ -7,6 +7,8 @@ Tasks/AndroidSigningV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/ANTV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
+Tasks/ANTV2/   @microsoft/akvelon-build-task-team
+
 Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE
 
 Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms    @DergachevE
