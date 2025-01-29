@@ -48,7 +48,7 @@
     },
     {
       "name": "TargetFolder",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.TargetFolder",
       "defaultValue": "",
       "required": true,
