@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
-import utils = require('../Common/utils');
-import constants = require('../Common/constants');
-import { execMavenBuild } from '../testLibExecutor';
+import utils = require('../../Common/utils');
+import constants = require('../../Common/constants');
+import { execMavenBuild } from '../../OldAutomatedFlow/testLibExecutor';
 
 export async function executeMavenTests(testsToBeExecuted: string[], pomFilePath?: string):Promise<number> {
 

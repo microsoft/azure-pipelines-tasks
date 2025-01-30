@@ -96,8 +96,6 @@ export class PythonTestExecutor implements ITestExecutor {
         this.toolRunner.arg(testsToBeExecuted);
         this.toolRunner.arg('--junitxml=TEST-python-junit.xml');
         
-        
-
         try {
             operationResult.returnCode = await this.toolRunner.execAsync();
         } catch (error) {

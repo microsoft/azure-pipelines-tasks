@@ -1,10 +1,10 @@
 import * as tl from 'azure-pipelines-task-lib/task'
-import { executePythonTests } from './Invokers/pythoninvoker'
-import { executeMavenTests } from './Invokers/maveninvoker'
-import { executeGradleTests } from './Invokers/gradleinvoker'
-import { ciDictionary } from './Common/ciEventLogger';
-import { executeGoTests } from './Invokers/goinvoker';
-import { executeJestTests } from './Invokers/jestinvoker';
+import { executePythonTests } from '../OldAutomatedFlow/Invokers/pythoninvoker'
+import { executeMavenTests } from '../OldAutomatedFlow/Invokers/maveninvoker'
+import { executeGradleTests } from '../OldAutomatedFlow/Invokers/gradleinvoker'
+import { ciDictionary } from '../Common/ciEventLogger';
+import { executeGoTests } from '../OldAutomatedFlow/Invokers/goinvoker';
+import { executeJestTests } from '../OldAutomatedFlow/Invokers/jestinvoker';
 
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 

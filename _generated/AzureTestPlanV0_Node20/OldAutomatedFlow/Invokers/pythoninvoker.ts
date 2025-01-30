@@ -1,6 +1,6 @@
-import { spawn, SpawnResult } from '../testexecutor';
+import { spawn, SpawnResult } from '../../OldAutomatedFlow/testexecutor';
 import tl = require('azure-pipelines-task-lib/task');
-import constants = require('../Common/constants');
+import constants = require('../../Common/constants');
 
 export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
