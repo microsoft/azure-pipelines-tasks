@@ -1,7 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { manualTestsFlow } from './Manual Flow/manualTests'
 import { getTestPlanData, TestPlanData } from './testPlanData'
-import { automatedTestsFlow } from './automatedTests'
+import { automatedTestsFlow } from './OldAutomatedFlow/automatedTests'
 import { publishEvent, ciDictionary } from './Common/ciEventLogger';
 import { IOperationResult } from './Interface/IOperationResult';
 import { newAutomatedTestsFlow } from './Automated Flow/automatedFlow';

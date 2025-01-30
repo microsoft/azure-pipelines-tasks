@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../Common/utils');
 import constants = require('../Common/constants');
 import tr = require("azure-pipelines-task-lib/toolrunner");
-import { executeGoCommand } from '../testLibExecutor';
+import { executeGoCommand } from '../OldAutomatedFlow/testLibExecutor';
 
 //GO command like "gotestsum --junitfile TEST-Go<i>-junit.xml -- <filepath> -v -run ^<TestName>$"
 export async function executeGoTests(testsToBeExecuted: string[]): Promise<number> {
