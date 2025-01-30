@@ -2,17 +2,17 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as tl from "azure-pipelines-task-lib/task";
 
-const minUnsupportedUbuntuVer = 24.04;
-
 export function detectUnsupportedUbuntuVersion(): boolean {
     const platform = os.platform();
     if (platform === 'linux') {
         const lsbContents = _readLinuxVersionFile();
+        if (lsbContents === undefined) { return false; }
+
         const { distribution, version } = _parseLinuxVersionInfo(lsbContents);
 
         if (distribution === 'Ubuntu') {
             const versionFloat = parseFloat(version);
-            if (versionFloat >= minUnsupportedUbuntuVer) {
+            if (versionFloat >= 24.04) {
                 try {
                     tl.which('mono', true);
                 }
@@ -31,15 +31,14 @@ export function detectUnsupportedUbuntuVersion(): boolean {
 function _readLinuxVersionFile(): string {
     const lsbReleaseFile = '/etc/lsb-release';
     const osReleaseFile = '/etc/os-release';
-    let contents = '';
 
     if (fs.existsSync(lsbReleaseFile)) {
-        contents = fs.readFileSync(lsbReleaseFile).toString();
+        return fs.readFileSync(lsbReleaseFile).toString();
     } else if (fs.existsSync(osReleaseFile)) {
-        contents = fs.readFileSync(osReleaseFile).toString();
+        return fs.readFileSync(osReleaseFile).toString();
     }
 
-    return contents;
+    return undefined;
 }
 
 function _parseLinuxVersionInfo(lsbContents): { distribution: string, version: string } {
