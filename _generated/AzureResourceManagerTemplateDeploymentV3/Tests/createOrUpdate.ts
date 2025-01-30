@@ -90,7 +90,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "CSMmultiple.json": [CSMJson, CSMJson],
         "": [""]
     },
-    'execsync': {
+    'execSync': {
         'az --version': {
             'code': 0,
             'stdout': '2.66.0'
