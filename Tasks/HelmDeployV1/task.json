@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 252,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -180,6 +180,7 @@
         "login": "login",
         "logout": "logout",
         "ls": "ls",
+        "push": "push",
         "package": "package",
         "rollback": "rollback",
         "upgrade": "upgrade",
@@ -214,7 +215,7 @@
       "type": "string",
       "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
       "defaultValue": "",
-      "visibleRule": "chartType == Name",
+      "visibleRule": "chartType == Name || command == create ",
       "required": "true",
       "groupName": "commands"
     },
@@ -224,7 +225,17 @@
       "type": "filePath",
       "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
       "defaultValue": "",
-      "visibleRule": "chartType == FilePath || command == package",
+      "visibleRule": "chartType == FilePath || command == package || command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "remoteRepo",
+      "label": "Remote Repo",
+      "type": "string",
+      "helpMarkDown": "The remote repository where the chart will be pushed.",
+      "defaultValue": "",
+      "visibleRule": "command == push",
       "required": "true",
       "groupName": "commands"
     },
@@ -246,7 +257,7 @@
       "type": "string",
       "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
       "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
+      "visibleRule": "command == install || command == upgrade || command == rollback || command == uninstall || command == delete",
       "groupName": "commands"
     },
     {
