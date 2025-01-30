@@ -71,7 +71,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath": {
         "az": true
     },
-    exec,
+    exec:{
+        "az --version": {
+            "code": 0,
+            "stdout": "2.66.0"
+        }
+    },
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
@@ -86,6 +91,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "CSMNotThere.json": [],
         "CSMmultiple.json": [CSMJson, CSMJson],
         "": [""]
+    },
+    execSync: {
+        "az --version": {
+            "code": 0,
+            "stdout": "2.66.0"
+        }
     }
 };
 
