@@ -77,6 +77,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "2.66.0"
         }
     },
+    match:{
+        "stdout": "2.66.0"
+    },
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
