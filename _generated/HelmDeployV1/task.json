@@ -230,6 +230,16 @@
       "groupName": "commands"
     },
     {
+      "name": "remoteRepo",
+      "label": "Remote Repo",
+      "type": "string",
+      "helpMarkDown": "The remote repository where the chart will be pushed.",
+      "defaultValue": "",
+      "visibleRule": "command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
       "name": "version",
       "label": "Version",
       "aliases": [
