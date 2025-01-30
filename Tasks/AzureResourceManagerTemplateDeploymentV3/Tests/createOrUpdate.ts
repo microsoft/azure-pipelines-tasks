@@ -74,11 +74,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     exec:{
         "az --version": {
             "code": 0,
-            "stdout": "2.66.0"
+            "stdout": "azure-cli                         2.66.0"
         }
-    },
-    match:{
-        "stdout": "2.66.0"
     },
     "findMatch": {
         "CSM.json": [CSMJson],
