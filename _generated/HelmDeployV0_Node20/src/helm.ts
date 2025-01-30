@@ -52,10 +52,10 @@ function isKubConfigLogoutRequired(command: string): boolean {
 // get kubeconfig file path
 async function getKubeConfigFile(): Promise<string> {
     const connectionType = tl.getInput("connectionType", true)
+    const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint");
     let result
-    if (connectionType === "Azure Resource Manager") {
+    if (connectionType === "Azure Resource Manager" && azureSubscriptionEndpoint) {
         const clusterName : string = tl.getInput("kubernetesCluster", true);
-        const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", true);
         const resourceGroup : string = tl.getInput("azureResourceGroup", true);
         const useClusterAdmin: boolean = tl.getBoolInput('useClusterAdmin');
         result = await getClusterType().getKubeConfig(azureSubscriptionEndpoint, resourceGroup, clusterName, useClusterAdmin)
