@@ -230,16 +230,6 @@
       "groupName": "commands"
     },
     {
-      "name": "remoteRepo",
-      "label": "ms-resource:loc.input.label.remoteRepo",
-      "type": "string",
-      "helpMarkDown": "ms-resource:loc.input.help.remoteRepo",
-      "defaultValue": "",
-      "visibleRule": "command == push",
-      "required": "true",
-      "groupName": "commands"
-    },
-    {
       "name": "version",
       "label": "ms-resource:loc.input.label.version",
       "aliases": [
