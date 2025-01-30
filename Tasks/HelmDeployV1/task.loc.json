@@ -180,6 +180,7 @@
         "login": "login",
         "logout": "logout",
         "ls": "ls",
+        "push": "push",
         "package": "package",
         "rollback": "rollback",
         "upgrade": "upgrade",
