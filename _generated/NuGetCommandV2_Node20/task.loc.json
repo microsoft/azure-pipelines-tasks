@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
+    "Minor": 252,
     "Patch": 1
   },
   "runsOn": [
@@ -547,10 +547,12 @@
     "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
-    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth",
+    "LIB_WhichNotFound_Linux": "ms-resource:loc.messages.LIB_WhichNotFound_Linux",
+    "Error_IncompatibleUbuntuVersion": "ms-resource:loc.messages.Error_IncompatibleUbuntuVersion"
   },
   "_buildConfigMapping": {
-    "Default": "2.247.0",
-    "Node20_229_1": "2.247.1"
+    "Default": "2.252.0",
+    "Node20_229_1": "2.252.1"
   }
 }
