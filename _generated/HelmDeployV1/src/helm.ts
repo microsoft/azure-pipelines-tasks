@@ -149,7 +149,7 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
         "rollback": "./helmcommands/helmrollback",
         "uninstall": "./helmcommands/helmuninstall",
         "delete": "./helmcommands/helmuninstall",
-        "create": "./helmcommands/helmcreate"
+        "create": "./helmcommands/helmcreate",
     }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
