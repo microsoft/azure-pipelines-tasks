@@ -35,7 +35,7 @@ export class PythonTestExecutor implements ITestExecutor {
         return operationResult;
     }
 
-    async discoverTests(testsToBeExecuted: string[], ciData: ciDictionary): Promise<string[]> {
+    async discoverTests(testsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult> {
         let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
         const args: string[] = ['--collect-only', '-q'];
         let discoveryResult = { stdout: ''};;
@@ -47,42 +47,35 @@ export class PythonTestExecutor implements ITestExecutor {
         } catch (error) {
             operationResult.errorMessage =  error.message || String(error);
         }
-    
-        // Extract discovered tests from stdout
-        const discoveredTests: string[] = extractPythonDiscoveredTests(discoveryResult.stdout ?? '');
-        var testStringtoFQNMap: Map<string, string> = new Map<string, string>();
-    
-        for(let test of discoveredTests){ 
-            testStringtoFQNMap.set(transformPythonTestStrings(test), test);
-        }
-    
-        var testsToRun: string[] = [];
-    
-        for(let test of testsToBeExecuted){
-            if(!testStringtoFQNMap.has(test)){
-                tl.debug(`Test ${test} not found in discovered tests`);
+
+        if(operationResult.returnCode === 0){
+            // Extract discovered tests from stdout
+            const discoveredTests: string[] = extractPythonDiscoveredTests(discoveryResult.stdout ?? '');
+            var testStringtoFQNMap: Map<string, string> = new Map<string, string>();
+        
+            for(let test of discoveredTests){ 
+                testStringtoFQNMap.set(transformPythonTestStrings(test), test);
             }
-            else{
-                testsToRun.push(testStringtoFQNMap.get(test));
+        
+            for(let test of testsToBeExecuted){
+                if(!testStringtoFQNMap.has(test)){
+                    tl.debug(`Test ${test} not found in discovered tests`);
+                }
+                else{
+                    listOfTestsToBeRan.push(testStringtoFQNMap.get(test));
+                }
             }
+        
+            // Variables for debug console logs
+            const testsToBeExecutedString: string = testsToBeExecuted.join(", ");
+            const testsToRunString: string = listOfTestsToBeRan.join(", ");
+        
+            tl.debug(`Tests to executed are: ${testsToBeExecutedString}`);
+            tl.debug(`Tests to run are: ${testsToRunString}`);
+            console.log(`Found ${listOfTestsToBeRan.length} tests to run`);
+
+            return operationResult;
         }
-    
-        // Variables for debug console logs
-        const testsToBeExecutedString: string = testsToBeExecuted.join(", ");
-        const testsToRunString: string = testsToRun.join(", ");
-    
-        tl.debug(`Tests to executed are: ${testsToBeExecutedString}`);
-        tl.debug(`Tests to run are: ${testsToRunString}`);
-    
-        if (testsToRun.length === 0) {
-            tl.warning("No common tests found between specified tests and discovered tests.");
-        }
-        testsToBeExecuted = testsToRun;
-    
-        console.log(`Found ${testsToRun.length} tests to run`);
-    
-        // Implement test discovery logic here
-        return testsToBeExecuted;
     }
 
     async executeTests(testsToBeExecuted: string[], ciData: ciDictionary): Promise<IOperationResult> {

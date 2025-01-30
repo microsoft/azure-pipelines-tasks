@@ -15,19 +15,23 @@ export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSele
     let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
     const testLanguage = tl.getInput('testLanguageInput', true);
     let testExecutor: ITestExecutor = getTestExecutor(testLanguage);
+    let listOfTestsToBeRan: string[] = [];
     if (listOfTestsToBeExecuted && listOfTestsToBeExecuted.length > 0) {
         automatedTestInvokerResult = await testExecutor.setup();
 
         if (automatedTestInvokerResult.returnCode === 0) {
-            listOfTestsToBeExecuted = await testExecutor.discoverTests(listOfTestsToBeExecuted, ciData);
-            if (listOfTestsToBeExecuted.length === 0) {
-                return handleNoTestsFound(testSelectorInput);
-            }
+            automatedTestInvokerResult = await testExecutor.discoverTests(listOfTestsToBeExecuted, ciData, listOfTestsToBeRan);
 
-            automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsToBeExecuted, ciData);
             if (automatedTestInvokerResult.returnCode === 0) {
-                automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
-            }
+                if (listOfTestsToBeRan.length === 0) {
+                    return handleNoTestsFound(testSelectorInput);
+                }
+
+                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsToBeExecuted, ciData);
+                if (automatedTestInvokerResult.returnCode === 0) {
+                    automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
+                }
+            }   
         }
     } else {
         automatedTestInvokerResult = handleNoTestsFound(testSelectorInput);

@@ -6,6 +6,6 @@ export interface ITestExecutor {
     testRunnerCLI: string;
     toolRunner: ToolRunner;
     setup(): Promise<IOperationResult>;
-    discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary): Promise<string[]>;
+    discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult>;
     executeTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary): Promise<IOperationResult>;
 }

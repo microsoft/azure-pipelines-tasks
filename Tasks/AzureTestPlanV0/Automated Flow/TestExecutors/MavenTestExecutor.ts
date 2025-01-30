@@ -37,9 +37,14 @@ export class MavenTestExecutor implements ITestExecutor {
         return operationResult;
     }
 
-    async discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary): Promise<string[]> {
-        // Implement test discovery logic here
-        return listOfTestsToBeExecuted;
+    async discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult> {
+        let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+
+        listOfTestsToBeExecuted.forEach(element => {
+            listOfTestsToBeRan.push(element);
+        });
+        
+        return operationResult;
     }
 
     async executeTests(testsToBeExecuted: string[], ciData: ciDictionary): Promise<IOperationResult> {
