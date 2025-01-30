@@ -31,6 +31,9 @@ process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRM"] = "serviceprincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE"] = "key";
 
+
+
+
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
 var CSMBicepWithSpaceInPath = path.join(__dirname, "CSMwithBicep WithSpaceInPath.bicep");
@@ -86,6 +89,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "CSMNotThere.json": [],
         "CSMmultiple.json": [CSMJson, CSMJson],
         "": [""]
+    },
+    'execsync': {
+        'az --version': {
+            'code': 0,
+            'stdout': '2.66.0'
+        }
     }
 };
 
