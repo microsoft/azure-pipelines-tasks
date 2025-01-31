@@ -231,6 +231,9 @@
         "task.loc.json",
         "Tests"
     ],
+    "Node20_229_1": [
+        "NuGetCommandV2"
+    ],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
