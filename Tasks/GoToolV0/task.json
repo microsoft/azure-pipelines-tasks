@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 251,
-    "Patch": 0
+    "Patch": 1
   },
   "satisfies": [
     "GO"
@@ -58,6 +58,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "gotool.js",
       "argumentFormat": ""
     }
