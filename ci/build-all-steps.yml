@@ -114,7 +114,8 @@ steps:
       ne(variables['numTasksForDowngradingCheck'], 0),
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
+      eq(variables['System.PullRequest.TargetBranch'], 'master'),
+      ne(variables['System.PullRequest.SourceBranch'], 'users/merlynop/node20merge-2') # remove after merging users/merlynop/node20merge-2 ; see https://github.com/microsoft/azure-pipelines-tasks/pull/20819
     )
 
 # Clean
