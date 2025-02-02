@@ -105,6 +105,13 @@ namespace BuildConfigGen
                     }
 
                     contentError = $"Content doesn't match {r.Value} {procesed}to {r.Key} (overwrite=true).  Dest file doesn't match source.";
+
+
+                    // Write the content of the mismatched files to the console
+                    Console.WriteLine($"Mismatched Source File ({sourceFile}):");
+                    Console.WriteLine(File.ReadAllText(sourceFile));
+                    Console.WriteLine($"Mismatched Destination File ({r.Key}):");
+                    Console.WriteLine(File.ReadAllText(r.Key));
                 }
             }
 
