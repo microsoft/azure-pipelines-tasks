@@ -112,10 +112,35 @@ namespace BuildConfigGen
                     Console.WriteLine(File.ReadAllText(sourceFile));
                     Console.WriteLine($"Mismatched Destination File ({r.Key}):");
                     Console.WriteLine(File.ReadAllText(r.Key));
+
+                    // Output the result of 'git status'
+                    var gitStatus = GetGitStatus();
+                    Console.WriteLine("Git Status:");
+                    Console.WriteLine(gitStatus);
                 }
             }
 
             return contentError;
+        }
+
+        private string GetGitStatus()
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "git",
+                Arguments = "status",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = Process.Start(psi))
+            {
+                using (var reader = process.StandardOutput)
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
 
         public void CleanupTempFiles()
