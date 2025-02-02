@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
+using System.Text;
 
 namespace BuildConfigGen
 {
@@ -130,17 +131,26 @@ namespace BuildConfigGen
                 FileName = "git",
                 Arguments = "status",
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
 
-            using (var process = Process.Start(psi))
+            var output = new StringBuilder();
+            var error = new StringBuilder();
+
+            using (var process = new Process { StartInfo = psi })
             {
-                using (var reader = process.StandardOutput)
-                {
-                    return reader.ReadToEnd();
-                }
+                process.OutputDataReceived += (sender, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+                process.ErrorDataReceived += (sender, e) => { if (e.Data != null) error.AppendLine(e.Data); };
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.WaitForExit();
             }
+
+            return output.ToString() + error.ToString();
         }
 
         public void CleanupTempFiles()
