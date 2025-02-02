@@ -115,21 +115,25 @@ namespace BuildConfigGen
                     Console.WriteLine(File.ReadAllText(r.Key));
 
                     // Output the result of 'git status'
-                    var gitStatus = GetGitStatus();
+                    var gitStatus = Run("git", "status");
                     Console.WriteLine("Git Status:");
                     Console.WriteLine(gitStatus);
+
+                    var commit = Run("git", "rev-parse HEAD");
+                    Console.WriteLine("rev-parse HEAD:");
+                    Console.WriteLine(commit);
                 }
             }
 
             return contentError;
         }
 
-        private string GetGitStatus()
+        private string Run(string filename, string args)
         {
             var psi = new ProcessStartInfo
             {
-                FileName = "git",
-                Arguments = "status",
+                FileName = filename,
+                Arguments = args,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
