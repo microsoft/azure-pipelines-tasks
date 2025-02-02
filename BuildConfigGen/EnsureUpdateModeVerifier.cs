@@ -122,6 +122,10 @@ namespace BuildConfigGen
                     var commit = Run("git", "rev-parse HEAD");
                     Console.WriteLine("rev-parse HEAD:");
                     Console.WriteLine(commit);
+
+                    var show = Run("git", "show HEAD");
+                    Console.WriteLine("show HEAD:");
+                    Console.WriteLine(show);
                 }
             }
 
