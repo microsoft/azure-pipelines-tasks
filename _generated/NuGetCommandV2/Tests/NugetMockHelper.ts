@@ -62,6 +62,22 @@ export class NugetMockHelper {
         nMockHelper.registerNugetUtilityMockUnix(this.tmr, projectFile);
     }
 
+    public registerNugetMacOsMock() {
+        nMockHelper.registerNugetMacOsMock(this.tmr);
+    }
+
+    public registerNugetWindowsMock() {
+        nMockHelper.registerNugetWindowsMock(this.tmr);
+    }
+
+    public registerNugetUbuntu22Mock() {
+        nMockHelper.registerNugetUbuntu22Mock(this.tmr);
+    }
+
+    public registerNugetUbuntu24Mock() {
+        nMockHelper.registerNugetUbuntu24Mock(this.tmr);
+    }
+
     public registerVstsNuGetPushRunnerMock() {
         this.tmr.registerMock('./Common/VstsNuGetPushToolUtilities', {
             getBundledVstsNuGetPushLocation: function() {
