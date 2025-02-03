@@ -231,22 +231,6 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node20": [
-        "AzureTestPlanV0"       
-    ],
-    "Node20_229_2": [
-        "AzureFileCopyV2",
-        "AzureFileCopyV3",
-        "AzureFileCopyV4",
-        "AzureFileCopyV5",
-        "AzureFileCopyV6",
-        "AzurePowerShellV4",
-        "AzurePowerShellV5",
-        "AzureResourceManagerTemplateDeploymentV3"
-    ],
-    "Node20_229_14": [
-        "PublishSymbolsV2"
-    ],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
