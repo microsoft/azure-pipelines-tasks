@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
+using System.Text;
 
 namespace BuildConfigGen
 {
@@ -105,10 +106,59 @@ namespace BuildConfigGen
                     }
 
                     contentError = $"Content doesn't match {r.Value} {procesed}to {r.Key} (overwrite=true).  Dest file doesn't match source.";
+
+
+                    // Write the content of the mismatched files to the console
+                    Console.WriteLine($"Mismatched Source File ({sourceFile}):");
+                    Console.WriteLine(File.ReadAllText(sourceFile));
+                    Console.WriteLine($"Mismatched Destination File ({r.Key}):");
+                    Console.WriteLine(File.ReadAllText(r.Key));
+
+                    // Output the result of 'git status'
+                    var gitStatus = Run("git", "status");
+                    Console.WriteLine("Git Status:");
+                    Console.WriteLine(gitStatus);
+
+                    var commit = Run("git", "rev-parse HEAD");
+                    Console.WriteLine("rev-parse HEAD:");
+                    Console.WriteLine(commit);
+
+                    var show = Run("git", "show HEAD");
+                    Console.WriteLine("show HEAD:");
+                    Console.WriteLine(show);
                 }
             }
 
             return contentError;
+        }
+
+        private string Run(string filename, string args)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = filename,
+                Arguments = args,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var output = new StringBuilder();
+            var error = new StringBuilder();
+
+            using (var process = new Process { StartInfo = psi })
+            {
+                process.OutputDataReceived += (sender, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+                process.ErrorDataReceived += (sender, e) => { if (e.Data != null) error.AppendLine(e.Data); };
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.WaitForExit();
+            }
+
+            return output.ToString() + error.ToString();
         }
 
         public void CleanupTempFiles()

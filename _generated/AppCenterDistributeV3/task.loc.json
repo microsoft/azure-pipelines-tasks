@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 247,
+    "Minor": 252,
     "Patch": 0
   },
   "minimumAgentVersion": "2.206.1",
@@ -246,7 +246,8 @@
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   },
   "_buildConfigMapping": {
-    "Default": "3.247.0",
-    "Node20_229_7": "3.247.1"
+    "Default": "3.252.0",
+    "LocalPackages": "3.249.4",
+    "Node20_229_7": "3.252.1"
   }
 }

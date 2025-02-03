@@ -2,7 +2,7 @@
   "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
   "name": "AppCenterDistribute",
   "friendlyName": "App Center distribute",
-  "description": "Distribute app builds to testers and users via Visual Studio App Center",
+  "description": "Distribute tes app builds to testers and users via Visual Studio App Center",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
   "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
   "category": "Deploy",
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 247,
+    "Minor": 252,
     "Patch": 0
   },
   "minimumAgentVersion": "2.206.1",
@@ -246,7 +246,8 @@
     "FailedToFindFile": "Failed to find %s at %s."
   },
   "_buildConfigMapping": {
-    "Default": "3.247.0",
-    "Node20_229_7": "3.247.1"
+    "Default": "3.252.0",
+    "LocalPackages": "3.249.4",
+    "Node20_229_7": "3.252.1"
   }
 }
