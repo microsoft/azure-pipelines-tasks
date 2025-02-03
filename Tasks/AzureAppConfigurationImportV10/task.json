@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 247,
+        "Minor": 252,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
@@ -106,7 +106,7 @@
             "type": "pickList",
             "label": "Separator",
             "groupName": "Options",
-            "helpMarkDown": "Separator used to flatten the configuration file (json \u0026 yaml files). It is required when the depth provided is greater than 1",
+            "helpMarkDown": "Separator used to flatten the configuration file (json & yaml files). It is required when the depth provided is greater than 1",
             "options": {
                 ".": ".  (Period)",
                 "/": "/  (Forward Slash)",

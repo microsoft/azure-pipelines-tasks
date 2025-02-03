@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LocConfig SchemaVersion="6.0" Name="Default.LocConfig" Desc="The Default Configuration File" xmlns="http://schemas.microsoft.com/locstudio/2006/6/LocConfig">
+    <Files>
+        <!-- Include the default macro definition file -->
+        <File Name="default.macros" Type="Macro" />
+        <!-- Include the default task definition file -->
+        <File Name="default.loctasks" Type="Task" />
+    </Files>
+</LocConfig>
