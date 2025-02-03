@@ -27,7 +27,7 @@ export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSele
                     return handleNoTestsFound(testSelectorInput);
                 }
 
-                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsFromTestPlan, ciData);
+                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsDiscovered, ciData);
                 if (automatedTestInvokerResult.returnCode === 0) {
                     automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
                 }
