@@ -47,6 +47,7 @@
         "AzureResourceManagerTemplateDeploymentV3",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
+        "AzureRmWebAppDeploymentV5",
         "AzureSpringCloudV0",
         "AzureStaticWebAppV0",
         "AzureWebAppV1",
@@ -111,6 +112,7 @@
         "GoToolV0",
         "GradleV2",
         "GradleV3",
+        "GradleV4",
         "GruntV0",
         "GulpV0",
         "GulpV1",
@@ -245,6 +247,7 @@
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
+        "GradleV4",
         "GruntV0",
         "GulpV0",
         "GulpV1",
@@ -271,7 +274,8 @@
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
-        "OpenPolicyAgentInstallerV0"
+        "OpenPolicyAgentInstallerV0",
+        "AzureRmWebAppDeploymentV5"
     ],
     "Node20_229_1": [
         "CargoAuthenticateV0",
