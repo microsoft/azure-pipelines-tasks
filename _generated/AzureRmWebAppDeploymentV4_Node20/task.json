@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 247,
+    "Minor": 252,
     "Patch": 1
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -220,6 +220,45 @@
       "required": false,
       "properties": {
         "EditableOptions": "True"
+      },
+      "options": {
+        "DOTNETCORE:9.0": ".NET 9.0",
+        "DOTNETCORE:8.0": ".NET 8.0",
+        "DOTNETCORE:7.0": ".NET 7.0",
+        "DOTNETCORE:6.0": ".NET 6.0",
+        "NODE:20-lts": "Node 20 LTS",
+        "NODE:18-lts": "Node 18 LTS",
+        "NODE:16-lts": "Node 16 LTS",
+        "PYTHON:3.12": "Python 3.12",
+        "PYTHON:3.11": "Python 3.11",
+        "PYTHON:3.10": "Python 3.10",
+        "PYTHON:3.9": "Python 3.9",
+        "PYTHON:3.8": "Python 3.8",
+        "PHP:8.3": "PHP 8.3",
+        "PHP:8.2": "PHP 8.2",
+        "PHP:8.1": "PHP 8.1",
+        "PHP:8.0": "PHP 8.0",
+        "JAVA:21-java21": "Java 21",
+        "JAVA:17-java17": "Java 17",
+        "JAVA:11-java11": "Java 11",
+        "JAVA:8-jre8": "Java 8",
+        "JBOSSEAP:8-java17": "JBoss EAP 8 (Java 17)",
+        "JBOSSEAP:8-java11": "JBoss EAP 8 (Java 11)",
+        "JBOSSEAP:7-java17": "JBoss EAP 7 (Java 17)",
+        "JBOSSEAP:7-java11": "JBoss EAP 7 (Java 11)",
+        "JBOSSEAP:7-java8": "JBoss EAP 7 (Java 8)",
+        "TOMCAT:10.1-java21": "Tomcat 10.1 (Java 21)",
+        "TOMCAT:10.1-java17": "Tomcat 10.1 (Java 17)",
+        "TOMCAT:10.1-java11": "Tomcat 10.1 (Java 11)",
+        "TOMCAT:10.0-java17": "Tomcat 10.0 (Java 17)",
+        "TOMCAT:10.0-java11": "Tomcat 10.0 (Java 11)",
+        "TOMCAT:10.0-jre8": "Tomcat 10.0 (Java 8)",
+        "TOMCAT:9.0-java21": "Tomcat 9.0 (Java 21)",
+        "TOMCAT:9.0-java17": "Tomcat 9.0 (Java 17)",
+        "TOMCAT:9.0-java11": "Tomcat 9.0 (Java 11)",
+        "TOMCAT:9.0-jre8": "Tomcat 9.0 (Java 8)",
+        "TOMCAT:8.5-java11": "Tomcat 8.5 (Java 11)",
+        "TOMCAT:8.5-jre8": "Tomcat 8.5 (Java 8)"
       },
       "helpMarkDown": "Select the framework and version.",
       "visibleRule": "WebAppKind = webAppLinux"
@@ -482,15 +521,6 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-    },
-    {
-      "target": "RuntimeStack",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
-      "parameters": {
-        "osTypeSelected": "Linux"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -663,7 +693,7 @@
     "MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
   },
   "_buildConfigMapping": {
-    "Default": "4.247.0",
-    "Node20_229_2": "4.247.1"
+    "Default": "4.252.0",
+    "Node20_229_2": "4.252.1"
   }
 }
