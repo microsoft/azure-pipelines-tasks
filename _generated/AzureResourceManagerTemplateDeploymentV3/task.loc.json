@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 250,
+    "Minor": 252,
     "Patch": 0
   },
   "demands": [],
@@ -340,7 +340,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   },
   "_buildConfigMapping": {
-    "Default": "3.250.0",
-    "Node20_229_2": "3.250.1"
+    "Default": "3.252.0",
+    "Node20_229_2": "3.252.1"
   }
 }
