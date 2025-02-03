@@ -46,7 +46,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
@@ -1158,6 +1158,28 @@ namespace BuildConfigGen
 
             var outputTaskNodeObject = outputTaskNode.AsObject();
             outputTaskNodeObject.Remove("_buildConfigMapping");
+
+            bool anyVersionsUpdatedExceptForGlobal = taskState.versionsUpdated.Where(x => !x.useGlobalVersion).Any();
+
+            JsonObject configMapping = new JsonObject();
+            var configTaskVersionMappingSortedByConfig = taskState.configTaskVersionMapping.OrderBy(x => x.Key.name);
+            foreach (var cfg in configTaskVersionMappingSortedByConfig)
+            {
+                if (!config.useGlobalVersion && cfg.Key.useGlobalVersion && !anyVersionsUpdatedExceptForGlobal)
+                {
+                    if (existingLocalPackageVersion != null)
+                    {
+                        configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
+                    }
+                }
+                else
+                {
+                    configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
+                }
+            }
+
+            outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
+
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
@@ -1553,6 +1575,13 @@ always-auth=true", false);
                                 offset++;
                             }
                             while (taskState.configTaskVersionMapping.Values.Contains(targetVersion));
+
+                            if (config.abTaskReleases)
+                            {
+                                // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
+                                // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
+                                targetVersion.Build = config.constMappingKey;
+                            }
 
                             taskState.configTaskVersionMapping.Add(config, targetVersion);
 
