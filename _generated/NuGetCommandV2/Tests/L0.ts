@@ -448,4 +448,41 @@ describe('NuGetCommand Suite', function () {
         assert(tr.failed, 'should have failed');
         done();
     });
+
+    it('restore succeeds on ubuntu 22', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, './RestoreTests/singleslnUbuntu22.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive'), 'it should have run NuGet with mono');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore succeeds on ubuntu 24 with mono', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, './RestoreTests/singleslnUbuntu24Mono.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive'), 'it should have run NuGet with mono');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore fails on ubuntu 24 without mono', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, './RestoreTests/failUbuntu24NoMono.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert(tr.invokedToolCount == 0, 'should have run no tools');
+        done();
+    });
 });
