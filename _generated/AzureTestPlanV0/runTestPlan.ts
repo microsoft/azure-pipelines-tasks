@@ -32,10 +32,10 @@ export async function run() {
 
     let ciData: ciDictionary = setupCiData(testSelectorInput, testPlanInfo);
 
-    let manualFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
-    let automatedFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };;
+    let manualFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+    let automatedFlowResult: IOperationResult = { returnCode: 0, errorMessage: '' };
     const myEnvVar = tl.getVariable('Use_NewAutomatedFlow');
-    console.log(`The value of Use_NewAutomatedFlow is: ${myEnvVar}`);
+    tl.debug(`The value of Use_NewAutomatedFlow is: ${myEnvVar}`);
 
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {

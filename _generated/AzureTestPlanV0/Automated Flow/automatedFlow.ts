@@ -11,23 +11,23 @@ import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
 
 export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
-    let listOfTestsToBeExecuted: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
+    let listOfTestsFromTestPlan: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
     let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
     const testLanguage = tl.getInput('testLanguageInput', true);
     let testExecutor: ITestExecutor = getTestExecutor(testLanguage);
-    let listOfTestsToBeRan: string[] = [];
-    if (listOfTestsToBeExecuted && listOfTestsToBeExecuted.length > 0) {
+    let listOfTestsDiscovered: string[] = [];
+    if (listOfTestsFromTestPlan.length > 0) {
         automatedTestInvokerResult = await testExecutor.setup();
 
         if (automatedTestInvokerResult.returnCode === 0) {
-            automatedTestInvokerResult = await testExecutor.discoverTests(listOfTestsToBeExecuted, ciData, listOfTestsToBeRan);
+            automatedTestInvokerResult = await testExecutor.discoverTests(listOfTestsFromTestPlan, ciData, listOfTestsDiscovered);
 
             if (automatedTestInvokerResult.returnCode === 0) {
-                if (listOfTestsToBeRan.length === 0) {
+                if (listOfTestsDiscovered.length === 0) {
                     return handleNoTestsFound(testSelectorInput);
                 }
 
-                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsToBeExecuted, ciData);
+                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsFromTestPlan, ciData);
                 if (automatedTestInvokerResult.returnCode === 0) {
                     automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
                 }
