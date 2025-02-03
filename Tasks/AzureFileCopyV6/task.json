@@ -229,6 +229,10 @@
     },
     "Node10": {
       "target": "PreJobExecutionAzureFileCopy.js"
+    },
+    "Node20_1": {
+      "target": "PreJobExecutionAzureFileCopy.js",
+      "argumentFormat": ""
     }
   },
   "execution": {

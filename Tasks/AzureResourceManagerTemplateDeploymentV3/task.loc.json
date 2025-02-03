@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 252,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -273,6 +273,10 @@
     },
     "Node10": {
       "target": "main.js"
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
