@@ -190,6 +190,10 @@
     "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

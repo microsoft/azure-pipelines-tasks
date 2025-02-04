@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 252,
-    "Patch": 8
+    "Patch": 9
   },
   "preview": true,
   "demands": [],
@@ -161,6 +161,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
     }
