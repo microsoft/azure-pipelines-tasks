@@ -526,10 +526,6 @@
     },
     "Node10": {
       "target": "src//downloadsecurefiles.js"
-    },
-    "Node20_1": {
-      "target": "src//downloadsecurefiles.js",
-      "argumentFormat": ""
     }
   },
   "execution": {
@@ -539,10 +535,6 @@
     },
     "Node10": {
       "target": "src//helm.js"
-    },
-    "Node20_1": {
-      "target": "src//helm.js",
-      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -552,10 +544,6 @@
     },
     "Node10": {
       "target": "src//deletesecurefiles.js"
-    },
-    "Node20_1": {
-      "target": "src//deletesecurefiles.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -582,5 +570,10 @@
     "PackageSupportedInHelmsV37Only": "ms-resource:loc.messages.PackageSupportedInHelmsV37Only",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.252.2",
+    "LocalPackages": "1.249.4",
+    "Node20_229_3": "1.252.3"
   }
 }

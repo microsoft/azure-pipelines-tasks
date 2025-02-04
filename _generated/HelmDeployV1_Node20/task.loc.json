@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 252,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [
@@ -582,5 +582,10 @@
     "PackageSupportedInHelmsV37Only": "ms-resource:loc.messages.PackageSupportedInHelmsV37Only",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.252.2",
+    "LocalPackages": "1.249.4",
+    "Node20_229_3": "1.252.3"
   }
 }
