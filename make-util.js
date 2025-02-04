@@ -1797,8 +1797,9 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
+ * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
@@ -1826,6 +1827,10 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     {
         writeUpdateArg += " --include-local-packages-build-config";
     }
+
+    if (useSemverBuildConfig) {
+        writeUpdateArg += " --use-semver-build-config";
+    } 
 
     var debugAgentDirArg = "";
     if(debugAgentDir) {
