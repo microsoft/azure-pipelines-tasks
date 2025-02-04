@@ -1147,13 +1147,13 @@ namespace BuildConfigGen
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
 
-            outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[defaultConfig].Major;
-            outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[defaultConfig].Minor;
-            outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[defaultConfig].Patch;
+            outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[config].Major;
+            outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[config].Minor;
+            outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
 
             if (defaultConfig != config)
             {
-                outputTaskNode["version"]!["Build"] = config.name;
+                outputTaskNode["version"]!["Build"] = config.constMappingKey;
             }
 
             var outputTaskNodeObject = outputTaskNode.AsObject();

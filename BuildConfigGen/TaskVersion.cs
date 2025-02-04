@@ -34,7 +34,7 @@ public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
             throw new ArgumentException("semVer");
         }
     }
-    public TaskVersion(int major, int minor, int overidePatch)
+    public TaskVersion(int major, int minor, int overidePatch, string? build = null)
     {
         if (overidePatch < 0)
         {
@@ -44,6 +44,7 @@ public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         Major = major;
         Minor = minor;
         Patch = overidePatch;
+        Build = build;
     }
 
     private TaskVersion(TaskVersion taskVersionToClone)
@@ -92,17 +93,17 @@ public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 
     public TaskVersion CloneWithMinorAndPatch(int minor, int overridePatch)
     {
-        return new TaskVersion(Major, minor, overridePatch);
+        return new TaskVersion(Major, minor, overridePatch, Build);
     }
 
     public TaskVersion CloneWithPatch(int overridePatch)
     {
-        return new TaskVersion(Major, Minor, overridePatch);
+        return new TaskVersion(Major, Minor, overridePatch, Build);
     }
 
     public TaskVersion CloneWithMajor(int major)
     {
-        return new TaskVersion(major, Minor, Patch);
+        return new TaskVersion(major, Minor, Patch, Build);
     }
 
     public static implicit operator String(TaskVersion version)
