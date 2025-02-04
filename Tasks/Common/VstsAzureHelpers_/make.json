@@ -142,6 +142,11 @@
                 "archiveName": "openssl_new.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.3.1/M245/openssl.zip",
                 "dest": "./opensslv3"
+            },
+            {
+                "archiveName": "openssl_new3.4.0.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.4.0/M252/openssl.zip",
+                "dest": "./opensslv4"
             }
         ]
     }
