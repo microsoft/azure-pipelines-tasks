@@ -215,7 +215,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.chartName",
       "defaultValue": "",
-      "visibleRule": "chartType == Name || command == create",
+      "visibleRule": "chartType == Name || command == create ",
       "required": "true",
       "groupName": "commands"
     },
@@ -257,7 +257,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.releaseName",
       "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
+      "visibleRule": "command == install || command == upgrade || command == rollback || command == uninstall || command == delete",
       "groupName": "commands"
     },
     {
@@ -266,7 +266,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.overrideValues",
       "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade || command == rollback || command == uninstall || command == delete",
+      "visibleRule": "command == install || command == upgrade",
       "groupName": "commands"
     },
     {
