@@ -5,11 +5,11 @@
     "description": "Create a snapshot in an Azure App Configuration instance",
     "helpUrl": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-snapshots",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 246,
+        "Minor": 252,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration Snapshot",

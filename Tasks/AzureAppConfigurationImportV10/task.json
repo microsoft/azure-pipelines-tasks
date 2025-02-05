@@ -5,11 +5,11 @@
     "description": "Import key-values to an Azure App Configuration instance",
     "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-import-task",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 249,
+        "Minor": 252,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
