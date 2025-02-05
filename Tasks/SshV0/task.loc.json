@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 248,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -148,6 +148,10 @@
   ],
   "execution": {
     "Node16": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "ssh.js",
       "argumentFormat": ""
     }
