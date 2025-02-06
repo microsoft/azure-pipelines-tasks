@@ -77,9 +77,9 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "JavaMaven": "Java-Maven",
-        "JavaGradle": "Java-Gradle",
-        "Python": "Python-PyTest"
+        "JavaMaven": "Java - Maven",
+        "JavaGradle": "Java - Gradle",
+        "Python": "Python - PyTest"
       }
     },
     {
