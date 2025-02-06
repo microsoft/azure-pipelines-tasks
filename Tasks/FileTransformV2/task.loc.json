@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 249,
-    "Patch": 1
+    "Minor": 252,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
