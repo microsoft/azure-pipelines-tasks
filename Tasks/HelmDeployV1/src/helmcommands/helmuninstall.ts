@@ -12,5 +12,4 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     if (namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
     }    
-
 }
