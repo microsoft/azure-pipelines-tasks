@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Configuration Export",
   "loc.helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-  "loc.description": "Export key-values to task variables from Azure App Configuration",
+  "loc.description": "Export key-values from Azure App Configuration to task variables in your build or deployment pipelines",
   "loc.instanceNameFormat": "Azure App Configuration",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Subscription for the Azure App Configuration instance.",
