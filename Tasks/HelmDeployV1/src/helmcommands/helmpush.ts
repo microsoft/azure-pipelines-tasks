@@ -8,7 +8,9 @@ Pushes a helm chart to ACR
 */
 
 export async function addArguments(helmCli: helmcli): Promise<void> {
-    helmCli.addArgument("push");
+    helmCli.setCommand("push");
 
     helmCli.addArgument(tl.getVariable("helmChartRef"));
+    helmCli.addArgument(tl.getInput("chartPath" , true));
+    helmCli.addArgument(tl.getInput("remoteRepo" , true));
 }

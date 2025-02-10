@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 252,
+    "Minor": 253,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -501,6 +501,10 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

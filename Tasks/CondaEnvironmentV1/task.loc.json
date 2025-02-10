@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 247,
-    "Patch": 0
+    "Patch": 1
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -91,6 +91,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -103,9 +107,5 @@
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "PrependPath": "ms-resource:loc.messages.PrependPath",
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20-225": "1.234.3"
   }
 }
