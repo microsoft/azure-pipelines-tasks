@@ -17,8 +17,8 @@
         "ServerGate"
     ],
     "version": {
-        "Major": 1,
-        "Minor": 220,
+        "Major": 2,
+        "Minor": 253,
         "Patch": 0
     },
     "instanceNameFormat": "Azure Function: $(function)",

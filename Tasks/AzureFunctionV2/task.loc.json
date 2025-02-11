@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/refs/heads/master/tasks.schema.json",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
@@ -16,8 +17,8 @@
     "ServerGate"
   ],
   "version": {
-    "Major": 1,
-    "Minor": 220,
+    "Major": 2,
+    "Minor": 253,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -49,7 +50,7 @@
       "name": "method",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.method",
-      "required": "true",
+      "required": true,
       "defaultValue": "POST",
       "options": {
         "OPTIONS": "OPTIONS",
@@ -67,10 +68,10 @@
       "name": "headers",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
-      "required": "false",
+      "required": false,
       "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
       "properties": {
-        "resizable": "true",
+        "resizable": true,
         "rows": "10",
         "maxLength": "5000"
       },
@@ -88,10 +89,10 @@
       "name": "body",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
-      "required": "false",
+      "required": false,
       "defaultValue": "",
       "properties": {
-        "resizable": "true",
+        "resizable": true,
         "rows": "3",
         "maxLength": "2000"
       },
