@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 252,
-    "Patch": 9
+    "Minor": 253,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -77,11 +77,9 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "JavaMaven": "Java-Maven",
-        "JavaGradle": "Java-Gradle",
-        "Python": "Python",
-        "Go": "Go",
-        "Jest": "Jest"
+        "JavaMaven": "Java - Maven",
+        "JavaGradle": "Java - Gradle",
+        "Python": "Python - PyTest"
       }
     },
     {
