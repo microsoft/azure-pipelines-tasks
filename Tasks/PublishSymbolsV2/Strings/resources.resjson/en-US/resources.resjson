@@ -4,7 +4,6 @@
   "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
   "loc.instanceNameFormat": "Publish symbols path",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.AzureDevOpsServiceConnection": "AzureDevOps service connection",
   "loc.input.help.AzureDevOpsServiceConnection": "Name of the AzureDevOps service connection.",
   "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
   "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider.",
