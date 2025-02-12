@@ -24,7 +24,7 @@ export class JestTestExecutor implements ITestExecutor {
         try {
             this.toolRunnerPath = tl.which(this.testRunnerCLI, true);
             this.toolRunner = tl.tool(this.toolRunnerPath);
-            this.toolRunner.arg("i jest-junit");
+            this.toolRunner.line('install jest-junit');
             operationResult.returnCode = await this.toolRunner.execAsync();
             this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
         } catch (error) {
@@ -57,14 +57,12 @@ export class JestTestExecutor implements ITestExecutor {
                 break;
             }
             
-            const args = [];
             this.toolRunner = tl.tool(this.toolRunnerPath);
             try {
                 let reportName: string = `TEST-Jest${i}-junit.xml`;
                 tl.setVariable('JEST_JUNIT_OUTPUT_NAME', reportName);
-                args.push(`jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
-                tl.debug("Executing jest test with args :" + args);
-                this.toolRunner.arg(args);
+                tl.debug("Executing jest test with args :" + `jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
+                this.toolRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
                 operationResult.returnCode = await this.toolRunner.execAsync();
             } catch (error) {
                 operationResult.errorMessage =  error.message || String(error);

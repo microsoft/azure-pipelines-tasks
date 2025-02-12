@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 253,
-    "Patch": 1
+    "Patch": 3
   },
   "preview": true,
   "demands": [],
@@ -79,7 +79,8 @@
       "options": {
         "JavaMaven": "Java - Maven",
         "JavaGradle": "Java - Gradle",
-        "Python": "Python - PyTest"
+        "Python": "Python - PyTest",
+        "JavaScriptJest": "JavaScript - Jest"
       }
     },
     {
