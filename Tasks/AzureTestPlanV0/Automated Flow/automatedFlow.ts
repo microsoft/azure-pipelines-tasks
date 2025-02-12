@@ -9,6 +9,7 @@ import { ITestExecutor } from '../Interface/ITestExecutor';
 import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExecutor';
 import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
+import { JestTestExecutor } from './TestExecutors/JestTestExecutor';
 
 export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
     let listOfTestsFromTestPlan: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
@@ -55,10 +56,8 @@ function getTestExecutor(testLanguage: string): ITestExecutor{
                     testExecutor = new PythonTestExecutor();
                     break;
     
-                case 'Go':
-                    break;
-    
-                case 'Jest':
+                case 'JavaScriptJest':
+                    testExecutor = new JestTestExecutor();
                     break;
     
                 default:
