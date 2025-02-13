@@ -12,7 +12,6 @@ export class JestTestExecutor implements ITestExecutor {
     testRunnerCLI: string = constants.NPM_EXECUTABLE;
     toolRunnerPath: string;
     toolRunner: ToolRunner;
-    gradlewFilePath: string;
 
     /*
     * Setup the test executor
