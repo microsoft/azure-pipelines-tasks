@@ -43,9 +43,12 @@ export async function run(clientToolFilePath: string): Promise<void> {
         if(manifest && !fileExists(manifest)) {
             throw new Error(tl.loc("ManifestFileNotFound", manifest));
         }
+        else if(manifest && fileExists(manifest)) {
+            tl.debug("Manifest file found at: " + manifest);
+        }
         else
         {
-            tl.debug("Manifest file found at: " + manifest);
+            tl.debug("Manifest is not specified");
         }
 
         tl.debug("connectedServiceName: " + connectedServiceName);
