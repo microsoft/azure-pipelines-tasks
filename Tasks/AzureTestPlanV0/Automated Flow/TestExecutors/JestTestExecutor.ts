@@ -19,7 +19,6 @@ export class JestTestExecutor implements ITestExecutor {
     */
     async setup(): Promise<IOperationResult> {
         let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
-        this.gradlewFilePath = tl.getInput('gradleFilePath');
 
         try {
             this.toolRunnerPath = tl.which(this.testRunnerCLI, true);
@@ -53,10 +52,6 @@ export class JestTestExecutor implements ITestExecutor {
         executionTimer.start();
 
         for (let test of testsToBeExecuted) {
-            if(operationResult.returnCode !== 0) {
-                break;
-            }
-            
             this.toolRunner = tl.tool(this.toolRunnerPath);
             try {
                 let reportName: string = `TEST-Jest${i}-junit.xml`;
@@ -65,9 +60,19 @@ export class JestTestExecutor implements ITestExecutor {
                 this.toolRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
                 operationResult.returnCode = await this.toolRunner.execAsync();
             } catch (error) {
-                operationResult.errorMessage =  error.message || String(error);
+                if(operationResult.errorMessage === '') {
+                    operationResult.errorMessage =  error.message || String(error);
+                }
+                else{
+                    operationResult.errorMessage = operationResult.errorMessage + '\n' + (error.message || String(error));
+                }
+
             }
             i++;
+        }
+
+        if(operationResult.errorMessage !== ''){
+            operationResult.returnCode = 1;
         }
 
         executionTimer.stop(ciData);      
