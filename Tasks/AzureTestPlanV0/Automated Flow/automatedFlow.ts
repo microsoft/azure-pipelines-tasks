@@ -9,10 +9,12 @@ import { ITestExecutor } from '../Interface/ITestExecutor';
 import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExecutor';
 import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
+import { JestTestExecutor } from './TestExecutors/JestTestExecutor';
 
 export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
     let listOfTestsFromTestPlan: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
     let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+    let publishOperationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
     const testLanguage = tl.getInput('testLanguageInput', true);
     let testExecutor: ITestExecutor = getTestExecutor(testLanguage);
     let listOfTestsDiscovered: string[] = [];
@@ -21,20 +23,20 @@ export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSele
 
         if (automatedTestInvokerResult.returnCode === 0) {
             automatedTestInvokerResult = await testExecutor.discoverTests(listOfTestsFromTestPlan, ciData, listOfTestsDiscovered);
-
             if (automatedTestInvokerResult.returnCode === 0) {
                 if (listOfTestsDiscovered.length === 0) {
                     return handleNoTestsFound(testSelectorInput);
                 }
-
                 automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsDiscovered, ciData);
-                if (automatedTestInvokerResult.returnCode === 0) {
-                    automatedTestInvokerResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
-                }
+                publishOperationResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
             }   
         }
     } else {
         automatedTestInvokerResult = handleNoTestsFound(testSelectorInput);
+    }
+    if(automatedTestInvokerResult.returnCode !== 0 || publishOperationResult.returnCode !== 0){
+        automatedTestInvokerResult.returnCode = 1;
+        automatedTestInvokerResult.errorMessage = automatedTestInvokerResult.errorMessage + '/n' + publishOperationResult.errorMessage;
     }
 
     return automatedTestInvokerResult;
@@ -55,10 +57,8 @@ function getTestExecutor(testLanguage: string): ITestExecutor{
                     testExecutor = new PythonTestExecutor();
                     break;
     
-                case 'Go':
-                    break;
-    
-                case 'Jest':
+                case 'JavaScriptJest':
+                    testExecutor = new JestTestExecutor();
                     break;
     
                 default:
