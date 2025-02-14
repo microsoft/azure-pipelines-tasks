@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 253,
-    "Patch": 3
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -146,7 +146,7 @@
     {
       "target": "testSuite",
       "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?api-version=3.0-preview.2",
       "parameters": {
         "testPlan": "$(testPlan)"
       },
