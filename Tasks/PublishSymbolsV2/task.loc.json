@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 253,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,24 @@
     }
   ],
   "inputs": [
+    {
+      "name": "AzureDevOpsServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": true,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureDevOpsServiceConnection",
+      "label": "ms-resource:loc.input.label.AzureDevOpsServiceConnection"
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
+    },
     {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
