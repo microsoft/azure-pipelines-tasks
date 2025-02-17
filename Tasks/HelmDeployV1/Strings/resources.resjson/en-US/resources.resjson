@@ -36,6 +36,8 @@
   "loc.input.help.chartName": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
   "loc.input.label.chartPath": "Chart Path",
   "loc.input.help.chartPath": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
+  "loc.input.label.remoteRepo": "Remote Repo",
+  "loc.input.help.remoteRepo": "The remote repository where the chart will be pushed.",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
   "loc.input.label.releaseName": "Release Name",

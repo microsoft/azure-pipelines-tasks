@@ -23,7 +23,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-java-common": "^2.198.1",
-    "azure-pipelines-tasks-msbuildhelpers": "^3.231.0"
+    "azure-pipelines-tasks-msbuildhelpers": "^3.252.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
