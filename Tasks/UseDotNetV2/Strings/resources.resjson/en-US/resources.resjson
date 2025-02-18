@@ -7,7 +7,7 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or SDK.",
-  "loc.input.label.useGlobalJson": "Use global json",
+  "loc.input.label.useGlobalJson": "Use global json NEW",
   "loc.input.help.useGlobalJson": "Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.",
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.help.workingDirectory": "Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.",
