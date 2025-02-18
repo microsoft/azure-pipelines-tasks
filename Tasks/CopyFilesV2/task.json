@@ -1,7 +1,7 @@
 {
   "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
   "name": "CopyFiles",
-  "friendlyName": "Copy files new",
+  "friendlyName": "Copy files",
   "description": "Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/copy-files",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
@@ -33,7 +33,7 @@
     {
       "name": "SourceFolder",
       "type": "filePath",
-      "label": "Source Folder new",
+      "label": "Source Folder",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
