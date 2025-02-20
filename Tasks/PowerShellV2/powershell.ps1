@@ -31,7 +31,6 @@ function Get-ActionPreference {
 
 Trace-VstsEnteringInvocation $MyInvocation
 try {
-    #Test
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
     # Get inputs.
