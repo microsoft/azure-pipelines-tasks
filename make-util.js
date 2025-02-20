@@ -1805,7 +1805,7 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
 
     var tasks = taskList.join('|')
     ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
-    var programPath = `dotnet run --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
 
     const args = [
         "--task",

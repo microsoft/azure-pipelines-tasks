@@ -18,12 +18,12 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.18.105",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.16.0"
   },
   "devDependencies": {
-    "typescript": "4.9.5"
+    "typescript": "5.1.6"
   }
 }

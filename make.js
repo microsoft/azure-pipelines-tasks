@@ -122,6 +122,19 @@ if (argv.task) {
     }
 }
 
+function validateTaskPaths() {
+    const paths = taskList.map(taskName => path.join(tasksPath, taskName))
+        .concat(fs.existsSync(genTaskPath) ? fs.readdirSync(genTaskPath).map(taskName => path.join(genTaskPath, taskName)) : [])
+        .concat(fs.existsSync(genTaskPathLocal) ? fs.readdirSync(genTaskPathLocal).map(taskName => path.join(genTaskPathLocal, taskName)) : []);
+
+    const invalidPaths = paths.filter(taskPath => test('-d', taskPath) && !test('-f', path.join(taskPath, 'task.json')) && !taskPath.includes('_buildConfigs'));
+    if (invalidPaths.length > 0) {
+        fail(`The following paths do not contain task.json and need to be cleaned up:\n${invalidPaths.join('\n')}. They were likely left over after syncing.\nTo clean, use 'git clean -dn' to see what would be deleted and 'git clean -df' to delete the paths.`);
+    }
+}
+
+validateTaskPaths();
+
 // set the runner options. should either be empty or a comma delimited list of test runners.
 // for example: ts OR ts,ps
 //
