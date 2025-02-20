@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Reemplazar valores para establecer",
   "loc.input.label.kustomizationPath": "Ruta de acceso de Kustomization",
   "loc.input.help.kustomizationPath": "El argumento debe ser la ruta de acceso al directorio que contiene el archivo o una dirección URL del repositorio de GIT con un sufijo de ruta de acceso que especifique lo mismo respecto a la raíz del repositorio.",
+  "loc.input.label.enableHelm": "Habilitar el generador de inflación de Helm Chart",
+  "loc.input.help.enableHelm": "Establezca en 'true' para habilitar el generador de inflación de Helm Chart con kustomize.",
   "loc.input.label.resourceToPatch": "Recurso para la revisión",
   "loc.input.help.resourceToPatch": "para identificar el recurso",
   "loc.input.label.resourceFileToPatch": "Ruta de acceso del archivo",

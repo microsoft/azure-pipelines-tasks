@@ -261,6 +261,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
     },
     {
+      "name": "enableHelm",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableHelm",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.enableHelm"
+    },
+    {
       "name": "resourceToPatch",
       "type": "radio",
       "label": "ms-resource:loc.input.label.resourceToPatch",

@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "替代要设置的值",
   "loc.input.label.kustomizationPath": "Kustomization 路径",
   "loc.input.help.kustomizationPath": "该参数必须是包含该文件的目录的路径，或带有路径后缀的 git 存储库 URL，该路径后缀指定与存储库根目录相同的路径。",
+  "loc.input.label.enableHelm": "启用 Helm Chart 膨胀生成器",
+  "loc.input.help.enableHelm": "设置为“true”以使用kustomize启用 Helm Chart 膨胀生成器。",
   "loc.input.label.resourceToPatch": "要修补的资源",
   "loc.input.help.resourceToPatch": "识别资源",
   "loc.input.label.resourceFileToPatch": "文件路径",

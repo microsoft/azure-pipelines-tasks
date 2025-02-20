@@ -47,6 +47,7 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
+tr.setInput("enableHelm", process.env[shared.TestEnvVars.enableHelm] || '');
 tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
 tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
 
