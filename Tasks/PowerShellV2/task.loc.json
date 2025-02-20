@@ -17,12 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 253,
-    "Patch": 0
-  },
-  "release": {
-    "Sprint": 252,
-    "Ordinal": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
