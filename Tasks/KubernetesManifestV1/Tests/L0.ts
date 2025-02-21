@@ -34,7 +34,6 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.containers];
         delete process.env[shared.TestEnvVars.resourceType]
         delete process.env.RemoveNamespaceFromEndpoint;
-
     });
 
     it('Run successfuly for deploy with none strategy', async () => {

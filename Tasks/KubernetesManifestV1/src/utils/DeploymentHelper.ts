@@ -125,7 +125,7 @@ function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): 
     return manifestFiles;
 }
 
-export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
+async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     await KubernetesManifestUtility.checkManifestStability(kubectl, resources, TaskInputParameters.rolloutStatusTimeout);
 
 }
