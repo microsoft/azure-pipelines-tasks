@@ -5,6 +5,7 @@ import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces
 import {TestCaseResult} from 'azure-devops-node-api/interfaces/TestInterfaces';
 import constants = require('./Common/constants');
 import { getVstsWepApi } from './Common/ApiHelper';
+import { ciDictionary } from './Common/ciEventLogger';
 
 export const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
 
@@ -22,7 +23,7 @@ export interface ManualTestRunData {
     runUrl: string;
 }
 
-export async function getTestPlanData(): Promise<TestPlanData> {
+export async function getTestPlanData(ciData: ciDictionary): Promise<TestPlanData | null> {
 
     const testPlanDataResponse: TestPlanData = {
         listOfFQNOfTestCases: [],
@@ -56,8 +57,10 @@ export async function getTestPlanData(): Promise<TestPlanData> {
             testPlanDataResponse.listOfAutomatedTestPoints = testPlanData.listOfAutomatedTestPoints;
         })
         .catch((error) => {
-            tl.error("Error while fetching Test Plan Data :" + error);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
+            ciData.returnCode = 1;
+            ciData.errorMessage = error.message || String(error);
+            ciData.taskErrorMessage = tl.loc('ErrorFailTaskOnAPIFailure');
+            return null;
         });
 
     return testPlanDataResponse;
@@ -91,24 +94,30 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
         do {
             try {
-                let testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
+            const testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
 
-                token = testCasesResponse.continuationToken;
+            if(testCasesResponse === null){
+                tl.debug("No respone while fetching Test cases List for test suite id: " + testSuiteId + " and test plan id: " + testPlanInputId 
+                    + " and test configuration id: " + testPlanConfigInputId + " with continuation token: " + token);
+                break;
+            }
 
-                for (let key in testCasesResponse) {
-                    if (testCasesResponse.hasOwnProperty(key)) {
-                        testCasesData.push(testCasesResponse[key]);
-                    }
+            token = testCasesResponse.continuationToken;
+
+            for (let key in testCasesResponse) {
+                if (testCasesResponse.hasOwnProperty(key)) {
+                    testCasesData.push(testCasesResponse[key]);
                 }
+            }
 
             } catch (error) {
-                tl.error("Error fetching test cases list:" + error);
+                tl.debug("Error fetching test cases list: " + error);
                 token = undefined;
             }
-        } while ((token !== undefined) && (token !== null));
+        } while (token);
 
         if (testCasesData.length === 0) {
-            console.log(`No test cases for test suite ${testSuiteId}`);
+            console.log(`No test cases for test suite: ${testSuiteId} and test plan: ${testPlanInputId}`);
             continue;
         }
 
@@ -171,12 +180,13 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 }
             }
         });
+        tl.debug("Number of Automated Test point ids :" + testPlanData.listOfAutomatedTestPoints.length + " after fetching test cases for test suite id: " + testSuiteId);
+        tl.debug("Number of Manual Test point ids :" + testPlanData.listOfManualTestPoints.length + " after fetching test cases for test suite id: " + testSuiteId);
 
     }
 
-    console.log("Number of Automated Test point ids :", testPlanData.listOfAutomatedTestPoints.length);
-    console.log("Number of Manual Test point ids :", testPlanData.listOfManualTestPoints.length);
-
+    console.log("Total number of Automated Test point ids :" + testPlanData.listOfAutomatedTestPoints.length);
+    console.log("Total number of Manual Test point ids :" + testPlanData.listOfManualTestPoints.length);
     return testPlanData;
 }
 
