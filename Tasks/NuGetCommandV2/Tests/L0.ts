@@ -406,6 +406,8 @@ describe('NuGetCommand Suite', function () {
         tr.run();
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_Error_NugetFailedWithCodeAndErr 1 stderr output is here", "should have error from nuget");
         done();
     });
 
@@ -416,6 +418,9 @@ describe('NuGetCommand Suite', function () {
         tr.run();
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 1 error from nuget and one from task");
+        assert.equal(tr.errorIssues[0], "loc_mock_Error_NugetFailedWithCodeAndErr 1 stderr output is here", "should have error from nuget");
+        assert.equal(tr.errorIssues[1], "loc_mock_Error_PackageFailure", "should have error from task runner");
         done();
     });
 
@@ -426,6 +431,9 @@ describe('NuGetCommand Suite', function () {
         tr.run();
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 1 error from nuget and one from task");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_Error_UnexpectedErrorVstsNuGetPush 1 stderr output is here", "should have error from nuget");
+        assert.equal(tr.errorIssues[1], "loc_mock_PackagesFailedToPublish", "should have error from task runner");
         done();
     });
 
@@ -446,6 +454,9 @@ describe('NuGetCommand Suite', function () {
         tr.run();
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 1 error from nuget and one from task");
+        assert.equal(tr.errorIssues[0], "loc_mock_Error_NugetFailedWithCodeAndErr 1 stderr output is here", "should have error from nuget");
+        assert.equal(tr.errorIssues[1], "loc_mock_PackagesFailedToInstall", "should have error from task runner");
         done();
     });
 
