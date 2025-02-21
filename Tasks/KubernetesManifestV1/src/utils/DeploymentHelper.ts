@@ -34,7 +34,14 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
 
     // check manifest stability
     const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([KubernetesConstants.DiscoveryAndLoadBalancerResource.service]));
-    await checkManifestStability(kubectl, resourceTypes);
+    const resourceType = tl.getInput('resource-type') || ''
+
+    // for a fleet object, we do not check for manifest stability
+    if (resourceType.toLowerCase() != 'microsoft.containerservice/fleets') {
+        await checkManifestStability(kubectl, resourceTypes)
+    }else{
+        console.log('checkManifestStability was skipped for fleet');
+    }
 
     // print ingress resources
     const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress]);
@@ -118,7 +125,7 @@ function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): 
     return manifestFiles;
 }
 
-async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
+export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     await KubernetesManifestUtility.checkManifestStability(kubectl, resources, TaskInputParameters.rolloutStatusTimeout);
 
 }
