@@ -69,7 +69,6 @@ param(
    [switch]$DryRun,
    [switch]$NoPath,
    [string]$AzureFeed="https://builds.dotnet.microsoft.com/dotnet",
-   [string]$FallbackAzureFeed="https://dotnetcli.azureedge.net/dotnet",
    [string]$UncachedFeed="https://dotnetcli.blob.core.windows.net/dotnet",
    [string]$ProxyAddress,
    [switch]$ProxyUseDefaultCredentials
@@ -447,14 +446,12 @@ function Prepend-Sdk-InstallRoot-To-Path([string]$InstallRoot, [string]$BinFolde
 $CLIArchitecture = Get-CLIArchitecture-From-Architecture $Architecture
 $SpecificVersion = Get-Specific-Version-From-Version -AzureFeed $AzureFeed -Channel $Channel -Version $Version
 $DownloadLink = Get-Download-Link -AzureFeed $AzureFeed -Channel $Channel -SpecificVersion $SpecificVersion -CLIArchitecture $CLIArchitecture
-$FallbackDownloadLink = Get-Download-Link -AzureFeed $FallbackAzureFeed -Channel $Channel -SpecificVersion $SpecificVersion -CLIArchitecture $CLIArchitecture
 $LegacyDownloadLink = Get-LegacyDownload-Link -AzureFeed $AzureFeed -Channel $Channel -SpecificVersion $SpecificVersion -CLIArchitecture $CLIArchitecture
 
 if ($DryRun) {
     Say "Payload URLs:"
     Say "Primary - $DownloadLink"
     Say "Legacy - $LegacyDownloadLink"
-    Say "Fallback - $FallbackDownloadLink"
     Say "Repeatable invocation: .\$($MyInvocation.MyCommand) -Version $SpecificVersion -Channel $Channel -Architecture $CLIArchitecture -InstallDir $InstallDir"
     exit 0
 }
@@ -487,21 +484,12 @@ try {
     DownloadFile -Uri $DownloadLink -OutPath $ZipPath
 }
 catch {
-    try {
-        Say "Cannot download: $DownloadLink"
-        $DownloadLink = $FallbackDownloadLink
-        $ZipPath = [System.IO.Path]::GetTempFileName()
-        Say-Verbose "Fallabck zip path: $ZipPath"
-        Say "Downloading fallback link: $FallbackDownloadLink"
-        DownloadFile -Uri $FallbackDownloadLink -OutPath $ZipPath
-    } catch {
-        Say "Cannot download: $FallbackDownloadLink"
-        $DownloadLink = $LegacyDownloadLink
-        $ZipPath = [System.IO.Path]::GetTempFileName()
-        Say-Verbose "Legacy zip path: $ZipPath"
-        Say "Downloading legacy link: $DownloadLink"
-        DownloadFile -Uri $DownloadLink -OutPath $ZipPath
-    }
+    Say "Cannot download: $DownloadLink"
+    $DownloadLink = $LegacyDownloadLink
+    $ZipPath = [System.IO.Path]::GetTempFileName()
+    Say-Verbose "Legacy zip path: $ZipPath"
+    Say "Downloading legacy link: $DownloadLink"
+    DownloadFile -Uri $DownloadLink -OutPath $ZipPath
 }
 
 Say "Extracting zip from $DownloadLink"
