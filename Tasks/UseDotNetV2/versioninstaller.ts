@@ -28,6 +28,7 @@ export class VersionInstaller {
      * @param downloadUrl The download url of the sdk / runtime.
      */
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
+        // console.log("inside downloadAndInstall");
         if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
@@ -49,7 +50,7 @@ export class VersionInstaller {
             }
 
             // Extract
-            console.log(tl.loc("ExtractingPackage", downloadPath));
+            // console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
                 let tempDirectory = tl.getVariable('Agent.TempDirectory');
                 let extDirectory = path.join(tempDirectory, tinyGuid());
@@ -61,8 +62,12 @@ export class VersionInstaller {
 
             // Copy folders
             tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            // console.log("extPath - ", extPath);
+            // var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]);
+            // console.log("allRootLevelEnteriesInDir - ", allRootLevelEnteriesInDir);
             var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
+            // console.log("directoriesTobeCopied - ", directoriesTobeCopied);
             directoriesTobeCopied.forEach((directoryPath) => {
                 tl.cp(directoryPath, this.installationPath, "-rf", false);
             });
@@ -71,7 +76,9 @@ export class VersionInstaller {
             try {
                 if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
                     tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
+                    // console.log("allRootLevelEnteriesInDir - ", allRootLevelEnteriesInDir);
                     var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
+                    // console.log("filesToBeCopied - ", filesToBeCopied);
                     filesToBeCopied.forEach((filePath) => {
                         tl.cp(filePath, this.installationPath, "-f", false);
                     });
@@ -84,7 +91,7 @@ export class VersionInstaller {
             // Cache tool
             this.createInstallationCompleteFile(versionInfo);
 
-            console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
+            // console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
         }
         catch (ex) {
             throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex);
@@ -134,13 +141,17 @@ export class VersionInstaller {
     }
 
     private isLatestInstalledVersion(version: string): boolean {
+        // console.log("Inside IsLatestInstalledVersion");
         var pathTobeChecked = this.packageType == utils.Constants.sdk ? path.join(this.installationPath, utils.Constants.relativeSdkPath) : path.join(this.installationPath, utils.Constants.relativeRuntimePath);
         if (!tl.exist(pathTobeChecked)) {
             throw tl.loc("PathNotFoundException", pathTobeChecked);
         }
-
-        var allEnteries: string[] = tl.ls("", [pathTobeChecked]).map(name => path.join(pathTobeChecked, name));
+        // console.log("Path to be checked - ", pathTobeChecked);
+        // var allEnteries: string[] = tl.ls("", [pathTobeChecked]).map(name => path.join(pathTobeChecked, name));
+        var allEnteries: string[] = tl.ls("", [pathTobeChecked]);
+        // console.log("All entries - ", allEnteries);
         var folderPaths: string[] = allEnteries.filter(element => fs.lstatSync(element).isDirectory());
+        // console.log("Folder Paths - ", folderPaths);
         var isLatest: boolean = folderPaths.findIndex(folderPath => {
             try {
                 let versionFolderName = path.basename(folderPath);
@@ -151,8 +162,9 @@ export class VersionInstaller {
                 // no op, folder name might not be in version format
             }
         }) < 0;
-
+        
         var filePaths: string[] = allEnteries.filter(element => !fs.lstatSync(element).isDirectory());
+        // console.log("filePaths - ", filePaths);
         isLatest = isLatest && filePaths.findIndex(filePath => {
             try {
                 var versionCompleteFileName = this.getVersionCompleteFileName(path.basename(filePath));
@@ -182,7 +194,7 @@ export class VersionInstaller {
 
     private async downloadFromFallbackUrl(fallBackUrl: string, packageType: string, version: string, downloadUrl: string) : Promise<string> {
         let url = `${fallBackUrl}/${packageType === "runtime" ? "Runtime" : "Sdk"}/${version}/${downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1)}`;
-        console.log("Using fallback url for download: " + url);
+        // console.log("Using fallback url for download: " + url);
         var downloadPath = await toolLib.downloadToolWithRetries(url)
         return downloadPath;
     }
