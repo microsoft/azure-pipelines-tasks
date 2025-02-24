@@ -32,6 +32,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
         delete process.env[shared.TestEnvVars.trafficSplitMethod];
         delete process.env[shared.TestEnvVars.containers];
+        delete process.env[shared.TestEnvVars.resourceType]
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -44,6 +45,19 @@ describe('Kubernetes Manifests Suite', function () {
         await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
+    });
+
+    it('Fleet deployment skips checkManifestStability step', async () => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;
+        process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key1\ntest-key2';
+        process.env[shared.TestEnvVars.resourceType] = 'Microsoft.ContainerService/fleets';
+        await tr.runAsync();
+        console.log(tr.stdout);
+        assert(tr.stdout.indexOf('checkManifestStability was skipped for fleet') != -1, 'checkManifestStability was skipped for fleet');
+        assert(tr.succeeded, 'task should have succeeded');
     });
 
     it('Run successfully for deploy canary', async () => {
