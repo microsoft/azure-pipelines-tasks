@@ -100,8 +100,8 @@ async function publishResults(
     const publishingTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
     publishingTimer.start();
 
-    const failTaskonFailureToPublish = tl.getBoolInput('failTaskonFailureToPublish', false);
-    const failOnMissingResultsFile = tl.getBoolInput('failOnMissingResultsFile', false);
+    const failTaskonFailureToPublish = tl.getBoolInput('failTaskOnFailureToPublishResults', false);
+    const failOnMissingResultsFile = tl.getBoolInput('failTaskOnMissingResultsFile', false);
 
     try {
         if (!testPlanInfo?.listOfAutomatedTestPoints && failOnMissingResultsFile) {
@@ -117,7 +117,7 @@ async function publishResults(
         if (failTaskonFailureToPublish) {
             return createErrorResult(`Publishing failed: ${error.message}`);
         }
-        tl.debug(`Failed to publish test results: ${error.message} but continuing since failTaskonFailureToPublish is set to false`);
+        tl.debug(`Failed to publish test results: ${error.message} but continuing since failTaskOnFailureToPublishResults is set to false`);
         return createSuccessResult();
     } finally {
         publishingTimer.stop(ciData);
