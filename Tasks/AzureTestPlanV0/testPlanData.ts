@@ -262,6 +262,5 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCaseRe
                 testCaseResult
             );
         }
-        
     });
 }
