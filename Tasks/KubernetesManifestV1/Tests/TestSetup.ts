@@ -49,7 +49,6 @@ tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFil
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
 tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
 tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
-tr.setInput('resourceType', process.env[shared.TestEnvVars.resourceType] || '');
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
