@@ -55,8 +55,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key1\ntest-key2';
         process.env[shared.TestEnvVars.resourceType] = 'Microsoft.ContainerService/fleets';
         await tr.runAsync();
-        console.log(tr.stdout);
-        assert(tr.stdout.indexOf('checkManifestStability was skipped for fleet') != -1, 'checkManifestStability was skipped for fleet');
+        assert(tr.stdout.indexOf('checking manifest stability') === -1, 'checking manifest stability should not be printed');
         assert(tr.succeeded, 'task should have succeeded');
     });
 

@@ -38,9 +38,8 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
 
     // for a fleet object, we do not check for manifest stability
     if (resourceType.toLowerCase() != 'microsoft.containerservice/fleets') {
+        tl.debug('checking manifest stability');
         await checkManifestStability(kubectl, resourceTypes)
-    }else{
-        tl.debug('checkManifestStability was skipped for fleet');
     }
 
     // print ingress resources
