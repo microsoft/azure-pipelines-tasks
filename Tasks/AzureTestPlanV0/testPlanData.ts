@@ -235,7 +235,7 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCase[]
         automatedTestName = (testCase as any).automatedTestName;
         testPlanData.listOfFQNOfTestCases.push(automatedTestName);
         automatedTestStorage = (testCase as any).automatedTestStorage;
-        isManualTest = automatedTestName ? true : false;
+        isManualTest = automatedTestName ? false : true;
         revisionId = (testCase as any).revision;
 
         if ((testCase as any).testPoint) {
