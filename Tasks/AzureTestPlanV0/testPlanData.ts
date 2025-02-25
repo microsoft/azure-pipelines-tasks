@@ -232,43 +232,26 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCase[]
         let isManualTest = false;
         let revisionId = 0;
 
-        for (const witField of testCase.workItem?.workItemFields || []) {
-            const parsedWitField = JSON.parse(JSON.stringify(witField)); // Deep copy for safety
+        automatedTestName = (testCase as any).automatedTestName;
+        testPlanData.listOfFQNOfTestCases.push(automatedTestName);
+        automatedTestStorage = (testCase as any).automatedTestStorage;
+        isManualTest = automatedTestName ? true : false;
+        revisionId = (testCase as any).revision;
 
-            if (parsedWitField[constants.AUTOMATED_TEST_NAME] !== undefined && parsedWitField[constants.AUTOMATED_TEST_NAME] !== null) {
-                automatedTestName = parsedWitField[constants.AUTOMATED_TEST_NAME].toString();
-                testPlanData.listOfFQNOfTestCases.push(automatedTestName);
-            }
+        if ((testCase as any).testPoint) {
 
-            if (parsedWitField[constants.AUTOMATED_TEST_STORAGE] !== undefined && parsedWitField[constants.AUTOMATED_TEST_STORAGE] !== null) {
-                automatedTestStorage = parsedWitField[constants.AUTOMATED_TEST_STORAGE].toString();
-            }
-
-            if (parsedWitField[constants.AUTOMATION_STATUS] !== undefined && parsedWitField[constants.AUTOMATION_STATUS] !== null && parsedWitField[constants.AUTOMATION_STATUS] === constants.NOT_AUTOMATED) {
-                isManualTest = true;
-            }
-
-            if (parsedWitField[constants.REVISION_ID] !== undefined && parsedWitField[constants.REVISION_ID] !== null) {
-                revisionId = parseInt(parsedWitField[constants.REVISION_ID]);
-            }
-        }
-
-        if (testCase.pointAssignments.length > 0) {
             let testCaseResult: TestCaseResult = {
-                testPoint: {
-                    id: testCase.pointAssignments[0].id.toString()
-                },
-                testCase: {
-                    id: testCase.workItem.id.toString()
-                },
-                testCaseTitle: testCase.workItem.name,
+                testPoint: (testCase as any).testPoint,
+                testCase: (testCase as any).testCase.id,
+                testCaseTitle: (testCase as any).testCase.name,
                 testCaseRevision: revisionId,
-                owner: testCase.pointAssignments[0].tester,
+                owner: (testCase as any).owner,
                 configuration: {
-                    id: testCase.pointAssignments[0].configurationId.toString(),
-                    name: testCase.pointAssignments[0].configurationName
+                    id: (testCase as any).configuration.id
+                    //name: testCase.pointAssignments[0].configurationName
                 }
             }
+
             if (automatedTestName !== '' && automatedTestStorage !== '') {
                 testCaseResult.automatedTestName = automatedTestName;
                 testCaseResult.automatedTestStorage = automatedTestStorage;
@@ -278,6 +261,7 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCase[]
                     testCaseResult
                 );
             }
+
             if (isManualTest === true) {
                 testPlanData.listOfManualTestPoints.push(
                     testCaseResult
