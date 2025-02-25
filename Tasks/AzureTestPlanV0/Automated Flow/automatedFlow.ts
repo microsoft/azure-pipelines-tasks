@@ -100,8 +100,8 @@ async function publishResults(
     const publishingTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
     publishingTimer.start();
 
-    const failTaskonFailureToPublish = tl.getBoolInput('failTaskonFailureToPublish', true);
-    const failOnMissingResultsFile = tl.getBoolInput('failOnMissingResultsFile', true);
+    const failTaskonFailureToPublish = tl.getBoolInput('failTaskonFailureToPublish', false);
+    const failOnMissingResultsFile = tl.getBoolInput('failOnMissingResultsFile', false);
 
     try {
         if (!testPlanInfo?.listOfAutomatedTestPoints && failOnMissingResultsFile) {
