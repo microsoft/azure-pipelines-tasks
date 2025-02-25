@@ -88,10 +88,10 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
         return testPlanData;
     }
 
-    let testCasesData: TestCase[] = [];
+    let testCasesData: (TestCase | TestCaseResult)[] = [];
 
     if (testRunId) {
-        const testCasesResponse = await getTestCaseListAsync(testPlanInputId, 0, testPlanConfigInputId.toString(), token, testRunId);
+        const testCasesResponse = (await getTestCaseListAsync(testPlanInputId, 0, testPlanConfigInputId.toString(), token, testRunId)) as TestCaseResult[];
         for (let key in testCasesResponse) {
             if (testCasesResponse.hasOwnProperty(key)) {
                 testCasesData.push(testCasesResponse[key]);
@@ -107,7 +107,7 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
             do {
                 try {
-                    const testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token, testRunId);
+                    const testCasesResponse = (await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token, testRunId)) as PagedList<TestCase>;
                     if(testCasesResponse === null){
                         tl.debug("No respone while fetching Test cases List for test suite id: " + testSuiteId + " and test plan id: " + testPlanInputId
                             + " and test configuration id: " + testPlanConfigInputId + " with continuation token: " + token);
@@ -130,14 +130,14 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
         }
     }
 
-    testRunId ? populateTestPlanDataForTestRunSelector(testCasesData, testPlanData) : populateTestPlanDataForTestPlanSelector(testCasesData, testPlanData);
+    testRunId ? populateTestPlanDataForTestRunSelector(testCasesData as TestCaseResult[], testPlanData) : populateTestPlanDataForTestPlanSelector(testCasesData as TestCase[], testPlanData);
 
     console.log("Total number of Automated Test point ids :" + testPlanData.listOfAutomatedTestPoints.length);
     console.log("Total number of Manual Test point ids :" + testPlanData.listOfManualTestPoints.length);
     return testPlanData;
 }
 
-export async function getTestCaseListAsync(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string, testRunId: number): Promise<PagedList<TestCase>> {
+export async function getTestCaseListAsync(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string, testRunId: number): Promise<PagedList<TestCase> | TestCaseResult[]>{
 
     let vsts: apim.WebApi = await getVstsWepApi();
     let testPlanApi = await vsts.getTestPlanApi();
@@ -146,7 +146,7 @@ export async function getTestCaseListAsync(testPlanId: number, testSuiteId: numb
 
     if (testRunId) {
         tl.debug("Fetching test case list for test run:" + testRunId);
-        return testApi.getTestResults(projectId, testRunId) as unknown as Promise<PagedList<TestCase>>;
+        return testApi.getTestResults(projectId, testRunId);
     }
 
     tl.debug("Fetching test case list for test plan:" + testPlanId + " ,test suite id:" + testSuiteId + " ,test configuration id:" + testConfigurationId);
@@ -224,7 +224,7 @@ export function populateTestPlanDataForTestPlanSelector(testCasesData: TestCase[
     });
 }
 
-export function populateTestPlanDataForTestRunSelector(testCasesData: TestCase[], testPlanData: TestPlanData): void {
+export function populateTestPlanDataForTestRunSelector(testCasesData: TestCaseResult[], testPlanData: TestPlanData): void {
 
     testCasesData.forEach(testCase => {
         let automatedTestName = '';
@@ -232,41 +232,36 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCase[]
         let isManualTest = false;
         let revisionId = 0;
 
-        automatedTestName = (testCase as any).automatedTestName;
+        automatedTestName = testCase.automatedTestName;
         testPlanData.listOfFQNOfTestCases.push(automatedTestName);
-        automatedTestStorage = (testCase as any).automatedTestStorage;
+        automatedTestStorage = testCase.automatedTestStorage;
         isManualTest = automatedTestName ? false : true;
-        revisionId = (testCase as any).revision;
+        revisionId = testCase.revision;
 
-        if ((testCase as any).testPoint) {
-
-            let testCaseResult: TestCaseResult = {
-                testPoint: (testCase as any).testPoint,
-                testCase: (testCase as any).testCase.id,
-                testCaseTitle: (testCase as any).testCase.name,
-                testCaseRevision: revisionId,
-                owner: (testCase as any).owner,
-                configuration: {
-                    id: (testCase as any).configuration.id
-                    //name: testCase.pointAssignments[0].configurationName
-                }
-            }
-
-            if (automatedTestName !== '' && automatedTestStorage !== '') {
-                testCaseResult.automatedTestName = automatedTestName;
-                testCaseResult.automatedTestStorage = automatedTestStorage;
-                testCaseResult.state = "5";
-
-                testPlanData.listOfAutomatedTestPoints.push(
-                    testCaseResult
-                );
-            }
-
-            if (isManualTest === true) {
-                testPlanData.listOfManualTestPoints.push(
-                    testCaseResult
-                );
-            }
+        let testCaseResult: TestCaseResult = {
+            testPoint: testCase.testPoint,
+            testCase: testCase.testCase,
+            testCaseTitle: testCase.testCaseTitle,
+            testCaseRevision: testCase.testCaseRevision,
+            owner: testCase.owner,
+            configuration: testCase.configuration
         }
+
+        if (automatedTestName !== '' && automatedTestStorage !== '') {
+            testCaseResult.automatedTestName = automatedTestName;
+            testCaseResult.automatedTestStorage = automatedTestStorage;
+            testCaseResult.state = "5";
+
+            testPlanData.listOfAutomatedTestPoints.push(
+                testCaseResult
+            );
+        }
+
+        if (isManualTest === true) {
+            testPlanData.listOfManualTestPoints.push(
+                testCaseResult
+            );
+        }
+        
     });
 }
