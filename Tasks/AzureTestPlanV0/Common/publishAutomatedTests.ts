@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import * as path from 'path';
 import constants = require('./constants');
 
-function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults, listOfAutomatedTestPoints) {
+function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults, listOfAutomatedTestPoints, testPlan) {
     var properties = <{ [key: string]: string }>{};    
     properties['type'] = testRunner;
     properties['mergeResults'] = mergeResults;
@@ -14,14 +14,14 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     properties['testRunSystem'] = testRunSystem;
     properties['listOfAutomatedTestPoints'] = listOfAutomatedTestPoints;
 
-    var testPlanId = tl.getInput('testPlan');
+    var testPlanId = testPlan ?? tl.getInput('testPlan');
     tl.debug('testPlanId: ' + testPlanId);
     properties['testPlanId'] = testPlanId;
 
     tl.command('results.publish', properties, '');
 }
 
-export async function publishAutomatedTestResult(listOfAutomatedTestPoints: string) {
+export async function publishAutomatedTestResult(listOfAutomatedTestPoints: string, testPlan: string) {
     try{
         const testRunner = "JUnit";
         const testResultsFiles: string[] = ["**/TEST-*.xml"];
@@ -81,7 +81,8 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
                 publishRunAttachments,
                 testRunSystem,
                 failTaskOnFailureToPublishResults,
-                listOfAutomatedTestPoints);
+                listOfAutomatedTestPoints,
+                testPlan);
         }
     } catch (err) {
         throw new Error('Faced error while publishing test results:' + err.message);

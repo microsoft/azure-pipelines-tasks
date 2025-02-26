@@ -244,7 +244,8 @@ export function populateTestPlanDataForTestRunSelector(testCasesData: TestCaseRe
             testCaseTitle: testCase.testCaseTitle,
             testCaseRevision: testCase.testCaseRevision,
             owner: testCase.owner,
-            configuration: testCase.configuration
+            configuration: testCase.configuration,
+            testPlan: testCase.testPlan
         }
 
         if (automatedTestName !== '' && automatedTestStorage !== '') {
