@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "設定する値のオーバーライド",
   "loc.input.label.kustomizationPath": "Kustomization のパス",
   "loc.input.help.kustomizationPath": "引数には、ファイルが保存されているディレクトリへのパス、または同じファイルへのリポジトリのルートからのパスのサフィックスを含む Git リポジトリの URL を指定する必要があります。",
+  "loc.input.label.enableHelm": "Helm Chartインフレーションジェネレーターを有効にする",
+  "loc.input.help.enableHelm": "kustomize で Helm Chart インフレーション ジェネレーターを有効にするには、 'true' に設定します。",
   "loc.input.label.resourceToPatch": "修正するリソース",
   "loc.input.help.resourceToPatch": "リソースを識別するため",
   "loc.input.label.resourceFileToPatch": "ファイル パス",

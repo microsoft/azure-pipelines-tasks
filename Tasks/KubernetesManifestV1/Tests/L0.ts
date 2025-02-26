@@ -498,13 +498,26 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
     });
 
-    it('Kustomize bake should pass with image substituition', async () => {
+    it('Kustomize bake should pass with image substitution', async () => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
         process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1\nalpine';
+        process.env.KubectlMinorVersion = '14';
+        await tr.runAsync();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
+    });
+
+    it('Kustomize bake should pass with enableHelm', async () => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env[shared.TestEnvVars.enableHelm] = 'true';
         process.env.KubectlMinorVersion = '14';
         await tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
