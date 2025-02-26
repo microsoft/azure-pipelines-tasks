@@ -2,14 +2,14 @@
     "id": "fd186364-adb5-43c0-91ea-c5f9daa5b747",
     "name": "AzureAppConfigurationImport",
     "friendlyName": "Azure App Configuration Import",
-    "description": "Import key-values to an Azure App Configuration instance",
+    "description": "Import settings from configuration files into Azure App Configuration through build or deployment pipelines",
     "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-import-task",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 249,
+        "Minor": 253,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
