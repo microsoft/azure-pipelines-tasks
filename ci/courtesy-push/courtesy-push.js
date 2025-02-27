@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { cat } = require('shelljs');
 const xml2js = require('xml2js');
 
 const azureSourceFolder = process.argv[2];
