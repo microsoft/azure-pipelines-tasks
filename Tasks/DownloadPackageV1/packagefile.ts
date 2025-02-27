@@ -1,11 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
-#if NODE20
 import * as extract from 'extract-zip'
-#else
-var DecompressZip = require('decompress-zip');
-#endif
 
 var tar = require("tar-fs");
 var zlib = require("zlib");
@@ -68,27 +64,12 @@ export class PackageFile {
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
         return new Promise<void>(function(resolve, reject) {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-#if NODE20
             tl.debug(`Using extract-zip package for extracting archive`);
             extract(zipLocation, { dir: unzipLocation }).then(() => {
                 resolve();
             }).catch((error) => {
                 reject(error);
             });
-#else
-            var unzipper = new DecompressZip(zipLocation);
-            unzipper.on("error", err => {
-                return reject(tl.loc("ExtractionFailed", err));
-            });
-            unzipper.on("extract", () => {
-                tl.debug("Extracted " + zipLocation + " to " + unzipLocation + " successfully");
-                return resolve();
-            });
-
-            unzipper.extract({
-                path: path.normalize(unzipLocation)
-            });
-#endif
         });
     }
 }

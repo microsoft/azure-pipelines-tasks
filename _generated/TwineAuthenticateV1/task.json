@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 248,
-    "Patch": 3
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -78,6 +78,10 @@
     "Node16": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -109,11 +113,15 @@
     "Node16": {
       "target": "authcleanup.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
     }
   },
   "_buildConfigMapping": {
-    "Default": "1.248.3",
-    "Node20_229_1": "1.248.4",
+    "Default": "1.248.4",
+    "LocalPackages": "1.249.4",
     "wif_242": "1.248.5"
   }
 }

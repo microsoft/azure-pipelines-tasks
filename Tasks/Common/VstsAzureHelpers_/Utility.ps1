@@ -372,8 +372,8 @@ function ConvertTo-Pfx {
      $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
     }
    else{
-     $openSSLExePath = "$PSScriptRoot\opensslv3\openssl.exe"
-     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3\openssl.cnf"
+     $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
      $env:RANDFILE=".rnd"
 
      $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""

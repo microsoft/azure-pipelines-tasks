@@ -1,15 +1,13 @@
-﻿import { Console } from "console";
-import tl = require('azure-pipelines-task-lib/task');
+﻿import tl = require('azure-pipelines-task-lib/task');
 import apim = require('azure-devops-node-api');
-import { WorkItemDetails, TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
+import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanInterfaces');
-import { RunCreateModel, TestRun, ShallowReference, TestPlan, TestCaseResult, TestResultCreateModel, TestCaseMetadata2, TestCaseReference2 } from 'azure-devops-node-api/interfaces/TestInterfaces';
-import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
-import constants = require('./constants');
-import { ITestResultsApi } from "azure-devops-node-api/TestResultsApi";
+import {TestCaseResult} from 'azure-devops-node-api/interfaces/TestInterfaces';
+import constants = require('./Common/constants');
+import { getVstsWepApi } from './Common/ApiHelper';
+import { ciDictionary } from './Common/ciEventLogger';
 
-const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
+export const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
 
 export interface TestPlanData {
     listOfFQNOfTestCases: string[];
@@ -25,7 +23,7 @@ export interface ManualTestRunData {
     runUrl: string;
 }
 
-export async function getTestPlanData(): Promise<TestPlanData> {
+export async function getTestPlanData(ciData: ciDictionary): Promise<TestPlanData | null> {
 
     const testPlanDataResponse: TestPlanData = {
         listOfFQNOfTestCases: [],
@@ -59,8 +57,10 @@ export async function getTestPlanData(): Promise<TestPlanData> {
             testPlanDataResponse.listOfAutomatedTestPoints = testPlanData.listOfAutomatedTestPoints;
         })
         .catch((error) => {
-            tl.error("Error while fetching Test Plan Data :" + error);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
+            ciData.returnCode = 1;
+            ciData.errorMessage = error.message || String(error);
+            ciData.taskErrorMessage = tl.loc('ErrorFailTaskOnAPIFailure');
+            return null;
         });
 
     return testPlanDataResponse;
@@ -94,24 +94,30 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
         do {
             try {
-                let testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
+            const testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
 
-                token = testCasesResponse.continuationToken;
+            if(testCasesResponse === null){
+                tl.debug("No respone while fetching Test cases List for test suite id: " + testSuiteId + " and test plan id: " + testPlanInputId 
+                    + " and test configuration id: " + testPlanConfigInputId + " with continuation token: " + token);
+                break;
+            }
 
-                for (let key in testCasesResponse) {
-                    if (testCasesResponse.hasOwnProperty(key)) {
-                        testCasesData.push(testCasesResponse[key]);
-                    }
+            token = testCasesResponse.continuationToken;
+
+            for (let key in testCasesResponse) {
+                if (testCasesResponse.hasOwnProperty(key)) {
+                    testCasesData.push(testCasesResponse[key]);
                 }
+            }
 
             } catch (error) {
-                tl.error("Error fetching test cases list:" + error);
+                tl.debug("Error fetching test cases list: " + error);
                 token = undefined;
             }
-        } while ((token !== undefined) && (token !== null));
+        } while (token);
 
         if (testCasesData.length === 0) {
-            console.log(`No test cases for test suite ${testSuiteId}`);
+            console.log(`No test cases for test suite: ${testSuiteId} and test plan: ${testPlanInputId}`);
             continue;
         }
 
@@ -174,23 +180,21 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 }
             }
         });
+        tl.debug("Number of Automated Test point ids :" + testPlanData.listOfAutomatedTestPoints.length + " after fetching test cases for test suite id: " + testSuiteId);
+        tl.debug("Number of Manual Test point ids :" + testPlanData.listOfManualTestPoints.length + " after fetching test cases for test suite id: " + testSuiteId);
 
     }
 
-    console.log("Number of Automated Test point ids :", testPlanData.listOfAutomatedTestPoints.length);
-    console.log("Number of Manual Test point ids :", testPlanData.listOfManualTestPoints.length);
-
+    console.log("Total number of Automated Test point ids :" + testPlanData.listOfAutomatedTestPoints.length);
+    console.log("Total number of Manual Test point ids :" + testPlanData.listOfManualTestPoints.length);
     return testPlanData;
 }
 
 export async function getTestCaseListAsync(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string): Promise<PagedList<TestCase>> {
 
-    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-    let projectId = tl.getVariable('System.TeamProjectId');
-    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
-    let vsts: apim.WebApi = new apim.WebApi(url, auth);
+    let vsts: apim.WebApi = await getVstsWepApi();
     let testPlanApi = await vsts.getTestPlanApi();
+    let projectId = tl.getVariable('System.TeamProjectId');
 
     tl.debug("Fetching test case list for test plan:" + testPlanId + " ,test suite id:" + testSuiteId + " ,test configuration id:" + testConfigurationId);
 
@@ -202,89 +206,6 @@ export async function getTestCaseListAsync(testPlanId: number, testSuiteId: numb
         testConfigurationId,
         null,
         continuationToken)
-
 }
 
-export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<ManualTestRunData> {
-
-    const manualTestRunResponse: ManualTestRunData = { testRunId: 0, runUrl: "" };
-
-    const testRunRequestBody = prepareRunModel(testPlanInfo);
-
-    try {
-
-        let projectId = tl.getVariable('System.TeamProjectId');
-        var testResultsApi = await getTestResultApiClient();
-
-        let testRunResponse = await createManualTestRunAsync(testResultsApi, testRunRequestBody, projectId);
-        console.log("Test run created with id: ", testRunResponse.id);
-
-        let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfManualTestPoints, projectId, testRunResponse.id);
-        console.log("Test results created for run id: ", testResultsResponse[0].testRun);
-
-        manualTestRunResponse.testRunId = testRunResponse.id;
-        manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
-    }
-
-    catch(error) {
-        tl.error("Error while creating manual test run :" + error);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnCreateRunFailure'));
-    }
-
-    return manualTestRunResponse;
-}
-
-export function prepareRunModel(testPlanInfo: TestPlanData): RunCreateModel{
-
-    // some create run params may change on based of requirement
-    let buildId = tl.getVariable('Build.BuildId');
-    let testPointIds: number[] = testPlanInfo.listOfManualTestPoints.map(testPoint => parseInt(testPoint.testPoint.id));
-    let testPlanId = testPlanInfo.testPlanId;
-    let testConfigurationId = testPlanInfo.testConfigurationId;
-
-    const currentUtcTime = new Date().toUTCString();
-    console.log("date:...", currentUtcTime);
-
-    const testRunRequestBody: RunCreateModel = {
-        automated: false,
-        name: 'Manual test run',
-        plan: { id: testPlanId.toString() },
-        configurationIds: [testConfigurationId],
-        pointIds: testPointIds,
-        build: { id: buildId },
-        iteration: "manual"
-    };
-
-    return testRunRequestBody;
-}
-
-export async function createManualTestResultsAsync(testResultsApi:ITestResultsApi, testResultsRequest: TestCaseResult[], projectId, testRunId): Promise<TestCaseResult[]> {
-    return testResultsApi.addTestResultsToTestRun(
-        testResultsRequest,
-        projectId,
-        testRunId)
-    
-}
-
-export async function createManualTestRunAsync(testResultsApi:ITestResultsApi, testRunRequest: RunCreateModel, projectId): Promise<TestRun> {
-
-    tl.debug("Creating manual test run");
-
-    return testResultsApi.createTestRun(
-        testRunRequest,
-        projectId)
-
-}
-
-export async function getTestResultApiClient(){
-    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-
-    let auth = (token.length == 52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
-    let vsts: apim.WebApi = new apim.WebApi(url, auth);
-    let testResultsApi = await vsts.getTestResultsApi();
-
-    console.log("Test result api client created");
-    return testResultsApi;
-}
 

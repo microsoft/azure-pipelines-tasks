@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 250,
-    "Patch": 10
+    "Minor": 253,
+    "Patch": 8
   },
   "preview": true,
   "demands": [],
@@ -77,11 +77,10 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "JavaMaven": "Java-Maven",
-        "JavaGradle": "Java-Gradle",
-        "Python": "Python",
-        "Go": "Go",
-        "Jest": "Jest"
+        "JavaMaven": "Java - Maven",
+        "JavaGradle": "Java - Gradle",
+        "Python": "Python - PyTest",
+        "JavaScriptJest": "JavaScript - Jest"
       }
     },
     {
@@ -147,7 +146,7 @@
     {
       "target": "testSuite",
       "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?api-version=3.0-preview.2",
       "parameters": {
         "testPlan": "$(testPlan)"
       },
@@ -161,6 +160,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
     }
