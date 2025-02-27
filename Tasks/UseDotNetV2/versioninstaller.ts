@@ -61,7 +61,7 @@ export class VersionInstaller {
 
             // Copy folders
             tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]);
             var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
             directoriesTobeCopied.forEach((directoryPath) => {
                 tl.cp(directoryPath, this.installationPath, "-rf", false);
@@ -138,8 +138,7 @@ export class VersionInstaller {
         if (!tl.exist(pathTobeChecked)) {
             throw tl.loc("PathNotFoundException", pathTobeChecked);
         }
-
-        var allEnteries: string[] = tl.ls("", [pathTobeChecked]).map(name => path.join(pathTobeChecked, name));
+        var allEnteries: string[] = tl.ls("", [pathTobeChecked]);
         var folderPaths: string[] = allEnteries.filter(element => fs.lstatSync(element).isDirectory());
         var isLatest: boolean = folderPaths.findIndex(folderPath => {
             try {
@@ -151,7 +150,7 @@ export class VersionInstaller {
                 // no op, folder name might not be in version format
             }
         }) < 0;
-
+        
         var filePaths: string[] = allEnteries.filter(element => !fs.lstatSync(element).isDirectory());
         isLatest = isLatest && filePaths.findIndex(filePath => {
             try {
