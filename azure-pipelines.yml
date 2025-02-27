@@ -72,6 +72,11 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: tasksSkipPublish
+  ${{ if eq(parameters.skip_publish, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
   ${{ if eq(parameters.deploy_all_tasks, true) }}:
     value: 'true'
@@ -136,7 +141,7 @@ extends:
         timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(parameters.skip_publish, false))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
