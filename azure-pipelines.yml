@@ -87,8 +87,6 @@ extends:
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
-      credscan:
-        suppressionsFile: $(Build.SourcesDirectory)/AzureDevOps/.config/CredScanSuppressions.json
       sourceAnalysisPool:
         name: 1ES-ABTT-Shared-Pool
         image: abtt-windows-2022
@@ -171,6 +169,10 @@ extends:
             )
           )
         templateContext:
+          parameters:
+            sdl:
+              credscan:
+                suppressionsFile: $(Build.SourcesDirectory)/AzureDevOps/.config/CredScanSuppressions.json
           outputs:
           - output: nuget
             packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
