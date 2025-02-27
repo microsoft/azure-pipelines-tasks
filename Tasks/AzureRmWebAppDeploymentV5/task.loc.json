@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 252,
-    "Patch": 5
+    "Minor": 253,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -232,6 +232,7 @@
         "DOTNETCORE:8.0": ".NET 8.0",
         "DOTNETCORE:7.0": ".NET 7.0",
         "DOTNETCORE:6.0": ".NET 6.0",
+        "NODE:22-lts": "Node 22 LTS",
         "NODE:20-lts": "Node 20 LTS",
         "NODE:18-lts": "Node 18 LTS",
         "NODE:16-lts": "Node 16 LTS",
