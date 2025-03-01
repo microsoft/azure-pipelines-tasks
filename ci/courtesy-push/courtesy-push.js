@@ -41,7 +41,8 @@ async function extractDependency(xmlDependencyString) {
     try {
         var details = await parseStringPromise(xmlDependencyString);
         return [ details.PackageVersion.$.Include, details.PackageVersion.$.Version ];
-    } catch {
+    } catch (error) {
+        console.log("ExtractDependencies failed for : \n" + xmlDependencyString + "\nWith Error : " + error)
         return [ null, null ];
     }
 }
@@ -66,6 +67,7 @@ async function getDeps(depArr) {
     // first run we form structures 
     for (let i = 0; i < depArr.length; i++) {
         const newDep = depArr[i];
+        console.log("GetDeps : " + newDep);
         var [ name, version ] = await extractDependency(newDep);
         const lowercasedName = name.toLowerCase();
 
@@ -198,7 +200,9 @@ function parseUnifiedDependencies(path) {
  */
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
+    console.log("Current Dependencies : \n" + currentDependencies);
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+    console.log("UpdatedDependencies : \n" + updatedDependencies);
 
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
 
