@@ -39,19 +39,12 @@ function formDirectoryTag(nugetTaskName) {
  */
 async function extractDependency(xmlDependencyString) {
     try {
+        xmlDependencyString = `<root>${xmlDependencyString}</root>`;
         var details = await xml2js.parseStringPromise(xmlDependencyString);
-        return [ details.package.$.id, details.package.$.version ];
+        const packageData = details.root.PackageVersion[0].$;
+        return [packageData.Include, packageData.Version];
     } catch {
         return [ null, null ];
-    }
-}
-
-async function extractDependencyProps(xmlDependencyString) {
-    try {
-        var details = await xml2js.parseStringPromise(xmlDependencyString);
-        return [details.PackageVersion.$.Include, details.PackageVersion.$.Version];
-    } catch {
-        return [ null, null];
     }
 }
 
@@ -127,7 +120,7 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
 
     while (index < newDepsArr.length) {
         const currentDep = newDepsArr[index];
-        const [ name ] = await extractDependencyProps(currentDep);
+        const [ name ] = await extractDependency(currentDep);
 
         if (!name) {
             index++;
@@ -163,7 +156,7 @@ async function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
 
     while (index < newDepsArr.length) {
         const currentDep = newDepsArr[index];
-        const [ name ] = await extractDependencyProps(currentDep);
+        const [ name ] = await extractDependency(currentDep);
         
         const lowerName = name && name.toLowerCase();
         if (!name || !basicDepsForUpdate.has(lowerName)) {
