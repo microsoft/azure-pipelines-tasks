@@ -41,7 +41,7 @@ async function extractDependency(xmlDependencyString) {
     try {
         var details = await parseStringPromise(xmlDependencyString);
         return [ details.PackageVersion.$.Include, details.PackageVersion.$.Version ];
-    } catch (error){
+    } catch {
         return [ null, null ];
     }
 }
@@ -205,7 +205,7 @@ async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let updatedDeps = { added: [], removed: [] };
 
     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
-    //[ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
 
     fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
     console.log('Updating Unified Dependencies file done.');
