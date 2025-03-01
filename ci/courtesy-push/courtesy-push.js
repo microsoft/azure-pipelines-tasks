@@ -39,7 +39,7 @@ function formDirectoryTag(nugetTaskName) {
  */
 async function extractDependency(xmlDependencyString) {
     try {
-        var details = await parseStringPromise(xmlDependencyString);
+        var details = await xml2js.parseStringPromise(xmlDependencyString);
         return [ details.PackageVersion.$.Include, details.PackageVersion.$.Version ];
     } catch (error) {
         console.log("ExtractDependencies failed for : \n" + xmlDependencyString + "\nWith Error : " + error)
