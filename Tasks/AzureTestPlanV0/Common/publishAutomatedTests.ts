@@ -68,7 +68,8 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
 
         if (testResultsFilesCount === 0) {
               if (failTaskOnMissingResultsFile) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('NoMatchingFilesFound', testResultsFiles));
+                //tl.setResult(tl.TaskResult.Failed, tl.loc('NoMatchingFilesFound', testResultsFiles));
+                throw new Error(tl.loc('NoMatchingFilesFound', testResultsFiles));
             } else {
                 tl.warning(tl.loc('NoMatchingFilesFound', testResultsFiles));
             }
@@ -83,7 +84,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
                 listOfAutomatedTestPoints);
         }
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        throw new Error('Faced error while publishing test results:' + err.message);
     }
 }
 
