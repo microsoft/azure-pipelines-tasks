@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 252,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -531,6 +531,10 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -687,5 +691,9 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.252.0",
+    "Node20_229_2": "4.252.1"
   }
 }

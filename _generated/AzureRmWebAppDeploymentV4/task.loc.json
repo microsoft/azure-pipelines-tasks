@@ -687,5 +687,9 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.252.0",
+    "Node20_229_2": "4.252.1"
   }
 }
