@@ -41,7 +41,7 @@ async function extractDependency(xmlDependencyString) {
     try {
         var details = await xml2js.parseStringPromise(xmlDependencyString);
         return [ details.PackageVersion.$.Include, details.PackageVersion.$.Version ];
-    } catch (error) {
+    } catch {
         return [ null, null ];
     }
 }
@@ -198,28 +198,14 @@ function parseUnifiedDependencies(path) {
  */
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
-    console.log("Current Dependencies : \n" + currentDependencies);
-
-     // Storing initial state of currentDependencies
-     let initialDependencies = new Set(currentDependencies);
-
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
-    console.log("UpdatedDependencies : \n" + updatedDependencies);
-
+    
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
 
     let updatedDeps = { added: [], removed: [] };
 
     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
     [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
-
-     // Compute differences
-     let finalDependencies = new Set(currentDependencies);
-     let addedDeps = [...finalDependencies].filter(dep => !initialDependencies.has(dep));
-     let removedDeps = [...initialDependencies].filter(dep => !finalDependencies.has(dep));
- 
-     console.log("Dependencies Added:\n", addedDeps);
-     console.log("Dependencies Removed:\n", removedDeps);
 
     fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
     console.log('Updating Unified Dependencies file done.');
