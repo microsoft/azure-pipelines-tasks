@@ -199,7 +199,7 @@ function parseUnifiedDependencies(path) {
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
-    
+
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
 
     let updatedDeps = { added: [], removed: [] };
