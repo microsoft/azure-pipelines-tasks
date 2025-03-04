@@ -4,7 +4,7 @@ const xml2js = require('xml2js');
 
 const azureSourceFolder = process.argv[2];
 const newDeps = process.argv[3];
-const unifiedDepsPath = path.join(azureSourceFolder, '.nuget', 'externals', 'UnifiedDependencies.xml');
+const unifiedDepsPath = path.join(azureSourceFolder, 'Directory.Packages.props');
 const tfsServerPath = path.join(azureSourceFolder, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.hosted.xml');
 const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 
@@ -40,7 +40,7 @@ function formDirectoryTag(nugetTaskName) {
 async function extractDependency(xmlDependencyString) {
     try {
         var details = await xml2js.parseStringPromise(xmlDependencyString);
-        return [ details.package.$.id, details.package.$.version ];
+        return [ details.PackageVersion.$.Include, details.PackageVersion.$.Version ];
     } catch {
         return [ null, null ];
     }
