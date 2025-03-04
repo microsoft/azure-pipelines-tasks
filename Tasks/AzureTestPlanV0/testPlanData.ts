@@ -141,12 +141,12 @@ export async function getTestCaseListAsync(testPlanId: number, testSuiteId: numb
 
     let vsts: apim.WebApi = await getVstsWepApi();
     let testPlanApi = await vsts.getTestPlanApi();
-    let testApi = await vsts.getTestApi();
+    let testResultsApi = await vsts.getTestResultsApi();
     let projectId = tl.getVariable('System.TeamProjectId');
 
     if (testRunId) {
         tl.debug("Fetching test case list for test run:" + testRunId);
-        return testApi.getTestResults(projectId, testRunId);
+        return testResultsApi.getTestResults(projectId, testRunId);
     }
 
     tl.debug("Fetching test case list for test plan:" + testPlanId + " ,test suite id:" + testSuiteId + " ,test configuration id:" + testConfigurationId);
