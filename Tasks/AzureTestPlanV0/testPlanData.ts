@@ -109,7 +109,7 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 try {
                     const testCasesResponse = (await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token, testRunId)) as PagedList<TestCase>;
                     if(testCasesResponse === null){
-                        console.log("No respone while fetching Test cases List for test suite id: " + testSuiteId + " and test plan id: " + testPlanInputId
+                        tl.debug("No respone while fetching Test cases List for test suite id: " + testSuiteId + " and test plan id: " + testPlanInputId
                             + " and test configuration id: " + testPlanConfigInputId + " with continuation token: " + token);
                         break;
                     }
