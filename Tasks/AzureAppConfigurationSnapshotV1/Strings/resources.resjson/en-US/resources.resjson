@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Configuration Snapshot",
   "loc.helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-  "loc.description": "Create a snapshot in an Azure App Configuration instance",
+  "loc.description": "Create a configuration snapshot in Azure App Configuration through build or deployment pipelines",
   "loc.instanceNameFormat": "Azure App Configuration Snapshot",
   "loc.group.displayName.AppConfiguration": "AppConfiguration",
   "loc.group.displayName.Options": "Options",

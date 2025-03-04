@@ -3,6 +3,8 @@ export const MVN_EXECUTABLE: string = 'mvn';
 export const MAVEN_DTEST: string = '-Dtest=';
 export const GRADLE_EXECUTABLE: string = 'gradle';
 export const PYTEST_EXECUTABLE: string = 'pytest';
+export const NPM_EXECUTABLE: string = 'npm';
+export const NPX_EXECUTABLE: string = 'npx';
 export const AUTOMATED_TEST_NAME = "Microsoft.VSTS.TCM.AutomatedTestName";
 export const AUTOMATED_TEST_STORAGE = "Microsoft.VSTS.TCM.AutomatedTestStorage";
 export const AUTOMATION_STATUS = 'Microsoft.VSTS.TCM.AutomationStatus';
