@@ -1413,7 +1413,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log('> Generating XML dependencies for UnifiedDependencies');
     var depsContentPath = path.join(nugetPackagesPath, 'unified_deps.xml');
     fs.writeFileSync(depsContentPath, unifiedDepsContent.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join(os.EOL));
-    
+
     // Write file that has XML for servicing, makes it easier to setup that file.
     console.log('> Generating XML dependencies for Servicing');
     var servicingContentPath = path.join(nugetPackagesPath, 'servicing.xml');
