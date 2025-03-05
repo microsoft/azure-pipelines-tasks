@@ -14,7 +14,7 @@ $input_pwsh = Get-VstsInput -Name pwsh -AsBool -Default $false
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
 $validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
-$hostEnv = "ADO/AzurePowerShell@v5`_$($env:AGENT_NAME)`_$($env:BUILD_BUILDID)`_$($env:RELEASE_RELEASEID)`_$($env:BUILD_DEFINITIONNAME)`_$($env:RELEASE_DEFINITIONNAME)`_$($env:AGENT_OS)"
+$hostEnv = "ADO/AzurePowerShell@v5`_$($env:AGENT_OS)`_$($env:AGENT_NAME)`_$($env:BUILD_DEFINITIONNAME)`_$($env:BUILD_BUILDID)`_$($env:RELEASE_DEFINITIONNAME)`_$($env:RELEASE_RELEASEID)"
 $env:AZUREPS_HOST_ENVIRONMENT = $hostEnv
 Write-Host "AZUREPS_HOST_ENVIRONMENT: $env:AZUREPS_HOST_ENVIRONMENT"
 

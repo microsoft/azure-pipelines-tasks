@@ -17,7 +17,7 @@ async function run() {
     tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
 
     const env = process.env;
-    const hostEnv = `ADO/AzurePowerShell@v5_${env.AGENT_NAME || ""}_${env.BUILD_BUILDID || ""}_${env.RELEASE_RELEASEID || ""}_${env.BUILD_DEFINITIONNAME || ""}_${env.RELEASE_DEFINITIONNAME || ""}_${env.AGENT_OS || ""}`;
+    const hostEnv = `ADO/AzurePowerShell@v5_${env.AGENT_OS || ""}_${env.AGENT_NAME || ""}_${env.BUILD_DEFINITIONNAME || ""}_${env.BUILD_BUILDID || ""}_${env.RELEASE_DEFINITIONNAME || ""}_${env.RELEASE_RELEASEID || ""}`;
     
     process.env.AZUREPS_HOST_ENVIRONMENT = hostEnv;
     console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);    
