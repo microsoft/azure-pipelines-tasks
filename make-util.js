@@ -1379,7 +1379,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 }
             }
             // Create xml entry for UnifiedDependencies
-            unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
+            unifiedDepsContent.push(`  <PackageVersion Include="${fullTaskName}" Version="${taskVersion}" AvailableAtDeployTime="true" />`);
 
             // Create xml entry that we need to configure servicing file
             servicingXmlContent.push(getServicingXmlContent(taskFolderName, fullTaskName, taskVersion));
