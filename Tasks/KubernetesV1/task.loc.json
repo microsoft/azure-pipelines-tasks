@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 250,
-    "Patch": 1
+    "Minor": 254,
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -148,6 +148,7 @@
         "login": "login",
         "logout": "logout",
         "logs": "logs",
+        "rollout": "rollout",
         "run": "run",
         "set": "set",
         "top": "top"
