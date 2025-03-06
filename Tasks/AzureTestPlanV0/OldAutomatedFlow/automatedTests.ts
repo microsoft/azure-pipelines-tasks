@@ -49,7 +49,7 @@ async function publishResults(testPlanInfo: TestPlanData, ciData: ciDictionary, 
     publishingTimer.start();
 
     try {
-        await publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
+        await publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints), testPlanInfo.listOfAutomatedTestPoints.length ? testPlanInfo.listOfAutomatedTestPoints[0].testPlan?.id : "");
     } catch (err) {
         automatedTestInvokerResult.returnCode = 1;
         automatedTestInvokerResult.errorMessage = err.message || String(err);
