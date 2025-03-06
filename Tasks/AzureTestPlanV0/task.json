@@ -35,6 +35,30 @@
       }
     },
     {
+      "name": "testPlanOrRunSelector",
+      "type": "pickList",
+      "label": "Select tests using",
+      "defaultValue": "testPlan",
+      "required": true,
+      "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
+      "options": {
+        "testPlan": "Test plan",
+        "testRun": "Test run"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testRunId",
+      "type": "string",
+      "label": "Test Run",
+      "defaultValue": "$(test.RunId)",
+      "required": true,
+      "helpMarkDown": "Test run based selection is used when triggering automated test runs from the test hub, value for this should be kept as it is",
+      "visibleRule": "testPlanOrRunSelector = testRun"
+    },
+    {
       "name": "testPlan",
       "type": "string",
       "label": "Test plan",
@@ -44,7 +68,8 @@
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testSuite",
@@ -54,10 +79,10 @@
       "helpMarkDown": "Select one or more test suites containing test cases.",
       "required": true,
       "properties": {
-        "MultiSelect": "True",
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testConfiguration",
