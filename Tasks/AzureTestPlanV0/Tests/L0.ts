@@ -25,7 +25,7 @@ describe('AzureTestPlan Suite', function () {
     it('Check if runs fine', (done: Mocha.Done) => {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0SimpleTest.js');
+        let tp: string = path.join(__dirname, 'L0SampleTest.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.runAsync().then(() => {
