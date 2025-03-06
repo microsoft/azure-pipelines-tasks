@@ -364,38 +364,13 @@ function ConvertTo-Pfx {
     else {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
-     Write-Verbose "Strating "
-     $osInfo = Get-CimInstance -ClassName Win32_OperatingSystem
-     $osVersion = $osInfo.Version
-     $majorVersion = [int]($osVersion.Split('.')[0])
-     Write-Verbose "version : $majorVersion "
-
+    
     if(-not $featureFlags.useOpenssLatestVersion) {
      $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
      $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
      $env:RANDFILE=".rnd"
 
      $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
-    }
-    elseif(-not $featureFlags.useEncryptionBasedOnOSVersion)
-    {
-        if($majorVersion -le 16)
-        {
-        $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
-        $env:RANDFILE=".rnd"
-
-        $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
-
-        }
-        else{
-
-        $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
-        $env:RANDFILE=".rnd"
-        $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
- 
-        }
     }
     else
     {
