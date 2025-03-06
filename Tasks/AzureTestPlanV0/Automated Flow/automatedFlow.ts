@@ -109,7 +109,8 @@ async function publishResults(
         }
 
         await publishAutomatedTestResult(
-            JSON.stringify(testPlanInfo.listOfAutomatedTestPoints)
+            JSON.stringify(testPlanInfo.listOfAutomatedTestPoints),
+            testPlanInfo.listOfAutomatedTestPoints.length ? testPlanInfo.listOfAutomatedTestPoints[0].testPlan?.id : ""
         );
         return createSuccessResult();
 
