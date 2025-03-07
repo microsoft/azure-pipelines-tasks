@@ -59,8 +59,8 @@ describe('AzureTestPlan Suite', function () {
     it('should return error when no tests are found in test plan', async function () {
         const testPlanInfo = { listOfFQNOfTestCases: [] } as TestPlanData;
         testPlanInfo.listOfFQNOfTestCases = [];
-        const result = await newAutomatedTestsFlow(testPlanInfo, 'someSelector', {});
-        assert.strictEqual(result.returnCode, 0);
+        const result = await newAutomatedTestsFlow(testPlanInfo, 'automatedTests', {});
+        assert.strictEqual(result.returnCode, 1);
     });
 
     it('should return error if no executor is found for the test language', async function () {
