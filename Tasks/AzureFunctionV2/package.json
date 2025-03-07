@@ -1,5 +1,5 @@
 {
-  "name": "vsts-tasks-azurefunctionapp",
+  "name": "vsts-tasks-azurefunctionv2",
   "version": "1.0.0",
   "description": "Azure Pipelines Azure Function Deployment",
   "main": "azurermWebappdeployment.js",
@@ -21,6 +21,7 @@
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
     "agent-base": "6.0.2",
+    "axios": "^1.8.2",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.242.2",

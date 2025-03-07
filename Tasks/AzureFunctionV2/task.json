@@ -19,7 +19,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 250,
+    "Minor": 253,
     "Patch": 0
   },
   "releaseNotes": "What's new in version 2.* <br /> Added",
@@ -40,9 +40,9 @@
         "label": "Authentication option",
         "required": true,
         "helpMarkDown": "Select the service connection type to use to invoke the REST API.",
-        "defaultValue": "keyAuthentication",
+        "defaultValue": "ARMAuthentication",
         "options": {
-            "keyAuthentication": "Function Key",
+            "KeyAuthentication": "Function Key",
             "ARMAuthentication": "Azure Resource Manager"
         }
     },

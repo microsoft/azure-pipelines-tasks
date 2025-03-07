@@ -19,7 +19,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 250,
+    "Minor": 253,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -40,9 +40,9 @@
       "label": "ms-resource:loc.input.label.authenticationOptionSelector",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.authenticationOptionSelector",
-      "defaultValue": "keyAuthentication",
+      "defaultValue": "ARMAuthentication",
       "options": {
-        "keyAuthentication": "Function Key",
+        "KeyAuthentication": "Function Key",
         "ARMAuthentication": "Azure Resource Manager"
       }
     },
