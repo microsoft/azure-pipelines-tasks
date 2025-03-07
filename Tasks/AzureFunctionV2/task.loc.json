@@ -1,213 +1,154 @@
 {
-  "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
-  "name": "AzureFunctionApp",
+  "id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
+  "name": "AzureFunction",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Deploy",
+  "category": "Utility",
   "visibility": [
     "Build",
     "Release"
   ],
   "runsOn": [
+    "Server",
+    "ServerGate",
     "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
+    "Major": 2,
     "Minor": 250,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.104.1",
   "groups": [
     {
-      "name": "AdditionalDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
-      "isExpanded": false,
-      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
-    },
-    {
-      "name": "ApplicationAndConfigurationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
       "isExpanded": false
     }
   ],
   "inputs": [
     {
-      "name": "azureSubscription",
+      "name": "authenticationOptionSelector",
       "aliases": [
-        "connectedServiceNameARM"
+        "authenticationType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authenticationOptionSelector",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.authenticationOptionSelector",
+      "defaultValue": "keyAuthentication",
+      "options": {
+        "keyAuthentication": "Function Key",
+        "ARMAuthentication": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "ARMAuthentication",
+      "aliases": [
+        "azureServiceConnection",
+        "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscription",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.ARMAuthentication",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
+      "helpMarkDown": "ms-resource:loc.input.help.ARMAuthentication",
+      "visibleRule": "authenticationOptionSelector = ARMAuthentication"
     },
     {
-      "name": "appType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.appType",
+      "name": "function",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.function",
       "defaultValue": "",
       "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.function"
+    },
+    {
+      "name": "key",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.key",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.key"
+    },
+    {
+      "name": "method",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.method",
+      "required": true,
+      "defaultValue": "POST",
       "options": {
-        "functionApp": "Function App on Windows",
-        "functionAppLinux": "Function App on Linux"
+        "OPTIONS": "OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE": "TRACE",
+        "PATCH": "PATCH"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.appType"
+      "helpMarkDown": "ms-resource:loc.input.help.method"
     },
     {
-      "name": "isFlexConsumption",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isFlexConsumption",
-      "defaultValue": "false",
-      "required": false
-    },
-    {
-      "name": "appName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.appName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.appName"
-    },
-    {
-      "name": "deployToSlotOrASE",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.deployToSlotOrASE",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE",
-      "visibleRule": "appType != \"\" && isFlexConsumption = false"
-    },
-    {
-      "name": "resourceGroupName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.resourceGroupName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
-      "visibleRule": "deployToSlotOrASE = true"
-    },
-    {
-      "name": "slotName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.slotName",
-      "defaultValue": "production",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.slotName",
-      "visibleRule": "deployToSlotOrASE = true"
-    },
-    {
-      "name": "package",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.package"
-    },
-    {
-      "name": "runtimeStack",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.runtimeStack",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "options": {
-        "DOTNET|6.0": "DOTNET|6.0",
-        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
-        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
-        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
-        "JAVA|8": "JAVA|8",
-        "JAVA|11": "JAVA|11",
-        "JAVA|17": "JAVA|17",
-        "JAVA|21": "JAVA|21",
-        "NODE|14": "NODE|14",
-        "NODE|16": "NODE|16",
-        "NODE|18": "NODE|18",
-        "NODE|20": "NODE|20",
-        "PYTHON|3.8": "PYTHON|3.8",
-        "PYTHON|3.9": "PYTHON|3.9",
-        "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
-      },
-      "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
-      "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
-    },
-    {
-      "name": "appSettings",
+      "name": "headers",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.appSettings",
+      "label": "ms-resource:loc.input.label.headers",
+      "required": false,
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+      "properties": {
+        "resizable": true,
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.headers"
+    },
+    {
+      "name": "queryParameters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.queryParameters",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.appSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.queryParameters"
+    },
+    {
+      "name": "body",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.body",
+      "required": false,
+      "defaultValue": "",
       "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
-      }
+        "resizable": true,
+        "rows": "3",
+        "maxLength": "2000"
+      },
+      "visibleRule": "method != GET && method != HEAD",
+      "helpMarkDown": "ms-resource:loc.input.help.body"
     },
     {
-      "name": "deploymentMethod",
+      "name": "waitForCompletion",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentMethod",
-      "defaultValue": "auto",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "defaultValue": "false",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
+      "groupName": "completionOptions",
       "options": {
-        "auto": "Auto-detect",
-        "zipDeploy": "Zip Deploy",
-        "runFromPackage": "Zip Deploy with Run From Package"
-      },
-      "visibleRule": "appType != \"\" && isFlexConsumption = false",
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
-    }
-  ],
-  "outputVariables": [
-    {
-      "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected Azure Function App."
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "appName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureFunctionAppNamesByAppType",
-      "parameters": {
-        "WebAppKind": "$(appType)"
+        "true": "Callback",
+        "false": "ApiResponse"
       }
     },
     {
-      "target": "resourceGroupName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppResourceGroup",
-      "parameters": {
-        "WebAppName": "$(appName)"
-      }
-    },
-    {
-      "target": "slotName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppSlotsId",
-      "parameters": {
-        "WebAppName": "$(appName)",
-        "ResourceGroupName": "$(resourceGroupName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

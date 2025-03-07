@@ -1,216 +1,157 @@
 {
-  "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
-  "name": "AzureFunctionApp",
-  "friendlyName": "Azure Functions Deploy",
-  "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
-  "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
-  "category": "Deploy",
+  "id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
+  "name": "AzureFunction",
+  "friendlyName": "Invoke Azure Function",
+  "description": "Invoke an Azure Function",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "category": "Utility",
   "visibility": [
     "Build",
     "Release"
   ],
   "runsOn": [
+    "Server",
+    "ServerGate",
     "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
+    "Major": 2,
     "Minor": 250,
     "Patch": 0
   },
-  "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
-  "minimumAgentVersion": "2.104.1",
+  "releaseNotes": "What's new in version 2.* <br /> Added",
   "groups": [
     {
-      "name": "AdditionalDeploymentOptions",
-      "displayName": "Additional Deployment Options",
-      "isExpanded": false,
-      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
-    },
-    {
-      "name": "ApplicationAndConfigurationSettings",
-      "displayName": "Application and Configuration Settings",
+      "name": "completionOptions",
+      "displayName": "Advanced",
       "isExpanded": false
     }
   ],
   "inputs": [
     {
-      "name": "azureSubscription",
-      "aliases": [
-        "connectedServiceNameARM"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure Resource Manager connection",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        "name": "authenticationOptionSelector",
+        "aliases": [
+            "authenticationType"
+        ],
+        "type": "pickList",
+        "label": "Authentication option",
+        "required": true,
+        "helpMarkDown": "Select the service connection type to use to invoke the REST API.",
+        "defaultValue": "keyAuthentication",
+        "options": {
+            "keyAuthentication": "Function Key",
+            "ARMAuthentication": "Azure Resource Manager"
+        }
     },
     {
-      "name": "appType",
-      "type": "pickList",
-      "label": "App type",
+        "name": "ARMAuthentication",
+        "aliases": [
+            "azureServiceConnection",
+            "azureSubscription"
+        ],
+        "type": "connectedService:AzureRM",
+        "label": "Azure subscription",
+        "required": true,
+        "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
+        "visibleRule": "authenticationOptionSelector = ARMAuthentication"
+    },
+    {
+      "name": "function",
+      "type": "string",
+      "label": "Azure function URL",
       "defaultValue": "",
       "required": true,
+      "helpMarkDown": "URL of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
+    },
+    {
+      "name": "key",
+      "type": "string",
+      "label": "Function key",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
+    },
+    {
+      "name": "method",
+      "type": "pickList",
+      "label": "Method",
+      "required": true,
+      "defaultValue": "POST",
       "options": {
-        "functionApp": "Function App on Windows",
-        "functionAppLinux": "Function App on Linux"
+        "OPTIONS": "OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE": "TRACE",
+        "PATCH": "PATCH"
       },
-      "helpMarkDown": "Select the Azure Function App type for the deployment."
+      "helpMarkDown": "Select the HTTP method with which the function should be invoked."
     },
     {
-      "name": "isFlexConsumption",
-      "type": "boolean",
-      "label": "Is Function App on Flex Consumption Plan",
-      "defaultValue": "false",
-      "required": false
-    },
-    {
-      "name": "appName",
-      "type": "pickList",
-      "label": "Azure Functions App name",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "Enter or Select the name of an existing Azure Functions App. The Function Apps listed will be based on the selected app type."
-    },
-    {
-      "name": "deployToSlotOrASE",
-      "type": "boolean",
-      "label": "Deploy to Slot or App Service Environment",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Select the option to deploy to an existing deployment slot or Azure App Service Environment.<br />For both the targets, the task needs Resource group name.<br />In case the deployment target is a slot, by default the deployment is done to the production slot. Any other existing slot name can also be provided.<br />In case the deployment target is an Azure App Service environment, leave the slot name as ‘production’ and just specify the Resource group name.",
-      "visibleRule": "appType != \"\" && isFlexConsumption = false"
-    },
-    {
-      "name": "resourceGroupName",
-      "type": "pickList",
-      "label": "Resource group",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "The Resource group name is required when the deployment target is either a deployment slot or an App Service Environment.<br />Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
-      "visibleRule": "deployToSlotOrASE = true"
-    },
-    {
-      "name": "slotName",
-      "type": "pickList",
-      "label": "Slot",
-      "defaultValue": "production",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
-      "visibleRule": "deployToSlotOrASE = true"
-    },
-    {
-      "name": "package",
-      "type": "filePath",
-      "label": "Package or folder",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-      "required": true,
-      "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
-    },
-    {
-      "name": "runtimeStack",
-      "type": "pickList",
-      "label": "Runtime stack",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "options": {
-        "DOTNET|6.0": "DOTNET|6.0",
-        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
-        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
-        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
-        "JAVA|8": "JAVA|8",
-        "JAVA|11": "JAVA|11",
-        "JAVA|17": "JAVA|17",
-        "JAVA|21": "JAVA|21",
-        "NODE|14": "NODE|14",
-        "NODE|16": "NODE|16",
-        "NODE|18": "NODE|18",
-        "NODE|20": "NODE|20",
-        "PYTHON|3.8": "PYTHON|3.8",
-        "PYTHON|3.9": "PYTHON|3.9",
-        "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
-      },
-      "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
-      "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
-    },
-    {
-      "name": "appSettings",
+      "name": "headers",
       "type": "multiLine",
-      "label": "App settings",
+      "label": "Headers",
+      "required": false,
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+      "properties": {
+        "resizable": true,
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "Define a header in JSON format. The header shall be attached to the request that is sent."
+    },
+    {
+      "name": "queryParameters",
+      "type": "string",
+      "label": "Query parameters",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+      "helpMarkDown": "Query parameters string to append to the function URL. It should not start with with \"?\" nor \"&\"."
+    },
+    {
+      "name": "body",
+      "type": "multiLine",
+      "label": "Body",
+      "required": false,
+      "defaultValue": "",
       "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
-      }
+        "resizable": true,
+        "rows": "3",
+        "maxLength": "2000"
+      },
+      "visibleRule": "method != GET && method != HEAD",
+      "helpMarkDown": "JSON-formatted message body for the request."
     },
     {
-      "name": "deploymentMethod",
+      "name": "waitForCompletion",
       "type": "pickList",
-      "label": "Deployment method",
-      "defaultValue": "auto",
+      "label": "Completion event",
+      "defaultValue": "false",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "Default value \"ApiResponse\". Available values: \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+      "groupName": "completionOptions",
       "options": {
-        "auto": "Auto-detect",
-        "zipDeploy": "Zip Deploy",
-        "runFromPackage": "Zip Deploy with Run From Package"
-      },
-      "visibleRule": "appType != \"\" && isFlexConsumption = false",
-      "helpMarkDown": "Choose the deployment method for your Function app. Please note that Linux and Flex Consumption apps do not support this configuration."
-    }
-  ],
-  "outputVariables": [
-    {
-      "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected Azure Function App."
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "appName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureFunctionAppNamesByAppType",
-      "parameters": {
-        "WebAppKind": "$(appType)"
+        "true": "Callback",
+        "false": "ApiResponse"
       }
     },
     {
-      "target": "resourceGroupName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppResourceGroup",
-      "parameters": {
-        "WebAppName": "$(appName)"
-      }
-    },
-    {
-      "target": "slotName",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppSlotsId",
-      "parameters": {
-        "WebAppName": "$(appName)",
-        "ResourceGroupName": "$(resourceGroupName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+      "name": "successCriteria",
+      "type": "string",
+      "label": "Success criteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means the response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
     }
   ],
-  "instanceNameFormat": "Azure Function App Deploy: $(appName)",
+  "instanceNameFormat": "Azure Function: $(function)",
   "execution": {
     "Node16": {
       "target": "azurermwebappdeployment.js",
