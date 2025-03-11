@@ -19,7 +19,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 253,
+    "Minor": 262,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -154,15 +154,13 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node16": {
-      "target": "azurermwebappdeployment.js",
-      "argumentFormat": ""
+      "target": "main.js"
     },
     "Node10": {
-      "target": "azurermwebappdeployment.js"
+      "target": "main.js"
     },
     "Node20_1": {
-      "target": "azurermwebappdeployment.js",
-      "argumentFormat": ""
+      "target": "main.js"
     }
   },
   "messages": {

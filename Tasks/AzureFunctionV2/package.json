@@ -2,7 +2,7 @@
   "name": "vsts-tasks-azurefunctionv2",
   "version": "1.0.0",
   "description": "Azure Pipelines Azure Function Deployment",
-  "main": "azurermWebappdeployment.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -23,16 +23,3 @@ export interface CallbackResult {
     statusCode: number;
     body: any;
 }
-
-export interface AzureEndpoint {
-    subscriptionID: string;
-    subscriptionName: string;
-    servicePrincipalClientID: string;
-    servicePrincipalKey?: string;
-    tenantID: string;
-    url: string;
-    environmentAuthorityUrl: string;
-    activeDirectoryResourceID: string;
-    scheme: string; // Authentication scheme (ServicePrincipal, WorkloadIdentityFederation, etc.)
-    applicationTokenCredentials: any; // Contains getToken() method
-}
