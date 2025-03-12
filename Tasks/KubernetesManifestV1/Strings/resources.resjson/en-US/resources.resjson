@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Override values to set",
   "loc.input.label.kustomizationPath": "Kustomization Path",
   "loc.input.help.kustomizationPath": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root.",
+  "loc.input.label.enableHelm": "Enable Helm chart inflation generator",
+  "loc.input.help.enableHelm": "Set to true to enable the helm chart inflation generator with kustomize.",
   "loc.input.label.resourceToPatch": "Resource to patch",
   "loc.input.help.resourceToPatch": "to identify the resource",
   "loc.input.label.resourceFileToPatch": "File path",

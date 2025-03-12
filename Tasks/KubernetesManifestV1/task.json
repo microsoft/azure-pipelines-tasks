@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 250,
-    "Patch": 1
+    "Minor": 253,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -259,6 +259,15 @@
       "visibleRule": "action = bake && renderType = kustomize",
       "defaultValue": "",
       "helpMarkDown": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root."
+    },
+    {
+      "name": "enableHelm",
+      "type": "boolean",
+      "label": "Enable Helm chart inflation generator",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "false",
+      "helpMarkDown": "Enable the helm chart inflation generator with kustomize."
     },
     {
       "name": "resourceToPatch",

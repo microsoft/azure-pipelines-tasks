@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "설정할 재정의 값입니다.",
   "loc.input.label.kustomizationPath": "Kustomization 경로",
   "loc.input.help.kustomizationPath": "인수는 파일을 포함하는 디렉터리의 경로이거나, 리포지토리 루트에 대해 동일한 경로를 지정하는 경로 접미사를 포함하는 git 리포지토리 URL이어야 합니다.",
+  "loc.input.label.enableHelm": "Helm Chart 인플레이션 생성기 활성화",
+  "loc.input.help.enableHelm": "'kustomize'로 Helm Chart 인플레이션 생성기를 활성화하려면 'true'로 설정합니다.",
   "loc.input.label.resourceToPatch": "패치할 리소스",
   "loc.input.help.resourceToPatch": "리소스를 식별합니다.",
   "loc.input.label.resourceFileToPatch": "파일 경로",
