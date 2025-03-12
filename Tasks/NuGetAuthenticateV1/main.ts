@@ -11,7 +11,7 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
     let federatedFeedAuthSuccessCount: number = 0;
-
+// test
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
