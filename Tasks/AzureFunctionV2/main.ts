@@ -17,7 +17,7 @@ async function main() {
         tl.debug("Function invocation result: " + JSON.stringify(result, null, 2));
     }
     catch(error) {
-        tl.debug("Error occurred during task execution: " + error);
+        tl.debug(tl.loc('TaskExecutionError', error));
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
