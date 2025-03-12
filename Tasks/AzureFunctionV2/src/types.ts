@@ -14,11 +14,6 @@ export interface TaskInputs {
     successCriteria?: string;
 }
 
-export interface FunctionRequest {
-    url: string;
-    config: AxiosRequestConfig;
-}
-
 export interface CallbackResult {
     statusCode: number;
     body: any;

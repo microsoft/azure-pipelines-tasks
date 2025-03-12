@@ -1,5 +1,5 @@
 export enum AuthType {
-    Key = 'keyAuthentication',
+    Key = 'KeyAuthentication',
     ARM = 'ARMAuthentication'
 }
 
