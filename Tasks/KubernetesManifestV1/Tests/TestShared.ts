@@ -37,7 +37,8 @@ export let TestEnvVars = {
     isCanaryDeploymentPresent: "__isCanaryDeploymentPresent__",
     isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__",
     baselineAndCanaryReplicas: "__baselineAndCanaryReplicas__",
-    trafficSplitMethod: "__trafficSplitMethod__"
+    trafficSplitMethod: "__trafficSplitMethod__",
+    resourceType: "__resourceType__"
 };
 
 export let OperatingSystems = {
