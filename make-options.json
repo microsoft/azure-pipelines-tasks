@@ -51,6 +51,7 @@
         "AzureRmWebAppDeploymentV5",
         "AzureSpringCloudV0",
         "AzureStaticWebAppV0",
+        "AzureTestPlanV0",
         "AzureWebAppV1",
         "AzureWebAppContainerV1",
         "AzureVmssDeploymentV0",
