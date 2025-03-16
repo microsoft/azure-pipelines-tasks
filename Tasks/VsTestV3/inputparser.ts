@@ -179,6 +179,8 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = 0;
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "donothing";
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
+    inputDataContract.TestReportingSettings.CustomLoggerConfig = tl.getInput('customLoggerConfig');
+    
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
