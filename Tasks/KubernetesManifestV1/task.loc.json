@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 250,
-    "Patch": 1
+    "Minor": 253,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -259,6 +259,15 @@
       "visibleRule": "action = bake && renderType = kustomize",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
+    },
+    {
+      "name": "enableHelm",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableHelm",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.enableHelm"
     },
     {
       "name": "resourceToPatch",

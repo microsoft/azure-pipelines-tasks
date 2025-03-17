@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Außerkraftsetzungswerte, die festgelegt werden sollen",
   "loc.input.label.kustomizationPath": "Kustomization-Pfad",
   "loc.input.help.kustomizationPath": "Das Argument muss der Pfad zum Verzeichnis sein, das die Datei enthält, oder eine Git-Repository-URL mit einem Pfadsuffix, das denselben Wert in Bezug auf den Repositorystamm angibt.",
+  "loc.input.label.enableHelm": "Aktivieren Sie den Helm Chart-Inflationsgenerator",
+  "loc.input.help.enableHelm": "Auf „true“ setzen, um den Helm Chart-Inflationsgenerator mit „kustomize“ zu aktivieren.",
   "loc.input.label.resourceToPatch": "Ressource für Patch",
   "loc.input.help.resourceToPatch": "zum Identifizieren der Ressource",
   "loc.input.label.resourceFileToPatch": "Dateipfad",

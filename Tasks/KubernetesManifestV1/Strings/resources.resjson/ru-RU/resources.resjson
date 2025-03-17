@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Переопределение задаваемых значений",
   "loc.input.label.kustomizationPath": "Путь Kustomization",
   "loc.input.help.kustomizationPath": "Аргумент должен быть путем к каталогу, содержащему файл, или URL-адресом репозитория Git с суффиксом path, указывающим тот же путь относительно корня репозитория.",
+  "loc.input.label.enableHelm": "Включить генератор инфляции Helm Chart",
+  "loc.input.help.enableHelm": "Установите значение «true», чтобы включить генератор инфляции Helm Chart с помощью kustomize.",
   "loc.input.label.resourceToPatch": "Ресурс для исправления",
   "loc.input.help.resourceToPatch": "для идентификации ресурса",
   "loc.input.label.resourceFileToPatch": "Путь к файлу",

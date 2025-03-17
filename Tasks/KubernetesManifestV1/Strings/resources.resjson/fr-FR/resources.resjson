@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Valeurs de remplacement à définir",
   "loc.input.label.kustomizationPath": "Chemin de Kustomization",
   "loc.input.help.kustomizationPath": "L'argument doit être le chemin du répertoire contenant le fichier, ou une URL de dépôt GIT avec un suffixe de chemin spécifiant la même chose par rapport à la racine du dépôt.",
+  "loc.input.label.enableHelm": "Activer le générateur d'inflation de chart Helm",
+  "loc.input.help.enableHelm": "Définir à 'true' pour activer le générateur d'inflation de chart Helm avec kustomize.",
   "loc.input.label.resourceToPatch": "Ressource à corriger",
   "loc.input.help.resourceToPatch": "pour identifier la ressource",
   "loc.input.label.resourceFileToPatch": "Chemin du fichier",

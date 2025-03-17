@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "覆寫值以進行設定",
   "loc.input.label.kustomizationPath": "Kustomization 路徑",
   "loc.input.help.kustomizationPath": "引數必須是包含檔案的目錄路徑，或路徑尾碼指定目標與儲存機制根路徑相同的 git 存放庫 URL。",
+  "loc.input.label.enableHelm": "啟用 Helm Chart 擴充產生器",
+  "loc.input.help.enableHelm": "將其設置為 'true' 以啟用使用 'kustomize' 的 Helm Chart 扩充生成器。",
   "loc.input.label.resourceToPatch": "要修補的資源",
   "loc.input.help.resourceToPatch": "以找出資源",
   "loc.input.label.resourceFileToPatch": "檔案路徑",

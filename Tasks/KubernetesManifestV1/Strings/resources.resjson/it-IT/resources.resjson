@@ -47,6 +47,8 @@
   "loc.input.help.overrides": "Valori di override da impostare",
   "loc.input.label.kustomizationPath": "Percorso Kustomization",
   "loc.input.help.kustomizationPath": "L'argomento deve essere il percorso della directory contenente il file o un URL di repository GIT con un suffisso di percorso che specifica lo stesso rispetto alla radice del repository.",
+  "loc.input.label.enableHelm": "Abilitare il generatore di inflazione del Helm Chart",
+  "loc.input.help.enableHelm": "Impostare su "true" per abilitare il generatore di inflazione del Helm Chart con kustomize.",
   "loc.input.label.resourceToPatch": "Risorsa a cui applicare la patch",
   "loc.input.help.resourceToPatch": "per identificare la risorsa",
   "loc.input.label.resourceFileToPatch": "Percorso file",
