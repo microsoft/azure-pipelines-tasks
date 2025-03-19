@@ -424,7 +424,7 @@
       "label": "Custom Logger Configuration",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Use this option if you have a custom logger. The feature needs to be enabled for your organization first, otherwise the custom logger will not be used. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....'",
+      "helpMarkDown": "Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....'",
       "groupName": "reportingOptions"
     },
     {
