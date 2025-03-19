@@ -11,10 +11,7 @@
     "Release"
   ],
   "runsOn": [
-    "Server",
-    "ServerGate",
-    "Agent",
-    "DeploymentGroup"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
