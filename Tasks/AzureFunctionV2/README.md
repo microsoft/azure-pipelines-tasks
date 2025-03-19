@@ -27,8 +27,6 @@ Add the task to your pipeline using:
     azureServiceConnection: '$(serviceConnection)'
     function: 'https://yourfunctionapp.azurewebsites.net/api/YourFunction'
     key: '$(functionKey)'
-    method: 'POST'
-    headers: '{"Content-Type": "application/json"}'
-    body: '{"parameter": "value"}'
+    method: 'GET'
     waitForCompletion: 'false'  # or 'true' for callback
 ```
