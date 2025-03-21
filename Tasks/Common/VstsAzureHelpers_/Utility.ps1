@@ -1,6 +1,7 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
     useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION)
+    useEncryptionBasedOnOSVersion = [System.Convert]::ToBoolean($env:USE_ENCRYPTION_BASED_ON_OS_IMAGE)
 }
 
 function Add-Certificate {
@@ -363,6 +364,15 @@ function ConvertTo-Pfx {
     else {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
+    
+     $osInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+     $osName = $osInfo.Caption
+     Write-Verbose "OS Name: $osName "
+     if ($osInfo.Caption -match "Windows Server (\d{4})")
+      {
+        $serverVersion = [int]$matches[1]
+        Write-Verbose "OS Version: $serverVersion"
+      } 
 
     if(-not $featureFlags.useOpenssLatestVersion) {
      $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
@@ -371,7 +381,28 @@ function ConvertTo-Pfx {
 
      $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
     }
-   else{
+    elseif($featureFlags.useEncryptionBasedOnOSVersion)
+    {
+        if($serverVersion -le 2016)
+        {
+        $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
+        $env:RANDFILE=".rnd"
+
+        $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+
+        }
+        else{
+
+        $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
+        $env:RANDFILE=".rnd"
+        $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+ 
+        }
+    }
+    else
+    {
      $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
      $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
      $env:RANDFILE=".rnd"
