@@ -19,7 +19,7 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 198,
+        "Minor": 222,
         "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
@@ -104,7 +104,8 @@
             "helpMarkDown": "The build for comparison.",
             "options": {
                 "LastSuccessful": "Last Successful Build",
-                "Specific": "Specific Build"
+                "Specific": "Specific Build",
+                "LatestFromBranch": "Last Successful Build from a specific Branch",
             },
             "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
         },
@@ -116,6 +117,15 @@
             "required": false,
             "helpMarkDown": "The build number for comparison.",
             "visibleRule": "updateType = Manifest versions && compareType = Specific"
+        },
+        {
+            "name": "branchName",
+            "type": "string",
+            "label": "Branch Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The branch name to get the build for comparison.",
+            "visibleRule": "updateType = Manifest versions && compareType = LatestFromBranch"
         },
         {
             "name": "overwriteExistingPkgArtifact",
