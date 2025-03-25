@@ -17,19 +17,20 @@ export class AzureFunctionInvoker {
       tl.debug(`Invoking Azure Function with ${this.inputs.authType} authentication`);
       const request: AxiosRequestConfig = await this.requestBuilder.buildRequest();
 
+      // Make the initial request to the function
       const response = await this.makeRequest<T>(request);
-
-      // If we're waiting for a callback
+      
       if (this.inputs.waitForCompletion === CompletionEvent.Callback) {
-        tl.debug('Waiting for callback completion...');
-        const callbackHandler = new CallbackHandler(tl.getVariable('system.TaskInstanceId') || '');
+        console.log('Function invoked. Waiting for callback...');
+        
+        const taskInstanceId = tl.getVariable('system.TaskInstanceId') || '';
+        console.log(`Task instance ID: ${taskInstanceId}`);
+        
+        const callbackHandler = new CallbackHandler(taskInstanceId);
         const callbackResult = await callbackHandler.waitForCallback();
-
-        if (callbackResult.statusCode >= 400) {
-          throw new Error(`Callback failed with status ${callbackResult.statusCode}: ${JSON.stringify(callbackResult.body)}`);
-        }
-
-        return callbackResult.body;
+        
+        console.log(`Callback received: ${JSON.stringify(callbackResult.body)}`);
+        return callbackResult.body as T;
       }
 
       return response;
