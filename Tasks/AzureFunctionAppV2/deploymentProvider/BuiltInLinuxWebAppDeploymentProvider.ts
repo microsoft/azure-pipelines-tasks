@@ -22,6 +22,7 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOTNET-ISOLATED|6.0', 'dotnet-isolated '],
     [ 'DOTNET-ISOLATED|7.0', 'dotnet-isolated '],
     [ 'DOTNET-ISOLATED|8.0', 'dotnet-isolated '],
+    [ 'DOTNET-ISOLATED|9.0', 'dotnet-isolated '],
     [ 'JAVA|8', 'java ' ],
     [ 'JAVA|11', 'java ' ],
     [ 'JAVA|17', 'java ' ],
