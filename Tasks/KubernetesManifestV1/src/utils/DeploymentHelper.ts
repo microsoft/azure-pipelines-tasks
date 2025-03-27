@@ -34,6 +34,13 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
 
     // check manifest stability
     const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([KubernetesConstants.DiscoveryAndLoadBalancerResource.service]));
+    const resourceType = tl.getInput('resourceType') || ''
+
+    // for a fleet object, we do not check for manifest stability
+    if (resourceType.toLowerCase() != 'microsoft.containerservice/fleets') {
+        tl.debug('checking manifest stability');
+        await checkManifestStability(kubectl, resourceTypes)
+    }   
     await checkManifestStability(kubectl, resourceTypes);
 
     // print ingress resources
