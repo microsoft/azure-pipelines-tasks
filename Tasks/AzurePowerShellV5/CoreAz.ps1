@@ -35,7 +35,7 @@ try {
 }
 catch {
     Write-Host "An error occurred in Initialize-AzModule"
-    Resolve-Error $_ | ConvertTo-Json -Depth 5 | Write-Host
+    Resolve-AzError $_ | ConvertTo-Json -Depth 5 | Write-Host
     throw
 }
 
