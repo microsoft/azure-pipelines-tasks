@@ -41,7 +41,6 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
         tl.debug('checking manifest stability');
         await checkManifestStability(kubectl, resourceTypes)
     }   
-    await checkManifestStability(kubectl, resourceTypes);
 
     // print ingress resources
     const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress]);
