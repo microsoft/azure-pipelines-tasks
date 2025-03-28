@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
   "loc.input.label.rolloutStatusTimeout": "Timeout for rollout status",
   "loc.input.help.rolloutStatusTimeout": "The length of time (in seconds) to wait before ending watch on rollout status",
+  "loc.input.label.resourceType": "Resource type",
+  "loc.input.help.resourceType": "The type of the resource (fleet, managed cluster)",
   "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
