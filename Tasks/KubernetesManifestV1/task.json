@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 255,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -398,6 +398,15 @@
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
         "message": "Enter a valid value for timeout."
       }
+    },
+    {
+      "name": "resourceType",
+      "type": "string",
+      "label": "Resource type",
+      "defaultValue": "Microsoft.ContainerService/managedClusters",
+      "required": false,
+      "helpMarkDown": "The type of the resource (fleet, managed cluster)",
+      "visibleRule": "action = deploy"
     }
   ],
   "dataSourceBindings": [
