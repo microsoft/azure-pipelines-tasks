@@ -130,10 +130,10 @@ function Initialize-AzureSubscription {
 
                 try {
                     if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                        Write-Host "##[command] Add-AzureRMAccount -Credential $psCredential"
+                        Write-Host "##[command]Add-AzureRMAccount -Credential $psCredential"
                         $null = Add-AzureRMAccount -Credential $psCredential
                     } else {
-                        Write-Host "##[command] Connect-AzureRMAccount -Credential $psCredential"
+                        Write-Host "##[command]Connect-AzureRMAccount -Credential $psCredential"
                         $null = Connect-AzureRMAccount -Credential $psCredential
                     }
                 } catch {
@@ -151,7 +151,7 @@ function Initialize-AzureSubscription {
         # Add account (Az).
         if ($script:azProfileModule) {
             try {
-                Write-Host "##[command] Connect-AzAccount -Credential $psCredential"
+                Write-Host "##[command]Connect-AzAccount -Credential $psCredential"
                 $null = Connect-AzAccount -Credential $psCredential
             } catch {
                 # Provide an additional, custom, credentials-related error message.
