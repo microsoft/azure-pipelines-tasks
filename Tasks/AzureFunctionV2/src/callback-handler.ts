@@ -1,116 +1,98 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import axios from 'axios';
-import pRetry from 'p-retry';
 import { CallbackResult } from './types';
 
 export class CallbackHandler {
-  private planUrl: string;
-  private projectId: string;
-  private hubName: string;
-  private planId: string;
-  private timelineId: string;
-  private authToken: string;
+  private static readonly TIMEOUT = 7200000; // 2 hours in milliseconds
+  private static readonly POLLING_INTERVAL = 5000; // 5 seconds
+  private static readonly MAX_ATTEMPTS = 1440; // 2 hours at 5-second intervals
 
-  constructor(private taskInstanceId: string) {
-    this.planUrl = tl.getVariable('system.CollectionUri') || '';
-    this.projectId = tl.getVariable('system.TeamProjectId') || '';
-    this.hubName = tl.getVariable('system.HostType') || '';
-    this.planId = tl.getVariable('system.PlanId') || '';
-    this.timelineId = tl.getVariable('system.TimelineId') || '';
-    this.authToken = tl.getVariable('system.AccessToken') || '';
-  }
+  constructor(private taskInstanceId: string) {}
 
   public async waitForCallback(): Promise<CallbackResult> {
-    console.log(`Waiting for callback via API for task ID: ${this.taskInstanceId}`);
-    
-    // Use p-retry to handle retries with exponential backoff
-    const result = await pRetry(
-      async () => {
-        // Check the timeline record
-        const record = await this.getTimelineRecord();
-        
-        // Check for the specific callback variable in the record
-        if (record && record.variables && 
-            record.variables[`AZURE_FUNCTION_CALLBACK_${this.taskInstanceId}`]) {
-          
-          const callbackValue = record.variables[`AZURE_FUNCTION_CALLBACK_${this.taskInstanceId}`].value;
-          console.log(`Found callback value: ${callbackValue}`);
-          
-          try {
-            const callbackData = JSON.parse(callbackValue);
-            const isSuccess = callbackData.result === 'succeeded';
-            
-            let resultData = {};
-            if (callbackData.resultCode) {
-              try {
-                resultData = JSON.parse(callbackData.resultCode);
-              } catch {
-                resultData = { message: callbackData.resultCode };
-              }
-            }
-            
-            return {
-              statusCode: isSuccess ? 200 : 500,
-              body: resultData
-            };
-          } catch (e) {
-            return {
-              statusCode: 200,
-              body: { raw: callbackValue }
-            };
-          }
+    tl.debug(`Waiting for callback to update timeline record for task: ${this.taskInstanceId}`);
+
+    const startTime = Date.now();
+    let attempts = 0;
+
+    // Poll until timeout or successful callback
+    while (Date.now() - startTime < CallbackHandler.TIMEOUT) {
+      attempts++;
+
+      try {
+        tl.debug(`Checking callback status (attempt ${attempts}/${CallbackHandler.MAX_ATTEMPTS})...`);
+        const result = await this.checkCallbackStatus();
+
+        if (result) {
+          tl.debug('Received callback response');
+          return result;
         }
-        
-        // If no callback found, throw error to trigger retry
-        throw new Error('Callback not found yet, retrying...');
-      },
-      {
-        retries: 1440, // 2 hours with 5-second intervals
-        minTimeout: 5000, // 5 seconds
-        maxTimeout: 5000, // 5 seconds (fixed interval)
-        onFailedAttempt: error => {
-          if (error.retriesLeft % 12 === 0) { // Log every minute
-            console.log(`Callback not received yet. Retries left: ${error.retriesLeft}`);
-          }
+
+        // Wait before next check
+        await this.sleep(CallbackHandler.POLLING_INTERVAL);
+      } catch (error: any) {
+        tl.debug(`Error checking callback status: ${error.message}`);
+
+        // If this is a permanent error, don't keep retrying
+        if (this.isPermanentError(error)) {
+          throw error;
         }
+
+        // Wait before retry
+        await this.sleep(CallbackHandler.POLLING_INTERVAL);
       }
-    );
-    
-    return result;
-  }
-  
-  private async getTimelineRecord(): Promise<any> {
-    try {
-      // First, try getting the job record (which contains the variables)
-      const baseUrl = this.planUrl.replace(/\/+$/, '');
-      const url = `${baseUrl}/${this.projectId}/_apis/distributedtask/hubs/${this.hubName}/plans/${this.planId}/timelines/${this.timelineId}/records?api-version=7.1`;
-      
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${this.authToken}`
-        }
-      });
-      
-      if (response.status === 200 && response.data && response.data.value) {
-        // Find the job record (parent of our task)
-        for (const record of response.data.value) {
-          // Check if this record has variables containing our callback
-          if (record.variables && 
-              record.variables[`AZURE_FUNCTION_CALLBACK_${this.taskInstanceId}`]) {
-            return record;
-          }
-          
-          // Check if this is our task's parent (the job record)
-          if (record.type === 'Job') {
-            return record;
-          }
-        }
-      }
-      
-      return null;
-    } catch (error) {
-      console.log(`API error: ${error}`);
-      return null;
     }
+
+    throw new Error(
+      'Timed out waiting for callback from Azure Function. The function might still be running, but did not send a callback response within the 2-hour timeout period.'
+    );
+  }
+
+  /**
+   * Checks if the callback has been received
+   * @returns The callback result, or null if not received yet
+   */
+  private async checkCallbackStatus(): Promise<CallbackResult | null> {
+    try {
+      // Try to get callback data from timeline record
+      const timelineRecord = this.getTimelineRecord();
+
+      if (timelineRecord && timelineRecord.result) {
+        tl.debug(`Received callback timeline record: ${JSON.stringify(timelineRecord)}`);
+
+        // Extract status code and body from record
+        return {
+          statusCode: timelineRecord.result === 'succeeded' ? 200 : 500,
+          body: timelineRecord.resultCode || timelineRecord.errorMessage || {}
+        };
+      }
+    } catch (error: any) {
+      tl.debug(`Error getting timeline record: ${error.message}`);
+    }
+
+    return null;
+  }
+
+  private isPermanentError(error: any): boolean {
+    const message = error.message || '';
+    const permanentErrorMarkers = ['Access denied', 'Unauthorized', 'Not Found', 'Invalid'];
+
+    return permanentErrorMarkers.some(marker => message.includes(marker));
+  }
+
+  private getTimelineRecord(): any {
+    const record = tl.getVariable(`AZURE_FUNCTION_CALLBACK_${this.taskInstanceId}`);
+    if (record) {
+      try {
+        return JSON.parse(record);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
