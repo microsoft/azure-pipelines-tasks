@@ -16,8 +16,8 @@
     "ServerGate"
   ],
   "version": {
-    "Major": 1,
-    "Minor": 220,
+    "Major": 2,
+    "Minor": 272,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -29,6 +29,17 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ARMAuthentication",
+      "aliases": [
+        "azureServiceConnection",
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ARMAuthentication",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMAuthentication"
+    },
     {
       "name": "function",
       "type": "string",
@@ -125,7 +136,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
-        "EndpointId": "",
+        "EndpointId": "TaskInputs['ARMAuthentication']",
         "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
         "Method": "$(method)",
         "Body": "$(body)",

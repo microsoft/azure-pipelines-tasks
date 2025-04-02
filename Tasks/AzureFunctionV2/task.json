@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 270,
+        "Minor": 272,
         "Patch": 0
     },
     "instanceNameFormat": "Azure Function: $(function)",
@@ -29,6 +29,14 @@
         }
     ],
     "inputs": [
+        {
+            "name": "ARMAuthentication",
+            "aliases": ["azureServiceConnection", "azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "required": true,
+            "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL"
+        },
         {
             "name": "function",
             "type": "string",
@@ -125,7 +133,7 @@
     "execution": {
         "HttpRequest": {
             "Execute": {
-                "EndpointId": "",
+                "EndpointId": "$(ARMAuthentication)",
                 "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
                 "Method": "$(method)",
                 "Body": "$(body)",
