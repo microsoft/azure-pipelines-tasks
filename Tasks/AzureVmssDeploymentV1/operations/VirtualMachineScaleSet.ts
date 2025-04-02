@@ -285,7 +285,6 @@ export default class VirtualMachineScaleSet {
                         return reject(tl.loc("SettingVMExtensionFailedwithAuthentication", utils.getError(error) , this.taskParameters.vmssName));
                     }
                     return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
-                
                 }
 
                 console.log(tl.loc("CustomScriptExtensionInstalled", customScriptExtension.name));
