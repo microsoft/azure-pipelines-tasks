@@ -160,8 +160,9 @@ export class dotNetExe {
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
+        const isMTP: boolean = this.getIsMicrosoftTestingPlatform();
+
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            const isMTP: boolean = this.getIsMicrosoftTestingPlatform();
             if (isMTP) {
                 this.arguments = ` --report-trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
             } else {
@@ -186,17 +187,20 @@ export class dotNetExe {
             const projectFile = projectFiles[fileIndex];
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
-            // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
-            if (projectFile.endsWith(".proj") || projectFile.EndsWith(".csproj") || projectFile.EndsWith(".vbproj") || projectFile.EndsWith(".fsproj")) {
-                dotnet.arg("--project");
-            }
-            else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
-                dotnet.arg("--solution");
-            }
-            else {
-                tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
-                failedProjects.push(projectFile);
-                continue;
+
+            if (isMTP) {
+                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
+                if (projectFile.endsWith(".proj") || projectFile.EndsWith(".csproj") || projectFile.EndsWith(".vbproj") || projectFile.EndsWith(".fsproj")) {
+                    dotnet.arg("--project");
+                }
+                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
+                    dotnet.arg("--solution");
+                }
+                else {
+                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
+                    failedProjects.push(projectFile);
+                    continue;
+                }
             }
 
             dotnet.arg(projectFile);
