@@ -3,6 +3,7 @@
   "name": "AzureFunction",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
@@ -11,15 +12,15 @@
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Server",
+    "ServerGate"
   ],
-  "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
-    "Minor": 254,
+    "Major": 1,
+    "Minor": 220,
     "Patch": 0
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "completionOptions",
@@ -28,33 +29,6 @@
     }
   ],
   "inputs": [
-    {
-      "name": "authenticationOptionSelector",
-      "aliases": [
-        "authenticationType"
-      ],
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.authenticationOptionSelector",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.authenticationOptionSelector",
-      "defaultValue": "ARMAuthentication",
-      "options": {
-        "KeyAuthentication": "Function Key",
-        "ARMAuthentication": "Azure Resource Manager"
-      }
-    },
-    {
-      "name": "ARMAuthentication",
-      "aliases": [
-        "azureServiceConnection",
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ARMAuthentication",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ARMAuthentication",
-      "visibleRule": "authenticationOptionSelector = ARMAuthentication"
-    },
     {
       "name": "function",
       "type": "string",
@@ -75,7 +49,7 @@
       "name": "method",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.method",
-      "required": true,
+      "required": "true",
       "defaultValue": "POST",
       "options": {
         "OPTIONS": "OPTIONS",
@@ -93,10 +67,10 @@
       "name": "headers",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
-      "required": false,
+      "required": "false",
       "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
       "properties": {
-        "resizable": true,
+        "resizable": "true",
         "rows": "10",
         "maxLength": "5000"
       },
@@ -114,10 +88,10 @@
       "name": "body",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
-      "required": false,
+      "required": "false",
       "defaultValue": "",
       "properties": {
-        "resizable": true,
+        "resizable": "true",
         "rows": "3",
         "maxLength": "2000"
       },
@@ -148,19 +122,17 @@
       "visibleRule": "waitForCompletion = false"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node16": {
-      "target": "main.js"
-    },
-    "Node10": {
-      "target": "main.js"
-    },
-    "Node20_1": {
-      "target": "main.js"
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "",
+        "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+        "Method": "$(method)",
+        "Body": "$(body)",
+        "Headers": "$(headers)",
+        "WaitForCompletion": "$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
+      }
     }
-  },
-  "messages": {
-    "TaskExecutionError": "ms-resource:loc.messages.TaskExecutionError"
   }
 }
