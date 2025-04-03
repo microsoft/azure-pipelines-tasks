@@ -371,8 +371,7 @@ class Utils {
             try {
                 overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {                
-                tl.warning("The provided metadata file " + taskParameters.csmFile + " is missing metadata of parameter " + overrideParameter.name);                
-                console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
+                tl.error(tl.loc("ErrorWhileParsingParameter", taskParameters.csmFile, overrideParameter.name));
             }
             parameters[overrideParameter.name] = {
                 value: overrideParameter.value
