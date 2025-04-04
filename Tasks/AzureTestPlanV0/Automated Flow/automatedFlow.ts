@@ -11,85 +11,163 @@ import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
 import { JestTestExecutor } from './TestExecutors/JestTestExecutor';
 
-export async function newAutomatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<IOperationResult> {
-    let listOfTestsFromTestPlan: string[] = testPlanInfo?.listOfFQNOfTestCases ?? [];
-    let automatedTestInvokerResult: IOperationResult = { returnCode: 0, errorMessage: '' };
-    let publishOperationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+export async function newAutomatedTestsFlow(
+    testPlanInfo: TestPlanData, 
+    testSelectorInput: string, 
+    ciData: ciDictionary
+): Promise<IOperationResult> {
+
     const testLanguage = tl.getInput('testLanguageInput', true);
-    let testExecutor: ITestExecutor = getTestExecutor(testLanguage);
-    let listOfTestsDiscovered: string[] = [];
-    if (listOfTestsFromTestPlan.length > 0) {
-        automatedTestInvokerResult = await testExecutor.setup();
-
-        if (automatedTestInvokerResult.returnCode === 0) {
-            automatedTestInvokerResult = await testExecutor.discoverTests(listOfTestsFromTestPlan, ciData, listOfTestsDiscovered);
-            if (automatedTestInvokerResult.returnCode === 0) {
-                if (listOfTestsDiscovered.length === 0) {
-                    return handleNoTestsFound(testSelectorInput);
-                }
-                automatedTestInvokerResult = await testExecutor.executeTests(listOfTestsDiscovered, ciData);
-                publishOperationResult = await publishResults(testPlanInfo, ciData, automatedTestInvokerResult);
-            }   
-        }
-    } else {
-        automatedTestInvokerResult = handleNoTestsFound(testSelectorInput);
-    }
-    if(automatedTestInvokerResult.returnCode !== 0 || publishOperationResult.returnCode !== 0){
-        automatedTestInvokerResult.returnCode = 1;
-        automatedTestInvokerResult.errorMessage = automatedTestInvokerResult.errorMessage + '/n' + publishOperationResult.errorMessage;
+    if (!testLanguage) {
+        return createErrorResult('Test language input is required');
     }
 
-    return automatedTestInvokerResult;
-}
+    const listOfTestsFromTestPlan = testPlanInfo?.listOfFQNOfTestCases ?? [];
+    if (listOfTestsFromTestPlan.length === 0) {
+        return handleNoTestsFound(testSelectorInput);
+    }
 
-function getTestExecutor(testLanguage: string): ITestExecutor{
-    let testExecutor:ITestExecutor;
-    switch (testLanguage) {
-                case 'JavaMaven':
-                    testExecutor = new MavenTestExecutor();
-                    break;
-    
-                case 'JavaGradle':
-                    testExecutor = new GradleTestExecutor();
-                    break;
-    
-                case 'Python':
-                    testExecutor = new PythonTestExecutor();
-                    break;
-    
-                case 'JavaScriptJest':
-                    testExecutor = new JestTestExecutor();
-                    break;
-    
-                default:
-                    console.log('Invalid test Language Input selected.');
-            }
-    return testExecutor;
-}
+    // Initialize test executor
+    const testExecutor = getTestExecutor(testLanguage.toLowerCase());
 
-async function publishResults(testPlanInfo: TestPlanData, ciData: ciDictionary, automatedTestInvokerResult: IOperationResult): Promise<IOperationResult> {
-    let publishingTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
-    publishingTimer.start();
+    if (!testExecutor) {
+        return createErrorResult(`Test executor not found for test language: ${testLanguage}`);
+    }
 
     try {
-        await publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
-    } catch (err) {
-        automatedTestInvokerResult.returnCode = 1;
-        automatedTestInvokerResult.errorMessage = err.message || String(err);
+        // Execute test phases
+        const executionResult = await executeTestPhases(
+            testExecutor as ITestExecutor,
+            listOfTestsFromTestPlan,
+            testPlanInfo,
+            ciData
+        );
+
+        return executionResult;
+    } catch (error) {
+        tl.debug(`Unexpected error in automated test flow: ${error.message}`);
+        return createErrorResult(`Automated test flow failed: ${error.message}`);
     }
-    finally{
-        publishingTimer.stop(ciData);
+}
+
+async function executeTestPhases(
+    testExecutor: ITestExecutor,
+    testsFromPlan: string[],
+    testPlanInfo: TestPlanData,
+    ciData: ciDictionary
+): Promise<IOperationResult> {
+    // Setup phase
+    const setupResult = await testExecutor.setup();
+    if (setupResult.returnCode !== 0) {
+        tl.debug(`Setup failed: ${setupResult.errorMessage}`);
+        return setupResult;
     }
 
-    return automatedTestInvokerResult;
+    // Discovery phase
+    const listOfTestsDiscovered: string[] = [];
+    const discoveryResult = await testExecutor.discoverTests(
+        testsFromPlan,
+        ciData,
+        listOfTestsDiscovered
+    );
+
+    if (discoveryResult.returnCode !== 0) {
+        tl.debug(`Test discovery failed: ${discoveryResult.errorMessage}`);
+        return discoveryResult;
+    }
+
+    if (listOfTestsDiscovered.length === 0) {
+        return handleNoTestsFound('automatedTests');
+    }
+
+    // Execution phase
+    const executionResult = await testExecutor.executeTests(
+        listOfTestsDiscovered,
+        ciData
+    );
+
+    // Publishing phase
+    const publishResult = await publishResults(testPlanInfo, ciData);
+
+    // Combine and return results
+    return combineResults(executionResult, publishResult);
+}
+
+async function publishResults(
+    testPlanInfo: TestPlanData,
+    ciData: ciDictionary
+): Promise<IOperationResult> {
+    const publishingTimer = new SimpleTimer(constant.AUTOMATED_PUBLISHING);
+    publishingTimer.start();
+
+    const failTaskonFailureToPublish = tl.getBoolInput('failTaskOnFailureToPublishResults', false);
+    const failOnMissingResultsFile = tl.getBoolInput('failTaskOnMissingResultsFile', false);
+
+    try {
+        if (!testPlanInfo?.listOfAutomatedTestPoints && failOnMissingResultsFile) {
+            throw new Error('No automated test points available for publishing');
+        }
+
+        await publishAutomatedTestResult(
+            JSON.stringify(testPlanInfo.listOfAutomatedTestPoints),
+            testPlanInfo.listOfAutomatedTestPoints.length ? testPlanInfo.listOfAutomatedTestPoints[0].testPlan?.id : ""
+        );
+        return createSuccessResult();
+
+    } catch (error) {
+        if (failTaskonFailureToPublish) {
+            return createErrorResult(`Publishing failed: ${error.message}`);
+        }
+        tl.debug(`Failed to publish test results: ${error.message} but continuing since failTaskOnFailureToPublishResults is set to false`);
+        return createSuccessResult();
+    } finally {
+        publishingTimer.stop(ciData);
+    }
+}
+
+function createErrorResult(message: string): IOperationResult {
+    return { returnCode: 1, errorMessage: message };
+}
+
+function createSuccessResult(): IOperationResult {
+    return { returnCode: 0, errorMessage: '' };
+}
+
+function combineResults(
+    executionResult: IOperationResult,
+    publishResult: IOperationResult
+): IOperationResult {
+    if (executionResult.returnCode !== 0 || publishResult.returnCode !== 0) {
+        return {
+            returnCode: 1,
+            errorMessage: [executionResult.errorMessage, publishResult.errorMessage]
+                .filter(Boolean)
+                .join('\n')
+        };
+    }
+    return createSuccessResult();
+}
+
+function getTestExecutor(testLanguage: string): ITestExecutor {
+    switch (testLanguage) {
+        case 'javamaven':
+            return new MavenTestExecutor();
+        case 'javagradle':
+            return new GradleTestExecutor();
+        case 'python':
+            return new PythonTestExecutor();
+        case 'javascriptjest':
+            return new JestTestExecutor();
+        default:
+            return null;
+    }
 }
 
 function handleNoTestsFound(testSelectorInput: string): IOperationResult {
     if (testSelectorInput === 'automatedTests') {
-        return { returnCode: 1, errorMessage: tl.loc('ErrorFailTaskOnNoAutomatedTestsFound') };
-    } else {
-        console.log('No automated tests found for given test plan inputs ');
-        return { returnCode: 0, errorMessage: '' };
+        return createErrorResult(tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
     }
+    tl.warning('No automated tests found for given test plan input');
+    return createSuccessResult();
 }
 
