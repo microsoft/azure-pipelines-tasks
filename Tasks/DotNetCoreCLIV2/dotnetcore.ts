@@ -190,7 +190,7 @@ export class dotNetExe {
 
             if (isMTP) {
                 // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
-                if (projectFile.endsWith(".proj") || projectFile.EndsWith(".csproj") || projectFile.EndsWith(".vbproj") || projectFile.EndsWith(".fsproj")) {
+                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
                     dotnet.arg("--project");
                 }
                 else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
