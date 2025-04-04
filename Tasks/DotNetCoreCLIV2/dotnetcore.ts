@@ -147,7 +147,7 @@ export class dotNetExe {
     }
 
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exists("dotnet.config")) {
+        if (!tl.exist("dotnet.config")) {
             return false;
         }
 
