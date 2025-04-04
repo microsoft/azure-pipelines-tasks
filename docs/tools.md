@@ -57,14 +57,14 @@ Since using a tool installer means the tool will be acquired if not present, the
 As an example, consider writing a tool installer task for [chocolatey](https://chocolatey.org) and there is a separate chocolatey task.  Chocolatey is a windows only tool.
 
 Chocolatey task:
-```
+```js
 demands: [
     "chocolatey"
 ]
 ``` 
 
 Chocolatey tool installer task:
-```
+```js
 demands: [
     "powershell"
 ],
@@ -109,22 +109,22 @@ The task lib will offer a ToolInstall class.
 This is the api the author of the tool installer uses
 
 API:
-```
+```typescript
 
 // returns location of downloaded package
-download(url: string): Promise string    
+download(url: string): Promise<string>;
 
 // tar.gz, zip.  will support handful of well known as convenience.  can always control your own
 // will extract to the proper location in the agents tools folder
 // returns string of tool set
-extract(location: string: type: string): Promise string;
+extract(location: string: type: string): Promise<string>;
 
-prependPath(location: string): Promise void;
-setToolVariable(name: string, location: string): Promise void;  
+prependPath(location: string): Promise<void>;
+setToolVariable(name: string, location: string): Promise<void>;  
 ```
 
 Sample:
-```
+```typescript
 import tl = require('vsts-task-lib/task');
 import tim = require('vsts-task-lib/toolinstaller');
 
