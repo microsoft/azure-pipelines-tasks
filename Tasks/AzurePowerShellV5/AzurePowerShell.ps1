@@ -1,4 +1,6 @@
 Trace-VstsEnteringInvocation $MyInvocation
+Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk\InputFunctions.ps1"
+Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk\LocalizationFunctions.ps1"
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 # Get inputs.
@@ -6,7 +8,7 @@ $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
-$__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
+$__vsts_input_errorActionPreference = Get-VstsInput -Name errorActioPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
@@ -17,6 +19,9 @@ $validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 $hostEnv = "ADO/AzurePowerShell@v5`_$($env:AGENT_OS)`_$($env:AGENT_NAME)`_$($env:BUILD_DEFINITIONNAME)`_$($env:BUILD_BUILDID)`_$($env:RELEASE_DEFINITIONNAME)`_$($env:RELEASE_RELEASEID)"
 $env:AZUREPS_HOST_ENVIRONMENT = $hostEnv
 Write-Host "AZUREPS_HOST_ENVIRONMENT: $env:AZUREPS_HOST_ENVIRONMENT"
+
+$ffvalue = Get-PipelineFeature -FeatureName "AZPWSHWARNING"
+Write-Host "ffvalue is: $ffvalue"
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -34,11 +39,21 @@ if ($scriptArguments -match '[\r\n]') {
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
 
+. (Join-Path $PSScriptRoot "Utility.ps1") 
 if ($targetAzurePs -eq $otherVersion) {
     if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
-    } else {
+    }
+    else {
         $targetAzurePs = $customTargetAzurePs.Trim()
+        if (Get-PipelineFeature -FeatureName "AZPWSHWARNING") {
+            Write-Warning "FF enabled"
+            $latestRelease = Get-MajorAzurePowerShellReleases
+        
+            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease[0].tag_name)) {
+                Write-Warning "PowerShell Az version $targetAzurePs is out of date, the latest version is $($latestRelease[0].tag_name)"
+            }       
+        }       
     }
 }
 
@@ -47,6 +62,17 @@ $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList
 
 if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
+    if(Get-PipelineFeature -FeatureName "AZPWSHWARNING")
+    {
+        Write-Host "FF enabled"
+        $installedVersion = Get-InstalledMajorRelease
+        $latestRelease = Get-MajorAzurePowerShellReleases
+        
+        if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $installedVersion -latestRelease $($latestRelease[0].tag_name)) {
+            Write-Warning "PowerShell Az version $installedVersion is out of date, the latest version is $($latestRelease[0].tag_name)"
+        } 
+    }
+      
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
