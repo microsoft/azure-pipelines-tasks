@@ -370,8 +370,8 @@ class Utils {
 
             try {
                 overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
-            } catch (error) {
-                console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
+            } catch (error) {                
+                tl.error(tl.loc("ErrorWhileParsingParameter", taskParameters.csmFile, overrideParameter.name));
             }
             parameters[overrideParameter.name] = {
                 value: overrideParameter.value

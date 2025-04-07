@@ -70,7 +70,7 @@
   "loc.messages.EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
   "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
   "loc.messages.DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
-  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
+  "loc.messages.ErrorWhileParsingParameter": "The provided metadata file '%s'  is missing metadata of parameter '%s'",
   "loc.messages.TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
   "loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
   "loc.messages.TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
