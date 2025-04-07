@@ -17,7 +17,7 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ### IIS Web Server
 
-There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. Alternatively, you can use the "Enable IIS" option provided in the task to enable the IIS web server along with all of its sub-features on the machines (applicable only for Windows Server machines). The task updates websites, webapps and application pools. Also to deploy a webapp, use a different task [IIS WebApp Deployment On Deployment Group](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/IISWebAppDeploymentOnMachineGroup)
+There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. Alternatively, you can use the "Enable IIS" option provided in the task to enable the IIS web server along with all of its sub-features on the machines (applicable only for Windows Server machines). The task updates websites, webapps and application pools. Also to deploy a webapp, use a different task [IIS WebApp Deployment On Deployment Group](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/IISWebAppDeploymentOnMachineGroupV0/README.md)
 
 ### Pre-existing Deployment Group
 
