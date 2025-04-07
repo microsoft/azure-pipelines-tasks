@@ -8,7 +8,7 @@ $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
-$__vsts_input_errorActionPreference = Get-VstsInput -Name errorActioPreference
+$__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
@@ -43,8 +43,7 @@ $latestVersion = "LatestVersion"
 if ($targetAzurePs -eq $otherVersion) {
     if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
-    }
-    else {
+    } else {
         $targetAzurePs = $customTargetAzurePs.Trim()
         if (Get-PipelineFeature -FeatureName "AZPWSHWARNING") {
             Write-Warning "FF enabled"
