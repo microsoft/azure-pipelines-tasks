@@ -74,9 +74,6 @@ describe('CopyFiles L0 Suite', function () {
         let runner2: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -107,8 +104,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir [bracket]/someOtherDir2/file3.file')} to ${path.normalize('/destDir/someOtherDir2/file3.file')}`),
             'should have copied dir2 file3');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -118,9 +113,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0copySubtractExclude.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -142,8 +134,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             !runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file1.file')} to ${path.normalize('/destDir/someOtherDir2/file1.file')}`),
             'should not have copied dir2 file1');
-        // }, runner, done);
-        // });
         done();
 
     });
@@ -154,13 +144,8 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfContentsNotSet.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue('Error: Input required: Contents'), 'should have created error issue');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -170,13 +155,8 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotSet.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue('Error: Input required: SourceFolder'), 'should have created error issue');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -186,13 +166,8 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfTargetFolderNotSet.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue('Error: Input required: TargetFolder'), 'should have created error issue');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -202,13 +177,8 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotFound.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        //     .then(() => {
-        //         runValidations(() => {
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue(`Error: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -218,13 +188,8 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfTargetFileIsDir.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue(`Error: loc_mock_TargetIsDir ${path.normalize('/srcDir/someOtherDir/file1.file')} ${path.normalize('/destDir/someOtherDir/file1.file')}`), 'should have created error issue');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -234,9 +199,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0skipsIfExists.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -252,8 +214,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -263,9 +223,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0overwritesIfSpecified.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        //     .then(() => {
-        //         runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -281,8 +238,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        //     }, runner, done);
-        // });
         done();
     });
 
@@ -292,9 +247,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0preservesTimestampIfSpecified.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        //     .then(() => {
-        //         runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -313,8 +265,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        //     }, runner, done);
-        // });
         done();
     });
 
@@ -324,9 +274,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0cleansIfSpecified.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -348,8 +295,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -359,9 +304,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndDestDoesntExist.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         // This will fail if stat is called with throwEnoent=true
         assert(
             runner.succeeded,
@@ -384,8 +326,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -395,9 +335,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndTargetIsFile.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -416,8 +353,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -427,9 +362,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0rootsPatterns.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -442,8 +374,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file2.file')} to ${path.normalize('/destDir/someOtherDir2/file2.file')}`),
             'should have copied file1');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -451,9 +381,6 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0IgnoresMakeDirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -464,8 +391,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
-        // }, runner, done);
-        // });
         done();
     });
 
@@ -473,14 +398,10 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0FailsIfThereIsMkdirError.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
+
         assert(
             runner.failed,
             'should have failed');
-        // }, runner, done);
-        // });
         done();
     });
 
