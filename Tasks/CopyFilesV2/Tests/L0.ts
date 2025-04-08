@@ -29,9 +29,6 @@ describe('CopyFiles L0 Suite', function () {
         let tp = path.join(__dirname, 'L0copyAllFiles.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(tp);
         runner.run();
-        // runner.runAsync()
-        // .then(() => {
-        // runValidations(() => {
         assert(
             runner.succeeded,
             'should have succeeded');
@@ -62,8 +59,6 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file3.file')} to ${path.normalize('/destDir/someOtherDir2/file3.file')}`),
             'should have copied dir2 file3');
-        // }, runner, done);
-        // });
         done();
     });
 
