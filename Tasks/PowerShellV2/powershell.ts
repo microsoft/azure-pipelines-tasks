@@ -18,6 +18,38 @@ function getActionPreference(vstsInputName: string, defaultAction: string = 'Def
     return result
 }
 
+let customWriteWarningFunction = `
+function Custom-WriteWarning {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Message,  # The warning message to display
+
+        [ValidateSet("SilentlyContinue", "Ignore", "Continue", "Stop")]
+        [string]$WarningAction = $WarningPreference  # Default to the global WarningPreference
+    )
+
+    # Handle the warning based on the WarningAction
+    switch ($WarningAction) {
+        "SilentlyContinue" {
+            # Suppress the warning
+            return
+        }
+        "Ignore" {
+            # Ignore the warning entirely
+            return
+        }
+        "Continue" {
+            # Display the warning
+            Write-Warning $Message
+        }
+        "Stop" {
+            # Treat the warning as a terminating error
+            throw $Message
+        }
+    }
+}
+`;
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -75,6 +107,7 @@ async function run() {
         if (input_progressPreference.toUpperCase() != 'DEFAULT') {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
+        contents.push(customWriteWarningFunction);
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
@@ -100,6 +133,9 @@ async function run() {
             script = `${input_script}`;
         }
         // tl.debug(`input_warningPreference: ${input_warningPreference}`);
+        // if ($WarningPreference  -ne 'SilentlyContinue' -and $WarningPreference  -ne 'Ignore') {
+        //     Write-Host "##vso[task.logissue type=warning;]$_";
+        // }
         console.log("input_warningPreference: ", input_warningPreference);
         if (input_showWarnings && input_warningPreference.toUpperCase() != 'SILENTLYCONTINUE' && input_warningPreference.toUpperCase() != 'IGNORE') {
 
@@ -109,8 +145,13 @@ async function run() {
                 Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
                     if($Event.SourceEventArgs.Action -like "Add"){
                         $Event.SourceEventArgs.NewItems | ForEach-Object {
-                            if ($WarningPreference  -ne 'SilentlyContinue' -and $WarningPreference  -ne 'Ignore') {
-                                Write-Host "##vso[task.logissue type=warning;]$_";
+                            if ($_ -match "Metadata:Action=(?<action>\\w+): (?<message>.+)") {
+                                $action = $matches['action']
+                                $message = $matches['message']
+                                Write-Host "##vso[task.logissue]$action: $message"
+                                if ($action -ne 'SilentlyContinue' -and $action -ne 'Ignore') {
+                                    Write-Host "##vso[task.logissue type=warning;]$message"
+                                }
                             }
                         }
                     }
@@ -130,7 +171,7 @@ async function run() {
             contents.push(`    exit $LASTEXITCODE`);
             contents.push(`}`);
         }
-
+        console.log('Generated Script:', contents.join(os.EOL));
         // Write the script to disk.
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
@@ -194,5 +235,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
 }
+
+
 
 run();
