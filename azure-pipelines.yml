@@ -37,6 +37,10 @@ parameters:
   displayName: skipTests (Not for production use)
   type: boolean
   default: false
+- name: skip_publish
+  displayName: skipPublish (Not for production use)
+  type: boolean
+  default: false
 - name: publishToDistributedTaskTest
   displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
   type: boolean
@@ -65,6 +69,11 @@ variables:
     value: ''
 - name: tasksSkipTests
   ${{ if eq(parameters.skip_tests, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
+- name: tasksSkipPublish
+  ${{ if eq(parameters.skip_publish, true) }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
@@ -132,7 +141,7 @@ extends:
         timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022

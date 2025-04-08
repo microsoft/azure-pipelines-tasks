@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
+    "Minor": 254,
     "Patch": 1
   },
   "demands": [
@@ -416,6 +416,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customLoggerConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customLoggerConfig",
       "groupName": "reportingOptions"
     },
     {

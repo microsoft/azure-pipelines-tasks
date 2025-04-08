@@ -5,11 +5,11 @@
   "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-import-task",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Deploy",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 249,
+    "Minor": 255,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
