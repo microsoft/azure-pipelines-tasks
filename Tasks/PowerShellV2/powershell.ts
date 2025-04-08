@@ -30,7 +30,7 @@ async function run() {
         let input_debugPreference: string = getActionPreference('debugPreference', 'Default');
         let input_progressPreference: string = getActionPreference('progressPreference', 'SilentlyContinue');
 
-        let input_showWarnings = tl.getBoolInput('showWarnings', false);
+        let input_showWarnings = tl.getBoolInput('showWarnings', false); // reading show warning here
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
@@ -99,13 +99,19 @@ async function run() {
         } else {
             script = `${input_script}`;
         }
-        if (input_showWarnings) {
-            script = `
+        // tl.debug(`input_warningPreference: ${input_warningPreference}`);
+        console.log("input_warningPreference: ", input_warningPreference);
+        if (input_showWarnings && input_warningPreference.toUpperCase() != 'SILENTLYCONTINUE' && input_warningPreference.toUpperCase() != 'IGNORE') {
+
+            // if (input_showWarnings) {
+                script = `
                 $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
                 Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
                     if($Event.SourceEventArgs.Action -like "Add"){
                         $Event.SourceEventArgs.NewItems | ForEach-Object {
-                            Write-Host "##vso[task.logissue type=warning;]$_";
+                            if ($WarningPreference  -ne 'SilentlyContinue' -and $WarningPreference  -ne 'Ignore') {
+                                Write-Host "##vso[task.logissue type=warning;]$_";
+                            }
                         }
                     }
                 };

@@ -98,6 +98,19 @@ describe('PowerShell Suite', function () {
         }, tr);
     });
 
+    it('Suppresses warnings when warningPreference is SILENTLYCONTINUE', async () => {
+        let tp: string = path.join(__dirname, 'L0SilentlyContinue.js'); // Mock test script
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    
+        await tr.runAsync();
+    
+        runValidations(() => {
+            assert(tr.succeeded, 'PowerShell should have succeeded.');
+            assert(tr.stdout.indexOf('##vso[task.logissue type=warning;]') === -1, 'Warnings should not have been logged.');
+            assert(tr.stdout.indexOf('Write-Warning') === -1, 'Warnings should not appear in the output.');
+        }, tr);
+    });
+
     describe('Environment variable expansion', testEnvExpansion);
     describe('Validate file arguments', runValidateFileArgsTests)
 });
