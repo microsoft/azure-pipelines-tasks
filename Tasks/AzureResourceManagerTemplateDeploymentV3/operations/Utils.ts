@@ -369,7 +369,7 @@ class Utils {
             }
 
             try {
-                if (template.parameters[overrideParameter.name] == undefined) {
+                if (template.parameters[overrideParameter.name] === undefined) {
                     tl.error(tl.loc("ErrorWhileOverrideParameterUndefined", taskParameters.csmFile, overrideParameter.name));
                 }
                 else {
