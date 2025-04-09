@@ -371,7 +371,7 @@ class Utils {
             try {
                 overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {
-                if (template.parameters[overrideParameter.name] == undefined) {
+                if (template.parameters[overrideParameter.name] === undefined) {
                     tl.error(tl.loc("ErrorWhileOverrideParameterUndefined", taskParameters.csmFile, overrideParameter.name));
                 }
                 console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
