@@ -133,18 +133,35 @@ async function fetchPRsForRelease(baseBranch, version) {
  * @param {Array<Object>} PRs - PRs to get the changed files for
  * @returns {Array<Object>} - Modified files for the PRs which contains tasks options. 
  */
+async function getAllFilesForPR(pull_number) {
+    const files = [];
+    let page = 1;
+
+    while (true) {
+        const response = await octokit.pulls.listFiles({
+            owner: OWNER,
+            repo: REPO,
+            pull_number,
+            per_page: 100,
+            page
+        });
+
+        files.push(...response.data.map(file => file.filename));
+
+        if (response.data.length < 100) break; // Exit loop if fewer than 100 files are returned
+        page++;
+    }
+    console.log(`Files for PR ${pull_number}:`, files);
+    return files;
+}
+
 async function getPRsFiles(PRs) {
     for (let i = 0; i < PRs.length; i++) {
         const PR = PRs[i];
         const pull_number = PR.number;
         console.log(`Fetching files for PR ${pull_number}`);
-        const response = await octokit.pulls.listFiles({
-            owner: OWNER,
-            repo: REPO,
-            pull_number
-        });
 
-        const files = response.data.map(file => file.filename);
+        const files = await getAllFilesForPR(pull_number);
 
         for (let j = 0; j < files.length; j++) {
             const file = files[j];
@@ -207,6 +224,7 @@ async function main() {
         console.log(`Found ${data.length} PRs`);
         const PRs = await getPRsFiles(data);
         const releaseNotes = tempGen.generateReleaseNotesForPRs(PRs, version);
+        console.log('Release Notes:\n', releaseNotes); // Output release notes to console
         await createRelease(releaseNotes, version, releaseBranch);
     } catch (err) {
         throw err;
