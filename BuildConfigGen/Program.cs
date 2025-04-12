@@ -140,7 +140,7 @@ namespace BuildConfigGen
                 ? new NoDebugConfigGenerator()
                 : new VsCodeLaunchConfigGenerator(gitRootPath, debugAgentDir);
 
-            int maxPatchForCurrentSprint = 0;
+            int maxPatchForCurrentSprint = -1;
 
             int currentSprint;
             if (currentSprintNullable.HasValue)
@@ -183,7 +183,7 @@ namespace BuildConfigGen
                         taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: true);
 
                         bool taskTargettedForUpdating = allTasks || tasks.Where(x => x.Key == t.Value.Name).Any();
                         bool taskVersionsNeedUpdating = taskVersionInfo[t.Value.Name].versionsUpdated.Any();
@@ -225,7 +225,7 @@ namespace BuildConfigGen
                         taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: false);
                         CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping, checkGlobalVersion: true);
                     }
                 }
@@ -254,7 +254,7 @@ namespace BuildConfigGen
                                 else
                                 {
                                     // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
-                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, maxPatchForCurrentSprint);
                                     globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
                                 }
                             }
@@ -1244,7 +1244,7 @@ always-auth=true", false);
             }
         }
 
-        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder)
+        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder, bool includeUpdatesForTasksWithoutVersionMap)
         {
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GetTasksRootPath(currentDir);
@@ -1408,10 +1408,7 @@ always-auth=true", false);
                             // if mergeToBase config existed previously, remove it
                             if (old.TryGetValue(config, out var oldVersion))
                             {
-                                if (!taskState.versionsUpdated.Contains(config))
-                                {
-                                    taskState.versionsUpdated.Add(config);
-                                }
+                                taskState.versionsUpdated.Add(config);
                             }
                         }
                         else
@@ -1427,13 +1424,54 @@ always-auth=true", false);
 
                             taskState.configTaskVersionMapping.Add(config, targetVersion);
 
-                            if (!taskState.versionsUpdated.Contains(config))
-                            {
-                                taskState.versionsUpdated.Add(config);
-                            }
+                            taskState.versionsUpdated.Add(config);
                         }
                     }
                 }
+            }
+
+            // make this conditional because HasTaskVersionChanged is expensive
+            if (includeUpdatesForTasksWithoutVersionMap)
+            {
+                if (!taskState.versionsUpdated.Any())
+                {
+                    // we'll get here if there is a task with no mapping file, so without checking git, we don't know if the task version has changed
+                    // we'll check git on the base task to see if the task version changed (e.g. HEAD vs uncommited change)
+
+                    if (HasTaskVersionChanged(taskTargetPath))
+                    {
+                        taskState.versionsUpdated.Add(Config.Default);
+                    }
+                }
+            }
+        }
+
+        private static bool HasTaskVersionChanged(string taskTargetPath)
+        {
+            string taskJsonPath = Path.Combine(taskTargetPath, "task.json");
+
+            if (!File.Exists(taskJsonPath))
+            {
+                throw new Exception($"Task file not found: {taskJsonPath}");
+            }
+
+            if (GitUtil.HasUncommitedChanges(taskJsonPath))
+            {
+                var unchangedContent = GitUtil.GetUnchangedContent(taskJsonPath);
+
+                JsonNode taskJson = JsonNode.Parse(unchangedContent)!;
+                int major = taskJson["version"]!["Major"]!.GetValue<int>();
+                int minor = taskJson["version"]!["Minor"]!.GetValue<int>();
+                int patch = taskJson["version"]!["Patch"]!.GetValue<int>();
+
+                TaskVersion versionInUnChangedTaskJson = new TaskVersion(major, minor, patch);
+                TaskVersion versionInChangedTaskJson = GetInputVersion(taskTargetPath);
+
+                return !versionInUnChangedTaskJson.Equals(versionInChangedTaskJson);
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -1718,14 +1756,21 @@ always-auth=true", false);
 
     }
 
-    // todo rename - as this is not a struct.  (refactor in a seperate PR)
+    // todo rename - as this is not a struct.  (refactor/cleanup in a seperate PR)
     internal class TaskStateStruct
     {
         // todo - fix case
         public Dictionary<Program.Config.ConfigRecord, TaskVersion> configTaskVersionMapping { get; }
 
-        // todo - fix case
-        public HashSet<Program.Config.ConfigRecord> versionsUpdated { get; }
+        private readonly HashSet<Program.Config.ConfigRecord> _versionsUpdated;
+
+        public HashSet<Program.Config.ConfigRecord> versionsUpdated
+        {
+            get
+            {
+                return _versionsUpdated;
+            }
+        }
 
         public bool OnlyHasDefaultOrGlobalVersion
         {
@@ -1751,7 +1796,7 @@ always-auth=true", false);
         public TaskStateStruct()
         {
             this.configTaskVersionMapping = [];
-            this.versionsUpdated = [];
+            this._versionsUpdated = [];
         }
     }
 }
