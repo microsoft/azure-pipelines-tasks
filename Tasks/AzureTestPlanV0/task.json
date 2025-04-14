@@ -186,7 +186,8 @@
       "parameters": {
         "testPlan": "$(testPlan)"
       },
-      "resultSelector": "jsonpath:$.value[*]"
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "Azure Test Plan - $(testSelector)",
