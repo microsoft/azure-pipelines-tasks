@@ -160,7 +160,7 @@ export class dotNetExe {
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
-        const isMTP: boolean = this.getIsMicrosoftTestingPlatform();
+        const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
 
         if (enablePublishTestResults && enablePublishTestResults === true) {
             if (isMTP) {
