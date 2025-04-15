@@ -12,7 +12,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 20
   inputs:
-    versionSpec: 20.11.0
+    versionSpec: 20.x
 
 - script: |
     cd azure-pipelines-tasks
@@ -46,7 +46,7 @@ steps:
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
     BRANCH: '$(branchName)'
@@ -56,4 +56,4 @@ steps:
     node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)

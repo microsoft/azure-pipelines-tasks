@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "demands": [],
@@ -188,10 +188,14 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "azuremysqldeploy.js"
     },
-    "Node16": {
+    "Node20_1": {
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
     }

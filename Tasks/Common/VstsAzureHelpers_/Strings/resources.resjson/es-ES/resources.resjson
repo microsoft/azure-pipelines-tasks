@@ -13,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "El punto de conexión de AzureRM especificado no es válido.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "No se pudo capturar el token de acceso para la identidad administrada. Configure la identidad administrada para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: \"{0}\". Mensaje de error: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "No se pudo capturar el token de acceso para la identidad administrada. Código de estado: \"{0}\". Mensaje de error: {1}",
-  "loc.messages.AZ_MsiFailure": "No se pudo capturar el token de acceso para la identidad administrada. {0}"
+  "loc.messages.AZ_MsiFailure": "No se pudo capturar el token de acceso para la identidad administrada. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "El secreto expiró. Actualice la conexión de servicio en {0}. Consulte https://aka.ms/azdo-rm-workload-identity-conversion para más información sobre la conversión en conexiones de servicio sin secretos.",
+  "loc.messages.AZ_ModuleInitFailWarning": "No se pudieron inicializar los módulos Az existentes; reserva a la instalación",
+  "loc.messages.AZ_ModuleInstallFail": "No se pudieron instalar los módulos Az",
+  "loc.messages.AZ_RMDeprecationMessage": "Está usando AzureRM, que se retirará pronto, programe una actualización."
 }

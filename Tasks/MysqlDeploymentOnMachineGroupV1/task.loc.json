@@ -16,12 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "The MysqlDeploymentOnMachineGroup@1 task is deprecated",
   "inputs": [
     {
       "name": "TaskNameSelector",
@@ -104,6 +106,10 @@
       "target": "mysqldeploy.js"
     },
     "Node16": {
+      "target": "mysqldeploy.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "mysqldeploy.js",
       "argumentFormat": ""
     }

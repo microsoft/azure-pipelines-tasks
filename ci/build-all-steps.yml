@@ -19,11 +19,21 @@ steps:
 - task: NodeTool@0
   displayName: Use node 20
   inputs:
-    versionSpec: 20.11.0
+    versionSpec: 20.x
+
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
 
 # npm install
 - script: npm install
   displayName: npm install
+
+- script: |
+    echo "##[error]PRs from fork repositories forbidden. Create PR directly."
+    exit 1
+  displayName: Check Is Forked PR
+  condition: eq(variables['SYSTEM.PULLREQUEST.ISFORK'], 'true')
 
 # Verify min agent demands
 - script: |
@@ -32,7 +42,12 @@ steps:
   displayName: npm install min agent demands
 
 - script: node ./ci/verifyMinAgentDemands/index.js
+  env:
+    GITHUB_PAT: $(GitHubPAT)
   displayName: Verify min agent demands
+
+- script: node ./ci/verify-registries.js
+  displayName: Verify registries
 
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
@@ -51,18 +66,57 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
+- template: /ci/generate-branch-name.yml@self
+  parameters:
+    prefix: releases
+
+- powershell: |
+    $releaseBranch = "$(branchName)"
+
+    # add config entry to avoid errors while pulling
+    git config --global user.email "$(username)@microsoft.com"
+    git config --global user.name "$(username)"
+
+    Write-Host 'Enabling verbose git tracing..'
+    git config --global http.verbose true
+    $env:GIT_TRACE = 1
+    $env:GIT_CURL_VERBOSE = 1
+
+    # Pull commits from remote and push branch to git
+    git checkout -b $releaseBranch
+    Write-Host 'Trying to pull the remote branch..'
+    git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    if (-not $?) {
+      Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
+    }
+    Write-Host 'Trying to push to the remote branch..'
+    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  condition: |
+    and(
+      succeeded(),
+      in(variables['build.reason'], 'Schedule', 'Manual'),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  displayName: Push release branch
+
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
+  # remove SourceBranch condition after merging users/merlynop/node20merge-2 ; see https://github.com/microsoft/azure-pipelines-tasks/pull/20819
   condition: |
     and(
       succeeded(),
       ne(variables['numTasksForDowngradingCheck'], 0),
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
+      eq(variables['System.PullRequest.TargetBranch'], 'master'),
+      ne(variables['System.PullRequest.SourceBranch'], 'users/merlynop/node20merge-2')
     )
 
 # Clean
@@ -70,12 +124,12 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/after-build-check-tasks.js
-  displayName: Check that tasks has no duplicated libs
+  displayName: After build tasks validation
   condition: |
     and(
       succeeded(),
@@ -125,10 +179,10 @@ steps:
 # Test
 - script: node make.js test
   displayName: Run tests
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
 - script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
@@ -150,35 +204,6 @@ steps:
         ne(variables['numTasks'], 0)
       )
 
-  - template: /ci/generate-branch-name.yml@self
-    parameters:
-      prefix: releases
-
-  - powershell: |
-      $releaseBranch = "$(branchName)"
-
-      # add config entry to avoid errors while pulling
-      git config --global user.email "$(username)@microsoft.com"
-      git config --global user.name "$(username)"
-
-      # Pull commits from remote and push branch to git
-      git checkout -b $releaseBranch
-      Write-Host 'Trying to pull the remote branch..'
-      git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-      if (-not $?) {
-        Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
-      }
-      Write-Host 'Trying to push to the remote branch..'
-      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: |
-      and(
-        succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
-        eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      )
-    displayName: Push release branch
-
   - powershell: |
       $releaseBranch = "$(branchName)"
 
@@ -196,4 +221,5 @@ steps:
         eq(variables['COURTESY_PUSH'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
+    continueOnError: true
     displayName: Create Release

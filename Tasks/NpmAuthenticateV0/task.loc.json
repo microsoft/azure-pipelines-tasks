@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 2
+    "Minor": 251,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -42,6 +42,10 @@
     },
     "Node16": {
       "target": "npmauth.js"
+    },
+    "Node20_1": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -50,6 +54,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
@@ -74,6 +82,13 @@
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
     "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
-    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
+    "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc",
+    "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
+    "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   }
 }

@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -148,11 +148,15 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "azurewebappsettings.js"
+    },
     "Node10": {
       "target": "azurewebappsettings.js"
     },
-    "Node16": {
-      "target": "azurewebappsettings.js"
+    "Node20_1": {
+      "target": "azurewebappsettings.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

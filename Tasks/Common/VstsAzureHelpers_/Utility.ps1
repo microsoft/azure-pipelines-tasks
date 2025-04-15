@@ -1,5 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION)
 }
 
 function Add-Certificate {
@@ -245,20 +246,29 @@ function Get-VstsFederatedToken {
     $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
     $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
 
-    $tokenResponse = $taskHttpClient.CreateOidcTokenAsync(
-        $projectId,
-        $hub,
-        $planId,
-        $jobId,
-        $connectedServiceNameARM,
-        $null
-    ).Result
-    $federatedToken = $tokenResponse.OidcToken
-    if ($null -eq $federatedToken) {
-        Write-Verbose "Failed to create OIDC token."
-        throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
+    $timeToWait = 4000
+    for (($retryAttempt = 1), ($retryLimit = 3); $retryAttempt -le $retryLimit; $retryAttempt++) {
+        $tokenResponse = $taskHttpClient.CreateOidcTokenAsync(
+            $projectId,
+            $hub,
+            $planId,
+            $jobId,
+            $connectedServiceNameARM,
+            $null
+        ).Result
+        $federatedToken = $tokenResponse.OidcToken
+        if ($null -ne $federatedToken) {
+            return $federatedToken
+        }
+
+        if ($retryAttempt -lt $retryLimit) {
+            Write-Verbose "Failed to fetch federated token. Remaining retries count = '$($retryLimit - $retryAttempt)'"
+            Start-Sleep -m $timeToWait * $retryAttempt
+        }
     }
-    return $federatedToken
+
+    Write-Verbose "Failed to create OIDC token."
+    throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
 }
 
 function Set-UserAgent {
@@ -354,11 +364,21 @@ function ConvertTo-Pfx {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
 
-    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
-    $env:RANDFILE=".rnd"
+    if(-not $featureFlags.useOpenssLatestVersion) {
+     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
+     $env:RANDFILE=".rnd"
 
-    $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+     $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    }
+   else{
+     $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
+     $env:RANDFILE=".rnd"
+
+     $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+     }
+     
     $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
@@ -591,7 +611,7 @@ function Add-AzureStackAzureRmEnvironment {
         AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
         EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
     }
-    
+
     if ($featureFlags.retireAzureRM)
     {
         $azureEnvironmentParams.StorageEndpoint = $StorageEndpointSuffix
@@ -607,7 +627,7 @@ function Add-AzureStackAzureRmEnvironment {
 
         if($null -ne $armEnv) {
             Write-Verbose "Updating Az environment $name" -Verbose
-    
+
             if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
                 Remove-AzEnvironment -Name $name -Force | Out-Null
             }
@@ -625,7 +645,7 @@ function Add-AzureStackAzureRmEnvironment {
 
         if($null -ne $armEnv) {
             Write-Verbose "Updating AzureRm environment $name" -Verbose
-    
+
             if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
                 Remove-AzureRmEnvironment -Name $name -Force | Out-Null
             }

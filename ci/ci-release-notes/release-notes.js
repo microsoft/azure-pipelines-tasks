@@ -1,5 +1,5 @@
 const argv = require('minimist')(process.argv.slice(2));
-const path = require('path');
+const axios = require("axios");
 
 const util = require('../ci-util');
 const tempGen = require('./template-generator');
@@ -10,7 +10,9 @@ const OWNER = 'microsoft';
 const REPO = 'azure-pipelines-tasks';
 const GIT = 'git';
 const VALID_RELEASE_RE = /^[0-9]{1,3}$/;
-// if (!argv.token) throw Error('token is required');
+
+const getWhatSprintUrl = sprintVersion => `https://whatsprintis.it/sprint/${sprintVersion}`;
+if (!argv.token) throw Error('token is required');
 
 const octokit = new Octokit({ auth: argv.token });
 
@@ -56,16 +58,20 @@ function checkGitStatus() {
 /**
  * Function to get the PR from the branch started from date
  * @param {string} branch - Branch to check for PRs
- * @param {string} date - Date since which to check for PRs
+ * @param {string} dateFrom - Date since which to check for PRs
+ * @param {string} dateTo - Date to which to check for PRs
  * @returns {Promise<*>} - PRs merged since date
  */
-async function getPRsFromDate(branch, date) {
+async function getPRsFromDate(branch, dateFrom, dateTo) {
+    if (!dateFrom || !dateTo) throw Error('dateFrom and dateTo are required');
+    if (!branch) throw Error('branch is required');
+
     const PRs = [];
     let page = 1;
     try {
         while (true) {
             const results = await octokit.search.issuesAndPullRequests({
-                q: `type:pr+is:merged+repo:${OWNER}/${REPO}+base:${branch}+merged:>=${date}`,
+                q: `type:pr+is:merged+repo:${OWNER}/${REPO}+base:${branch}+merged:${dateFrom}..${dateTo}`,
                 order: 'asc',
                 sort: 'created',
                 per_page: 100,
@@ -86,46 +92,38 @@ async function getPRsFromDate(branch, date) {
 }
 
 /**
- * Function to fetch the PRs since the defined release (derivedFrom) based on branch
- * @param {string} branch - Branch to check for PRs
- * @param {string} derivedFrom - Version(tag) to check for PRs
- * @returns {Promise<*>} - PRs merged since derivedFrom was created
+ * Function to fetch the PRs for sprint
+ * @param {string} baseBranch - Branch to check for PRs, usually master
+ * @param {string} version - Version(tag) to check for PRs
+ * @returns {Promise<*>} - PRs merged for sprint version
 */
-async function fetchPRsSinceLastRelease(derivedFrom, branch) {
-    console.log('Derived from %o', derivedFrom);
+async function fetchPRsForRelease(baseBranch, version) {
     try {
-        var releaseInfo;
+        const sprintResponse = await axios.get(getWhatSprintUrl(version));
+        const sprintData = sprintResponse.data;
+        console.log('Getting latest release');
 
-        if (derivedFrom !== 'latest') {
-            var tag = 'v' + derivedFrom;
+        releaseInfo = await octokit.repos.getLatestRelease({
+            owner: OWNER,
+            repo: REPO
+        });
 
-            console.log(`Getting release by tag ${tag}`);
+        // Prefer last release date instead of sprint start date
+        const lastReleaseDate = new Date(releaseInfo.data.published_at);
+        const potentialSprintStartDate = new Date(sprintData.start);
+        const dateFrom = lastReleaseDate > potentialSprintStartDate ? lastReleaseDate : potentialSprintStartDate;
+        const startDate = dateFrom.toISOString()
 
-            releaseInfo = await octokit.repos.getReleaseByTag({
-                owner: OWNER,
-                repo: REPO,
-                tag: tag
-            });
-        } else {
-            console.log('Getting latest release');
-
-            releaseInfo = await octokit.repos.getLatestRelease({
-                owner: OWNER,
-                repo: REPO
-            });
-        }
-
-        var lastReleaseDate = releaseInfo.data.published_at;
-        console.log(`Fetching PRs merged since ${lastReleaseDate} on ${branch}`);
+        console.log(`Fetching PRs from ${startDate} to ${sprintData.end}`)
         try {
-            return await getPRsFromDate(branch, lastReleaseDate);
+            return await getPRsFromDate(baseBranch, startDate, sprintData.end);
         } catch (e) {
             console.log(`Error: Problem fetching PRs: ${e}`);
             process.exit(-1);
         }
     } catch (e) {
+        console.log("Failed to fetch sprint dates for version " + version);
         console.log(e);
-        console.log(`Error: Cannot find release ${derivedFrom}. Aborting.`);
         process.exit(-1);
     }
 }
@@ -135,18 +133,35 @@ async function fetchPRsSinceLastRelease(derivedFrom, branch) {
  * @param {Array<Object>} PRs - PRs to get the changed files for
  * @returns {Array<Object>} - Modified files for the PRs which contains tasks options. 
  */
+async function getAllFilesForPR(pull_number) {
+    const files = [];
+    let page = 1;
+
+    while (true) {
+        const response = await octokit.pulls.listFiles({
+            owner: OWNER,
+            repo: REPO,
+            pull_number,
+            per_page: 100,
+            page
+        });
+
+        files.push(...response.data.map(file => file.filename));
+
+        if (response.data.length < 100) break; // Exit loop if fewer than 100 files are returned
+        page++;
+    }
+    console.log(`Files for PR ${pull_number}:`, files);
+    return files;
+}
+
 async function getPRsFiles(PRs) {
     for (let i = 0; i < PRs.length; i++) {
         const PR = PRs[i];
         const pull_number = PR.number;
         console.log(`Fetching files for PR ${pull_number}`);
-        const response = await octokit.pulls.listFiles({
-            owner: OWNER,
-            repo: REPO,
-            pull_number
-        });
 
-        const files = response.data.map(file => file.filename);
+        const files = await getAllFilesForPR(pull_number);
 
         for (let j = 0; j < files.length; j++) {
             const file = files[j];
@@ -187,11 +202,10 @@ async function createRelease(releaseNotes, version, releaseBranch) {
 
 async function main() {
     const version = argv.version ? String(argv.version) : null;
-    const derivedFrom = argv.derivedFrom || 'latest';
     const branch = argv.branch || 'master';
     const releaseBranch = argv.releaseBranch;
 
-    console.log({version, derivedFrom, branch, releaseBranch});
+    console.log({version, branch, releaseBranch});
     try {
         if (!version) {
             console.log('Error: You must supply a version');
@@ -206,16 +220,15 @@ async function main() {
         await verifyNewReleaseTagOk(version);
         checkGitStatus();
         
-        const data = await fetchPRsSinceLastRelease(derivedFrom, branch);
+        const data = await fetchPRsForRelease(branch, version);
         console.log(`Found ${data.length} PRs`);
-
         const PRs = await getPRsFiles(data);
         const releaseNotes = tempGen.generateReleaseNotesForPRs(PRs, version);
+        console.log('Release Notes:\n', releaseNotes); // Output release notes to console
         await createRelease(releaseNotes, version, releaseBranch);
     } catch (err) {
         throw err;
     }
 }
 
-// main();
-checkGitStatus();
+main();

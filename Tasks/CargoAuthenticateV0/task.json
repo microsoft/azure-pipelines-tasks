@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 248,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -43,6 +43,10 @@
     "Node16": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -52,6 +56,12 @@
     "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
-    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
+    "ConnectionAlreadySet": "Registry %s already has auth set for an %s connection.",
+    "ConnectionAlreadySetOverwriting": "Registry %s already has auth set for an %s connection. Overwriting the existing auth.",
+    "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
+    "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   }
 }

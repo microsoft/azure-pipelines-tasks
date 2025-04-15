@@ -9,13 +9,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 244,
         "Patch": 0
     },
     "groups": [],
     "demands": [],
     "preview": true,
     "minimumAgentVersion": "2.159.2",
+    "deprecated": true,
+    "deprecationMessage": "The CacheBeta@0 task is deprecated, please use the latest version of the CacheBeta task",
     "inputs": [
         {
             "name": "key",

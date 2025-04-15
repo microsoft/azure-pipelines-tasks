@@ -10,7 +10,7 @@ import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
+import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 
 var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
@@ -369,7 +369,12 @@ class Utils {
             }
 
             try {
-                overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
+                if (template.parameters[overrideParameter.name] === undefined) {
+                    tl.error(tl.loc("ErrorWhileOverrideParameterUndefined", taskParameters.csmFile, overrideParameter.name));
+                }
+                else {
+                    overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
+                }
             } catch (error) {
                 console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
             }
@@ -488,7 +493,7 @@ class Utils {
         var finalPathExtension: string = ".json" 
 
         if(filePathExtension === 'bicep'){
-            const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
+            const result: IExecSyncResult = tl.execSync("az", `bicep build --file "${filePath}"`);
             if(result && result.code !== 0){
                 throw new Error(tl.loc("BicepBuildFailed", result.stderr));
             }
@@ -497,7 +502,7 @@ class Utils {
             finalPathExtension = ".parameters.json"
 
             //Using --outfile to avoid overwriting primary bicep file in the case bicep and param file have the the same file name.
-            const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file ${filePath} --outfile ${path.join(fileDir, fileName + finalPathExtension)}`);
+            const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file "${filePath}" --outfile "${path.join(fileDir, fileName + finalPathExtension)}"`);
             if(result && result.code !== 0){
                 throw new Error(tl.loc("BicepParamBuildFailed", result.stderr));
             } 

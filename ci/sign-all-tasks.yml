@@ -9,9 +9,15 @@ steps:
   inputs:
     version: 6.x
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@2
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
   inputs:
-    ConnectedServiceName: AzurePipelinesTasksESRP
+    ConnectedServiceName: $(ConnectedServiceName)
+    UseMSIAuthentication: true
+    AppRegistrationClientId: $(AppRegistrationClientId)
+    AppRegistrationTenantId: $(AppRegistrationTenantId)
+    EsrpClientId: $(EsrpClientId)
+    AuthAKVName: $(AuthAKVName)
+    AuthSignCertName: $(AuthSignCertName)
     FolderPath: '${{ parameters.layoutRoot }}'
     Pattern: '*.zip'
     signConfigType: inlineSignParams

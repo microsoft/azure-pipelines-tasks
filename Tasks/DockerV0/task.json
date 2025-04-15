@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 248,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -25,6 +25,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Docker@0 task is deprecated, please use a newer version of the Docker task",
   "inputs": [
     {
       "name": "containerregistrytype",
@@ -341,11 +343,15 @@
   ],
   "instanceNameFormat": "$(action)",
   "execution": {
+    "Node16": {
+      "target": "container.js"
+    },
     "Node10": {
       "target": "container.js"
     },
-    "Node16": {
-      "target": "container.js"
+    "Node20_1": {
+      "target": "container.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

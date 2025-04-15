@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 239,
-    "Patch": 1
+    "Minor": 254,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -37,6 +37,8 @@
     }
   ],
   "minimumAgentVersion": "2.0.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzurePowerShell@3 task is deprecated, please use the latest version of the AzurePowerShell task",
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",

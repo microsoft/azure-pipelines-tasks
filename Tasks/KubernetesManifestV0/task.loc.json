@@ -13,11 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
+  "deprecated": true,
+  "deprecationMessage": "The KubernetesManifest@0 task is deprecated, please use a newer version of the KubernetesManifest task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "action",
@@ -353,6 +355,10 @@
       "target": "src//run.js"
     },
     "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "src//run.js",
       "argumentFormat": ""
     }

@@ -49,6 +49,7 @@ tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFil
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
 tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
 tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
+tr.setInput('resourceType', process.env[shared.TestEnvVars.resourceType] || '');
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -68,6 +69,7 @@ process.env.ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE = process.env[s
 process.env.ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG = '{"apiVersion":"v1", "clusters": [{"cluster": {"insecure-skip-tls-verify":"true", "server":"https://5.6.7.8", "name" : "scratch"}}], "contexts": [{"context" : {"cluster": "scratch", "namespace" : "default", "user": "experimenter", "name" : "exp-scratch"}], "current-context" : "exp-scratch", "kind": "Config", "users" : [{"user": {"password": "regpassword", "username" : "test"}]}';
 
 process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = 'testnamespace';
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 
 if (process.env.RemoveNamespaceFromEndpoint) {
     process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = '';

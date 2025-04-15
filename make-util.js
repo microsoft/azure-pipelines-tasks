@@ -8,6 +8,7 @@ var path = require('path');
 var process = require('process');
 var semver = require('semver');
 var shell = require('shelljs');
+const { XMLParser } = require("fast-xml-parser");
 const Downloader = require("nodejs-file-downloader");
 
 // global paths
@@ -17,7 +18,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -153,7 +154,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -173,13 +174,20 @@ var buildNodeTask = function (taskPath, outDir) {
         } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
-
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm install');
+        if (isServerBuild) {
+            run('npm ci');
+        } else {
+            run('npm install');
+        }
         cd(taskPath);
     }
 
@@ -281,7 +289,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
 }
 exports.matchCopy = matchCopy;
 
-var run = function (cl, inheritStreams, noHeader) {
+var run = function (cl, inheritStreams, noHeader, throwOnError) {
     if (!noHeader) {
         console.log();
         console.log('> ' + cl);
@@ -300,12 +308,18 @@ var run = function (cl, inheritStreams, noHeader) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        process.exit(1);
+        if(throwOnError)
+        {
+            throw new Error('Failed to run: ' + cl + ' exit code: ' + err.status);
+        }else{
+            process.exit(1);
+        }
     }
 
     return (output || '').toString().trim();
 }
 exports.run = run;
+
 
 var ensureTool = function (name, versionArgs, validate) {
     console.log(name + ' tool:');
@@ -332,8 +346,8 @@ exports.ensureTool = ensureTool;
 
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: 'v20.11.0',
-        16: 'v16.17.1',
+        20: 'v20.17.0',
+        16: 'v16.20.2',
         14: 'v14.10.1',
         10: 'v10.24.1',
         6: 'v6.10.3',
@@ -401,17 +415,23 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-
     const downloader = new Downloader({
         url: url,
         directory: path.join(downloadPath, 'file'),
-        fileName: scrubbedUrl
+        fileName: scrubbedUrl,
+        maxAttempts: 3,
+        timeout: 60000,
+        onProgress: function (percentage, chunk, remainingSize) {
+            // check that we run inside pipeline
+            if (process.env['AGENT_TEMPDIRECTORY']) {
+                console.log(`##vso[task.setprogress value=${percentage};]Downloading file: ${scrubbedUrl}`)
+            }
+        },
     });
 
 
     const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
     fs.writeFileSync(marker, '');
-
     return filePath;
 }
 exports.downloadFileAsync = downloadFileAsync;
@@ -443,7 +463,7 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
 
     var crypto = require('crypto');
-    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+    var newScrubbedUrl = crypto.createHash('sha256').update(scrubbedUrl).digest('hex');
 
     var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
@@ -685,6 +705,19 @@ var getExternalsAsync = async function (externals, destRoot) {
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
             var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
 
+            // If nuget doesn't find specific package version, it will download the latest.
+            // We can't specify nuget to fail such request, so we need at least to check version post-factum.
+            const parser = new XMLParser();
+
+            const nuspecPath = path.join(packageSource, package.name + '.nuspec');
+            const nuspecXml = fs.readFileSync(nuspecPath);
+            const nuspec = parser.parse(nuspecXml);
+
+            const nuspecVersion = nuspec && nuspec.package && nuspec.package.metadata && nuspec.package.metadata.version;
+            if (nuspecVersion !== package.version) {
+                fail(`Expected version '${package.version}' but got '${nuspecVersion}' for nuget package '${package.name}'`);
+            }
+
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
         }
@@ -718,6 +751,8 @@ var fileToJson = function (file) {
 exports.fileToJson = fileToJson;
 
 var createResjson = function (task, taskPath) {
+    console.log(`createResjson ${taskPath}`);
+
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
         resources['loc.friendlyName'] = task.friendlyName;
@@ -1280,11 +1315,8 @@ exports.createNonAggregatedZip = createNonAggregatedZip;
  * /artifacts
  *  /AndroidSigningV2
  *      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
- *      /push.cmd
  *  /AnotherTask
  *      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
- *      /push.cmd
- *  /push.cmd * Root push.cmd that runs all nested push.cmd's.
  *  /servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
  *  /unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
  *
@@ -1347,7 +1379,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 }
             }
             // Create xml entry for UnifiedDependencies
-            unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
+            unifiedDepsContent.push(`  <PackageVersion Include="${fullTaskName}" Version="${taskVersion}" AvailableAtDeployTime="true" />`);
 
             // Create xml entry that we need to configure servicing file
             servicingXmlContent.push(getServicingXmlContent(taskFolderName, fullTaskName, taskVersion));
@@ -1370,15 +1402,12 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             // Write layout version file. This will help us if we change the structure of the individual NuGet packages in the future.
             fs.writeFileSync(path.join(nugetContentPath, 'layout-version.txt'), '3');
 
-            // Create the nuspec file, nupkg, and push.cmd
+            // Create the nuspec file and nupkg
             var taskNuspecPath = createNuspecFile(taskZipPath, fullTaskName, taskVersion);
-            var taskPublishFolder = createNuGetPackage(nugetPackagesPath, taskFolderName, taskNuspecPath, taskZipPath);
-            createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
+            createNuGetPackage(nugetPackagesPath, taskFolderName, taskNuspecPath, taskZipPath);
         });
 
     console.log();
-    console.log('> Creating root push.cmd at ' + nugetPackagesPath);
-    createRootPushCmd(nugetPackagesPath);
 
     // Write file that has XML for unified dependencies, makes it easier to setup that file.
     console.log('> Generating XML dependencies for UnifiedDependencies');
@@ -1392,25 +1421,6 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
-/**
- * Create push.cmd at root of the nuget packages path.
- *
- * This makes it easier to run all the nested push.cmds within the task folders.
- * @param {*} nugetPackagesPath
- */
-var createRootPushCmd = function (nugetPackagesPath) {
-    var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
-    contents +=     'pushd %%s' + os.EOL;
-    contents +=     'if exist push.cmd (' + os.EOL;
-    contents +=     'push.cmd' + os.EOL;
-    contents +=     ') else (' + os.EOL;
-    contents +=     'echo "file not exist"' + os.EOL;
-    contents +=     ')' + os.EOL;
-    contents +=     'popd' + os.EOL;
-    contents += ')';
-    var rootPushCmdPath = path.join(nugetPackagesPath, 'push.cmd');
-    fs.writeFileSync(rootPushCmdPath, contents);
-}
 
 /**
  * Create xml content for servicing.
@@ -1487,29 +1497,6 @@ var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, 
     return taskPublishFolder;
 }
 
-/**
- * Create push.cmd for the task.
- * @param {*} taskPublishFolder Folder for a specific task within the publish folder.
- * @param {*} fullTaskName Full name of the task. e.g - Mseng.MS.TF.Build.Tasks.AzureCLIV1
- * @param {*} taskVersion Version of the task. e.g - 1.132.0
- */
-var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
-    console.log('> Creating push.cmd for task ' + fullTaskName);
-
-    var taskPushCmdPath = path.join(taskPublishFolder, 'push.cmd');
-    var nupkgName = `${fullTaskName}.${taskVersion}.nupkg`;
-
-    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
-    var apiKey = 'Skyrise';
-
-    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
-
-    if (process.env['COURTESY_PUSH']) {
-        pushCmd += ' -skipDuplicate'
-    }
-
-    fs.writeFileSync(taskPushCmdPath, pushCmd);
-}
 
 // Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.
 // [stfrance]: remove this once we have fully migrated to nuget package per task.
@@ -1724,7 +1711,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
         return Array.from(nodes);
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10 taskName=' + taskName);
     nodes.add(10);
     return Array.from(nodes);
 }
@@ -1780,28 +1767,26 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
+ * Ensure Pre-reqs for buildConfigGen (e.g. dotnet)
  * @param {String} baseConfigToolPath base build config tool path
- * @returns {String} Path to the executed file
  */
-var getBuildConfigGenerator = function (baseConfigToolPath) {
-    var programPath = "";
+var ensureBuildConfigGeneratorPrereqs = function (baseConfigToolPath) {
     var configToolBuildUtility = "";
 
     if (os.platform() === 'win32') {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
     } else {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
-    run(configToolBuildUtility, true);
+    const dotnetSdkVersion = "8.0.100";
+    const dotnetInstallationDirectory = path.resolve(baseConfigToolPath, "_dotnetsdk", dotnetSdkVersion);
 
-    return programPath;
+    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
+    run(`${configToolBuildUtility} ${baseConfigToolPath} ${dotnetInstallationDirectory} ${dotnetSdkVersion}`, true);
+    addPath(dotnetInstallationDirectory);
 };
-exports.getBuildConfigGenerator = getBuildConfigGenerator;
+exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
 
 /**
  * Function to validate or write generated tasks
@@ -1810,49 +1795,46 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  * @param {Object} makeOptions Object with all tasks
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
+ * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
+ * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-    const validatingTasks = {};
+    var tasks = taskList.join('|')
+    ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
+    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+
+    const args = [
+        "--task",
+        `"${tasks}"`
+    ];
+
+    if (sprintNumber) {
+        args.push("--current-sprint");
+        args.push(sprintNumber);
+    }
     
-    for (const key in makeOptions) {
-        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-
-        makeOptions[key].forEach((taskName) => {
-            if (taskList.indexOf(taskName) ===  -1) return;
-            if (validatingTasks[key]) {
-                validatingTasks[key].push(taskName);
-            } else {
-                validatingTasks[key] = [taskName];
-            }
-        });
+    var writeUpdateArg = "";
+    if(writeUpdates)
+    {
+        writeUpdateArg += " --write-updates";
     }
-    for (const config in validatingTasks) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const args = [
-            "--configs",
-            config,
-            "--task",
-            `"${validatingTasks[config].join('|')}"`
-        ];
 
-        if (sprintNumber) {
-            args.push("--current-sprint");
-            args.push(sprintNumber);
-        }
-        
-        var writeUpdateArg = "";
-        if(writeUpdates)
-        {
-            writeUpdateArg += " --write-updates";
-        }
-
-        banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
-        run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
+    if(includeLocalPackagesBuildConfig)
+    {
+        writeUpdateArg += " --include-local-packages-build-config";        
     }
+
+    var debugAgentDirArg = "";
+    if(debugAgentDir) {
+        debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
+    }
+
+    banner(`Validating: tasks ${tasks} \n`);
+    run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
+
 }
 exports.processGeneratedTasks = processGeneratedTasks;
 
@@ -1940,7 +1922,7 @@ exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
  * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
  * and copy files from generated to source if needed
  */
-function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenTaskPathLocal, includeLocalPackagesBuildConfig, callGenTaskDuringBuild = false) {
     const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
@@ -1950,10 +1932,16 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
     return async function(taskName, ...args) {
         await originalFunction.apply(this, [taskName, ...args]);
 
-        const genTaskPath = path.join(basicGenTaskPath, taskName);
+        var genTaskPath = path.join(basicGenTaskPath, taskName);
+
+        if (includeLocalPackagesBuildConfig && !fs.existsSync(genTaskPath)) {
+            genTaskPath = path.join(basicGenTaskPathLocal, taskName);
+        };
 
         // if it's not a generated task, we don't need to sync files
-        if (!fs.existsSync(genTaskPath)) return;
+        if (!fs.existsSync(genTaskPath)){
+            return;
+        }
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
@@ -1969,19 +1957,30 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-
+            
             if (config) {  
-                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+                if(config==="LocalPackages"){
+                    dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
+                }else{
+                    dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+                }
             }
             
-            const folderPath = path.dirname(dest);
-            if (!fs.existsSync(folderPath)) {
-                console.log(`Creating folder ${folderPath}`);
-                shell.mkdir('-p', folderPath);
-            }
+            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
+            const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
+            const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
 
-            console.log(`Copying ${candidatePath} to ${dest}`);
-            fs.copyFileSync(candidatePath, dest);
+            if(fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap)
+            {
+                const folderPath = path.dirname(dest);
+                if (!fs.existsSync(folderPath)) {
+                    console.log(`Creating folder ${folderPath}`);
+                    shell.mkdir('-p', folderPath);
+                }
+
+                console.log(`Copying ${candidatePath} to ${dest}`);
+                fs.copyFileSync(candidatePath, dest);
+            }
         });
     }
 }

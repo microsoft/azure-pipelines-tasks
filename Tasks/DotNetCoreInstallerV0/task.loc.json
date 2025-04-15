@@ -13,14 +13,16 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 250,
+    "Patch": 1
   },
   "satisfies": [
     "DotNetCore"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "deprecated": true,
+  "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
   "inputs": [
     {
       "name": "packageType",
@@ -48,6 +50,10 @@
       "target": "dotnetcoreinstaller.js"
     },
     "Node16": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "dotnetcoreinstaller.js",
       "argumentFormat": ""
     }

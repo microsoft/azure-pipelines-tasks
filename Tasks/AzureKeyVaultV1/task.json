@@ -14,11 +14,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 2
+    "Minor": 254,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureKeyVault@1 task is deprecated, please use the latest version of the AzureKeyVault task",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -74,19 +76,27 @@
   ],
   "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "prejobexecution": {
+    "Node16": {
+      "target": "runprejob.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "runprejob.js"
     },
-    "Node16": {
+    "Node20_1": {
       "target": "runprejob.js",
       "argumentFormat": ""
     }
   },
   "execution": {
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "run.js"
     },
-    "Node16": {
+    "Node20_1": {
       "target": "run.js",
       "argumentFormat": ""
     }

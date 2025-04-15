@@ -27,7 +27,6 @@ var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
-var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 var genTaskPath = path.join(__dirname, '..', '_generated');
 var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
 
@@ -49,7 +48,6 @@ exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
 exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
-exports.publishPushCmdPath = publishPushCmdPath;
 exports.genTaskPath = genTaskPath;
 exports.makeOptionPath = makeOptionPath;
 
@@ -111,7 +109,7 @@ var run = function (cl, inheritStreams) {
     var rc = 0;
     var output;
     try {
-        output = ncp.execSync(cl, options);
+        output = ncp.execSync(cl, options); // CodeQL [SM01509] this is a generic function used in tasks pipeline to execute few git commands 
     }
     catch (err) {
         if (!inheritStreams) {
@@ -566,6 +564,8 @@ function logToPipeline(type, payload) {
         case 'debug':
             console.log(`##vso[task.debug]${payload}`);
             break;
+        case 'section':
+            console.log(`##[section]${payload}`);
         default: 
             console.log(payload);
     }

@@ -14,11 +14,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.209.0",
   "groups": [
     {
       "name": "AzureDetails",
@@ -166,10 +166,14 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "main.js"
     },
-    "Node16": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

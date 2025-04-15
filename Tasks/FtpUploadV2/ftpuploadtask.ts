@@ -84,9 +84,6 @@ class ProgressTracker {
 
 function findFiles(ftpOptions: FtpOptions): string[] {
     tl.debug("Searching for files to upload");
-#if NODE20
-    let error: any | undefined;
-#endif
     try {
         const rootFolderStats = tl.stats(ftpOptions.rootFolder);
         if (rootFolderStats.isFile()) {
@@ -155,12 +152,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         return Array.from(matchingFilesSet).sort();
     }
     catch (err) {
-#if NODE20
-        error = err;
-        tl.error(error);
-#else
-        tl.error(err);
-#endif
+        tl.error(err + '');
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     }
 
@@ -228,10 +220,18 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
 
     const hostName: string = options.serverEndpointUrl.hostname!;
     const portStr: string = options.serverEndpointUrl.port!;
-    let port: number = 21;
+    let port: number;
+
     if (portStr) {
         // port not explicitly specified, use default
         port = parseInt(portStr);
+    } else if (secure === "implicit") {
+        // port for implicit FTPS
+        port = 990;
+    }
+    else {
+        // port for FTP and explicit FTPS
+        port = 21;
     }
 
     console.log(tl.loc("ConnectPort", hostName, port));
@@ -301,18 +301,12 @@ async function run() {
     }
    
     let ftpClient: ftp.Client;
-#if NODE20
     let error: any | undefined;
-#endif
     try {
         ftpClient = await getFtpClient(ftpOptions);
     } catch (err) {
-#if NODE20
         error = err;
         tl.error(error);
-#else
-        tl.error(err);
-#endif
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
         return;
     }
@@ -329,12 +323,8 @@ async function run() {
                 return;
             } catch (err) {
                 e = err;
-#if NODE20
                 error = err;
                 tl.warning(error);
-#else
-                tl.warning(err);
-#endif
                 ftpClient.close();
 
                 await sleep(1000);
@@ -401,12 +391,8 @@ async function run() {
 
         console.log(tl.loc("UploadSucceedMsg", tracker.getSuccessStatusMessage()));
     } catch (err) {
-#if NODE20
         error = err;
         tl.error(error);
-#else
-        tl.error(err);
-#endif
         console.log(tracker.getFailureStatusMessage());
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     } finally {

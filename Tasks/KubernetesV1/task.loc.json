@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "demands": [],
@@ -148,6 +148,7 @@
         "login": "login",
         "logout": "logout",
         "logs": "logs",
+        "rollout": "rollout",
         "run": "run",
         "set": "set",
         "top": "top"
@@ -450,11 +451,15 @@
     }
   ],
   "execution": {
+    "Node16": {
+      "target": "src//kubernetes.js"
+    },
     "Node10": {
       "target": "src//kubernetes.js"
     },
-    "Node16": {
-      "target": "src//kubernetes.js"
+    "Node20_1": {
+      "target": "src//kubernetes.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

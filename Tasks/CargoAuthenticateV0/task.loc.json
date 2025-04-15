@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 248,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -43,6 +43,10 @@
     "Node16": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -52,6 +56,12 @@
     "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
-    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
+    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet",
+    "ConnectionAlreadySetOverwriting": "ms-resource:loc.messages.ConnectionAlreadySetOverwriting",
+    "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   }
 }

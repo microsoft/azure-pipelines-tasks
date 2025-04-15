@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -46,6 +46,8 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Gradle@2 task is deprecated, please use a newer version of the Gradle task",
   "inputs": [
     {
       "name": "wrapperScript",
@@ -384,6 +386,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }

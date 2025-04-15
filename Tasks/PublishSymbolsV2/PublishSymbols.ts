@@ -1,13 +1,21 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import { getAccessTokenViaWorkloadIdentityFederation } from './Auth';
+
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if(nodeVersion < 16) {
+    console.log(tl.loc('NodeVersionSupport', nodeVersion));
+    tl.error(tl.loc('NodeVersionSupport', nodeVersion));
+
+}
 
 const symbolRequestAlreadyExistsError = 17;
+const {"v4": uuidV4} = require('uuid');
 
 interface IClientToolOptions {
     clientToolFilePath: string;
@@ -18,6 +26,7 @@ interface IClientToolOptions {
     requestName: string;
     sourcePathListFileName: string;
     symbolServiceUri: string;
+    manifest: string;
 }
 
 export async function run(clientToolFilePath: string): Promise<void> {
@@ -28,12 +37,33 @@ export async function run(clientToolFilePath: string): Promise<void> {
 
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
-        let personalAccessToken;
-        if (AsAccountName) {
+        let personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
+        const connectedServiceName = tl.getInput("ConnectedServiceName", false);
+        const manifest = tl.getInput("Manifest", false); 
+        if(manifest && !fileExists(manifest)) {
+            throw new Error(tl.loc("ManifestFileNotFound", manifest));
+        }
+        else if(manifest && fileExists(manifest)) {
+            tl.debug("Manifest file found at: " + manifest);
+        }
+        else
+        {
+            tl.debug("Manifest is not specified");
+        }
+
+        tl.debug("connectedServiceName: " + connectedServiceName);
+
+        if(connectedServiceName){
+            tl.debug("connectedServiceName: " + connectedServiceName);
+            personalAccessToken = await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
+        }
+        else if (AsAccountName) {
+            tl.debug("AsAccountName: " + AsAccountName);
             personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
         }
         else {
             personalAccessToken = clientToolUtils.getSystemAccessToken();
+            //Get the symbol service uri and set it to the symbolServiceUri
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
         }
@@ -55,7 +85,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             requestName = (tl.getVariable("System.TeamProject") + "/" +
                 tl.getVariable("Build.DefinitionName") + "/" +
                 tl.getVariable("Build.BuildNumber") + "/" +
-                tl.getVariable("Build.BuildId")  + "/" +  
+                tl.getVariable("Build.BuildId")  + "/" +
                 uniqueId).toLowerCase();
         }
 
@@ -77,7 +107,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");
                 tl.debug(`Using endpoint ${symbolServiceUri} to create request ${requestName} with content in ${symbolsFolder}`);
-                
+
                 tl.debug(`Removing trailing '\/' in ${symbolServiceUri}`);
                 symbolServiceUri = clientToolUtils.trimEnd(symbolServiceUri, '/');
 
@@ -94,7 +124,8 @@ export async function run(clientToolFilePath: string): Promise<void> {
                     personalAccessToken,
                     requestName,
                     sourcePathListFileName,
-                    symbolServiceUri
+                    symbolServiceUri,
+                    manifest
                 } as IClientToolOptions;
 
                 let toolRunnerOptions = clientToolRunner.getClientToolOptions();
@@ -126,6 +157,15 @@ export async function run(clientToolFilePath: string): Promise<void> {
     }
 }
 
+function fileExists(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 function publishSymbolsUsingClientTool(
     sourcePath: string,
     options: IClientToolOptions,
@@ -137,6 +177,11 @@ function publishSymbolsUsingClientTool(
         "--name", options.requestName,
         "--directory", sourcePath
     );
+
+    if (options.manifest) {
+        command.push("--manifest", options.manifest);
+        tl.debug("Manifest: " + options.manifest);
+    }
 
     if (options.expirationInDays) {
         command.push("--expirationInDays", options.expirationInDays);

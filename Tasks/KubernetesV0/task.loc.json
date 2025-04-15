@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 254,
+    "Patch": 4
   },
   "demands": [],
   "preview": "false",
@@ -45,6 +45,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The Kubernetes@0 task is deprecated, please use a newer version of the Kubernetes task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {
       "name": "kubernetesServiceEndpoint",
@@ -347,6 +349,10 @@
       "target": "src//kubernetes.js"
     },
     "Node16": {
+      "target": "src//kubernetes.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "src//kubernetes.js",
       "argumentFormat": ""
     }

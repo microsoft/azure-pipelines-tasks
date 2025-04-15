@@ -33,7 +33,7 @@ function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
     var endpoint = tl.getInput("azureSubscriptionEndpoint")
     if (connectionType === "Azure Resource Manager" && endpoint) {
-        return require("./clusters/armkubernetescluster")
+        return require("azure-pipelines-tasks-azure-arm-rest/aksUtility")
     }
 
     return require("./clusters/generickubernetescluster")
@@ -51,30 +51,39 @@ function isKubConfigLogoutRequired(command: string): boolean {
 
 // get kubeconfig file path
 async function getKubeConfigFile(): Promise<string> {
-    return getClusterType().getKubeConfig().then((config) => {
-        var configFilePath = getKubeConfigFilePath();
-        tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
-        fs.writeFileSync(configFilePath, config);
-        fs.chmodSync(configFilePath, '600');
-        return configFilePath;
-    });
+    const connectionType = tl.getInput("connectionType", true)
+    const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint");
+    let result
+    if (connectionType === "Azure Resource Manager" && azureSubscriptionEndpoint) {
+        const clusterName : string = tl.getInput("kubernetesCluster", true);
+        const resourceGroup : string = tl.getInput("azureResourceGroup", true);
+        const useClusterAdmin: boolean = tl.getBoolInput('useClusterAdmin');
+        result = await getClusterType().getKubeConfig(azureSubscriptionEndpoint, resourceGroup, clusterName, useClusterAdmin)
+    } else {
+        result = await getClusterType().getKubeConfig()
+    }
+    let configFilePath = getKubeConfigFilePath();
+    tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
+    fs.writeFileSync(configFilePath, result);
+    fs.chmodSync(configFilePath, '600');
+    return configFilePath;
 }
 
-function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
     if (!helmCli.isHelmV3()) {
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
     process.env.HELM_EXPERIMENTAL_OCI="1";
-    runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
+    await runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
     tl.setVariable("helmChartRef", chartRef);
-    runHelm(helmCli, "registry", kubectlCli, false);
+    await runHelm(helmCli, "registry", kubectlCli, false);
     helmCli.resetArguments();
-    runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
+    await runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
     helmCli.resetArguments();
-    runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+    await runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
 }
 
 async function run() {
@@ -131,10 +140,10 @@ async function run() {
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
             case "save":
-                runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
+                await runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
                 break;
             default:
-                runHelm(helmCli, command, kubectlCli, failOnStderr);
+                await runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
     } catch (err) {
         // not throw error so that we can logout from helm and kubernetes
@@ -149,7 +158,7 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean) {
+async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
     var helmCommandMap = {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
@@ -175,7 +184,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
-    commandImplementation.addArguments(helmCli);
+    await commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
     tl.setVariable('helmExitCode', execResult.code.toString());

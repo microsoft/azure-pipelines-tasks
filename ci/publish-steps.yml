@@ -8,13 +8,17 @@ steps:
 - task: NodeTool@0
   displayName: Use node 20
   inputs:
-    versionSpec: 20.11.0
+    versionSpec: 20.x
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
   displayName: Use NuGet 6
   inputs:
     versionSpec: 6.0.0
+
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
 
 # npm install
 - script: npm install

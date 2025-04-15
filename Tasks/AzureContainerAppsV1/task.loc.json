@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -176,6 +176,10 @@
     },
     "Node16": {
       "target": "azurecontainerapps.js"
+    },
+    "Node20_1": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

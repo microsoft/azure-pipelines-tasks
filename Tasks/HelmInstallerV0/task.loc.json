@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 246,
+    "Patch": 3
   },
   "demands": [],
   "satisfies": [
@@ -28,6 +28,8 @@
       "isExpanded": false
     }
   ],
+  "deprecated": true,
+  "deprecationMessage": "The HelmInstaller@0 task is deprecated, please use a newer version of the HelmInstaller task",
   "inputs": [
     {
       "name": "helmVersion",
@@ -85,6 +87,10 @@
     },
     "Node16": {
       "target": "src//helmtoolinstaller.js"
+    },
+    "Node20_1": {
+      "target": "src//helmtoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

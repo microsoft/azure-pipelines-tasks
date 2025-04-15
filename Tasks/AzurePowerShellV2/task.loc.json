@@ -17,13 +17,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 239,
-    "Patch": 1
+    "Minor": 254,
+    "Patch": 0
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.95.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzurePowerShell@2 task is deprecated, please use the latest version of the AzurePowerShell task",
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",

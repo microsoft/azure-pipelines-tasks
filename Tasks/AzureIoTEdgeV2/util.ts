@@ -4,6 +4,7 @@ import * as crypto from "crypto";
 import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { Writable } from "stream";
 import { RegistryCredential } from './registrycredentialfactory';
+import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 interface Cmd {
   path: string;
@@ -181,15 +182,15 @@ export default class Util {
     return hostType === 'build';
   }
 
-  public static createOrAppendDockerCredentials(registryAuthenticationToken: RegistryCredential): void {
+  public static createOrAppendDockerCredentials(registryAuthenticationToken: AuthenticationToken): void {
     let creVar = tl.getVariable(Constants.fileNameDockerCredential);
 
     let credentials = creVar ? JSON.parse(creVar) : [];
     if (registryAuthenticationToken) {
       credentials.push({
-        username: registryAuthenticationToken.username,
-        password: registryAuthenticationToken.password,
-        address: registryAuthenticationToken.serverUrl
+        username: registryAuthenticationToken.getUsername(),
+        password: registryAuthenticationToken.getPassword(),
+        address: registryAuthenticationToken.getLoginServerUrl()
       });
     }
     tl.setVariable(Constants.fileNameDockerCredential, JSON.stringify(credentials));

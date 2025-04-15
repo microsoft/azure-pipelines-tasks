@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 248,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -369,6 +369,10 @@
     "Node16": {
       "target": "xcode.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "xcode.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -377,6 +381,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "postxcode.js",
       "argumentFormat": ""
     }

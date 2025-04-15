@@ -13,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "Указана недопустимая конечная точка AzureRM.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Настройте управляемое удостоверение для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: \"{0}\", сообщения о состоянии: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Код состояния: '{0}', сообщение о состоянии: {1}",
-  "loc.messages.AZ_MsiFailure": "Не удалось получить маркер доступа для управляемого удостоверения. {0}"
+  "loc.messages.AZ_MsiFailure": "Не удалось получить маркер доступа для управляемого удостоверения. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы по адресу {0}. Подробнее о преобразовании в подключения служб без секретов см. по ссылке https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.AZ_ModuleInitFailWarning": "Не удалось инициализировать существующие модули Az. Откат к установке",
+  "loc.messages.AZ_ModuleInstallFail": "Не удалось установить модули Az",
+  "loc.messages.AZ_RMDeprecationMessage": "Вы используете модуль AzureRM, поддержка которого скоро будет прекращена. Запланируйте обновление."
 }

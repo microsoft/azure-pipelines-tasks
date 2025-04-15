@@ -18,13 +18,15 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": false,
+  "deprecated": true,
+  "deprecationMessage": "The AzureContainerApps@0 task is deprecated, please use the latest version of the AzureContainerApps task",
   "inputs": [
     {
       "name": "cwd",
@@ -177,6 +179,10 @@
     },
     "Node16": {
       "target": "azurecontainerapps.js"
+    },
+    "Node20_1": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

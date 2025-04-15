@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 255,
     "Patch": 0
   },
   "demands": [],
@@ -174,10 +174,14 @@
   ],
   "instanceNameFormat": "Func on K8s - deploy",
   "execution": {
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "src//run.js"
     },
-    "Node16": {
+    "Node20_1": {
       "target": "src//run.js",
       "argumentFormat": ""
     }

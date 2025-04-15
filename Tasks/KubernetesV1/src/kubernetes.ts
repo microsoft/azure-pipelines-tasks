@@ -18,7 +18,7 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join( __dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest/module.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest/module.json'),true);
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
@@ -138,7 +138,6 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var result = [];
     return commandImplementation.run(clusterConnection, command, (data) => result.push(data))
         .fin(function cleanup() {
-            console.log("commandOutput" + result);
             const resultString = result.toString();
             const commandOutputLength = resultString.length;
             if (commandOutputLength > environmentVariableMaximumSize) {

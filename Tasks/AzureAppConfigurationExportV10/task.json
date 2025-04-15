@@ -1,0 +1,173 @@
+{
+    "id": "81fa1f14-66ef-4e75-93fd-30b8ee7140d6",
+    "name": "AzureAppConfigurationExport",
+    "friendlyName": "Azure App Configuration Export",
+    "description": "Export key-values from Azure App Configuration to task variables in your build or deployment pipelines",
+    "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-export-task",
+    "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
+    "category": "Deploy",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 10,
+        "Minor": 255,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Azure App Configuration",
+    "minimumAgentVersion": "2.144.0",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Subscription for the Azure App Configuration instance."
+        },
+        {
+            "name": "AppConfigurationEndpoint",
+            "type": "pickList",
+            "label": "App Configuration Endpoint",
+            "required": true,
+            "helpMarkDown": "Provide the endpoint of an existing [Azure App Configuration](https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-key-value).",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "validation": {
+                "expression": "isUrl(value)",
+                "message": "Provide a valid app configuration endpoint."
+            }
+        },
+        {
+            "name": "SelectionMode",
+            "type": "radio",
+            "label": "Selection Mode",
+            "defaultValue": "Default",
+            "helpMarkDown": "Selection mode specifies how the key-values read from a configuration store are selected. The 'Default' selection mode allows the use of key and label filters. The 'Snapshot' selection mode allows key-values to be selected from a snapshot.",
+            "required": false,
+            "options": {
+                "Default": "Default",
+                "Snapshot": "Snapshot"
+            }
+        },
+        {
+            "name": "KeyFilter",
+            "type": "string",
+            "label": "Key Filter",
+            "defaultValue": "*",
+            "required": true,
+            "helpMarkDown": "The filter can be used to select what key-values are requested from Azure App Configuration. A value of '*' will select all key-values. [Reference for key-values query](https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-key-value#query-key-values).",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "SelectionMode = Default"
+        },
+        {
+            "name": "Label",
+            "type": "string",
+            "label": "Label",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specifies which label should be used when selecting key-values from App Configuration. If no label is provided then key-values with the _null_ label will be retrieved. The following characters are not allowed: `,` `*`.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "validation": {
+                "expression": "isMatch(value, '^[^\\*|\\,]*$','IgnoreCase')",
+                "message": "The following characters are not allowed: '*', ','"
+            },
+            "visibleRule": "SelectionMode = Default"
+        },
+        {
+            "name": "SnapshotName",
+            "type": "string",
+            "label": "Snapshot name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specifies snapshot from which key-values should be retrieved in Azure App Configuration",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "SelectionMode = Snapshot"
+        },
+        {
+            "name": "TrimKeyPrefix",
+            "type": "multiLine",
+            "label": "Trim Key Prefix",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specifies one or more prefixes that should be trimmed from App Configuration keys before setting them as variables. Multiple prefixes can be separated by a new-line character.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "SuppressWarningForOverriddenKeys",
+            "type": "boolean",
+            "label": "Suppress warning for overridden keys",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Specifies whether or not to suppress the warning shown when existing keys are overridden.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "TreatKeyVaultErrorsAsWarning",
+            "type": "boolean",
+            "label": "Treat key vault resolution errors as warnings",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Specifies whether to display key vault resolution errors as warning. By default, the task fails when encountering key vault resolution errors.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "AppConfigurationEndpoint",
+            "endpointId": "$(ConnectedServiceName)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2019-02-01-preview",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{properties.endpoint}}}\", \"DisplayValue\" : \"{{{properties.endpoint}}}\" }"
+        }
+    ],
+    "execution": {
+        "Node16": {
+            "target": "index.js"
+        },
+        "Node20_1": {
+            "target": "index.js"
+        }
+    },
+    "messages": {
+        "KeyIsRequired": "'key' is required.",
+        "FailedToSetSecretVariable": "Failed to set secret variable with name %s due to invalid value",
+        "SupportedOptionsForSelectionMode": "Supported options for SelectionMode are '%s' and '%s', please provide a valid option.",
+        "InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
+        "SecretUrlCannotBeEmpty": "Secret url cannot be empty",
+        "InvalidSecretUrl": "Invalid secret Url",
+        "AzureAppConfigurationTaskIsStartingUp": "Azure App Configuration Export Task is starting up...",
+        "AzureSubscriptionTitle": "Azure Subscription:",
+        "AppConfigurationEndpointTitle": "App Configuration Endpoint:",
+        "SelectionModeTitle": "Selection Mode:",
+        "KeyFilterTitle": "Key Filter:",
+        "LabelFilterTitle": "Label Filter:",
+        "SnapshotNameTitle": "Snapshot Name:",
+        "InvalidVariableName": "Failed to set variable with name '%s' due to invalid variable name.",
+        "RetrievedKeyValues": "'%s' key-values were retrieved from Azure App Configuration.",
+        "DuplicateKeysFound": "Found %s key-values with keys that were already defined. Their values have been overwritten.",
+        "AccessDenied": "Access to the target App Configuration instance was denied. Please ensure the required role assignment is made for the identity running this task.",
+        "SnapshotNotFound": "The snapshot '%s' was not found in App Configuration Store.",
+        "InvalidCompositionTypeValue": "Snapshots with a composition type of '%s' are not supported. Snapshots with composition type of '%s' should be used for snapshots referenced by this task.",
+        "ArchivedSnapshotWarning": "The snapshot '%s' is archived and is scheduled to expire on '%s'.",
+        "AccessDeniedToUrl": "Access to %s was denied. Please ensure the required role assignment is made for the identity running this task.",
+        "AuthenticationError": "Error response: %s \nStatus code: %s \nError message: %s",
+        "AuthenticationRestError": "`\nStatus code: %s \nUrl: %s \nError message: %s \nWWW-Authenticate: %s \nClientRequestId: %s",
+        "HttpError": "A HTTP error occurred \nName: %s \nCode: %s \nStatus code:%s \nUrl: %s \nError message: %s \nClientRequestId: %s",
+        "AnUnexpectedError": "An unexpected error occurred. %s."
+    }
+}

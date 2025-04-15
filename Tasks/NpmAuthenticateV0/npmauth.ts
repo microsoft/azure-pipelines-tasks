@@ -3,18 +3,30 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as npmregistry from 'azure-pipelines-tasks-packaging-common-v3/npm/npmregistry';
-import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
-import * as npmutil from 'azure-pipelines-tasks-packaging-common-v3/npm/npmutil';
+import * as npmregistry from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as os from 'os';
-import * as npmrcparser from 'azure-pipelines-tasks-packaging-common-v3/npm/npmrcparser';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
+#if WIF
+import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
+
+let internalFeedSuccessCount: number = 0;
+let externalFeedSuccessCount: number = 0;
+let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let workingDirectory = path.dirname(npmrc);
+    let endpointsArray = tl.getVariable('EXISTING_ENDPOINTS') 
+        ? tl.getVariable('EXISTING_ENDPOINTS').split(',') 
+        : [];
+
     if (!(npmrc.endsWith('.npmrc'))) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
     }
@@ -58,15 +70,7 @@ async function main(): Promise<void> {
         fs.writeFileSync(indexFile, JSON.stringify(npmrcTable));
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
-
-    let endpointRegistries: npmregistry.INpmRegistry[] = [];
-    let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
-    if (endpointIds && endpointIds.length > 0) {
-        await Promise.all(endpointIds.map(async e => {
-            endpointRegistries.push(await npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
-        }));
-    }
-
+    
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
@@ -75,38 +79,106 @@ async function main(): Promise<void> {
         util.logError(error);
         throw error;
     }
+    // Getting local registries will also save normalized registries in the npmrc
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
-
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+
+    let endpointRegistries: npmregistry.INpmRegistry[] = [];
+    let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
+    if (endpointIds && endpointIds.length > 0) {
+        await Promise.all(endpointIds.map(async e => {
+            var registry = await npmregistry.NpmRegistry.FromServiceEndpoint(e, true);
+
+            // Add newly discovered endpoints to env variable. Warn of duplicates.
+            if (endpointsArray.includes(registry.url)){
+                tl.warning(tl.loc('DuplicateCredentials', registry.url));
+            }
+            else {
+                endpointsArray.push(registry.url);
+                tl.setVariable('EXISTING_ENDPOINTS', endpointsArray.join(','), false);
+            }
+            endpointRegistries.push(registry);
+        }));
+    }
+
     let addedRegistry = [];
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
+    let npmrcRegistries = npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
+
+#if WIF
+    const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+    const federatedAuthToken = await getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
+
+    const feedUrl = tl.getInput("feedUrl");
+    if (feedUrl && !entraWifServiceConnectionName) {
+        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
+    }
+
+    if(feedUrl){
+        npmrcRegistries = npmrcRegistries.filter(x=> util.toNerfDart(x) == util.toNerfDart(npmrcparser.NormalizeRegistry(feedUrl)));
+        if(npmrcRegistries.length == 0){
+            throw new Error(tl.loc("IgnoringRegistry", feedUrl));
+        }
+    }
+#endif
+
+    for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
-        if (endpointRegistries && endpointRegistries.length > 0) {
-            for (let serviceEndpoint of endpointRegistries) {
 
+#if WIF
+        if (feedUrl && entraWifServiceConnectionName){
+            if (util.toNerfDart(npmrcparser.NormalizeRegistry(feedUrl)) == util.toNerfDart(RegistryURLString)) {
+                console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+                registry =  new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true);
+                let url = URL.parse(RegistryURLString);
+                addedRegistry.push(url);
+                npmrcFile = clearFileOfReferences(npmrc, npmrcFile, url, addedRegistry);
+                federatedFeedAuthSuccessCount++;
+                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
+            }
+        } else if (!feedUrl && entraWifServiceConnectionName){
+            console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+            registry = new npmregistry.NpmRegistry(RegistryURLString, `${util.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true)
+            let url = URL.parse(RegistryURLString);
+            addedRegistry.push(url);
+            npmrcFile = clearFileOfReferences(npmrc, npmrcFile, url, addedRegistry);
+            federatedFeedAuthSuccessCount++;
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
+        }
+#endif
+
+        if (!registry && endpointRegistries && endpointRegistries.length > 0) {
+            for (let serviceEndpoint of endpointRegistries) {
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
                     let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
                     addedRegistry.push(serviceURL);
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, addedRegistry);
+                    externalFeedSuccessCount++;
                     break;
                 }
             }
         }
+
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
                 if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
+                    // If a registry is found, but we previously added credentials for it warn and overwrite
+                    if (endpointsArray.includes(localRegistry.url)) {
+                        tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
+                        tl.warning(tl.loc('FoundEndpointCredentials', registryURL.host));
+                    }
                     let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
                     addedRegistry.push(localURL);
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);                    
                     break;
                 }
             }
         }
+
         if (registry) {
             tl.debug(tl.loc('AddingAuthRegistry', registry.url));
             npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
@@ -128,7 +200,14 @@ main().catch(error => {
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
+}).finally(() => {
+    emitTelemetry("Packaging", "NpmAuthenticateV0", {
+        "InternalFeedAuthCount": internalFeedSuccessCount,
+        "ExternalFeedAuthCount": externalFeedSuccessCount,
+        "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
+    });
 });
+
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
@@ -147,3 +226,17 @@ function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, adde
     return redoneFile;
 }
 
+#if WIF
+async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string){
+    if(!adoServiceConnection){
+        return undefined;
+    }
+
+    let federatedAuthToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
+    if(!federatedAuthToken){
+        throw new Error(tl.loc("FailedToGetServiceConnectionAuth", adoServiceConnection)); 
+    }
+
+    return federatedAuthToken;
+}
+#endif

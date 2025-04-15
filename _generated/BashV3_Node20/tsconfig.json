@@ -1,7 +1,0 @@
-{
-    "extends": "@tsconfig/node10/tsconfig.json",
-    "compilerOptions": {
-        "noImplicitAny": false,
-        "strictNullChecks": false,
-    }
-}

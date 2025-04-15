@@ -13,11 +13,11 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/node": "^16.11.39",
-    "azure-pipelines-task-lib": "^5.0.0-preview.0",
-    "azure-pipelines-tasks-msbuildhelpers": "^3.231.0"
+    "@types/node": "^20.3.1",
+    "azure-pipelines-task-lib": "^4.16.0",
+    "azure-pipelines-tasks-msbuildhelpers": "^3.252.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

@@ -72,7 +72,9 @@ export const testChartNameForACR = "testChartNameForACR";
 export const testChartPathForACR = "test/testChartPathForACR";
 export const testAzureResourceGroupForACR = "test-rg";
 export const testAzureSubscriptionEndpointForACR = "RMTest";
+export const testAzureSubscriptionEndpointAuthType = "SerivcePrincipal"
 export const testAzureContainerRegistry = "sonayak.azurecr.io";
+export const testEndpointAuthVar = "ENDPOINT_AUTH_SCHEME_" + testAzureSubscriptionEndpointForACR;
 
 /**
  * Formats the given path to be appropriate for the operating system.
