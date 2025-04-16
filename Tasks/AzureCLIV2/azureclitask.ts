@@ -208,8 +208,10 @@ export class azureclitask {
         try {
             let versionMatch = [];
             if (tl.getPipelineFeature('UseAzVersion')) {
+                // gets azure-cli version from both az version output which is in JSON format and az --version output text format
                 versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
             }else{
+                // gets azure-cli version from az --version output text format
                 versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
             }
 
