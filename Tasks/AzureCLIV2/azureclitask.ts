@@ -49,9 +49,16 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
-            const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
-            Utility.throwIfError(azVersionResult);
-            this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+            if (tl.getPipelineFeature('UseAzVersion')) {
+                const azVersionResult: IExecSyncResult = tl.execSync("az", "version");
+                Utility.throwIfError(azVersionResult);
+                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+                
+            } else {
+                const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
+                Utility.throwIfError(azVersionResult);
+                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+            }
 
             // set az cli config dir
             this.setConfigDirectory();
@@ -199,7 +206,12 @@ export class azureclitask {
 
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            const versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+            let versionMatch = [];
+            if (tl.getPipelineFeature('UseAzVersion')) {
+                versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
+            }else{
+                versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+            }
 
             if (!versionMatch || versionMatch.length < 2) {
                 tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
