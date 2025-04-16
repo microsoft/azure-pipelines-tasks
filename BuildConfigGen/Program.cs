@@ -19,6 +19,22 @@ namespace BuildConfigGen
         public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
     }
 
+    internal static class ConfigExtensions
+    {
+        public static bool UpdatesOuputUnconditionally(this Program.Config.ConfigRecord config)
+        {
+            return config.isNode
+                    || config.shouldUpdateLocalPkgs
+                    || config.mergeToBase
+                    || config.useAltGeneratedPath;
+        }
+
+        public static bool ManagePackageJsonInOverride(this Program.Config.ConfigRecord config)
+        {
+            return config.isNode ||
+                config.shouldUpdateLocalPkgs;
+        }
+    }
     internal class Program
     {
         private const string filesOverriddenForConfigGoHereReadmeTxt = "FilesOverriddenForConfigGoHereREADME.txt";
@@ -52,7 +68,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true, mergeToBase: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Wif", writeNpmrc: true);
-            public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "LocalPackages", writeNpmrc: true, shouldUpdateLocalPkgs: false, useGlobalVersion: true, useAltGeneratedPath: true);
+            public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: false, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "LocalPackages", writeNpmrc: true, shouldUpdateLocalPkgs: false, useGlobalVersion: true, useAltGeneratedPath: true);
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages };
         }
 
@@ -152,6 +168,8 @@ namespace BuildConfigGen
                 currentSprint = GetCurrentSprint();
             }
 
+            Console.WriteLine($"Current sprint: {currentSprint}");  
+
             Dictionary<string, TaskStateStruct> taskVersionInfo = [];
 
             {
@@ -199,7 +217,11 @@ namespace BuildConfigGen
 
                     if (tasksNeedingUpdates.Count > 0)
                     {
-                        throw new Exception($"The following tasks have versions that need updating (needed for updating global version): {string.Join(", ", tasksNeedingUpdates)}.  Please run 'node make.js build --task [taskname]' to update");
+                        Console.WriteLine($"The following tasks have versions that need updating (needed for updating global version); including in list of tasks to update: {string.Join(", ", tasksNeedingUpdates)}.");
+
+                        Console.WriteLine("before concat: " + string.Join(",", tasks.Select(x => x.Key).ToArray()));
+                        tasks = ConcatAdditionalTasks(allTasksList: allTasksList, existingTasks: tasks, tasksToAppend: tasksNeedingUpdates);
+                        Console.WriteLine("after concat: " + string.Join(",", tasks.Select(x => x.Key).ToArray()));
                     }
 
                     // bump patch number for global if any tasks invalidated or if there is no existing global version
@@ -248,14 +270,12 @@ namespace BuildConfigGen
                             {
                                 if (globalVersion.Minor == currentSprint)
                                 {
-                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
-                                    globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                                    globalVersion = new TaskVersion(taskMajorVersion, currentSprint, Math.Max(maxPatchForCurrentSprint, globalVersion.Patch));
                                 }
                                 else
                                 {
                                     // this could fail if there is a task with a future-sprint version, which should not be the case.  If that happens, CheckForDuplicates will throw
-                                    globalVersion = globalVersion.CloneWithMinorAndPatch(currentSprint, maxPatchForCurrentSprint);
-                                    globalVersion = globalVersion.CloneWithMajor(taskMajorVersion);
+                                    globalVersion = new TaskVersion(taskMajorVersion, currentSprint, maxPatchForCurrentSprint);
                                 }
                             }
                         }
@@ -301,6 +321,41 @@ namespace BuildConfigGen
                     throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
                 }
             }
+        }
+
+        private static IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> ConcatAdditionalTasks(
+            IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> allTasksList, 
+            IEnumerable<KeyValuePair<string, MakeOptionsReader.AgentTask>> existingTasks, 
+            List<string> tasksToAppend)
+        {
+            List<KeyValuePair<string, MakeOptionsReader.AgentTask>> newTasks = new(existingTasks);
+
+            foreach (var taskNeedingUpdates in tasksToAppend)
+            {
+                bool taskExists = false;
+
+                foreach (var existingTask in newTasks)
+                {
+                    if (string.Equals(existingTask.Key, taskNeedingUpdates))
+                    {
+                        taskExists = true;
+                        break;
+                    }
+                }
+
+                if (!taskExists)
+                {
+                    foreach (var taskToAdd in allTasksList)
+                    {
+                        if (string.Equals(taskToAdd.Key, taskNeedingUpdates, StringComparison.OrdinalIgnoreCase))
+                        {
+                            newTasks.Add(taskToAdd);
+                        }
+                    }
+                }
+            }
+
+            return newTasks;
         }
 
         private static string GetTasksRootPath(string inputCurrentDir)
@@ -613,14 +668,14 @@ namespace BuildConfigGen
                             taskConfigPath = Path.Combine(taskOutput, "task.json");
                             var taskConfigExists = File.Exists(taskConfigPath);
 
-                            // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
+                            // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config updates the output unconditionally
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
                             if (versionUpdated
                                 || taskConfigExists
+                                || config.UpdatesOuputUnconditionally()
+                                || taskVersionState.OnlyHasDefaultOrGlobalVersion                                
                                 || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config)
-                                || config.isNode
-                                || config.mergeToBase
-                                || taskVersionState.OnlyHasDefaultOrGlobalVersion)
+)
                             {
                                 if (config.mergeToBase)
                                 {
@@ -675,7 +730,7 @@ namespace BuildConfigGen
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.loc.json");
 
-                            if (config.isNode)
+                            if (config.ManagePackageJsonInOverride())
                             {
                                 GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath, generatedFolder, task);
 
