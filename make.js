@@ -263,6 +263,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     {
         if (!argv.skipPrebuildSteps)
         {
+            /*
             // temp: clone for now prior to merging these as subtrees
             if (!test('-d', 'task-lib')) {
                 run("git clone https://github.com/microsoft/azure-pipelines-task-lib task-lib");
@@ -282,15 +283,17 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
             // build task-lib
             cd(taskLibPath);
-            run("npm install", /*inheritStreams:*/true);
-            run("node make.js build", /*inheritStreams:*/true);
+            run("npm install", true);
+            run("node make.js build", true);
 
-            
+
             await util.installNodeAsync('20');
             // build task-lib
             cd(tasksCommonPath);
-            run("npm install", /*inheritStreams:*/true);
-            run("node make.js --build", /*inheritStreams:*/true);
+            run("npm install", true);
+            run("node make.js --build", true);
+            */
+            
         }
     }
 
