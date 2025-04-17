@@ -72,6 +72,9 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "AGENT_TEMPPATH": taskLib.getVariable('Agent.TempPath'),
             "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId'),
             "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG'),
+            "HTTP_PROXY": process.env['HTTP_PROXY'],
+            "HTTPS_PROXY": process.env['HTTPS_PROXY'],
+            "NO_PROXY": process.env['NO_PROXY'],
             "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT')
         };
 
