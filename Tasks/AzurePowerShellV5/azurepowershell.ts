@@ -15,6 +15,13 @@ async function run() {
     let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
     let tempDirectory = tl.getVariable('agent.tempDirectory');
     tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
+
+    const env = process.env;
+    const hostEnv = `ADO/AzurePowerShell@v5_${env.AGENT_OS || ""}_${env.AGENT_NAME || ""}_${env.BUILD_DEFINITIONNAME || ""}_${env.BUILD_BUILDID || ""}_${env.RELEASE_DEFINITIONNAME || ""}_${env.RELEASE_RELEASEID || ""}`;
+    
+    process.env.AZUREPS_HOST_ENVIRONMENT = hostEnv;
+    console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);    
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 

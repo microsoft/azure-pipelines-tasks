@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 253,
-    "Patch": 6
+    "Minor": 255,
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -35,6 +35,30 @@
       }
     },
     {
+      "name": "testPlanOrRunSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlanOrRunSelector",
+      "defaultValue": "testPlan",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlanOrRunSelector",
+      "options": {
+        "testPlan": "Test plan",
+        "testRun": "Test run"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testRunId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunId",
+      "defaultValue": "$(test.RunId)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunId",
+      "visibleRule": "testPlanOrRunSelector = testRun"
+    },
+    {
       "name": "testPlan",
       "type": "string",
       "label": "ms-resource:loc.input.label.testPlan",
@@ -44,7 +68,8 @@
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testSuite",
@@ -54,10 +79,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "required": true,
       "properties": {
-        "MultiSelect": "True",
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testConfiguration",

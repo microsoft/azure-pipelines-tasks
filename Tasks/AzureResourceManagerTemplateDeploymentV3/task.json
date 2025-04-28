@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 252,
-    "Patch": 2
+    "Minor": 256,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -341,6 +341,7 @@
     "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
     "BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
-    "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
+    "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file",
+    "ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"  
   }
 }
