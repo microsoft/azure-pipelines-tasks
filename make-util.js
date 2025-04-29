@@ -191,14 +191,20 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         cd(taskPath);
     }
 
+    let additionalArguments = "";
+
+    if (process.argv.includes("--include-sourcemap")) {
+        additionalArguments += " --sourceMap";
+    }
+
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`node ${tscExec} --outDir "${outDir}" --rootDir "${taskPath}" ${additionalArguments}`);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`tsc --outDir "${outDir}" --rootDir "${taskPath}" ${additionalArguments}`);
     }
 
     cd(originalDir);
@@ -1368,7 +1374,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create the full task name so we don't need to rely on the folder name.
             var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
-            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) { 
+            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) {
                 for (let i in taskJsonContents._buildConfigMapping) {
                     if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
                         // take only first part of the name
@@ -1718,7 +1724,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
 /**
- * 
+ *
  * @param {String} buildPath - Path to the build folder
  * @param {String} taskName - Name of the task
  * @returns { Boolean } true if the task is a node task
@@ -1726,12 +1732,12 @@ exports.getTaskNodeVersion = getTaskNodeVersion;
 var isNodeTask = function(buildPath, taskName) {
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) return false;
-    
+
     const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     const taskJson = JSON.parse(taskJsonContents);
     const execution = ['execution', 'prejobexecution','postjobexecution']
         .map(key => taskJson[key]);
-    
+
     for (const executors of execution) {
         if (!executors) continue;
         for (const key of Object.keys(executors)) {
@@ -1815,7 +1821,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
         args.push("--current-sprint");
         args.push(sprintNumber);
     }
-    
+
     var writeUpdateArg = "";
     if(writeUpdates)
     {
@@ -1824,7 +1830,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 
     if(includeLocalPackagesBuildConfig)
     {
-        writeUpdateArg += " --include-local-packages-build-config";        
+        writeUpdateArg += " --include-local-packages-build-config";
     }
 
     var debugAgentDirArg = "";
@@ -1945,27 +1951,27 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
-            .filter(function (item) { 
+            .filter(function (item) {
                 // ignore node_modules
                 if (item.indexOf("node_modules") !== -1) return false
                 // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
                 if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
-                
+
                 return true;
             });
 
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-            
-            if (config) {  
+
+            if (config) {
                 if(config==="LocalPackages"){
                     dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
                 }else{
                     dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
                 }
             }
-            
+
             // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
