@@ -36,6 +36,11 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 
     public TaskVersion(int major, int minor, int overidePatch)
     {
+        if (overidePatch < 0)
+        {
+            throw new Exception($"bug, overridePatch must be >=0, got {overidePatch}");
+        }
+
         Major = major;
         Minor = minor;
         Patch = overidePatch;
