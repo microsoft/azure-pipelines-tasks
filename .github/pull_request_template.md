@@ -1,18 +1,39 @@
-**Task name**: <Name of changed or new pipeline task>
+### **Task Name**
+_Name of the updated or newly created pipeline task._
 
-**Description**: <Describe your changes here>
+---
 
-**Risk Assesment(Low/Medium/High)**:
+### **Description**
+_Provide a clear and concise description of the changes introduced in this PR._
 
-**Added unit tests:** (Y/N) <Please mark if unit tests were added or updated according changes>
+---
 
-**Tests Performed**: <Add the list of tests Manual or Automated performed for your changes>
+### **Risk Assessment** (Low / Medium / High)  
+_Assess the level of risk and provide a brief justification (e.g., scope of changes, usage impact, etc.)._
 
-**Documentation changes required:** (Y/N) <Please mark if documentation changes are required>
+---
 
-**Attached related issue:** (Y/N) <Please add link to related issue here>
-> Note: For adding link to ADO WI see [here](https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops).
+### **Unit Tests Added or Updated** (Yes / No)  
+_Indicate whether unit tests were added or updated based on the changes._
 
-**Checklist**:
-- [ ] Task version was bumped - please check [instruction](https://github.com/microsoft/azure-pipelines-tasks/tree/master/docs/taskversionbumping.md) how to do it
-- [ ] Checked that applied changes work as expected
+---
+
+### **Tests Performed**
+_List all tests performed (manual or automated) to validate the changes._
+
+---
+
+### **Documentation Changes Required** (Yes / No)  
+_Indicate whether any user-facing or developer documentation needs to be updated._
+
+---
+
+### **Related Issue Attached** (Yes / No)  
+_If applicable, include a link to the related issue or work item._  
+📌 [How to link to ADO Work Items](https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops)
+
+---
+
+### **Checklist**
+- [ ] Task version was bumped — see [instructions here](https://github.com/microsoft/azure-pipelines-tasks/tree/master/docs/taskversionbumping.md)  
+- [ ] Verified that the changes behave as expected
