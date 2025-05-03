@@ -224,7 +224,7 @@ function Set-CurrentAzureRMSubscriptionV2 {
     $additional = @{ }
     if ($TenantId) { $additional['TenantId'] = $TenantId }
 
-    Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+    Write-Host "##[command]Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
     $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
 }
 
