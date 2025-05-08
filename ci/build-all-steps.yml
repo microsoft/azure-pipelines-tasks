@@ -108,7 +108,6 @@ steps:
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
-  # remove SourceBranch condition after merging users/merlynop/node20merge-2 ; see https://github.com/microsoft/azure-pipelines-tasks/pull/20819
   condition: |
     and(
       succeeded(),
@@ -116,7 +115,7 @@ steps:
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master'),
-      ne(variables['System.PullRequest.SourceBranch'], 'users/merlynop/node20merge-2')
+      not(contains(variables['BRANCH_EXCLUDED_FROM_VERSION_CHECK'], variables['System.PullRequest.SourceBranch']))
     )
 
 # Clean
