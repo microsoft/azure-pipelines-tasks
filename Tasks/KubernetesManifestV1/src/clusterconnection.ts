@@ -38,6 +38,10 @@ export default class ClusterConnection {
             const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", true);
             const resourceGroup : string = tl.getInput("azureResourceGroup", true);
             const useClusterAdmin: boolean = tl.getBoolInput('useClusterAdmin');
+            const resourceType: string = (tl.getInput("resourceType", false) || "Microsoft.ContainerService/managedClusters");
+            if (resourceType.toLowerCase() == "microsoft.containerservice/fleets"){
+                return this.loadClusterType(connectionType).getKubeConfigForFleet(azureSubscriptionEndpoint, resourceGroup, clusterName)
+            }
             return this.loadClusterType(connectionType).getKubeConfig(azureSubscriptionEndpoint, resourceGroup, clusterName, useClusterAdmin)
         } else {
             return this.loadClusterType(connectionType).getKubeConfig()
