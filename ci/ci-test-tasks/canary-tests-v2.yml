@@ -24,7 +24,7 @@ jobs:
 - job: detect_changes
   displayName: Detect changes
   pool:
-    vmImage: ubuntu-latest
+    vmImage: ubuntu-22.04
   steps:
   - script: |
       git fetch origin master
