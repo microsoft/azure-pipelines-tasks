@@ -17,7 +17,8 @@
     "package_path": "",
     "package_name": "",
     "capture_name_prefix": "",
-    "skip_clean":""
+    "skip_clean":"",
+    "delete_foldername": ""
   },
   "builders": [{
         "type": "azure-arm",

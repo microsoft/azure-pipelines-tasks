@@ -43,6 +43,10 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         if(taskParameters.isManagedImage){
             this._templateVariables.set(constants.TemplateVariableManagedImageName, taskParameters.managedImageName) 
         }
+        tl.debug(JSON.stringify(taskParameters.isDeleteTempFolder));
+        if(taskParameters.isDeleteTempFolder){
+            this._templateVariables.set(constants.DeleteTempFolderName, taskParameters.deleteTempFolderName); 
+        }
 
         if(taskParameters.baseImageSource === constants.BaseImageSourceCustomVhd) {
             this._templateVariables.set(constants.TemplateVariableImageUrlName, taskParameters.customBaseImageUrl);
@@ -61,8 +65,11 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         // user deployment script specific variables
         var deployScriptPath = taskParameters.deployScriptPath;
         var packagePath = taskParameters.packagePath;
+        var deletefoldername=taskParameters.deleteTempFolderName;
         this._templateVariables.set(constants.TemplateVariableScriptRelativePathName, deployScriptPath);
         this._templateVariables.set(constants.TemplateVariablePackagePathName, packagePath);
+        this._templateVariables.set(constants.TemplateVariableDeleteFolderName,deletefoldername);
+        tl.debug("deletefoldername1"+deletefoldername);
         this._templateVariables.set(constants.TemplateVariablePackageName, path.basename(packagePath));
         if(!utils.IsNullOrEmpty(taskParameters.deployScriptArguments)) {
             this._templateVariables.set(constants.TemplateVariableScriptArgumentsName, taskParameters.deployScriptArguments);

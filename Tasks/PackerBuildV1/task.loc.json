@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 255,
-    "Patch": 0
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -215,6 +215,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.deployScriptArguments",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "isDeleteTempFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDeleteTempFolder",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.isDeleteTempFolder",
+      "defaultValue": false,
       "groupName": "DeploymentInputs"
     },
     {

@@ -18,7 +18,8 @@
     "package_name": "",
     "capture_name_prefix": "",
     "skip_clean": "",
-    "managed_image_name": ""
+    "managed_image_name": "",
+    "delete_foldername":""
   },
   "builders": [{
         "type": "azure-arm",

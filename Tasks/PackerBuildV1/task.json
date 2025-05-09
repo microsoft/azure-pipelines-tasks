@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 255,
-    "Patch": 0
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -93,6 +93,7 @@
       "defaultValue": true,
       "groupName": "AzureDetails"
     },
+   
     {
       "name": "managedImageName",
       "type": "string",
@@ -215,6 +216,14 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "Specify the arguments to be passed to deployment script.",
+      "groupName": "DeploymentInputs"
+    }, {
+      "name": "isDeleteTempFolder",
+      "type": "boolean",
+      "label": "Delete temp folder",
+      "required": true,
+      "helpMarkDown": "Check if generated temp folder to be kept or not",
+      "defaultValue": false,
       "groupName": "DeploymentInputs"
     },
     {
