@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "Actualización del archivo omitida: %s",
   "loc.messages.FailedToApplyTransformationReason1": "1. Si la transformación ya se ha aplicado para el paquete generado por MSBuild durante la compilación. Si es así, quite la etiqueta <DependentUpon> para cada configuración del archivo csproj y compile de nuevo. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Asegúrese de que el archivo de configuración y los archivos de transformación están presentes en la misma carpeta dentro del paquete.",
-  "loc.messages.FileTranformationNotEnabled": "La transformación de archivos no está habilitada. Proporcione una de las opciones siguientes para la sustitución de variables: Reglas de transformación XML o Archivos de destino JSON/XML."
+  "loc.messages.FileTransformationNotEnabled": "La transformación de archivos no está habilitada. Proporcione una de las opciones siguientes para la sustitución de variables: Reglas de transformación XML o Archivos de destino JSON/XML."
 }
