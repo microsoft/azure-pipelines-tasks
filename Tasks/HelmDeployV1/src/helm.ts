@@ -33,7 +33,7 @@ function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
     var endpoint = tl.getInput("azureSubscriptionEndpoint")
     if (connectionType === "Azure Resource Manager" && endpoint) {
-        return require("./clusters/armkubernetescluster")
+        return require("azure-pipelines-tasks-azure-arm-rest/aksUtility")
     }
 
     return require("./clusters/generickubernetescluster")
@@ -51,13 +51,22 @@ function isKubConfigLogoutRequired(command: string): boolean {
 
 // get kubeconfig file path
 async function getKubeConfigFile(): Promise<string> {
-    return getClusterType().getKubeConfig().then((config) => {
-        var configFilePath = getKubeConfigFilePath();
-        tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
-        fs.writeFileSync(configFilePath, config);
-        fs.chmodSync(configFilePath, '600');
-        return configFilePath;
-    });
+    const connectionType = tl.getInput("connectionType", true)
+    const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint");
+    let result
+    if (connectionType === "Azure Resource Manager" && azureSubscriptionEndpoint) {
+        const clusterName : string = tl.getInput("kubernetesCluster", true);
+        const resourceGroup : string = tl.getInput("azureResourceGroup", true);
+        const useClusterAdmin: boolean = tl.getBoolInput('useClusterAdmin');
+        result = await getClusterType().getKubeConfig(azureSubscriptionEndpoint, resourceGroup, clusterName, useClusterAdmin)
+    } else {
+        result = await getClusterType().getKubeConfig()
+    }
+    let configFilePath = getKubeConfigFilePath();
+    tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
+    fs.writeFileSync(configFilePath, result);
+    fs.chmodSync(configFilePath, '600');
+    return configFilePath;
 }
 
 async function run() {
@@ -136,7 +145,11 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
         "package": "./helmcommands/helmpackage",
         "push": "./helmcommands/helmpush",
         "registry": "./helmcommands/helmregistrylogin",
-        "upgrade": "./helmcommands/helmupgrade"
+        "upgrade": "./helmcommands/helmupgrade",
+        "rollback": "./helmcommands/helmrollback",
+        "uninstall": "./helmcommands/helmuninstall",
+        "delete": "./helmcommands/helmuninstall",
+        "create": "./helmcommands/helmcreate",
     }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");

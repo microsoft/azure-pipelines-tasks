@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 245,
+    "Minor": 255,
     "Patch": 0
   },
   "demands": [
@@ -48,6 +48,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -409,6 +419,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customLoggerConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customLoggerConfig",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishRunAttachments",
@@ -416,6 +435,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.donotPublishTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
     },
     {
       "name": "failOnMinTestsNotRun",
@@ -552,6 +581,10 @@
     },
     "Node16": {
       "target": "runvstest.js"
+    },
+    "Node20_1": {
+      "target": "runvstest.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

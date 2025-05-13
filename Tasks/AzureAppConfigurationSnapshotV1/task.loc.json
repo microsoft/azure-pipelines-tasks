@@ -5,11 +5,11 @@
   "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-snapshots",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Deploy",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 255,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

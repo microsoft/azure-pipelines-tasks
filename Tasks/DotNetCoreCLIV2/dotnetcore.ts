@@ -3,9 +3,19 @@ import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
+import * as toml from 'toml';
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
 
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
@@ -33,10 +43,10 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join(__dirname, "node_modules", "azure-pipelines-tasks-packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         this.setConsoleCodePage();
+        this.setUpConnectedServiceEnvironmentVariables();
 
         try {
             switch (this.command) {
@@ -136,13 +146,28 @@ export class dotNetExe {
         }
     }
 
+    private getIsMicrosoftTestingPlatform(): boolean {
+        if (!tl.exist("dotnet.config")) {
+            return false;
+        }
+
+        let dotnetConfig = fs.readFileSync("dotnet.config", 'utf8');
+        return toml.parse(dotnetConfig).dotnet?.test?.runner?.name === 'Microsoft.Testing.Platform';
+    }
+
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
+        const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
+
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
+            if (isMTP) {
+                this.arguments = ` --report-trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
+            } else {
+                this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
+            }
         }
 
         // Remove old trx files
@@ -162,6 +187,22 @@ export class dotNetExe {
             const projectFile = projectFiles[fileIndex];
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
+
+            if (isMTP) {
+                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
+                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
+                    dotnet.arg("--project");
+                }
+                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
+                    dotnet.arg("--solution");
+                }
+                else {
+                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
+                    failedProjects.push(projectFile);
+                    continue;
+                }
+            }
+
             dotnet.arg(projectFile);
             dotnet.line(this.arguments);
             try {
@@ -453,6 +494,25 @@ export class dotNetExe {
             telemetry.emitTelemetry("Packaging", "DotNetCoreCLIRestore", nugetTelem);
         } catch (err) {
             tl.debug(`Unable to log NuGet task init telemetry. Err:( ${err} )`);
+        }
+    }
+
+    private setUpConnectedServiceEnvironmentVariables() {
+        var connectedService = tl.getInput('ConnectedServiceName');
+        if(connectedService) {
+            var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+            if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+                process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+                process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+                process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+                tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+            }
+            else {
+                tl.warning('Connected service is not of type Workload Identity Federation');
+            }
+        }
+        else {
+            tl.debug('No connected service set');
         }
     }
 }

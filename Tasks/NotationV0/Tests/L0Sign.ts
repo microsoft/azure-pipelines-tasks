@@ -17,7 +17,7 @@ tmr.setAnswers({
             "code": 0,
             "stdout": "extracted" 
         },
-        "notation sign localhost:5000/e2e@sha256:xxxxxx --plugin azure-kv --id https://xxx.vault.azure.net/keys/self-signed-cert/a12c1ba176df4476a9325ca48ff796ad --signature-format cose --plugin-config=self_signed=true": {
+        "notation sign localhost:5000/e2e@sha256:xxxxxx --plugin azure-kv --id https://xxx.vault.azure.net/keys/self-signed-cert/a12c1ba176df4476a9325ca48ff796ad --signature-format cose --plugin-config=self_signed=true --debug": {
             "code": 0,
             "stdout": "extracted" 
         }

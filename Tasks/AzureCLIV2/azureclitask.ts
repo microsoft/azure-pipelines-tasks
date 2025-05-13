@@ -1,12 +1,23 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
+
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 const AZ_SESSION_REFRESH_INTERVAL_MS: number = 480000; // 8 minutes, 2 minutes before IdToken expiry date
 
@@ -37,7 +48,18 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            Utility.throwIfError(tl.execSync("az", "--version"));
+
+            if (tl.getPipelineFeature('UseAzVersion')) {
+                const azVersionResult: IExecSyncResult = tl.execSync("az", "version");
+                Utility.throwIfError(azVersionResult);
+                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+                
+            } else {
+                const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
+                Utility.throwIfError(azVersionResult);
+                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+            }
+
             // set az cli config dir
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
@@ -180,6 +202,44 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
     private static tenantId: string = null;
+    private static isSupportCertificateParameter: boolean = false;
+
+    private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
+        try {
+            let versionMatch = [];
+            if (tl.getPipelineFeature('UseAzVersion')) {
+                // gets azure-cli version from both az version output which is in JSON format and az --version output text format
+                versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
+            }else{
+                // gets azure-cli version from az --version output text format
+                versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
+            }
+
+            if (!versionMatch || versionMatch.length < 2) {
+                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
+                return false;
+            }
+
+            const currentVersion = versionMatch[1];
+            tl.debug(`Current Azure CLI version: ${currentVersion}`);
+
+            // Parse both versions into major, minor, patch components
+            const [currentMajor, currentMinor, currentPatch] = currentVersion.split('.').map(Number);
+            const [compareMajor, compareMinor, comparePatch] = versionToCompare.split('.').map(Number);
+
+            // Compare versions
+            if (currentMajor > compareMajor) return true;
+            if (currentMajor < compareMajor) return false;
+
+            if (currentMinor > compareMinor) return true;
+            if (currentMinor < compareMinor) return false;
+
+            return currentPatch >= comparePatch;
+        } catch (error) {
+            tl.error(`Error checking Azure CLI version: ${error.message}`);
+            return false;
+        }
+    }
 
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
@@ -192,8 +252,11 @@ export class azureclitask {
 
             const federatedToken = await this.getIdToken(connectedService);
             tl.setSecret(federatedToken);
-            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
+            if(!visibleAzLogin ){
+                args += ` --output none`;
+            }
             //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
@@ -208,6 +271,7 @@ export class azureclitask {
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
+            let authParam: string = "--password";
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
@@ -216,6 +280,9 @@ export class azureclitask {
 
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
+                if(this.isSupportCertificateParameter) {
+                    authParam = "--certificate";
+                }
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
                 cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
                 fs.writeFileSync(cliPassword, certificateContent);
@@ -231,10 +298,10 @@ export class azureclitask {
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
             if (visibleAzLogin) {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             }
             else {
-                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
+                Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
             }
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
@@ -291,13 +358,11 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
-#if NODE20
         // since node19 default node's GlobalAgent has timeout 5sec
         // keepAlive is set to true to avoid creating default node's GlobalAgent
         const webApiOptions = {
             keepAlive: true
         }
-#endif
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
@@ -306,11 +371,7 @@ export class azureclitask {
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
-#if NODE20
         const connection = new WebApi(uri, authHandler, webApiOptions);
-#else
-        const connection = new WebApi(uri, authHandler);
-#endif
         const api: ITaskApi = await connection.getTaskApi();
         const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {

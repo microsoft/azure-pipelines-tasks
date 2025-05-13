@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "appcenter-file-upload-client-node": "1.0.0",
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "@azure/storage-blob": "^12.10.0",
@@ -26,6 +26,6 @@
     "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

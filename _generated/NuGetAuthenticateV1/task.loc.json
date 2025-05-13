@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 6
+    "Minor": 247,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -46,6 +46,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -56,8 +60,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.244.6",
-    "Node20_229_1": "1.244.7",
-    "wif_242": "1.244.8"
+    "Default": "1.247.4",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.247.5"
   }
 }

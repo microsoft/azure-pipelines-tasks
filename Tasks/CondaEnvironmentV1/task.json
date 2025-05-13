@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 244,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -89,6 +89,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

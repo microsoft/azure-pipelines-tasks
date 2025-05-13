@@ -1,5 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION)
 }
 
 function Add-Certificate {
@@ -363,11 +364,21 @@ function ConvertTo-Pfx {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
 
-    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
-    $env:RANDFILE=".rnd"
+    if(-not $featureFlags.useOpenssLatestVersion) {
+     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
+     $env:RANDFILE=".rnd"
 
-    $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+     $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    }
+   else{
+     $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
+     $env:RANDFILE=".rnd"
+
+     $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+     }
+     
     $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword

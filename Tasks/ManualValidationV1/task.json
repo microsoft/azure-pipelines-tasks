@@ -15,7 +15,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 244,
+        "Minor": 253,
         "Patch": 0
     },
     "inputs": [
@@ -34,6 +34,14 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action."
+        },
+        {
+            "name": "allowApproversToApproveTheirOwnRuns",
+            "type": "boolean",
+            "label": "Allow approvers to approve their own run",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, approver will be able to approve their own run"            
         },
         {
             "name": "instructions",

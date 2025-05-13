@@ -10,7 +10,7 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 256,
     "Patch": 0
   },
   "groups": [
@@ -18,6 +18,12 @@
       "name": "commandConfig",
       "displayName": "ms-resource:loc.group.displayName.commandConfig",
       "isExpanded": true
+    },
+    {
+      "name": "timestamp",
+      "displayName": "ms-resource:loc.group.displayName.timestamp",
+      "isExpanded": false,
+      "visibleRule": "command = sign"
     },
     {
       "name": "pluginConfig",
@@ -61,7 +67,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.1.1",
+      "defaultValue": "1.3.2",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "visibleRule": "command = install && isCustomVersion = false",
@@ -136,7 +142,7 @@
       "name": "akvPluginVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.akvPluginVersion",
-      "defaultValue": "1.2.0",
+      "defaultValue": "1.2.1",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.akvPluginVersion",
       "visibleRule": "plugin = azureKeyVault",
@@ -180,6 +186,26 @@
       "defaultValue": false,
       "visibleRule": "plugin = azureKeyVault",
       "groupName": "pluginConfig"
+    },
+    {
+      "name": "timestampURL",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.timestampURL",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "command = sign",
+      "helpMarkDown": "ms-resource:loc.input.help.timestampURL",
+      "groupName": "timestamp"
+    },
+    {
+      "name": "timestampRootCert",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.timestampRootCert",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "command = sign",
+      "helpMarkDown": "ms-resource:loc.input.help.timestampRootCert",
+      "groupName": "timestamp"
     },
     {
       "name": "trustPolicy",

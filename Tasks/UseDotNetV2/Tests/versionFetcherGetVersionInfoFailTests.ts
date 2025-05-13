@@ -109,9 +109,20 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
+mockery.registerMock('azure-pipelines-task-lib/task', {
+    loc: function (locString, param: string[]) { return tl.loc(locString, param); },
+    debug: function (message) { return tl.debug(message); },
+    error: function (errorMessage) { return tl.error(errorMessage); },
+    getVariable: function (variableName) { return tl.getVariable(variableName); },
+    getInput: function (inputName, required) { return tl.getInput(inputName, required); },
+    getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
+    setResourcePath: function (path) { return; }
+});
+
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 
-const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";
 const ReleasesJsonUrl2: string = "https://releases.file.com/version2.2.json"
 const ReleasesJsonUrl3: string = "https://releases.file.com/version3.0.json"
 const ReleasesJsonUrl4: string = "https://releases.file.com/version4.0.json"

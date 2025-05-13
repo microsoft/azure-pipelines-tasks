@@ -15,7 +15,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 244,
+    "Minor": 253,
     "Patch": 0
   },
   "inputs": [
@@ -34,6 +34,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.approvers"
+    },
+    {
+      "name": "allowApproversToApproveTheirOwnRuns",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowApproversToApproveTheirOwnRuns",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.allowApproversToApproveTheirOwnRuns"
     },
     {
       "name": "instructions",

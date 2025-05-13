@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 242,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "groups": [
     {
@@ -277,6 +277,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

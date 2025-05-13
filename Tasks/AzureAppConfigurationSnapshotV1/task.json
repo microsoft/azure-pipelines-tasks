@@ -2,14 +2,14 @@
     "id": "520c1ef0-be95-4931-9278-6e3ac79b81f2",
     "name": "AzureAppConfigurationSnapshot",
     "friendlyName": "Azure App Configuration Snapshot",
-    "description": "Create a snapshot in an Azure App Configuration instance",
+    "description": "Create a configuration snapshot in Azure App Configuration through build or deployment pipelines",
     "helpUrl": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-snapshots",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 244,
+        "Minor": 255,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration Snapshot",

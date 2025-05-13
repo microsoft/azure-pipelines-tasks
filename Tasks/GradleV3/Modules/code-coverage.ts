@@ -24,6 +24,8 @@ export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Prom
     buildProperties['ismultimodule'] = String(settings.isMultiModule);
     buildProperties['gradle5xOrHigher'] = String(settings.gradle5xOrHigher);
     buildProperties['gradleVersion'] = settings.gradleVersion;
+    buildProperties['useJacocoTemplateV2forSingleModule'] = String(settings.useJacocoTemplateV2forSingleModule);
+    buildProperties['useJacocoTemplateV2forMultiModule'] = String(settings.useJacocoTemplateV2forMultiModule);
 
     const codeCoverageEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', settings.codeCoverageTool.toLowerCase());
     return codeCoverageEnabler.enableCodeCoverage(buildProperties);

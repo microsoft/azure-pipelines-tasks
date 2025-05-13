@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "Conda Environment $(environmentName)",
@@ -75,6 +75,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

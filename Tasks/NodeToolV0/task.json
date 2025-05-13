@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "satisfies": [
     "Node",
@@ -108,6 +108,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nodetool.js",
       "argumentFormat": ""
     }
