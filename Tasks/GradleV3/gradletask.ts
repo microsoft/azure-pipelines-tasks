@@ -150,6 +150,23 @@ async function run() {
             codeAnalysisResult.gradleResult = -1;
             codeAnalysisResult.statusFailed = true;
             codeAnalysisResult.analysisError = err;
+            
+            const isAnyCodeAnalysisEnabled = tl.getBoolInput('checkstyleAnalysisEnabled', false) || tl.getBoolInput('findbugsAnalysisEnabled', false) || tl.getBoolInput('pmdAnalysisEnabled', false) || tl.getBoolInput('spotBugsAnalysisEnabled', false) || tl.getBoolInput('sqAnalysisEnabled', false);
+            
+            const errorMsg = err.toString().toLowerCase();
+            const isTaskNameIndicatesTest = inputTasks.some(task => task.toLowerCase().includes('test') && !task.toLowerCase().includes('setup'));
+            const errorMsgIndicatesTest = errorMsg.includes('test failure') || errorMsg.includes('tests failed') || errorMsg.includes('failing tests') || (errorMsg.includes('test') && errorMsg.includes('fail'));
+
+            const errorMsgIndicatesCodeAnalysis = errorMsg.includes('checkstyle') || errorMsg.includes('pmd') || errorMsg.includes('findbugs') || errorMsg.includes('spotbugs') || errorMsg.includes('sonar') || errorMsg.includes('code analysis') || errorMsg.includes('quality gate');
+            
+            codeAnalysisResult.isTestFailure = (isTaskNameIndicatesTest || errorMsgIndicatesTest)
+
+            codeAnalysisResult.isCodeAnalysisFailure = isAnyCodeAnalysisEnabled && (errorMsgIndicatesCodeAnalysis || (!codeAnalysisResult.isTestFailure));
+
+
+            if (!isAnyCodeAnalysisEnabled) {
+                codeAnalysisResult.isCodeAnalysisFailure = false;
+            }
 
             console.error(err);
             tl.debug('taskRunner fail');

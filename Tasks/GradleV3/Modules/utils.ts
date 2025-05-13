@@ -17,9 +17,13 @@ export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult): ITas
         status = TaskResult.Failed;
 
         if (codeAnalysisResult.statusFailed) {
-            message = `Code analysis failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
-        } else {
-            message = `Build failed. Gradle exit code: ${codeAnalysisResult.gradleResult}`;
+            if (codeAnalysisResult.isTestFailure && !codeAnalysisResult.isCodeAnalysisFailure) {
+                message = `Tests failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
+            } else if (codeAnalysisResult.isCodeAnalysisFailure) {
+                message = `Code analysis failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
+            } else {
+                message = `Build failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
+            }
         }
     }
 
