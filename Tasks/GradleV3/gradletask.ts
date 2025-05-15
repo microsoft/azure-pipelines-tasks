@@ -15,6 +15,7 @@ import { configureWrapperScript, isMultiModuleProject } from './Modules/project-
 import { enableCodeCoverageAsync, publishTestResults, publishCodeCoverageResultsAsync, resolveCodeCoveragePreset } from './Modules/code-coverage';
 import { ICodeAnalysisResult, ICodeCoveragePreset, ICodeCoverageSettings, IPublishCodeCoverageSettings, ITaskResult } from './interfaces';
 import { resolveTaskResult } from './Modules/utils';
+import * as stream from 'stream';
 
 async function run() {
     try {
@@ -139,9 +140,30 @@ async function run() {
 
         // START: Run code analysis
         const codeAnalysisResult: ICodeAnalysisResult = {};
+        const gradleOutput: string[] = [];
+        const stdoutStream = new stream.Writable({
+            write: (chunk, encoding, callback) => {
+                const output = chunk.toString();
+                gradleOutput.push(output);
+                process.stdout.write(output);
+                callback();
+            }
+        });
+        const stderrStream = new stream.Writable({
+            write: (chunk, encoding, callback) => {
+                const output = chunk.toString();
+                gradleOutput.push(output);
+                process.stderr.write(output);
+                callback();
+            }
+        });
+        const execOptions = getExecOptions();
+        execOptions.outStream = stdoutStream;
+        execOptions.errStream = stderrStream;
+
 
         try {
-            codeAnalysisResult.gradleResult = await gradleRunner.exec(getExecOptions());
+            codeAnalysisResult.gradleResult = await gradleRunner.exec(execOptions);
             codeAnalysisResult.statusFailed = false;
             codeAnalysisResult.analysisError = '';
 
@@ -150,24 +172,6 @@ async function run() {
             codeAnalysisResult.gradleResult = -1;
             codeAnalysisResult.statusFailed = true;
             codeAnalysisResult.analysisError = err;
-            
-            const isAnyCodeAnalysisEnabled = tl.getBoolInput('checkstyleAnalysisEnabled', false) || tl.getBoolInput('findbugsAnalysisEnabled', false) || tl.getBoolInput('pmdAnalysisEnabled', false) || tl.getBoolInput('spotBugsAnalysisEnabled', false) || tl.getBoolInput('sqAnalysisEnabled', false);
-            
-            const errorMsg = err.toString().toLowerCase();
-            const isTaskNameIndicatesTest = inputTasks.some(task => task.toLowerCase().includes('test') && !task.toLowerCase().includes('setup'));
-            const errorMsgIndicatesTest = errorMsg.includes('test failure') || errorMsg.includes('tests failed') || errorMsg.includes('failing tests') || (errorMsg.includes('test') && errorMsg.includes('fail'));
-
-            const errorMsgIndicatesCodeAnalysis = errorMsg.includes('checkstyle') || errorMsg.includes('pmd') || errorMsg.includes('findbugs') || errorMsg.includes('spotbugs') || errorMsg.includes('sonar') || errorMsg.includes('code analysis') || errorMsg.includes('quality gate');
-            
-            codeAnalysisResult.isTestFailure = (isTaskNameIndicatesTest || errorMsgIndicatesTest)
-
-            codeAnalysisResult.isCodeAnalysisFailure = isAnyCodeAnalysisEnabled && (errorMsgIndicatesCodeAnalysis || (!codeAnalysisResult.isTestFailure));
-
-
-            if (!isAnyCodeAnalysisEnabled) {
-                codeAnalysisResult.isCodeAnalysisFailure = false;
-            }
-
             console.error(err);
             tl.debug('taskRunner fail');
         }
@@ -187,8 +191,11 @@ async function run() {
         };
         await publishCodeCoverageResultsAsync(publishCodeCoverageSettings);
 
-        const taskResult: ITaskResult = resolveTaskResult(codeAnalysisResult);
+        const taskResult: ITaskResult = resolveTaskResult(codeAnalysisResult, gradleOutput);
         tl.setResult(taskResult.status, taskResult.message);
+        if(taskResult.error !== undefined && taskResult.error !== '') {
+            console.log(taskResult.error);
+        }
         // END: Run code analysis
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);

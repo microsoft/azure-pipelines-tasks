@@ -33,11 +33,10 @@ export interface ICodeAnalysisResult {
     gradleResult?: number;
     statusFailed?: boolean;
     analysisError?: any;
-    isCodeAnalysisFailure?: boolean;
-    isTestFailure?: boolean;
 }
 
 export interface ITaskResult {
     status: TaskResult;
     message: string;
+    error?: string;
 }
