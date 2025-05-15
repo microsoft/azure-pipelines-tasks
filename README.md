@@ -27,7 +27,7 @@ Check Deprecation.md file for the list of task which are no longer supported.
 
 See the documentation for [Continuous integration and deployment](https://aka.ms/tfbuild).
 
-Use the NuGet Authenticate task(https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/package/nuget-authenticate?view=azure-devops) before running tasks NuGetRestore, NuGetCommand and VSBuild that need authentication.
+Use the [NuGet Authenticate](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/package/nuget-authenticate?view=azure-devops) task before running tasks NuGetRestore, NuGetCommand and VSBuild that need authentication.
 
 ## Writing Tasks
 
