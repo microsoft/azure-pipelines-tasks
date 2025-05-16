@@ -65,8 +65,7 @@
         {
             "type": "windows-shell",
             "inline": [
-             "cmd /c \"echo run_deploy_script: {{user `delete_foldername`}}\"",
-      
+             "cmd /c \"echo run_deploy_script: {{user `delete_foldername`}}\"",      
              "cmd /c  \" if '{{user `delete_foldername`}}' == 'true' if exist c:\\\\DeployTemp rd /s /q c:\\\\DeployTemp\""
             ]
           },
