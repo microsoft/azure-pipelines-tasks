@@ -163,7 +163,16 @@
       },
       "required": "True",
       "visibleRule": "Action = Install Extensions",
-      "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
+      "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The App Service will be restarted to make sure latest changes take effect. To specify a version, use the format 'extensionId@version'. To always install the latest version (even if already installed), use 'extensionId@latest'."
+    },
+    {
+      "name": "ExtensionVersions",
+      "type": "string",
+      "label": "Extension Versions",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "Optional: Specify versions for extensions listed above. Use comma-separated list of versions in the same order as the extensions list. Use 'latest' to always install the latest version even if the extension is already installed. Leave blank to use default behavior."
     },
     {
       "name": "OutputVariable",

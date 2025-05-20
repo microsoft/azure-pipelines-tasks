@@ -41,8 +41,9 @@ export class KuduServiceUtils {
         console.log(tl.loc('StoppedContinousWebJobs'));
     }
 
-    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>): Promise<void> {
+    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>, extensionVersions?: Array<string>): Promise<void> {
         outputVariables = outputVariables ? outputVariables : [];
+        extensionVersions = extensionVersions ? extensionVersions : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
         var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
@@ -58,18 +59,54 @@ export class KuduServiceUtils {
             allSiteExtensionMap[siteExtension.title] = siteExtension;
         }
 
-        for(var extensionID of extensionList) {
+        for(var i = 0; i < extensionList.length; i++) {
+            var extensionID = extensionList[i];
+            var version = (i < extensionVersions.length) ? extensionVersions[i] : "";
+            var forceUpdate = false;
+            
+            // Check if extensionID contains version information in format extensionID@version
+            if (extensionID.includes('@') && !version) {
+                const parts = extensionID.split('@');
+                extensionID = parts[0];
+                version = parts[1];
+            }
+            
+            // If version is 'latest', we force an update even if extension is already installed
+            if (version === 'latest') {
+                forceUpdate = true;
+                version = '';
+            }
+            
             var siteExtensionDetails = null;
             if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
                 extensionID = allSiteExtensionMap[extensionID].id;
             }
-            // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
-            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
+            
+            // Python extensions are moved to Nuget and the extensions IDs are changed. The below check ensures that old extensions are mapped to new extension ID.
+            if(!forceUpdate && (siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID]))) {
                 siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
-                console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
+                
+                // If a specific version is requested and it's different from the installed version, reinstall
+                if (version && siteExtensionDetails.version !== version) {
+                    console.log(tl.loc('InstallingSiteExtension', extensionID));
+                    if (version) {
+                        console.log(`Installing version: ${version}`);
+                    }
+                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
+                    anyExtensionInstalled = true;
+                } else {
+                    console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
+                    if (siteExtensionDetails.version) {
+                        console.log(`Installed version: ${siteExtensionDetails.version}`);
+                    }
+                }
             }
             else {
-                siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                console.log(tl.loc('InstallingSiteExtension', extensionID));
+                if (version) {
+                    console.log(`Installing version: ${version}`);
+                }
+                siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
                 anyExtensionInstalled = true;
             }
             
