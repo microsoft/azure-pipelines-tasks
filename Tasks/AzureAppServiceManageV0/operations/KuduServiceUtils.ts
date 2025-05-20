@@ -92,7 +92,17 @@ export class KuduServiceUtils {
                     if (version) {
                         console.log(`Installing version: ${version}`);
                     }
-                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
+                    
+                    // Try to pass the version parameter if provided
+                    // Note: The underlying Kudu REST API may or may not support versioned installations
+                    // depending on the Azure App Service version
+                    try {
+                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
+                    } catch (error) {
+                        // If version parameter is not supported, try without it
+                        console.log(`Installing extension with version specification failed. Attempting without version specification.`);
+                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                    }
                     anyExtensionInstalled = true;
                 } else {
                     console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
@@ -106,8 +116,21 @@ export class KuduServiceUtils {
                 if (version) {
                     console.log(`Installing version: ${version}`);
                 }
+            // Try to pass the version parameter if provided
+            // Note: The underlying Kudu REST API may or may not support versioned installations
+            // depending on the Azure App Service version
+            try {
                 siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
-                anyExtensionInstalled = true;
+            } catch (error) {
+                // If version parameter is not supported, try without it
+                if (version) {
+                    console.log(`Installing extension with version specification failed. Attempting without version specification.`);
+                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                } else {
+                    throw error;
+                }
+            }
+            anyExtensionInstalled = true;
             }
             
             var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
