@@ -45,12 +45,17 @@ function findFiles(): string[] {
         }
         return [path.basename(rootFolderOrFile)];
     } else {
-        var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
-        var baseNames: string[] = [];
-        for (var i = 0; i < fullPaths.length; i++) {
-            baseNames[i] = path.basename(fullPaths[i]);
+        // Check if rootFolderOrFile is a file
+        if (fs.existsSync(rootFolderOrFile) && fs.statSync(rootFolderOrFile).isFile()) {
+            return [path.basename(rootFolderOrFile)];
+        } else {
+            var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
+            var baseNames: string[] = [];
+            for (var i = 0; i < fullPaths.length; i++) {
+                baseNames[i] = path.basename(fullPaths[i]);
+            }
+            return baseNames;
         }
-        return baseNames;
     }
 }
 
