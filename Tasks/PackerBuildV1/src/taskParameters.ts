@@ -20,7 +20,7 @@ export default class TaskParameters {
     public builtinBaseImage: string;
     public customBaseImageUrl: string;
     public isManagedImage: boolean;
-    public isDeleteTempFolder:boolean;
+    public canDeleteTempFolder:boolean;
     public managedImageName: string;
     public deleteTempFolderName:string;
     public imagePublisher: string;
@@ -57,11 +57,11 @@ export default class TaskParameters {
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
                 this.location = tl.getInput(constants.LocationInputName, true);
                 this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
-                this.isDeleteTempFolder=tl.getBoolInput(constants.DeleteTempFolderName,false);
+                this.canDeleteTempFolder=tl.getBoolInput(constants.DeleteTempFolderName,false);
                 if (this.isManagedImage) {
                     this.managedImageName = tl.getInput(constants.ManagedImageNameInputName, true);
                 }
-                if (this.isDeleteTempFolder) {
+                if (this.canDeleteTempFolder) {
                     this.deleteTempFolderName = tl.getInput(constants.DeleteTempFolderName, true);
                 }
 

@@ -43,7 +43,7 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         if(taskParameters.isManagedImage){
             this._templateVariables.set(constants.TemplateVariableManagedImageName, taskParameters.managedImageName) 
         }
-        if(taskParameters.isDeleteTempFolder){
+        if(taskParameters.canDeleteTempFolder){
             this._templateVariables.set(constants.DeleteTempFolderName, taskParameters.deleteTempFolderName); 
         }
 

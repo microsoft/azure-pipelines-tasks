@@ -218,11 +218,11 @@
       "helpMarkDown": "Specify the arguments to be passed to deployment script.",
       "groupName": "DeploymentInputs"
     }, {
-      "name": "isDeleteTempFolder",
+      "name": "canDeleteTempFolder",
       "type": "boolean",
       "label": "Delete temp folder",
       "required": true,
-      "helpMarkDown": "Check if generated temp folder to be kept or not",
+      "helpMarkDown": "This option allows you to remove temporary folder",
       "defaultValue": false,
       "groupName": "DeploymentInputs"
     },

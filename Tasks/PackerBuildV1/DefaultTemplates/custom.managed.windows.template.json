@@ -16,7 +16,7 @@
     "package_name": "{{env `package_name`}}",
     "capture_name_prefix": "{{env `capture_name_prefix`}}",
     "managed_image_name":  "{{env `managed_image_name`}}",
-    "delete_foldername": "{{env `delete_foldername`}}"
+    "delete_temp_folder": "{{env `delete_temp_folder`}}"
   },
   "builders": [{
         "type": "azure-arm",
@@ -64,8 +64,8 @@
         {
             "type": "windows-shell",
             "inline": [
-             "cmd /c \"echo run_deploy_script: {{user `delete_foldername`}}\"",      
-             "cmd /c  \" if '{{user `delete_foldername`}}' == 'true' if exist c:\\\\DeployTemp rd /s /q c:\\\\DeployTemp\""
+             "cmd /c \"echo run_deploy_script: {{user `delete_temp_folder`}}\"",      
+             "cmd /c  \" if '{{user `delete_temp_folder`}}' == 'true' if exist c:\\\\DeployTemp rd /s /q c:\\\\DeployTemp\""
             ]
           },
         {
