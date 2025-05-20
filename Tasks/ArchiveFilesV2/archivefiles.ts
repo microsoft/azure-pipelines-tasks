@@ -45,8 +45,10 @@ function findFiles(): string[] {
         }
         return [path.basename(rootFolderOrFile)];
     } else {
-        // Check if rootFolderOrFile is a file
-        if (fs.existsSync(rootFolderOrFile) && fs.statSync(rootFolderOrFile).isFile()) {
+        // Check if rootFolderOrFile is a file (only when feature flag is enabled)
+        if (tl.getPipelineFeature("DistributedTasks.Task.ArchiveOneFileWithRootFolderInput") && 
+            fs.existsSync(rootFolderOrFile) && 
+            fs.statSync(rootFolderOrFile).isFile()) {
             return [path.basename(rootFolderOrFile)];
         } else {
             var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
