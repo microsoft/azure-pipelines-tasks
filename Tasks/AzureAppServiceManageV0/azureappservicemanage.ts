@@ -67,7 +67,7 @@ async function run() {
         let targetSlot: string = tl.getInput('TargetSlot', false);
         let preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         let extensionList = tl.getInput('ExtensionsList', false);
-        let extensionVersions = tl.getInput('ExtensionVersions', false);
+        let extensionVersions = undefined; // ExtensionVersions removed as requested in PR feedback
         let extensionOutputVariables = tl.getInput('OutputVariable');
         let appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
         let azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();

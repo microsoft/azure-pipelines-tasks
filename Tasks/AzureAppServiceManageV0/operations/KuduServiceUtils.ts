@@ -3,6 +3,7 @@ import Q = require('q');
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 const pythonExtensionPrefix: string = "azureappservice-";
+const extensionVersionSupportEnabled = tl.getBoolFeatureFlag('AzureAppServiceManageV0.ExtensionVersionSupport');
 
 export class KuduServiceUtils {
     private _appServiceKuduService: Kudu;
@@ -43,7 +44,7 @@ export class KuduServiceUtils {
 
     public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>, extensionVersions?: Array<string>): Promise<void> {
         outputVariables = outputVariables ? outputVariables : [];
-        extensionVersions = extensionVersions ? extensionVersions : [];
+        extensionVersions = extensionVersions && extensionVersionSupportEnabled ? extensionVersions : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
         var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
@@ -61,20 +62,34 @@ export class KuduServiceUtils {
 
         for(var i = 0; i < extensionList.length; i++) {
             var extensionID = extensionList[i];
-            var version = (i < extensionVersions.length) ? extensionVersions[i] : "";
+            var version = "";
             var forceUpdate = false;
             
-            // Check if extensionID contains version information in format extensionID@version
-            if (extensionID.includes('@') && !version) {
-                const parts = extensionID.split('@');
-                extensionID = parts[0];
-                version = parts[1];
-            }
-            
-            // If version is 'latest', we force an update even if extension is already installed
-            if (version === 'latest') {
-                forceUpdate = true;
-                version = '';
+            if (extensionVersionSupportEnabled) {
+                // Get version from extensionVersions array if available
+                version = (i < extensionVersions.length) ? extensionVersions[i] : "";
+                
+                // Check if extensionID contains version information in format extensionID(version)
+                const parenthesesRegex = /^(.*)\(([^)]*)\)$/;
+                const parenthesesMatch = extensionID.match(parenthesesRegex);
+                if (parenthesesMatch && parenthesesMatch.length >= 3) {
+                    extensionID = parenthesesMatch[1]; // Extension ID
+                    version = parenthesesMatch[2] || ""; // Version
+                }
+                
+                // Maintain backwards compatibility for extensionID@version format
+                const atSignRegex = /^(.*)@(.*)$/;
+                const atSignMatch = extensionID.match(atSignRegex);
+                if (atSignMatch && atSignMatch.length >= 3 && !version) {
+                    extensionID = atSignMatch[1]; // Extension ID
+                    version = atSignMatch[2] || ""; // Version
+                }
+                
+                // If version is 'latest', we force an update even if extension is already installed
+                if (version === 'latest') {
+                    forceUpdate = true;
+                    version = '';
+                }
             }
             
             var siteExtensionDetails = null;
@@ -87,7 +102,7 @@ export class KuduServiceUtils {
                 siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 
                 // If a specific version is requested and it's different from the installed version, reinstall
-                if (version && siteExtensionDetails.version !== version) {
+                if (extensionVersionSupportEnabled && version && siteExtensionDetails.version !== version) {
                     console.log(tl.loc('InstallingSiteExtension', extensionID));
                     if (version) {
                         console.log(`Installing version: ${version}`);
@@ -101,6 +116,9 @@ export class KuduServiceUtils {
                     } catch (error) {
                         // If version parameter is not supported, try without it
                         console.log(`Installing extension with version specification failed. Attempting without version specification.`);
+                        tl.warning(`Failed to install extension ${extensionID} with version ${version}. Error: ${error.message || JSON.stringify(error)}`);
+                        console.log("##vso[telemetry.publish area=TaskInternal;feature=AzureAppServiceManageV0]" + 
+                            JSON.stringify({ extensionVersionInstallFailed: true, extensionId: extensionID, version: version }));
                         siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
                     }
                     anyExtensionInstalled = true;
@@ -113,23 +131,27 @@ export class KuduServiceUtils {
             }
             else {
                 console.log(tl.loc('InstallingSiteExtension', extensionID));
-                if (version) {
+                if (extensionVersionSupportEnabled && version) {
                     console.log(`Installing version: ${version}`);
                 }
-            // Try to pass the version parameter if provided
-            // Note: The underlying Kudu REST API may or may not support versioned installations
-            // depending on the Azure App Service version
-            try {
-                siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, version);
-            } catch (error) {
-                // If version parameter is not supported, try without it
-                if (version) {
-                    console.log(`Installing extension with version specification failed. Attempting without version specification.`);
-                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
-                } else {
-                    throw error;
+                
+                // Try to pass the version parameter if provided
+                // Note: The underlying Kudu REST API may or may not support versioned installations
+                // depending on the Azure App Service version
+                try {
+                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID, extensionVersionSupportEnabled ? version : undefined);
+                } catch (error) {
+                    // If version parameter is not supported, try without it
+                    if (extensionVersionSupportEnabled && version) {
+                        console.log(`Installing extension with version specification failed. Attempting without version specification.`);
+                        tl.warning(`Failed to install extension ${extensionID} with version ${version}. Error: ${error.message || JSON.stringify(error)}`);
+                        console.log("##vso[telemetry.publish area=TaskInternal;feature=AzureAppServiceManageV0]" + 
+                            JSON.stringify({ extensionVersionInstallFailed: true, extensionId: extensionID, version: version }));
+                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                    } else {
+                        throw error;
+                    }
                 }
-            }
             anyExtensionInstalled = true;
             }
             
