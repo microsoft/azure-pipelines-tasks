@@ -20,9 +20,9 @@ export default class TaskParameters {
     public builtinBaseImage: string;
     public customBaseImageUrl: string;
     public isManagedImage: boolean;
-    public canDeleteTempFolder:boolean;
+    public canDeleteTempFolder: boolean;
     public managedImageName: string;
-    public canDeleteTempFolderInputName:string;
+    public canDeleteTempFolderInputName: string;
     public imagePublisher: string;
     public imageOffer: string;
     public imageSku: string;
