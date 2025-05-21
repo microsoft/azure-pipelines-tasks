@@ -42,9 +42,8 @@ export class KuduServiceUtils {
         console.log(tl.loc('StoppedContinousWebJobs'));
     }
 
-    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>, extensionVersions?: Array<string>): Promise<void> {
+    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>): Promise<void> {
         outputVariables = outputVariables ? outputVariables : [];
-        extensionVersions = extensionVersions && extensionVersionSupportEnabled ? extensionVersions : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
         var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
@@ -66,9 +65,6 @@ export class KuduServiceUtils {
             var forceUpdate = false;
             
             if (extensionVersionSupportEnabled) {
-                // Get version from extensionVersions array if available
-                version = (i < extensionVersions.length) ? extensionVersions[i] : "";
-                
                 // Check if extensionID contains version information in format extensionID(version)
                 const parenthesesRegex = /^(.*)\(([^)]*)\)$/;
                 const parenthesesMatch = extensionID.match(parenthesesRegex);

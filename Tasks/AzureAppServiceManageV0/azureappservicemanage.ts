@@ -67,7 +67,6 @@ async function run() {
         let targetSlot: string = tl.getInput('TargetSlot', false);
         let preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         let extensionList = tl.getInput('ExtensionsList', false);
-        let extensionVersions = undefined; // ExtensionVersions removed as requested in PR feedback
         let extensionOutputVariables = tl.getInput('OutputVariable');
         let appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
         let azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
@@ -167,8 +166,7 @@ async function run() {
             }
             case "Install Extensions": {
                 let extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                let extensionVersionsArray = (extensionVersions) ? extensionVersions.split(',') : [];
-                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray, extensionVersionsArray);
+                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
                 break;
             }
             case "Enable Continuous Monitoring": {
