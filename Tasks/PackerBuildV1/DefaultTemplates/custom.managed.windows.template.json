@@ -16,7 +16,7 @@
     "package_name": "{{env `package_name`}}",
     "capture_name_prefix": "{{env `capture_name_prefix`}}",
     "managed_image_name":  "{{env `managed_image_name`}}",
-    "delete_temp_folder": "{{env `delete_temp_folder`}}"
+    "delete_temp_folder":  "{{env `delete_temp_folder`}}"
   },
   "builders": [{
         "type": "azure-arm",

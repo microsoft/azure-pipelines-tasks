@@ -57,7 +57,7 @@ export default class TaskParameters {
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
                 this.location = tl.getInput(constants.LocationInputName, true);
                 this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
-                this.canDeleteTempFolder=tl.getBoolInput(constants.canDeleteTempFolderInputName,false);
+                this.canDeleteTempFolder = tl.getBoolInput(constants.canDeleteTempFolderInputName, false);
                 if (this.isManagedImage) {
                     this.managedImageName = tl.getInput(constants.ManagedImageNameInputName, true);
                 }
