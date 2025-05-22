@@ -103,6 +103,7 @@ export class azurecontainerapps {
     // Miscellaneous properties
     private static imageToBuild: string;
     private static runtimeStack: string;
+    private static kind: string;
     private static ingress: string;
     private static targetPort: string;
     private static shouldUseUpdateCommand: boolean;
@@ -415,6 +416,7 @@ export class azurecontainerapps {
         // Get the ingress inputs
         this.ingress = tl.getInput('ingress', false);
         this.targetPort = tl.getInput('targetPort', false);
+        this.kind = tl.getInput('kind', false);
 
         // If both ingress and target port were not provided for an existing Container App, or if ingress is to be disabled,
         // use the 'update' command, otherwise we should use the 'up' command that performs a PATCH operation on the ingress properties.
@@ -471,6 +473,11 @@ export class azurecontainerapps {
                 // Note: this step should be skipped if we're updating an existing Container App (ingress is enabled via a separate command)
                 this.commandLineArgs.push(`--ingress ${this.ingress}`);
                 this.commandLineArgs.push(`--target-port ${this.targetPort}`);
+            }
+
+            // Set the value of kind if provided
+            if (!util.isNullOrEmpty(this.kind)) {
+                this.commandLineArgs.push(`--kind ${this.kind}`);
             }
         }
 
