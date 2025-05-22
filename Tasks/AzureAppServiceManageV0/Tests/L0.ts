@@ -33,4 +33,7 @@ describe('Azure App Service Manage Suite', function() {
     KuduServiceTests.KuduServiceTests();
     AppInsightsWebTests.ApplicationInsightsTests();
     ResourcesTests.ResourcesTests();
+    
+    // Extension Version Support Tests
+    require('./L0ExtensionVersionSupport/L0ExtensionVersionSupport');
 });
