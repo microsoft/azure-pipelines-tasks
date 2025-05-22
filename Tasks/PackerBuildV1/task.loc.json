@@ -218,6 +218,15 @@
       "groupName": "DeploymentInputs"
     },
     {
+      "name": "canDeleteTempFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canDeleteTempFolder",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.canDeleteTempFolder",
+      "defaultValue": false,
+      "groupName": "DeploymentInputs"
+    },
+    {
       "name": "additionalBuilderParameters",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalBuilderParameters",
