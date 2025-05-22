@@ -53,8 +53,6 @@ The task is used to manage an existing Azure App Service. The mandatory fields a
 
 * **Install Extensions:** The task can also be used to [install site extensions](https://www.siteextensions.net/packages) on the App Service. Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension such as [PHP Composer](https://www.siteextensions.net/packages/ComposerExtension/) or the right version of [Python](https://www.siteextensions.net/packages?q=Python). The App Service will be restarted to make sure latest changes take effect. Please note that extensions are only supported only for Web App on Windows.
 
-* **Extension Versions:** To specify versions for extensions, use the format 'extensionId(version)' in the Install Extensions field. Use 'latest' to always install the latest version even if the extension is already installed (e.g., 'extensionId(latest)'). The original format without version specification is still supported.
-
 ## Output variable
 When provided a variable name, the variable will be populated with the the local installation path of the selected extension. In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field. Example: outputVariable1, outputVariable2
 
