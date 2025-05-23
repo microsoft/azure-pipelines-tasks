@@ -51,7 +51,15 @@ The task is used to manage an existing Azure App Service. The mandatory fields a
 
 * **Application Insights Resource Name:** This parameter is visible when "Enable Continuous Monitoring" action is selected. Select the name of Application Insights resource where continuous monitoring data will be recorded. If your application insights resource is not listed here and you want to create a new resource, click on +new button. Once the resource is created on Azure Portal, come back here and click on refresh button.
 
-* **Install Extensions:** The task can also be used to [install site extensions](https://www.siteextensions.net/packages) on the App Service. Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension such as [PHP Composer](https://www.siteextensions.net/packages/ComposerExtension/) or the right version of [Python](https://www.siteextensions.net/packages?q=Python). The App Service will be restarted to make sure latest changes take effect. Please note that extensions are only supported only for Web App on Windows.
+* **Install Extensions:** The task can also be used to [install site extensions](https://www.siteextensions.net/packages) on the App Service. Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension such as [PHP Composer](https://www.siteextensions.net/packages/ComposerExtension/) or the right version of [Python](https://www.siteextensions.net/packages?q=Python). 
+
+  To specify a specific version of an extension, use the format `extensionId(version)`. For example, `AspNetCoreRuntime.6.0.x64(6.0.5)` will install version 6.0.5 of the AspNetCore Runtime extension. If an extension with a different version is already installed, it will be updated to the specified version.
+
+  To always update an extension to the latest version (even if it's already installed), use `extensionId(latest)`. For example, `Microsoft.AspNetCore.AzureAppServices.SiteExtension(latest)` will always update to the latest version.
+
+  If no version is specified, the extension will only be installed if it's not already present.
+
+  The App Service will be restarted to make sure latest changes take effect. Please note that extensions are only supported only for Web App on Windows.
 
 ## Output variable
 When provided a variable name, the variable will be populated with the the local installation path of the selected extension. In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field. Example: outputVariable1, outputVariable2
