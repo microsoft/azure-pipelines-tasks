@@ -18,7 +18,8 @@
     "package_name": "",
     "capture_name_prefix": "",
     "skip_clean": "",
-    "managed_image_name": ""
+    "managed_image_name": "",
+    "delete_temp_folder": ""
   },
   "builders": [{
         "type": "azure-arm",
@@ -60,7 +61,17 @@
             "chmod +x /deployTemp/{{user `package_name`}}/{{user `script_relative_path`}}",
             "/deployTemp/{{user `package_name`}}/{{user `script_relative_path`}} {{user `script_arguments`}}"
         ]
-    },
+    },{
+        "type": "shell",
+        "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+        "inline": [
+          "echo delete_temp_folder: {{user `delete_temp_folder`}}",
+          "if [ \"{{user `delete_temp_folder`}}\" = \"true\" ]; then",
+          "  echo 'Removing /deployTemp if exists...'",
+          "  rm -rf /deployTemp && echo '/deployTemp deleted'",
+          "fi"
+        ]
+      },
     {
         "type": "shell",
         "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
