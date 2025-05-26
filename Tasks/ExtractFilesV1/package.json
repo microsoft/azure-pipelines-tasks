@@ -19,7 +19,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
     "collections": "3.0.0",
-    "minimatch": "^6.0.0"
+    "minimatch": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
