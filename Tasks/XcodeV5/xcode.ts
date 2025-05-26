@@ -268,8 +268,19 @@ async function run() {
             }
         });
 
+        // Determine if we should skip the initial build step
+        const isOnlyBuildAction = actions.length === 1 && actions[0] === 'build';
+        let skipInitialBuild = false;
+        if (isOnlyBuildAction && packageApp && sdk !== 'iphonesimulator') {
+            // If only "build" is requested and packageApp is true, skip the initial build
+            skipInitialBuild = true;
+            tl.debug('Skipping initial build since only "build" action is specified and packageApp is true.');
+        }
+
         try {
-            await xcb.exec();
+            if (!skipInitialBuild) {
+                await xcb.exec();
+            }
         } catch (err) {
             if (buildOnlyDeviceErrorFound) {
                 // Tell the user they need to change Destination platform to fix this build error.
