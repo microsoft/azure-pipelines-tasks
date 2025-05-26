@@ -701,8 +701,8 @@ describe('Xcode L0 Suite', function () {
         assert(tr.invokedToolCount === 6, 'Should have ran 6 command lines.');
     });
 
-    it('should skip initial build when actions is only build and packageApp is true', async function () {
-        let tp = path.join(__dirname, 'L0BuildAndExportApp.js');
+    it('Skip initial build when action is set for packing', async function () {
+        let tp = path.join(__dirname, 'L0PackingBuild.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         await tr.runAsync();

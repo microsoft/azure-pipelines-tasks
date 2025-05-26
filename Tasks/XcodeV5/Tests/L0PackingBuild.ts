@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('actions', 'build');
+tr.setInput('actions', 'packing');
 tr.setInput('configuration', 'Release');
 tr.setInput('sdk', 'iphoneos');
 tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
