@@ -38,4 +38,5 @@ export interface ICodeAnalysisResult {
 export interface ITaskResult {
     status: TaskResult;
     message: string;
+    error?: string;
 }
