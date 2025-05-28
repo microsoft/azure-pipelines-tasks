@@ -23,6 +23,8 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'NODE|10', 'node ' ],
     [ 'NODE|12', 'node ' ],
     [ 'NODE|14', 'node ' ],
+    [ 'NODE|20', 'node ' ],
+    [ 'NODE|22', 'node ' ],
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
     [ 'PYTHON|3.8', 'python ']
