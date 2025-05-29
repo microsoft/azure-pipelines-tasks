@@ -700,4 +700,29 @@ describe('Xcode L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 6, 'Should have ran 6 command lines.');
     });
+
+    it('Skip build step when skipBuildStep is enabled', async function () {
+        let tp = path.join(__dirname, 'L0SkipBuildStep.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        // Should run version check
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+
+        // Should NOT run the initial build step when skipBuildStep is enabled
+        assert(!tr.ran('/home/bin/xcodebuild -sdk iphoneos -configuration Release -workspace /user/build/MyApp.xcodeproj/project.xcworkspace -scheme MyScheme build CODE_SIGNING_ALLOWED=NO'),
+            'Initial build should have been skipped when skipBuildStep is enabled.');
+
+        // Should run the archive step in the packaging section
+        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/MyApp.xcodeproj/project.xcworkspace -scheme MyScheme archive -sdk iphoneos -configuration Release -archivePath /user/build/MyScheme CODE_SIGNING_ALLOWED=NO'),
+            'xcodebuild archive should have been run in the packaging section.');
+
+        // Should run the export step
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/MyScheme.xcarchive -exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
+
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
 });
