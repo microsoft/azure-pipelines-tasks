@@ -63,9 +63,9 @@ export class KuduServiceUtils {
             if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
                 extensionID = allSiteExtensionMap[extensionID].id;
             }
-            // Python extensions are moved to Nuget and the extensions IDs are changed. The below check ensures that old extensions are mapped to new extension ID.
-            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
-                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
+            const alreadyInstalled = this._getInstalledSiteExtension(extensionID, siteExtensionMap);
+            if(alreadyInstalled) {
+                siteExtensionDetails = alreadyInstalled;
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
@@ -123,16 +123,23 @@ export class KuduServiceUtils {
             }
             try {
                 let siteExtensionDetails = null;
-                if (version && version.toLowerCase() !== 'latest') {
-                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtensionWithVersion(extensionID, version);
-                    anyExtensionInstalled = true;
-                } else if (version && version.toLowerCase() === 'latest') {
-                    siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
-                    anyExtensionInstalled = true;
+                const alreadyInstalled = this._getInstalledSiteExtension(extensionID, siteExtensionMap);
+                if (version) {
+                    if (version.toLowerCase() === 'latest') {
+                        if (alreadyInstalled && alreadyInstalled.local_is_latest_version !== false) {
+                            tl.debug(`Extension '${extensionID}' is already at latest version (local_is_latest_version: true), skipping install.`);
+                            siteExtensionDetails = alreadyInstalled;
+                        } else {
+                            siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                            anyExtensionInstalled = true;
+                        }
+                    } else {
+                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtensionWithVersion(extensionID, version);
+                        anyExtensionInstalled = true;
+                    }
                 } else {
-                    // No version: only install if not already installed
-                    if (siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
-                        siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
+                    if (alreadyInstalled) {
+                        siteExtensionDetails = alreadyInstalled;
                         tl.debug('ExtensionAlreadyInstalled: ' + extensionID);
                     } else {
                         siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
@@ -319,5 +326,19 @@ export class KuduServiceUtils {
      */
     public static isExtensionVersionSupportEnabled(): boolean {
         return tl.getPipelineFeature('EnableExtensionVersionSupport');
+    }
+
+    /**
+     * Returns the installed site extension details if present, including python-prefixed extensions.
+     * Python extensions are moved to Nuget and the extensions IDs are changed. The below check ensures that old extensions are mapped to new extension ID.
+     */
+    private _getInstalledSiteExtension(extensionID: string, siteExtensionMap: any): any {
+        if (siteExtensionMap[extensionID]) {
+            return siteExtensionMap[extensionID];
+        }
+        if (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID]) {
+            return siteExtensionMap[pythonExtensionPrefix + extensionID];
+        }
+        return null;
     }
 }

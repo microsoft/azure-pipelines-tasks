@@ -44,4 +44,38 @@ describe('KuduServiceUtils.installSiteExtensionsWithVersionSupport', () => {
         await utils.installSiteExtensionsWithVersion(['ext2']);
         assert.strictEqual(calls.installSiteExtension.length, 0, 'installSiteExtension should not be called');
     });
+    it('skips installSiteExtension for @latest if local_is_latest_version is true', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'ext1', local_is_latest_version: true, local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@latest']);
+        assert.strictEqual(calls.installSiteExtension.length, 0, 'installSiteExtension should not be called');
+    });
+    it('calls installSiteExtension for @latest if local_is_latest_version is false', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'ext1', local_is_latest_version: false, local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@latest']);
+        assert.strictEqual(calls.installSiteExtension.length, 1, 'installSiteExtension should be called');
+        assert.deepStrictEqual(calls.installSiteExtension[0], ['ext1']);
+    });
+    it('skips installSiteExtension for @latest if python-prefixed extension is at latest', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'azureappservice-ext1', local_is_latest_version: true, local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@latest']);
+        assert.strictEqual(calls.installSiteExtension.length, 0, 'installSiteExtension should not be called');
+    });
+    it('calls installSiteExtension for @latest if python-prefixed extension is not at latest', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'azureappservice-ext1', local_is_latest_version: false, local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@latest']);
+        assert.strictEqual(calls.installSiteExtension.length, 1, 'installSiteExtension should be called');
+        assert.deepStrictEqual(calls.installSiteExtension[0], ['ext1']);
+    });
 });
