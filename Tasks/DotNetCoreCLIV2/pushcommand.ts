@@ -24,11 +24,11 @@ export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         const timeout: number = getRequestTimeout();
-        const webApiOptions: RequestOptions = {
+        const webApiOptions: RequestOptions = { 
             socketTimeout: timeout,
             globalAgentOptions: {
-                timeout: timeout
-            }
+                timeout: timeout,
+            } 
         };
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet, webApiOptions);
     } catch (error) {
@@ -100,7 +100,7 @@ export async function run(): Promise<void> {
         tl.mkdirP(tempNuGetConfigDirectory);
         let credCleanup = () => {
             if (tl.exist(tempNuGetConfigDirectory)) {
-                tl.rmRF(tempNuGetConfigDirectory);
+                tl.rmRF(tempNuGetConfigDirectory)
             }
         };
 
@@ -113,12 +113,11 @@ export async function run(): Promise<void> {
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
             nuGetConfigHelper = new NuGetConfigHelper2(
                 null,
-                null /* nugetConfigPath */,
+                null, /* nugetConfigPath */
                 authInfo,
                 { credProviderFolder: null, extensionsDisabled: true },
                 tempNuGetPath,
-                false /* useNugetToModifyConfigFile */
-            );
+                false /* useNugetToModifyConfigFile */);
 
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
 
@@ -139,12 +138,11 @@ export async function run(): Promise<void> {
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
             nuGetConfigHelper = new NuGetConfigHelper2(
                 null,
-                null /* nugetConfigPath */,
+                null, /* nugetConfigPath */
                 authInfo,
                 { credProviderFolder: null, extensionsDisabled: true },
                 tempNuGetPath,
-                false /* useNugetToModifyConfigFile */
-            );
+                false /* useNugetToModifyConfigFile */);
 
             const externalAuth = externalAuthArr[0];
 
@@ -159,11 +157,11 @@ export async function run(): Promise<void> {
 
             const authType: auth.ExternalAuthType = externalAuth.authType;
             switch (authType) {
-                case auth.ExternalAuthType.UsernamePassword:
-                case auth.ExternalAuthType.Token:
+                case (auth.ExternalAuthType.UsernamePassword):
+                case (auth.ExternalAuthType.Token):
                     apiKey = 'RequiredApiKey';
                     break;
-                case auth.ExternalAuthType.ApiKey:
+                case (auth.ExternalAuthType.ApiKey):
                     const apiKeyAuthInfo = externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
                     break;
