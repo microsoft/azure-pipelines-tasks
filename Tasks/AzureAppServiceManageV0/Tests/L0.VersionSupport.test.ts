@@ -1,38 +1,47 @@
 import * as assert from 'assert';
-import * as sinon from 'sinon';
 import { KuduServiceUtils } from '../operations/KuduServiceUtils';
 
 describe('KuduServiceUtils.installSiteExtensionsWithVersionSupport', () => {
     let kuduServiceMock: any;
     let utils: KuduServiceUtils;
+    let calls: any;
     beforeEach(() => {
+        calls = {
+            getSiteExtensions: [],
+            getAllSiteExtensions: [],
+            installSiteExtension: [],
+            installSiteExtensionWithVersion: []
+        };
         kuduServiceMock = {
-            getSiteExtensions: sinon.stub().resolves([]),
-            getAllSiteExtensions: sinon.stub().resolves([
+            getSiteExtensions: async function() { calls.getSiteExtensions.push([...arguments]); return []; },
+            getAllSiteExtensions: async function() { calls.getAllSiteExtensions.push([...arguments]); return [
                 { id: 'ext1', title: 'ext1' },
                 { id: 'ext2', title: 'ext2' }
-            ]),
-            installSiteExtension: sinon.stub().resolves({ id: 'ext1', local_path: 'foo' }),
-            installSiteExtensionWithVersion: sinon.stub().resolves({ id: 'ext1', local_path: 'foo' })
+            ]; },
+            installSiteExtension: async function() { calls.installSiteExtension.push([...arguments]); return { id: 'ext1', local_path: 'foo' }; },
+            installSiteExtensionWithVersion: async function() { calls.installSiteExtensionWithVersion.push([...arguments]); return { id: 'ext1', local_path: 'foo' }; }
         };
         utils = new KuduServiceUtils(kuduServiceMock);
     });
     it('calls installSiteExtensionWithVersion for versioned input', async () => {
         await utils.installSiteExtensionsWithVersion(['ext1@1.2.3']);
-        assert(kuduServiceMock.installSiteExtensionWithVersion.calledWith('ext1', '1.2.3'));
+        assert.strictEqual(calls.installSiteExtensionWithVersion.length, 1, 'installSiteExtensionWithVersion should be called once');
+        assert.deepStrictEqual(calls.installSiteExtensionWithVersion[0], ['ext1', '1.2.3']);
     });
     it('calls installSiteExtension for latest', async () => {
         await utils.installSiteExtensionsWithVersion(['ext1@latest']);
-        assert(kuduServiceMock.installSiteExtension.calledWith('ext1'));
+        assert.strictEqual(calls.installSiteExtension.length, 1, 'installSiteExtension should be called once');
+        assert.deepStrictEqual(calls.installSiteExtension[0], ['ext1']);
     });
     it('calls installSiteExtension for no version if not installed', async () => {
-        kuduServiceMock.getSiteExtensions.resolves([]);
+        kuduServiceMock.getSiteExtensions = async function() { calls.getSiteExtensions.push([...arguments]); return []; };
         await utils.installSiteExtensionsWithVersion(['ext2']);
-        assert(kuduServiceMock.installSiteExtension.calledWith('ext2'));
+        assert.strictEqual(calls.installSiteExtension.length, 1, 'installSiteExtension should be called once');
+        assert.deepStrictEqual(calls.installSiteExtension[0], ['ext2']);
     });
     it('does not call installSiteExtension for no version if already installed', async () => {
-        kuduServiceMock.getSiteExtensions.resolves([{ id: 'ext2', local_path: 'bar' }]);
+        kuduServiceMock.getSiteExtensions = async function() { calls.getSiteExtensions.push([...arguments]); return [{ id: 'ext2', local_path: 'bar' }]; };
         await utils.installSiteExtensionsWithVersion(['ext2']);
-        assert(kuduServiceMock.installSiteExtension.notCalled);
+        assert.strictEqual(calls.installSiteExtension.length, 0, 'installSiteExtension should not be called');
     });
 });
