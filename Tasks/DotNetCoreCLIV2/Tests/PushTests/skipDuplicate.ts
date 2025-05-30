@@ -48,7 +48,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "findMatch": {
-        "fromMockedUtility-foo.nupkg" : ["c:\\agent\\home\\directory\\foo.nupkg"]
+        "fromMockedUtility-foo.nupkg": ["c:\\agent\\home\\directory\\foo.nupkg"]
     }
 };
 nmh.setAnswers(a);
