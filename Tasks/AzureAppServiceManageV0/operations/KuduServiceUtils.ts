@@ -134,8 +134,13 @@ export class KuduServiceUtils {
                             anyExtensionInstalled = true;
                         }
                     } else {
-                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtensionWithVersion(extensionID, version);
-                        anyExtensionInstalled = true;
+                        if (alreadyInstalled && alreadyInstalled.version === version) {
+                            tl.debug(`Extension '${extensionID}' is already at specified version '${version}', skipping install.`);
+                            siteExtensionDetails = alreadyInstalled;
+                        } else {
+                            siteExtensionDetails = await this._appServiceKuduService.installSiteExtensionWithVersion(extensionID, version);
+                            anyExtensionInstalled = true;
+                        }
                     }
                 } else {
                     if (alreadyInstalled) {

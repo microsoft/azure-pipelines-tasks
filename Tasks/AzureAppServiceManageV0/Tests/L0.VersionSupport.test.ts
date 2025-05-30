@@ -78,4 +78,21 @@ describe('KuduServiceUtils.installSiteExtensionsWithVersionSupport', () => {
         assert.strictEqual(calls.installSiteExtension.length, 1, 'installSiteExtension should be called');
         assert.deepStrictEqual(calls.installSiteExtension[0], ['ext1']);
     });
+    it('skips installSiteExtensionWithVersion for versioned input if already installed at that version', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'ext1', version: '1.2.3', local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@1.2.3']);
+        assert.strictEqual(calls.installSiteExtensionWithVersion.length, 0, 'installSiteExtensionWithVersion should not be called');
+    });
+    it('calls installSiteExtensionWithVersion for versioned input if already installed at different version', async () => {
+        kuduServiceMock.getSiteExtensions = async function() {
+            calls.getSiteExtensions.push([...arguments]);
+            return [{ id: 'ext1', version: '1.0.0', local_path: 'foo' }];
+        };
+        await utils.installSiteExtensionsWithVersion(['ext1@1.2.3']);
+        assert.strictEqual(calls.installSiteExtensionWithVersion.length, 1, 'installSiteExtensionWithVersion should be called');
+        assert.deepStrictEqual(calls.installSiteExtensionWithVersion[0], ['ext1', '1.2.3']);
+    });
 });
