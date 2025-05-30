@@ -185,15 +185,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetNuGetPushAsync(
-    dotnetPath: string,
-    packageFile: string,
-    feedUri: string,
-    apiKey: string,
-    dotnetArguments: string,
-    configFile: string,
-    workingDirectory: string
-): Q.Promise<number> {
+function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, dotnetArguments: string, configFile: string, workingDirectory: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
 
     dotnet.arg('nuget');
@@ -226,7 +218,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
             let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
             let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
             switch (endpointScheme) {
-                case "token":
+                case ("token"):
                     accessToken = endpointAuth.parameters['apitoken'];
                     break;
                 default:
@@ -280,7 +272,7 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): P
     request.method = 'GET';
     request.headers = {
         "Content-Type": "application/json",
-        Authorization: "Basic " + token64
+        "Authorization": "Basic " + token64
     };
 
     const timeout: number = getRequestTimeout();
