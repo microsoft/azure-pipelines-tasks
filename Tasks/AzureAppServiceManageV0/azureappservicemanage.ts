@@ -166,7 +166,12 @@ async function run() {
             }
             case "Install Extensions": {
                 let extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
+                if (tl.getPipelineFeature('EnableExtensionVersionSupport')) {
+                    tl.debug('Installing site extensions with version support');
+                    await kuduServiceUtils.installSiteExtensionsWithVersion(extensionList.split(','), extensionOutputVariablesArray);
+                } else {
+                    await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
+                }
                 break;
             }
             case "Enable Continuous Monitoring": {
