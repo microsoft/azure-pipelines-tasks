@@ -219,7 +219,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
             let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
             switch (endpointScheme) {
                 case ("token"):
-                    accessToken = endpointAuth.parameters['apitoken'];
+                    accessToken = endpointAuth.parameters["apitoken"];
                     break;
                 default:
                     tl.warning(tl.loc("Warning_UnsupportedServiceConnectionAuth"));
