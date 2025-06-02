@@ -286,10 +286,9 @@ export class dotNetExe {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
-                if (moveZipToOutputSource) {
-                    fs.mkdirSync(outputSource);
-                    fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
-                }
+                // When moveZipToOutputSource is true and zipAfterPublish is true, 
+                // we should leave the zip file where it was created and not move it into a subdirectory
+                // This way the artifact will be the zip file directly instead of a directory containing the zip
             }
             else {
                 throw tl.loc("noPublishFolderFoundToZip", projectFile);
