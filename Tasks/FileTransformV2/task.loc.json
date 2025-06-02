@@ -127,6 +127,6 @@
     "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile",
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
-    "FileTranformationNotEnabled": "ms-resource:loc.messages.FileTranformationNotEnabled"
+    "FileTransformationNotEnabled": "ms-resource:loc.messages.FileTransformationNotEnabled"
   }
 }

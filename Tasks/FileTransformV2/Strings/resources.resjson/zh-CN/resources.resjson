@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "已跳过更新文件: %s",
   "loc.messages.FailedToApplyTransformationReason1": "1. 在生成期间是否已对 MSBuild 生成的包应用转换。如果已应用，请删除 csproj 文件中每个配置的 <DependentUpon> 标记，然后重新生成。",
   "loc.messages.FailedToApplyTransformationReason2": "2. 确保配置文件和转换文件位于包内的同一个文件夹中。",
-  "loc.messages.FileTranformationNotEnabled": "未启用文件转换。请提供以下项之一: XML 转换规则或 JSON/XML 目标文件，以进行变量替换。"
+  "loc.messages.FileTransformationNotEnabled": "未启用文件转换。请提供以下项之一: XML 转换规则或 JSON/XML 目标文件，以进行变量替换。"
 }

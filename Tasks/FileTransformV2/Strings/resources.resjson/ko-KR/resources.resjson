@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "파일 %s 업데이트를 건너뜀",
   "loc.messages.FailedToApplyTransformationReason1": "1. 빌드 중 생성된 MSBuild 패키지에 대해 변환이 이미 적용되었는지 여부를 확인합니다. 그런 경우 csproj 파일에서 각 구성에 대해 <DependentUpon> 태그를 제거하고 다시 빌드합니다. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. 구성 파일 및 변환 파일이 패키지 내의 동일한 폴더에 있는지 확인합니다.",
-  "loc.messages.FileTranformationNotEnabled": "파일 변환을 사용할 수 없습니다. XML 변환 규칙 또는 변수 대체를 위한 JSON/XML 대상 파일 중 하나를 제공하세요."
+  "loc.messages.FileTransformationNotEnabled": "파일 변환을 사용할 수 없습니다. XML 변환 규칙 또는 변수 대체를 위한 JSON/XML 대상 파일 중 하나를 제공하세요."
 }
