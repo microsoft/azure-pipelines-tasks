@@ -936,7 +936,7 @@ CLI.bump = async (argv) => {
     const changedTasks = util.getChangedTasks();
     const jsons = ["task.json", "task.loc.json"];
 
-    argv.sprint = argv.sprint ?? (await util.getCurrentSprint()).sprint;
+    argv.sprint = argv.sprint ?? Number((await util.getCurrentSprint()).sprint);
 
     changedTasks.forEach((taskName) => {
         const taskPath = path.join(tasksPath, taskName);
