@@ -24,6 +24,8 @@
   "loc.input.help.xcodeDeveloperDir": "(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.",
   "loc.input.label.packageApp": "Create app package",
   "loc.input.help.packageApp": "Indicate whether an IPA app package file should be generated as a part of the build.",
+  "loc.input.label.skipBuildStep": "Skip build step",
+  "loc.input.help.skipBuildStep": "Skip the Xcode build step and go directly to package creation. This is useful when you have a pre-built archive and only need to export it.",
   "loc.input.label.archivePath": "Archive path",
   "loc.input.help.archivePath": "(Optional) Specify a directory where created archives should be placed.",
   "loc.input.label.exportPath": "Export path",
