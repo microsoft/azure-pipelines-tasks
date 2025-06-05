@@ -1368,7 +1368,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create the full task name so we don't need to rely on the folder name.
             var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
-            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) { 
+            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) {
                 for (let i in taskJsonContents._buildConfigMapping) {
                     if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
                         // take only first part of the name
@@ -1718,7 +1718,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
 /**
- * 
+ *
  * @param {String} buildPath - Path to the build folder
  * @param {String} taskName - Name of the task
  * @returns { Boolean } true if the task is a node task
@@ -1726,12 +1726,12 @@ exports.getTaskNodeVersion = getTaskNodeVersion;
 var isNodeTask = function(buildPath, taskName) {
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) return false;
-    
+
     const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     const taskJson = JSON.parse(taskJsonContents);
     const execution = ['execution', 'prejobexecution','postjobexecution']
         .map(key => taskJson[key]);
-    
+
     for (const executors of execution) {
         if (!executors) continue;
         for (const key of Object.keys(executors)) {
@@ -1815,7 +1815,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
         args.push("--current-sprint");
         args.push(sprintNumber);
     }
-    
+
     var writeUpdateArg = "";
     if(writeUpdates)
     {
@@ -1824,7 +1824,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 
     if(includeLocalPackagesBuildConfig)
     {
-        writeUpdateArg += " --include-local-packages-build-config";        
+        writeUpdateArg += " --include-local-packages-build-config";
     }
 
     var debugAgentDirArg = "";
@@ -1945,27 +1945,27 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
-            .filter(function (item) { 
+            .filter(function (item) {
                 // ignore node_modules
                 if (item.indexOf("node_modules") !== -1) return false
                 // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
                 if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
-                
+
                 return true;
             });
 
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-            
-            if (config) {  
+
+            if (config) {
                 if(config==="LocalPackages"){
                     dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
                 }else{
                     dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
                 }
             }
-            
+
             // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
@@ -1986,5 +1986,34 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 }
 
 exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
+
+function getChangedTasks() {
+    const changedTasks = [];
+    const changedFiles = run('git diff --name-only origin/master', false, true).split('\n');
+
+    changedFiles.forEach((file) => {
+        if (file.startsWith('Tasks/')) {
+            const taskName = file.split('/')[1];
+            if (!changedTasks.includes(taskName)) {
+                changedTasks.push(taskName);
+            }
+        }
+    });
+    return changedTasks;
+}
+
+exports.getChangedTasks = getChangedTasks;
+
+async function getCurrentSprint() {
+    const result = await fetch("https://whatsprintis.it", {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    return result.json();
+}
+
+exports.getCurrentSprint = getCurrentSprint;
 
 //------------------------------------------------------------------------------
