@@ -157,9 +157,9 @@ function getTaskList(taskList, includeLocalPackagesBuildConfig) {
     }
 
     generatedTaskFolders = generatedTaskFolders.filter((taskName) => {
-            return !taskName.endsWith(".versionmap.txt") 
+            return !taskName.endsWith(".versionmap.txt")
                 && (
-                        (((includeLocalPackagesBuildConfig && fs.existsSync(path.join(genTaskPath, taskName))) || !includeLocalPackagesBuildConfig) && fs.statSync(path.join(genTaskPath, taskName)).isDirectory()) 
+                        (((includeLocalPackagesBuildConfig && fs.existsSync(path.join(genTaskPath, taskName))) || !includeLocalPackagesBuildConfig) && fs.statSync(path.join(genTaskPath, taskName)).isDirectory())
                         || (includeLocalPackagesBuildConfig && fs.statSync(path.join(genTaskPathLocal, taskName)).isDirectory())
                 );
         });
@@ -226,7 +226,7 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = async function(/** @type {{ task: string }} */ argv) 
+CLI.build = async function(/** @type {{ task: string }} */ argv)
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
@@ -285,7 +285,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             run("npm install", /*inheritStreams:*/true);
             run("node make.js build", /*inheritStreams:*/true);
 
-            
+
             await util.installNodeAsync('20');
             // build task-lib
             cd(tasksCommonPath);
@@ -296,7 +296,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
     const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
 
-    // Wrap build function  to store files that changes after the build 
+    // Wrap build function  to store files that changes after the build
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, genTaskPathLocal, argv.includeLocalPackagesBuildConfig, writeUpdatedsFromGenTasks);
     const { allTasksNode20, allTasksDefault } = allTasks.
         reduce((res, taskName) => {
@@ -308,14 +308,14 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
             return res;
         }, {allTasksNode20: [], allTasksDefault: []})
-    
+
     if (allTasksNode20.length > 0) {
         await util.installNodeAsync('20');
         ensureTool('node', '--version', `v${node20Version}`);
         for (const taskName of allTasksNode20) {
             await buildTaskWrapped(taskName, allTasksNode20.length, 20, !writeUpdatedsFromGenTasks);
         }
-    } 
+    }
     if (allTasksDefault.length > 0) {
        await util.installNodeAsync('10');
         ensureTool('node', '--version', `v${node10Version}`);
@@ -342,7 +342,7 @@ function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
     // if task exists inside gen folder prefere it
     if (fs.existsSync(path.join(genTaskPath, taskName))) {
         taskPath = genTaskPath;
-    } 
+    }
     else if(includeLocalPackagesBuildConfig)
     {
         if(fs.existsSync(path.join(genTaskPathLocal, taskName)))
@@ -370,14 +370,14 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
         // Need to add all tasks which starts with task name
         console.log('Found generated task: ' + taskName);
         isGeneratedTask = true;
-    } 
+    }
     else if (argv.includeLocalPackagesBuildConfig && fs.existsSync(localTaskPath))
     {
         console.log('Found local generated task: ' + taskName);
         isGeneratedTask = true;
         taskPath = localTaskPath;
-    } 
-    else 
+    }
+    else
     {
         taskPath = path.join(tasksPath, taskName);
     }
@@ -441,13 +441,13 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
                 if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
                     cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
                 }
-                
+
                 if(argv.includeLocalPackagesBuildConfig)
                 {
                     if (!fs.existsSync(genTaskCommonPathLocal) && isGeneratedTask) {
                         cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPathLocal);
                     }
-                }   
+                }
 
                 mkdir('-p', modOutDir);
 
@@ -718,7 +718,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     results.forEach(({ taskName, result }) => {
         hasErrors = true;
         console.log(`Task: ${taskName}, Result: ${result}`);
-    });    
+    });
 
     if (hasErrors) {
         console.log('Errors occurred during tests');
@@ -921,43 +921,54 @@ CLI.publish = function(/** @type {{ server: string; task: string }} */ argv) {
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
 
+/**
+ * Bump the patch version for all tasks that have changed since the last commit
+ * @param {Object} argv - Arguments object containing the sprint number
+ * @param {number} [argv.sprint] - The sprint number to use for bumping the patch version. Default value is the current sprint.
+ * @example
+ * ```
+ * node make.js bump
+ * node make.js bump --sprint 258
+ * ````
+ */
+CLI.bump = async (argv) => {
+    // Get the list of changed tasks since the last commit
+    const changedTasks = util.getChangedTasks();
+    const jsons = ["task.json", "task.loc.json"];
 
-var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
-// used to bump the patch version in task.json files
-CLI.bump = function() {
-    verifyAllAgentPluginTasksAreInSkipList();
+    argv.sprint = argv.sprint ?? (await util.getCurrentSprint()).sprint;
 
-    taskList.forEach(function (taskName) {
-        // load files
-        var taskJsonPath = path.join(tasksPath, taskName, 'task.json');
-        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+    changedTasks.forEach((taskName) => {
+        const taskPath = path.join(tasksPath, taskName);
 
-        var taskLocJsonPath = path.join(tasksPath, taskName, 'task.loc.json');
-        var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
-
-        // skip agent plugin tasks
-        if(agentPluginTaskNames.indexOf(taskJson.name) > -1) {
+        if (!test('-d', taskPath)) {
             return;
         }
 
-        if (typeof taskJson.version.Patch != 'number') {
-            fail(`Error processing '${taskName}'. version.Patch should be a number.`);
-        }
+        jsons.forEach((jsonFile) => {
+            const taskJsonPath = path.join(taskPath, jsonFile);
 
-        taskJson.version.Patch = taskJson.version.Patch + 1;
-        taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
+            if (!test('-f', taskJsonPath)) {
+                return;
+            }
 
-        const taskJsonStringified = JSON.stringify(taskJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
-        fs.writeFileSync(taskJsonPath, taskJsonStringified);
-        const taskLocJsonStringified = JSON.stringify(taskLocJson, null, 2).replace(/(\n|\r\n)/g, os.EOL);
-        fs.writeFileSync(taskLocJsonPath, taskLocJsonStringified);
+            const taskJson = fileToJson(taskJsonPath);
 
-        // Check that task.loc and task.loc.json versions match
-        if ((taskJson.version.Major !== taskLocJson.version.Major) ||
-            (taskJson.version.Minor !== taskLocJson.version.Minor) ||
-            (taskJson.version.Patch !== taskLocJson.version.Patch)) {
-            console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
-        }
+            if (argv.sprint > taskJson.version.Minor) {
+                taskJson.version.Minor = argv.sprint;
+                taskJson.version.Patch = 0;
+            } else if (argv.sprint === taskJson.version.Minor) {
+                taskJson.version.Patch++;
+            } else {
+                throw new Error(`Sprint version ${argv.sprint} is less than the current task version Minor ${taskJson.version.Minor}. Cannot bump version.`);
+            }
+
+            fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
+
+            if (jsonFile === "task.json") {
+                console.log(`Bump version of ${taskName} to ${Object.values(taskJson.version).join(".")}`);
+            }
+        });
     });
 }
 
@@ -1046,7 +1057,7 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 // 1. Copy generated task to base task, delete generated files in  _generated/Task_Node20 and Tasks/taskname/_buildConfig/Node20.
 // 2. Update versionmap.txt file.
 // 3. Remove _buildConfigMapping section in task.json and task-loc.json
-// 4. Update the buildConfig section in make-option.json.  
+// 4. Update the buildConfig section in make-option.json.
 CLI.mergeBuildConfig = function(/** @type {{ config: string }} */ argv) {
     var config = argv.config
     banner(`Merging all tasks under ${config} build config into base tasks...`);
