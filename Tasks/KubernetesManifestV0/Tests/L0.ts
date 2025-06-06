@@ -1,13 +1,15 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as assert from 'assert';
+import * as assert from 'node:assert';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import * as yaml from 'js-yaml';
+
 import * as shared from './TestShared';
 import * as utils from '../src/utils/utilities';
 import { updateImagePullSecrets, updateImageDetails } from '../src/utils/KubernetesObjectUtility';
-import * as yaml from 'js-yaml';
-import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
@@ -40,19 +42,19 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for deploy with none strategy', (done: Mocha.Done) => {
+    it('Run successfuly for deploy with none strategy', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;
         process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key1\ntest-key2';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
         done();
     });
 
-    it('Run successfully for deploy canary', (done: Mocha.Done) => {
+    it('Run successfully for deploy canary', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -62,7 +64,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.isStableDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'false';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment-canary created') != -1, 'Canary deployment is created');
         assert(tr.stdout.indexOf('nginx-deployment-baseline created') != -1, 'Baseline deployment is created');
@@ -73,7 +75,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should fail when canary deployment already exits', (done: Mocha.Done) => {
+    it('Run should fail when canary deployment already exits', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -82,29 +84,29 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.isStableDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
-    it('Run should fail for promote with none strategy', (done: Mocha.Done) => {
+    it('Run should fail for promote with none strategy', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;
         process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key';
-        tr.run();
+        tr.runAsync();
         assert(tr.failed, 'task should have failed');
         done();
     });
 
-    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: Mocha.Done) => {
+    it('Run successfuly for promote with canary strategy when baseline resource exists', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
         assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
@@ -115,13 +117,13 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: Mocha.Done) => {
+    it('Run successfuly for promote with canary strategy when baseline resource does not exist', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
         assert(tr.stdout.indexOf('Rollout status has been skipped for Deployment as only updateStartegy:\'RollingUpdate\' is allowed') != -1, 'deployment rollout status skipped');
@@ -132,63 +134,63 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: Mocha.Done) => {
+    it('Run successfuly for reject with canary strategy when baseline resource exists', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
         assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
         done();
     });
 
-    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: Mocha.Done) => {
+    it('Run successfuly for reject with canary strategy when baseline resource does not exist', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
         assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
         done();
     });
 
-    it('Run should fail for reject with none strategy', (done: Mocha.Done) => {
+    it('Run should fail for reject with none strategy', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;
-        tr.run();
+        tr.runAsync();
         assert(tr.failed, 'task should have failed');
         done();
     });
 
-    it('Run successfuly for delete with arguments', (done: Mocha.Done) => {
+    it('Run successfuly for delete with arguments', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.arguments] = 'deployment nginx-deployment'
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.delete;
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('deleted successfuly') != -1, 'Deleted successfuly');
         done();
     });
 
-    it('Run should fail for delete with no arguments', (done: Mocha.Done) => {
+    it('Run should fail for delete with no arguments', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.delete;
-        tr.run();
+        tr.runAsync();
         assert(tr.failed, 'task should have failed');
         done();
     });
 
-    it('Run should succeed with helm bake and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -196,13 +198,13 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm';
         process.env[shared.TestEnvVars.helmVersion] = "v2";
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should succeed with helm3 bake and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm3 bake and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -210,13 +212,13 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm';
         process.env[shared.TestEnvVars.helmVersion] = "v3";
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should succeed with helm2 type (backward compat) with helm2 and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm2 type (backward compat) with helm2 and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -224,13 +226,13 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         process.env[shared.TestEnvVars.helmVersion] = "v2";
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake overriding release name and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -239,14 +241,14 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'helm';
         process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
         done();
     });
 
-    it('Run should succeed with helm3 bake overriding release name and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm3 bake overriding release name and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -255,7 +257,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'helm';
         process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
@@ -263,7 +265,7 @@ describe('Kubernetes Manifests Suite', function () {
         done(tr.stderr);
     });
 
-    it('Run should succeed with helm2 type (backward compat) and helm3 bake overriding release name and honor namespace field', (done: Mocha.Done) => {
+    it('Run should succeed with helm2 type (backward compat) and helm3 bake overriding release name and honor namespace field', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -272,7 +274,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
@@ -280,7 +282,7 @@ describe('Kubernetes Manifests Suite', function () {
         done(tr.stderr);
     });
 
-    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -289,7 +291,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         process.env.RemoveNamespaceFromEndpoint = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
@@ -298,7 +300,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -307,7 +309,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
         process.env.RemoveNamespaceFromEndpoint = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('newReleaseName') > -1, 'bake should have overriden release name');
@@ -317,7 +319,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake should override values with : correctly', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake should override values with : correctly', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -326,7 +328,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
@@ -335,7 +337,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm3 bake should override values with : correctly', (done: Mocha.Done) => {
+    it('Run should succeed with helm3 bake should override values with : correctly', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -344,7 +346,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.helmVersion] = "v3";
         process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
         process.env.RemoveNamespaceFromEndpoint = 'true';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
@@ -353,7 +355,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake with image substituion', (done: Mocha.Done) => {
+    it('Run should succeed with helm bake with image substituion', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -362,19 +364,19 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'helm';
         process.env[shared.TestEnvVars.helmVersion] = "v2";
         process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should successfully create secret', (done: Mocha.Done) => {
+    it('Run should successfully create secret', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.createSecret;
         process.env[shared.TestEnvVars.secretName] = 'secret';
         process.env[shared.TestEnvVars.secretType] = 'generic';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('delete secret') > -1, 'task should have deleted secret');
         assert(tr.stdout.indexOf('create secret') > -1, 'task should have created secret');
@@ -382,20 +384,20 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should scale', (done: Mocha.Done) => {
+    it('Run should scale', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.scale;
         process.env[shared.TestEnvVars.kind] = 'replicaset';
         process.env[shared.TestEnvVars.replicas] = '1';
         process.env[shared.TestEnvVars.name] = 'r1';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('scale replicaset/r1') > -1, 'task should have run scale command');
         done();
     });
 
-    it('Run should succeessfully patch', (done: Mocha.Done) => {
+    it('Run should succeessfully patch', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.patch;
@@ -403,7 +405,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.mergeStrategy] = 'merge';
         process.env[shared.TestEnvVars.name] = 'r1';
         process.env[shared.TestEnvVars.patch] = 'somePatch';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
@@ -450,40 +452,40 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should bake docker-compose files using kompose', (done: Mocha.Done) => {
+    it('Run should bake docker-compose files using kompose', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should bake docker-compose files using kompose with image substituion', (done: Mocha.Done) => {
+    it('Run should bake docker-compose files using kompose with image substituion', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
         process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         done();
     });
 
-    it('Run should fail when docker-compose file path is not supplied', (done: Mocha.Done) => {
+    it('Run should fail when docker-compose file path is not supplied', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = '';
-        tr.run();
+        tr.runAsync();
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf('Input required: dockerComposeFile') > 0, 'proper error message should have been thrown');
         done();
@@ -507,33 +509,33 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Kustomize bake should fail when kubectl version is lower than v1.14', (done: Mocha.Done) => {
+    it('Kustomize bake should fail when kubectl version is lower than v1.14', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
         process.env.KubectlMinorVersion = '13';
-        tr.run();
+        tr.runAsync();
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf('KubectlShouldBeUpgraded') > 0, 'proper error message should have been thrown');
         done();
     });
 
-    it('Kustomize bake should pass when kubectl version is greater than or equal to v1.14', (done: Mocha.Done) => {
+    it('Kustomize bake should pass when kubectl version is greater than or equal to v1.14', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
         process.env[shared.TestEnvVars.renderType] = 'kustomize';
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
         process.env.KubectlMinorVersion = '14';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
         done();
     });
 
-    it('Kustomize bake should pass with image substituition', (done: Mocha.Done) => {
+    it('Kustomize bake should pass with image substituition', async (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
@@ -541,7 +543,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
         process.env[shared.TestEnvVars.containers] = 'nginx:1.1.1\nalpine';
         process.env.KubectlMinorVersion = '14';
-        tr.run();
+        tr.runAsync();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
         done();
