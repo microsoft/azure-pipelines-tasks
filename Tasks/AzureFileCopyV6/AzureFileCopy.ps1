@@ -41,9 +41,18 @@ $additionalArgumentsForBlobCopy = $additionalArgumentsForBlobCopy.Trim()
 $additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
 $useDefaultArgumentsForBlobCopy = ($additionalArgumentsForBlobCopy -eq "")
 
-# azcopy location on automation agent
-$azCopyExeLocation = 'AzCopy\AzCopy.exe'
-$azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
+# Determine AzCopy version based on Az.Accounts version
+$azAccountsModule = Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+if ($null -eq $azAccountsModule -or ([version]$azAccountsModule.Version -ge [version]'5.0.0')) {
+    # Use AzCopy/Latest if Az.Accounts not found or version is >= 5.0.0
+    $azCopyExeLocation = 'AzCopy/Latest/AzCopy.exe'
+    $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
+    Write-Verbose "Using AzCopy/Latest (Az.Accounts not found or >= 5.0.0)"
+} else {
+    $azCopyExeLocation = 'AzCopy/Prev/AzCopy.exe'
+    $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
+    Write-Verbose "Using AzCopy/Prev (Az.Accounts < 5.0.0)"
+}
 
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer

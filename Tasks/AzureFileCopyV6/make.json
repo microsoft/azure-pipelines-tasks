@@ -1,11 +1,11 @@
 {
-"rm": [
+    "rm": [
         {
-          "items": [
-            "node_modules/https-proxy-agent/node_modules/agent-base",
-            "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base"
-          ],
-          "options": "-Rf"
+            "items": [
+                "node_modules/https-proxy-agent/node_modules/agent-base",
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base"
+            ],
+            "options": "-Rf"
         }
     ],
 
@@ -39,7 +39,11 @@
         "archivePackages": [
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.29.1/AzCopy.zip",
-                "dest": "./"
+                "dest": "AzCopy/Latest/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.25.1/AzCopy.zip",
+                "dest": "AzCopy/Prev/"
             }
         ],
         "nugetv2": [
@@ -68,15 +72,6 @@
         {
             "source": "MimeMapping.json",
             "options": "-R"
-        }
-    ],
-    "rm": [
-        {
-            "items": [
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
-                "node_modules/https-proxy-agent/node_modules/agent-base"
-            ],
-            "options": "-Rf"
         }
     ]
 }
