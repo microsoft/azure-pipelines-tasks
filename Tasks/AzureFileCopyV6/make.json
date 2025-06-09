@@ -39,11 +39,11 @@
         "archivePackages": [
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.29.1/AzCopy.zip",
-                "dest": "AzCopy/Latest/"
+                "dest": "./"
             },
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.25.1/AzCopy.zip",
-                "dest": "AzCopy/Prev/"
+                "dest": "AzCopy_Prev"
             }
         ],
         "nugetv2": [
