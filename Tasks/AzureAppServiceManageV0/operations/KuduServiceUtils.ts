@@ -63,9 +63,9 @@ export class KuduServiceUtils {
             if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
                 extensionID = allSiteExtensionMap[extensionID].id;
             }
-            // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
-            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
-                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
+            const alreadyInstalled = this._getInstalledSiteExtension(extensionID, siteExtensionMap);
+            if(alreadyInstalled) {
+                siteExtensionDetails = alreadyInstalled;
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
@@ -86,6 +86,85 @@ export class KuduServiceUtils {
         tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {
+            await this.restart();
+        }
+    }
+
+    /**
+     * Installs site extensions with version support if specified (name@version).
+     * Emits telemetry for attempts, successes, and failures.
+     * Falls back to legacy behavior for non-versioned extensions.
+     */
+    public async installSiteExtensionsWithVersion(extensionList: Array<string>, outputVariables?: Array<string>): Promise<void> {
+        outputVariables = outputVariables ? outputVariables : [];
+        var outputVariableIterator: number = 0;
+        var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
+        var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
+        var anyExtensionInstalled: boolean = false;
+        var siteExtensionMap = {};
+        var allSiteExtensionMap = {};
+        var extensionLocalPaths: string = "";
+        for (var siteExtension of siteExtensions) {
+            siteExtensionMap[siteExtension.id] = siteExtension;
+        }
+        for (var siteExtension of allSiteExtensions) {
+            allSiteExtensionMap[siteExtension.id] = siteExtension;
+            allSiteExtensionMap[siteExtension.title] = siteExtension;
+        }
+        for (const ext of extensionList) {
+            const { name, version } = this._parseExtensionNameAndVersion(ext);
+            if (!name) {
+                tl.warning(`Malformed extension input: '${ext}'`);
+                continue;
+            }
+            let extensionID = name;
+            if (allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
+                extensionID = allSiteExtensionMap[extensionID].id;
+            }
+            try {
+                let siteExtensionDetails = null;
+                const alreadyInstalled = this._getInstalledSiteExtension(extensionID, siteExtensionMap);
+                if (version) {
+                    if (version.toLowerCase() === 'latest') {
+                        if (alreadyInstalled && alreadyInstalled.local_is_latest_version !== false) {
+                            tl.debug(`Extension '${extensionID}' is already at latest version (local_is_latest_version: true), skipping install.`);
+                            siteExtensionDetails = alreadyInstalled;
+                        } else {
+                            siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                            anyExtensionInstalled = true;
+                        }
+                    } else {
+                        if (alreadyInstalled && alreadyInstalled.version === version) {
+                            tl.debug(`Extension '${extensionID}' is already at specified version '${version}', skipping install.`);
+                            siteExtensionDetails = alreadyInstalled;
+                        } else {
+                            siteExtensionDetails = await this._appServiceKuduService.installSiteExtensionWithVersion(extensionID, version);
+                            anyExtensionInstalled = true;
+                        }
+                    }
+                } else {
+                    if (alreadyInstalled) {
+                        siteExtensionDetails = alreadyInstalled;
+                        tl.debug('ExtensionAlreadyInstalled: ' + extensionID);
+                    } else {
+                        siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
+                        anyExtensionInstalled = true;
+                    }
+                }
+                var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails as any);
+                extensionLocalPaths += extensionLocalPath + ",";
+                if (outputVariableIterator < outputVariables.length) {
+                    tl.debug('Set output Variable ' + outputVariables[outputVariableIterator] + ' to value: ' + extensionLocalPath);
+                    tl.setVariable(outputVariables[outputVariableIterator], extensionLocalPath);
+                    outputVariableIterator += 1;
+                }
+            } catch (err) {
+                tl.warning(`Failed to install extension ${name}${version ? '@' + version : ''}: ${err}`);
+            }
+        }
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths.slice(0, -1));
+        tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
+        if (anyExtensionInstalled) {
             await this.restart();
         }
     }
@@ -220,5 +299,51 @@ export class KuduServiceUtils {
             deployer : 'VSTS',
             details : buildOrReleaseUrl
         };
+    }
+
+    /**
+     * Helper to parse extension name and version from a string like 'name@version'.
+     * Returns { name: string, version: string|null }.
+     * Handles edge cases: missing name, empty version, malformed input.
+     */
+    private _parseExtensionNameAndVersion(extension: string): { name: string, version: string|null } {
+        if (!extension || typeof extension !== 'string') {
+            return { name: '', version: null };
+        }
+        const atIdx = extension.indexOf('@');
+        if (atIdx === -1) {
+            return { name: extension, version: null };
+        }
+        const name = extension.substring(0, atIdx).trim();
+        const version = extension.substring(atIdx + 1).trim();
+        if (!name) {
+            return { name: '', version: null };
+        }
+        if (!version) {
+            return { name, version: null };
+        }
+        return { name, version };
+    }
+
+    /**
+     * Checks if the versioned extension install feature flag is enabled.
+     * Uses pipeline variable injection. Name: EnableExtensionVersionSupport
+     */
+    public static isExtensionVersionSupportEnabled(): boolean {
+        return tl.getPipelineFeature('EnableExtensionVersionSupport');
+    }
+
+    /**
+     * Returns the installed site extension details if present, including python-prefixed extensions.
+     * Python extensions are moved to Nuget and the extensions IDs are changed. The below check ensures that old extensions are mapped to new extension ID.
+     */
+    private _getInstalledSiteExtension(extensionID: string, siteExtensionMap: any): any {
+        if (siteExtensionMap[extensionID]) {
+            return siteExtensionMap[extensionID];
+        }
+        if (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID]) {
+            return siteExtensionMap[pythonExtensionPrefix + extensionID];
+        }
+        return null;
     }
 }
