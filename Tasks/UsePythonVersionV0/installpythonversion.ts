@@ -39,7 +39,14 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
             task.warning(`Standard installation failed or produced incomplete installation: ${error.message}`);
             task.warning('Attempting alternative installation method...');
             
-            await installPythonAlternative(pythonInstallerDir, versionSpec, parameters);
+            try {
+                await installPythonAlternative(pythonInstallerDir, versionSpec, parameters);
+                task.warning('Alternative installation method succeeded');
+            } catch (altError) {
+                task.error(`Alternative installation method also failed: ${altError.message}`);
+                throw new Error(`Both standard and alternative Python installation methods failed. ` +
+                              `Standard error: ${error.message}. Alternative error: ${altError.message}`);
+            }
         }
     } else {
         return task.exec('bash', './setup.sh', installerScriptOptions);
@@ -186,7 +193,12 @@ async function installPythonAlternative(pythonInstallerDir: string, versionSpec:
     // Clean up any existing incomplete installation
     if (fs.existsSync(pythonArchPath)) {
         task.debug(`Removing existing installation at ${pythonArchPath}`);
-        fs.rmSync(pythonArchPath, { recursive: true, force: true });
+        try {
+            // Simple recursive removal using task.exec
+            await task.exec('cmd', ['/c', `rmdir /s /q "${pythonArchPath}"`], { windowsHide: true });
+        } catch (error) {
+            task.warning(`Could not remove existing installation: ${error.message}`);
+        }
     }
     
     // Ensure the target directory exists
@@ -376,7 +388,10 @@ async function validatePythonInstallation(versionSpec: string, parameters: TaskP
     }
 
     if (hasErrors) {
-        throw new Error('Python installation validation failed: installation is incomplete. This is a known issue with certain Python archive versions. Please try using a different Python version or report this issue.');
+        const message = 'Python installation validation failed: installation is incomplete. ' +
+                       'This may be due to a known issue with the Python installer when run from certain directories. ' +
+                       'The task will now attempt an alternative installation method.';
+        throw new Error(message);
     }
 
     task.debug('Python installation validation completed successfully');
