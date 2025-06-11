@@ -13,7 +13,7 @@ tmr.setInput('publishWebProjects', "false");
 tmr.setInput('arguments', "--configuration release --output /usr/out");
 tmr.setInput('zipAfterPublish', "true");
 tmr.setInput('modifyOutputPath', "false");
-tmr.setInput('zipAfterPublishCreateDirectory', "false"); // Test new simplified behavior
+tmr.setInput('zipAfterPublishCreateDirectory', "true"); // Test legacy behavior with directory creation
 
 // Mock file system operations for testing zip functionality
 const mockFs = {

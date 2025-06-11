@@ -28,6 +28,7 @@ export class dotNetExe {
     private arguments: string;
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
+    private zipAfterPublishCreateDirectory: boolean;
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
     private workingDirectory: string;
@@ -39,6 +40,7 @@ export class dotNetExe {
         this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
+        this.zipAfterPublishCreateDirectory = tl.getBoolInput("zipAfterPublishCreateDirectory", true);
         this.workingDirectory = tl.getPathInput("workingDirectory", false);
     }
 
@@ -286,9 +288,14 @@ export class dotNetExe {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
-                // When moveZipToOutputSource is true and zipAfterPublish is true, 
-                // we should leave the zip file where it was created and not move it into a subdirectory
-                // This way the artifact will be the zip file directly instead of a directory containing the zip
+                
+                // Check if we should create directory for ZIP output (legacy behavior)
+                if (moveZipToOutputSource && this.zipAfterPublishCreateDirectory) {
+                    // Legacy behavior: create directory and move ZIP file into it
+                    fs.mkdirSync(outputSource);
+                    fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
+                }
+                // If zipAfterPublishCreateDirectory is false, leave ZIP file at original location (new simplified behavior)
             }
             else {
                 throw tl.loc("noPublishFolderFoundToZip", projectFile);

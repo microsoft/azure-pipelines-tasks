@@ -333,6 +333,18 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
+    it('publish works with zipAfterPublish and legacy directory creation option', async () => {
+        process.env["__projects__"] = "web/project.json";
+        process.env["__publishWebProjects__"] = "false";
+        process.env["__arguments__"] = "--configuration release --output /usr/out";
+        let tp = path.join(__dirname, 'zipAfterPublishLegacyTests.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
     it('publish fails with zipAfterPublish and publishWebProjects option with no project file specified', async () => {
         process.env["__projects__"] = "";
         process.env["__publishWebProjects__"] = "false";
