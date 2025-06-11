@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 257,
+    "Minor": 264,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -138,6 +138,7 @@
       "Execute": {
         "EndpointId": "$(ARMAuthentication)",
         "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+        "ResourceURL": "api://$(endpoint.serviceprincipalid)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",
