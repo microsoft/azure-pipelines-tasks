@@ -179,15 +179,7 @@
       "required": false,
       "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
     },
-    {
-      "name": "zipAfterPublishCreateDirectory",
-      "type": "boolean",
-      "visibleRule": "command = publish && zipAfterPublish = true",
-      "label": "Create directory for ZIP output",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "If true, the ZIP file will be placed in a directory with the same name as the output path (legacy behavior). If false, the ZIP file will remain at the original output location (simplified behavior)."
-    },
+
     {
       "name": "selectOrConfig",
       "aliases": [

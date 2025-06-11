@@ -13,7 +13,7 @@ tmr.setInput('publishWebProjects', "false");
 tmr.setInput('arguments', "--configuration release --output /usr/out");
 tmr.setInput('zipAfterPublish', "true");
 tmr.setInput('modifyOutputPath', "false");
-tmr.setInput('zipAfterPublishCreateDirectory', "false"); // Test new simplified behavior
+// tmr.setInput('zipAfterPublishCreateDirectory', "false"); // Removed: now controlled by feature flag
 
 // Mock file system operations for testing zip functionality
 const mockFs = {
@@ -89,6 +89,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tmr.setAnswers(a);
+
+// Mock getPipelineFeature to return true for simplified behavior (no directory creation)
+const mockTl = {
+    ...require('azure-pipelines-task-lib/task'),
+    getPipelineFeature: function(feature: string): boolean {
+        if (feature === 'DotNetCoreCLIZipAfterPublishSimplified') {
+            return true; // Enable simplified behavior for this test
+        }
+        return false;
+    }
+};
+
+tmr.registerMock('azure-pipelines-task-lib/task', mockTl);
 tmr.registerMock('fs', Object.assign({}, fs, mockFs));
 tmr.registerMock('archiver', mockArchiver);
 tmr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
