@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "已跳過更新檔案: %s",
   "loc.messages.FailedToApplyTransformationReason1": "1. 是否已對建置期間由 MSBuild 產生的套件套用轉換。若已套用，請移除 csproj 檔案中每項設定的 <DependentUpon> 標記，然後重建。",
   "loc.messages.FailedToApplyTransformationReason2": "2. 確認組態檔與轉換檔皆位於套件內的同一個資料夾中。",
-  "loc.messages.FileTranformationNotEnabled": "未啟用檔案轉換功能。請提供下列其中一項: XML 轉換規則或 JSON/XML 目標檔案，以替代變數。"
+  "loc.messages.FileTransformationNotEnabled": "未啟用檔案轉換功能。請提供下列其中一項: XML 轉換規則或 JSON/XML 目標檔案，以替代變數。"
 }

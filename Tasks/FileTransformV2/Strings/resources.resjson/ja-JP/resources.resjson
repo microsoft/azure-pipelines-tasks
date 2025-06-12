@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "ファイルの更新がスキップされました: %s",
   "loc.messages.FailedToApplyTransformationReason1": "1. ビルド中、MSBuild によって生成されたパッケージに対して変換が既に適用されたかどうか。適用された場合は、csproj ファイル内の各構成の <DependentUpon> タグを削除してから、リビルドします。",
   "loc.messages.FailedToApplyTransformationReason2": "2. 構成ファイルと変換ファイルがパッケージ内の同じフォルダーに存在すること。",
-  "loc.messages.FileTranformationNotEnabled": "ファイル変換が有効になっていません。XML 変換ルールか、変数の置換用の JSON または XML ターゲット ファイルのいずれか一方を指定してください。"
+  "loc.messages.FileTransformationNotEnabled": "ファイル変換が有効になっていません。XML 変換ルールか、変数の置換用の JSON または XML ターゲット ファイルのいずれか一方を指定してください。"
 }

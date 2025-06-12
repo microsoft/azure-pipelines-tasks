@@ -47,5 +47,5 @@
   "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s",
   "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
-  "loc.messages.FileTranformationNotEnabled": "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
+  "loc.messages.FileTransformationNotEnabled": "File Transformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
 }
