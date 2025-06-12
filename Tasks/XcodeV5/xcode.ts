@@ -127,10 +127,12 @@ async function run() {
         let useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
         let actions: string[] = tl.getDelimitedInput('actions', ' ', true);
         let packageApp: boolean = tl.getBoolInput('packageApp', true);
+        let skipBuildStep: boolean = tl.getBoolInput('skipBuildStep', false);
         let args: string = tl.getInput('args', false);
 
         telemetryData.actions = actions;
         telemetryData.packageApp = packageApp;
+        telemetryData.skipBuildStep = skipBuildStep;
 
         //--------------------------------------------------------
         // Exec Tools
@@ -261,21 +263,35 @@ async function run() {
         }
 
         //--- Xcode Build ---
-        let buildOnlyDeviceErrorFound: boolean;
-        xcb.on('errline', (line: string) => {
-            if (!buildOnlyDeviceErrorFound && line.includes('build only device cannot be used to run this target')) {
-                buildOnlyDeviceErrorFound = true;
-            }
-        });
+        // Determine if we should skip the initial build step
+        const isArchiveOnlyAction = actions.length === 1 && actions[0] === 'archive';
+        let skipInitialBuild = false;
+        if ((isArchiveOnlyAction && packageApp && sdk !== 'iphonesimulator') || (skipBuildStep && packageApp)) {
+            // If only "archive" is requested and packageApp is true, skip the initial build
+            // OR if skipBuildStep is explicitly enabled and packageApp is true
+            skipInitialBuild = true;
+            tl.debug('Skipping initial build since only "archive" action is specified and packageApp is true, or skipBuildStep is enabled.');
+        }
 
-        try {
-            await xcb.exec();
-        } catch (err) {
-            if (buildOnlyDeviceErrorFound) {
-                // Tell the user they need to change Destination platform to fix this build error.
-                tl.warning(tl.loc('NoDestinationPlatformWarning'));
+        if (!skipInitialBuild) {
+            let buildOnlyDeviceErrorFound: boolean;
+            xcb.on('errline', (line: string) => {
+                if (!buildOnlyDeviceErrorFound && line.includes('build only device cannot be used to run this target')) {
+                    buildOnlyDeviceErrorFound = true;
+                }
+            });
+
+            try {
+                await xcb.exec();
+            } catch (err) {
+                if (buildOnlyDeviceErrorFound) {
+                    // Tell the user they need to change Destination platform to fix this build error.
+                    tl.warning(tl.loc('NoDestinationPlatformWarning'));
+                }
+                throw err;
             }
-            throw err;
+        } else {
+            tl.debug('Skipping Xcode build step as requested.');
         }
 
         //--------------------------------------------------------
