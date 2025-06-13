@@ -13,7 +13,7 @@
     "@types/node": "^20.11.0",
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^5.2.1"
+    "azure-pipelines-task-lib": "^5.2.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
