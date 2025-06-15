@@ -17,7 +17,11 @@ export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult, gradl
     }
     else {
         status = TaskResult.Failed;
-        message = 'Gradle task failed. See Gradle output error details below';
+        if (codeAnalysisResult.statusFailed && codeAnalysisResult.analysisError) {
+            message = `Failed to execute Gradle. Exit code: ${codeAnalysisResult.gradleResult}`;
+        } else {
+            message = `Build failed. Gradle exit code: ${codeAnalysisResult.gradleResult}`;
+        }
         error = gradleOutput.join('');
     }
     const taskResult: ITaskResult = {
