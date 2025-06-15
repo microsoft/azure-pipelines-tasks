@@ -1,0 +1,133 @@
+import { ITestExecutor } from "../../Interface/ITestExecutor";
+import { IOperationResult } from "../../Interface/IOperationResult";
+import { ciDictionary } from "../../Common/ciEventLogger";
+import * as constants from "../../Common/constants";
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
+import { SimpleTimer } from "../../Common/SimpleTimer";
+import * as utils from "../../Common/utils";
+import * as fs from 'fs';
+import * as path from 'path';
+
+export class PlaywrightTestExecutor implements ITestExecutor {
+    testRunnerCLI: string = constants.NPM_EXECUTABLE;
+    toolRunnerPath: string;
+    toolRunner: ToolRunner;
+
+    /*
+    * Setup the test executor
+    */
+    async setup(): Promise<IOperationResult> {
+        let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+
+        try {
+            
+            this.toolRunnerPath = tl.which(this.testRunnerCLI, true);
+            this.toolRunner = tl.tool(this.toolRunnerPath);
+            this.toolRunner.line('install');
+            operationResult.returnCode = await this.toolRunner.execAsync();
+            if (operationResult.returnCode !== 0) {
+                throw new Error('npm install failed');
+            }
+
+            this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
+            this.toolRunner = tl.tool(this.toolRunnerPath);
+            this.toolRunner.line('playwright install');
+            operationResult.returnCode = await this.toolRunner.execAsync();
+            if (operationResult.returnCode !== 0) {
+                throw new Error('playwright install failed');
+            }
+        } catch (error) {
+            operationResult.returnCode = 1;
+            operationResult.errorMessage = error.message || String(error);
+            tl.debug("Error in setting up env for Playwright Test Framework: " + operationResult.errorMessage);
+        }
+
+        return operationResult;
+    }
+
+    async discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult> {
+        let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+
+        listOfTestsToBeExecuted.forEach(element => {
+            listOfTestsToBeRan.push(utils.separatePlaywrightTestName ? utils.separatePlaywrightTestName(element) : element);
+        });
+
+        return operationResult;
+    }
+
+    async executeTests(testsToBeExecuted: string[], ciData: ciDictionary): Promise<IOperationResult> {
+    let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
+    let executionTimer = new SimpleTimer(constants.AUTOMATED_EXECUTION);
+
+    tl.debug('Entering executeTests method');
+    tl.debug(`Tests to be executed: ${JSON.stringify(testsToBeExecuted)}`);
+
+    if (!testsToBeExecuted || testsToBeExecuted.length === 0) {
+        tl.debug('No tests to execute');
+        return { returnCode: 0, errorMessage: 'No tests to execute' };
+    }
+
+    executionTimer.start();
+
+    let grepArg = '';
+    try {
+        const junitOutput = 'test-results/test-results.xml';
+        tl.setVariable('PLAYWRIGHT_JUNIT_OUTPUT_NAME', junitOutput);
+        const resultsDir = path.join(process.cwd(), 'test-results');
+        if (!fs.existsSync(resultsDir)) {
+            fs.mkdirSync(resultsDir);
+        }
+
+        // Playwright test name selection usually uses 'grep'
+        if (testsToBeExecuted && testsToBeExecuted.length > 0) {
+            const grepPattern = testsToBeExecuted.map(t => `${t}`).join('|');
+            grepArg = grepPattern;
+        }
+
+        tl.debug(`Grep Argument: ${grepArg}`);
+
+        this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
+        this.toolRunner = tl.tool(this.toolRunnerPath);
+
+        // Building the command: cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=... playwright test --reporter=junit -g ...
+        this.toolRunner.arg('cross-env');
+        this.toolRunner.arg(`PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput}`);
+        this.toolRunner.arg('playwright');
+        this.toolRunner.arg('test');
+        this.toolRunner.arg('--reporter=junit');
+
+        if (grepArg) {
+            this.toolRunner.arg('-g');
+            this.toolRunner.arg(grepArg);
+        }
+
+        const commandPreview = `npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput} playwright test --reporter=junit -g "${grepArg}"`;
+        tl.debug(`Executing Playwright test command: ${commandPreview}`);
+
+        operationResult.returnCode = await this.toolRunner.execAsync();
+        
+    }
+
+    catch (error) {
+        tl.debug(`Error during test execution: ${error.message}`);
+        operationResult.returnCode = 1;
+        operationResult.errorMessage = error.message || String(error);
+        ciData['failureDetails'] = {
+            errorMessage: error.message || 'Unknown error',
+            stackTrace: error.stack || 'No stack trace available',
+            failureType: 'Execution Error'
+        };
+    }
+
+    executionTimer.stop(ciData);
+    ciData['grepArgument'] = grepArg;
+    ciData['executionStatus'] = operationResult.returnCode === 0 ? 'Success' : 'Failure';
+
+    // Log telemetry data
+    tl.debug(`Telemetry Data Before Logging: ${JSON.stringify(ciData)}`);
+
+    return operationResult;
+    }
+}
+

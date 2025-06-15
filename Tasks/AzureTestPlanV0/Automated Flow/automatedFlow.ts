@@ -10,7 +10,7 @@ import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExec
 import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
 import { JestTestExecutor } from './TestExecutors/JestTestExecutor';
-
+import { PlaywrightTestExecutor } from './TestExecutors/PlaywrightTestExecutor';
 export async function newAutomatedTestsFlow(
     testPlanInfo: TestPlanData, 
     testSelectorInput: string, 
@@ -21,6 +21,9 @@ export async function newAutomatedTestsFlow(
     if (!testLanguage) {
         return createErrorResult('Test language input is required');
     }
+    tl.debug(`Test language input is: ${testLanguage} and ${testLanguage.toLowerCase()}`);
+    const testLanguageLower = testLanguage.toLowerCase();
+    tl.debug(`Test language input is: ${testLanguageLower}`);
 
     const listOfTestsFromTestPlan = testPlanInfo?.listOfFQNOfTestCases ?? [];
     if (listOfTestsFromTestPlan.length === 0) {
@@ -28,6 +31,7 @@ export async function newAutomatedTestsFlow(
     }
 
     // Initialize test executor
+    
     const testExecutor = getTestExecutor(testLanguage.toLowerCase());
 
     if (!testExecutor) {
@@ -149,7 +153,7 @@ function combineResults(
 }
 
 function getTestExecutor(testLanguage: string): ITestExecutor {
-    switch (testLanguage) {
+    switch (testLanguage.toLowerCase()) {
         case 'javamaven':
             return new MavenTestExecutor();
         case 'javagradle':
@@ -158,6 +162,12 @@ function getTestExecutor(testLanguage: string): ITestExecutor {
             return new PythonTestExecutor();
         case 'javascriptjest':
             return new JestTestExecutor();
+        case 'javascriptplaywright': 
+            tl.debug('Returning PlaywrightTestExecutor for JavaScript');
+            return new PlaywrightTestExecutor();
+        case 'typescriptplaywright':
+            tl.debug('Returning PlaywrightTestExecutor for TypeScript');
+            return new PlaywrightTestExecutor();
         default:
             return null;
     }

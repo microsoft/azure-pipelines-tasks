@@ -1,6 +1,6 @@
 {
-  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
-  "name": "AzureTestPlan",
+  "id": "357b4bd2-ad3f-47ae-b094-6920f6e17554",
+  "name": "AzureTestPlan2",
   "friendlyName": "Azure Test Plan",
   "description": "Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 255,
+    "Minor": 257,
     "Patch": 2
   },
   "preview": true,
@@ -105,7 +105,9 @@
         "JavaMaven": "Java - Maven",
         "JavaGradle": "Java - Gradle",
         "Python": "Python - PyTest",
-        "JavaScriptJest": "JavaScript - Jest"
+        "JavaScriptJest": "JavaScript - Jest",
+        "JavaScriptPlaywright": "JavaScript - Playwright",
+        "TypeScriptPlaywright": "TypeScript - Playwright"
       }
     },
     {
@@ -204,5 +206,6 @@
     "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
     "NoMatchingFilesFound": "No test result files matching '%s' were found.",
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
+    
   }
 }
