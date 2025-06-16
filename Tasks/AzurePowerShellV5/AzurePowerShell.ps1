@@ -18,8 +18,6 @@ $hostEnv = "ADO/AzurePowerShell@v5`_$($env:AGENT_OS)`_$($env:AGENT_NAME)`_$($env
 $env:AZUREPS_HOST_ENVIRONMENT = $hostEnv
 Write-Host "AZUREPS_HOST_ENVIRONMENT: $env:AZUREPS_HOST_ENVIRONMENT"
 
-$DisplayWarningForOlderAzVersion = Get-VstsPipelineFeature -FeatureName "AZPWSHWARNING"
-
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
 if ($scriptType -eq "FilePath") {
@@ -35,6 +33,7 @@ if ($scriptArguments -match '[\r\n]') {
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
+$versionTolerance = 3
 
 . (Join-Path $PSScriptRoot "Utility.ps1") 
 if ($targetAzurePs -eq $otherVersion) {
@@ -42,13 +41,7 @@ if ($targetAzurePs -eq $otherVersion) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
         $targetAzurePs = $customTargetAzurePs.Trim()
-        if ($DisplayWarningForOlderAzVersion -eq $true) {
-            $latestRelease = Get-MajorAzurePowerShellReleases
-        
-            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease[0].tag_name)) {
-                Write-Warning "PowerShell Az version $targetAzurePs is out of date, the latest version is $($latestRelease[0].tag_name)"
-            }       
-        }       
+        Initialize-ModuleVersionValidation -moduleName "azure-powershell" -targetAzurePs $targetAzurePs -displayModuleName "Az" -versionsToReduce $versionTolerance  
     }
 }
 
@@ -57,15 +50,8 @@ $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList
 
 if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
-    if($DisplayWarningForOlderAzVersion -eq $true)
-    {
-        $installedVersion = Get-InstalledMajorRelease
-        $latestRelease = Get-MajorAzurePowerShellReleases
-        
-        if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $installedVersion -latestRelease $($latestRelease[0].tag_name)) {
-            Write-Warning "PowerShell Az version $installedVersion is out of date, the latest version is $($latestRelease[0].tag_name)"
-        } 
-    }
+    $installedVersion = Get-InstalledMajorRelease "Az"
+    Initialize-ModuleVersionValidation -moduleName "azure-powershell" -targetAzurePs $installedVersion -displayModuleName "Az" -versionsToReduce $versionTolerance 
       
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
