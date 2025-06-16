@@ -37,7 +37,7 @@ $Major = $null
 $Minor = $null
 $Patch = $null
 
-$TaskJsonPath = "Tasks/${TaskName}/task.json"
+$TaskJsonPath = "../../Tasks/${TaskName}/task.json"
 if (-not (Test-Path $TaskJsonPath)) {
     Show-ErrorAndExit "Task not found: $TaskName. Please check the task name and try again."
 }
@@ -49,13 +49,7 @@ if ($action -eq 's') {
     $Patch = Read-Host 'Enter the Patch version number'
 }
 
-Write-Host ""  # Add spacing
-if ($searchMode) {
-    Write-Host "[INFO] Searching for version $Major.$Minor.$Patch in Tasks/${TaskName}/task.json..." -ForegroundColor Yellow
-} else {
-    Write-Host "[INFO] Searching for all versions in Tasks/${TaskName}/task.json..." -ForegroundColor Yellow
-}
-Write-Host ""  # Add spacing
+
 
 # Try to get the remote URL for link generation
 $remoteUrl = git remote get-url origin 2>$null
@@ -90,11 +84,23 @@ foreach ($commit in $commits) {
                     LinkOrCommit = $commitUrl
                     Date = $commitDate
                     Author = $commitInfo
+                    CommitHash = $commit
                 }
             }
         } catch {
             Write-Host "[WARN] Could not parse JSON for commit $commit. Skipping." -ForegroundColor DarkYellow
         }
+    }
+}
+
+# Function to get the release tag(s) for a given commit
+function Get-ReleaseTagsForCommit($commitHash) {
+    $tags = git tag --contains $commitHash 2>$null
+    if ($tags) {
+        $sortedTags = $tags | Sort-Object { [int]$_ } -ErrorAction SilentlyContinue
+        return $sortedTags[0]
+    } else {
+        return $null
     }
 }
 
@@ -137,7 +143,9 @@ if ($searchMode) {
 
     # If Major, Minor, and Patch are provided, search for that specific version 
     if ($Major -and $Minor -and $Patch) {
+        Write-Host ""  # Add spacing
         Write-Host "[INFO] Searching for version $Major.$Minor.$Patch..." -ForegroundColor Yellow
+        Write-Host ""  # Add spacing
         $inputVersion = "$Major.$Minor.$Patch"
         if ($versions.ContainsKey($inputVersion)) {
             $row = $versions[$inputVersion].PSObject.Copy()
@@ -147,57 +155,40 @@ if ($searchMode) {
                 $row.LinkOrCommit = "`e]8;;$($row.LinkOrCommit)`e\$commitHash`e]8;;`e\"
             }
             Write-Host "[SUCCESS] Version $inputVersion existed." -ForegroundColor Green
+            Write-Host ""  # Add spacing
             $row | Format-Table Version, LinkOrCommit, Date, Author
-        } 
-        else {
+            $showRelease = Read-Host 'Do you want to see the release this version is part of? (Y/N)'
+            if ($showRelease -ne 'Y' -and $showRelease -ne 'y' -and $showRelease -ne 'N' -and $showRelease -ne 'n') {
+                Show-ErrorAndExit "Invalid input for release check. Please enter 'Y' or 'N'."
+            }
+            Write-Host ""  # Add spacing
+            if ($showRelease -eq 'Y' -or $showRelease -eq 'y') {
+                $commitHash = $row.CommitHash
+                $releaseTag = Get-ReleaseTagsForCommit $commitHash
+                if ($releaseTag) {
+                    if ($remoteUrl) {
+                        $releaseUrl = "$remoteUrl/releases/tag/$releaseTag"
+                        Write-Host "This version is part of release: $releaseTag" -ForegroundColor Green
+                        Write-Host "Release link: $releaseUrl" -ForegroundColor Cyan
+                    } else {
+                        Write-Host "This version is part of release: $releaseTag" -ForegroundColor Green
+                    }
+                } else {
+                    Write-Host "No release tag found for this version." -ForegroundColor Yellow
+                }
+            }
+        } else {
             Write-Host "Version $inputVersion does not exist for ${TaskName}." -ForegroundColor Red
             Write-Host ""  # Add spacing
             Write-Host "[INFO] Valid versions for ${TaskName}:" -ForegroundColor Cyan
             $table | Format-Table Version, LinkOrCommit, Date, Author
         }
     }   
-    # If Major, Minor, or Patch is missing, use wildcard matching
-    else {
-        Write-Host "[INFO] Searching for versions matching Major: $Major, Minor: $Minor, Patch: $Patch..." -ForegroundColor Yellow
-        
-        if($Major -eq $null -and $Minor -eq $null -and $Patch -eq $null) {
-            Write-Host "[ERROR] At least one version component (Major, Minor, or Patch) must be specified." -ForegroundColor Red
-            exit 1
-        }
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        $filteredVersions = $table | Where-Object {
-            ($Major -eq $null -or $_.Version -like "$Major.*") -and
-            ($Minor -eq $null -or $_.Version -like "*.$Minor.*") -and
-            ($Patch -eq $null -or $_.Version -like "*.$Patch")
-        }
-
-        if ($filteredVersions.Count -eq 0) {
-            Write-Host "[INFO] No matching versions found." -ForegroundColor Red
-            Write-Host ""  # Add spacing
-            Write-Host "[INFO] Valid versions for ${TaskName}:" -ForegroundColor Cyan
-            $table | Format-Table Version, LinkOrCommit, Date, Author
-        } else {
-            Write-Host "[INFO] Matching versions:" -ForegroundColor Green
-            $filteredVersions | Format-Table Version, LinkOrCommit, Date, Author
-        }
-    }
-
 }
 # If no search mode, just show all unique versions
 else 
 {
+    Write-Host ""  # Add spacing
     Write-Host "[INFO] All unique versions found for ${TaskName} (latest first):" -ForegroundColor Cyan
     $table | Format-Table Version, LinkOrCommit, Date, Author
 }
