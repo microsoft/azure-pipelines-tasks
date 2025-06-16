@@ -141,14 +141,6 @@ async function run() {
         // START: Run code analysis
         const codeAnalysisResult: ICodeAnalysisResult = {};
         const gradleOutput: string[] = [];
-        const stdoutStream = new stream.Writable({
-            write: (chunk, encoding, callback) => {
-                const output = chunk.toString();
-                gradleOutput.push(output);
-                process.stdout.write(output);
-                callback();
-            }
-        });
         const stderrStream = new stream.Writable({
             write: (chunk, encoding, callback) => {
                 const output = chunk.toString();
@@ -158,7 +150,6 @@ async function run() {
             }
         });
         const execOptions = getExecOptions();
-        execOptions.outStream = stdoutStream;
         execOptions.errStream = stderrStream;
 
 
