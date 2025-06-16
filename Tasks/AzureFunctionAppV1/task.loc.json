@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 255,
+    "Minor": 258,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -120,6 +120,7 @@
         "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
         "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
         "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
+        "DOTNET-ISOLATED|9.0": "DOTNET-ISOLATED|9.0",
         "JAVA|8": "JAVA|8",
         "JAVA|11": "JAVA|11",
         "JAVA|17": "JAVA|17",

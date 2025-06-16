@@ -211,5 +211,66 @@ namespace BuildConfigGen
 
             return s;
         }
+
+        internal static bool HasChangesComparedToDefaultBranch(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"The file '{filePath}' does not exist.");
+            }
+
+            string directory = Path.GetDirectoryName(filePath) ?? throw new Exception("Unable to determine the directory of the file.");
+            string relativePath = FixupPath(filePath);
+
+            string[] output;
+            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"diff master -- \"{relativePath}\"", directory, out output);
+
+            if (exitCode != 0)
+            {
+                throw new Exception("Failed to check git status. Non-zero exit code.");
+            }
+
+            // If the output contains any lines, it means there are uncommitted changes
+            return output.Length > 0;
+        }
+
+        internal static string GetDefaultBranchContent(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"The file '{filePath}' does not exist.");
+            }
+
+            string directory = Path.GetDirectoryName(filePath) ?? throw new Exception("Unable to determine the directory of the file.");
+            string relativePath = GetGitPath(filePath);
+
+            string[] output;
+            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"show master:\"{relativePath}\"", directory, out output);
+
+            if (exitCode != 0)
+            {
+                throw new Exception("Failed to retrieve unchanged content. Non-zero exit code.");
+            }
+
+            return string.Join(Environment.NewLine, output);
+        }
+
+        private static string GetGitPath(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"The file '{filePath}' does not exist.");
+            }
+
+            string directory = Path.GetDirectoryName(filePath) ?? throw new Exception("Unable to determine the directory of the file.");
+            string gitRoot = RunGitCommandScalar(directory, "rev-parse --show-toplevel");
+
+            if (!filePath.StartsWith(FixupPath(gitRoot)))
+            {
+                throw new Exception($"The file '{filePath}' is not within the Git repository root '{gitRoot}'.");
+            }
+
+            return filePath.Substring(gitRoot.Length + 1).Replace(Path.DirectorySeparatorChar, '/');
+        }
     }
 }
