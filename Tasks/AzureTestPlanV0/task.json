@@ -1,9 +1,9 @@
 {
-  "id": "357b4bd2-ad3f-47ae-b094-6920f6e17554",
-  "name": "AzureTestPlan2",
+  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
+  "name": "AzureTestPlan",
   "friendlyName": "Azure Test Plan",
   "description": "Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-test-plan-v0?view=azure-pipelines",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 257,
-    "Patch": 2
+    "Minor": 259,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
