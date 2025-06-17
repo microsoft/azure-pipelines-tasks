@@ -21,17 +21,13 @@ export async function newAutomatedTestsFlow(
     if (!testLanguage) {
         return createErrorResult('Test language input is required');
     }
-    tl.debug(`Test language input is: ${testLanguage} and ${testLanguage.toLowerCase()}`);
-    const testLanguageLower = testLanguage.toLowerCase();
-    tl.debug(`Test language input is: ${testLanguageLower}`);
 
     const listOfTestsFromTestPlan = testPlanInfo?.listOfFQNOfTestCases ?? [];
     if (listOfTestsFromTestPlan.length === 0) {
         return handleNoTestsFound(testSelectorInput);
     }
 
-    // Initialize test executor
-    
+    // Initialize test executor    
     const testExecutor = getTestExecutor(testLanguage.toLowerCase());
 
     if (!testExecutor) {
@@ -153,7 +149,7 @@ function combineResults(
 }
 
 function getTestExecutor(testLanguage: string): ITestExecutor {
-    switch (testLanguage.toLowerCase()) {
+    switch (testLanguage) {
         case 'javamaven':
             return new MavenTestExecutor();
         case 'javagradle':
@@ -163,10 +159,8 @@ function getTestExecutor(testLanguage: string): ITestExecutor {
         case 'javascriptjest':
             return new JestTestExecutor();
         case 'javascriptplaywright': 
-            tl.debug('Returning PlaywrightTestExecutor for JavaScript');
             return new PlaywrightTestExecutor();
         case 'typescriptplaywright':
-            tl.debug('Returning PlaywrightTestExecutor for TypeScript');
             return new PlaywrightTestExecutor();
         default:
             return null;
