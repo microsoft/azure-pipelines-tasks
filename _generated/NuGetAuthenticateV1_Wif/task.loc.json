@@ -13,12 +13,12 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 253,
+    "Minor": 259,
     "Patch": 1,
     "Build": "wif_242"
   },
   "release": {
-    "Sprint": 253,
+    "Sprint": 259,
     "Ordinal": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -87,8 +87,8 @@
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.253.0",
+    "Default": "1.259.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.253.1+wif_242"
+    "wif_242": "1.259.1+wif_242"
   }
 }

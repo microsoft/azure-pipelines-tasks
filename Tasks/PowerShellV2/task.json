@@ -17,8 +17,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
+    "Minor": 259,
     "Patch": 1
+  },
+  "release": {
+    "Sprint": 259,
+    "Ordinal": 1
   },
   "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "minimumAgentVersion": "2.115.0",
