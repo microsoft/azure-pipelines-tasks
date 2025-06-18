@@ -72,6 +72,7 @@ async function main(): Promise<void> {
         internalFeedSuccessCount = feedList.length;
         externalFeedSuccessCount = externalEndpoints.length;
         console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
+        console.log("Task succeeded");
     }
     catch (error) {
         tl.error(error);

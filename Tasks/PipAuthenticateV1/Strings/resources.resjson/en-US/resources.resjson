@@ -17,7 +17,7 @@
   "loc.messages.Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
   "loc.messages.Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
-  "loc.messages.Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
+  "loc.messages.Info_SuccessAddingAuth": "[Info_SuccessAddingAuth]Successfully added auth for %s internal feeds and %s external endpoint.",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
   "loc.messages.Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
