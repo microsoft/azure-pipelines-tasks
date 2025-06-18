@@ -210,12 +210,11 @@ function Get-MajorVersionOnAzurePackage {
     )
     # GitHub API URL for Azure releases
     $url = "https://api.github.com/repos/Azure/${moduleName}/releases"
-    $lastFiveMajorReleases = ""
     try {
         $response = Invoke-RestMethod -Uri $url -Method Get
         $majorReleases = $response
         If ($moduleName -eq 'azure-powershell') {
-            $majorReleases = $response  | Where-Object { $_.tag_name -match '^v\d+\.\d+\.0' }
+            $majorReleases = $response  | Where-Object { $_.tag_name -match '^v\d+\.\d+\.0' } | Sort-Object { $_.id } -Descending
         } 
         $lastOneRelease = $majorReleases | Select-Object -First 1
     } catch {
@@ -271,8 +270,8 @@ function Initialize-ModuleVersionValidation {
         if ($DisplayWarningForOlderAzVersion -eq $true) {
             $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName
 
-            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease[0].tag_name) -versionsToReduce $versionsToReduce) {
-                Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease[0].tag_name))
+            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease.tag_name) -versionsToReduce $versionsToReduce) {
+                Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease.tag_name))
             }       
         }
     } catch {

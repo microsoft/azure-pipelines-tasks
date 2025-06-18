@@ -49,15 +49,15 @@ async function run() {
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
-        let otherVersion = "OtherVersion"
-        let fetchingModule = "azure-powershell"
-        let moduleDisplayName = "Az module"
-        const versionTolerance = 3
+        const otherVersion = "OtherVersion"
+        const fetchingModule = "azure-powershell"
+        const moduleDisplayName = "Az module"
+        const majorversionTolerance = 3
 
         if (targetAzurePs == otherVersion) {
             if (customTargetAzurePs != "") {
                 targetAzurePs = customTargetAzurePs;
-                await validateAzModuleVersion(fetchingModule, customTargetAzurePs, moduleDisplayName, versionTolerance, true)
+                await validateAzModuleVersion(fetchingModule, customTargetAzurePs, moduleDisplayName, majorversionTolerance, true)
             }
             else {
                 console.log(tl.loc('InvalidAzurePsVersion',customTargetAzurePs));
@@ -66,9 +66,9 @@ async function run() {
         else {
             targetAzurePs = ""
              if (tl.getPipelineFeature('ShowWarningOnOlderAzureModules')) {
-                let versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
+                const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
                 const azVersionResult = tl.execSync("az", versionCommand);
-                await validateAzModuleVersion(fetchingModule, azVersionResult.stdout, moduleDisplayName, versionTolerance, true)
+                await validateAzModuleVersion(fetchingModule, azVersionResult.stdout, moduleDisplayName, majorversionTolerance, true)
              }
         }
 
