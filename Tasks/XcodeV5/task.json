@@ -13,7 +13,7 @@
   "version": {
     "Major": 5,
     "Minor": 248,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "demands": [
@@ -117,6 +117,16 @@
       "required": true,
       "helpMarkDown": "Indicate whether an IPA app package file should be generated as a part of the build.",
       "groupName": "package"
+    },
+    {
+      "name": "skipBuildStep",
+      "type": "boolean",
+      "label": "Skip build step",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Skip the Xcode build step and go directly to package creation. This is useful when you have a pre-built archive and only need to export it.",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "archivePath",
