@@ -47,11 +47,11 @@ steps:
 # Build all tasks
 - script: node make.js serverBuild $(includeLocalPackagesBuildConfigParameter)
   displayName: Build all tasks
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false), eq(${{ parameters.useSemverBuildConfig }}, false))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true), eq(${{ parameters.useSemverBuildConfig }}, false))
 
 - script: node make.js serverBuild $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true;
   displayName: Build all tasks
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false), eq(${{ parameters.useSemverBuildConfig }}, true))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true), eq(${{ parameters.useSemverBuildConfig }}, true))
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
