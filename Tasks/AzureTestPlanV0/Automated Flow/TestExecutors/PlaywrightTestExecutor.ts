@@ -39,12 +39,12 @@ export class PlaywrightTestExecutor implements ITestExecutor {
             }
 
             const crossEnvPath = tl.which('cross-env', false);
-            if(!crossEnvPath){
+            if (!crossEnvPath) {
                 this.toolRunnerPath = tl.which(this.testRunnerCLI, true);
                 this.toolRunner = tl.tool(this.toolRunnerPath);
                 this.toolRunner.line('install cross-env');
                 operationResult.returnCode = await this.toolRunner.execAsync();
-                if( operationResult.returnCode !== 0) {
+                if (operationResult.returnCode !== 0) {
                     throw new Error('cross-env install failed');
                 }
             }
