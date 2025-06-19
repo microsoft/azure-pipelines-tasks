@@ -47,6 +47,7 @@ parameters:
   default: false
 - name: generateReleaseNotes
   displayName: Generate Release Notes for the deployed changes
+  type: boolean
   default: true
 
 variables:
