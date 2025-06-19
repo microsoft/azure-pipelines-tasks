@@ -158,9 +158,7 @@ function getTestExecutor(testLanguage: string): ITestExecutor {
             return new PythonTestExecutor();
         case 'javascriptjest':
             return new JestTestExecutor();
-        case 'javascriptplaywright': 
-            return new PlaywrightTestExecutor();
-        case 'typescriptplaywright':
+        case 'playwright': 
             return new PlaywrightTestExecutor();
         default:
             return null;

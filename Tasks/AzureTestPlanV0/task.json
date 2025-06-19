@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 259,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -106,8 +106,7 @@
         "JavaGradle": "Java - Gradle",
         "Python": "Python - PyTest",
         "JavaScriptJest": "JavaScript - Jest",
-        "JavaScriptPlaywright": "JavaScript - Playwright",
-        "TypeScriptPlaywright": "TypeScript - Playwright"
+        "Playwright": "JavaScript/TypeScript - Playwright"
       }
     },
     {
