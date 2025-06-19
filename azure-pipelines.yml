@@ -133,6 +133,8 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
+            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
+            generateReleaseNotes: ${{ parameters.generateReleaseNotes }}
 
       # Publish
       - job: publish
