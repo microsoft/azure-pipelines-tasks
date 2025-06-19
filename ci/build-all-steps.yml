@@ -70,11 +70,11 @@ steps:
 
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
-  condition: and(eq(${{ parameters.useSemverBuildConfig }}, false))
+  condition: eq(${{ parameters.useSemverBuildConfig }}, false)
 
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks --use-semver-build-config
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
-  condition: and(eq(${{ parameters.useSemverBuildConfig }}, true))
+  condition: eq(${{ parameters.useSemverBuildConfig }}, true)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
