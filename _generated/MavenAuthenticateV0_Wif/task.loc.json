@@ -10,7 +10,8 @@
   "version": {
     "Major": 0,
     "Minor": 247,
-    "Patch": 2
+    "Patch": 2,
+    "Build": "wif_242"
   },
   "runsOn": [
     "Agent",
