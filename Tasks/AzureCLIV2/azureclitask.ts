@@ -7,6 +7,7 @@ import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
+import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -48,17 +49,12 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-
-            if (tl.getPipelineFeature('UseAzVersion')) {
-                const azVersionResult: IExecSyncResult = tl.execSync("az", "version");
-                Utility.throwIfError(azVersionResult);
-                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
-                
-            } else {
-                const azVersionResult: IExecSyncResult = tl.execSync("az", "--version");
-                Utility.throwIfError(azVersionResult);
-                this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
-            }
+            const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
+            const minorVersionTolerance = 5
+            const azVersionResult: IExecSyncResult = tl.execSync("az", versionCommand);
+            Utility.throwIfError(azVersionResult);
+            this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
+            await validateAzModuleVersion("azure-Cli", azVersionResult.stdout, "Azure-Cli", minorVersionTolerance)
 
             // set az cli config dir
             this.setConfigDirectory();
