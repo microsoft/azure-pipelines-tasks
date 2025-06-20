@@ -33,12 +33,15 @@ if ($scriptArguments -match '[\r\n]') {
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
+$versionTolerance = 3
 
+. (Join-Path $PSScriptRoot "Utility.ps1") 
 if ($targetAzurePs -eq $otherVersion) {
     if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
         $targetAzurePs = $customTargetAzurePs.Trim()
+        Initialize-ModuleVersionValidation -moduleName "azure-powershell" -targetAzurePs $targetAzurePs -displayModuleName "Az" -versionsToReduce $versionTolerance  
     }
 }
 
@@ -47,6 +50,9 @@ $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList
 
 if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
+    $installedVersion = Get-InstalledMajorRelease "Az"
+    Initialize-ModuleVersionValidation -moduleName "azure-powershell" -targetAzurePs $installedVersion -displayModuleName "Az" -versionsToReduce $versionTolerance 
+      
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }

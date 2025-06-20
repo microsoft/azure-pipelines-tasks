@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
@@ -48,11 +49,15 @@ async function run() {
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
-        let otherVersion = "OtherVersion"
+        const otherVersion = "OtherVersion"
+        const fetchingModule = "azure-powershell"
+        const moduleDisplayName = "Az module"
+        const majorversionTolerance = 3
 
         if (targetAzurePs == otherVersion) {
             if (customTargetAzurePs != "") {
                 targetAzurePs = customTargetAzurePs;
+                await validateAzModuleVersion(fetchingModule, customTargetAzurePs, moduleDisplayName, majorversionTolerance, true)
             }
             else {
                 console.log(tl.loc('InvalidAzurePsVersion',customTargetAzurePs));
@@ -60,6 +65,11 @@ async function run() {
         }
         else {
             targetAzurePs = ""
+             if (tl.getPipelineFeature('ShowWarningOnOlderAzureModules')) {
+                const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
+                const azVersionResult = tl.execSync("az", versionCommand);
+                await validateAzModuleVersion(fetchingModule, azVersionResult.stdout, moduleDisplayName, majorversionTolerance, true)
+             }
         }
 
         var endpoint = JSON.stringify(endpointObject);

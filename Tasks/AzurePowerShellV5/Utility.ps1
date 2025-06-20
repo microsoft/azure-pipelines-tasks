@@ -200,3 +200,81 @@ function CleanUp-PSModulePathForHostedAgent {
 
     $env:PSModulePath = $azPSModulePath
 }
+
+
+function Get-MajorVersionOnAzurePackage {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName
+    )
+    # GitHub API URL for Azure releases
+    $url = "https://api.github.com/repos/Azure/${moduleName}/releases"
+    try {
+        $response = Invoke-RestMethod -Uri $url -Method Get
+        $majorReleases = $response
+        If ($moduleName -eq 'azure-powershell') {
+            $majorReleases = $response  | Where-Object { $_.tag_name -match '^v\d+\.\d+\.0' } | Sort-Object { $_.id } -Descending
+        } 
+        $lastOneRelease = $majorReleases | Select-Object -First 1
+    } catch {
+        Write-Verbose "Attempting to find the latest major release failed with the error: $($_.Exception.Message)"
+    }
+    return $lastOneRelease
+}
+
+function Get-InstalledMajorRelease{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName
+    )
+    Write-Host "##[command]Get-InstalledModule -Name ${moduleName}"
+    $installedModuleMajorVersion = (Get-InstalledModule -Name $moduleName).Version
+    return $installedModuleMajorVersion
+}
+
+function Get-IsSpecifiedPwshAzVersionOlder{
+    [CmdletBinding()]
+    param([string] $specifiedVersion,
+          [string] $latestRelease,
+          [int] $versionsToReduce)
+
+    $specifiedVersion = ($specifiedVersion -split '\.')[0]
+    Write-Host "specifiedVersion : $specifiedVersion"
+    Write-Host "latest Release: $latestRelease"
+    if($latestRelease -match '(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)?'){
+        $latestMajorRelease = $matches['major']
+    }
+
+    if(([int]$specifiedVersion) -le ([int]$latestMajorRelease-$versionsToReduce)){
+        return $true
+    }
+    return $false
+}
+
+function Initialize-ModuleVersionValidation {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName,
+        [Parameter(Mandatory=$true)]
+        [string]$targetAzurePs,
+        [Parameter(Mandatory=$true)]
+        [string]$displayModuleName,
+        [Parameter(Mandatory=$true)]
+        [int]$versionsToReduce
+    )
+    try {
+        $DisplayWarningForOlderAzVersion = Get-VstsPipelineFeature -FeatureName "ShowWarningOnOlderAzureModules"
+        if ($DisplayWarningForOlderAzVersion -eq $true) {
+            $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName
+
+            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease.tag_name) -versionsToReduce $versionsToReduce) {
+                Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease.tag_name))
+            }       
+        }
+    } catch {
+        Write-Verbose "Error while validating Az version: $($_.Exception.Message)"
+    }
+}
