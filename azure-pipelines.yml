@@ -92,7 +92,7 @@ extends:
       autoBaseline: false
     sdl:
       sbom:
-        enabled: false
+        enabled: true
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
