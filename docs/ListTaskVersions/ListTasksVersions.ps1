@@ -1,3 +1,9 @@
+param(
+    [string]$TaskName,
+    [string]$Version,
+    [switch]$ShowRelease
+)
+
 <#
 .SYNOPSIS
     List all unique versions of an Azure Pipelines task and show the commit link for each version, or search for a particular version.
@@ -16,40 +22,50 @@ function Show-ErrorAndExit($msg) {
     exit 1
 }
 
-
-# Prompt user for action
-Write-Host ""  # Add spacing
-Write-Host "View (A)ll versions of a task, or (S)earch for a particular version" -ForegroundColor Cyan
-$action = Read-Host 'Enter "A" for all, or "S" for search'
-
-if ($action -notin @('A', 'a', 'S', 's')) {
-    Show-ErrorAndExit "Invalid action. Please enter 'A' for all versions or 'S' for search."
+# Only prompt for parameters if not provided
+if (-not $TaskName) {
+    Write-Host ""  # Add spacing
+    Write-Host "View (A)ll versions of a task, or (S)earch for a particular version" -ForegroundColor Cyan
+    $action = Read-Host 'Enter "A" for all, or "S" for search'
+    if ($action -notin @('A', 'a', 'S', 's')) {
+        Show-ErrorAndExit "Invalid action. Please enter 'A' for all versions or 'S' for search."
+    }
+    $TaskName = Read-Host 'Enter the task name (e.g CopyFilesV2)'
+    if($TaskName -eq '') {
+        Show-ErrorAndExit "Task name cannot be empty. Please provide a valid task name."
+    }
+    $searchMode = $action -eq 's'
+    if ($searchMode) {
+        Write-Host ""  # Add spacing
+        $Major = Read-Host 'Enter the Major version number'
+        $Minor = Read-Host 'Enter the Minor version number'
+        $Patch = Read-Host 'Enter the Patch version number'
+        $showReleaseInput = Read-Host 'Do you want to show the release tag? (Y/N)'
+        if ($showReleaseInput -match '^(y|yes)$') {
+            $ShowRelease = $true
+        } else {
+            $ShowRelease = $false
+        }
+    }
+} else {
+    $searchMode = $false
+    if ($Version) {
+        $searchMode = $true
+        $versionParts = $Version -split '\.'
+        if ($versionParts.Length -eq 3) {
+            $Major = $versionParts[0]
+            $Minor = $versionParts[1]
+            $Patch = $versionParts[2]
+        } else {
+            Show-ErrorAndExit "Version must be in the format Major.Minor.Patch (e.g., 2.252.0)"
+        }
+    }
 }
-
-$TaskName = Read-Host 'Enter the task name (e.g CopyFilesV2)'
-
-if($TaskName -eq '') {
-    Show-ErrorAndExit "Task name cannot be empty. Please provide a valid task name."
-}   
-
-$searchMode = $false
-$Major = $null
-$Minor = $null
-$Patch = $null
 
 $TaskJsonPath = "../../Tasks/${TaskName}/task.json"
 if (-not (Test-Path $TaskJsonPath)) {
     Show-ErrorAndExit "Task not found: $TaskName. Please check the task name and try again."
 }
-
-if ($action -eq 's') {
-    $searchMode = $true
-    $Major = Read-Host 'Enter the Major version number'
-    $Minor = Read-Host 'Enter the Minor version number'
-    $Patch = Read-Host 'Enter the Patch version number'
-}
-
-
 
 # Try to get the remote URL for link generation
 $remoteUrl = git remote get-url origin 2>$null
@@ -157,12 +173,7 @@ if ($searchMode) {
             Write-Host "[SUCCESS] Version $inputVersion existed." -ForegroundColor Green
             Write-Host ""  # Add spacing
             $row | Format-Table Version, LinkOrCommit, Date, Author
-            $showRelease = Read-Host 'Do you want to see the release this version is part of? (Y/N)'
-            if ($showRelease -ne 'Y' -and $showRelease -ne 'y' -and $showRelease -ne 'N' -and $showRelease -ne 'n') {
-                Show-ErrorAndExit "Invalid input for release check. Please enter 'Y' or 'N'."
-            }
-            Write-Host ""  # Add spacing
-            if ($showRelease -eq 'Y' -or $showRelease -eq 'y') {
+            if ($ShowRelease) {
                 $commitHash = $row.CommitHash
                 $releaseTag = Get-ReleaseTagsForCommit $commitHash
                 if ($releaseTag) {
