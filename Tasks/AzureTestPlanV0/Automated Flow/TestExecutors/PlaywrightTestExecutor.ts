@@ -92,7 +92,7 @@ export class PlaywrightTestExecutor implements ITestExecutor {
             }
 
             // Playwright test name selection usually uses 'grep'
-            const grepPattern = testsToBeExecuted.map(t => `${t}`).join('|');
+            const grepPattern = testsToBeExecuted.map(t => utils.escapeRegex(t)).join('|');
             grepArg = grepPattern;
 
             tl.debug(`Grep Argument: ${grepArg}`);

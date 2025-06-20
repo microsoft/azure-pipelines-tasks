@@ -128,3 +128,7 @@ export function transformPythonTestStrings(automatedTestName: string): string {
     }
     return updatedAutomatedTestName;
 }
+
+export function escapeRegex(input: string): string {
+    return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
