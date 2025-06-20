@@ -116,7 +116,7 @@ steps:
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master'),
-      ne(variables['System.PullRequest.SourceBranch'], 'users/merlynop/node20merge-2')
+      not(contains(variables['System.PullRequest.SourceBranch'], 'users/iduplenskikh/2276576'))
     )
 
 # Clean
