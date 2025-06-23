@@ -73,6 +73,10 @@ export function separateJestTestName(inputString) {
     }
 }
 
+/*  
+    Extracts and returns the substring after the last dot ('.') in the input string i.e. the test name that will be used in grep argument.
+    For example, inputString: "tests/test.spec.ts.testName" will return "testName".
+*/
 export function separatePlaywrightTestName(inputString) {
     const lastDotIndex = inputString.lastIndexOf('.');
 
