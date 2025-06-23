@@ -216,6 +216,7 @@ extends:
           - output: buildArtifacts
             displayName: 'Publish package artifact'
             PathtoPublish: _package/tasks.zip
+            sbomBuildDropPath: $(Build.SourcesDirectory)/_package
             ArtifactName: allTasks
         steps:
         - template: /ci/build-all-tasks.yml@self
