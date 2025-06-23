@@ -1,13 +1,49 @@
 # TasksVersions.ps1 Documentation
 
 ## Overview
-`TasksVersions.ps1` is a PowerShell script designed to list all unique versions of an Azure Pipelines task and show the commit link for each version. It also allows searching for a specific version based on `Major`, `Minor`, and `Patch` parameters.
+`ListTasksVersions.ps1` is a PowerShell script designed to list all unique versions of an Azure Pipelines task and show the commit link for each version. It also allows searching for a specific version based on `Major`, `Minor`, and `Patch` parameters.
 
 ## Features
 - List all versions of a task.
 - Search for a specific version using `Major`, `Minor`, and `Patch` parameters.
 - Displays error messages for invalid or missing inputs.
+## How to Run the Script
 
+There are two ways to run the script:
+
+### 1. Parameterized (Non-Interactive) Mode
+You provide all required parameters directly on the command line. This is useful for automation or scripting.
+
+**Examples:**
+- List all versions of a task:
+  ```powershell
+  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2
+  ```
+- Search for a specific version:
+  ```powershell
+  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2 -Version 2.238.0
+  ```
+  
+- Search for a specific version and show release info:
+  ```powershell
+  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2 -Version 2.238.0 -ShowRelease
+  ```
+
+### 2. Interactive Mode
+If you do not provide required parameters, the script will prompt you for input. This is user-friendly for manual use.
+
+**Example:**
+- Run the script without parameters:
+  ```powershell
+  pwsh ./ListTasksVersions.ps1
+  ```
+- The script will prompt you to:
+  1. Choose to view all versions or search for a specific version.
+  2. Enter the task name.
+  3. (If searching) Enter the version numbers.
+  4. Choose whether to display release information (y/n).
+
+Each case is handled automatically based on your input.
 ## Usage
 
 ### Parameters
@@ -49,58 +85,6 @@
   ```
   All parameters (Major, Minor, Patch) are required for search. Please provide valid values.
   ```
-
-## How to Run the Script
-
-There are two ways to run the script:
-
-### 1. Parameterized (Non-Interactive) Mode
-You provide all required parameters directly on the command line. This is useful for automation or scripting.
-
-**Examples:**
-- List all versions of a task:
-  ```powershell
-  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2
-  ```
-- Search for a specific version:
-  ```powershell
-  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2 -Version 2.238.0
-  ```
-  
-- Search for a specific version and show release info:
-  ```powershell
-  pwsh ./ListTasksVersions.ps1 -TaskName CopyFilesV2 -Version 2.238.0 -ShowRelease
-  ```
-
-### 2. Interactive Mode
-If you do not provide required parameters, the script will prompt you for input. This is user-friendly for manual use.
-
-**Example:**
-- Run the script without parameters:
-  ```powershell
-  pwsh ./ListTasksVersions.ps1
-  ```
-- The script will prompt you to:
-  1. Choose to view all versions or search for a specific version.
-  2. Enter the task name.
-  3. (If searching) Enter the version numbers.
-  4. Choose whether to display release information (y/n).
-
-Each case is handled automatically based on your input.
-
-## Error Handling
-  - If you leave the task name blank, you will see:
-    ```
-    Task name cannot be empty. Please provide a valid task name.
-    ```
-  - If the task does not exist, you will see:
-    ```
-    Task not found: <TaskName>. Please check the task name and try again.
-    ```
-  - If you search for a version but do not provide all version numbers, you will see:
-    ```
-    All parameters (Major, Minor, Patch) are required for search. Please provide valid values.
-    ```
 
 ## Notes
 - Ensure the `task.json` file exists in the `Tasks/<TaskName>/` directory.
