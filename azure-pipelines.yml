@@ -130,6 +130,8 @@ extends:
                 )
               PathtoPublish: _package/tasks.zip
               ArtifactName: package
+              sbomBuildDropPath: $(Build.SourcesDirectory)/_package
+
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
