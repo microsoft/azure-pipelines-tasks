@@ -5,9 +5,8 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('NuGetPublisher Suite', function () {
     it('publish single package internally', async () => {
-        let tp = path.join(__dirname, 'internal.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
+        const tp = path.join(__dirname, 'internal.js')
+        const tr = new ttm.MockTestRunner(tp);
         await tr.runAsync()
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe push -NonInteractive c:\\agent\\home\\directory\\package.nupkg -Source testFeedUri -ApiKey VSTS -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'should have pushed packages');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
@@ -19,9 +18,8 @@ describe('NuGetPublisher Suite', function () {
     }).timeout(20000);
 
     it('publish single package externally', async () => {
-        let tp = path.join(__dirname, 'external.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
+        const tp = path.join(__dirname, 'external.js')
+        const tr = new ttm.MockTestRunner(tp);
         await tr.runAsync()
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe push -NonInteractive c:\\agent\\home\\directory\\package.nupkg -Source https://example.feed.com -ApiKey secret'), 'should have pushed packages');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
