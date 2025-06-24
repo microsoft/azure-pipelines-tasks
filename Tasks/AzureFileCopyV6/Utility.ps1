@@ -150,11 +150,11 @@ function ConvertTo-Pfx {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
 
-    $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\openssl\openssl.exe"
-    $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\openssl\openssl.cnf"
+    $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
+    $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
     $env:RANDFILE=".rnd"
 
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`"  -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1"
 
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
