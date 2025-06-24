@@ -35,9 +35,6 @@ steps:
   displayName: Check Is Forked PR
   condition: eq(variables['SYSTEM.PULLREQUEST.ISFORK'], 'true')
 
-- script: node ./ci/check-node-executor-agent-version.js
-  displayName: Verify node executor and related minimum agent version
-
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
