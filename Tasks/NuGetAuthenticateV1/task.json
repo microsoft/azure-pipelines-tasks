@@ -13,12 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 253,
-    "Patch": 0
-  },
-  "release": {
-    "Sprint": 253,
-    "Ordinal": 1
+    "Minor": 247,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
