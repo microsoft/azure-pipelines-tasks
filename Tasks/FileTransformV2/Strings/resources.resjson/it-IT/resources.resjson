@@ -43,5 +43,5 @@
   "loc.messages.SkippedUpdatingFile": "L'aggiornamento del file %s è stato ignorato",
   "loc.messages.FailedToApplyTransformationReason1": "1. Verificare se la trasformazione è già stata applicata per il pacchetto generato da MSBuild durante la compilazione. In caso affermativo, rimuovere il tag <DependentUpon> per ogni file config nel file csproj e ricompilare. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.",
-  "loc.messages.FileTranformationNotEnabled": "La trasformazione file non è abilitata. Specificare uno dei valori seguenti: Regole di trasformazione XML o File di destinazione JSON/XML per la sostituzione delle variabili."
+  "loc.messages.FileTransformationNotEnabled": "La trasformazione file non è abilitata. Specificare uno dei valori seguenti: Regole di trasformazione XML o File di destinazione JSON/XML per la sostituzione delle variabili."
 }
