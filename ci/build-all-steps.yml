@@ -1,5 +1,7 @@
 parameters:
   os: ''
+  useSemverBuildConfig: false
+  generateReleaseNotes: true
 
 steps:
 
@@ -68,6 +70,11 @@ steps:
 
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, false)
+
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks --use-semver-build-config
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, true)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
@@ -126,7 +133,11 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
+
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
@@ -219,7 +230,8 @@ steps:
         succeeded(),
         in(variables['build.reason'], 'Schedule', 'Manual'),
         eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(${{ parameters.generateReleaseNotes }}, true)
       )
     continueOnError: true
     displayName: Create Release
