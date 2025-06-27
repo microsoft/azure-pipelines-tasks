@@ -4,6 +4,7 @@ import { api } from './api';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
 import { getBuildConfigs } from './helpers';
+import { getPipelineNamesForTask } from './helpers.TaskPipeline';
 
 interface BuildResult { result: string; message: string }
 
@@ -43,17 +44,22 @@ async function main() {
   const runningTestBuilds: Promise<BuildResult | BuildResult[]>[] = [];
   for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
-    const runResult = await runTaskPipelines(task);
+    // Get all pipeline names for this task (default + additional)
+    const pipelineNames = getPipelineNamesForTask(task);
 
-    if (runResult === DISABLED) {
-      disabledPipelines.push(task);
-    } else if (runResult === INVALID) {
-      invalidPipelines.push(task);
-    } else {
-      runningTestBuilds.push(...runResult);
+    for (const pipelineName of pipelineNames) {
+      console.log(`\n--- Starting pipeline execution: ${task} on ${pipelineName} ---`);
+      const runResult = await runTaskPipelines(task, pipelineName);
+
+      if (runResult === DISABLED) {
+        disabledPipelines.push(`${task} (${pipelineName})`);
+      } else if (runResult === INVALID) {
+        invalidPipelines.push(`${task} (${pipelineName})`);
+      } else {
+        runningTestBuilds.push(...runResult);
+      }
     }
   }
-
   let failed: boolean = false;
 
   Promise.all(runningTestBuilds).then(buildResults => {
@@ -101,9 +107,9 @@ async function main() {
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
+async function runTaskPipelines(taskName: string, pipelineName: string): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
   const pipelines = await fetchPipelines()();
-  const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
+  const pipeline = pipelines.find(p => p.name === pipelineName);
   let allowParrallelRun = true;
 
   if (pipeline) {
