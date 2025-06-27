@@ -45,6 +45,14 @@ parameters:
   displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
   type: boolean
   default: false  
+- name: useSemverBuildConfig
+  displayName: Use Semver Build Config to support canary rollout
+  type: boolean
+  default: false
+- name: generateReleaseNotes
+  displayName: Generate Release Notes for the deployed changes
+  type: boolean
+  default: true
 
 variables:
 - name: currentDate
@@ -134,6 +142,8 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
+            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
+            generateReleaseNotes: ${{ parameters.generateReleaseNotes }}
 
       # Publish
       - job: publish
@@ -219,6 +229,7 @@ extends:
         - template: /ci/build-all-tasks.yml@self
           parameters:
             deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
 
       # All tasks on Linux
       - job: build_all_linux
