@@ -1,11 +1,14 @@
+import * as path from 'path';
+
 export function getPipelineNamesForTask(taskName: string): string[] {
   const pipelineNames: string[] = [taskName];
   
   try {
-    // Using require for JSON file to avoid TypeScript configuration issues
-    const mapping = (require as any)('./task-pipeline-mapping.json');
+    // Using path.resolve for robust JSON file path resolution
+    const mappingPath = path.resolve(__dirname, 'task-pipeline-mapping.json');
+    const mapping = (require as any)(mappingPath);
     
-    if (mapping[taskName]) {
+    if (mapping && mapping[taskName]) {
       const additionalPipelines = mapping[taskName];
       
       if (Array.isArray(additionalPipelines)) {
