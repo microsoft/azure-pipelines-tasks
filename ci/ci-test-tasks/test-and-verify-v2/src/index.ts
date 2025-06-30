@@ -41,16 +41,34 @@ async function main() {
   const disabledPipelines: string[] = [];
   const invalidPipelines: string[] = [];
   const runningTestBuilds: Promise<BuildResult | BuildResult[]>[] = [];
+  
+  // Fetch all pipelines once at the start for efficiency
+  const pipelines = await fetchPipelines()();
+
   for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
-    const runResult = await runTaskPipelines(task);
 
-    if (runResult === DISABLED) {
-      disabledPipelines.push(task);
-    } else if (runResult === INVALID) {
-      invalidPipelines.push(task);
+    // Find all pipelines that start with the task name
+    const matchingPipelines = pipelines.filter(pipeline => pipeline.name?.startsWith(task));
+    
+    if (matchingPipelines.length > 0) {
+      console.log(`Found ${matchingPipelines.length} pipeline(s) for task "${task}": ${matchingPipelines.map(p => p.name).join(', ')}`);
+
+      for (const pipeline of matchingPipelines) {
+        console.log(`\n--- Starting pipeline execution: ${task} on ${pipeline.name} ---`);
+        
+        const runResult = await runTaskPipelines(task, pipeline);
+
+        if (runResult === DISABLED) {
+          disabledPipelines.push(`${task} (${pipeline.name})`);
+        } else if (runResult === INVALID) {
+          invalidPipelines.push(`${task} (${pipeline.name})`);
+        } else {
+          runningTestBuilds.push(...runResult);
+        }
+      }
     } else {
-      runningTestBuilds.push(...runResult);
+      console.log(`⚠️  No pipelines found starting with "${task}"`);
     }
   }
 
@@ -101,12 +119,9 @@ async function main() {
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
-  const pipelines = await fetchPipelines()();
-  const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
+async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionReference): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
   let allowParrallelRun = true;
 
-  if (pipeline) {
     if (pipeline.queueStatus === 2) { // disabled
       console.log(`Pipeline "${pipeline.name}" is disabled.`);
       return DISABLED;
@@ -155,7 +170,6 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult |
           console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
           const pipelineBuild = await startTestPipeline(pipeline, config);
           if (pipelineBuild !== null) {
-
             result = await completeBuild(taskName, pipelineBuild);
             buildResults.push(result);
           }
@@ -164,13 +178,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult |
       }));
     }
 
-
     return runningBuilds;
-  }
-
-  console.log(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
-
-  return [];
 }
 
 async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build | null> {
