@@ -43,18 +43,44 @@ $useDefaultArgumentsForBlobCopy = ($additionalArgumentsForBlobCopy -eq "")
 
 # Determine AzCopy version based on Az.Accounts version
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
-$azAccountsModule = Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-if ($null -eq $azAccountsModule -or ([version]$azAccountsModule.Version -ge [version]'5.0.0')) {
-    # Use latest AzCopy
-    $azCopyExeLocation = 'AzCopy\AzCopy.exe'
-    Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts not found or >= 5.0.0"
+
+# Command to run in PowerShell Core (returns version only)
+$coreCommand = '(Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()'
+# Locate pwsh.exe
+$pwshPath = Get-Command pwsh.exe -ErrorAction SilentlyContinue
+
+if ($pwshPath) {
+    Write-Verbose "Found PowerShell Core. Querying Az.accounts module version..."
+
+    # Capture output and ensure it's a clean version string
+    $azAccountsVersionCore = & $pwshPath.Source -NoProfile -Command $coreCommand
+
+    # Convert to a single string, then trim
+    $cleanVersion = ($azAccountsVersionCore -join '').Trim()
+
+     if ($cleanVersion -and $cleanVersion -ne "NotFound") {
+        try {
+            $parsedVersion = [version]$cleanVersion
+
+            if ($parsedVersion -ge [version]'5.0.0') {
+                $azCopyExeLocation = 'AzCopy\AzCopy.exe'
+                Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts >= 5.0.0"
+            } else {
+                $azCopyExeLocation = 'AzCopy_Prev\AzCopy\AzCopy.exe'
+                Write-Verbose "Using AzCopy_Prev (10.25.1) - Az.Accounts < 5.0.0"
+            }
+        } catch {
+            Write-Error "Failed to parse Az.Accounts version: $cleanVersion"
+        }
+    } 
+    else {
+        Write-Output "Az.Accounts not found in PowerShell Core"
+    }
+
 } else {
-    # Use previous AzCopy
-    $azCopyExeLocation = 'AzCopy_Prev\AzCopy\AzCopy.exe'
-    Write-Verbose "Using AzCopy_Prev (10.25.1) - Az.Accounts < 5.0.0"
+    Write-Error "PowerShell Core (pwsh.exe) is not installed or not found in PATH."
 }
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
-
 
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
