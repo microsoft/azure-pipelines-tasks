@@ -45,6 +45,23 @@ async function main() {
   // Fetch all pipelines once at the start for efficiency
   const pipelines = await fetchPipelines()();
 
+  // Add null check and array validation
+  if (!pipelines || !Array.isArray(pipelines)) {
+    console.error('Failed to fetch pipelines or pipelines is not an array');
+    console.log('##vso[task.complete result=Failed]');
+    process.exit(1);
+  }
+
+  // Add length check
+  if (pipelines.length === 0) {
+    console.warn('No pipelines found in the project');
+    console.log('##vso[task.issue type=warning]No pipelines found in the project');
+    console.log('##vso[task.complete result=Succeeded]');
+    process.exit(0);
+  }
+
+  console.log(`Found ${pipelines.length} total pipelines in the project`);
+
   for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
 
@@ -68,7 +85,7 @@ async function main() {
         }
       }
     } else {
-      console.log(`⚠️  No pipelines found starting with "${task}"`);
+      console.log(`Cannot build and run tests for task ${task} - corresponding test pipeline was not found`);
     }
   }
 
