@@ -92,7 +92,7 @@ extends:
       autoBaseline: false
     sdl:
       sbom:
-        enabled: false
+        enabled: true
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
@@ -130,6 +130,7 @@ extends:
                 )
               PathtoPublish: _package/tasks.zip
               ArtifactName: package
+              sbomBuildDropPath: $(Build.SourcesDirectory)/_package
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
@@ -214,6 +215,7 @@ extends:
           - output: buildArtifacts
             displayName: 'Publish package artifact'
             PathtoPublish: _package/tasks.zip
+            sbomBuildDropPath: $(Build.SourcesDirectory)/_package
             ArtifactName: allTasks
         steps:
         - template: /ci/build-all-tasks.yml@self
