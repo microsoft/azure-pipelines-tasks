@@ -49,6 +49,23 @@ export class PlaywrightTestExecutor implements ITestExecutor {
                 }
             }
 
+            const connectedService = tl.getInput('ConnectedServiceName', false);
+            if (connectedService) {
+                var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+                if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+                    process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+                    process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+                    process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false); 
+                    tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID, AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+                }
+                else {
+                    tl.debug('Connected service is not of type Workload Identity Federation');
+                }
+            }
+            else {
+                tl.debug('No connected service set');
+            }
+
         } catch (error) {
             operationResult.returnCode = 1;
             operationResult.errorMessage = error.message || String(error);
@@ -96,7 +113,7 @@ export class PlaywrightTestExecutor implements ITestExecutor {
             grepArg = grepPattern;
 
             tl.debug(`Grep Argument: ${grepArg}`);
-            
+
             executionTimer.start();
 
             const commandPreview = `npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput} playwright test --reporter=junit -g "${grepArg}"`;
