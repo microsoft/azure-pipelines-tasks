@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript",
   "loc.instanceNameFormat": "Azure Test Plan - $(testSelector)",
+  "loc.input.label.ConnectedServiceName": "Azure Resource Manager connection",
+  "loc.input.help.ConnectedServiceName": "Select an Azure Resource Manager service connection",
   "loc.input.label.testSelector": "Test cases to be executed",
   "loc.input.help.testSelector": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
   "loc.input.label.testPlanOrRunSelector": "Select tests using",
