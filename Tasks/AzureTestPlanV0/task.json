@@ -14,12 +14,22 @@
   "version": {
     "Major": 0,
     "Minor": 259,
-    "Patch": 4
+    "Patch": 5
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
