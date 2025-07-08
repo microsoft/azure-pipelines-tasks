@@ -28,8 +28,46 @@ async function run() {
             // set the secure file output variable.
             tl.setVariable('secureFilePath', secureFilePath);
         }
-    } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+    } catch (err: any) {
+        try {
+            // Convert error object to a serializable format
+            const errorObject = {
+                name: err.name,
+                message: err.message,
+                stack: err.stack,
+                // Include any additional properties
+                ...Object.getOwnPropertyNames(err).reduce((obj, key) => {
+                    obj[key] = err[key];
+                    return obj;
+                }, {})
+            };
+
+            // Log the full error details
+            tl.error('Error details:');
+            tl.error(JSON.stringify(errorObject, null, 2));
+
+            // If it's an AggregateError, also log inner errors
+            if (err.name === "AggregateError" && Array.isArray(err.errors)) {
+                tl.error('AggregateError inner errors:');
+                const innerErrors = err.errors.map((innerError: any, index: number) => ({
+                    errorIndex: index + 1,
+                    name: innerError.name,
+                    message: innerError.message,
+                    stack: innerError.stack,
+                    ...Object.getOwnPropertyNames(innerError).reduce((obj, key) => {
+                        obj[key] = innerError[key];
+                        return obj;
+                    }, {})
+                }));
+                tl.error(JSON.stringify(innerErrors, null, 2));
+            }
+
+            tl.setResult(tl.TaskResult.Failed, `Task failed: ${err.message}`);
+        } catch (jsonError) {
+            // Fallback if JSON stringification fails
+            tl.error(`Error converting error to JSON: ${jsonError.message}`);
+            tl.setResult(tl.TaskResult.Failed, err.message || 'Unknown error occurred');
+        }
     }
 }
 
