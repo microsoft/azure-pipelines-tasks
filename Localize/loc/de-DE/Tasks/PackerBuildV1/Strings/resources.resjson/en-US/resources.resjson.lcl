@@ -639,33 +639,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.FailedToFetchSPNDetailsRemotely" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not fetch SPN details from the graph service connection. Error: %s.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Abrufen von SPN-Details aus der Diagrammdienstverbindung nicht möglich. Fehler: %s.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.FetchedSPNDetailsRemotely" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Fetched SPN details successfully. ObjectId: %s]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[SPN-Details erfolgreich abgerufen. ObjectId: %s]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.FetchingSPNDetailsRemotely" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Fetching SPN details for app ID %s from the Azure AD graph service connection...]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[SPN-Details für App-ID %s werden aus der Azure AD-Diagrammdienstverbindung abgerufen...]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";loc.messages.GetArtifactItemsNotSupported" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Get artifact items not supported, invalid code path]]></Val>
