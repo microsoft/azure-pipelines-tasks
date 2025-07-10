@@ -28,15 +28,12 @@ parameters:
 
 - name: task_deployment
   displayName: Choose deployment options
-  type: boolean
-  values:
-   - value: true
-     label: Deploy all tasks
-   - value: false
-     label: Deploy task of sprint 
-   - value: false
-     label: Deploy hotfix
-     value: false
+  type: radio
+  default: labelOne
+  options:
+     labelOne: Deploy all tasks
+     labelTwo: Deploy task of sprint 
+     labelThree: Deploy hotfix
 
 - name: enableCodeQL
   displayName: Enable CodeQL for run
