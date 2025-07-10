@@ -98,6 +98,8 @@ variables:
     value: 'false'
 - name: FORCE_COURTESY_PUSH
   value: 'true'
+- name: COURTESY_PUSH
+  value: 'true'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
