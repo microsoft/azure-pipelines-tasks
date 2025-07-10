@@ -28,12 +28,6 @@ parameters:
 
 - name: task_deployment
   displayName: Choose deployment options
-  # type: radio
-  # default: labelOne
-  # options:
-  #    labelOne: Deploy all tasks
-  #    labelTwo: Deploy task of sprint 
-  #    labelThree: Deploy hotfix
   type: string
   default: 'Deploy all tasks'
   values:
@@ -98,7 +92,7 @@ variables:
   ${{ else }}:
     value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
-  ${{ if eq(parameters.deploy_all_tasks, true) }}:
+  ${{ if eq(parameters.task_deployment,'Deploy all tasks') }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
@@ -240,7 +234,7 @@ extends:
         steps:
         - template: /ci/build-all-tasks.yml@self
           parameters:
-            deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+            deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all tasks') }}
 
       # All tasks on Linux
       - job: build_all_linux
