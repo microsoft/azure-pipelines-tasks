@@ -21,10 +21,23 @@ parameters:
   displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
   type: string
   default: TaskNameVN
-- name: deploy_all_tasks
-  displayName: Build all tasks for deployment
+# - name: deploy_all_tasks
+#   displayName: Build all tasks for deployment
+#   type: boolean
+#   default: false
+
+- name: task_deployment
+  displayName: Choose deployment options
   type: boolean
-  default: false
+  values:
+   - value: true
+     label: Deploy all tasks
+   - value: false
+     label: Deploy task of sprint 
+   - value: false
+     label: Deploy hotfix
+     value: false
+
 - name: enableCodeQL
   displayName: Enable CodeQL for run
   type: boolean
