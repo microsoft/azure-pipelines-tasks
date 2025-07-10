@@ -45,6 +45,10 @@ parameters:
   displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
   type: boolean
   default: false  
+- name: releaseNote
+  displayName: Generate Release note
+  type: boolean
+  default: false
 
 variables:
 - name: currentDate
