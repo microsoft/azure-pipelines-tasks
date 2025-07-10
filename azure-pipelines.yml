@@ -173,6 +173,17 @@ extends:
             ArtifactName: IndividualNuGetPackages
         steps:
         - template: /ci/publish-steps.yml@self
+        
+        # Generate Release Notes (conditional)
+        - ${{ if eq(parameters.releaseNote, true) }}:
+          - script: |
+              cd ci/ci-release-notes
+              npm install
+              node release-notes.js --token $(System.AccessToken) --version $(Build.BuildNumber)
+            displayName: Generate Release Notes
+            condition: and(succeeded(), eq('${{ parameters.releaseNote }}', 'true'))
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
       # Courtesy Push
       - job: courtesy_push
