@@ -97,7 +97,7 @@ variables:
   ${{ else }}:
     value: 'false'
 - name: FORCE_COURTESY_PUSH
-  value: 'true'
+  default: 'true'
 - name: COURTESY_PUSH
   value: 'true'
 
