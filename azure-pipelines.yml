@@ -24,7 +24,7 @@ parameters:
     - Write TaskNameVN for 'Deploy task of sprint'.
     - Provide name of task to 'Deploy hotfix' (e.g. PowerShellV2).
   type: string
-  default: ""
+  placeholder: "Enter Task name"
   # default: |
 # - name: deploy_all_tasks
 #   displayName: Build all tasks for deployment
