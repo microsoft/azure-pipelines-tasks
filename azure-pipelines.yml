@@ -18,13 +18,14 @@ resources:
 
 parameters:
 - name: task_name
-  displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
+  displayName: |
+    Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
+    - Leave empty for 'Deploy all tasks'.
+    - Write TaskNameVN for 'Deploy task of sprint'.
+    - Provide name of task to 'Deploy hotfix' (e.g. PowerShellV2).
   type: string
-  # default: TaskNameVN
+  default: ""
   default: |
-    Leave empty for 'Deploy all tasks'.
-    Write TaskNameVN for 'Deploy task of sprint'.
-    Provide name of task to 'Deploy hotfix' (e.g. PowerShellV2).
 # - name: deploy_all_tasks
 #   displayName: Build all tasks for deployment
 #   type: boolean
