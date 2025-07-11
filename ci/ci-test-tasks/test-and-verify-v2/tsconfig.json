@@ -4,7 +4,8 @@
         "noImplicitAny": false,
         "strictNullChecks": true,
         "outDir": "./dist",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "resolveJsonModule": true
     },
     "exclude": [
         "node_modules"
