@@ -71,7 +71,7 @@ variables:
 - name: taskName
   value: ${{ parameters.task_name }}
 - name: taskNameIsSet
-  value: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+  value: ${{ not(eq(parameters.task_name, '')) }}
 - name: runCodeQl
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
