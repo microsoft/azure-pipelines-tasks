@@ -20,11 +20,9 @@ parameters:
 - name: task_name
   displayName: |
     Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
-    - Leave empty for 'Deploy all tasks'.
-    - Write TaskNameVN for 'Deploy task of sprint'.
-    - Provide name of task to 'Deploy hotfix' (e.g. PowerShellV2).
+    - Provide name of tasks separated by ',' to 'Deploy Hotfix' (e.g. PowerShellV2).
   type: string
-  placeholder: "Enter Task name"
+  default: 'TaskNameVN'
   # default: |
 # - name: deploy_all_tasks
 #   displayName: Build all tasks for deployment
@@ -36,9 +34,9 @@ parameters:
   type: string
   default: 'Deploy all tasks'
   values:
-  - 'Deploy all tasks'
-  - 'Deploy task of sprint'
-  - 'Deploy hotfix'
+  - 'Deploy all Tasks'
+  - 'Deploy task of Sprint'
+  - 'Deploy Hotfix'
 
 - name: enableCodeQL
   displayName: Enable CodeQL for run
@@ -71,7 +69,7 @@ variables:
 - name: taskName
   value: ${{ parameters.task_name }}
 - name: taskNameIsSet
-  value: ${{ not(eq(parameters.task_name, '')) }}
+  value: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
 - name: runCodeQl
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
