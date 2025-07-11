@@ -40,6 +40,8 @@ export class PackageFile {
 
     private async extract(): Promise<void> {
         const fileEnding = path.parse(this.initialLocation).ext;
+        tl.debug("Extracting file: " + this.initialLocation + " to " + this.finalLocation);
+        tl.debug("File ending: " + fileEnding);
         switch (fileEnding) {
             case ".zip":
             case ".crate":
