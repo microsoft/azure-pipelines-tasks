@@ -32,7 +32,7 @@ parameters:
 - name: task_deployment
   displayName: Choose deployment options
   type: string
-  default: 'Deploy all tasks'
+  default: 'Deploy all Tasks'
   values:
   - 'Deploy all Tasks'
   - 'Deploy task of Sprint'
