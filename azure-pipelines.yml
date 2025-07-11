@@ -69,7 +69,7 @@ variables:
 - name: taskName
   value: ${{ parameters.task_name }}
 - name: taskNameIsSet
-  value: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+  value: ${{ not(eq(parameters.task_deployment, 'Deploy all Tasks')) }}
 - name: runCodeQl
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
@@ -103,6 +103,8 @@ variables:
   value: 'true'
 - name: COURTESY_PUSH
   value: 'true'
+- name: releaseNote
+  value: ${{ eq(parameters.releaseNote, true) }}
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -184,7 +186,7 @@ extends:
               npm install
               node release-notes.js --token $(System.AccessToken) --version $(Build.BuildNumber)
             displayName: Generate Release Notes
-            condition: and(succeeded(), eq('${{ parameters.releaseNote }}', 'true'))
+            condition: and(succeeded(), eq(variables['releaseNote'], 'true'))
             env:
               SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
