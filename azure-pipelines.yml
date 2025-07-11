@@ -69,7 +69,7 @@ variables:
 - name: taskName
   value: ${{ parameters.task_name }}
 - name: taskNameIsSet
-  value: ${{ not(eq(parameters.task_deployment, 'Deploy all Tasks')) }}
+  value: ${{ not(or(eq(parameters.task_deployment, 'Deploy all Tasks'), eq(parameters.task_deployment, 'Deploy task of Sprint'))) }}
 - name: runCodeQl
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
