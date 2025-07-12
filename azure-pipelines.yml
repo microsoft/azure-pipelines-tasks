@@ -18,13 +18,26 @@ resources:
 
 parameters:
 - name: task_name
-  displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
+  displayName: |
+    Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
+    - Provide name of tasks separated by ',' to 'Deploy Hotfix' (e.g. PowerShellV2).
   type: string
-  default: TaskNameVN
-- name: deploy_all_tasks
-  displayName: Build all tasks for deployment
-  type: boolean
-  default: false
+  default: 'TaskNameVN'
+  # default: |
+# - name: deploy_all_tasks
+#   displayName: Build all tasks for deployment
+#   type: boolean
+#   default: false
+
+- name: task_deployment
+  displayName: Choose deployment options
+  type: string
+  default: 'Deploy all Tasks'
+  values:
+  - 'Deploy all Tasks'
+  - 'Deploy task of Sprint'
+  - 'Deploy Hotfix'
+
 - name: enableCodeQL
   displayName: Enable CodeQL for run
   type: boolean
@@ -33,10 +46,10 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
-- name: skip_tests
-  displayName: skipTests (Not for production use)
-  type: boolean
-  default: false
+# - name: skip_tests
+#   displayName: skipTests (Not for production use)
+#   type: boolean
+#   default: false
 - name: skip_publish
   displayName: skipPublish (Not for production use)
   type: boolean
@@ -46,13 +59,14 @@ parameters:
   type: boolean
   default: false  
 
+
 variables:
 - name: currentDate
   value: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
 - name: taskName
   value: ${{ parameters.task_name }}
 - name: taskNameIsSet
-  value: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+  value: ${{ not(or(eq(parameters.task_deployment, 'Deploy all Tasks'), eq(parameters.task_deployment, 'Deploy task of Sprint'))) }}
 - name: runCodeQl
   value: ${{ eq(parameters.enableCodeQL, true) }}
 - name: system.debug
@@ -67,21 +81,26 @@ variables:
     value: '1'
   ${{ else }}:
     value: ''
-- name: tasksSkipTests
-  ${{ if eq(parameters.skip_tests, true) }}:
-    value: 'true'
-  ${{ else }}:
-    value: 'false'
+# - name: tasksSkipTests
+#   ${{ if eq(parameters.skip_tests, true) }}:
+#     value: 'true'
+#   ${{ else }}:
+#     value: 'false'
 - name: tasksSkipPublish
   ${{ if eq(parameters.skip_publish, true) }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
-  ${{ if eq(parameters.deploy_all_tasks, true) }}:
+  ${{ if eq(parameters.task_deployment,'Deploy all tasks') }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: FORCE_COURTESY_PUSH
+  value: 'true'
+- name: COURTESY_PUSH
+  value: 'true'
+
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -155,6 +174,7 @@ extends:
             ArtifactName: IndividualNuGetPackages
         steps:
         - template: /ci/publish-steps.yml@self
+        
 
       # Courtesy Push
       - job: courtesy_push
@@ -220,7 +240,7 @@ extends:
         steps:
         - template: /ci/build-all-tasks.yml@self
           parameters:
-            deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+            deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all tasks') }}
 
       # All tasks on Linux
       - job: build_all_linux
