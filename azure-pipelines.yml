@@ -23,11 +23,7 @@ parameters:
     - Provide name of tasks separated by ',' to 'Deploy Hotfix' (e.g. PowerShellV2).
   type: string
   default: 'TaskNameVN'
-  # default: |
-# - name: deploy_all_tasks
-#   displayName: Build all tasks for deployment
-#   type: boolean
-#   default: false
+
 
 - name: task_deployment
   displayName: Choose deployment options
@@ -46,10 +42,7 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
-# - name: skip_tests
-#   displayName: skipTests (Not for production use)
-#   type: boolean
-#   default: false
+
 - name: skip_publish
   displayName: skipPublish (Not for production use)
   type: boolean
@@ -81,11 +74,7 @@ variables:
     value: '1'
   ${{ else }}:
     value: ''
-# - name: tasksSkipTests
-#   ${{ if eq(parameters.skip_tests, true) }}:
-#     value: 'true'
-#   ${{ else }}:
-#     value: 'false'
+
 - name: tasksSkipPublish
   ${{ if eq(parameters.skip_publish, true) }}:
     value: 'true'
