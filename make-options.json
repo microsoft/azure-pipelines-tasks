@@ -77,7 +77,6 @@
         "DecryptFileV1",
         "DelayV1",
         "DeleteFilesV1",
-        "DeployVisualStudioTestAgentV2",
         "DockerV0",
         "DockerV1",
         "DockerV2",
