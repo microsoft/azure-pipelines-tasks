@@ -154,6 +154,30 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+function performNpmAudit(taskPath) {
+    console.log('\n🛫 Running npm audit...');
+
+    try {
+        const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
+            stdio: 'pipe',
+            encoding: 'utf8',
+        });
+
+        if (auditResult.error) {
+            console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
+            console.log(`👉 Please see details by running the command: npm audit fix --prefix ${taskPath}`);
+            process.exit(1);
+        } else {
+            console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
+        }
+
+        console.log(auditResult);
+    } catch (error) {
+        console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
+        console.error(error.message);
+    }
+}
+
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
@@ -189,6 +213,10 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
             run('npm install');
         }
         cd(taskPath);
+    }
+
+    if (!process.env['TF_BUILD']) {
+        performNpmAudit(taskPath);
     }
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
