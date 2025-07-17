@@ -165,13 +165,11 @@ function performNpmAudit(taskPath) {
 
         if (auditResult.error) {
             console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
-            console.log(`👉 Please see details by running the command: npm audit fix --prefix ${taskPath}`);
+            console.log(`👉 Please see details by running the command: npm audit --prefix ${taskPath}`);
             process.exit(1);
         } else {
             console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
         }
-
-        console.log(auditResult);
     } catch (error) {
         console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
         console.error(error.message);
