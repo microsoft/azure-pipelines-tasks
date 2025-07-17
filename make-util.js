@@ -191,6 +191,7 @@ function performNpmAudit(taskPath) {
     } catch (error) {
         console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
         console.error(error.message);
+        process.exit(1);
     }
 }
 
