@@ -17,13 +17,6 @@ resources:
     ref: refs/tags/release
 
 parameters:
-- name: task_name
-  displayName: |
-    Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
-    - Provide name of tasks separated by ',' to 'Deploy Hotfix' (e.g. PowerShellV2).
-  type: string
-  default: 'TaskNameVN'
-
 - name: task_deployment
   displayName: Choose deployment options
   type: string
@@ -32,7 +25,11 @@ parameters:
   - 'Deploy all Tasks'
   - 'Deploy task of Sprint'
   - 'Deploy Hotfix'
-
+- name: task_name
+  displayName: |
+    To 'Deploy Hotfix' provide task names (e.g. BashV3,AzureCLIV1,PowerShellV2) else leave to default
+  type: string
+  default: 'TaskNameVN'
 - name: enableCodeQL
   displayName: Enable CodeQL for run
   type: boolean
@@ -81,10 +78,6 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
-- name: FORCE_COURTESY_PUSH
-  value: 'true'
-- name: COURTESY_PUSH
-  value: 'true'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
