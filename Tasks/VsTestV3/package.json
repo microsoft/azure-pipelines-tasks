@@ -15,7 +15,7 @@
   "dependencies": {
     "is-unc-path": "^1.0.0",
     "performance-now": "0.2.0",
-    "request": "2.87.0",
+    "request": "^2.87.0",
     "string": "3.3.1",
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
@@ -29,6 +29,7 @@
     "regedit": "2.2.6"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "qs": "^6.14.0"
   }
 }
