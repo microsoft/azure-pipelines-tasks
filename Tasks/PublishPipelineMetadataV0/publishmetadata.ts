@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface RelatedUrl {
     "url": string;
@@ -19,7 +19,7 @@ interface AttestationRequestPayload {
 function getPipelineMetadataObjects(): any {
     const pipelineMetadataRequestBodyString = "metadata";
     const allVariables = tl.getVariables();
-    let requestObjects = [];
+    let requestObjects: string[] = [];
     allVariables.forEach(v => {
         if (v.name.toLowerCase().startsWith(pipelineMetadataRequestBodyString)) {
             try {
@@ -34,7 +34,7 @@ function getPipelineMetadataObjects(): any {
     return requestObjects;
 }
 
-function constructMetadataRequestBody(requestObject: any): AttestationRequestPayload {
+function constructMetadataRequestBody(requestObject: any): AttestationRequestPayload | undefined {
     if (!requestObject.name) {
         tl.debug("Not pushing metadata as no name found in request payload");
         return;
@@ -103,9 +103,9 @@ async function run() {
             return;
         }
 
-        const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/attestationdetails?api-version=5.2-preview.1";
+        const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri")! + tl.getVariable("System.TeamProject") + "/_apis/deployment/attestationdetails?api-version=5.2-preview.1";
         metadataObjects.forEach((requestPayload: any) => {
-            const requestObject: AttestationRequestPayload = constructMetadataRequestBody(requestPayload);
+            const requestObject: AttestationRequestPayload | undefined = constructMetadataRequestBody(requestPayload);
             sendRequestToImageStore(JSON.stringify(requestObject), requestUrl).then((result) => {
                 tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
                 if (result.statusCode < 200 && result.statusCode >= 300) {
@@ -126,7 +126,7 @@ async function run() {
 
 async function sendRequestToImageStore(requestBody: string, requestUrl: string): Promise<any> {
     const request = new WebRequest();
-    const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+    const accessToken: string | undefined = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
     request.uri = requestUrl;
     request.method = 'POST';
     request.body = requestBody;
