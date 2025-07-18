@@ -1,15 +1,20 @@
-var check = require('validator').default;
-var fs = require('fs');
-var makeOptions = require('./make-options.json');
-var minimatch = require('minimatch');
-var ncp = require('child_process');
-var os = require('os');
-var path = require('path');
-var process = require('process');
-var semver = require('semver');
-var shell = require('shelljs');
-const { XMLParser } = require("fast-xml-parser");
-const Downloader = require("nodejs-file-downloader");
+const ncp = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const process = require('process');
+
+const { XMLParser } = require('fast-xml-parser');
+const minimatch = require('minimatch');
+const minimist = require('minimist');
+const Downloader = require('nodejs-file-downloader');
+const check = require('validator').default;
+const semver = require('semver');
+const shell = require('shelljs');
+
+const makeOptions = require('./make-options.json');
+
+const args = minimist(process.argv.slice(2));
 
 // global paths
 var repoPath = __dirname;
@@ -154,6 +159,43 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+function performNpmAudit(taskPath) {
+    console.log('\n🛫 Running npm audit...');
+
+    if (process.env['TF_BUILD']) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit in build pipeline because it is not supported in the pipeline.`);
+        return;
+    }
+
+    if (args.BypassNpmAudit) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit because --BypassNpmAudit argument is set.`);
+        return;
+    }
+
+    try {
+        const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
+            stdio: 'pipe',
+            encoding: 'utf8',
+            shell: true
+        });
+
+        if (auditResult.error) {
+            console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
+            console.log('👉 Please see details by running the command');
+            console.log(`\tnpm audit --prefix ${taskPath}`);
+            console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
+            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
+            process.exit(1);
+        } else {
+            console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
+        }
+    } catch (error) {
+        console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
+        console.error(error.message);
+        process.exit(1);
+    }
+}
+
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
@@ -190,6 +232,8 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         }
         cd(taskPath);
     }
+
+    performNpmAudit(taskPath);
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
@@ -344,23 +388,21 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+const node20Version = '20.17.0';
+exports.node20Version = node20Version;
+
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: 'v20.17.0',
-        16: 'v16.20.2',
-        14: 'v14.10.1',
-        10: 'v10.24.1',
-        6: 'v6.10.3',
-        5: 'v5.10.1',
+        20: node20Version
     };
 
     if (!nodeVersion) {
-        nodeVersion = versions[20];
+        nodeVersion = 'v' + versions[20];
     } else {
         if (!versions[nodeVersion]) {
             fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
         };
-        nodeVersion = versions[nodeVersion];
+        nodeVersion = 'v' + versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1684,11 +1726,12 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
 const getTaskNodeVersion = function(buildPath, taskName) {
+    const fallbackNode = 20;
     const nodes = new Set();
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 10');
-        nodes.add(10);
+        console.warn(`Unable to find task.json, defaulting to use Node ${fallbackNode}`);
+        nodes.add(fallbackNode);
         return Array.from(nodes);
     }
 
@@ -1703,7 +1746,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
             const currExecutor = key.toLocaleLowerCase();
             if (!currExecutor.startsWith('node')) continue;
             const version = currExecutor.replace('node', '');
-            nodes.add(parseInt(version) || 20);
+            nodes.add(parseInt(version) || fallbackNode);
         }
     }
 
@@ -1711,8 +1754,8 @@ const getTaskNodeVersion = function(buildPath, taskName) {
         return Array.from(nodes);
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10 taskName=' + taskName);
-    nodes.add(10);
+    console.warn(`Unable to determine execution type from task.json, defaulting to use Node ${fallbackNode} taskName=${taskName}`);
+    nodes.add(fallbackNode);
     return Array.from(nodes);
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
