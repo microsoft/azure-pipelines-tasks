@@ -176,6 +176,7 @@ function performNpmAudit(taskPath) {
         const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
             stdio: 'pipe',
             encoding: 'utf8',
+            shell: true
         });
 
         if (auditResult.error) {
