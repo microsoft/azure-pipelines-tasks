@@ -42,13 +42,24 @@ $additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
 $useDefaultArgumentsForBlobCopy = ($additionalArgumentsForBlobCopy -eq "")
 
 # Determine AzCopy version based on Az.Accounts version
-$azCopyExeLocation = 'AzCopy\AzCopy.exe'
-
+$azCopyExeLocation = 'AzCopy_Prev\AzCopy\AzCopy.exe'
+function Get-azCopyExeLocation
+{
+    param([string]$location)
+    if ($location -eq 'latest') {
+        Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts >= 5.0.0"
+        return 'AzCopy\AzCopy.exe'
+    } else {
+        Write-Verbose "Using AzCopy_Prev (10.25.1) - Az.Accounts < 5.0.0"
+        return 'AzCopy_Prev\AzCopy\AzCopy.exe'
+    }
+}
 # Command to run in PowerShell Core (returns version only)
 $coreCommand = '(Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()'
 # Locate pwsh.exe
 $pwshPath = Get-Command pwsh.exe -ErrorAction SilentlyContinue
-
+# if FF enable use prev azcopy if error occurs while az.accounts version check
+$DisableAzAccountCheck =  Get-VstsPipelineFeature -FeatureName 'DisableAzAccountCheck'
 if ($pwshPath) {
     Write-Verbose "Found PowerShell Core. Querying Az.accounts module version..."
 
@@ -63,23 +74,30 @@ if ($pwshPath) {
             $parsedVersion = [version]$cleanVersion
 
             if ($parsedVersion -ge [version]'5.0.0') {
-                $azCopyExeLocation = 'AzCopy\AzCopy.exe'
-                Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts >= 5.0.0"
+              $azCopyExeLocation =  Get-azCopyExeLocation -location "latest"
             } else {
-                $azCopyExeLocation = 'AzCopy_Prev\AzCopy\AzCopy.exe'
-                Write-Verbose "Using AzCopy_Prev (10.25.1) - Az.Accounts < 5.0.0"
+              $azCopyExeLocation =  Get-azCopyExeLocation -location "previous"
             }
         } catch {
-            Write-Error "Failed to parse Az.Accounts version: $cleanVersion"
+            Write-Verbose "Failed to parse Az.Accounts version: $cleanVersion"
+            if ($DisableAzAccountCheck -eq $true) {
+                 $azCopyExeLocation = Get-azCopyExeLocation -location "latest"
+            }
         }
     } 
     else {
-        Write-Output "Az.Accounts not found in PowerShell Core"
+      Write-Verbose "Az.Accounts not found in PowerShell Core"
+       if ($DisableAzAccountCheck -eq $true) {
+         $azCopyExeLocation = Get-azCopyExeLocation -location "latest"
+       }
     }
-
 } else {
     Write-Error "PowerShell Core (pwsh.exe) is not installed or not found in PATH."
+     if ($DisableAzAccountCheck -eq $true) {
+         $azCopyExeLocation =  Get-azCopyExeLocation -location "latest"
+       }
 }
+
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Import RemoteDeployer
