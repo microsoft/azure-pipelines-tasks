@@ -58,8 +58,8 @@ function Get-azCopyExeLocation
 $coreCommand = '(Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()'
 # Locate pwsh.exe
 $pwshPath = Get-Command pwsh.exe -ErrorAction SilentlyContinue
-# if FF enable use prev azcopy if error occurs while az.accounts version check
-$DisableAzAccountCheck =  Get-VstsPipelineFeature -FeatureName 'DisableAzAccountCheck'
+# if FF enable use latest azcopy as default
+$UseLatestAzCopyAsDefault =  Get-VstsPipelineFeature -FeatureName 'UseLatestAzCopyAsDefault'
 if ($pwshPath) {
     Write-Verbose "Found PowerShell Core. Querying Az.accounts module version..."
 
@@ -68,6 +68,8 @@ if ($pwshPath) {
 
     # Convert to a single string, then trim
     $cleanVersion = ($azAccountsVersionCore -join '').Trim()
+    
+    Write-Verbose "Az.Accounts version: $cleanVersion" 
 
      if ($cleanVersion -and $cleanVersion -ne "NotFound") {
         try {
@@ -80,20 +82,20 @@ if ($pwshPath) {
             }
         } catch {
             Write-Verbose "Failed to parse Az.Accounts version: $cleanVersion"
-            if ($DisableAzAccountCheck -eq $true) {
+            if ($UseLatestAzCopyAsDefault -eq $true) {
                  $azCopyExeLocation = Get-azCopyExeLocation -location "latest"
             }
         }
     } 
     else {
       Write-Verbose "Az.Accounts not found in PowerShell Core"
-       if ($DisableAzAccountCheck -eq $true) {
+       if ($UseLatestAzCopyAsDefault -eq $true) {
          $azCopyExeLocation = Get-azCopyExeLocation -location "latest"
        }
     }
 } else {
     Write-Error "PowerShell Core (pwsh.exe) is not installed or not found in PATH."
-     if ($DisableAzAccountCheck -eq $true) {
+     if ($UseLatestAzCopyAsDefault -eq $true) {
          $azCopyExeLocation =  Get-azCopyExeLocation -location "latest"
        }
 }
