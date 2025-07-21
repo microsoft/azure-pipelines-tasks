@@ -647,7 +647,7 @@ namespace BuildConfigGen
                 var targetConfigsWithMergeToBaseOrderedFirst = targetConfigs.OrderBy(x => x.mergeToBase ? 0 : 1);
 
                 var defaultConfig = targetConfigs.FirstOrDefault(x => x.isDefault)
-                    ?? throw new ArgumentException($"There is no default config for task {task} which is required if {nameof(useSemverBuildConfig)} is true");
+                ?? throw new Exception($"There is no default config for task {task}");
 
                 foreach (var config in targetConfigsWithMergeToBaseOrderedFirst)
                 {
@@ -751,10 +751,10 @@ namespace BuildConfigGen
                                     WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                     WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
 
-                                    if (useSemverBuildConfig)
+                                    if (useSemverBuildConfig && !config.mergeToBase)
                                     {
-                                        WriteTaskJsonWithSemverConfig(taskOutput, taskVersionState, defaultConfig, config, "task.json", existingLocalPackageVersion);
-                                        WriteTaskJsonWithSemverConfig(taskOutput, taskVersionState, defaultConfig, config, "task.loc.json", existingLocalPackageVersion);
+                                        WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
+                                        WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                     }
                                     else if (!config.mergeToBase)
                                     {
@@ -1087,7 +1087,12 @@ namespace BuildConfigGen
             return outputTaskNodeObject["_buildConfigMapping"]?.AsObject()?[Config.LocalPackages.constMappingKey]?.GetValue<string>();
         }
 
-        private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName, string? existingLocalPackageVersion)
+        /// <summary>
+        /// Writes task.json with version information and build config mapping.
+        /// When useSemverBuildConfig is true, uses the same major.minor.patch for all build configuration tasks, 
+        /// but the "build" suffix of semver is different and directly corresponds to the config name.
+        /// </summary>
+        private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName, string? existingLocalPackageVersion, bool useSemverBuildConfig = false, Config.ConfigRecord? defaultConfig = null)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
@@ -1095,6 +1100,12 @@ namespace BuildConfigGen
             outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[config].Major;
             outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[config].Minor;
             outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
+
+            // Add semver build suffix if using semver config and not the default config
+            if (useSemverBuildConfig && defaultConfig != null && defaultConfig != config)
+            {
+                outputTaskNode["version"]!["Build"] = config.constMappingKey;
+            }
 
             var outputTaskNodeObject = outputTaskNode.AsObject();
             outputTaskNodeObject.Remove("_buildConfigMapping");
@@ -1111,62 +1122,6 @@ namespace BuildConfigGen
                     // unless the config being generated is the globalVersion (written to _generated_local),
                     // if no other versions are updated other than the globalVersion,
                     // don't change the global version in the existing generated file.
-                    if (existingLocalPackageVersion != null)
-                    {
-                        configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
-                    }
-                }
-                else
-                {
-                    configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
-                }
-            }
-
-            outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
-
-            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
-        }
-
-        /// <summary>
-        /// This uses the same major.minor.patch for all build configuration tasks, but the "build" suffix of semver is different, and directly corresponds to the name.
-        /// We no longer populate the '_buildConfigMapping' property of the task.json, since server won't expect this property to be set.
-        /// </summary>
-        /// <param name="taskPath"></param>
-        /// <param name="taskState"></param>
-        /// <param name="defaultConfig"></param>
-        /// <param name="config"></param>
-        /// <param name="fileName"></param>
-        /// <param name="existingLocalPackageVersion"></param>
-        private static void WriteTaskJsonWithSemverConfig(string taskPath,
-            TaskStateStruct taskState,
-            Config.ConfigRecord defaultConfig,
-            Config.ConfigRecord config,
-            string fileName,
-            string? existingLocalPackageVersion)
-        {
-            string outputTaskPath = Path.Combine(taskPath, fileName);
-            JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
-
-            outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[config].Major;
-            outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[config].Minor;
-            outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
-
-            if (defaultConfig != config)
-            {
-                outputTaskNode["version"]!["Build"] = config.constMappingKey;
-            }
-
-            var outputTaskNodeObject = outputTaskNode.AsObject();
-            outputTaskNodeObject.Remove("_buildConfigMapping");
-
-            bool anyVersionsUpdatedExceptForGlobal = taskState.versionsUpdated.Where(x => !x.useGlobalVersion).Any();
-
-            JsonObject configMapping = new JsonObject();
-            var configTaskVersionMappingSortedByConfig = taskState.configTaskVersionMapping.OrderBy(x => x.Key.name);
-            foreach (var cfg in configTaskVersionMappingSortedByConfig)
-            {
-                if (!config.useGlobalVersion && cfg.Key.useGlobalVersion && !anyVersionsUpdatedExceptForGlobal)
-                {
                     if (existingLocalPackageVersion != null)
                     {
                         configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
@@ -1400,7 +1355,6 @@ always-auth=true", false);
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GetTasksRootPath(currentDir);
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
-
             if (!Directory.Exists(taskTargetPath))
             {
                 throw new Exception($"expected {taskTargetPath} to exist!");
@@ -1449,7 +1403,6 @@ always-auth=true", false);
                         {
                             throw new Exception($"Multiple configs for task being merged.  This is not supported.  task={task} mergingConfig.name={mergingConfig.name}");
                         }
-
                         // versionMap contains a version that needs to be merged to base
                         allConfigsMappedAndValid = false;
                         mergingConfig = config;
@@ -1568,7 +1521,6 @@ always-auth=true", false);
                         else
                         {
                             TaskVersion targetVersion;
-
                             do
                             {
                                 targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);

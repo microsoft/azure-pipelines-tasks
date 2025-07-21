@@ -1,4 +1,6 @@
-﻿public static class VersionParser
+﻿using System.Diagnostics.CodeAnalysis;
+
+public static class VersionParser
 {
     /// <summary>
     /// Splits the full Semver 2.0 string into individual string components: version, pre-release version, and build version.
@@ -11,7 +13,7 @@
     /// <returns></returns>
     public static bool TryParseVersionComponents(
         string fullVersion,
-        out string? versionSegment,
+        [NotNullWhen(returnValue: true)] out string? versionSegment,
         out string? preReleaseSegment,
         out string? buildSegment)
     {
