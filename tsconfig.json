@@ -1,6 +1,34 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs"
-    }
+        "module": "commonjs",
+        "declaration": true,
+        "sourceMap": false,
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true,
+        "noEmitOnError": false,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowUnusedLabels": true,
+        "allowUnreachableCode": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "useUnknownInCatchVariables": false
+    },
+    "files": [
+        "make.js",
+        "make-util.js"
+    ]
 }

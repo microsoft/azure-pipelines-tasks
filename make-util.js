@@ -159,6 +159,10 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+/**
+ * Performs npm audit on the specified task path.
+ * @param {string} taskPath - The path to the task directory where npm audit should be performed.
+ */
 function performNpmAudit(taskPath) {
     console.log('\n🛫 Running npm audit...');
 
@@ -179,12 +183,12 @@ function performNpmAudit(taskPath) {
             shell: true
         });
 
-        if (auditResult.error) {
+        if (auditResult.status) {
             console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
             console.log('👉 Please see details by running the command');
             console.log(`\tnpm audit --prefix ${taskPath}`);
             console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
-            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
+            console.log(`\tnode make.js build --task ${args.task} --BypassNpmAudit`);
             process.exit(1);
         } else {
             console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
