@@ -192,8 +192,6 @@ Tasks/DelayV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DeleteFilesV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/DeployVisualStudioTestAgentV2/    @rasunkar  @microsoft\adoautotest
-
 Tasks/DockerV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DockerV1/    @microsoft/release-management-task-team @manolerazvan 
