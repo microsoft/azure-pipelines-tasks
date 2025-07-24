@@ -189,7 +189,7 @@ function Invoke-LoadLibrary {
 ########################################
 # If the type has already been loaded once, then it is not loaded again.
 Write-Verbose "Adding dbghelp native wrappers."
-$dbghelpdllfile = (join-path -Path $PSScriptRoot -ChildPath “..\dbghelp.dll” -Resolve).replace(“\”,”\\")
+$dbghelpdllfile = (join-path -Path $PSScriptRoot -ChildPath "\..\dbghelp.dll" -Resolve).replace("\","\\")
 Add-Type -Debug:$false -TypeDefinition @'
 namespace IndexHelpers.Dbghelp
 {
