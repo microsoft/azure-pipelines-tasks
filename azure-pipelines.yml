@@ -7,10 +7,6 @@ trigger:
 
 resources:
   repositories:
-  - repository: AzureDevOps
-    type: git
-    name: AzureDevOps/AzureDevOps
-
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -165,6 +161,7 @@ extends:
           os: windows
         dependsOn:
         - publish
+        enabled: false # disabled for now to remove hard dependency on azuredevops repo as it causes fasle CG issues in tasks repo. 
         condition: |
           and(
             succeeded(),
@@ -190,9 +187,6 @@ extends:
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
         steps:
-        - checkout: AzureDevOps
-          fetchDepth: 1
-          persistCredentials: true
         - checkout: self
         - template: /ci/courtesy-push.yml@self
 

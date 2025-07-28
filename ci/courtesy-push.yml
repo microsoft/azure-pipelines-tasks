@@ -22,39 +22,50 @@ steps:
   displayName: Download Artifact
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-  displayName: Update unified deps
+  displayName: Update unified deps and create branch
+  env:
+    USERNAME: $(User)
+    PAT: $(ACCESS_TOKEN)
+    USEREMAIL: $(Email)
+    BRANCH_NAME: $(branchName)
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
+- powershell: |
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    Write-Host "##vso[task.setVariable variable=currentDate]$currentDate"
+  displayName: Set currentDate variable
+
+# returns branchName
 - template: /ci/generate-branch-name.yml@self
 
 - powershell: |
+    # The JS script has already created the branch and pushed changes
+    # Use the branch name from the template, but only proceed if JS script set actualBranchName
     $releaseBranch = "$(branchName)"
-
-    # Push branch to git
-    Write-Host "Pushing branch to AzureDevOps"
-    cd AzureDevOps
-    git checkout -b $releaseBranch
-    git config --global user.email "$(username)@microsoft.com"
-    git config --global user.name "$(username)"
-    git add Directory.Packages.props
-    git add Tfs\Service\Deploy\components\*
-    git commit -m "Courtesy bump of tasks"
-    git push origin $releaseBranch --force
+    $actualBranch = "$(actualBranchName)"
+    
+    if ([string]::IsNullOrEmpty($actualBranch)) {
+        Write-Host "No branch was created by the JS script (no changes detected)"
+        exit 0
+    }
+    
+    Write-Host "Branch created by JS script: $releaseBranch"
     Write-Host "Creating Pull Request"
-    cd ..\azure-pipelines-tasks\ci\courtesy-push
+    cd azure-pipelines-tasks\ci\courtesy-push
     node open-courtesy-push-pull-request.js $releaseBranch
 
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
+  condition: ne(variables['actualBranchName'], '')
   env:
     TOKEN: $(System.AccessToken)
 
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
-  condition: eq(variables['build.reason'], 'Schedule')
+  condition: and(eq(variables['build.reason'], 'Schedule'), ne(variables['actualBranchName'], ''))
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
   
