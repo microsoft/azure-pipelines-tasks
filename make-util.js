@@ -200,6 +200,16 @@ function performNpmAudit(taskPath) {
     }
 }
 
+function getAdditionalTypeScriptArguments() {
+    const tsArgs = [];
+
+    if (process.argv.includes("--include-sourcemap")) {
+        tsArgs.push('--sourceMap');
+    }
+
+    return tsArgs.join('');
+}
+
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
@@ -243,11 +253,11 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`node ${tscExec} --outDir "${outDir}" --rootDir "${taskPath}" ${getAdditionalTypeScriptArguments()}`);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`tsc --outDir "${outDir}" --rootDir "${taskPath}" ${getAdditionalTypeScriptArguments()}`);
     }
 
     cd(originalDir);
