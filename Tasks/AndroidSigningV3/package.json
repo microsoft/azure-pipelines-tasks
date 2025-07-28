@@ -4,6 +4,7 @@
   "description": "Azure Pipelines Android Signing Task",
   "main": "index.js",
   "scripts": {
+    "build": "node ../../make.js build --task AndroidSigningV3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

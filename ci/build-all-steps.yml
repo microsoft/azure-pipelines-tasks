@@ -123,8 +123,13 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+# Build Tasks - Only PreBuild Steps
+- script: node make.js serverBuild --onlyPrebuildSteps
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
+
+# Build Tasks - Build Steps
+- script: pnpm -r --no-bail --aggregate-output --reporter=append-only --workspace-concurrency=0 run build --skipPrebuildSteps
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 

@@ -4,6 +4,7 @@
   "description": "Visual Studio App Center Test Task",
   "main": "appcentertest.js",
   "scripts": {
+    "build": "node ../../make.js build --task AppCenterTestV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

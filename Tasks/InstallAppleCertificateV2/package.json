@@ -4,6 +4,7 @@
   "description": "Azure Pipelines InstallAppleCertificate Task",
   "main": "preinstallcert.js",
   "scripts": {
+    "build": "node ../../make.js build --task InstallAppleCertificateV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

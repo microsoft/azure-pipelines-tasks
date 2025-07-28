@@ -4,6 +4,7 @@
   "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
   "main": "usepythonversion.js",
   "scripts": {
+    "build": "node ../../make.js build --task UsePythonVersionV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

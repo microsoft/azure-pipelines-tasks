@@ -4,6 +4,7 @@
   "description": "Node Tool Installer",
   "main": "nodetool.js",
   "scripts": {
+    "build": "node ../../make.js build --task NodeToolV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

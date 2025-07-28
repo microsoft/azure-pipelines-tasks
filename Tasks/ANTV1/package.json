@@ -6,6 +6,10 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
+  "scripts": {
+    "build": "node ../../make.js build --task ANTV1",
+    "test": "node ../../make.js test --task ANTV1"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",

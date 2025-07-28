@@ -1,0 +1,11 @@
+packages:
+  - 'Tasks/*'
+  - '!Tasks/Common'
+  - '!Tasks/CargoAuthenticateV0'
+  - '!Tasks/CondaAuthenticateV0'
+  - '!Tasks/MavenAuthenticateV0'
+  - '!Tasks/NpmAuthenticateV0'
+  - '!Tasks/NuGetAuthenticateV1'
+  - '!Tasks/PipAuthenticateV1'
+  - '!Tasks/TwineAuthenticateV1'
+  - '!Tasks/DeployVisualStudioTestAgentV2'

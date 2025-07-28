@@ -4,6 +4,7 @@
   "description": "Azure Pipelines Container Structure Test execution Task",
   "main": "containerstructuretest.js",
   "scripts": {
+    "build": "node ../../make.js build --task ContainerStructureTestV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

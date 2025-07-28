@@ -4,6 +4,7 @@
   "description": "Azure Pipelines Azure CLI Task",
   "main": "azureclitask.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureCLIV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

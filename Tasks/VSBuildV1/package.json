@@ -19,5 +19,8 @@
   },
   "devDependencies": {
     "typescript": "4.0.2"
+  },
+  "scripts": {
+    "build": "node ../../make.js build --task VSBuildV1"
   }
 }
