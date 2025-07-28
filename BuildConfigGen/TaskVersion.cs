@@ -3,10 +3,6 @@ using System.Text;
 
 public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 {
-    public TaskVersion()
-    {
-    }
-
     public TaskVersion(string version)
     {
         VersionParser.ParseVersion(
@@ -56,35 +52,15 @@ public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         IsTest = taskVersionToClone.IsTest;
     }
 
-    public int Major
-    {
-        get;
-        set;
-    }
+    public int Major { get; }
 
-    public int Minor
-    {
-        get;
-        set;
-    }
+    public int Minor { get; }
 
-    public int Patch
-    {
-        get;
-        set;
-    }
+    public int Patch { get; }
 
-    public string? Build
-    {
-        get;
-        set;
-    }
+    public string? Build { get; }
 
-    public bool IsTest
-    {
-        get;
-        set;
-    }
+    public bool IsTest { get; }
 
     public TaskVersion Clone()
     {
@@ -104,6 +80,11 @@ public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
     public TaskVersion CloneWithMajor(int major)
     {
         return new TaskVersion(major, Minor, Patch, Build);
+    }
+
+    public TaskVersion CloneWithBuild(string? build)
+    {
+        return new TaskVersion(Major, Minor, Patch, build);
     }
 
     public static implicit operator String(TaskVersion version)
