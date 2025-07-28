@@ -205,6 +205,9 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
+
+    performNpmAudit(taskPath);
+
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
         // we allow only two dev dependencies: typescript and @tsconfig/node10
@@ -236,8 +239,6 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         }
         cd(taskPath);
     }
-
-    performNpmAudit(taskPath);
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
