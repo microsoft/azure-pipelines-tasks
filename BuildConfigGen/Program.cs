@@ -494,6 +494,7 @@ namespace BuildConfigGen
             string gitRootPath = GetTasksRootPath(currentDir);
 
             string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+
             if (!Directory.Exists(taskTargetPath))
             {
                 throw new Exception($"expected {taskTargetPath} to exist!");
@@ -646,9 +647,6 @@ namespace BuildConfigGen
                 // we need to ensure merges occur first, as the changes may cascade to other configs (e.g. Default), if there are multiple
                 var targetConfigsWithMergeToBaseOrderedFirst = targetConfigs.OrderBy(x => x.mergeToBase ? 0 : 1);
 
-                var defaultConfig = targetConfigs.FirstOrDefault(x => x.isDefault)
-                ?? throw new Exception($"There is no default config for task {task}");
-
                 foreach (var config in targetConfigsWithMergeToBaseOrderedFirst)
                 {
                     if (config.useGlobalVersion && !includeLocalPackagesBuildConfig)
@@ -753,6 +751,12 @@ namespace BuildConfigGen
 
                                     if (useSemverBuildConfig && !config.mergeToBase)
                                     {
+                                        var defaultConfig = targetConfigs.FirstOrDefault(x => x.isDefault);
+                                        if (defaultConfig == null)
+                                        {
+                                            throw new Exception($"There is no default config for task {task}");
+                                        }
+                                        
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                     }
@@ -1403,6 +1407,7 @@ always-auth=true", false);
                         {
                             throw new Exception($"Multiple configs for task being merged.  This is not supported.  task={task} mergingConfig.name={mergingConfig.name}");
                         }
+
                         // versionMap contains a version that needs to be merged to base
                         allConfigsMappedAndValid = false;
                         mergingConfig = config;
@@ -1521,6 +1526,7 @@ always-auth=true", false);
                         else
                         {
                             TaskVersion targetVersion;
+
                             do
                             {
                                 targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);
@@ -1532,7 +1538,7 @@ always-auth=true", false);
                             {
                                 // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
                                 // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
-                                targetVersion.Build = config.constMappingKey;
+                                targetVersion = targetVersion.CloneWithBuild(config.constMappingKey);
                             }
 
                             taskState.configTaskVersionMapping.Add(config, targetVersion);
@@ -1609,11 +1615,20 @@ always-auth=true", false);
             {
                 if (config.useGlobalVersion)
                 {
+                    TaskVersion versionToUse = globalVersion;
+                    
+                    if (config.abTaskReleases)
+                    {
+                        // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
+                        // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
+                        versionToUse = globalVersion.CloneWithBuild(config.constMappingKey);
+                    }
+
                     if (taskState.configTaskVersionMapping.ContainsKey(config))
                     {
-                        if (taskState.configTaskVersionMapping[config] != globalVersion)
+                        if (taskState.configTaskVersionMapping[config] != versionToUse)
                         {
-                            taskState.configTaskVersionMapping[config] = globalVersion;
+                            taskState.configTaskVersionMapping[config] = versionToUse;
 
                             if (!taskState.versionsUpdated.Contains(config))
                             {
@@ -1623,7 +1638,7 @@ always-auth=true", false);
                     }
                     else
                     {
-                        taskState.configTaskVersionMapping.Add(config, globalVersion);
+                        taskState.configTaskVersionMapping.Add(config, versionToUse);
 
                         if (!taskState.versionsUpdated.Contains(config))
                         {
