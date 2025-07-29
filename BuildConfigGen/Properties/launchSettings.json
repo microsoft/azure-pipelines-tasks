@@ -3,6 +3,14 @@
     "BuildConfigGen": {
       "commandName": "Project",
       "commandLineArgs": "--all-tasks --write-updates"
+    },
+    "BuildConfigGenSingle": {
+      "commandName": "Project",
+      "commandLineArgs": "--task PowerShellV2 --configs=Node20 --write-updates"
+    },
+    "BuildConfigGenSingleNew": {
+      "commandName": "Project",
+      "commandLineArgs": "--use-semver-build-config --task PowerShellV2 --configs=Node20 --write-updates"
     }
   }
 }
