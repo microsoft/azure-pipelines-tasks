@@ -254,6 +254,9 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         // Verify generated files across tasks are up-to-date
         util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
         
+        await util.installNodeAsync("20");
+        ensureTool('node', '--version', `v${util.node20Version}`);
+
         if(argv.onlyPrebuildSteps)
         {
             // If only prebuild steps are requested, we can exit early
@@ -281,10 +284,10 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     // This code is structured to support installing/building with multiple node versions in the future, including the same task for multiple node versions
     // Currently, we only support Node.js 20
     if (allTasksNode20.length > 0) {
-        await installNodeAndBuildTasks(20, util.node20Version, allTasksNode20, builtTasks);
+        await installNodeAndBuildTasks(20, allTasksNode20, builtTasks);
     }
     if (allTasksDefault.length > 0) {
-        await installNodeAndBuildTasks(20, util.node20Version, allTasksDefault, builtTasks);
+        await installNodeAndBuildTasks(20, allTasksDefault, builtTasks);
     }
 
     // Remove Commons from _generated folder as it is not required
@@ -300,9 +303,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     banner('Build successful', true);
 
     // Track tasks that have been built with specific node versions to avoid duplicates
-    async function installNodeAndBuildTasks(nodeMajorVersion, nodeFullVersion, buildTaskList, builtTasks) {
-        await util.installNodeAsync(nodeMajorVersion.toString());
-        ensureTool('node', '--version', `v${nodeFullVersion}`);
+    async function installNodeAndBuildTasks(nodeMajorVersion, buildTaskList, builtTasks) {
         for (const taskName of buildTaskList) {
             const taskKey = `${taskName}-${nodeMajorVersion}`;
             if (!builtTasks.has(taskKey)) {
