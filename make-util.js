@@ -159,6 +159,10 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+/**
+ * Performs npm audit on the specified task path.
+ * @param {string} taskPath - The path to the task directory where npm audit should be performed.
+ */
 function performNpmAudit(taskPath) {
     console.log('\n🛫 Running npm audit...');
 
@@ -179,12 +183,12 @@ function performNpmAudit(taskPath) {
             shell: true
         });
 
-        if (auditResult.error) {
+        if (auditResult.status) {
             console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
             console.log('👉 Please see details by running the command');
             console.log(`\tnpm audit --prefix ${taskPath}`);
             console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
-            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
+            console.log(`\tnode make.js build --task ${args.task} --BypassNpmAudit`);
             process.exit(1);
         } else {
             console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
@@ -196,11 +200,24 @@ function performNpmAudit(taskPath) {
     }
 }
 
+function getAdditionalTypeScriptArguments() {
+    const tsArgs = [];
+
+    if (process.argv.includes("--include-sourcemap")) {
+        tsArgs.push('--sourceMap');
+    }
+
+    return tsArgs.join('');
+}
+
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
+
+    performNpmAudit(taskPath);
+
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
         // we allow only two dev dependencies: typescript and @tsconfig/node10
@@ -233,16 +250,14 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         cd(taskPath);
     }
 
-    performNpmAudit(taskPath);
-
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`node ${tscExec} --outDir "${outDir}" --rootDir "${taskPath}" ${getAdditionalTypeScriptArguments()}`);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run(`tsc --outDir "${outDir}" --rootDir "${taskPath}" ${getAdditionalTypeScriptArguments()}`);
     }
 
     cd(originalDir);
