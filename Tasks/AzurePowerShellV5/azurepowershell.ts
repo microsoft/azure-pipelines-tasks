@@ -66,9 +66,10 @@ async function run() {
         else {
             targetAzurePs = ""
              if (tl.getPipelineFeature('ShowWarningOnOlderAzureModules')) {
-                const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
-                const azVersionResult = tl.execSync("az", versionCommand);
-                await validateAzModuleVersion(fetchingModule, azVersionResult.stdout, moduleDisplayName, majorversionTolerance, true)
+                const azVersionResult = await getInstalledAzModuleVersion();
+                if (azVersionResult) {
+                    await validateAzModuleVersion(fetchingModule, azVersionResult, moduleDisplayName, majorversionTolerance, true)
+                }
              }
         }
 
@@ -200,6 +201,36 @@ async function run() {
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
         }
+    }
+}
+
+async function getInstalledAzModuleVersion(): Promise<string | null> {
+    try {
+        tl.debug('Checking installed Az PowerShell module version...');
+        
+        // PowerShell command to get the installed Az module version
+        const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-Command')
+            .arg(`. '${path.join(path.resolve(__dirname),'Utility.ps1')}'; Get-InstalledMajorRelease -moduleName 'Az' -iswin $false`);
+            
+        const result = await powershell.execSync()
+        if (result.code === 0 && result.stdout) {
+            const version = result.stdout.trim();
+            if (version && version !== '' && version !== '0.0.0') {
+                tl.debug(`Found installed Az module version: ${version}`);
+                return version;
+            }
+        }
+        tl.debug('Az PowerShell module not found on the agent');
+        return null;
+    } catch (error) {
+        tl.debug(`Error checking installed Az module version: ${error.message}`);
+        return null;
     }
 }
 

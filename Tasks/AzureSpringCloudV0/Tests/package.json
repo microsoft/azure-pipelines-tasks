@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "mocha": "^10.5.1",
-    "nock": "9.0.11"
+    "nock": "^10.0.6"
   }
 }

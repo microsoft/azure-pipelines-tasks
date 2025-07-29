@@ -14,12 +14,22 @@
   "version": {
     "Major": 0,
     "Minor": 259,
-    "Patch": 4
+    "Patch": 5
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",

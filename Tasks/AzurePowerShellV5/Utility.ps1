@@ -223,15 +223,89 @@ function Get-MajorVersionOnAzurePackage {
     return $lastOneRelease
 }
 
-function Get-InstalledMajorRelease{
+function Get-LatestModuleFromCommonPath {
+    [CmdletBinding()]
+    param([string] $patternToMatch,
+          [string] $patternToExtract)
+
+    $commonPaths = $env:PSModulePath -split ';'
+    $maxVersion = [version] "0.0.0"
+    $regexToMatch = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToMatch
+    $regexToExtract = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToExtract
+
+    foreach ($path in $commonPaths) {
+        $azModulePath = Join-Path $path $moduleName
+        if (Test-Path $azModulePath) {
+            Write-Verbose "Found Az module directory at: $azModulePath"
+            $versions = Get-ChildItem -Directory -Path $modulePath | Where-Object { $regexToMatch.IsMatch($_.Name) }
+            foreach ($versionDir in $versions) {
+                $manifestPath = Join-Path $versionDir.FullName "$moduleName.psd1"
+                $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
+                if($moduleVersion -gt $maxVersion) {
+                    if (Test-Path $manifestPath) {
+                        $maxVersion = $moduleVersion
+                    }
+                }
+            }
+        }
+    }
+    return $maxVersion
+}
+
+function Get-InstalledMajorRelease {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string]$moduleName
+        [string]$moduleName,
+        [Parameter(Mandatory=$true)]
+        [bool]$isWin
     )
-    Write-Host "##[command]Get-InstalledModule -Name ${moduleName}"
-    $installedModuleMajorVersion = (Get-InstalledModule -Name $moduleName).Version
-    return $installedModuleMajorVersion
+    $version = ''
+    $versionPattern = "[0-9]+\.[0-9]+\.[0-9]+"
+    Write-Verbose "Attempting to find installed version of module: $moduleName"
+    $isHostedAgent = Test-IsHostedAgentPathPresent -isWin $isWin
+    if ($isHostedAgent) {
+        if ($isWin) {
+            $latestAzPath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
+        } else {
+            $latestAzPath = Get-LatestModuleLinux -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
+        }
+        if ($latestAzPath -and $latestAzPath -match $versionPattern -and $latestAzPath -ne '0.0.0') {
+            $version = $Matches[0]
+            Write-Debug "Found Az module version from hosted agent module path: $version"
+            return $version
+        }
+    }
+    try {
+        $installedModule = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue | Sort-Object Version -Descending | Select-Object -First 1
+        if ($installedModule) {
+            $version = $installedModule.Version.ToString()
+            Write-Debug "Found Az module version from Get-InstalledModule: $version"
+            return $version
+        }
+    } catch {
+        Write-Verbose "Get-InstalledModule failed: $($_.Exception.Message)"
+    }
+    try {
+        # First try to get the Az module directly
+        $azModule = Get-Module -Name $moduleName -ListAvailable -ErrorAction SilentlyContinue | Sort-Object Version -Descending | Select-Object -First 1
+        if ($azModule) {
+            $version = $azModule.Version.ToString()
+            Write-Host "Found Az module version directly in Get-Module: $version"
+            return $version
+        }
+        if (!$isHostedAgent) {
+            $version = Get-LatestModuleFromCommonPath -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
+            if ($version -and $version -ne '0.0.0') {
+                # $version = $azModule.ToString()
+                Write-Debug "Found Az module version For self hosted Agent: $version"
+                return $version
+            }
+            throw ("Could not find the module version of $moduleName. Please ensure the Az module is installed on the agent.")
+        }
+    } catch {
+        Write-Verbose "Az module specific detection failed: $($_.Exception.Message)"
+    }
 }
 
 function Get-IsSpecifiedPwshAzVersionOlder{
@@ -259,6 +333,7 @@ function Initialize-ModuleVersionValidation {
         [Parameter(Mandatory=$true)]
         [string]$moduleName,
         [Parameter(Mandatory=$true)]
+        [AllowEmptyString()]
         [string]$targetAzurePs,
         [Parameter(Mandatory=$true)]
         [string]$displayModuleName,
@@ -268,8 +343,10 @@ function Initialize-ModuleVersionValidation {
     try {
         $DisplayWarningForOlderAzVersion = Get-VstsPipelineFeature -FeatureName "ShowWarningOnOlderAzureModules"
         if ($DisplayWarningForOlderAzVersion -eq $true) {
+            if ($targetAzurePs -eq "") {
+                $targetAzurePs = Get-InstalledMajorRelease -moduleName $displayModuleName -isWin $true
+            }
             $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName
-
             if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease.tag_name) -versionsToReduce $versionsToReduce) {
                 Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease.tag_name))
             }       

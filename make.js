@@ -69,15 +69,16 @@ var tasksCommonPath = path.join(__dirname, 'tasks-common');
 var CLI = {};
 
 // node min version
-var minNodeVer = '10.24.1';
+var minNodeVer = util.node20Version;
 if (semver.lt(process.versions.node, minNodeVer)) {
-    fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
+    fail(
+        `Node.js version ${process.versions.node} detected. This build requires Node.js >= ${minNodeVer}.\n` +
+        `To remediate:\n` +
+        `  1. Install NVM for Windows: winget install CoreyButler.NVMforWindows\n` +
+        `  2. Install Node.js ${minNodeVer}: nvm install ${minNodeVer}\n` +
+        `  3. Use Node.js ${minNodeVer}: nvm use ${minNodeVer}\n`
+    );
 }
-
-// Node 14 is supported by the build system, but not currently by the agent. Block it for now
-var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
-var node10Version = '10.24.1';
-var node20Version = '20.17.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -309,19 +310,15 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             return res;
         }, {allTasksNode20: [], allTasksDefault: []})
 
+    const builtTasks = new Set();
+
+    // This code is structured to support installing/building with multiple node versions in the future, including the same task for multiple node versions
+    // Currently, we only support Node.js 20
     if (allTasksNode20.length > 0) {
-        await util.installNodeAsync('20');
-        ensureTool('node', '--version', `v${node20Version}`);
-        for (const taskName of allTasksNode20) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 20, !writeUpdatedsFromGenTasks);
-        }
+        await installNodeAndBuildTasks(20, util.node20Version, allTasksNode20, builtTasks);
     }
     if (allTasksDefault.length > 0) {
-       await util.installNodeAsync('10');
-        ensureTool('node', '--version', `v${node10Version}`);
-        for (const taskName of allTasksDefault) {
-            await buildTaskWrapped(taskName, allTasksNode20.length, 10, !writeUpdatedsFromGenTasks);
-        }
+        await installNodeAndBuildTasks(20, util.node20Version, allTasksDefault, builtTasks);
     }
 
     // Remove Commons from _generated folder as it is not required
@@ -335,6 +332,21 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     }
 
     banner('Build successful', true);
+
+    // Track tasks that have been built with specific node versions to avoid duplicates
+    async function installNodeAndBuildTasks(nodeMajorVersion, nodeFullVersion, buildTaskList, builtTasks) {
+        await util.installNodeAsync(nodeMajorVersion.toString());
+        ensureTool('node', '--version', `v${nodeFullVersion}`);
+        for (const taskName of buildTaskList) {
+            const taskKey = `${taskName}-${nodeMajorVersion}`;
+            if (!builtTasks.has(taskKey)) {
+                builtTasks.add(taskKey);
+                await buildTaskWrapped(taskName, nodeMajorVersion, !writeUpdatedsFromGenTasks);
+            } else {
+                console.log(`Skipping ${taskName} for Node.js ${nodeMajorVersion} - already built`);
+            }
+        }
+    }
 }
 
 function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
@@ -358,10 +370,9 @@ function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
     return 10;
 }
 
-async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBuild = false) {
+async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     let isGeneratedTask = false;
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
-    const removeNodeModules = taskListLength > 1;
 
     // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
     var taskPath = path.join(genTaskPath, taskName);
@@ -404,9 +415,6 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
         // create loc files
         createTaskLocJson(taskPath);
         createResjson(taskDef, taskPath);
-
-        // determine the type of task
-        shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
     } else {
         outDir = path.join(buildTasksPath, path.basename(taskPath));
     }
@@ -547,20 +555,18 @@ async function buildTaskAsync(taskName, taskListLength, nodeVersion, isServerBui
     console.log('> copying task resources');
     copyTaskResources(taskMake, taskPath, outDir);
 
-    if (removeNodeModules) {
-        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+    const taskNodeModulesPath = path.join(taskPath, 'node_modules');
 
-        if (fs.existsSync(taskNodeModulesPath)) {
-            console.log('\n> removing node modules');
-            rm('-Rf', taskNodeModulesPath);
-        }
+    if (fs.existsSync(taskNodeModulesPath)) {
+        console.log('\n> removing node modules');
+        rm('-Rf', taskNodeModulesPath);
+    }
 
-        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+    const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
 
-        if (fs.existsSync(taskTestsNodeModulesPath)) {
-            console.log('\n> removing task tests node modules');
-            rm('-Rf', taskTestsNodeModulesPath);
-        }
+    if (fs.existsSync(taskTestsNodeModulesPath)) {
+        console.log('\n> removing task tests node modules');
+        rm('-Rf', taskTestsNodeModulesPath);
     }
 
     // remove duplicated task libs node modules from build tasks.

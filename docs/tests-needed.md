@@ -61,7 +61,6 @@ of untested tasks to 0!
 | CUrlUploaderV2 | @leantk |  |
 | DecryptFileV1 | @leantk |  |
 | DeleteFilesV1 | @jtpetty | :heavy_check_mark: |
-| DeployVisualStudioTestAgentV2 | @SadagopanRajaram @ShreyasRmsft | :heavy_check_mark: |
 | DockerComposeV0 | @bansalaseem | :heavy_check_mark: |
 | DockerInstallerV0 |  |  |
 | DockerV0 | @bansalaseem | :heavy_check_mark: |
