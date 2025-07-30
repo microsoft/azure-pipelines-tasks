@@ -19,4 +19,3 @@
     <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5" Version="1.0.0" />
     <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5_Node16" Version="1.0.0" />
     <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5_Node20" Version="1.0.0" />
-

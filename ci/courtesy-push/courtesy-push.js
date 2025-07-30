@@ -243,6 +243,7 @@ async function getDeps(depArr) {
         const newDep = depArr[i];
         var [ name, version ] = await extractDependency(newDep);
         const lowercasedName = name.toLowerCase();
+        console.log("Success-1")
 
         if (!deps.hasOwnProperty(lowercasedName)) deps[lowercasedName] = {};
 
@@ -289,6 +290,7 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
     const newDepsArr = depsArray.slice();
     const updatedDepsObj = Object.assign({}, updatedDeps);
     const basicDepsForUpdate = Object.keys(depsForUpdate).map(dep => dep.toLowerCase());
+    console.log("Success-2")
     let index = 0;
 
     while (index < newDepsArr.length) {
@@ -301,6 +303,7 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
         }
 
         const basicName = name.toLowerCase();
+        console.log("Success-3")
 
         if (isIncludeButNotEqual(basicDepsForUpdate, basicName)) {
             newDepsArr.splice(index, 1);
@@ -332,6 +335,7 @@ async function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
         const [ name ] = await extractDependency(currentDep);
         
         const lowerName = name && name.toLowerCase();
+        console.log("Success-4")
         if (!name || !basicDepsForUpdate.has(lowerName)) {
             index++;
             continue;
