@@ -4,7 +4,8 @@
   "description": "Visual Studio App Center Test Task",
   "main": "appcentertest.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,8 @@
     "appcenter-cli": "3.0.3",
     "azure-devops-node-api": "^11.1.0",
     "azure-pipelines-task-lib": "^4.13.0",
-    "glob": "^7.0.6"
+    "glob": "^7.0.6",
+    "patch-package": "^8.0.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
