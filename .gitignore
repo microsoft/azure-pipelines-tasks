@@ -223,3 +223,7 @@ _dotnetsdk/
 FilesOverriddenForConfigGoHereREADME.txt
 
 _generated_local/
+
+# Auto-cloned dependencies during build
+task-lib/
+tasks-common/

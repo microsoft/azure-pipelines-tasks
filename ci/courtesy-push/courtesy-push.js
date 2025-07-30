@@ -3,16 +3,14 @@ const path = require('path');
 const xml2js = require('xml2js');
 const cp = require('child_process');
 
-const azureSourceFolder = process.argv[2];
-const newDeps = process.argv[3];
-const unifiedDepsPath = path.join(azureSourceFolder, 'Directory.Packages.props');
-const tfsServerPath = path.join(azureSourceFolder, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.hosted.xml');
+
+const newDeps = process.argv[2];
 const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 
 // Git configuration
 const GIT = 'git';
 const token = process.env.PAT || process.env.TOKEN;
-const orgUrl = 'dev.azure.com/mseng';
+const orgUrl= 'dev.azure.com/mseng'
 const project = 'AzureDevOps';
 const repo = 'AzureDevOps';
 const username = process.env.USERNAME || 'azure-pipelines-bot';
@@ -26,8 +24,8 @@ if (!token) {
     process.exit(1);
 }
 
-if (!azureSourceFolder || !newDeps) {
-    console.error('Usage: node courtesy-push.js <azureSourceFolder> <newDepsFile>');
+if (!newDeps) {
+    console.error('Usage: node courtesy-push.js <newDepsFile>');
     process.exit(1);
 }
 
@@ -37,16 +35,14 @@ if (!azureSourceFolder || !newDeps) {
  * @param {string} directory - The directory to execute the command in
  * @param {boolean} dryrun - Whether this is a dry run
  */
-function execInForeground(command, directory, dryrun = false) {
+function execInForeground(command, directory) {
     directory = directory || '.';
     console.log(`% ${command}`);
-    if (!dryrun) {
-        try {
+    try {
             cp.execSync(command, { cwd: directory, stdio: [process.stdin, process.stdout, process.stderr] });
-        } catch (error) {
+    } catch (error) {
             console.error(`Command failed: ${command}`);
             throw error;
-        }
     }
 }
 
@@ -55,8 +51,8 @@ function execInForeground(command, directory, dryrun = false) {
  */
 function gitConfig() {
     try {
-        execInForeground(`${GIT} config --global user.email "${username}@microsoft.com"`, null, dryrun);
-        execInForeground(`${GIT} config --global user.name "${username}"`, null, dryrun);
+        execInForeground(`${GIT} config --global user.email "${username}@microsoft.com"`, null);
+        execInForeground(`${GIT} config --global user.name "${username}"`, null);
     } catch (error) {
         console.warn('Warning: Could not configure git user settings. This might be expected if already configured.');
     }
@@ -66,16 +62,17 @@ function gitConfig() {
  * Clone the Azure DevOps repository if it doesn't exist
  * @param {string} repoPath - Path where the repo should be cloned
  */
+
 function ensureRepoExists(repoPath) {
-    if (!fs.existsSync(repoPath)) {
-        console.log(`Cloning Azure DevOps repository to ${repoPath}`);
-        const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
-        execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
-    } else {
-        console.log(`Repository already exists at ${repoPath}`);
-        // Pull latest changes
-        execInForeground(`${GIT} pull origin master`, repoPath, dryrun);
+    const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
+
+    if (fs.existsSync(repoPath)) {
+        console.log(`Removing existing repository at ${repoPath}`);
+        fs.rmSync(repoPath, { recursive: true, force: true });
     }
+    
+    console.log(`Cloning Azure DevOps repository to ${repoPath}`);
+    execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null);
 }
 
 /**
@@ -83,20 +80,135 @@ function ensureRepoExists(repoPath) {
  * @param {string} repoPath - Path to the repository
  * @param {string} targetToCommit - Path to the files to commit
  */
+
 function commitAndPushChanges(repoPath, targetToCommit) {
     console.log('Adding changes to git...');
-    execInForeground(`${GIT} add ${targetToCommit}`, repoPath, dryrun);
+    
+    // Debug: Check git status before adding
+    console.log('\n=== Git Status Before Add ===');
+    try {
+        const gitStatus = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Git status output:', gitStatus || '(no changes)');
+        
+        const diffOutput = cp.execSync('git diff --name-only', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Modified files:', diffOutput || '(no files)');
+    } catch (error) {
+        console.log('Could not get git status:', error.message);
+    }
+    
+    execInForeground(`${GIT} add ${targetToCommit}`, repoPath, false);
+    
+    // Debug: Check git status after adding
+    console.log('\n=== Git Status After Add ===');
+    try {
+        const gitStatusAfter = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Git status after add:', gitStatusAfter || '(no changes staged)');
+    } catch (error) {
+        console.log('Could not get git status after add:', error.message);
+    }
     
     gitConfig();
     
     console.log(`Creating branch ${sourceBranch}...`);
-    execInForeground(`${GIT} checkout -b ${sourceBranch}`, repoPath, dryrun);
+    execInForeground(`${GIT} checkout -b ${sourceBranch}`, repoPath);
     
     console.log('Committing changes...');
-    execInForeground(`${GIT} commit -m "${commitMessage}"`, repoPath, dryrun);
+    execInForeground(`${GIT} commit -m "${commitMessage}"`, repoPath);
     
     console.log('Pushing changes...');
-    execInForeground(`${GIT} push --force origin ${sourceBranch}`, repoPath, dryrun);
+    if(dryrun){
+        console.log("SKIPPED THE PUSH COMMAND BECAUSE DRYRUN IS SET TO TRUE")
+    }
+    else{
+        execInForeground(`${GIT} push origin ${sourceBranch}`, repoPath);
+    }
+    
+}
+
+/**
+ * Create a Pull Request in Azure DevOps
+ * @param {string} sourceBranch - The source branch name for the PR
+ */
+async function createPullRequest(sourceBranch) {
+    console.log('\n=== Creating Pull Request ===');
+    
+    try {
+        const azdev = require('azure-devops-node-api');
+        
+        if (!token) {
+            console.error('No token provided for PR creation');
+            return;
+        }
+
+        // const fullOrgUrl = `https://${orgUrl}`;
+        const authHandler = azdev.getPersonalAccessTokenHandler(token);
+
+        const refs = {
+            sourceRefName: `refs/heads/${sourceBranch}`,
+            targetRefName: 'refs/heads/main' // Change to 'refs/heads/master' if your repo uses master
+        };
+
+        const pullRequestToCreate = {
+            ...refs,
+            title: 'Courtesy Bump of Tasks',
+            description: `Autogenerated PR to bump the versions of tasks
+            
+This PR was automatically created by the courtesy push process to update:
+- Directory.Packages.props with new task dependencies
+- TfsServer.hosted.xml with new task configurations
+
+Branch: ${sourceBranch}
+Generated: ${new Date().toISOString()}`
+        };
+
+        if(!dryrun){
+
+        console.log('Getting Azure DevOps connection...');
+        const connection = new azdev.WebApi(`https://${orgUrl}`, authHandler);
+        
+        console.log('Getting Git API...');
+        const gitApi = await connection.getGitApi();
+        
+        console.log('Checking if an active pull request already exists...');
+        let existingPRs = await gitApi.getPullRequests(repo, refs, project);
+        let PR = existingPRs[0];
+
+        if (PR) {
+            console.log(`PR already exists: ${PR.pullRequestId}`);
+        } else {
+            console.log('Creating new pull request...');
+            PR = await gitApi.createPullRequest(pullRequestToCreate, repo, project);
+            console.log(`Successfully created PR: ${PR.pullRequestId}`);
+        }
+
+        const prLink = `https://${orgUrl}/${project}/_git/${repo}/pullrequest/${PR.pullRequestId}`;
+        console.log(`Link to the PR: ${prLink}`);
+        
+        // Set Azure Pipeline variables
+        console.log(`##vso[task.setvariable variable=PR_ID]${PR.pullRequestId}`);
+        console.log(`##vso[task.setvariable variable=PR_LINK]${prLink}`);
+        
+        return {
+            prId: PR.pullRequestId,
+            prLink: prLink
+        };
+     }else{
+        console.log("================Printing the PR details:================")
+        console.log(`   Source Branch: ${sourceBranch}`);
+        console.log(`   Target Branch: main`);
+        console.log(`   Title: Courtesy Bump of Tasks`);
+        console.log(`   Organization: ${orgUrl}`);
+        console.log(`   Project: ${project}`);
+        console.log(`   Repository: ${repo}`);
+        console.log(`   Pull-Request description:${JSON.stringify(pullRequestToCreate,null,2)}`)
+        console.log('DRYRUN set to true-skipping actual PR creation...')
+     }
+
+        
+    } catch (error) {
+        console.error('Error creating pull request:', error.message);
+        throw error;
+    }
 }
 
 /**
@@ -159,16 +271,12 @@ async function getDeps(depArr) {
         const newDep = depArr[i];
         var [ name, version ] = await extractDependency(newDep);
         const lowercasedName = name.toLowerCase();
-
         if (!deps.hasOwnProperty(lowercasedName)) deps[lowercasedName] = {};
-
         const dep = deps[lowercasedName];
-
         dep.name = name;
         dep.version = version;
         dep.depStr = newDep;
     }
-
 
     const keys = Object.keys(deps);
 
@@ -217,7 +325,6 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
         }
 
         const basicName = name.toLowerCase();
-
         if (isIncludeButNotEqual(basicDepsForUpdate, basicName)) {
             newDepsArr.splice(index, 1);
             updatedDepsObj.removed.push(name);
@@ -284,9 +391,11 @@ function parseUnifiedDependencies(path) {
  * The function parses unified dependencies file and updates it with new dependencies/remove unused
  * Since the generated tasks can only be used and build with default version, if unified_deps.xml doesn't contain
  * the default version, the specific config (e.g. Node16) will be removed from the list of dependencies
- * @param {String} pathToUnifiedDeps - path to UnifiedDependencies.xml
- * @param {String} pathToNewUnifiedDeps - path to unified_deps.xml which contains dependencies updated on current week
+ * @param {String} unifiedDepsPath - path to UnifiedDependencies.xml
+ * @param {String} newUnifiedDepsPath - path to unified_deps.xml which contains dependencies updated on current week
  */
+
+
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
@@ -310,11 +419,16 @@ async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
  * @param {String} pathToTfsCore - path to TfsServer.Servicing.core.xml
  * @param {Object} depsToUpdate - structure to track added/removed dependencies (formed in updateUnifiedDeps)
  */
-async function updateTfsServerDeps(pathToTfsCore) {
-    // Ensure the Azure DevOps repository exists
-    const repoPath = azureSourceFolder;
-    ensureRepoExists(repoPath);
+async function updateTfsServerDeps() {
+    const repoName='AzureDevops'
+    const agentTempDir=process.env.AGENT_TEMPDIRECTORY;
+    const repoPath=path.join(agentTempDir, repoName);
     
+    ensureRepoExists(repoPath);
+
+    const unifiedDepsPath = path.join(repoPath, 'Directory.Packages.props');
+    const tfsServerPath = path.join(repoPath, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.hosted.xml');
+    const pathToTfsCore=tfsServerPath
     // Update the unified dependencies
     const depsToUpdate = await updateUnifiedDeps(unifiedDepsPath, newDeps);
 
@@ -359,10 +473,22 @@ async function updateTfsServerDeps(pathToTfsCore) {
         ].join(' ');
         
         commitAndPushChanges(repoPath, filesToCommit);
+        if(!dryrun)
         console.log('Changes committed and pushed successfully.');
+        else{
+            console.log('Changes committed but not pushed because DRYRUN is set to true')
+        }
         
         // Output branch name for Azure Pipelines to use (in case it was modified)
         console.log(`##vso[task.setvariable variable=actualBranchName]${sourceBranch}`);
+
+        // Create Pull Request
+        const prResult = await createPullRequest(sourceBranch);
+        if (prResult) {
+            console.log(`Pull Request created successfully: ${prResult.prLink}`);
+        } else {
+            console.log('Pull Request creation failed or skipped');
+        }
         
     } else {
         console.log('No dependency changes detected. Nothing to commit.');
@@ -375,12 +501,10 @@ async function updateTfsServerDeps(pathToTfsCore) {
 async function main() {
     try {
         console.log('Starting courtesy push process...');
-        console.log(`Azure source folder: ${azureSourceFolder}`);
         console.log(`New dependencies file: ${newDeps}`);
         console.log(`Branch name: ${sourceBranch}`);
         console.log(`Dry run: ${dryrun}`);
-        
-        await updateTfsServerDeps(tfsServerPath);
+        await updateTfsServerDeps();
         
         console.log('Courtesy push process completed successfully.');
     } catch (error) {

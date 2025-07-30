@@ -38,33 +38,11 @@ steps:
 # returns branchName
 - template: /ci/generate-branch-name.yml@self
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps and create branch
   env:
-    USERNAME: $(User)
-    PAT: $(ACCESS_TOKEN)
-    USEREMAIL: $(Email)
+    USERNAME: $(Build.RequestedFor)
+    PAT: $(System.AccessToken)
+    USEREMAIL: $(Build.RequestedForEmail)
     BRANCH_NAME: $(branchName)
 
-- powershell: |
-    # The JS script has already created the branch and pushed changes
-    # Use the branch name from the template, but only proceed if JS script set actualBranchName
-    $releaseBranch = "$(branchName)"
-    $actualBranch = "$(actualBranchName)"
-    
-    if ([string]::IsNullOrEmpty($actualBranch)) {
-        Write-Host "No branch was created by the JS script (no changes detected)"
-        exit 0
-    }
-    
-    Write-Host "Branch created by JS script: $releaseBranch"
-    Write-Host "Creating Pull Request"
-    cd azure-pipelines-tasks\ci\courtesy-push
-    node open-courtesy-push-pull-request.js $releaseBranch
-
-    # Sleep 30 seconds to let PR be created
-    Start-Sleep -Seconds 30
-  displayName: Create PR in Azure DevOps
-  condition: ne(variables['actualBranchName'], '')
-  env:
-    TOKEN: $(System.AccessToken)

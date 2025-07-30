@@ -41,6 +41,10 @@ parameters:
   displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
   type: boolean
   default: false  
+- name: dryRun
+  displayName: Dry Run (no push, no PR, no feed publish)
+  type: boolean
+  default: false
 
 variables:
 - name: currentDate
@@ -75,6 +79,11 @@ variables:
     value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
   ${{ if eq(parameters.deploy_all_tasks, true) }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
+- name: isDryRun
+  ${{ if eq(parameters.dryRun, true) }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
@@ -133,7 +142,7 @@ extends:
 
       # Publish
       - job: publish
-        displayName: Publish
+        displayName: Publish Nuget Artifacts
         timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
@@ -161,7 +170,6 @@ extends:
           os: windows
         dependsOn:
         - publish
-        enabled: false # disabled for now to remove hard dependency on azuredevops repo as it causes fasle CG issues in tasks repo. 
         condition: |
           and(
             succeeded(),
@@ -176,6 +184,7 @@ extends:
           )
         templateContext:
           outputs:
+          ${{ if not(parameters.dryRun) }}:
           - output: nuget
             packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
