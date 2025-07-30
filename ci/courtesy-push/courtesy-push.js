@@ -12,9 +12,12 @@ const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 // Git configuration
 const GIT = 'git';
 const token = process.env.PAT || process.env.TOKEN;
-const orgUrl = 'dev.azure.com/mseng';
-const project = 'AzureDevOps';
-const repo = 'AzureDevOps';
+// const orgUrl = 'dev.azure.com/mseng';
+const orgUrl= 'dev.azure.com/surajitshil'
+// const project = 'AzureDevOps';
+const project= 'Azure-Repo-File-Structure'
+// const repo = 'AzureDevOps';
+const repo= 'Azure-Repo-File-Structure'
 const username = process.env.USERNAME || 'azure-pipelines-bot';
 const sourceBranch = process.env.BRANCH_NAME || `courtesy-push-${Date.now()}`;
 const commitMessage = 'Update UnifiedDependencies.xml and TfsServer.hosted.xml';
@@ -66,17 +69,98 @@ function gitConfig() {
  * Clone the Azure DevOps repository if it doesn't exist
  * @param {string} repoPath - Path where the repo should be cloned
  */
+
+
+// function ensureRepoExists(repoPath) {
+//     if (!fs.existsSync(repoPath)) {
+//         console.log(`Cloning Azure DevOps repository to ${repoPath}`);
+//         const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
+//         execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
+//     } else {
+//         console.log(`Repository already exists at ${repoPath}`);
+//         // Pull latest changes
+//          // Pull latest changes - try main first, then master
+//         try {
+//             execInForeground(`${GIT} pull origin main`, repoPath, dryrun);
+//         } catch (error) {
+//             console.log('main branch not found, trying master...');
+//             execInForeground(`${GIT} pull origin master`, repoPath, dryrun);
+//         }
+//     }
+// }
+
+
+// function ensureRepoExists(repoPath) {
+//     const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
+    
+//     // Always start fresh to avoid state issues
+//     if (fs.existsSync(repoPath)) {
+//         console.log(`Removing existing repository at ${repoPath}`);
+//         if (!dryrun) {
+//             fs.rmSync(repoPath, { recursive: true, force: true });
+//         }
+//     }
+    
+//     console.log(`Cloning Azure DevOps repository to ${repoPath}`);
+//     execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
+// }
+
+
+// function ensureRepoExists(repoPath) {
+//     const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
+    
+//     if (!fs.existsSync(repoPath)) {
+//         console.log(`Cloning Azure DevOps repository to ${repoPath}`);
+//         execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
+//     } else {
+//         console.log(`Repository already exists at ${repoPath}`);
+        
+//         // Reset to clean state first
+//         console.log('Resetting to clean state...');
+//         execInForeground(`${GIT} checkout main`, repoPath, dryrun);
+//         execInForeground(`${GIT} reset --hard HEAD`, repoPath, dryrun);
+//         execInForeground(`${GIT} clean -fd`, repoPath, dryrun);
+        
+//         // Pull latest changes - try main first, then master
+//         try {
+//             execInForeground(`${GIT} pull origin main`, repoPath, dryrun);
+//         } catch (error) {
+//             console.log('main branch not found, trying master...');
+//             try {
+//                 execInForeground(`${GIT} checkout master`, repoPath, dryrun);
+//                 execInForeground(`${GIT} pull origin master`, repoPath, dryrun);
+//             } catch (masterError) {
+//                 console.log('Could not pull from main or master');
+//                 throw masterError;
+//             }
+//         }
+//     }
+// }
+
+
+
+
 function ensureRepoExists(repoPath) {
-    if (!fs.existsSync(repoPath)) {
-        console.log(`Cloning Azure DevOps repository to ${repoPath}`);
-        const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
-        execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
-    } else {
-        console.log(`Repository already exists at ${repoPath}`);
-        // Pull latest changes
-        execInForeground(`${GIT} pull origin master`, repoPath, dryrun);
+    const gitUrl = `https://${token}@${orgUrl}/${project}/_git/${repo}`;
+    
+    // Always start fresh (safest approach)
+    if (fs.existsSync(repoPath)) {
+        console.log(`Removing existing repository at ${repoPath}`);
+        if (!dryrun) {
+            fs.rmSync(repoPath, { recursive: true, force: true });
+        }
     }
+    
+    console.log(`Cloning Azure DevOps repository to ${repoPath}`);
+    execInForeground(`${GIT} clone --depth 1 ${gitUrl} ${repoPath}`, null, dryrun);
 }
+
+
+
+
+
+
+
 
 /**
  * Commit and push changes to the Azure DevOps repository

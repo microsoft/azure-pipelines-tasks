@@ -1,0 +1,22 @@
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1" Version="1.1.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1_Node16" Version="1.1.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1_Node20" Version="1.1.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2" Version="3.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node16" Version="3.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node20" Version="3.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask_Node16" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask_Node20" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask2" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask2_Node16" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask2_Node20" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask3" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask3_Node16" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask3_Node20" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask4" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask4_Node16" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask4_Node20" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5_Node16" Version="1.0.0" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DummyTask5_Node20" Version="1.0.0" />
+
