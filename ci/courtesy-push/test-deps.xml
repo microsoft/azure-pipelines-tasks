@@ -1,3 +1,6 @@
-    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2" Version="3.0.1" />
-    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node16" Version="3.0.1" />
-    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node20" Version="3.0.1" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2" Version="3.0.2" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node16" Version="3.0.2" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.DockerV2_Node20" Version="3.0.2" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.Dummy1" Version="1.0.2" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.Dummy1_Node16" Version="1.0.2" />
+    <PackageVersion Include="Mseng.MS.TF.DistributedTask.Tasks.Dummy1_Node20" Version="1.0.2"/>
