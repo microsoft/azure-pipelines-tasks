@@ -167,9 +167,48 @@ function ensureRepoExists(repoPath) {
  * @param {string} repoPath - Path to the repository
  * @param {string} targetToCommit - Path to the files to commit
  */
+// function commitAndPushChanges(repoPath, targetToCommit) {
+//     console.log('Adding changes to git...');
+//     execInForeground(`${GIT} add ${targetToCommit}`, repoPath, dryrun);
+    
+//     gitConfig();
+    
+//     console.log(`Creating branch ${sourceBranch}...`);
+//     execInForeground(`${GIT} checkout -b ${sourceBranch}`, repoPath, dryrun);
+    
+//     console.log('Committing changes...');
+//     execInForeground(`${GIT} commit -m "${commitMessage}"`, repoPath, dryrun);
+    
+//     console.log('Pushing changes...');
+//     execInForeground(`${GIT} push --force origin ${sourceBranch}`, repoPath, dryrun);
+// }
+
+
 function commitAndPushChanges(repoPath, targetToCommit) {
     console.log('Adding changes to git...');
+    
+    // Debug: Check git status before adding
+    console.log('\n=== Git Status Before Add ===');
+    try {
+        const gitStatus = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Git status output:', gitStatus || '(no changes)');
+        
+        const diffOutput = cp.execSync('git diff --name-only', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Modified files:', diffOutput || '(no files)');
+    } catch (error) {
+        console.log('Could not get git status:', error.message);
+    }
+    
     execInForeground(`${GIT} add ${targetToCommit}`, repoPath, dryrun);
+    
+    // Debug: Check git status after adding
+    console.log('\n=== Git Status After Add ===');
+    try {
+        const gitStatusAfter = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
+        console.log('Git status after add:', gitStatusAfter || '(no changes staged)');
+    } catch (error) {
+        console.log('Could not get git status after add:', error.message);
+    }
     
     gitConfig();
     
@@ -243,7 +282,7 @@ async function getDeps(depArr) {
         const newDep = depArr[i];
         var [ name, version ] = await extractDependency(newDep);
         const lowercasedName = name.toLowerCase();
-        console.log("Success-1")
+        // console.log("Success-1")
 
         if (!deps.hasOwnProperty(lowercasedName)) deps[lowercasedName] = {};
 
@@ -290,7 +329,7 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
     const newDepsArr = depsArray.slice();
     const updatedDepsObj = Object.assign({}, updatedDeps);
     const basicDepsForUpdate = Object.keys(depsForUpdate).map(dep => dep.toLowerCase());
-    console.log("Success-2")
+    // console.log("Success-2")
     let index = 0;
 
     while (index < newDepsArr.length) {
@@ -303,7 +342,7 @@ async function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
         }
 
         const basicName = name.toLowerCase();
-        console.log("Success-3")
+        // console.log("Success-3")
 
         if (isIncludeButNotEqual(basicDepsForUpdate, basicName)) {
             newDepsArr.splice(index, 1);
@@ -335,7 +374,7 @@ async function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
         const [ name ] = await extractDependency(currentDep);
         
         const lowerName = name && name.toLowerCase();
-        console.log("Success-4")
+        // console.log("Success-4")
         if (!name || !basicDepsForUpdate.has(lowerName)) {
             index++;
             continue;
@@ -375,9 +414,33 @@ function parseUnifiedDependencies(path) {
  * @param {String} pathToUnifiedDeps - path to UnifiedDependencies.xml
  * @param {String} pathToNewUnifiedDeps - path to unified_deps.xml which contains dependencies updated on current week
  */
+
+// async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+//     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
+//     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+
+//     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+
+//     let updatedDeps = { added: [], removed: [] };
+
+//     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+//     [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+
+//     fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
+//     console.log('Updating Unified Dependencies file done.');
+//     return updatedDeps;
+// }
+
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+    console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+    console.log(`Reading current deps from: ${unifiedDepsPath}`);
+    console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
+    
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+
+    console.log(`Current dependencies count: ${currentDependencies.length}`);
+    console.log(`New dependencies count: ${updatedDependencies.length}`);
 
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
 
@@ -386,10 +449,23 @@ async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
     [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
 
-    fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
+    console.log(`Final dependencies count: ${currentDependencies.length}`);
+    console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
+    console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
+    
+    // Check if file content actually changed
+    const originalContent = fs.readFileSync(unifiedDepsPath, 'utf8');
+    const newContent = currentDependencies.join('\n');
+    
+    console.log(`Original file size: ${originalContent.length} chars`);
+    console.log(`New file size: ${newContent.length} chars`);
+    console.log(`Content actually changed: ${originalContent !== newContent}`);
+    
+    fs.writeFileSync(unifiedDepsPath, newContent);
     console.log('Updating Unified Dependencies file done.');
     return updatedDeps;
 }
+
 
 /**
  * The function update TfsServer.Servicing.core.xml with new dependencies
