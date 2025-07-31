@@ -223,7 +223,7 @@ namespace BuildConfigGen
             string relativePath = FixupPath(filePath);
 
             string[] output;
-            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"diff master -- \"{relativePath}\"", directory, out output);
+            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"diff origin/master -- \"{relativePath}\"", directory, out output);
 
             if (exitCode != 0)
             {
@@ -245,7 +245,7 @@ namespace BuildConfigGen
             string relativePath = GetGitPath(filePath);
 
             string[] output;
-            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"show master:\"{relativePath}\"", directory, out output);
+            int exitCode = ProcessUtil.RunCommandWithExitCode("git", $"show origin/master:\"{relativePath}\"", directory, out output);
 
             if (exitCode != 0)
             {
