@@ -586,6 +586,96 @@ function insertNewDependenciesSimple(filePath, newDependencyStrings) {
 
 
 
+// Replace the insertNewDependenciesSimple function with this improved version:
+
+/**
+ * Simple approach: Just insert new dependencies before the closing </ItemGroup> tag
+ * @param {string} filePath - Path to Directory.Packages.props file
+ * @param {Array} newDependencyStrings - Array of new PackageVersion XML strings to add
+ */
+function insertNewDependenciesSimple(filePath, newDependencyStrings) {
+    if (newDependencyStrings.length === 0) {
+        console.log('No new dependencies to add');
+        return;
+    }
+    
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Check if the file has proper XML structure
+    const hasProperStructure = content.includes('<Project') && content.includes('<ItemGroup>') && content.includes('</ItemGroup>');
+    
+    if (hasProperStructure) {
+        // Find the last </ItemGroup> tag
+        const lastItemGroupMatch = content.lastIndexOf('</ItemGroup>');
+        
+        if (lastItemGroupMatch === -1) {
+            console.error('Could not find </ItemGroup> tag in the file');
+            return;
+        }
+        
+        // Find the indentation of the last PackageVersion element
+        const lastPackageVersionMatch = content.lastIndexOf('<PackageVersion');
+        let indent = '    '; // default 4 spaces
+        
+        if (lastPackageVersionMatch !== -1) {
+            // Find the line containing the last PackageVersion
+            const lineStart = content.lastIndexOf('\n', lastPackageVersionMatch) + 1;
+            const lineEnd = content.indexOf('\n', lastPackageVersionMatch);
+            const line = content.substring(lineStart, lineEnd === -1 ? content.length : lineEnd);
+            
+            // Extract the indentation from this line
+            const match = line.match(/^(\s*)/);
+            if (match) {
+                indent = match[1];
+            }
+        }
+        
+        // Create the new dependency entries with proper indentation
+        const newEntries = newDependencyStrings.map(dep => `${indent}${dep}`).join('\n');
+        
+        // Insert new dependencies just before the </ItemGroup> closing tag
+        const beforeClosing = content.substring(0, lastItemGroupMatch);
+        const afterClosing = content.substring(lastItemGroupMatch);
+        
+        const updatedContent = beforeClosing + newEntries + '\n' + afterClosing;
+        
+        fs.writeFileSync(filePath, updatedContent);
+        console.log(`Added ${newDependencyStrings.length} new dependencies to ${filePath}`);
+    } else {
+        // File doesn't have proper structure - rebuild it with proper XML structure
+        console.log('File appears to be missing XML structure. Rebuilding with proper format...');
+        
+        // Extract existing PackageVersion elements
+        const existingPackageVersions = [];
+        const lines = content.split('\n');
+        
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (trimmedLine.startsWith('<PackageVersion') && trimmedLine.includes('Include=')) {
+                existingPackageVersions.push(trimmedLine);
+            }
+        }
+        
+        // Combine existing and new dependencies
+        const allDependencies = [...existingPackageVersions, ...newDependencyStrings];
+        
+        // Create properly structured XML
+        const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ItemGroup>
+${allDependencies.map(dep => `    ${dep}`).join('\n')}
+  </ItemGroup>
+</Project>`;
+        
+        fs.writeFileSync(filePath, xmlContent);
+        console.log(`Rebuilt ${filePath} with proper XML structure and added ${newDependencyStrings.length} new dependencies`);
+    }
+}
+
+
+
+
+
 
 
 
@@ -618,54 +708,472 @@ function insertNewDependenciesSimple(filePath, newDependencyStrings) {
 //     return updatedDeps;
 // }
 
+// async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+// console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+//     console.log(`Reading current deps from: ${unifiedDepsPath}`);
+//     console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
+    
+//     // Parse current dependencies as XML
+//     const { packageVersions: currentDependencies, parsedXml: originalXml } = await parseUnifiedDependenciesAsXml(unifiedDepsPath);
+    
+//     // Parse new dependencies as simple text (since test-deps.xml is just lines)
+//     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+
+//     console.log(`Current dependencies count: ${currentDependencies.length}`);
+//     console.log(`New dependencies count: ${updatedDependencies.length}`);
+
+//     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+//     console.log(`New dependencies structure:`, Object.keys(updatedDependenciesStructure));
+
+//     let updatedDeps = { added: [], removed: [] };
+
+//     // Step 1: Remove old configs (Node16/Node20) for tasks that will be updated
+//     let workingDependencies;
+//     [ workingDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    
+//     // Step 2: Update existing dependencies with new versions/configs
+//     [ workingDependencies, updatedDeps ] = await updateConfigsForTasks(workingDependencies, updatedDependenciesStructure, updatedDeps);
+    
+//     // Step 3: Find NEW dependencies that don't exist yet (but don't modify currentDependencies)
+//     const existingDeps = new Set();
+//     for (const dep of currentDependencies) {
+//         const [name] = await extractDependency(dep);
+//         if (name) {
+//             existingDeps.add(name.toLowerCase());
+//         }
+//     }
+    
+//     const newDependenciesToAdd = [];
+//     for (const depKey in updatedDependenciesStructure) {
+//         const dep = updatedDependenciesStructure[depKey];
+        
+//         // If this dependency doesn't exist in current file, prepare to add it
+//         if (!existingDeps.has(dep.name.toLowerCase())) {
+//             console.log(`Preparing to add new dependency: ${dep.name}`);
+            
+//             // Add the main dependency
+//             newDependenciesToAdd.push(dep.depStr);
+//             updatedDeps.added.push(dep.name);
+            
+//             // Add its configs (Node16/Node20) if they exist
+//             if (dep.configs) {
+//                 dep.configs
+//                     .sort((a, b) => a.name > b.name)
+//                     .forEach(config => {
+//                         console.log(`Preparing to add new config: ${config.name}`);
+//                         newDependenciesToAdd.push(config.depStr);
+//                         updatedDeps.added.push(config.name);
+//                     });
+//             }
+//         }
+//     }
+
+//     console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
+//     console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
+    
+//     // Only modify the file if there are changes
+//     if (updatedDeps.added.length > 0 || updatedDeps.removed.length > 0) {
+//         // First, update the existing file with modified dependencies (if any)
+//         if (updatedDeps.removed.length > 0) {
+//             // Write the updated currentDependencies back (this handles removals and updates)
+//             fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
+//         }
+        
+//         // Then, simply append the new dependencies
+//         if (newDependenciesToAdd.length > 0) {
+//             insertNewDependenciesSimple(unifiedDepsPath, newDependenciesToAdd);
+//         }
+        
+//         console.log('Updating Unified Dependencies file done.');
+//     } else {
+//         console.log('No changes detected, skipping file write.');
+//     }
+    
+//     return updatedDeps;
+// }
+
+// Replace the updateUnifiedDeps function with this corrected version:
+
+// async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+//     console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+//     console.log(`Reading current deps from: ${unifiedDepsPath}`);
+//     console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
+    
+//     // Parse current dependencies as XML
+//     const { packageVersions: currentDependencies, parsedXml: originalXml } = await parseUnifiedDependenciesAsXml(unifiedDepsPath);
+    
+//     // Parse new dependencies as simple text (since test-deps.xml is just lines)
+//     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+
+//     console.log(`Current dependencies count: ${currentDependencies.length}`);
+//     console.log(`New dependencies count: ${updatedDependencies.length}`);
+
+//     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+//     console.log(`New dependencies structure:`, Object.keys(updatedDependenciesStructure));
+
+//     let updatedDeps = { added: [], removed: [] };
+
+//     // Step 1: Remove old configs (Node16/Node20) for tasks that will be updated
+//     let workingDependencies;
+//     [ workingDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    
+//     // Step 2: Update existing dependencies with new versions/configs
+//     [ workingDependencies, updatedDeps ] = await updateConfigsForTasks(workingDependencies, updatedDependenciesStructure, updatedDeps);
+    
+//     // Step 3: Find NEW dependencies that don't exist yet
+//     const existingDeps = new Set();
+//     for (const dep of currentDependencies) {
+//         const [name] = await extractDependency(dep);
+//         if (name) {
+//             existingDeps.add(name.toLowerCase());
+//         }
+//     }
+    
+//     const newDependenciesToAdd = [];
+//     for (const depKey in updatedDependenciesStructure) {
+//         const dep = updatedDependenciesStructure[depKey];
+        
+//         // If this dependency doesn't exist in current file, prepare to add it
+//         if (!existingDeps.has(dep.name.toLowerCase())) {
+//             console.log(`Preparing to add new dependency: ${dep.name}`);
+            
+//             // Add the main dependency
+//             newDependenciesToAdd.push(dep.depStr);
+//             updatedDeps.added.push(dep.name);
+            
+//             // Add its configs (Node16/Node20) if they exist
+//             if (dep.configs) {
+//                 dep.configs
+//                     .sort((a, b) => a.name > b.name)
+//                     .forEach(config => {
+//                         console.log(`Preparing to add new config: ${config.name}`);
+//                         newDependenciesToAdd.push(config.depStr);
+//                         updatedDeps.added.push(config.name);
+//                     });
+//             }
+//         }
+//     }
+
+//     console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
+//     console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
+    
+//     // Only modify the file if there are changes
+//     if (updatedDeps.added.length > 0 || updatedDeps.removed.length > 0) {
+//         // Combine all dependencies (updated existing ones + new ones)
+//         const allDependencies = [...workingDependencies, ...newDependenciesToAdd];
+        
+//         // Write back with proper XML structure using the original XML structure
+//         await writeUnifiedDependenciesAsXml(unifiedDepsPath, allDependencies, originalXml);
+        
+//         console.log('Updating Unified Dependencies file done.');
+//     } else {
+//         console.log('No changes detected, skipping file write.');
+//     }
+    
+//     return updatedDeps;
+// }
+
+
+// Replace the updateUnifiedDeps function with this simpler version:
+
+// async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+//     console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+//     console.log(`Reading current deps from: ${unifiedDepsPath}`);
+//     console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
+    
+//     // Read the original file as text to preserve structure
+//     const originalContent = fs.readFileSync(unifiedDepsPath, 'utf8');
+    
+//     // Parse new dependencies as simple text
+//     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
+//     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+//     console.log(`New dependencies count: ${updatedDependencies.length}`);
+
+//     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+//     console.log(`New dependencies structure:`, Object.keys(updatedDependenciesStructure));
+
+//     let updatedDeps = { added: [], removed: [] };
+
+//     // Extract existing PackageVersion elements from the original content
+//     const existingPackageVersions = [];
+//     const lines = originalContent.split('\n');
+    
+//     for (const line of lines) {
+//         const trimmedLine = line.trim();
+//         if (trimmedLine.startsWith('<PackageVersion') && trimmedLine.includes('Include=')) {
+//             existingPackageVersions.push(trimmedLine);
+//         }
+//     }
+    
+//     console.log(`Current dependencies count: ${existingPackageVersions.length}`);
+
+//     // Find existing dependency names for comparison
+//     const existingDeps = new Set();
+//     for (const dep of existingPackageVersions) {
+//         const [name] = await extractDependency(dep);
+//         if (name) {
+//             existingDeps.add(name.toLowerCase());
+//         }
+//     }
+    
+//     // Find NEW dependencies that don't exist yet
+//     const newDependenciesToAdd = [];
+//     for (const depKey in updatedDependenciesStructure) {
+//         const dep = updatedDependenciesStructure[depKey];
+        
+//         // If this dependency doesn't exist in current file, prepare to add it
+//         if (!existingDeps.has(dep.name.toLowerCase())) {
+//             console.log(`Preparing to add new dependency: ${dep.name}`);
+            
+//             // Add the main dependency
+//             newDependenciesToAdd.push(dep.depStr);
+//             updatedDeps.added.push(dep.name);
+            
+//             // Add its configs (Node16/Node20) if they exist
+//             if (dep.configs) {
+//                 dep.configs
+//                     .sort((a, b) => a.name > b.name)
+//                     .forEach(config => {
+//                         console.log(`Preparing to add new config: ${config.name}`);
+//                         newDependenciesToAdd.push(config.depStr);
+//                         updatedDeps.added.push(config.name);
+//                     });
+//             }
+//         }
+//     }
+
+//     console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
+//     console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
+    
+//     // Only modify the file if there are new dependencies to add
+//     if (newDependenciesToAdd.length > 0) {
+//         // Simply append new dependencies to the existing file structure
+//         insertNewDependenciesSimple(unifiedDepsPath, newDependenciesToAdd);
+//         console.log('Updating Unified Dependencies file done.');
+//     } else {
+//         console.log('No new dependencies to add, skipping file write.');
+//     }
+//     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+//     [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    
+//     return updatedDeps;
+// }
+
+
+
+
+
+
+// Replace the updateUnifiedDeps function with this enhanced version:
+
+// async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+//     console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+//     console.log(`Reading current deps from: ${unifiedDepsPath}`);
+//     console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
+    
+//     // Read the original file as text to preserve structure
+//     const originalContent = fs.readFileSync(unifiedDepsPath, 'utf8');
+    
+//     // Parse new dependencies as simple text
+//     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
+//     console.log(`New dependencies count: ${updatedDependencies.length}`);
+
+//     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+//     console.log(`New dependencies structure:`, Object.keys(updatedDependenciesStructure));
+
+//     let updatedDeps = { added: [], removed: [] };
+
+//     // Extract existing PackageVersion elements from the original content
+//     const existingPackageVersions = [];
+//     const lines = originalContent.split('\n');
+    
+//     for (const line of lines) {
+//         const trimmedLine = line.trim();
+//         if (trimmedLine.startsWith('<PackageVersion') && trimmedLine.includes('Include=')) {
+//             existingPackageVersions.push(trimmedLine);
+//         }
+//     }
+    
+//     console.log(`Current dependencies count: ${existingPackageVersions.length}`);
+
+//     // Step 1: Process existing dependencies - update versions and remove old configs
+//     let processedDependencies = [];
+//     const basicDepsForUpdate = Object.keys(updatedDependenciesStructure).map(dep => dep.toLowerCase());
+    
+//     for (const existingDep of existingPackageVersions) {
+//         const [name] = await extractDependency(existingDep);
+//         if (!name) {
+//             processedDependencies.push(existingDep);
+//             continue;
+//         }
+        
+//         const basicName = name.toLowerCase();
+//         const lowerName = name.toLowerCase();
+        
+//         // Check if this is a config (Node16/Node20) that should be removed
+//         if (isIncludeButNotEqual(basicDepsForUpdate, basicName)) {
+//             console.log(`Removing old config: ${name}`);
+//             updatedDeps.removed.push(name);
+//             continue; // Skip this dependency
+//         }
+        
+//         // Check if this dependency needs to be updated
+//         if (updatedDependenciesStructure.hasOwnProperty(lowerName)) {
+//             console.log(`Updating existing dependency: ${name}`);
+//             // Replace with new version
+//             processedDependencies.push(updatedDependenciesStructure[lowerName].depStr);
+            
+//             // Add new configs (Node16/Node20) if they exist
+//             if (updatedDependenciesStructure[lowerName].configs) {
+//                 updatedDependenciesStructure[lowerName].configs
+//                     .sort((a, b) => a.name > b.name)
+//                     .forEach(config => {
+//                         console.log(`Adding updated config: ${config.name}`);
+//                         processedDependencies.push(config.depStr);
+//                         updatedDeps.added.push(config.name);
+//                     });
+//             }
+//         } else {
+//             // Keep existing dependency as-is
+//             processedDependencies.push(existingDep);
+//         }
+//     }
+
+//     // Step 2: Find NEW dependencies that don't exist in the original file
+//     const existingDepNames = new Set();
+//     for (const dep of existingPackageVersions) {
+//         const [name] = await extractDependency(dep);
+//         if (name) {
+//             existingDepNames.add(name.toLowerCase());
+//         }
+//     }
+    
+//     const newDependenciesToAdd = [];
+//     for (const depKey in updatedDependenciesStructure) {
+//         const dep = updatedDependenciesStructure[depKey];
+        
+//         // If this dependency doesn't exist in current file, prepare to add it
+//         if (!existingDepNames.has(dep.name.toLowerCase())) {
+//             console.log(`Preparing to add new dependency: ${dep.name}`);
+            
+//             // Add the main dependency
+//             newDependenciesToAdd.push(dep.depStr);
+//             updatedDeps.added.push(dep.name);
+            
+//             // Add its configs (Node16/Node20) if they exist
+//             if (dep.configs) {
+//                 dep.configs
+//                     .sort((a, b) => a.name > b.name)
+//                     .forEach(config => {
+//                         console.log(`Preparing to add new config: ${config.name}`);
+//                         newDependenciesToAdd.push(config.depStr);
+//                         updatedDeps.added.push(config.name);
+//                     });
+//             }
+//         }
+//     }
+
+//     console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
+//     console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
+    
+//     // Step 3: Write the updated file
+//     if (updatedDeps.added.length > 0 || updatedDeps.removed.length > 0) {
+//         // Reconstruct the file with updated dependencies
+//         const updatedLines = [];
+//         let insideItemGroup = false;
+//         let itemGroupIndent = '';
+        
+//         for (const line of lines) {
+//             const trimmedLine = line.trim();
+            
+//             if (trimmedLine.includes('<ItemGroup>')) {
+//                 insideItemGroup = true;
+//                 // Detect the indentation level
+//                 const match = line.match(/^(\s*)/);
+//                 if (match) {
+//                     itemGroupIndent = match[1] + '  '; // Add 2 spaces for PackageVersion elements
+//                 }
+//                 updatedLines.push(line);
+//             } else if (trimmedLine.includes('</ItemGroup>')) {
+//                 // Insert all processed dependencies before closing ItemGroup
+//                 for (const dep of processedDependencies) {
+//                     updatedLines.push(`${itemGroupIndent}${dep}`);
+//                 }
+//                 // Insert all new dependencies
+//                 for (const dep of newDependenciesToAdd) {
+//                     updatedLines.push(`${itemGroupIndent}${dep}`);
+//                 }
+//                 updatedLines.push(line);
+//                 insideItemGroup = false;
+//             } else if (insideItemGroup && trimmedLine.startsWith('<PackageVersion')) {
+//                 // Skip existing PackageVersion elements - they're handled above
+//                 continue;
+//             } else {
+//                 // Keep all other lines (comments, other elements, etc.)
+//                 updatedLines.push(line);
+//             }
+//         }
+        
+//         fs.writeFileSync(unifiedDepsPath, updatedLines.join('\n'));
+//         console.log('Updating Unified Dependencies file done.');
+//     } else {
+//         console.log('No changes detected, skipping file write.');
+//     }
+    
+//     return updatedDeps;
+// }
+
+
+
+
+
+
+
+
+// Replace the updateUnifiedDeps function with this structure-preserving version:
+
 async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
-console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
+    console.log(`\n=== DEBUG: updateUnifiedDeps (Structure Preserving) ===`);
     console.log(`Reading current deps from: ${unifiedDepsPath}`);
     console.log(`Reading new deps from: ${newUnifiedDepsPath}`);
     
-    // Parse current dependencies as XML
-    const { packageVersions: currentDependencies, parsedXml: originalXml } = await parseUnifiedDependenciesAsXml(unifiedDepsPath);
+    // Read the original file as text to preserve structure
+    const originalContent = fs.readFileSync(unifiedDepsPath, 'utf8');
     
-    // Parse new dependencies as simple text (since test-deps.xml is just lines)
+    // Parse new dependencies
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
-
-    console.log(`Current dependencies count: ${currentDependencies.length}`);
     console.log(`New dependencies count: ${updatedDependencies.length}`);
 
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
     console.log(`New dependencies structure:`, Object.keys(updatedDependenciesStructure));
 
     let updatedDeps = { added: [], removed: [] };
-
-    // Step 1: Remove old configs (Node16/Node20) for tasks that will be updated
-    let workingDependencies;
-    [ workingDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    const lines = originalContent.split('\n');
+    const updatedLines = [];
     
-    // Step 2: Update existing dependencies with new versions/configs
-    [ workingDependencies, updatedDeps ] = await updateConfigsForTasks(workingDependencies, updatedDependenciesStructure, updatedDeps);
+    // Track dependencies that need to be added as new
+    const newDependenciesToAdd = [];
+    const existingDepNames = new Set();
     
-    // Step 3: Find NEW dependencies that don't exist yet (but don't modify currentDependencies)
-    const existingDeps = new Set();
-    for (const dep of currentDependencies) {
-        const [name] = await extractDependency(dep);
-        if (name) {
-            existingDeps.add(name.toLowerCase());
+    // First pass: collect existing dependency names
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (trimmedLine.startsWith('<PackageVersion') && trimmedLine.includes('Include=')) {
+            const [name] = await extractDependency(trimmedLine);
+            if (name) {
+                existingDepNames.add(name.toLowerCase());
+            }
         }
     }
     
-    const newDependenciesToAdd = [];
+    // Find truly new dependencies
     for (const depKey in updatedDependenciesStructure) {
         const dep = updatedDependenciesStructure[depKey];
-        
-        // If this dependency doesn't exist in current file, prepare to add it
-        if (!existingDeps.has(dep.name.toLowerCase())) {
+        if (!existingDepNames.has(dep.name.toLowerCase())) {
             console.log(`Preparing to add new dependency: ${dep.name}`);
-            
-            // Add the main dependency
             newDependenciesToAdd.push(dep.depStr);
             updatedDeps.added.push(dep.name);
             
-            // Add its configs (Node16/Node20) if they exist
             if (dep.configs) {
                 dep.configs
                     .sort((a, b) => a.name > b.name)
@@ -677,23 +1185,89 @@ console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
             }
         }
     }
+    
+    // Second pass: process each line individually
+    let insideItemGroup = false;
+    let itemGroupIndent = '';
+    const basicDepsForUpdate = Object.keys(updatedDependenciesStructure).map(dep => dep.toLowerCase());
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmedLine = line.trim();
+        
+        if (trimmedLine.includes('<ItemGroup>')) {
+            insideItemGroup = true;
+            const match = line.match(/^(\s*)/);
+            if (match) {
+                itemGroupIndent = match[1] + '  '; // Detect indentation
+            }
+            updatedLines.push(line);
+            
+        } else if (trimmedLine.includes('</ItemGroup>')) {
+            // Add new dependencies before closing ItemGroup
+            if (newDependenciesToAdd.length > 0) {
+                for (const dep of newDependenciesToAdd) {
+                    updatedLines.push(`${itemGroupIndent}${dep}`);
+                }
+            }
+            updatedLines.push(line);
+            insideItemGroup = false;
+            
+        } else if (insideItemGroup && trimmedLine.startsWith('<PackageVersion')) {
+            // Process existing PackageVersion elements
+            const [name] = await extractDependency(trimmedLine);
+            
+            if (!name) {
+                // Keep malformed lines as-is
+                updatedLines.push(line);
+                continue;
+            }
+            
+            const basicName = name.toLowerCase();
+            const lowerName = name.toLowerCase();
+            
+            // Check if this is an old config that should be removed
+            if (isIncludeButNotEqual(basicDepsForUpdate, basicName)) {
+                console.log(`Removing old config: ${name}`);
+                updatedDeps.removed.push(name);
+                // Skip this line (remove it)
+                continue;
+            }
+            
+            // Check if this dependency needs version update
+            if (updatedDependenciesStructure.hasOwnProperty(lowerName)) {
+                console.log(`Updating existing dependency: ${name}`);
+                // Replace with new version - preserve original indentation
+                const originalIndent = line.match(/^(\s*)/)[1];
+                updatedLines.push(`${originalIndent}${updatedDependenciesStructure[lowerName].depStr}`);
+                
+                // Add new configs right after the main dependency
+                if (updatedDependenciesStructure[lowerName].configs) {
+                    updatedDependenciesStructure[lowerName].configs
+                        .sort((a, b) => a.name > b.name)
+                        .forEach(config => {
+                            console.log(`Adding updated config: ${config.name}`);
+                            updatedLines.push(`${originalIndent}${config.depStr}`);
+                            updatedDeps.added.push(config.name);
+                        });
+                }
+            } else {
+                // Keep existing dependency exactly as-is
+                updatedLines.push(line);
+            }
+            
+        } else {
+            // Keep all other lines (comments, whitespace, other XML elements) exactly as-is
+            updatedLines.push(line);
+        }
+    }
 
     console.log(`Dependencies to add: ${JSON.stringify(updatedDeps.added)}`);
     console.log(`Dependencies to remove: ${JSON.stringify(updatedDeps.removed)}`);
     
-    // Only modify the file if there are changes
+    // Only write if there are changes
     if (updatedDeps.added.length > 0 || updatedDeps.removed.length > 0) {
-        // First, update the existing file with modified dependencies (if any)
-        if (updatedDeps.removed.length > 0) {
-            // Write the updated currentDependencies back (this handles removals and updates)
-            fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
-        }
-        
-        // Then, simply append the new dependencies
-        if (newDependenciesToAdd.length > 0) {
-            insertNewDependenciesSimple(unifiedDepsPath, newDependenciesToAdd);
-        }
-        
+        fs.writeFileSync(unifiedDepsPath, updatedLines.join('\n'));
         console.log('Updating Unified Dependencies file done.');
     } else {
         console.log('No changes detected, skipping file write.');
@@ -701,6 +1275,14 @@ console.log(`\n=== DEBUG: updateUnifiedDeps ===`);
     
     return updatedDeps;
 }
+
+
+
+
+
+
+
+
 
 
 /**
