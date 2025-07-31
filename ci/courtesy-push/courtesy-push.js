@@ -359,6 +359,147 @@ function parseUnifiedDependencies(path) {
 
 
 
+<<<<<<< Updated upstream
+=======
+
+/**
+ * Simple approach: Just insert new dependencies at the end of the existing ItemGroup
+ * @param {string} filePath - Path to Directory.Packages.props file
+ * @param {Array} newDependencyStrings - Array of new PackageVersion XML strings to add
+ */
+function insertNewDependenciesSimple(filePath, newDependencyStrings) {
+    if (newDependencyStrings.length === 0) {
+        console.log('No new dependencies to add');
+        return;
+    }
+    
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Find the last PackageVersion entry in the ItemGroup
+    const lastPackageVersionMatch = content.lastIndexOf('</ItemGroup>');
+    
+    if (lastPackageVersionMatch === -1) {
+        console.error('Could not find </ItemGroup> tag in the file');
+        return;
+    }
+    
+    // Create the new dependency entries with proper indentation
+    const indent = '    '; // 4 spaces to match existing formatting
+    const newEntries = newDependencyStrings.map(dep => `${indent}${dep}`).join('\n');
+    
+    // Insert new dependencies just before the </ItemGroup> closing tag
+    const beforeClosing = content.substring(0, lastPackageVersionMatch);
+    const afterClosing = content.substring(lastPackageVersionMatch);
+    
+    const updatedContent = beforeClosing + newEntries + '\n' + afterClosing;
+    
+    fs.writeFileSync(filePath, updatedContent);
+    console.log(`Added ${newDependencyStrings.length} new dependencies to ${filePath}`);
+}
+
+
+
+
+
+
+
+// Replace the insertNewDependenciesSimple function with this improved version:
+
+/**
+ * Simple approach: Just insert new dependencies before the closing </ItemGroup> tag
+ * @param {string} filePath - Path to Directory.Packages.props file
+ * @param {Array} newDependencyStrings - Array of new PackageVersion XML strings to add
+ */
+function insertNewDependenciesSimple(filePath, newDependencyStrings) {
+    if (newDependencyStrings.length === 0) {
+        console.log('No new dependencies to add');
+        return;
+    }
+    
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Check if the file has proper XML structure
+    const hasProperStructure = content.includes('<Project') && content.includes('<ItemGroup>') && content.includes('</ItemGroup>');
+    
+    if (hasProperStructure) {
+        // Find the last </ItemGroup> tag
+        const lastItemGroupMatch = content.lastIndexOf('</ItemGroup>');
+        
+        if (lastItemGroupMatch === -1) {
+            console.error('Could not find </ItemGroup> tag in the file');
+            return;
+        }
+        
+        // Find the indentation of the last PackageVersion element
+        const lastPackageVersionMatch = content.lastIndexOf('<PackageVersion');
+        let indent = '    '; // default 4 spaces
+        
+        if (lastPackageVersionMatch !== -1) {
+            // Find the line containing the last PackageVersion
+            const lineStart = content.lastIndexOf('\n', lastPackageVersionMatch) + 1;
+            const lineEnd = content.indexOf('\n', lastPackageVersionMatch);
+            const line = content.substring(lineStart, lineEnd === -1 ? content.length : lineEnd);
+            
+            // Extract the indentation from this line
+            const match = line.match(/^(\s*)/);
+            if (match) {
+                indent = match[1];
+            }
+        }
+        
+        // Create the new dependency entries with proper indentation
+        const newEntries = newDependencyStrings.map(dep => `${indent}${dep}`).join('\n');
+        
+        // Insert new dependencies just before the </ItemGroup> closing tag
+        const beforeClosing = content.substring(0, lastItemGroupMatch);
+        const afterClosing = content.substring(lastItemGroupMatch);
+        
+        const updatedContent = beforeClosing + newEntries + '\n' + afterClosing;
+        
+        fs.writeFileSync(filePath, updatedContent);
+        console.log(`Added ${newDependencyStrings.length} new dependencies to ${filePath}`);
+    } else {
+        // File doesn't have proper structure - rebuild it with proper XML structure
+        console.log('File appears to be missing XML structure. Rebuilding with proper format...');
+        
+        // Extract existing PackageVersion elements
+        const existingPackageVersions = [];
+        const lines = content.split('\n');
+        
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (trimmedLine.startsWith('<PackageVersion') && trimmedLine.includes('Include=')) {
+                existingPackageVersions.push(trimmedLine);
+            }
+        }
+        
+        // Combine existing and new dependencies
+        const allDependencies = [...existingPackageVersions, ...newDependencyStrings];
+        
+        // Create properly structured XML
+        const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ItemGroup>
+${allDependencies.map(dep => `    ${dep}`).join('\n')}
+  </ItemGroup>
+</Project>`;
+        
+        fs.writeFileSync(filePath, xmlContent);
+        console.log(`Rebuilt ${filePath} with proper XML structure and added ${newDependencyStrings.length} new dependencies`);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
 
 /**
  * The main function for unified dependencies update
