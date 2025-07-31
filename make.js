@@ -229,10 +229,6 @@ CLI.gendocs = function() {
 //
 CLI.build = async function(/** @type {{ task: string }} */ argv)
 {
-    if (process.env.TF_BUILD) {
-        fail('Please use serverBuild for CI builds for proper validation');
-    }
-
     writeUpdatedsFromGenTasks = true;
     await CLI.serverBuild(argv);
 }
