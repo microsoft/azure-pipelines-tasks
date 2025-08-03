@@ -1,4 +1,21 @@
-﻿using System.Diagnostics;
+﻿// todo: 
+// 1. Configs will only be opted in to merge if the specific task is removed from the respective make-options.json
+//     2. This resolves the version bumping issue - version bump will be required.
+// however, this creates a chicken and egg problem.
+//          We drive config updates based on make-options.json. If task is removed from make-options.json in order to be merged, the config won't be processed and task won't be merged
+// therefore we must re-think.
+// Go back to current plan -  
+//    merge tasks to base task w/o bumping version
+//    two problems
+//         1. PR will be blocked b/c bumping version is required
+//               a. possible solution - update version bump check to exclude IF:
+//                     1. In versionmapmap.txt, a config version is merged to base config
+//                     2. versionmap.txt is deleted and version matches version that was deleted config
+//         2. lot of churn in courtsey push b/c it will pick up all tasks by git filter
+//               a. but is this an issue?  We could update courtsey push to check if task version has actually changed to avoid excessive build/tests
+//               b. shouldn't be an issue for task deployment as task should not be deployed due to version already existing
+
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
