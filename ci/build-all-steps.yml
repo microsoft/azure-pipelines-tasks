@@ -91,9 +91,9 @@ steps:
 
     # Pull commits from remote and push branch to git
     git checkout -b $releaseBranch
-    if( $isDryRun -eq 'true' ) {
+    if ($isDryRun -eq 'true') {
       Write-Host 'DRY RUN: Skipping Git push operations to remote repository'
-    }else{
+    } else {
       Write-Host 'Trying to pull the remote branch..'
       git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
       if (-not $?) {
