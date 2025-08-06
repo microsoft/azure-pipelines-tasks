@@ -208,7 +208,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
-    it('test throws warning when zero match found', async () => {
+    it('test fails when zero match found', async () => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
         let tp = path.join(__dirname, 'validInputs.js')
@@ -216,8 +216,7 @@ describe('DotNetCoreExe Suite', function () {
         await tr.runAsync();
 
         assert(tr.invokedToolCount == 0, 'should not have invoked tool');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.failed, 'task should have failed');
     });
 
     it('publish works with explicit project files setting modifyoutput to false', async () => {
