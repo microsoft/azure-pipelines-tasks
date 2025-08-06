@@ -98,6 +98,7 @@ export class dotNetExe {
 
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
 
+        this.setupNativeLibraryPath(dotnetPath);
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
@@ -158,6 +159,9 @@ export class dotNetExe {
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
+        
+        this.setupNativeLibraryPath(dotnetPath);
+        
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
@@ -513,6 +517,102 @@ export class dotNetExe {
         }
         else {
             tl.debug('No connected service set');
+        }
+    }
+
+    private setupNativeLibraryPath(dotnetPath: string) {
+        // Only configure LD_LIBRARY_PATH on Linux systems for native library loading
+        if (tl.osType() !== 'Windows_NT') {
+            try {
+                const dotnetRoot = tl.getVariable('DOTNET_ROOT');
+                let libraryPaths: string[] = [];
+
+                // Add DOTNET_ROOT shared library paths if available
+                if (dotnetRoot && tl.exist(dotnetRoot)) {
+                    const sharedPath = path.join(dotnetRoot, 'shared');
+                    if (tl.exist(sharedPath)) {
+                        // Find all Microsoft.NETCore.App runtime versions
+                        try {
+                            const runtimeDirs = tl.ls("", [sharedPath]).filter(name => name.startsWith('Microsoft.NETCore.App'));
+                            for (const runtimeDir of runtimeDirs) {
+                                const runtimePath = path.join(sharedPath, runtimeDir);
+                                if (tl.exist(runtimePath)) {
+                                    // Add all version subdirectories
+                                    try {
+                                        const versions = tl.ls("", [runtimePath]);
+                                        for (const version of versions) {
+                                            const versionPath = path.join(runtimePath, version);
+                                            if (tl.exist(versionPath)) {
+                                                try {
+                                                    if (fs.lstatSync(versionPath).isDirectory()) {
+                                                        libraryPaths.push(versionPath);
+                                                    }
+                                                } catch (statError) {
+                                                    // Skip this path if we can't stat it
+                                                    tl.debug(`Could not stat path ${versionPath}: ${statError.message}`);
+                                                }
+                                            }
+                                        }
+                                    } catch (lsError) {
+                                        tl.debug(`Could not list directory ${runtimePath}: ${lsError.message}`);
+                                    }
+                                }
+                            }
+                        } catch (lsError) {
+                            tl.debug(`Could not list directory ${sharedPath}: ${lsError.message}`);
+                        }
+                    }
+                }
+
+                // Add default system dotnet paths
+                const systemDotnetPaths = [
+                    '/usr/share/dotnet/shared/Microsoft.NETCore.App',
+                    '/usr/lib/dotnet/shared/Microsoft.NETCore.App'
+                ];
+
+                for (const systemPath of systemDotnetPaths) {
+                    if (tl.exist(systemPath)) {
+                        try {
+                            const versions = tl.ls("", [systemPath]);
+                            for (const version of versions) {
+                                const versionPath = path.join(systemPath, version);
+                                if (tl.exist(versionPath)) {
+                                    try {
+                                        if (fs.lstatSync(versionPath).isDirectory()) {
+                                            libraryPaths.push(versionPath);
+                                        }
+                                    } catch (statError) {
+                                        // Skip this path if we can't stat it
+                                        tl.debug(`Could not stat path ${versionPath}: ${statError.message}`);
+                                    }
+                                }
+                            }
+                        } catch (lsError) {
+                            tl.debug(`Could not list directory ${systemPath}: ${lsError.message}`);
+                        }
+                    }
+                }
+
+                // Add dotnet installation directory itself
+                const dotnetDir = path.dirname(dotnetPath);
+                if (tl.exist(dotnetDir)) {
+                    libraryPaths.push(dotnetDir);
+                }
+
+                // Set LD_LIBRARY_PATH if we found any paths
+                if (libraryPaths.length > 0) {
+                    const currentLdLibraryPath = process.env.LD_LIBRARY_PATH || '';
+                    const newLdLibraryPath = libraryPaths.join(':') + (currentLdLibraryPath ? ':' + currentLdLibraryPath : '');
+                    process.env.LD_LIBRARY_PATH = newLdLibraryPath;
+                    tl.debug(`Set LD_LIBRARY_PATH to: ${newLdLibraryPath}`);
+                } else {
+                    tl.debug('No .NET runtime library paths found for LD_LIBRARY_PATH');
+                }
+
+            } catch (error) {
+                // Don't fail the task if we can't set up library paths, just log a warning
+                tl.warning(`Failed to configure native library paths: ${error.message}`);
+            }
         }
     }
 }
