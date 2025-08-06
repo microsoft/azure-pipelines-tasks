@@ -12,6 +12,18 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 The only prerequisite for the task is that .NET Core must be installed on Azure Pipelines agent machine. In case you want an exact version of .NET Core on the agent then you can use the [.NET Core Tool installer task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreInstallerV0)
 
+### Native Library Support (Linux/macOS)
+
+Starting from version 2.259.0, this task automatically configures the `LD_LIBRARY_PATH` environment variable on Linux and macOS systems to help the .NET runtime locate native shared libraries (.so files). This addresses issues where native dependencies might not be found after changes to the hosted agent environments.
+
+The task automatically discovers .NET runtime directories from:
+- `DOTNET_ROOT/shared/Microsoft.NETCore.App/*` (if DOTNET_ROOT is set)
+- `/usr/share/dotnet/shared/Microsoft.NETCore.App/*` (system installation)
+- `/usr/lib/dotnet/shared/Microsoft.NETCore.App/*` (alternative system path)
+- The directory containing the dotnet executable
+
+This configuration is applied automatically before executing any dotnet command and does not affect Windows environments.
+
 ### Parameters of the task
 
 * **Command\*:** The task can be use to run any [dotnet core command](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x).
