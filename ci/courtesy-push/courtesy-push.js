@@ -38,10 +38,10 @@ function execInForeground(command, directory) {
     directory = directory || '.';
     console.log(`% ${command}`);
     try {
-            cp.execSync(command, { cwd: directory, stdio: [process.stdin, process.stdout, process.stderr] });
+        cp.execSync(command, { cwd: directory, stdio: [process.stdin, process.stdout, process.stderr] });
     } catch (error) {
-            console.error(`Command failed: ${command}`);
-            throw error;
+        console.error(`Command failed: ${command}`);
+        throw error;
     }
 }
 
@@ -101,15 +101,11 @@ function commitAndPushChanges(repoPath, targetToCommit) {
     } catch (error) {
         console.log('Could not get git status after add:', error.message);
     }
-    
     gitConfig();
-    
     console.log(`Creating branch ${sourceBranch}...`);
     execInForeground(`${GIT} checkout -b ${sourceBranch}`, repoPath);
-    
     console.log('Committing changes...');
     execInForeground(`${GIT} commit -m "${commitMessage}"`, repoPath);
-    
     console.log('Pushing changes...');
     if(dryrun){
         console.log("SKIPPED THE PUSH COMMAND BECAUSE DRYRUN IS SET TO TRUE")
@@ -117,7 +113,6 @@ function commitAndPushChanges(repoPath, targetToCommit) {
     else{
         execInForeground(`${GIT} push origin ${sourceBranch}`, repoPath);
     }
-    
 }
 
 /**
