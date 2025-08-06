@@ -7,10 +7,6 @@ trigger:
 
 resources:
   repositories:
-  - repository: AzureDevOps
-    type: git
-    name: AzureDevOps/AzureDevOps
-
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -46,6 +42,10 @@ parameters:
   displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
   type: boolean
   default: false  
+- name: dryRun
+  displayName: Dry Run (no push, no PR, no feed publish)
+  type: boolean
+  default: false
 
 variables:
 - name: currentDate
@@ -75,6 +75,11 @@ variables:
     value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
   ${{ if eq(parameters.task_deployment,'Deploy all Tasks') }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
+- name: isDryRun
+  ${{ if eq(parameters.dryRun, true) }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
@@ -134,7 +139,7 @@ extends:
 
       # Publish
       - job: publish
-        displayName: Publish
+        displayName: Publish Nuget Artifacts
         timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
@@ -179,7 +184,7 @@ extends:
           - output: nuget
             packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            ${{ if eq(parameters.publishToDistributedTaskTest, true) }}:
+            ${{ if or(eq(parameters.dryRun, true),eq(parameters.publishToDistributedTaskTest, true)) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
             ${{ else }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
@@ -187,9 +192,6 @@ extends:
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
         steps:
-        - checkout: AzureDevOps
-          fetchDepth: 1
-          persistCredentials: true
         - checkout: self
         - template: /ci/courtesy-push.yml@self
 
