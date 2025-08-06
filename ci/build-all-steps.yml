@@ -91,7 +91,6 @@ steps:
 
     # Pull commits from remote and push branch to git
     git checkout -b $releaseBranch
-
     if( $isDryRun -eq 'true' ) {
       Write-Host 'DRY RUN: Skipping Git push operations to remote repository'
     }else{

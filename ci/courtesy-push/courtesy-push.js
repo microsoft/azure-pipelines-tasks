@@ -23,7 +23,6 @@ if (!token) {
     console.error('Error: PAT or TOKEN environment variable is required for git authentication');
     process.exit(1);
 }
-
 if (!newDeps) {
     console.error('Usage: node courtesy-push.js <newDepsFile>');
     process.exit(1);
@@ -83,8 +82,6 @@ function ensureRepoExists(repoPath) {
 
 function commitAndPushChanges(repoPath, targetToCommit) {
     console.log('Adding changes to git...');
-    
-    // Debug: Check git status before adding
     console.log('\n=== Git Status Before Add ===');
     try {
         const gitStatus = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
@@ -97,8 +94,6 @@ function commitAndPushChanges(repoPath, targetToCommit) {
     }
     
     execInForeground(`${GIT} add ${targetToCommit}`, repoPath, false);
-    
-    // Debug: Check git status after adding
     console.log('\n=== Git Status After Add ===');
     try {
         const gitStatusAfter = cp.execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf8' });
@@ -139,8 +134,6 @@ async function createPullRequest(sourceBranch) {
             console.error('No token provided for PR creation');
             return;
         }
-
-        // const fullOrgUrl = `https://${orgUrl}`;
         const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
         const refs = {
@@ -266,7 +259,6 @@ async function getDeps(depArr) {
     const deps = {};
     const getDependantConfigs = (arrKeys, packageName) => arrKeys.filter(key => key.includes(packageName) && key !== packageName);
 
-    // first run we form structures 
     for (let i = 0; i < depArr.length; i++) {
         const newDep = depArr[i];
         var [ name, version ] = await extractDependency(newDep);

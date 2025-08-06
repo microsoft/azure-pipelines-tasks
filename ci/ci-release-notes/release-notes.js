@@ -30,7 +30,6 @@ async function verifyNewReleaseTagOk(newRelease,isDryRun) {
         console.log('DRY RUN: Skipping actual tag verification step');
         return;
     }
-    
     try {
         var tag = 'v' + newRelease;
         await octokit.repos.getReleaseByTag({
