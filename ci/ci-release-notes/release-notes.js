@@ -233,7 +233,7 @@ async function main() {
         if(isDryRun=== 'true'){
             console.log('DRY RUN: Skipping actual release creation');
         }else{
-        await createRelease(releaseNotes, version, releaseBranch);
+            await createRelease(releaseNotes, version, releaseBranch);
         }
     } catch (err) {
         throw err;
