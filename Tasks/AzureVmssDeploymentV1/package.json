@@ -9,11 +9,14 @@
     "artifact-engine": "^1.5.5",
     "azp-tasks-az-blobstorage-provider": "^3.246.3",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
-    "azure-pipelines-tasks-utility-common": "^3.0.0-preview.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.259.2",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

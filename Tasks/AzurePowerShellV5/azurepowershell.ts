@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
@@ -48,11 +49,15 @@ async function run() {
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
-        let otherVersion = "OtherVersion"
+        const otherVersion = "OtherVersion"
+        const fetchingModule = "azure-powershell"
+        const moduleDisplayName = "Az module"
+        const majorversionTolerance = 3
 
         if (targetAzurePs == otherVersion) {
             if (customTargetAzurePs != "") {
                 targetAzurePs = customTargetAzurePs;
+                await validateAzModuleVersion(fetchingModule, customTargetAzurePs, moduleDisplayName, majorversionTolerance, true)
             }
             else {
                 console.log(tl.loc('InvalidAzurePsVersion',customTargetAzurePs));
@@ -60,6 +65,12 @@ async function run() {
         }
         else {
             targetAzurePs = ""
+             if (tl.getPipelineFeature('ShowWarningOnOlderAzureModules')) {
+                const azVersionResult = await getInstalledAzModuleVersion();
+                if (azVersionResult) {
+                    await validateAzModuleVersion(fetchingModule, azVersionResult, moduleDisplayName, majorversionTolerance, true)
+                }
+             }
         }
 
         var endpoint = JSON.stringify(endpointObject);
@@ -190,6 +201,36 @@ async function run() {
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
         }
+    }
+}
+
+async function getInstalledAzModuleVersion(): Promise<string | null> {
+    try {
+        tl.debug('Checking installed Az PowerShell module version...');
+        
+        // PowerShell command to get the installed Az module version
+        const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-Command')
+            .arg(`. '${path.join(path.resolve(__dirname),'Utility.ps1')}'; Get-InstalledMajorRelease -moduleName 'Az' -iswin $false`);
+            
+        const result = await powershell.execSync()
+        if (result.code === 0 && result.stdout) {
+            const version = result.stdout.trim();
+            if (version && version !== '' && version !== '0.0.0') {
+                tl.debug(`Found installed Az module version: ${version}`);
+                return version;
+            }
+        }
+        tl.debug('Az PowerShell module not found on the agent');
+        return null;
+    } catch (error) {
+        tl.debug(`Error checking installed Az module version: ${error.message}`);
+        return null;
     }
 }
 

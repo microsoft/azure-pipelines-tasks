@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^3.0.4"
   }
 }
