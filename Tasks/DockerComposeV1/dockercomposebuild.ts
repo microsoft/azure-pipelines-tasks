@@ -6,6 +6,7 @@ import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
+import * as DockerComposeUtils from "./dockercomposeutils";
 
 function dockerTag(connection: DockerComposeConnection, source: string, target: string, outputUpdate: (output: any) => any) {
     var command = connection.createCommand();
@@ -63,11 +64,18 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string, ou
 }
 
 export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
-    var command = connection.createComposeCommand();
-    command.arg("build");
     var arg = tl.getInput("arguments", false);
-    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
-    command.line(commandArgs || "");
+    var parsedArgs = DockerComposeUtils.parseComposeArguments(arg || "");
+    
+    var command = connection.createComposeCommand(parsedArgs.globalArgs);
+    command.arg("build");
+    
+    // Add command-specific arguments
+    if (parsedArgs.commandArgs.length > 0) {
+        parsedArgs.commandArgs.forEach(cmdArg => {
+            command.arg(cmdArg);
+        });
+    }
 
     return connection.execCommandWithLogging(command)
     .then((output) => outputUpdate(utils.writeTaskOutput("build", output)))
