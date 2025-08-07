@@ -5,13 +5,7 @@ steps:
   displayName: Install nuget
 
 - powershell: |
-    $sourcePath = "$(Build.SourcesDirectory)/azure-pipelines-tasks/.gdn"
-    $destinationPath = "$(Build.SourcesDirectory)/"
-    Copy-Item -Path $sourcePath -Destination $destinationPath -Recurse
-  displayName: Copy baseline files to root
-
-- powershell: |
-    cd azure-pipelines-tasks/ci/courtesy-push
+    cd $(Build.SourcesDirectory)/ci/courtesy-push
     npm install
   displayName: npm install
 
@@ -21,7 +15,7 @@ steps:
     downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
+- powershell: $(Build.SourcesDirectory)/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 - powershell: |
@@ -30,21 +24,17 @@ steps:
   displayName: Set currentDate variable
 
 - template: /ci/generate-branch-name.yml@self
-  parameters:
-    prefix: users/$(Build.RequestedFor)
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
   displayName: Update unified deps and create branch
   env:
-    USERNAME: $(Build.RequestedFor)
     TOKEN: $(System.AccessToken)
-    USEREMAIL: $(Build.RequestedForEmail)
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
-
-- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
+    USERNAME: $(username)
+    
+- powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
-    
