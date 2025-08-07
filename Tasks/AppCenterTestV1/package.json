@@ -5,7 +5,7 @@
   "main": "appcentertest.js",
   "scripts": {
     "build": "node ../../make.js build --task AppCenterTestV1",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ../../make.js test --task AppCenterTestV1",
     "postinstall": "patch-package"
   },
   "repository": {

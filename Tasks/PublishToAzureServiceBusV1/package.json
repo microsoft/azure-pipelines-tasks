@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: PublishToAzureServiceBusV1",
   "scripts": {
-    "build": "node ../../make.js build --task PublishToAzureServiceBusV1"
+    "build": "node ../../make.js build --task PublishToAzureServiceBusV1",
+    "test": "node ../../make.js test --task PublishToAzureServiceBusV1"
   }
 }

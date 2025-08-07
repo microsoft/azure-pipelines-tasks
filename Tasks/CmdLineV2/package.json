@@ -5,7 +5,7 @@
   "main": "cmdline.js",
   "scripts": {
     "build": "node ../../make.js build --task CmdLineV2",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task CmdLineV2"
   },
   "repository": {
     "type": "git",

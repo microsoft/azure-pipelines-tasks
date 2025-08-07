@@ -5,7 +5,7 @@
   "main": "azurewebappslotswap.js",
   "scripts": {
     "build": "node ../../make.js build --task AzureAppServiceManageV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task AzureAppServiceManageV0"
   },
   "repository": {
     "type": "git",

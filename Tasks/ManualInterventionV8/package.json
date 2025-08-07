@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: ManualInterventionV8",
   "scripts": {
-    "build": "node ../../make.js build --task ManualInterventionV8"
+    "build": "node ../../make.js build --task ManualInterventionV8",
+    "test": "node ../../make.js test --task ManualInterventionV8"
   }
 }

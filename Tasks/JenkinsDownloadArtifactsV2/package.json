@@ -1,10 +1,11 @@
 {
   "name": "vsts-tasks-jenkinsdownloadartifacts",
   "description": "Azure Pipelines Jenkins Download Task",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task JenkinsDownloadArtifactsV2"
-  },"repository": {
+  "scripts": {
+    "build": "node ../../make.js build --task JenkinsDownloadArtifactsV2",
+    "test": "node ../../make.js test --task JenkinsDownloadArtifactsV2"
+  },
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },

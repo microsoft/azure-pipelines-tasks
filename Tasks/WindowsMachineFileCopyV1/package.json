@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: WindowsMachineFileCopyV1",
   "scripts": {
-    "build": "node ../../make.js build --task WindowsMachineFileCopyV1"
+    "build": "node ../../make.js build --task WindowsMachineFileCopyV1",
+    "test": "node ../../make.js test --task WindowsMachineFileCopyV1"
   }
 }

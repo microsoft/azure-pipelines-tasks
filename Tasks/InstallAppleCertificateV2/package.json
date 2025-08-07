@@ -5,7 +5,7 @@
   "main": "preinstallcert.js",
   "scripts": {
     "build": "node ../../make.js build --task InstallAppleCertificateV2",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task InstallAppleCertificateV2"
   },
   "repository": {
     "type": "git",

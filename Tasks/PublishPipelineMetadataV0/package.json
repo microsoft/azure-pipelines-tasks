@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "node ../../make.js build --task PublishPipelineMetadataV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task PublishPipelineMetadataV0"
   },
   "author": "Microsoft Corporation",
   "license": "MIT"

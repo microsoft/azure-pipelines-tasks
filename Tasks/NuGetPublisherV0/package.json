@@ -5,7 +5,7 @@
   "main": "nugetpublisher.js",
   "scripts": {
     "build": "node ../../make.js build --task NuGetPublisherV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task NuGetPublisherV0"
   },
   "repository": {
     "type": "git",

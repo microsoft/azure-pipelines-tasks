@@ -5,7 +5,7 @@
   "main": "dotnetcoreinstaller.js",
   "scripts": {
     "build": "node ../../make.js build --task DotNetCoreInstallerV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task DotNetCoreInstallerV0"
   },
   "repository": {
     "type": "git",

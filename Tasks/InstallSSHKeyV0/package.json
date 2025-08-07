@@ -5,7 +5,7 @@
   "main": "preinstallsshkey.js",
   "scripts": {
     "build": "node ../../make.js build --task InstallSSHKeyV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task InstallSSHKeyV0"
   },
   "repository": {
     "type": "git",

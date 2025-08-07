@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: AzurePowerShellV3",
   "scripts": {
-    "build": "node ../../make.js build --task AzurePowerShellV3"
+    "build": "node ../../make.js build --task AzurePowerShellV3",
+    "test": "node ../../make.js test --task AzurePowerShellV3"
   }
 }

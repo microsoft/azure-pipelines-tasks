@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: DownloadPipelineArtifactV2",
   "scripts": {
-    "build": "node ../../make.js build --task DownloadPipelineArtifactV2"
+    "build": "node ../../make.js build --task DownloadPipelineArtifactV2",
+    "test": "node ../../make.js test --task DownloadPipelineArtifactV2"
   }
 }

@@ -16,6 +16,7 @@
     "typescript": "5.1.6"
   },
   "scripts": {
-    "build": "node ../../make.js build --task DockerV2"
+    "build": "node ../../make.js build --task DockerV2",
+    "test": "node ../../make.js test --task DockerV2"
   }
 }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: SqlServerDacpacDeployment",
   "scripts": {
-    "build": "node ../../make.js build --task SqlServerDacpacDeployment"
+    "build": "node ../../make.js build --task SqlServerDacpacDeployment",
+    "test": "node ../../make.js test --task SqlServerDacpacDeployment"
   }
 }

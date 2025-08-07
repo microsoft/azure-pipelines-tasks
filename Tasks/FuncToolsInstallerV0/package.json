@@ -10,6 +10,7 @@
     "azure-pipelines-tool-lib": "2.0.0-preview"
   },
   "scripts": {
-    "build": "node ../../make.js build --task FuncToolsInstallerV0"
+    "build": "node ../../make.js build --task FuncToolsInstallerV0",
+    "test": "node ../../make.js test --task FuncToolsInstallerV0"
   }
 }

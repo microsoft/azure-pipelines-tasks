@@ -5,7 +5,7 @@
   "main": "xcode.js",
   "scripts": {
     "build": "node ../../make.js build --task XcodeV5",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task XcodeV5"
   },
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "build": "node ../../make.js build --task NuGetAuthenticateV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task NuGetAuthenticateV1"
   },
   "repository": {
     "type": "git",

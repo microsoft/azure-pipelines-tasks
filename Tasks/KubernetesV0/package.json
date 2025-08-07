@@ -18,6 +18,7 @@
     "typescript": "5.1.6"
   },
   "scripts": {
-    "build": "node ../../make.js build --task KubernetesV0"
+    "build": "node ../../make.js build --task KubernetesV0",
+    "test": "node ../../make.js test --task KubernetesV0"
   }
 }

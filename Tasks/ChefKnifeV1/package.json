@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: ChefKnifeV1",
   "scripts": {
-    "build": "node ../../make.js build --task ChefKnifeV1"
+    "build": "node ../../make.js build --task ChefKnifeV1",
+    "test": "node ../../make.js test --task ChefKnifeV1"
   }
 }

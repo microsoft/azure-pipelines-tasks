@@ -5,7 +5,7 @@
   "main": "pipAuthenticateMain.js",
   "scripts": {
     "build": "node ../../make.js build --task PipAuthenticateV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task PipAuthenticateV1"
   },
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@
   "main": "appcenterdistribute.js",
   "scripts": {
     "build": "node ../../make.js build --task AppCenterDistributeV2",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task AppCenterDistributeV2"
   },
   "repository": {
     "type": "git",

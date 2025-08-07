@@ -1,10 +1,11 @@
 {
   "name": "AzureVmssDeployment",
   "main": "main.js",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task AzureVmssDeploymentV0"
-  },"dependencies": {
+  "scripts": {
+    "build": "node ../../make.js build --task AzureVmssDeploymentV0",
+    "test": "node ../../make.js test --task AzureVmssDeploymentV0"
+  },
+  "dependencies": {
     "@types/mocha": "^9.1.1",
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
@@ -21,5 +22,5 @@
   },
   "overrides": {
     "form-data": "^4.0.4"
-  }  
+  }
 }

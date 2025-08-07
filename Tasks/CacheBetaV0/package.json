@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: CacheBetaV0",
   "scripts": {
-    "build": "node ../../make.js build --task CacheBetaV0"
+    "build": "node ../../make.js build --task CacheBetaV0",
+    "test": "node ../../make.js test --task CacheBetaV0"
   }
 }

@@ -5,7 +5,7 @@
   "main": "grunttask.js",
   "scripts": {
     "build": "node ../../make.js build --task GruntV0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task GruntV0"
   },
   "repository": {
     "type": "git",

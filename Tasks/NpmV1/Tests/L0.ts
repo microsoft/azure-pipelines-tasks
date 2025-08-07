@@ -105,7 +105,7 @@ describe('Npm Toolrunner', function () {
 });
 
 describe('Npm Task', function () {
-    this.timeout(6000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 6000);
     before(() => {
         mockery.disable(); // needed to ensure that we can mock vsts-task-lib/task
         mockery.enable({

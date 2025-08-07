@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: AzureMonitorV0",
   "scripts": {
-    "build": "node ../../make.js build --task AzureMonitorV0"
+    "build": "node ../../make.js build --task AzureMonitorV0",
+    "test": "node ../../make.js test --task AzureMonitorV0"
   }
 }

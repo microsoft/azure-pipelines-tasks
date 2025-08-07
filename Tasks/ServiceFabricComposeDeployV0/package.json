@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: ServiceFabricComposeDeployV0",
   "scripts": {
-    "build": "node ../../make.js build --task ServiceFabricComposeDeployV0"
+    "build": "node ../../make.js build --task ServiceFabricComposeDeployV0",
+    "test": "node ../../make.js test --task ServiceFabricComposeDeployV0"
   }
 }

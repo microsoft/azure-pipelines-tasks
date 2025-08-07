@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: IISWebAppDeployment",
   "scripts": {
-    "build": "node ../../make.js build --task IISWebAppDeployment"
+    "build": "node ../../make.js build --task IISWebAppDeployment",
+    "test": "node ../../make.js test --task IISWebAppDeployment"
   }
 }

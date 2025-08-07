@@ -1,10 +1,11 @@
 {
   "name": "AzureKeyVault",
   "main": "main.js",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task AzureKeyVaultV1"
-  },"dependencies": {
+  "scripts": {
+    "build": "node ../../make.js build --task AzureKeyVaultV1",
+    "test": "node ../../make.js test --task AzureKeyVaultV1"
+  },
+  "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/q": "^1.5.0",

@@ -12,6 +12,7 @@
     "typescript": "5.1.6"
   },
   "scripts": {
-    "build": "node ../../make.js build --task HelmInstallerV1"
+    "build": "node ../../make.js build --task HelmInstallerV1",
+    "test": "node ../../make.js test --task HelmInstallerV1"
   }
 }

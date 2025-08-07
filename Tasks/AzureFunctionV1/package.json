@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: AzureFunctionV1",
   "scripts": {
-    "build": "node ../../make.js build --task AzureFunctionV1"
+    "build": "node ../../make.js build --task AzureFunctionV1",
+    "test": "node ../../make.js test --task AzureFunctionV1"
   }
 }

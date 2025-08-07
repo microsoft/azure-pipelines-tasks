@@ -3,10 +3,11 @@
   "version": "1.0.7",
   "description": "Archive Files Task",
   "main": "archivefilestask.js",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task ArchiveFilesV2"
-  },"repository": {
+  "scripts": {
+    "build": "node ../../make.js build --task ArchiveFilesV2",
+    "test": "node ../../make.js test --task ArchiveFilesV2"
+  },
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },

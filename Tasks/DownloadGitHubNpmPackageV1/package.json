@@ -5,7 +5,7 @@
   "main": "npm.js",
   "scripts": {
     "build": "node ../../make.js build --task DownloadGitHubNpmPackageV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task DownloadGitHubNpmPackageV1"
   },
   "repository": {
     "type": "git",

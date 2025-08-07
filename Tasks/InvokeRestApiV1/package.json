@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: InvokeRestApiV1",
   "scripts": {
-    "build": "node ../../make.js build --task InvokeRestApiV1"
+    "build": "node ../../make.js build --task InvokeRestApiV1",
+    "test": "node ../../make.js test --task InvokeRestApiV1"
   }
 }

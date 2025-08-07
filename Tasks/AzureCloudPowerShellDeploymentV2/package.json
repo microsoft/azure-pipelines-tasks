@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: AzureCloudPowerShellDeploymentV2",
   "scripts": {
-    "build": "node ../../make.js build --task AzureCloudPowerShellDeploymentV2"
+    "build": "node ../../make.js build --task AzureCloudPowerShellDeploymentV2",
+    "test": "node ../../make.js test --task AzureCloudPowerShellDeploymentV2"
   }
 }

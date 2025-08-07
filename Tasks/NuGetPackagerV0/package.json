@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: NuGetPackagerV0",
   "scripts": {
-    "build": "node ../../make.js build --task NuGetPackagerV0"
+    "build": "node ../../make.js build --task NuGetPackagerV0",
+    "test": "node ../../make.js test --task NuGetPackagerV0"
   }
 }

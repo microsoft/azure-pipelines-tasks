@@ -5,7 +5,7 @@
   "main": "decrypt.js",
   "scripts": {
     "build": "node ../../make.js build --task DecryptFileV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task DecryptFileV1"
   },
   "repository": {
     "type": "git",

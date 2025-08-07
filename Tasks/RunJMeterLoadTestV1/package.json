@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: RunJMeterLoadTestV1",
   "scripts": {
-    "build": "node ../../make.js build --task RunJMeterLoadTestV1"
+    "build": "node ../../make.js build --task RunJMeterLoadTestV1",
+    "test": "node ../../make.js test --task RunJMeterLoadTestV1"
   }
 }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: VsTestV1",
   "scripts": {
-    "build": "node ../../make.js build --task VsTestV1"
+    "build": "node ../../make.js build --task VsTestV1",
+    "test": "node ../../make.js test --task VsTestV1"
   }
 }

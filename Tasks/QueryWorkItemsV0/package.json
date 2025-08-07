@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: QueryWorkItemsV0",
   "scripts": {
-    "build": "node ../../make.js build --task QueryWorkItemsV0"
+    "build": "node ../../make.js build --task QueryWorkItemsV0",
+    "test": "node ../../make.js test --task QueryWorkItemsV0"
   }
 }

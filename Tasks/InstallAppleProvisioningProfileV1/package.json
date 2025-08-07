@@ -5,7 +5,7 @@
   "main": "preinstallprovprofile.js",
   "scripts": {
     "build": "node ../../make.js build --task InstallAppleProvisioningProfileV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task InstallAppleProvisioningProfileV1"
   },
   "repository": {
     "type": "git",

@@ -3,10 +3,11 @@
   "version": "2.208.0",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Maven",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task MavenV3"
-  },"license": "MIT",
+  "scripts": {
+    "build": "node ../../make.js build --task MavenV3",
+    "test": "node ../../make.js test --task MavenV3"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },

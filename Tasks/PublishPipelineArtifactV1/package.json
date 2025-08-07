@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: PublishPipelineArtifactV1",
   "scripts": {
-    "build": "node ../../make.js build --task PublishPipelineArtifactV1"
+    "build": "node ../../make.js build --task PublishPipelineArtifactV1",
+    "test": "node ../../make.js test --task PublishPipelineArtifactV1"
   }
 }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: ServiceFabricUpdateManifestsV2",
   "scripts": {
-    "build": "node ../../make.js build --task ServiceFabricUpdateManifestsV2"
+    "build": "node ../../make.js build --task ServiceFabricUpdateManifestsV2",
+    "test": "node ../../make.js test --task ServiceFabricUpdateManifestsV2"
   }
 }

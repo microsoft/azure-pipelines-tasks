@@ -1,10 +1,11 @@
 {
   "name": "AzureResourceManagerTemplateDeployment",
   "main": "main.js",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task AzureResourceManagerTemplateDeploymentV3"
-  },"dependencies": {
+  "scripts": {
+    "build": "node ../../make.js build --task AzureResourceManagerTemplateDeploymentV3",
+    "test": "node ../../make.js test --task AzureResourceManagerTemplateDeploymentV3"
+  },
+  "dependencies": {
     "@types/node": "^20.3.1",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.17.2",

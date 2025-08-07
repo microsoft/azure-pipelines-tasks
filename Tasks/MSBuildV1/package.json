@@ -1,10 +1,11 @@
 {
   "name": "vsts-tasks-msbuild",
   "description": "Azure Pipelines MSBuild Task",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task MSBuildV1"
-  },"repository": {
+  "scripts": {
+    "build": "node ../../make.js build --task MSBuildV1",
+    "test": "node ../../make.js test --task MSBuildV1"
+  },
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },

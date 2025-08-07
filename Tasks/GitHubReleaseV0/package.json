@@ -2,10 +2,11 @@
   "name": "github.release",
   "version": "0.0.0",
   "main": "main.js",
-  
-    "scripts": {
-    "build": "node ../../make.js build --task GitHubReleaseV0"
-  },"dependencies": {
+  "scripts": {
+    "build": "node ../../make.js build --task GitHubReleaseV0",
+    "test": "node ../../make.js test --task GitHubReleaseV0"
+  },
+  "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/q": "1.5.0",

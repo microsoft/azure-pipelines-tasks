@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Pipelines task: RunLoadTestV1",
   "scripts": {
-    "build": "node ../../make.js build --task RunLoadTestV1"
+    "build": "node ../../make.js build --task RunLoadTestV1",
+    "test": "node ../../make.js test --task RunLoadTestV1"
   }
 }
