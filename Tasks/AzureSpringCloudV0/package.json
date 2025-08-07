@@ -4,6 +4,7 @@
   "description": "Azure Pipelines Azure Spring Cloud App Deployment",
   "main": "azurespringclouddeployment.ts",
   "scripts": {
+    "build": "node ../../make.js build --task AzureSpringCloudV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

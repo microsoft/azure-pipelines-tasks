@@ -1,0 +1,8 @@
+{
+  "name": "chefknifev1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: ChefKnifeV1",
+  "scripts": {
+    "build": "node ../../make.js build --task ChefKnifeV1"
+  }
+}

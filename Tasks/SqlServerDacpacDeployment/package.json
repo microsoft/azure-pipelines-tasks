@@ -1,0 +1,8 @@
+{
+  "name": "sqlserverdacpacdeployment",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: SqlServerDacpacDeployment",
+  "scripts": {
+    "build": "node ../../make.js build --task SqlServerDacpacDeployment"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "downloadpipelineartifactv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: DownloadPipelineArtifactV1",
+  "scripts": {
+    "build": "node ../../make.js build --task DownloadPipelineArtifactV1"
+  }
+}

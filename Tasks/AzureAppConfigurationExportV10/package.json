@@ -8,6 +8,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+    "build": "node ../../make.js build --task AzureAppConfigurationExportV10",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Microsoft Corporation",

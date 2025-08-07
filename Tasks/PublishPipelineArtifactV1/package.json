@@ -1,0 +1,8 @@
+{
+  "name": "publishpipelineartifactv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: PublishPipelineArtifactV1",
+  "scripts": {
+    "build": "node ../../make.js build --task PublishPipelineArtifactV1"
+  }
+}

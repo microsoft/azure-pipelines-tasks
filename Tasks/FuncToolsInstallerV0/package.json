@@ -8,5 +8,8 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "4.3.1",
     "azure-pipelines-tool-lib": "2.0.0-preview"
+  },
+  "scripts": {
+    "build": "node ../../make.js build --task FuncToolsInstallerV0"
   }
 }

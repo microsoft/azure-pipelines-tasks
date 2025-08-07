@@ -1,0 +1,8 @@
+{
+  "name": "nugetpackagerv0",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: NuGetPackagerV0",
+  "scripts": {
+    "build": "node ../../make.js build --task NuGetPackagerV0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "cachebetav0",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: CacheBetaV0",
+  "scripts": {
+    "build": "node ../../make.js build --task CacheBetaV0"
+  }
+}

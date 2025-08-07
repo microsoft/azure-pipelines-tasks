@@ -1,0 +1,8 @@
+{
+  "name": "cachev2",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: CacheV2",
+  "scripts": {
+    "build": "node ../../make.js build --task CacheV2"
+  }
+}

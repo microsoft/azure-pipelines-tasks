@@ -1,0 +1,8 @@
+{
+  "name": "servicefabricdeployv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: ServiceFabricDeployV1",
+  "scripts": {
+    "build": "node ../../make.js build --task ServiceFabricDeployV1"
+  }
+}

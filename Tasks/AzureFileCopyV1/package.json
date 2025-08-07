@@ -1,0 +1,8 @@
+{
+  "name": "azurefilecopyv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: AzureFileCopyV1",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureFileCopyV1"
+  }
+}

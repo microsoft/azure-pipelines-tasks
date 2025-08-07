@@ -1,0 +1,8 @@
+{
+  "name": "vstestv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: VsTestV1",
+  "scripts": {
+    "build": "node ../../make.js build --task VsTestV1"
+  }
+}

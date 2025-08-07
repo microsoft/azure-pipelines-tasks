@@ -1,0 +1,8 @@
+{
+  "name": "manualinterventionv8",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: ManualInterventionV8",
+  "scripts": {
+    "build": "node ../../make.js build --task ManualInterventionV8"
+  }
+}

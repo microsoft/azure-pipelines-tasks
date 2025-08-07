@@ -4,6 +4,7 @@
   "description": "Authenticate pip client.",
   "main": "pipAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task PipAuthenticateV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

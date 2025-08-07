@@ -1,0 +1,8 @@
+{
+  "name": "sqldacpacdeploymentonmachinegroupv0",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: SqlDacpacDeploymentOnMachineGroupV0",
+  "scripts": {
+    "build": "node ../../make.js build --task SqlDacpacDeploymentOnMachineGroupV0"
+  }
+}

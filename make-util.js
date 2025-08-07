@@ -172,6 +172,22 @@ function performNpmAudit(taskPath) {
         return;
     }
 
+    // Check if package.json has dependencies before auditing
+    var packageJsonPath = path.join(taskPath, 'package.json');
+    if (test('-f', packageJsonPath)) {
+        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+        var prodDeps = packageJson.dependencies ? Object.keys(packageJson.dependencies).length : 0;
+        var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
+        
+        if (prodDeps === 0 && devDeps === 0) {
+            console.log('\x1b[A\x1b[K⏭️  Skipping npm audit - no dependencies found in package.json');
+            return;
+        }
+    } else {
+        console.log('\x1b[A\x1b[K⏭️  Skipping npm audit - no package.json found');
+        return;
+    }
+
     try {
         const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
             stdio: 'pipe',
@@ -206,6 +222,8 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         // we allow only two dev dependencies: typescript and @tsconfig/node10
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
+        var prodDeps = packageJson.dependencies ? Object.keys(packageJson.dependencies).length : 0;
+        
         if (devDeps === 1 && packageJson.devDependencies['typescript'] || (devDeps === 2 && packageJson.devDependencies['typescript'] && packageJson.devDependencies['@tsconfig/node10'])) {
             var version = packageJson.devDependencies['typescript'];
             if (!allowedTypescriptVersions.includes(version)) {
@@ -216,20 +234,38 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         } else if (devDeps >= 1) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
-        if (isServerBuild) {
-            run('npm ci');
+        
+        // Only run npm install/ci if there are actual dependencies
+        if (prodDeps > 0 || devDeps > 0) {
+            if (isServerBuild) {
+                run('npm ci');
+            } else {
+                run('npm install');
+            }
         } else {
-            run('npm install');
+            console.log('No dependencies found in package.json, skipping npm install');
         }
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        if (isServerBuild) {
-            run('npm ci');
+        
+        // Check if Tests package.json has dependencies before running npm install
+        var testsPackageJsonPath = rp('package.json');
+        var testsPackageJson = JSON.parse(fs.readFileSync(testsPackageJsonPath).toString());
+        var testsDevDeps = testsPackageJson.devDependencies ? Object.keys(testsPackageJson.devDependencies).length : 0;
+        var testsProdDeps = testsPackageJson.dependencies ? Object.keys(testsPackageJson.dependencies).length : 0;
+        
+        if (testsProdDeps > 0 || testsDevDeps > 0) {
+            if (isServerBuild) {
+                run('npm ci');
+            } else {
+                run('npm install');
+            }
         } else {
-            run('npm install');
+            console.log('No dependencies found in Tests/package.json, skipping npm install');
         }
+        
         cd(taskPath);
     }
 
@@ -509,32 +545,40 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
 
     var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
-    if (!test('-f', marker)) {
+    
+    if (test('-f', marker)) {
+        return targetPath;
+    }
+
+    // Make extraction path unique per process to avoid race conditions
+    var tempTargetPath = targetPath + '.tmp.' + process.pid;
+    
+    try {
         // download the archive
         var archivePath = await downloadFileAsync(url);
         console.log('Extracting archive: ' + url);
 
-        // delete any previously attempted extraction directory
-        if (test('-d', targetPath)) {
-            rm('-rf', targetPath);
+        // Clean up any previous temp attempt
+        if (test('-d', tempTargetPath)) {
+            rm('-rf', tempTargetPath);
         }
 
-        // extract
-        mkdir('-p', targetPath);
+        // extract to process-specific temp directory
+        mkdir('-p', tempTargetPath);
         if (isZip) {
             if (process.platform == 'win32') {
-                let escapedFile = archivePath.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
-                let escapedDest = targetPath.replace(/'/g, "''").replace(/"|\n|\r/g, '');
+                let escapedFile = archivePath.replace(/'/g, "''").replace(/"|\n|\r/g, '');
+                let escapedDest = tempTargetPath.replace(/'/g, "''").replace(/"|\n|\r/g, '');
 
                 let command = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
                 run(`powershell -Command "${command}"`);
             } else {
-                run(`unzip ${archivePath} -d ${targetPath}`);
+                run(`unzip ${archivePath} -d ${tempTargetPath}`);
             }
         }
         else if (isTargz) {
             var originalCwd = process.cwd();
-            cd(targetPath);
+            cd(tempTargetPath);
             try {
                 run(`tar -xzf "${archivePath}"`);
             }
@@ -543,8 +587,26 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
             }
         }
 
-        // write the completed marker
-        fs.writeFileSync(marker, '');
+        // Atomically move to final location (only one process will succeed)
+        try {
+            fs.renameSync(tempTargetPath, targetPath);
+            fs.writeFileSync(marker, '');
+        } catch (renameError) {
+            // Another process already completed - cleanup temp and check if final exists
+            if (test('-d', tempTargetPath)) {
+                rm('-rf', tempTargetPath);
+            }
+            if (!test('-f', marker)) {
+                throw renameError; // Re-throw if the other process didn't actually complete
+            }
+        }
+
+    } catch (error) {
+        // Cleanup temp directory on any error
+        if (test('-d', tempTargetPath)) {
+            rm('-rf', tempTargetPath);
+        }
+        throw error;
     }
 
     return targetPath;

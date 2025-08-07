@@ -12,7 +12,9 @@
     "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package"
+    "package": "node make.js package",
+    "build:parallel": "pnpm -r --workspace-concurrency=0 run build",
+    "build:sequential": "node make.js build"
   },
   "repository": {
     "type": "git",
@@ -42,6 +44,7 @@
     "node-uuid": "1.4.6",
     "nodejs-file-downloader": "^4.11.1",
     "nyc": "^15.1.0",
+    "pnpm": "10.14.0",
     "q": "1.4.1",
     "semver": "5.7.2",
     "shelljs": "^0.8.5",

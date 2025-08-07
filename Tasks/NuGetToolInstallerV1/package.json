@@ -4,6 +4,7 @@
   "description": "NuGet Tool Installer",
   "main": "nugetToolInstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetToolInstallerV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

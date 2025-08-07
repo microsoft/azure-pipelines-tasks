@@ -4,6 +4,7 @@
   "description": "GoLang Tool Installer",
   "main": "gotool.js",
   "scripts": {
+    "build": "node ../../make.js build --task GoToolV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

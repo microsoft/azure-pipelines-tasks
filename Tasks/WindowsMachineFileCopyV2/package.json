@@ -1,0 +1,8 @@
+{
+  "name": "windowsmachinefilecopyv2",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: WindowsMachineFileCopyV2",
+  "scripts": {
+    "build": "node ../../make.js build --task WindowsMachineFileCopyV2"
+  }
+}

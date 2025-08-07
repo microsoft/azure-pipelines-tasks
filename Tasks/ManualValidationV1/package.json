@@ -1,0 +1,8 @@
+{
+  "name": "manualvalidationv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: ManualValidationV1",
+  "scripts": {
+    "build": "node ../../make.js build --task ManualValidationV1"
+  }
+}

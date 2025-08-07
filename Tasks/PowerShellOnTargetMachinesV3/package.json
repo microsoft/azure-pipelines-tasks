@@ -1,0 +1,8 @@
+{
+  "name": "powershellontargetmachinesv3",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: PowerShellOnTargetMachinesV3",
+  "scripts": {
+    "build": "node ../../make.js build --task PowerShellOnTargetMachinesV3"
+  }
+}

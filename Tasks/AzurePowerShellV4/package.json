@@ -1,6 +1,9 @@
 {
   "name": "azure-powershell-v4",
-  "author": {
+  
+    "scripts": {
+    "build": "node ../../make.js build --task AzurePowerShellV4"
+  },"author": {
     "name": "Microsoft Corporation"
   },
   "dependencies": {

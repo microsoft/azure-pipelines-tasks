@@ -1,0 +1,8 @@
+{
+  "name": "iiswebappmanagementonmachinegroupv0",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: IISWebAppManagementOnMachineGroupV0",
+  "scripts": {
+    "build": "node ../../make.js build --task IISWebAppManagementOnMachineGroupV0"
+  }
+}

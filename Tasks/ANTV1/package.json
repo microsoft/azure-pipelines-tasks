@@ -2,7 +2,10 @@
   "name": "Ant",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Ant",
-  "license": "MIT",
+  
+    "scripts": {
+    "build": "node ../../make.js build --task ANTV1"
+  },"license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },

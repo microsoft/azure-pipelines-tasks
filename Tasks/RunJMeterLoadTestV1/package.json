@@ -1,0 +1,8 @@
+{
+  "name": "runjmeterloadtestv1",
+  "version": "1.0.0",
+  "description": "Azure Pipelines task: RunJMeterLoadTestV1",
+  "scripts": {
+    "build": "node ../../make.js build --task RunJMeterLoadTestV1"
+  }
+}
