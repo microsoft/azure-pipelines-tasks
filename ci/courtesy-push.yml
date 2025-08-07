@@ -5,7 +5,7 @@ steps:
   displayName: Install nuget
 
 - powershell: |
-    cd ci/courtesy-push
+    cd $(Build.SourcesDirectory)/ci/courtesy-push
     npm install
   displayName: npm install
 
@@ -15,7 +15,7 @@ steps:
     downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- powershell: ./ci/set-sprint-variables.ps1
+- powershell: $(Build.SourcesDirectory)/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 - powershell: |
@@ -25,7 +25,7 @@ steps:
 
 - template: /ci/generate-branch-name.yml@self
 
-- script: node ci\courtesy-push\courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
   displayName: Update unified deps and create branch
   env:
     TOKEN: $(System.AccessToken)
@@ -33,7 +33,7 @@ steps:
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
 
-- powershell: .\ci\courtesy-push\send-notification.ps1
+- powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')
   env:
