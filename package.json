@@ -13,8 +13,9 @@
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
     "package": "node make.js package",
-    "build:parallel": "pnpm -r --workspace-concurrency=0 run build",
-    "build:sequential": "node make.js build"
+    "build:parallel": "./node_modules/.bin/pnpm -r --aggregate-output --reporter=append-only --workspace-concurrency=4 run build --skipPrebuildSteps",
+    "build:presteps": "node make.js build --onlyPreBuildSteps",
+    "test:parallel": "./node_modules/.bin/pnpm -r --no-bail --aggregate-output --reporter=append-only --workspace-concurrency=1 run test"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,7 @@
     "node-uuid": "1.4.6",
     "nodejs-file-downloader": "^4.11.1",
     "nyc": "^15.1.0",
-    "pnpm": "10.14.0",
+    "pnpm": "10.13.1",
     "q": "1.4.1",
     "semver": "5.7.2",
     "shelljs": "^0.8.5",

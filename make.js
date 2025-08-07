@@ -229,6 +229,11 @@ CLI.gendocs = function() {
 //
 CLI.build = async function(/** @type {{ task: string }} */ argv)
 {
+    if (process.env.TF_BUILD) {
+        fail('Please use serverBuild for CI builds for proper validation');
+    }
+
+    writeUpdatedsFromGenTasks = true;
     await CLI.serverBuild(argv);
 }
 
@@ -253,6 +258,14 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
         // Verify generated files across tasks are up-to-date
         util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig);
+    
+        if(argv.onlyPreBuildSteps)
+        {
+            await util.installNodeAsync("20");
+            ensureTool('node', '--version', `v${util.node20Version}`);
+            return;
+        }
+
     }
 
     if (argv.includeLocalPackagesBuildConfig)
