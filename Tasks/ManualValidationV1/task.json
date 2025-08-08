@@ -33,7 +33,7 @@
             "label": "Approvers",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action."
+            "helpMarkDown": "Specify users/groups/project teams who can act on a manual validation. Enter each user/group on a separate line. In absence of input, users with queue build permission will be able to take action."
         },
         {
             "name": "allowApproversToApproveTheirOwnRuns",
