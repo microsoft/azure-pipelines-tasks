@@ -1,0 +1,11 @@
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: ARM - WIF - manual
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: |
+      az account set --subscription $(SUBSCRIPTION_ID)
+      $accessToken = az account get-access-token --resource $(RESOURCE_ID) --query accessToken --output tsv
+      echo "##vso[task.setvariable variable=AzDo_PAT;issecret=true]$accessToken"
+  displayName: Get Azure DevOps Access Token

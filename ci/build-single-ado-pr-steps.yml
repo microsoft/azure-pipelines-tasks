@@ -25,7 +25,7 @@ steps:
     artifactName: IndividualNugetPackages
     downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
-  
+
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
@@ -40,7 +40,7 @@ steps:
 - script: node ci\courtesy-push\courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps and create branch
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(AzDo_PAT)
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
