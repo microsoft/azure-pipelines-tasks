@@ -33,7 +33,7 @@ steps:
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
-
+    
 - powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')
