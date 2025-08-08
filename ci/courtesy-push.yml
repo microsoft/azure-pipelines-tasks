@@ -24,11 +24,12 @@ steps:
   displayName: Set currentDate variable
 
 - template: /ci/generate-branch-name.yml@self
+- template: /ci/get-AzDo-pat.yml@self
 
 - script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
   displayName: Update unified deps and create branch
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(AzDo_PAT)
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
