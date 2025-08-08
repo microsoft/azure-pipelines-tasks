@@ -40,7 +40,7 @@ steps:
 - script: node ci\courtesy-push\courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps and create branch
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(AzDo_PAT)
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
