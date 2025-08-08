@@ -71,7 +71,7 @@ The repository should look something like this:
 |-- .gitignore
 |-- build.gradle
 |-- gradlew
-|-- gradlew.bat
+|-- gradlew.bat 
 ```
 
 
