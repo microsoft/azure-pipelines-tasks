@@ -1121,8 +1121,17 @@ namespace BuildConfigGen
 
         private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib)
         {
+            if(!Path.Exists(Path.Combine(taskOutputNode, "package.json")))
+            {
+                return; // nothing to update
+            }
+            
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+
+            if(outputNodePackagePathJsonNode["dependencies"] == null)
+                return;
+
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
 
             // Upgrade typescript version for Node 20
