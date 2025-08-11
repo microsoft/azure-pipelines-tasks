@@ -258,7 +258,6 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         {
             await util.installNodeAsync("20");
             ensureTool('node', '--version', `v${util.node20Version}`);
-            return;
         }
 
     }
@@ -296,11 +295,11 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             run("npm install", /*inheritStreams:*/true);
             run("node make.js --build", /*inheritStreams:*/true);
         }
+    }
 
-        if(argv.onlyPreBuildSteps)
-        {
-            return;
-        }
+    if(argv.onlyPreBuildSteps)
+    {
+        return;
     }
 
     const allTasks = getTaskList(taskList, argv.includeLocalPackagesBuildConfig);
