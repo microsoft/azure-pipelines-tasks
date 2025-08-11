@@ -46,7 +46,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
@@ -86,12 +86,22 @@ namespace BuildConfigGen
         /// <param name="getTaskVersionTable"></param>
         /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
         /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null, bool includeLocalPackagesBuildConfig = false)
+        /// <param name="useSemverBuildConfig">If true, the semver "build" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3).</param>
+        static void Main(
+            string? task = null,
+            string? configs = null,
+            int? currentSprint = null,
+            bool writeUpdates = false,
+            bool allTasks = false,
+            bool getTaskVersionTable = false,
+            string? debugAgentDir = null,
+            bool includeLocalPackagesBuildConfig = false,
+            bool useSemverBuildConfig = false)
         {
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig);
             }
             catch (Exception e2)
             {
@@ -113,7 +123,16 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprintNullable, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir, bool includeLocalPackagesBuildConfig)
+        private static void MainInner(
+            string? task,
+            string? configs,
+            int? currentSprintNullable,
+            bool writeUpdates,
+            bool allTasks,
+            bool getTaskVersionTable,
+            string? debugAgentDir,
+            bool includeLocalPackagesBuildConfig,
+            bool useSemverBuildConfig)
         {
             if (allTasks)
             {
@@ -313,7 +332,18 @@ namespace BuildConfigGen
                 {
                     IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
 
-                    MainUpdateTask(taskVersionInfo[t.Value.Name], t.Value.Name, configsList, writeUpdates, currentSprint, debugConfGen, includeLocalPackagesBuildConfig, hasGlobalVersion: globalVersion is not null, generatedFolder: generatedFolder, altGeneratedFolder: altGeneratedFolder);
+                    MainUpdateTask(
+                        taskVersionInfo[t.Value.Name],
+                        t.Value.Name,
+                        configsList,
+                        writeUpdates,
+                        currentSprint,
+                        debugConfGen,
+                        includeLocalPackagesBuildConfig,
+                        hasGlobalVersion: globalVersion is not null,
+                        generatedFolder: generatedFolder,
+                        altGeneratedFolder: altGeneratedFolder,
+                        useSemverBuildConfig: useSemverBuildConfig);
                 }
 
                 debugConfGen.WriteLaunchConfigurations();
@@ -572,7 +602,8 @@ namespace BuildConfigGen
             bool includeLocalPackagesBuildConfig,
             bool hasGlobalVersion,
             string generatedFolder,
-            string altGeneratedFolder)
+            string altGeneratedFolder,
+            bool useSemverBuildConfig)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -614,6 +645,9 @@ namespace BuildConfigGen
 
                 // we need to ensure merges occur first, as the changes may cascade to other configs (e.g. Default), if there are multiple
                 var targetConfigsWithMergeToBaseOrderedFirst = targetConfigs.OrderBy(x => x.mergeToBase ? 0 : 1);
+
+                var defaultConfig = targetConfigs.FirstOrDefault(x => x.isDefault)
+                    ?? throw new ArgumentException($"There is no default config for task {task} which is required if {nameof(useSemverBuildConfig)} is true");
 
                 foreach (var config in targetConfigsWithMergeToBaseOrderedFirst)
                 {
@@ -717,7 +751,12 @@ namespace BuildConfigGen
                                     WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                     WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
 
-                                    if (!config.mergeToBase)
+                                    if (useSemverBuildConfig)
+                                    {
+                                        WriteTaskJsonWithSemverConfig(taskOutput, taskVersionState, defaultConfig, config, "task.json", existingLocalPackageVersion);
+                                        WriteTaskJsonWithSemverConfig(taskOutput, taskVersionState, defaultConfig, config, "task.loc.json", existingLocalPackageVersion);
+                                    }
+                                    else if (!config.mergeToBase)
                                     {
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion);
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion);
@@ -1072,6 +1111,62 @@ namespace BuildConfigGen
                     // unless the config being generated is the globalVersion (written to _generated_local),
                     // if no other versions are updated other than the globalVersion,
                     // don't change the global version in the existing generated file.
+                    if (existingLocalPackageVersion != null)
+                    {
+                        configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
+                    }
+                }
+                else
+                {
+                    configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
+                }
+            }
+
+            outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
+
+            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+        }
+
+        /// <summary>
+        /// This uses the same major.minor.patch for all build configuration tasks, but the "build" suffix of semver is different, and directly corresponds to the name.
+        /// We no longer populate the '_buildConfigMapping' property of the task.json, since server won't expect this property to be set.
+        /// </summary>
+        /// <param name="taskPath"></param>
+        /// <param name="taskState"></param>
+        /// <param name="defaultConfig"></param>
+        /// <param name="config"></param>
+        /// <param name="fileName"></param>
+        /// <param name="existingLocalPackageVersion"></param>
+        private static void WriteTaskJsonWithSemverConfig(string taskPath,
+            TaskStateStruct taskState,
+            Config.ConfigRecord defaultConfig,
+            Config.ConfigRecord config,
+            string fileName,
+            string? existingLocalPackageVersion)
+        {
+            string outputTaskPath = Path.Combine(taskPath, fileName);
+            JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
+
+            outputTaskNode["version"]!["Major"] = taskState.configTaskVersionMapping[config].Major;
+            outputTaskNode["version"]!["Minor"] = taskState.configTaskVersionMapping[config].Minor;
+            outputTaskNode["version"]!["Patch"] = taskState.configTaskVersionMapping[config].Patch;
+
+            if (defaultConfig != config)
+            {
+                outputTaskNode["version"]!["Build"] = config.constMappingKey;
+            }
+
+            var outputTaskNodeObject = outputTaskNode.AsObject();
+            outputTaskNodeObject.Remove("_buildConfigMapping");
+
+            bool anyVersionsUpdatedExceptForGlobal = taskState.versionsUpdated.Where(x => !x.useGlobalVersion).Any();
+
+            JsonObject configMapping = new JsonObject();
+            var configTaskVersionMappingSortedByConfig = taskState.configTaskVersionMapping.OrderBy(x => x.Key.name);
+            foreach (var cfg in configTaskVersionMappingSortedByConfig)
+            {
+                if (!config.useGlobalVersion && cfg.Key.useGlobalVersion && !anyVersionsUpdatedExceptForGlobal)
+                {
                     if (existingLocalPackageVersion != null)
                     {
                         configMapping.Add(new(cfg.Key.constMappingKey, existingLocalPackageVersion));
@@ -1480,6 +1575,13 @@ always-auth=true", false);
                                 offset++;
                             }
                             while (taskState.configTaskVersionMapping.Values.Contains(targetVersion));
+
+                            if (config.abTaskReleases)
+                            {
+                                // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
+                                // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
+                                targetVersion.Build = config.constMappingKey;
+                            }
 
                             taskState.configTaskVersionMapping.Add(config, targetVersion);
 
