@@ -9,7 +9,7 @@ const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 
 // Git configuration
 const GIT = 'git';
-const token = process.env.PAT || process.env.TOKEN;
+const token = process.env.TOKEN;
 const orgUrl= 'dev.azure.com/mseng'
 const project = 'AzureDevOps';
 const repo = 'AzureDevOps';
@@ -133,7 +133,7 @@ async function createPullRequest(sourceBranch) {
 
         const refs = {
             sourceRefName: `refs/heads/${sourceBranch}`,
-            targetRefName: 'refs/heads/main' // Change to 'refs/heads/master' if your repo uses master
+            targetRefName: 'refs/heads/master'
         };
 
         const pullRequestToCreate = {
@@ -183,7 +183,7 @@ Generated: ${new Date().toISOString()}`
      }else{
         console.log("================Printing the PR details:================")
         console.log(`   Source Branch: ${sourceBranch}`);
-        console.log(`   Target Branch: main`);
+        console.log(`   Target Branch: master`);
         console.log(`   Title: Courtesy Bump of Tasks`);
         console.log(`   Organization: ${orgUrl}`);
         console.log(`   Project: ${project}`);
@@ -407,7 +407,7 @@ async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
  * @param {Object} depsToUpdate - structure to track added/removed dependencies (formed in updateUnifiedDeps)
  */
 async function updateTfsServerDeps() {
-    const repoName='AzureDevops'
+    const repoName='AzureDevOps'
     const agentTempDir=process.env.AGENT_TEMPDIRECTORY;
     const repoPath=path.join(agentTempDir, repoName);
     
