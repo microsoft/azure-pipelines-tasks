@@ -123,15 +123,14 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Pre Build Tasks Step
-- script: node make.js serverBuild --onlyPreBuildSteps $(includeLocalPackagesBuildConfigParameter)
-  displayName: Pre Build Tasks Step
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
-
 # Build Tasks
-- script: ./node_modules/.bin/pnpm -r --no-bail --aggregate-output --reporter=append-only --workspace-concurrency=0 run build --skipPrebuildSteps $(includeLocalPackagesBuildConfigParameter)
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
+
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
