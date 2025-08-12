@@ -2,8 +2,10 @@
     "inputs": [
       {
         "name": "workloadIdentityServiceConnection",
+        "aliases": [
+          "azureDevOpsServiceConnection"
+        ],
         "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
-        "aliases": ["azureDevOpsServiceConnection"],
         "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
         "type": "connectedService:workloadidentityuser",
         "required": false,
