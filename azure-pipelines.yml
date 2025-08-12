@@ -31,10 +31,6 @@ variables:
   value: 'false'
 - name: isDryRun
   value: 'false'
-- name: useSemverBuildConfig
-  displayName: Use Semver Build Config to support canary rollout
-  type: boolean
-  default: false
   
 
 extends:
