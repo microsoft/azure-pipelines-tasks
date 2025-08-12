@@ -126,11 +126,7 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
-
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true
-  displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
