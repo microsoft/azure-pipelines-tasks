@@ -85,7 +85,6 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
-            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
             generateReleaseNotes: ${{ parameters.generateReleaseNotes }}
 
       # All tasks on Linux
@@ -116,4 +115,3 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Darwin
-            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
