@@ -44,6 +44,10 @@ parameters:
   displayName: Dry Run (no push, no PR, no feed publish)
   type: boolean
   default: false
+- name: useSemverBuildConfig
+  displayName: Use Semver Build Config to support canary rollout
+  type: boolean
+  default: false
 
 variables:
 - name: currentDate
@@ -134,6 +138,7 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
+            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
 
       # Publish
       - job: publish
@@ -217,4 +222,5 @@ extends:
         - template: /ci/build-all-tasks.yml@self
           parameters:
             deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all Tasks') }}
+            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
       
