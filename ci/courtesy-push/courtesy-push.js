@@ -190,6 +190,20 @@ Generated: ${new Date().toISOString()}`
         console.log(`   Repository: ${repo}`);
         console.log(`   Pull-Request description:${JSON.stringify(pullRequestToCreate,null,2)}`)
         console.log('DRYRUN set to true-skipping actual PR creation...')
+        const timestamp = Date.now();
+        const dummyPrId = `DRYRUN-${timestamp}`;
+        const dummyPrLink = `https://${orgUrl}/${project}/_git/${repo}/pullrequest/DRYRUN-${timestamp}`;
+        
+        console.log(`##vso[task.setvariable variable=PR_ID]${dummyPrId}`);
+        console.log(`##vso[task.setvariable variable=PR_LINK]${dummyPrLink}`);
+        
+        console.log(`DRYRUN: Generated dummy PR_ID = ${dummyPrId}`);
+        console.log(`DRYRUN: Generated dummy PR_LINK = ${dummyPrLink}`);
+        
+        return {
+            prId: dummyPrId,
+            prLink: dummyPrLink
+        };
      }
 
         
@@ -340,16 +354,13 @@ async function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
     while (index < newDepsArr.length) {
         const currentDep = newDepsArr[index];
         const [ name ] = await extractDependency(currentDep);
-        
         const lowerName = name && name.toLowerCase();
         if (!name || !basicDepsForUpdate.has(lowerName)) {
             index++;
             continue;
         }
-
         newDepsArr.splice(index, 1, depsForUpdate[lowerName].depStr);
         index++;
-
         if (depsForUpdate[lowerName].configs) {
             depsForUpdate[lowerName].configs
                 .sort((a, b) => a.name > b.name)
@@ -387,15 +398,28 @@ async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
     let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
     let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
 
+    console.log('=== DETAILED Directory.Packages.props COMPARISON DEBUGGING ===');
+    console.log(`Reading current dependencies from: ${unifiedDepsPath}`);
+    console.log(`Reading new dependencies from: ${newUnifiedDepsPath}`);
+    console.log(`Current dependencies count: ${currentDependencies.length}`);
+    console.log(`Updated dependencies count: ${updatedDependencies.length}`);
+    console.log('Updated Dependencies:', updatedDependencies);
     const updatedDependenciesStructure = await getDeps(updatedDependencies);
+    console.log('Updated Dependencies Structure:', updatedDependenciesStructure);
 
+    // Initialize the updatedDeps object to track added and removed configs for the updated Tasks
     let updatedDeps = { added: [], removed: [] };
 
     [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    console.log('=== BEFORE updateConfigsForTasks ===');
+    console.log('Dependencies for update keys:', Object.keys(updatedDependenciesStructure));
+    console.log('Current dependencies array length:', currentDependencies.length);
     [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
-
     fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
     console.log('Updating Unified Dependencies file done.');
+    console.log('Updated Dependencies:', updatedDependencies);
+    console.log('Added Config Dependencies:', updatedDeps.added);
+    console.log('Removed Config Dependencies:', updatedDeps.removed);
     return updatedDeps;
 }
 
@@ -416,6 +440,12 @@ async function updateTfsServerDeps() {
     const unifiedDepsPath = path.join(repoPath, 'Directory.Packages.props');
     const tfsServerPath = path.join(repoPath, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.hosted.xml');
     const pathToTfsCore=tfsServerPath
+
+    // Capture content BEFORE any changes
+    const beforeUnifiedContent = fs.readFileSync(unifiedDepsPath, 'utf8');
+    const beforeTfsContent = fs.readFileSync(pathToTfsCore, 'utf8');
+
+
     // Update the unified dependencies
     const depsToUpdate = await updateUnifiedDeps(unifiedDepsPath, newDeps);
 
@@ -423,6 +453,11 @@ async function updateTfsServerDeps() {
     const tfxCoreJson = await xml2js.parseStringPromise(tfsCore);
     const depsToAdd = depsToUpdate.added.filter(dep => depsToUpdate.removed.indexOf(dep) === -1);
     const depsToRemove = depsToUpdate.removed.filter(dep => depsToUpdate.added.indexOf(dep) === -1);
+
+    console.log('=== TfsServer.hosted.xml MODIFICATION DEBUGGING ===');
+    console.log(`Dependencies to add: ${JSON.stringify(depsToAdd, null, 2)}`);
+    console.log(`Dependencies to remove: ${JSON.stringify(depsToRemove, null, 2)}`);
+    console.log(`Total directories in TFS XML before modification: ${tfxCoreJson.Component.Directory.length}`);
 
     // removing dependencies
     for (let idx = 0; idx < tfxCoreJson.Component.Directory.length; idx++) {
@@ -440,6 +475,8 @@ async function updateTfsServerDeps() {
         tfxCoreJson.Component.Directory.unshift(directory);
     });
 
+    console.log(`Total directories in TFS XML after addition: ${tfxCoreJson.Component.Directory.length}`);
+
     const builder = new xml2js.Builder({
         xmldec: { version: '1.0', encoding: 'utf-8' },
         renderOpts: { pretty: true, indent: '  ', newline: '\n', allowEmpty: false, spacebeforeslash: ' ' }
@@ -448,10 +485,28 @@ async function updateTfsServerDeps() {
 
     fs.writeFileSync(pathToTfsCore, xml);
     console.log('Inserting into Tfs Servicing Core file done.');
+
+    // Capture content AFTER all changes
+    const afterUnifiedContent = fs.readFileSync(unifiedDepsPath, 'utf8');
+    const afterTfsContent = fs.readFileSync(pathToTfsCore, 'utf8');
+    
+    // Check if ANY files changed
+    const unifiedChanged = beforeUnifiedContent !== afterUnifiedContent;
+    const tfsChanged = beforeTfsContent !== afterTfsContent;
+    const anyFilesChanged = unifiedChanged || tfsChanged;
+
+
+
+    console.log('=== FILE CHANGE DETECTION ===');
+    console.log(`Directory.Packages.props changed: ${unifiedChanged}`);
+    console.log(`TfsServer.hosted.xml changed: ${tfsChanged}`);
+    console.log(`Any files changed: ${anyFilesChanged}`);
+    console.log(`Config additions: ${depsToUpdate.added.length}`);
+    console.log(`Config removals: ${depsToUpdate.removed.length}`);
     
     // Commit and push changes if there are any updates
-    if (depsToUpdate.added.length > 0 || depsToUpdate.removed.length > 0) {
-        console.log(`Dependencies updated: ${depsToUpdate.added.length} added, ${depsToUpdate.removed.length} removed`);
+    if (depsToUpdate.added.length > 0 || depsToUpdate.removed.length > 0 || anyFilesChanged) {
+        console.log(`Config Dependencies added: ${depsToUpdate.added.length}, Config Dependencies removed: ${depsToUpdate.removed.length}, Changes in the base task version: ${anyFilesChanged}`);
         
         // Commit both the unified dependencies file and the TFS server file
         const filesToCommit = [
