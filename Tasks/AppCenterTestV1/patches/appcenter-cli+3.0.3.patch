@@ -1,0 +1,26 @@
+diff --git a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
+index af2f6c9..a9a7833 100644
+--- a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
++++ b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
+@@ -11,7 +11,7 @@
+     <dependency>
+       <groupId>io.appium</groupId>
+       <artifactId>java-client</artifactId>
+-      <version>7.6.0</version>
++      <version>9.4.0</version>
+     </dependency>
+     <dependency>
+       <groupId>junit</groupId>
+diff --git a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
+index af2f6c9..a9a7833 100644
+--- a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
++++ b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
+@@ -11,7 +11,7 @@
+     <dependency>
+       <groupId>io.appium</groupId>
+       <artifactId>java-client</artifactId>
+-      <version>7.6.0</version>
++      <version>9.4.0</version>
+     </dependency>
+     <dependency>
+       <groupId>junit</groupId>

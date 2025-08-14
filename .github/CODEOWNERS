@@ -104,7 +104,7 @@ Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
-Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
+Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
 
 Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan 
 
@@ -160,7 +160,7 @@ Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manol
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/coveragepublisher/     @rasunkar  @microsoft\adoautotest
+Tasks/Common/coveragepublisher/     @manos  @microsoft/adoautotest
 
 Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
@@ -381,9 +381,9 @@ Tasks/PowerShellOnTargetMachinesV3/  @microsoft/release-management-task-team @ma
 
 Tasks/PublishBuildArtifactsV1/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/PublishCodeCoverageResultsV1/    @rasunkar  @microsoft\adoautotest
+Tasks/PublishCodeCoverageResultsV1/    @manos  @microsoft/adoautotest
 
-Tasks/PublishCodeCoverageResultsV2/    @rasunkar  @microsoft\adoautotest
+Tasks/PublishCodeCoverageResultsV2/    @manos  @microsoft/adoautotest
 
 Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
@@ -397,7 +397,7 @@ Tasks/PublishTestResultsV1/    @shailesh-sk
 
 Tasks/PublishTestResultsV2/    @shailesh-sk
 
-Tasks/ContainerStructureTestV0/    @rasunkar
+Tasks/ContainerStructureTestV0/    @manos
 
 Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @manolerazvan
 
@@ -409,15 +409,15 @@ Tasks/PythonScriptV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/QueryWorkItemsV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/QuickPerfTestV1/     @rasunkar  @microsoft\adoautotest
+Tasks/QuickPerfTestV1/     @manos  @microsoft/adoautotest
 
 Tasks/ReviewAppV0/   @ds-ms
 
-Tasks/RunDistributedTestsV1/   @rasunkar  @microsoft\adoautotest
+Tasks/RunDistributedTestsV1/   @manos  @microsoft/adoautotest
 
-Tasks/RunJMeterLoadTestV1/     @rasunkar  @microsoft\adoautotest
+Tasks/RunJMeterLoadTestV1/     @manos  @microsoft/adoautotest
 
-Tasks/RunLoadTestV1/   @rasunkar  @microsoft\adoautotest
+Tasks/RunLoadTestV1/   @manos  @microsoft/adoautotest
 
 Tasks/ServiceFabricComposeDeployV0/    @microsoft/release-management-task-team @manolerazvan 
 
@@ -453,13 +453,13 @@ Tasks/UseRubyVersionV0/    @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/VSBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
+Tasks/VsTestV1/    @manos  @microsoft/adoautotest
 
-Tasks/VsTestV2/    @rasunkar  @microsoft\adoautotest
+Tasks/VsTestV2/    @manos  @microsoft/adoautotest
 
-Tasks/VsTestV3/    @rasunkar  @microsoft\adoautotest
+Tasks/VsTestV3/    @manos  @microsoft/adoautotest
 
-Tasks/VsTestPlatformToolInstallerV1/   @rasunkar  @microsoft\adoautotest
+Tasks/VsTestPlatformToolInstallerV1/   @manos  @microsoft/adoautotest
 
 Tasks/WindowsMachineFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 

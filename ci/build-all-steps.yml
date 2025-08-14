@@ -1,5 +1,7 @@
 parameters:
   os: ''
+  useSemverBuildConfig: false
+  generateReleaseNotes: true
 
 steps:
 
@@ -68,6 +70,11 @@ steps:
 
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, false)
+
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks --use-semver-build-config
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, true)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
@@ -78,6 +85,7 @@ steps:
 
 - powershell: |
     $releaseBranch = "$(branchName)"
+    $isDryRun = "$(isDryRun)"
 
     # add config entry to avoid errors while pulling
     git config --global user.email "$(username)@microsoft.com"
@@ -90,13 +98,17 @@ steps:
 
     # Pull commits from remote and push branch to git
     git checkout -b $releaseBranch
-    Write-Host 'Trying to pull the remote branch..'
-    git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    if (-not $?) {
-      Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
+    if( $isDryRun -eq 'true' ) {
+      Write-Host "DRY RUN: Skipping Git push operations to remote repository"
+    }else{
+        Write-Host "Trying to pull the remote branch.."
+        git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+        if (-not $?) {
+          Write-Host "Failed to pull the remote branch. This is expected if the remote branch doesn't exist."
+        }
+        Write-Host "Trying to push to the remote branch.."
+        git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
     }
-    Write-Host 'Trying to push to the remote branch..'
-    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
   condition: |
     and(
       succeeded(),
@@ -126,7 +138,11 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
+
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
@@ -206,11 +222,12 @@ steps:
 
   - powershell: |
       $releaseBranch = "$(branchName)"
+      $isDryRun = "$(isDryRun)"
 
-      if ($(currentSprintWeek) -eq 3) {
+      if (($(currentSprintWeek) -eq 3) -or ($isDryRun -eq 'true')) {
         cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
         npm install
-        node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch
+        node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch --isDryRun $isDryRun
       } else {
         echo "Skipping since release notes generating on week 3"
       }
@@ -219,7 +236,8 @@ steps:
         succeeded(),
         in(variables['build.reason'], 'Schedule', 'Manual'),
         eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        eq(${{ parameters.generateReleaseNotes }}, true)
       )
     continueOnError: true
     displayName: Create Release

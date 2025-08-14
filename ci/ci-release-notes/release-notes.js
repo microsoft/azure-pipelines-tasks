@@ -21,10 +21,14 @@ const octokit = new Octokit({ auth: argv.token });
  * @param {string} newRelease  - Sprint version of the checked release
  * @returns {Promise<void>} - Exit from the program if the version already exists
  */
-async function verifyNewReleaseTagOk(newRelease) {
+async function verifyNewReleaseTagOk(newRelease,isDryRun) {
     if (!newRelease || !newRelease.match(VALID_RELEASE_RE)) {
         console.log(`Invalid version '${newRelease}'. Version must be in the form of <major>.<minor>.<patch> where each level is 0-999`);
         process.exit(-1);
+    }
+    if (isDryRun === 'true') {
+        console.log('DRY RUN: Skipping actual tag verification step');
+        return;
     }
     try {
         var tag = 'v' + newRelease;
@@ -204,8 +208,9 @@ async function main() {
     const version = argv.version ? String(argv.version) : null;
     const branch = argv.branch || 'master';
     const releaseBranch = argv.releaseBranch;
+    const isDryRun= argv.isDryRun;
 
-    console.log({version, branch, releaseBranch});
+    console.log({version, branch, releaseBranch,isDryRun});
     try {
         if (!version) {
             console.log('Error: You must supply a version');
@@ -217,7 +222,7 @@ async function main() {
             process.exit(-1);
         }
 
-        await verifyNewReleaseTagOk(version);
+        await verifyNewReleaseTagOk(version,isDryRun);
         checkGitStatus();
         
         const data = await fetchPRsForRelease(branch, version);
@@ -225,7 +230,11 @@ async function main() {
         const PRs = await getPRsFiles(data);
         const releaseNotes = tempGen.generateReleaseNotesForPRs(PRs, version);
         console.log('Release Notes:\n', releaseNotes); // Output release notes to console
-        await createRelease(releaseNotes, version, releaseBranch);
+        if(isDryRun=== 'true'){
+            console.log('DRY RUN: Skipping actual release creation');
+        }else{
+            await createRelease(releaseNotes, version, releaseBranch);
+        }
     } catch (err) {
         throw err;
     }
