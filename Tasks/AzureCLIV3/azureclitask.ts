@@ -351,9 +351,10 @@ export class azureclitask {
                 tl.setSecret(federatedToken);
                 let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
-                if(!visibleAzLogin ){
+                if (!visibleAzLogin ) {
                     args += ` --output none`;
                 }
+
                 //login using OpenID Connect federation
                 Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
@@ -375,8 +376,10 @@ export class azureclitask {
                 if (project) {
                     Utility.throwIfError(tl.execSync("az", `devops configure --defaults project="${project}"`), tl.loc("FailedToSetAzureDevOpsProject"));
                 }
-
-        }
+            }
+            else {
+                throw tl.loc('AuthSchemeNotSupported', authScheme);
+            }
         } catch (error) {
             const errorMessage = error?.message || error?.toString() || String(error);
             throw new Error(`Failed to setup Azure DevOps CLI: ${errorMessage}`);
