@@ -46,7 +46,13 @@ export class AzureRmWebAppDeploymentProvider{
         }
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+
+        if (this.taskParams.SiteContainers && this.taskParams.SiteContainers.length > 0) {
+            tl.debug("Updating site containers.");
+            await containerDeploymentUtility.updateSiteContainers(this.taskParams.SiteContainers);
+        } else if (this.taskParams.isMultiContainer) {
+            await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+        }
         await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
     }
 
