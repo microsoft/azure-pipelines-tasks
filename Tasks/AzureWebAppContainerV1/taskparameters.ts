@@ -45,7 +45,16 @@ export class TaskParametersUtility {
         let containerDetails = await this.getContainerKind(taskParameters);
         taskParameters.ImageName = containerDetails["imageName"];
         taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
-        taskParameters. MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
+        taskParameters.MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
+        
+        // Used for sitecontainers apps.
+        const siteContainersConfigInput = tl.getInput('sitecontainersConfig');
+        if (siteContainersConfigInput) {
+            const raw = JSON.parse(siteContainersConfigInput);
+            taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
+        } else {
+            taskParameters.SiteContainers = null;
+        }
 
         return taskParameters;
     }
@@ -110,6 +119,20 @@ export class TaskParametersUtility {
     }
 }
 
+export class SiteContainer {
+    name: string;
+    image: string;
+    port: number;
+
+    static fromJson(json: any): SiteContainer {
+        const container = new SiteContainer();
+        container.name = json.name;
+        container.image = json.image;
+        container.port = json.port || 80; // Default port if not specified
+        return container;
+    }
+}
+
 export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     connectedServiceName: string;
@@ -125,4 +148,5 @@ export interface TaskParameters {
     isLinuxContainerApp?: boolean;
     MulticontainerConfigFile?: string;
     isMultiContainer?: boolean;
+    SiteContainers?: Array<SiteContainer>;
 }
