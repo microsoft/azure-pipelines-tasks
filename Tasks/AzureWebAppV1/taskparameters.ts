@@ -50,6 +50,15 @@ export class TaskParametersUtility {
 
         taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
 
+        // Used for sitecontainers apps.
+        const siteContainersConfigInput = tl.getInput('sitecontainersConfig');
+        if (siteContainersConfigInput) {
+            const raw = JSON.parse(siteContainersConfigInput);
+            taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
+        } else {
+            taskParameters.SiteContainers = null;
+        }
+
         return taskParameters;
     }
 
@@ -129,4 +138,19 @@ export interface TaskParameters {
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
+    SiteContainers?: Array<SiteContainer>;
+}
+
+export class SiteContainer {
+    name: string;
+    image: string;
+    port: number;
+
+    static fromJson(json: any): SiteContainer {
+        const container = new SiteContainer();
+        container.name = json.name;
+        container.image = json.image;
+        container.port = json.port || 80; // Default port if not specified
+        return container;
+    }
 }
