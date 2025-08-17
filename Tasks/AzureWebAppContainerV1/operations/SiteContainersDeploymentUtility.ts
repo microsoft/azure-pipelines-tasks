@@ -3,7 +3,7 @@ import { AzureAppService } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-
 import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
-export class ContainerBasedDeploymentUtility {
+export class SiteContainersDeploymentUtility {
     private _appService: AzureAppService;
     private _appServiceUtility: AzureAppServiceUtility;
 
