@@ -34,7 +34,8 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
+    let extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
+    let  preInstalledJavaDirectory: string | undefined;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -43,7 +44,15 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
-        const preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        if(jdkArchitectureOption.toLowerCase() === 'arm64')
+        {
+            extendedJavaHome = extendedJavaHome.slice(0, -5) + extendedJavaHome.slice(-5).toLowerCase();
+            preInstalledJavaDirectory = process.env[extendedJavaHome];
+        }
+        else{
+            preInstalledJavaDirectory = taskLib.getVariable(extendedJavaHome);
+        }
+        
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
