@@ -54,17 +54,16 @@ export class azureclitask {
             const versionCommand = tl.getPipelineFeature('UseAzVersion');
 
             if (versionCommand) {
-                try {
-                    if (azVersionResult.code !== 0 || azVersionResult.stderr) {
-                        throw new Error(azVersionResult.stderr);
-                    }
+                azVersionResult = tl.execSync("az", "version");
 
-                } catch (err) {
-                        azVersionResult = tl.execSync("az", "--version");
-                        }
+                if (azVersionResult.code !== 0 || azVersionResult.stderr) {
+                    tl.debug("az version failed, falling back to 'az --version'");
+                    azVersionResult = tl.execSync("az", "--version");
+                }
             } 
             else {
-                    azVersionResult = tl.execSync("az", "--version");
+                // Default case: always run with "--version"
+                azVersionResult = tl.execSync("az", "--version");
             }
 
             Utility.throwIfError(azVersionResult);
