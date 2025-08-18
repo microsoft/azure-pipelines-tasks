@@ -4,10 +4,9 @@
 This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview) commands on Cross platform agents running Windows, Linux or Mac.
 
 ### What's new in Version 3.0
-- Support for two types of service connections:
-    - **Azure Resource Manager**: For Azure subscription operations and resource management
-    - **Azure DevOps**: For Azure DevOps operations using Azure DevOps CLI with automatic extension installation
-- Workload Identity Federation support for Azure DevOps connections.
+- Azure DevOps service connections support with automatic CLI extension installation
+- Workload Identity Federation support for Azure DevOps connections
+- Automatic organization and project configuration from pipeline context
 
 ### What's new in Version 2.0
 - Supports running PowerShell and PowerShell Core script.
