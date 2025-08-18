@@ -26,6 +26,6 @@
     "js-yaml": "3.13.1"
   },
   "overrides": {
-    "form-data": "^2.5.4"
+    "form-data": "^4.0.4"
   }
 }
