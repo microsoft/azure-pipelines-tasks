@@ -49,9 +49,23 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
             const minorVersionTolerance = 5
-            const azVersionResult: IExecSyncResult = tl.execSync("az", versionCommand);
+            let azVersionResult;
+            const versionCommand = tl.getPipelineFeature('UseAzVersion');
+
+            if (versionCommand) {
+                azVersionResult = tl.execSync("az", "version");
+
+                if (azVersionResult.code !== 0 || azVersionResult.stderr) {
+                    tl.debug("az version failed, falling back to 'az --version'");
+                    azVersionResult = tl.execSync("az", "--version");
+                }
+            } 
+            else {
+                // Default case: always run with "--version"
+                azVersionResult = tl.execSync("az", "--version");
+            }
+
             Utility.throwIfError(azVersionResult);
             this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
             await validateAzModuleVersion("azure-Cli", azVersionResult.stdout, "Azure-Cli", minorVersionTolerance)
