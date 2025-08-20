@@ -61,7 +61,7 @@
   },
   "_buildConfigMapping": {
     "Default": "1.262.0",
-    "LocalPackages": "1.249.4+LocalPackages",
+    "LocalPackages": "1.249.4",
     "wif_242": "1.262.1"
   }
 }
