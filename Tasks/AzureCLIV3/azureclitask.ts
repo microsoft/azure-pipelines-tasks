@@ -258,6 +258,15 @@ export class azureclitask {
         }
     }
 
+    private static isAzureDevOpsExtensionInstalled(): boolean {
+        try {
+            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops");
+            return result.code === 0;
+        } catch (error) {
+            return false;
+        }
+    }
+
     private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
@@ -352,8 +361,11 @@ export class azureclitask {
             var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
 
             if (authScheme.toLowerCase() == "workloadidentityfederation") {
-                // Install Azure DevOps extension
-                Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                // Install Azure DevOps extension if not already installed
+                const extensionInstalled = await this.isAzureDevOpsExtensionInstalled();
+                if (!extensionInstalled) {
+                    Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                }
 
                 await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
 
