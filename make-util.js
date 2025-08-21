@@ -1870,8 +1870,7 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
     {
         writeUpdateArg += " --include-local-packages-build-config";
     }
-
-    if (useSemverBuildConfig) {
+    if (useSemverBuildConfig === true || useSemverBuildConfig === 'true') {
         writeUpdateArg += " --use-semver-build-config";
     } 
 
