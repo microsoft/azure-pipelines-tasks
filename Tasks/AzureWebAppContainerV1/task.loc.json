@@ -130,6 +130,14 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
+    },
+    {
+      "name": "sitecontainersConfig",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.sitecontainersConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sitecontainersConfig"
     }
   ],
   "outputVariables": [

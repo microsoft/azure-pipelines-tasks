@@ -3,6 +3,7 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resource';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const osTypeMap = new Map([
@@ -116,20 +117,6 @@ export class TaskParametersUtility {
             isMultiContainer: isMultiContainer,
             multicontainerConfigFile: multicontainerConfigFile
         };
-    }
-}
-
-export class SiteContainer {
-    name: string;
-    image: string;
-    port: number;
-
-    static fromJson(json: any): SiteContainer {
-        const container = new SiteContainer();
-        container.name = json.name;
-        container.image = json.image;
-        container.port = json.port || 80; // Default port if not specified
-        return container;
     }
 }
 

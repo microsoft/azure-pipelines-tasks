@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service";
 import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
-import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 
 export class SiteContainersDeploymentUtility {
     private _appService: AzureAppService;
@@ -15,10 +15,8 @@ export class SiteContainersDeploymentUtility {
     public async updateSiteContainers(siteContainers: Array<SiteContainer>): Promise<void> {
 
         for (const siteContainer of siteContainers) {
-            if (siteContainer.isEnabled) {
-                tl.debug(`Updating site container: ${siteContainer.name}`);
-                await this._appServiceUtility.updateSiteContainer(siteContainer);
-            }
+            tl.debug(`Updating site container: ${siteContainer.getName()}`);
+            await this._appServiceUtility.updateSiteContainer(siteContainer);
         }
     }
 }
