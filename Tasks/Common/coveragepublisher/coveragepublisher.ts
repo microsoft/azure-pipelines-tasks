@@ -74,7 +74,23 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG'),
             "HTTPS_PROXY": process.env['HTTPS_PROXY'],
             "NO_PROXY": process.env['NO_PROXY'],
-            "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT')
+            "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT'),
+            // NTLM proxy support
+            "NTLM_PROXY": process.env['NTLM_PROXY'] || taskLib.getVariable('NTLM_PROXY'),
+            "NTLM_USERNAME": process.env['NTLM_USERNAME'] || taskLib.getVariable('NTLM_USERNAME'),
+            "NTLM_PASSWORD": process.env['NTLM_PASSWORD'] || taskLib.getVariable('NTLM_PASSWORD'),
+            "NTLM_DOMAIN": process.env['NTLM_DOMAIN'] || taskLib.getVariable('NTLM_DOMAIN'),
+            "HTTP_PROXY": process.env['HTTP_PROXY'],
+            // SSL/TLS configuration for NTLM proxy
+            "DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER": "0", // Use WinHttpHandler on Windows for better proxy support
+            "DOTNET_SYSTEM_NET_HTTP_USEWINHTTP": "true", // Force WinHTTP on Windows
+            "DOTNET_SYSTEM_NET_DISABLEIPV6": process.env['DOTNET_SYSTEM_NET_DISABLEIPV6'] || "false",
+            // SSL certificate validation options for problematic proxies
+            "DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2SUPPORT": "false", // Disable HTTP/2 if causing issues
+            // Additional proxy bypass options
+            "PROXY_BYPASS_ON_LOCAL": process.env['PROXY_BYPASS_ON_LOCAL'] || taskLib.getVariable('PROXY_BYPASS_ON_LOCAL'),
+            // Trust proxy certificates if needed (use with caution)
+            "ACCEPT_INVALID_SSL_CERTS": process.env['ACCEPT_INVALID_SSL_CERTS'] || taskLib.getVariable('ACCEPT_INVALID_SSL_CERTS')
         };
 
         await dotnet.exec({
