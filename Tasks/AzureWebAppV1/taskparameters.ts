@@ -6,6 +6,7 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -139,18 +140,4 @@ export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
     SiteContainers?: Array<SiteContainer>;
-}
-
-export class SiteContainer {
-    name: string;
-    image: string;
-    port: number;
-
-    static fromJson(json: any): SiteContainer {
-        const container = new SiteContainer();
-        container.name = json.name;
-        container.image = json.image;
-        container.port = json.port || 80; // Default port if not specified
-        return container;
-    }
 }

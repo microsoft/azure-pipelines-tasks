@@ -24,7 +24,7 @@ export class AzureWebAppSiteContainersDeploymentProvider extends BuiltInLinuxWeb
         // The AzureWebAppSiteContainersDeploymentProvider inherits the deployment logic from BuiltInLinuxWebAppDeploymentProvider.
 
         for (const siteContainer of this.taskParams.SiteContainers) {
-            tl.debug(`Updating SiteContainer: ${siteContainer.name}`);
+            tl.debug(`Updating SiteContainer: ${siteContainer.getName()}`);
             this.appServiceUtility.updateSiteContainer(siteContainer);
         }
 
