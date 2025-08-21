@@ -199,6 +199,11 @@ export class azureclitask {
                 this.logoutAzure();
             }
 
+            // Clean up Azure DevOps CLI configuration if it was set
+            if (connectionType === "azureDevOps") {
+                tl.execSync("az", `devops configure --defaults organization='' project=''`);
+            }
+
             if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
             {
                 process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
@@ -253,32 +258,37 @@ export class azureclitask {
         }
     }
 
+    private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
+        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+        const federatedToken = await this.getIdToken(connectedService);
+        tl.setSecret(federatedToken);
+        let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+        if (!visibleAzLogin) {
+            args += ` --output none`;
+        }
+
+        //login using OpenID Connect federation
+        Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+
+        this.servicePrincipalId = servicePrincipalId;
+        this.federatedToken = federatedToken;
+        this.tenantId = tenantId;
+
+        process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+        process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
+        process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
+    }
+
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);        
 
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
-            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-
-            const federatedToken = await this.getIdToken(connectedService);
-            tl.setSecret(federatedToken);
-            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-            if(!visibleAzLogin ){
-                args += ` --output none`;
-            }
-            //login using OpenID Connect federation
-            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-
-            this.servicePrincipalId = servicePrincipalId;
-            this.federatedToken = federatedToken;
-            this.tenantId = tenantId;
-
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
-            process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
-            process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
+            await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
@@ -340,31 +350,12 @@ export class azureclitask {
         try {
             var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
             var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
-             // Install Azure DevOps extension
-            Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
 
             if (authScheme.toLowerCase() == "workloadidentityfederation") {
-                var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-                var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+                // Install Azure DevOps extension
+                Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
 
-                const federatedToken = await this.getIdToken(connectedService);
-                tl.setSecret(federatedToken);
-                let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-                if (!visibleAzLogin ) {
-                    args += ` --output none`;
-                }
-
-                //login using OpenID Connect federation
-                Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-
-                this.servicePrincipalId = servicePrincipalId;
-                this.federatedToken = federatedToken;
-                this.tenantId = tenantId;
-
-                process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
-                process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
-                process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
+                await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
 
                 const organization = tl.getVariable('System.CollectionUri');
                 const project = tl.getVariable('System.TeamProject');
