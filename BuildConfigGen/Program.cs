@@ -221,7 +221,7 @@ namespace BuildConfigGen
                         taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: true);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: true, useSemverBuildConfig: useSemverBuildConfig);
 
                         bool taskTargettedForUpdating = allTasks || tasks.Where(x => x.Key == t.Value.Name).Any();
                         bool taskVersionsNeedUpdating = taskVersionInfo[t.Value.Name].versionsUpdated.Any();
@@ -267,7 +267,7 @@ namespace BuildConfigGen
                         taskVersionInfo.Add(t.Value.Name, new TaskStateStruct());
                         IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
-                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: false);
+                        UpdateVersionsForTask(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, currentSprint, globalVersionPath, globalVersion, generatedFolder, includeUpdatesForTasksWithoutVersionMap: false, useSemverBuildConfig: useSemverBuildConfig);
                         CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping, checkGlobalVersion: true);
                     }
                 }
@@ -316,7 +316,7 @@ namespace BuildConfigGen
                         // populate global verison information
                         HashSet<Config.ConfigRecord> targetConfigs = GetConfigRecords(configsList, writeUpdates);
 
-                        UpdateVersionsGlobal(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, globalVersion);
+                        UpdateVersionsGlobal(t.Value.Name, taskVersionInfo[t.Value.Name], targetConfigs, globalVersion, useSemverBuildConfig);
                         CheckForDuplicates(t.Value.Name, taskVersionInfo[t.Value.Name].configTaskVersionMapping, checkGlobalVersion: true);
                     }
                 }
@@ -331,7 +331,6 @@ namespace BuildConfigGen
                 foreach (var t in tasks)
                 {
                     IEnumerable<string> configsList = FilterConfigsForTask(configs, t);
-
                     MainUpdateTask(
                         taskVersionInfo[t.Value.Name],
                         t.Value.Name,
@@ -748,7 +747,6 @@ namespace BuildConfigGen
 
                                     WriteWIFInputTaskJson(taskOutput, config, "task.json", isLoc: false);
                                     WriteWIFInputTaskJson(taskOutput, config, "task.loc.json", isLoc: true);
-
                                     if (useSemverBuildConfig && !config.mergeToBase)
                                     {
                                         var defaultConfig = targetConfigs.FirstOrDefault(x => x.isDefault);
@@ -1110,7 +1108,6 @@ namespace BuildConfigGen
             {
                 outputTaskNode["version"]!["Build"] = config.constMappingKey;
             }
-
             var outputTaskNodeObject = outputTaskNode.AsObject();
             outputTaskNodeObject.Remove("_buildConfigMapping");
 
@@ -1136,7 +1133,6 @@ namespace BuildConfigGen
                     configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
                 }
             }
-
             outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
 
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
@@ -1354,7 +1350,7 @@ always-auth=true", false);
             }
         }
 
-        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder, bool includeUpdatesForTasksWithoutVersionMap)
+        private static void UpdateVersionsForTask(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string globalVersionPath, TaskVersion? globalVersion, string generatedFolder, bool includeUpdatesForTasksWithoutVersionMap, bool useSemverBuildConfig = false)
         {
             string currentDir = Environment.CurrentDirectory;
             string gitRootPath = GetTasksRootPath(currentDir);
@@ -1534,7 +1530,7 @@ always-auth=true", false);
                             }
                             while (taskState.configTaskVersionMapping.Values.Contains(targetVersion));
 
-                            if (config.abTaskReleases)
+                            if (config.abTaskReleases && useSemverBuildConfig)
                             {
                                 // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
                                 // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
@@ -1609,7 +1605,7 @@ always-auth=true", false);
             }
         }
 
-        private static void UpdateVersionsGlobal(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, TaskVersion globalVersion)
+        private static void UpdateVersionsGlobal(string task, TaskStateStruct taskState, HashSet<Config.ConfigRecord> targetConfigs, TaskVersion globalVersion, bool useSemverBuildConfig = false)
         {
             foreach (var config in targetConfigs)
             {
@@ -1617,7 +1613,7 @@ always-auth=true", false);
                 {
                     TaskVersion versionToUse = globalVersion;
                     
-                    if (config.abTaskReleases)
+                    if (config.abTaskReleases && useSemverBuildConfig)
                     {
                         // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
                         // In the second stage of refactoring, we are going to use the same version, which is going to significantly reduce complexity of all this.
