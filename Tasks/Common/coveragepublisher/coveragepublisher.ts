@@ -87,10 +87,12 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "DOTNET_SYSTEM_NET_DISABLEIPV6": process.env['DOTNET_SYSTEM_NET_DISABLEIPV6'] || "false",
             // SSL certificate validation options for problematic proxies
             "DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2SUPPORT": "false", // Disable HTTP/2 if causing issues
+            // Additional SSL/TLS fixes for NTLM proxy issues
+            "DOTNET_SYSTEM_NET_HTTP_USESYSTEMDEFAULTCREDENTIALS": "true", // Use system credentials for proxy auth
+            "DOTNET_SYSTEM_NET_HTTP_ALLOWUNENCRYPTEDHTTP2": "false", // Ensure encrypted connections
+            "DOTNET_SYSTEM_NET_SECURITY_ALLOWINSECURERENEGOTIATION": process.env['DOTNET_SYSTEM_NET_SECURITY_ALLOWINSECURERENEGOTIATION'] || "false",
             // Additional proxy bypass options
             "PROXY_BYPASS_ON_LOCAL": process.env['PROXY_BYPASS_ON_LOCAL'] || taskLib.getVariable('PROXY_BYPASS_ON_LOCAL'),
-            // Trust proxy certificates if needed (use with caution)
-            "ACCEPT_INVALID_SSL_CERTS": process.env['ACCEPT_INVALID_SSL_CERTS'] || taskLib.getVariable('ACCEPT_INVALID_SSL_CERTS')
         };
 
         await dotnet.exec({
