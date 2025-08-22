@@ -32,7 +32,7 @@ process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
 process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
 
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
-process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+// process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
 process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
@@ -54,6 +54,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension 'azure-devops' is not installed."
+        },
         "az extension add -n azure-devops -y": {
             "code": 0,
             "stdout": "Azure DevOps CLI extension installed"
@@ -67,8 +71,44 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "organization configured"
         },
         "az devops configure --defaults project=\"TestProject\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure project when SYSTEM_TEAMPROJECT is missing! This should be skipped."
+        },
+        "az devops configure --defaults project=\"undefined\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with 'undefined' value! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=\"null\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with 'null' value! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=\"\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with empty string! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=undefined": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with unquoted undefined! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=null": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with unquoted null! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with no value! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults project=TestProject": {
+            "code": 1,
+            "stderr": "Code attempted to configure project with unquoted project name! This should be skipped when SYSTEM_TEAMPROJECT is missing."
+        },
+        "az devops configure --defaults organization='' project=''": {
             "code": 0,
-            "stdout": "project configured"
+            "stdout": "configuration cleared"
+        },
+        "bash*": {
+            "code": 0,
+            "stdout": "test completed"
         },
         "*": {
             "code": 0,

@@ -54,9 +54,9 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
-        "az extension add -n azure-devops -y": {
+        "az extension show --name azure-devops": {
             "code": 0,
-            "stdout": "Azure DevOps CLI extension installed"
+            "stdout": "{\n  \"name\": \"azure-devops\",\n  \"version\": \"1.0.2\"\n}"
         },
         "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
             "code": 0,
@@ -69,6 +69,14 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az devops configure --defaults project=\"TestProject\"": {
             "code": 0,
             "stdout": "project configured"
+        },
+        "az devops configure --defaults organization='' project=''": {
+            "code": 0,
+            "stdout": "configuration cleared"
+        },
+        "bash*": {
+            "code": 0,
+            "stdout": "test completed"
         },
         "*": {
             "code": 0,

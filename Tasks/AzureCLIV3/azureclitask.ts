@@ -375,7 +375,6 @@ export class azureclitask {
                 if (organization) {
                     Utility.throwIfError(tl.execSync("az", `devops configure --defaults organization="${organization}"`), tl.loc("FailedToSetAzureDevOpsOrganization"));
                 }
-
                 if (project) {
                     Utility.throwIfError(tl.execSync("az", `devops configure --defaults project="${project}"`), tl.loc("FailedToSetAzureDevOpsProject"));
                 }
