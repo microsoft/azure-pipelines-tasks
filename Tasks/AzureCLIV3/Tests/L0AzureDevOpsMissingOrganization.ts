@@ -31,7 +31,7 @@ process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
 });
 process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
 
-process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
+// process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
 process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
@@ -54,6 +54,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension 'azure-devops' is not installed."
+        },
         "az extension add -n azure-devops -y": {
             "code": 0,
             "stdout": "Azure DevOps CLI extension installed"
@@ -62,13 +66,45 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Login successful"
         },
-        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
-            "code": 0,
-            "stdout": "organization configured"
-        },
         "az devops configure --defaults project=\"TestProject\"": {
             "code": 0,
             "stdout": "project configured"
+        },
+        "az devops configure --defaults organization=\"undefined\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with 'undefined' value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=\"null\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with 'null' value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=\"\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with empty string! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=undefined": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with unquoted undefined! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=null": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with unquoted null! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization with no value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
+        },
+        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
+            "code": 1,
+            "stderr": "Code attempted to configure organization when SYSTEM_COLLECTIONURI is missing! This should be skipped."
+        },
+        "az devops configure --defaults organization='' project=''": {
+            "code": 0,
+            "stdout": "configuration cleared"
+        },
+        "bash*": {
+            "code": 0,
+            "stdout": "test completed"
         },
         "*": {
             "code": 0,
