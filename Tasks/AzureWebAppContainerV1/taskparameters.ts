@@ -39,14 +39,6 @@ export class TaskParametersUtility {
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.OSType = appDetails["osType"];
         taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.indexOf("Linux") !=-1;
-
-        var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
-        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-
-        let containerDetails = await this.getContainerKind(taskParameters);
-        taskParameters.ImageName = containerDetails["imageName"];
-        taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
-        taskParameters.MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
         
         // Used for sitecontainers apps.
         const siteContainersConfigInput = tl.getInput('sitecontainersConfig');
@@ -54,8 +46,18 @@ export class TaskParametersUtility {
             const raw = JSON.parse(siteContainersConfigInput);
             taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
         } else {
+
+        // Used for docker single/multicontainer apps.
             taskParameters.SiteContainers = null;
+            
+            let containerDetails = await this.getContainerKind(taskParameters);
+            taskParameters.ImageName = containerDetails["imageName"];
+            taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
+            taskParameters.MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
         }
+
+        var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
         return taskParameters;
     }
