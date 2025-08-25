@@ -183,5 +183,8 @@
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
   "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided.",
   "loc.messages.MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
-  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication."
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }

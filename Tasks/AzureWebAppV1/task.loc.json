@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 259,
-    "Patch": 5
+    "Minor": 262,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.209.0",
   "groups": [
@@ -433,6 +433,9 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "SiteContainersNotSupportedWithPublishProfileAuthentication": "ms-resource:loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication"
+    "SiteContainersNotSupportedWithPublishProfileAuthentication": "ms-resource:loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication",
+    "StartedUpdatingSiteContainers": "ms-resource:loc.messages.StartedUpdatingSiteContainers",
+    "UpdatingSiteContainer": "ms-resource:loc.messages.UpdatingSiteContainer",
+    "CompletedUpdatingSiteContainers": "ms-resource:loc.messages.CompletedUpdatingSiteContainers"
   }
 }

@@ -20,14 +20,16 @@ export class AzureWebAppSiteContainersDeploymentProvider extends BuiltInLinuxWeb
     }
 
     public async DeployWebAppStep() {
-        // This method is intentionally left empty as the deployment logic is handled in the parent class.
         // The AzureWebAppSiteContainersDeploymentProvider inherits the deployment logic from BuiltInLinuxWebAppDeploymentProvider.
 
-        for (const siteContainer of this.taskParams.SiteContainers) {
-            tl.debug(`Updating SiteContainer: ${siteContainer.getName()}`);
-            this.appServiceUtility.updateSiteContainer(siteContainer);
-        }
+        console.log(tl.loc('StartedUpdatingSiteContainers'));
 
+        for (const siteContainer of this.taskParams.SiteContainers) {
+            console.log(tl.loc('UpdatingSiteContainer', siteContainer.getName()));
+            await this.appServiceUtility.updateSiteContainer(siteContainer);
+        }
+        console.log(tl.loc('CompletedUpdatingSiteContainers'));
+        
         // Update the blessed app now.
         await super.DeployWebAppStep();
         tl.debug("Deployment for AzureWebAppSiteContainers completed successfully.");
