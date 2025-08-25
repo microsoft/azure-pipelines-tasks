@@ -50,7 +50,7 @@ export class AzureRmWebAppDeploymentProvider{
             tl.debug("Updating site containers.");
             let siteContainersDeploymentUtility: SiteContainersDeploymentUtility = new SiteContainersDeploymentUtility(this.appService);
             await siteContainersDeploymentUtility.updateSiteContainers(this.taskParams.SiteContainers);
-        } else if (this.taskParams.isMultiContainer) {
+        } else {
             let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
             await containerDeploymentUtility.deployWebAppImage(this.taskParams);
         }
