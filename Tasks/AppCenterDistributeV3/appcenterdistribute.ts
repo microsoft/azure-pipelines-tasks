@@ -148,6 +148,7 @@ async function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, 
             if (response && response.upload_status === "readyToBePublished" && response.release_distinct_id) {
                 const releaseId = response.release_distinct_id;
                 tl.debug(`---- Received release id is ${releaseId}`);
+                console.log("##vso[task.setVariable variable=AppCenterReleaseId]${releaseId}")
                 clearInterval(timerId);
                 resolve(releaseId);
             } else if (!response || response.upload_status === "error") {
