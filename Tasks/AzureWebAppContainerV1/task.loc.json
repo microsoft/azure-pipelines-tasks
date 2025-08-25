@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 259,
-    "Patch": 5
+    "Minor": 262,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -343,6 +343,9 @@
     "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
     "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
     "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
-    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
+    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation",
+    "StartedUpdatingSiteContainers": "ms-resource:loc.messages.StartedUpdatingSiteContainers",
+    "UpdatingSiteContainer": "ms-resource:loc.messages.UpdatingSiteContainer",
+    "CompletedUpdatingSiteContainers": "ms-resource:loc.messages.CompletedUpdatingSiteContainers"
   }
 }

@@ -183,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Deployment to the webapp '%s' failed. For single-container, just specify a valid image name. For multi-container specifying a Docker-Compose file is mandatory and specifying image names is optional. Provided images names if the tags in Docker-Compose file need to be substituted.",
   "loc.messages.SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }

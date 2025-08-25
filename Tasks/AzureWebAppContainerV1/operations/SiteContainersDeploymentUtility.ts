@@ -14,9 +14,13 @@ export class SiteContainersDeploymentUtility {
 
     public async updateSiteContainers(siteContainers: Array<SiteContainer>): Promise<void> {
 
+        console.log(tl.loc('StartedUpdatingSiteContainers'));
+
         for (const siteContainer of siteContainers) {
-            tl.debug(`Updating site container: ${siteContainer.getName()}`);
+            console.log(tl.loc('UpdatingSiteContainer', siteContainer.getName()));
             await this._appServiceUtility.updateSiteContainer(siteContainer);
         }
+
+        console.log(tl.loc('CompletedUpdatingSiteContainers'));
     }
 }
