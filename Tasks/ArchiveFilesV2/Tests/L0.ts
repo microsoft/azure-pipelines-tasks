@@ -190,5 +190,32 @@ describe('ArchiveFiles L0 Suite', function () {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
+
+        it('Successfully adds a single file to an existing archive', async function () {
+            this.timeout(5000);
+            process.env['archiveType'] = 'zip';
+            process.env['archiveFile'] = 'singleFileArchive.zip';
+            process.env['includeRootFolder'] = 'false';
+            process.env['replaceExistingArchive'] = 'false';
+            expectedArchivePath = path.join(__dirname, 'test_output', 'singleFileArchive.zip');
+
+            // Create the initial archive
+            let tp1: string = path.join(__dirname, 'L0CreateArchive.js');
+            let tr1: ttm.MockTestRunner = new ttm.MockTestRunner(tp1);
+            await tr1.runAsync();
+            assert(fs.existsSync(expectedArchivePath), 'Should have created the initial archive');
+
+            // Add a single file to the existing archive
+            let tp2: string = path.join(__dirname, 'L0AddSingleFileToExisting.js');
+            let tr2: ttm.MockTestRunner = new ttm.MockTestRunner(tp2);
+            await tr2.runAsync();
+
+            assert(tr2.succeeded, 'Task should have succeeded');
+            assert(tr2.stdout.indexOf('Adding to existing archive') > -1 || 
+                  tr2.stdout.indexOf('Adding file to archive') > -1 ||
+                  tr2.stdout.indexOf('Archiving file:') > -1, 
+                  'Should have added file to archive');
+            assert(fs.existsSync(expectedArchivePath), 'Archive should still exist');
+        });
     }
 });
