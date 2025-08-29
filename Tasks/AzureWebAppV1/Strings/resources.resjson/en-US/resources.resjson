@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "Deployment method",
   "loc.input.help.deploymentMethod": "Choose the deployment method for the app.",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
   "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided.",
-  "loc.messages.MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+  "loc.messages.MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }
