@@ -12,7 +12,7 @@ export class SiteContainersDeploymentUtility {
         this._appServiceUtility = new AzureAppServiceUtility(appService);
     }
 
-    public async updateSiteContainers(siteContainers: Array<SiteContainer>): Promise<void> {
+    public async updateSiteContainers(siteContainers: SiteContainer[]): Promise<void> {
 
         console.log(tl.loc('StartedUpdatingSiteContainers'));
 

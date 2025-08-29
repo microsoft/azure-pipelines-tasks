@@ -132,12 +132,12 @@
       }
     },
     {
-      "name": "sitecontainersConfig",
+      "name": "siteContainersConfig",
       "type": "multiLine",
       "label": "Site Containers Config",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide sitecontainers-config JSON for SiteContainers deployments."
+      "helpMarkDown": "Provide siteContainers-config JSON for SiteContainers deployments."
     }
   ],
   "outputVariables": [
@@ -344,8 +344,8 @@
     "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
     "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
     "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified.",
-    "StartedUpdatingSiteContainers": "Started updating site containers.", 
-    "UpdatingSiteContainer": "Updating site container: %s",
-    "CompletedUpdatingSiteContainers": "Completed updating site containers."
+    "StartedUpdatingSiteContainers": "Started updating Site Containers.", 
+    "UpdatingSiteContainer": "Updating SiteContainer: %s",
+    "CompletedUpdatingSiteContainers": "Completed updating Site Containers."
   }
 }

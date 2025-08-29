@@ -39,9 +39,9 @@ export class TaskParametersUtility {
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.OSType = appDetails["osType"];
         taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.indexOf("Linux") !=-1;
-        
-        // Used for sitecontainers apps.
-        const siteContainersConfigInput = tl.getInput('sitecontainersConfig');
+
+        // Used for SiteContainers apps.
+        const siteContainersConfigInput = tl.getInput('siteContainersConfig');
         if (siteContainersConfigInput) {
             const raw = JSON.parse(siteContainersConfigInput);
             taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
@@ -137,5 +137,5 @@ export interface TaskParameters {
     isLinuxContainerApp?: boolean;
     MulticontainerConfigFile?: string;
     isMultiContainer?: boolean;
-    SiteContainers?: Array<SiteContainer>;
+    SiteContainers?: SiteContainer[];
 }

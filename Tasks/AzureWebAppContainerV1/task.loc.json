@@ -132,12 +132,12 @@
       }
     },
     {
-      "name": "sitecontainersConfig",
+      "name": "siteContainersConfig",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.sitecontainersConfig",
+      "label": "ms-resource:loc.input.label.siteContainersConfig",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sitecontainersConfig"
+      "helpMarkDown": "ms-resource:loc.input.help.siteContainersConfig"
     }
   ],
   "outputVariables": [
