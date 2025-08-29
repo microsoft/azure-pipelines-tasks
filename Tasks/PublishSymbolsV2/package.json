@@ -26,7 +26,6 @@
     "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
     "agent-base": "^6.0.2",
-    "msal-node1": "npm:@azure/msal-node@^1.18.4",
     "msal-node2": "npm:@azure/msal-node@^2.9.2",
     "uuid": "^10.0.0",
     "semver": "^6.3.1"
