@@ -51,8 +51,8 @@ export class TaskParametersUtility {
 
         taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
 
-        // Used for sitecontainers apps.
-        const siteContainersConfigInput = tl.getInput('sitecontainersConfig');
+        // Used for siteContainers apps.
+        const siteContainersConfigInput = tl.getInput('siteContainersConfig');
         if (siteContainersConfigInput) {
             const raw = JSON.parse(siteContainersConfigInput);
             taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
@@ -139,5 +139,5 @@ export interface TaskParameters {
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
-    SiteContainers?: Array<SiteContainer>;
+    SiteContainers?: SiteContainer[];
 }

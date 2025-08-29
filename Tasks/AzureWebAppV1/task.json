@@ -227,12 +227,12 @@
       "helpMarkDown": "Choose the deployment method for the app."
     },
     {
-      "name": "sitecontainersConfig",
+      "name": "siteContainersConfig",
       "type": "multiLine",
       "label": "Site Containers Config",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Provide sitecontainers-config JSON for SiteContainers deployments."
+      "helpMarkDown": "Provide siteContainers-config JSON for SiteContainers deployments."
     }
   ],
   "outputVariables": [
