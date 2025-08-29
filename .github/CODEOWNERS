@@ -93,11 +93,11 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
 # DRI rotation: App Service (Web Apps)
-Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
+Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @surenderssm @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
+Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @surenderssm @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @shilpirachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan
+Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @kumaramit-msft @ShilpiRachna1 @surenderssm @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan
 
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
@@ -106,9 +106,9 @@ Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmi
 
 Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
 
-Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan @kumaramit-msft @ShilpiRachna1 @microsoft/azure-app-service-pipelines-tasks
+Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan @kumaramit-msft @ShilpiRachna1 @surenderssm @microsoft/azure-app-service-pipelines-tasks
 
-Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @kumaramit-msft @ShilpiRachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
+Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @kumaramit-msft @ShilpiRachna1 @surenderssm @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
 Tasks/AzureVmssDeploymentV0/   @microsoft/release-management-task-team @manolerazvan
 
