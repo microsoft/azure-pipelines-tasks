@@ -6,6 +6,7 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -49,6 +50,15 @@ export class TaskParametersUtility {
         }
 
         taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
+
+        // Used for siteContainers apps.
+        const siteContainersConfigInput = tl.getInput('siteContainersConfig');
+        if (siteContainersConfigInput) {
+            const raw = JSON.parse(siteContainersConfigInput);
+            taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
+        } else {
+            taskParameters.SiteContainers = null;
+        }
 
         return taskParameters;
     }
@@ -129,4 +139,5 @@ export interface TaskParameters {
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
+    SiteContainers?: SiteContainer[];
 }
