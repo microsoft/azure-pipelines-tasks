@@ -24,5 +24,8 @@
     "azure-pipelines-tasks-docker-common": "^2.242.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
     "js-yaml": "3.13.1"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }
