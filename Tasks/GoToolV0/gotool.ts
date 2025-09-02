@@ -11,22 +11,23 @@ let osArch: string = os.arch();
 async function run() {
     try {
         let version = tl.getInput('version', true).trim();
-        await getGo(version);
-        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version });
+        let downloadBaseUrl: string = tl.getInput('goDownloadUrl', false);
+        await getGo(version, downloadBaseUrl);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version, customBaseUrl: String(!!downloadBaseUrl) });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
-async function getGo(version: string) {
+async function getGo(version: string, baseUrl?: string) {
     // check cache
     let toolPath: string;
     toolPath = toolLib.findLocalTool('go', fixVersion(version));
 
     if (!toolPath) {
         // download, extract, cache
-        toolPath = await acquireGo(version);
+        toolPath = await acquireGo(version, baseUrl);
         tl.debug("Go tool is cached under " + toolPath);
     }
 
@@ -40,12 +41,12 @@ async function getGo(version: string) {
 }
 
 
-async function acquireGo(version: string): Promise<string> {
+async function acquireGo(version: string, baseUrl?: string): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     let fileName: string = getFileName(version);
-    let downloadUrl: string = getDownloadUrl(fileName);
+    let downloadUrl: string = getDownloadUrl(fileName, baseUrl);
     let downloadPath: string = null;
     try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
@@ -100,8 +101,10 @@ function getFileName(version: string): string {
     return filename;
 }
 
-function getDownloadUrl(filename: string): string {
-    return util.format("https://storage.googleapis.com/golang/%s", filename);
+function getDownloadUrl(filename: string, baseUrl?: string): string {
+    let base: string = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://storage.googleapis.com/golang";
+    base = base.replace(/\/+$/, '');
+    return util.format("%s/%s", base, filename);
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
