@@ -13,35 +13,23 @@ async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
     let federatedFeedAuthSuccessCount: number = 0;
 
+    var feedUrl;
+    var entraWifServiceConnectionName;
+    var serviceConnections;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 #if WIF
 
-        var feedUrl = tl.getInput("feedUrl");
-        var entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-        var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
+        feedUrl = tl.getInput("feedUrl");
+        entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
 
-        // Validate input combination
-        // Case 1: NuGet && WIF -> Error
+        // Failure case: User provides inputs for both NuGet & WIF Service Connections
         if (serviceConnections.length > 0 && entraWifServiceConnectionName) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NuGetWithWIFNotSupported"));
             return;
-        }
-
-        // Case 2: !NuGet && WIF -> Success
-        if (entraWifServiceConnectionName) {
-            // Happy path
-        }
-        else {
-            // Case 3: !WIF && feedUrl -> Warn and ignore
-            if (feedUrl) {
-                feedUrl = null;
-                tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
-
-                // In the future, we will move towards breaking behavior
-                // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
-            }
         }
 
         // Validate input is valid feed URL
@@ -66,12 +54,19 @@ async function main(): Promise<void> {
         else if (entraWifServiceConnectionName && !feedUrl) {
             configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
             return;
-        }  
+        }
+        // Warning case: User provides feedUrl without providing a WIF service connection 
+        // In the future, we will shift to breaking behavior
+        else if (feedUrl) {
+            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
+            feedUrl = null;
+            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
+        }
 
 #endif
 
         // Configure the credential provider for both same-organization feeds and service connections
-        var serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
+        serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -88,8 +83,7 @@ async function main(): Promise<void> {
 
 /**
  * Validates that the feedUrl is a valid Azure DevOps feed URL.
- * Throws an error if the URL is not valid.
- * Returns true if the feedUrl is valid.
+ * Returns true if the feedUrl is valid, false otherwise.
  */
 function validateFeedUrl(feedUrl: string): boolean {
     return !!feedUrl && /^https:\/\/(dev\.azure\.com|[\w-]+\.visualstudio\.com)\/[\w-]+\/_packaging\/[\w-]+\/nuget\/v3\/index\.json$/i.test(feedUrl);
