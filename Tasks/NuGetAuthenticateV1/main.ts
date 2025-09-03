@@ -32,6 +32,16 @@ async function main(): Promise<void> {
             return;
         }
 
+        // Warning case: User provides feedUrl without providing a WIF service connection 
+        // In the future, we will shift to breaking behavior
+        if (entraWifServiceConnectionName) {
+            // Happy path, continue with flow
+        } else if (feedUrl) {
+            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
+            feedUrl = null;
+            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
+        }
+
         // Validate input is valid feed URL
         if (feedUrl && !validateFeedUrl(feedUrl)) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidFeedUrl", feedUrl));
@@ -55,13 +65,6 @@ async function main(): Promise<void> {
             configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
             return;
         }
-        // Warning case: User provides feedUrl without providing a WIF service connection 
-        // In the future, we will shift to breaking behavior
-        else if (feedUrl) {
-            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
-            feedUrl = null;
-            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
-        }
 
 #endif
 
@@ -75,6 +78,7 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
+            "isFeedUrlValid": validateFeedUrl(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
             "isServiceConnectionIncluded": !!serviceConnections.length
         });

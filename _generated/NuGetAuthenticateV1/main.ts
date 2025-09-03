@@ -28,6 +28,7 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
+            "isFeedUrlValid": validateFeedUrl(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
             "isServiceConnectionIncluded": !!serviceConnections.length
         });
