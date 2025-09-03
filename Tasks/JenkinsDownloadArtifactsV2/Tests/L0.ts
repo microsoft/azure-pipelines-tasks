@@ -34,7 +34,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             await tr.runAsync();
             assert(tr.stdOutContained('Input required: serverEndpoint'));
             assert(tr.failed, 'task should have failed');
-            //done();
+            
 
             //assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             //assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -45,7 +45,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -58,12 +58,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdOutContained('Input required: saveTo'), 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            //done();
+            
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -75,12 +75,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             await tr.runAsync();
             assert(tr.stdOutContained('Input required: jobName'), 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            //done();
+            
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -95,12 +95,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf("GettingCommitsFromSingleBuild") !== -1, "Failed to fetch commits from single build");
             assert(tr.stdout.indexOf('20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]') !== -1, "API parameter to fetch commits have changed");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -115,12 +115,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf("GettingCommitsFromSingleBuild") !== -1, "Failed to fetch commits from single build");
             assert(tr.stdout.indexOf('20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]') !== -1, "API parameter to fetch commits have changed");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -134,12 +134,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Translated url git@github.com:user/TestRepo.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -153,12 +153,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Translated url git@gitlab.com:admin/projectk.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://gitlab.com/admin/projectk/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -172,12 +172,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Translated url http://bitbucket.org/commits/3cbfc14e3f482a25e5122323f3273b89677d9875 after fixing the query path based on the provider') !== -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -191,12 +191,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Translated url https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -210,12 +210,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Translated url ssh://user@server/project.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to') !== -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -229,12 +229,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf('FoundBuildIndex') !== -1, "Failed to find the build index");
             assert(tr.stdout.indexOf('api/json?tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}') !== -1 , "API parameter to fetch commits range have changed");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -249,12 +249,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf('FoundBuildIndex') !== -1, "Failed to find the build index");
             assert(tr.stdout.indexOf('api/json?tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}') !== -1 , "API parameter to fetch commits range have changed");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -269,12 +269,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf('changeSet[kind,items[commitId,date,msg,author[fullName]]]') === -1 , "Should not call jenkins api to fetch commits");
             assert(tr.stdout.indexOf('JenkinsNoCommitsToFetch') !== -1, "No commits should be downloaded");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -287,13 +287,13 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdOutContained('loc_mock_ArtifactProviderNotSupported'), tr.stderr);
             assert(tr.failed, 'task should have failed');
-            //done();
+            
         }
         catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -306,13 +306,13 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdOutContained('Input required: ConnectedServiceNameARM'));
             assert(tr.failed, 'task should have failed');
-            //done();
+            
         }
         catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -325,13 +325,13 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('loc_mock_ArtifactSuccessfullyDownloaded') !== -1, tr.stdout);
             assert(tr.succeeded, 'task should have succedded.');
-            //done();
+            
         }
         catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -344,12 +344,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('Trying to get job type') !== -1, "Should try to find the job type");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -363,12 +363,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
             assert(tr.failed, 'task should have failed');
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -382,12 +382,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
             assert(tr.failed, 'task should have failed');
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -401,12 +401,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedMessage: string = "Found Jenkins job details jobName:multibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:20, IsMultiBranchPipeline:true, MultiBranchPipelineName:mybranch";
             assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the jobId and branchName if its multibranch project");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -420,12 +420,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:hudson.model.FreeStyleProject, buildId:10, IsMultiBranchPipeline:false, MultiBranchPipelineName:undefined";
             assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the jobId if its freestyle project");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -439,12 +439,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:hudson.model.FreeStyleProject, buildId:100, IsMultiBranchPipeline:false, MultiBranchPipelineName:undefined";
             assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its freestyle project");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -458,12 +458,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedMessage: string = "Found Jenkins job details jobName:mymultibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:200, IsMultiBranchPipeline:true, MultiBranchPipelineName:branch1";
             assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its multibranch project");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -479,12 +479,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedDownloadCommitsApi: string = "http://url/job/testmultibranchproject//job/master/api/json?tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}";
             assert(tr.stdout.indexOf(expectedDownloadCommitsApi) !== -1 , "API to download multibranch pipeline job's commits is not correct");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -505,12 +505,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let downloadCommitsApi: string = "tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}";
             assert(tr.stdout.indexOf(downloadCommitsApi) === -1 , "Should not try to download the commits");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -527,12 +527,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let buildIndexApi: string = "http://url/job/folder1/job/folder2/job/testmultibranchproject//job/master/20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]";
             assert(tr.stdout.indexOf(buildIndexApi) != -1, "Url for folder job should be correct");
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 
@@ -546,12 +546,12 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             let expectedMessage: string = "RetryingOperation DownloadJsonContent 1";
             assert(tr.stdout.indexOf(expectedMessage) != -1, tr.stdout);
 
-            //done();
+            
         } catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            //done(err);
+            
         }
     });
 });

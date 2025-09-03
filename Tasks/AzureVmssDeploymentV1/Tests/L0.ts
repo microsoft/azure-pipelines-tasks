@@ -12,12 +12,10 @@ function setResponseFile(name) {
 function runValidations(validator: () => void, tr) {
     try {
         validator();
-        //done();
     }
     catch (error) {
         console.log("STDERR", tr.stderr);
         console.log("STDOUT", tr.stdout);
-        //done(error);
     }
 }
 
