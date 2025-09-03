@@ -1,5 +1,8 @@
 {
   "name": "azure-powershell-v5",
+  "scripts": {
+    "build": "node ../../make.js build --task AzurePowerShellV5"
+  },
   "author": {
     "name": "Microsoft Corporation"
   },

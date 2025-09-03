@@ -4,6 +4,7 @@
   "description": "VSTS Publish Test Results Task",
   "main": "publishtestresults.js",
   "scripts": {
+    "build": "node ../../make.js build --task PublishTestResultsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

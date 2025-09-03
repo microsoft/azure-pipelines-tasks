@@ -4,6 +4,7 @@
   "description": "Azure Pipelines Xcode Task",
   "main": "xcode.js",
   "scripts": {
+    "build": "node ../../make.js build --task XcodeV5",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

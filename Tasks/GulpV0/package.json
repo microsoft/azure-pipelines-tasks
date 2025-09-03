@@ -1,6 +1,9 @@
 {
   "name": "vsts-gulp-task",
   "description": "Azure Pipelines gulp tasks",
+  "scripts": {
+    "build": "node ../../make.js build --task GulpV0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
