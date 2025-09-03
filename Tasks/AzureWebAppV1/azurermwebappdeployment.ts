@@ -7,6 +7,7 @@ import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 async function main() {
     let isDeploymentSuccess: boolean = true;
 
+    
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
