@@ -34,7 +34,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    let extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
+    let extendedJavaHome: string;
     let  preInstalledJavaDirectory: string | undefined;
 
     toolLib.debug('Trying to get tool from local cache first');
@@ -46,10 +46,11 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     } else if (preInstalled) {
         if(jdkArchitectureOption.toLowerCase() === 'arm64')
         {
-            extendedJavaHome = extendedJavaHome.slice(0, -5) + extendedJavaHome.slice(-5).toLowerCase();
+            extendedJavaHome = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toLowerCase();
             preInstalledJavaDirectory = process.env[extendedJavaHome];
         }
         else{
+            extendedJavaHome = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
             preInstalledJavaDirectory = taskLib.getVariable(extendedJavaHome);
         }
         
