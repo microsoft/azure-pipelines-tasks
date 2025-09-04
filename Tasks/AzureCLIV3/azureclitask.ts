@@ -214,7 +214,7 @@ export class azureclitask {
 
             // Clean up Azure DevOps CLI configuration if it was set
             if (connectionType === "azureDevOps") {
-                tl.execSync("az", `devops configure --defaults organization='' project=''`);
+                tl.execSync("az", `devops configure --defaults project='' organization=`);
             }
 
             if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
