@@ -337,7 +337,7 @@ Tasks/NodeTaskRunnerInstallerV0/    @microsoft/azure-pipelines-tasks-and-agent @
 Tasks/NodeToolV0/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI rotation: Azure Container Registry / Triage
-Tasks/NotationV0/ @tarunramsinghani
+Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT @tarunramsinghani
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 
