@@ -37,7 +37,7 @@
     {
       "name": "feedUrl",
       "aliases": [
-        "adoServiceConnectionCrossOrgFeedUrl"
+        "azureDevOpsServiceConnectionCrossOrgFeedUrl"
       ],
       "label": "ms-resource:loc.input.label.feedUrl",
       "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
@@ -62,8 +62,7 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "True"
-      },
-      "visibleRule": "workloadIdentityServiceConnection == ''"
+      }
     }
   ],
   "execution": {

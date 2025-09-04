@@ -15,9 +15,9 @@
         },
         {
             "name": "feedUrl",
-            "aliases": ["adoServiceConnectionCrossOrgFeedUrl"],
+            "aliases": ["azureDevOpsServiceConnectionCrossOrgFeedUrl"],
             "label": "Azure Artifacts URL",
-            "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+            "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
             "type": "string",
             "defaultValue": "",
             "required": false,
@@ -39,8 +39,7 @@
             "properties": {
                 "EditableOptions": "False",
                 "MultiSelectFlatList": "True"
-            },
-            "visibleRule": "workloadIdentityServiceConnection == ''"
+            }
         }
     ]
 }

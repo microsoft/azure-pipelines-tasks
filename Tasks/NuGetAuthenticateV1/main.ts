@@ -7,7 +7,6 @@ import { installCredProviderToUserProfile, configureCredProvider, configureCredP
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
-import { ServiceConnection } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils';
 
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
@@ -25,7 +24,6 @@ async function main(): Promise<void> {
         await installCredProviderToUserProfile(forceReinstallCredentialProvider);
 
         serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
-
 #if WIF
         entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
         feedUrl = tl.getInput("feedUrl", false);
@@ -57,10 +55,10 @@ async function main(): Promise<void> {
             return;
         } else if (feedUrl) {
             // Warning case: User provides feedUrl without providing a WIF service connection
-            // In the future, we will shift to breaking behavior
             tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
             feedUrl = null;
 
+            // In the future, we will shift to breaking behavior
             // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
         }
 #endif
@@ -73,9 +71,10 @@ async function main(): Promise<void> {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
-            "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
-            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
-            "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
+            // We have to check both input names because only WIF versions of the task are aware of aliases 
+            "isFeedUrlIncluded": !!(tl.getInput("feedUrl") || tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")) || isValidFeed(tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isEntraWifServiceConnectionNameIncluded": !!(tl.getInput("workloadIdentityServiceConnection")|| tl.getInput("azureDevOpsServiceConnection")),
             "isServiceConnectionIncluded": !!serviceConnections.length
         });
     }

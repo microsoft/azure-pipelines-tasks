@@ -4,7 +4,6 @@ import { installCredProviderToUserProfile, configureCredProvider, configureCredP
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
-import { ServiceConnection } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils';
 
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
@@ -23,7 +22,6 @@ async function main(): Promise<void> {
 
         serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
 
-
         // Configure the credential provider for both same-organization feeds and service connections
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
     } catch (error) {
@@ -32,9 +30,10 @@ async function main(): Promise<void> {
         emitTelemetry("Packaging", "NuGetAuthenticateV1", {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
-            "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
-            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
-            "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
+            // We have to check both input names because only WIF versions of the task are aware of aliases 
+            "isFeedUrlIncluded": !!(tl.getInput("feedUrl") || tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")) || isValidFeed(tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isEntraWifServiceConnectionNameIncluded": !!(tl.getInput("workloadIdentityServiceConnection")|| tl.getInput("azureDevOpsServiceConnection")),
             "isServiceConnectionIncluded": !!serviceConnections.length
         });
     }
