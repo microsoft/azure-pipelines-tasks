@@ -10,15 +10,18 @@
             "properties": {
               "EditableOptions": "False",
               "MultiSelectFlatList": "False"
-            }
+            },
+            "visibleRule": "nuGetServiceConnections == ''"
         },
         {
             "name": "feedUrl",
+            "aliases": ["adoServiceConnectionCrossOrgFeedUrl"],
             "label": "ms-resource:loc.input.label.feedUrl",
             "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
             "type": "string",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "visibleRule": "workloadIdentityServiceConnection != ''"
         },
         {
             "name": "forceReinstallCredentialProvider",
@@ -36,7 +39,8 @@
             "properties": {
                 "EditableOptions": "False",
                 "MultiSelectFlatList": "True"
-            }
+            },
+            "visibleRule": "workloadIdentityServiceConnection == ''"
         }
     ]
 }

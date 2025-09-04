@@ -12,7 +12,7 @@
   "loc.input.label.nuGetServiceConnections": "Service connection credentials for feeds outside this organization",
   "loc.input.help.nuGetServiceConnections": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
   "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
-  "loc.messages.Error_InvalidFeedUrl": "The provided feed URL '{0}' is not a valid Azure DevOps feed URL.",
+  "loc.messages.Error_InvalidFeedUrl": "The provided feed URL '%s' is not a valid Azure DevOps feed URL.",
   "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and azureDevOpsServiceConnection must be set together.",
   "loc.messages.Error_NuGetWithFeedUrlNotSupported": "Cannot specify both nuGetServiceConnections and feedUrl input parameters.",
   "loc.messages.Error_NuGetWithWIFNotSupported": "Cannot specify both nuGetServiceConnections and azureDevOpsServiceConnection(workloadIdentityServiceConnection) input parameters.",

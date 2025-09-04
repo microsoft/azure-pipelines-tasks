@@ -54,7 +54,7 @@
   },
   "messages": {
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
-    "Error_InvalidFeedUrl": "The provided feed URL '{0}' is not a valid Azure DevOps feed URL.",
+    "Error_InvalidFeedUrl": "ms-resource:loc.messages.Error_InvalidFeedUrl",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
     "Error_NuGetWithFeedUrlNotSupported": "ms-resource:loc.messages.Error_NuGetWithFeedUrlNotSupported",
     "Error_NuGetWithWIFNotSupported": "ms-resource:loc.messages.Error_NuGetWithWIFNotSupported",

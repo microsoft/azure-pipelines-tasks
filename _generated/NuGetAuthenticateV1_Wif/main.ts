@@ -18,10 +18,14 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        // Install the credential provider
+        forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
+        await installCredProviderToUserProfile(forceReinstallCredentialProvider);
 
-        feedUrl = tl.getInput("feedUrl");
-        entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
         serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
+
+        entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
+        feedUrl = tl.getInput("feedUrl", false);
 
         // Failure case: User provides inputs for both NuGet & WIF Service Connections
         if (serviceConnections.length > 0 && entraWifServiceConnectionName) {
@@ -29,24 +33,11 @@ async function main(): Promise<void> {
             return;
         }
 
-        // Warning case: User provides feedUrl without providing a WIF service connection 
-        // In the future, we will shift to breaking behavior
-        if (entraWifServiceConnectionName) {
-            // Happy path, continue with flow
-        } else if (feedUrl) {
-            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
-            feedUrl = null;
-            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
-        }
-
         // Validate input is valid feed URL
-        if (feedUrl && !validateFeedUrl(feedUrl)) {
+        if (feedUrl && !isValidFeed(feedUrl)) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidFeedUrl", feedUrl));
+            return;
         }
-
-        // Install the credential provider
-        forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
-        await installCredProviderToUserProfile(forceReinstallCredentialProvider);
 
         // Only cross-org feedUrls are supported with Azure Devops service connections. If feedUrl is internal, the task will fail.
         if (entraWifServiceConnectionName && feedUrl ) {
@@ -56,16 +47,21 @@ async function main(): Promise<void> {
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
             
             return;
-        }
-        // If the user doesn't provide a feedUrl, use the Azure Devops service connection to replace the Build Service
-        else if (entraWifServiceConnectionName && !feedUrl) {
+        } else if (entraWifServiceConnectionName && !feedUrl) {
+            // If the user doesn't provide a feedUrl, use the Azure Devops service connection to replace the Build Service
             configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
-            return;
-        }
 
+            return;
+        } else if (feedUrl) {
+            // Warning case: User provides feedUrl without providing a WIF service connection
+            // In the future, we will shift to breaking behavior
+            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
+            feedUrl = null;
+
+            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
+        }
 
         // Configure the credential provider for both same-organization feeds and service connections
-        serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -74,7 +70,7 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
-            "isFeedUrlValid": validateFeedUrl(tl.getInput("feedUrl")),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
             "isServiceConnectionIncluded": !!serviceConnections.length
         });
@@ -85,8 +81,13 @@ async function main(): Promise<void> {
  * Validates that the feedUrl is a valid Azure DevOps feed URL.
  * Returns true if the feedUrl is valid, false otherwise.
  */
-function validateFeedUrl(feedUrl: string): boolean {
-    return !!feedUrl && /^https:\/\/(dev\.azure\.com|[\w-]+\.visualstudio\.com)\/[\w-]+\/_packaging\/[\w-]+\/nuget\/v3\/index\.json$/i.test(feedUrl);
+function isValidFeed(feedUrl?: string | null): boolean {
+    if (!feedUrl) return false;
+    const normalized = feedUrl.trim().replace(/^[\u2018\u2019\u201C\u201D'"]|['"\u2018\u2019\u201C\u201D]$/g, '');
+
+    const feedRegex = /^https:\/\/(?:[\w.-]+\.)?(?:dev\.azure\.com|visualstudio\.com|vsts\.me|codedev\.ms|devppe\.azure\.com|codeapp\.ms)(?:\/[^\/]+(?:\/[^\/]+)?)?\/_packaging\/[^\/]+\/nuget\/v3\/index\.json\/?$/i;
+
+    return feedRegex.test(normalized);
 }
 
 main();

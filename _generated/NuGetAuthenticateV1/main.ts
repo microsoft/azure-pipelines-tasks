@@ -17,9 +17,14 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        // Install the credential provider
+        forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
+        await installCredProviderToUserProfile(forceReinstallCredentialProvider);
+
+        serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
+
 
         // Configure the credential provider for both same-organization feeds and service connections
-        serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
         await configureCredProvider(ProtocolType.NuGet, serviceConnections);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -28,7 +33,7 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
-            "isFeedUrlValid": validateFeedUrl(tl.getInput("feedUrl")),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!entraWifServiceConnectionName,
             "isServiceConnectionIncluded": !!serviceConnections.length
         });
@@ -39,8 +44,13 @@ async function main(): Promise<void> {
  * Validates that the feedUrl is a valid Azure DevOps feed URL.
  * Returns true if the feedUrl is valid, false otherwise.
  */
-function validateFeedUrl(feedUrl: string): boolean {
-    return !!feedUrl && /^https:\/\/(dev\.azure\.com|[\w-]+\.visualstudio\.com)\/[\w-]+\/_packaging\/[\w-]+\/nuget\/v3\/index\.json$/i.test(feedUrl);
+function isValidFeed(feedUrl?: string | null): boolean {
+    if (!feedUrl) return false;
+    const normalized = feedUrl.trim().replace(/^[\u2018\u2019\u201C\u201D'"]|['"\u2018\u2019\u201C\u201D]$/g, '');
+
+    const feedRegex = /^https:\/\/(?:[\w.-]+\.)?(?:dev\.azure\.com|visualstudio\.com|vsts\.me|codedev\.ms|devppe\.azure\.com|codeapp\.ms)(?:\/[^\/]+(?:\/[^\/]+)?)?\/_packaging\/[^\/]+\/nuget\/v3\/index\.json\/?$/i;
+
+    return feedRegex.test(normalized);
 }
 
 main();
