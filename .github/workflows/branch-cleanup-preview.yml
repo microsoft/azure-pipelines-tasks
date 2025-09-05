@@ -1,4 +1,8 @@
-name: Branch Cleanup Preview
+name: Branch Cleanup Preview (DEPRECATED)
+
+# DEPRECATED: This workflow has been replaced by branch-cleanup.yml
+# Please use the new workflow for both preview and production cleanup
+# This file is kept for backward compatibility only
 
 on:
   workflow_dispatch:
