@@ -20,7 +20,7 @@ _Assess the level of risk and provide reasoning (e.g., scope, impact, backward c
 ---
 
 ### **Change Behind Feature Flag** (Yes / No)
-_Can this change be behine feature flag, if not why?_
+_Can this change be behind feature flag, if not why?_
 
 ---
 
