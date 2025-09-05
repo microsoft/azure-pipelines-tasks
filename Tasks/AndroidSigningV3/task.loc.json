@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 246,
+    "Minor": 262,
     "Patch": 3
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
