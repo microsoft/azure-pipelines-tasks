@@ -5,6 +5,7 @@
   "main": "nugetToolInstaller.js",
   "scripts": {
     "build": "node ../../make.js build --task NuGetToolInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetToolInstallerV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -5,6 +5,7 @@
   "main": "run.js",
   "scripts": {
     "build": "node ../../make.js build --task ReviewAppV0",
+    "serverBuild": "node ../../make.js serverBuild --task ReviewAppV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node ../../make.js build --task HelmDeployV0"
+    "build": "node ../../make.js build --task HelmDeployV0",
+    "serverBuild": "node ../../make.js serverBuild --task HelmDeployV0"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",

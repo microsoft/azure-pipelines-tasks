@@ -5,6 +5,7 @@
   "main": "nlbtask.js",
   "scripts": {
     "build": "node ../../make.js build --task AzureNLBManagementV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureNLBManagementV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Microsoft Corporation",

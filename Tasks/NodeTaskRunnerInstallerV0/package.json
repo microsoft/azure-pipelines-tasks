@@ -3,6 +3,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node ../../make.js build --task NodeTaskRunnerInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task NodeTaskRunnerInstallerV0",
     "test": "node ../../make.js test --task NodeTaskRunnerInstallerV0"
   },
   "author": "Microsoft Corporation",

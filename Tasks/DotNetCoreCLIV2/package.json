@@ -5,6 +5,7 @@
   "main": "dotnetcore.js",
   "scripts": {
     "build": "node ../../make.js build --task DotNetCoreCLIV2",
+    "serverBuild": "node ../../make.js serverBuild --task DotNetCoreCLIV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

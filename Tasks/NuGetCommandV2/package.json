@@ -5,6 +5,7 @@
   "main": "nugetcommandmain.js",
   "scripts": {
     "build": "node ../../make.js build --task NuGetCommandV2",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetCommandV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

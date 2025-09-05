@@ -8,6 +8,7 @@
   "main": "..\\src\\opatoolinstaller.js",
   "scripts": {
     "build": "node ../../make.js build --task OpenPolicyAgentInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task OpenPolicyAgentInstallerV0",
     "test": "node ../../make.js test --task OpenPolicyAgentInstallerV0"
   },
   "author": "Microsoft Corporation",

@@ -5,6 +5,7 @@
   "main": "userubynversion.js",
   "scripts": {
     "build": "node ../../make.js build --task UseRubyVersionV0",
+    "serverBuild": "node ../../make.js serverBuild --task UseRubyVersionV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

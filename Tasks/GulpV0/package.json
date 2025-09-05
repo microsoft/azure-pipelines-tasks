@@ -2,7 +2,8 @@
   "name": "vsts-gulp-task",
   "description": "Azure Pipelines gulp tasks",
   "scripts": {
-    "build": "node ../../make.js build --task GulpV0"
+    "build": "node ../../make.js build --task GulpV0",
+    "serverBuild": "node ../../make.js serverBuild --task GulpV0"
   },
   "repository": {
     "type": "git",

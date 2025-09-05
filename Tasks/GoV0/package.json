@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "build": "node ../../make.js build --task GoV0",
+    "serverBuild": "node ../../make.js serverBuild --task GoV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

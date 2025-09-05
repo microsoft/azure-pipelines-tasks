@@ -5,6 +5,7 @@
   "main": "filetransformtask.js",
   "scripts": {
     "build": "node ../../make.js build --task FileTransformV1",
+    "serverBuild": "node ../../make.js serverBuild --task FileTransformV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

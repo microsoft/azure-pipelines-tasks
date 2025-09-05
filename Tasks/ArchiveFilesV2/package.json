@@ -4,7 +4,8 @@
   "description": "Archive Files Task",
   "main": "archivefilestask.js",
   "scripts": {
-    "build": "node ../../make.js build --task ArchiveFilesV2"
+    "build": "node ../../make.js build --task ArchiveFilesV2",
+    "serverBuild": "node ../../make.js serverBuild --task ArchiveFilesV2"
   },
   "repository": {
     "type": "git",

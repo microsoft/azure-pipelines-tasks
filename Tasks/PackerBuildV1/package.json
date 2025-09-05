@@ -2,7 +2,8 @@
   "name": "vsts-tasks-packerbuild",
   "main": "main.js",
   "scripts": {
-    "build": "node ../../make.js build --task PackerBuildV1"
+    "build": "node ../../make.js build --task PackerBuildV1",
+    "serverBuild": "node ../../make.js serverBuild --task PackerBuildV1"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",

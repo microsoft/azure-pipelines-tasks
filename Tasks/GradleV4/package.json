@@ -4,7 +4,8 @@
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
   "scripts": {
-    "build": "node ../../make.js build --task GradleV4"
+    "build": "node ../../make.js build --task GradleV4",
+    "serverBuild": "node ../../make.js serverBuild --task GradleV4"
   },
   "license": "MIT",
   "bugs": {

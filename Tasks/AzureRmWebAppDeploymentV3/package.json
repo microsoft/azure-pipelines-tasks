@@ -5,6 +5,7 @@
   "main": "AzureRmWebAppDeployment.js",
   "scripts": {
     "build": "node ../../make.js build --task AzureRmWebAppDeploymentV3",
+    "serverBuild": "node ../../make.js serverBuild --task AzureRmWebAppDeploymentV3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

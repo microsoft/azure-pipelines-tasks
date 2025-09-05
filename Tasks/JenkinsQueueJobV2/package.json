@@ -3,6 +3,7 @@
   "description": "Azure Pipelines Jenkins Queue Job Task",
   "scripts": {
     "build": "node ../../make.js build --task JenkinsQueueJobV2",
+    "serverBuild": "node ../../make.js serverBuild --task JenkinsQueueJobV2",
     "test": "node ../../make.js test --task JenkinsQueueJobV2"
   },
   "repository": {

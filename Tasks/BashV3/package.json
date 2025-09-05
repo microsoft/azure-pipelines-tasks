@@ -5,6 +5,7 @@
   "main": "bash.js",
   "scripts": {
     "build": "node ../../make.js build --task BashV3",
+    "serverBuild": "node ../../make.js serverBuild --task BashV3",
     "test": "node ../../make.js test --task BashV3"
   },
   "repository": {

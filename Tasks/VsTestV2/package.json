@@ -3,7 +3,8 @@
   "description": "Azure Pipelines VSTEST Task",
   "main": "VSTest.js",
   "scripts": {
-    "build": "node ../../make.js build --task VsTestV2"
+    "build": "node ../../make.js build --task VsTestV2",
+    "serverBuild": "node ../../make.js serverBuild --task VsTestV2"
   },
   "repository": {
     "type": "git",

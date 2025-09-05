@@ -5,6 +5,7 @@
   "main": "xamarinandroid.js",
   "scripts": {
     "build": "node ../../make.js build --task XamarinAndroidV1",
+    "serverBuild": "node ../../make.js serverBuild --task XamarinAndroidV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

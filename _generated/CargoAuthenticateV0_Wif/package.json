@@ -4,6 +4,8 @@
   "description": "Authenticate cargo client.",
   "main": "cargoAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task CargoAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task CargoAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

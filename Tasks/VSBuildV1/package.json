@@ -2,7 +2,8 @@
   "name": "vsts-tasks-vsbuild",
   "description": "Azure Pipelines VSBuild Task",
   "scripts": {
-    "build": "node ../../make.js build --task VSBuildV1"
+    "build": "node ../../make.js build --task VSBuildV1",
+    "serverBuild": "node ../../make.js serverBuild --task VSBuildV1"
   },
   "repository": {
     "type": "git",

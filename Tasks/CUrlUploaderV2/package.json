@@ -5,6 +5,7 @@
   "main": "curluploader.js",
   "scripts": {
     "build": "node ../../make.js build --task CUrlUploaderV2",
+    "serverBuild": "node ../../make.js serverBuild --task CUrlUploaderV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

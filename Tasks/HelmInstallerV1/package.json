@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node ../../make.js build --task HelmInstallerV1"
+    "build": "node ../../make.js build --task HelmInstallerV1",
+    "serverBuild": "node ../../make.js serverBuild --task HelmInstallerV1"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",

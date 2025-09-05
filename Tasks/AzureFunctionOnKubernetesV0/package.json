@@ -4,7 +4,8 @@
   "description": "Deploy Azure Function on Kubernetes",
   "main": "src//run.js",
   "scripts": {
-    "build": "node ../../make.js build --task AzureFunctionOnKubernetesV0"
+    "build": "node ../../make.js build --task AzureFunctionOnKubernetesV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureFunctionOnKubernetesV0"
   },
   "repository": {
     "type": "git",

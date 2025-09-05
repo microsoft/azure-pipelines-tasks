@@ -4,6 +4,7 @@
   "description": "Index sources and publish symbols.",
   "scripts": {
     "build": "node ../../make.js build --task PublishSymbolsV2",
+    "serverBuild": "node ../../make.js serverBuild --task PublishSymbolsV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

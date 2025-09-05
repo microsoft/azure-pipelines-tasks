@@ -4,7 +4,8 @@
   "description": "FTP Upload Task",
   "main": "ftpuploadtask.js",
   "scripts": {
-    "build": "node ../../make.js build --task FtpUploadV1"
+    "build": "node ../../make.js build --task FtpUploadV1",
+    "serverBuild": "node ../../make.js serverBuild --task FtpUploadV1"
   },
   "repository": {
     "type": "git",

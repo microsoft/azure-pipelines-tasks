@@ -2,7 +2,8 @@
   "name": "AzureKeyVault",
   "main": "main.js",
   "scripts": {
-    "build": "node ../../make.js build --task AzureKeyVaultV2"
+    "build": "node ../../make.js build --task AzureKeyVaultV2",
+    "serverBuild": "node ../../make.js serverBuild --task AzureKeyVaultV2"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",

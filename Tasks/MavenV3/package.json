@@ -4,7 +4,8 @@
   "author": "Microsoft Corporation",
   "description": "Build with Apache Maven",
   "scripts": {
-    "build": "node ../../make.js build --task MavenV3"
+    "build": "node ../../make.js build --task MavenV3",
+    "serverBuild": "node ../../make.js serverBuild --task MavenV3"
   },
   "license": "MIT",
   "bugs": {

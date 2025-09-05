@@ -1,7 +1,8 @@
 {
   "name": "azure-iot-edge-vsts-extension-task",
   "scripts": {
-    "build": "node ../../make.js build --task AzureIoTEdgeV2"
+    "build": "node ../../make.js build --task AzureIoTEdgeV2",
+    "serverBuild": "node ../../make.js serverBuild --task AzureIoTEdgeV2"
   },
   "version": "1.1.2",
   "dependencies": {

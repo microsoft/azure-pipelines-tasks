@@ -3,7 +3,8 @@
   "author": "Microsoft Corporation",
   "description": "Build with Apache Ant",
   "scripts": {
-    "build": "node ../../make.js build --task ANTV1"
+    "build": "node ../../make.js build --task ANTV1",
+    "serverBuild": "node ../../make.js serverBuild --task ANTV1"
   },
   "license": "MIT",
   "bugs": {

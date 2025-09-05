@@ -2,7 +2,8 @@
   "name": "AzureVmssDeployment",
   "main": "main.js",
   "scripts": {
-    "build": "node ../../make.js build --task AzureVmssDeploymentV0"
+    "build": "node ../../make.js build --task AzureVmssDeploymentV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureVmssDeploymentV0"
   },
   "dependencies": {
     "@types/mocha": "^9.1.1",

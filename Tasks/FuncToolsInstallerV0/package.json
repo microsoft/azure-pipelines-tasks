@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node ../../make.js build --task FuncToolsInstallerV0"
+    "build": "node ../../make.js build --task FuncToolsInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task FuncToolsInstallerV0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

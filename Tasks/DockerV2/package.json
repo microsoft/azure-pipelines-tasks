@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node ../../make.js build --task DockerV2"
+    "build": "node ../../make.js build --task DockerV2",
+    "serverBuild": "node ../../make.js serverBuild --task DockerV2"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",

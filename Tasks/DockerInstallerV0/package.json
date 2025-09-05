@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node ../../make.js build --task DockerInstallerV0"
+    "build": "node ../../make.js build --task DockerInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task DockerInstallerV0"
   },
   "dependencies": {
     "@types/node": "^20.3.1",
