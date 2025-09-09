@@ -20,7 +20,7 @@ async function run(): Promise<void> {
         tl.setResult(tl.TaskResult.Succeeded, "", true);
     }
     catch (e) {
-       
+
         if (Utils.IsInstanceOf(e, "ArgumentError") ||Utils.IsInstanceOf(e, "ParseError") || e instanceof AppConfigurationError) {
 
             tl.error(e.message);
@@ -36,7 +36,7 @@ async function run(): Promise<void> {
         }
         else if (e instanceof RestError) {
 
-            tl.loc("RestError",e.name !== undefined? e.name: "", e.code !== undefined ? e.code: "", e.statusCode, e.request.url, e.message, e.request.headers.get("x-ms-client-request-id"));
+            tl.error(tl.loc("RestError",e.name !== undefined? e.name: "", e.code !== undefined ? e.code: "", e.statusCode, e.request.url, e.message, e.request.headers.get("x-ms-client-request-id")));
             tl.debug(e.response?.bodyAsText);
         }
         else {
