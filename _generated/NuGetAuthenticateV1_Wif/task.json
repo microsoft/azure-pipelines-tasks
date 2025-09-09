@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 263,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -36,9 +36,6 @@
     },
     {
       "name": "feedUrl",
-      "aliases": [
-        "azureDevOpsServiceConnectionCrossOrgFeedUrl"
-      ],
       "label": "Azure Artifacts URL",
       "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
       "type": "string",
@@ -91,8 +88,8 @@
     "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.263.0",
+    "Default": "1.263.2",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.263.1"
+    "wif_242": "1.263.3"
   }
 }
