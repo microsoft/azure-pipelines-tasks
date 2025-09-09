@@ -6,6 +6,7 @@ $jobId = $env:SYSTEM_JOBID;
 
 $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION_3_4_2)
 }
 
 function Get-AzureCmdletsVersion
@@ -150,8 +151,14 @@ function ConvertTo-Pfx {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
 
-    $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
-    $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
+    if (-not $featureFlags.useOpenssLatestVersion) {
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
+    }
+    else {
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.cnf"
+    }
     $env:RANDFILE=".rnd"
 
     $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`"  -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1"
