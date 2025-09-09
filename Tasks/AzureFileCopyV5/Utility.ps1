@@ -6,7 +6,7 @@ $jobId = $env:SYSTEM_JOBID;
 
 $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION_3_4_2)
+    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_VERSION_3_4_2)
 }
 
 function Get-AzureCmdletsVersion
