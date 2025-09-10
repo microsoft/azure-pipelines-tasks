@@ -6,16 +6,17 @@
     "url": "git+https://github.com/microsoft/azure-pipelines-tasks.git"
   },
   "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task DownloadGitHubReleaseV0",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadGitHubReleaseV0",
+    "test": "node ../../make.js test --task DownloadGitHubReleaseV0"
+  },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "scripts": {
-    "build": "node ../../make.js build --task DownloadGitHubReleaseV0",
-    "test": "node ../../make.js test --task DownloadGitHubReleaseV0"
-  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",

@@ -4,6 +4,8 @@
   "description": "Visual Studio App Center Distribute Task",
   "main": "appcenterdistribute.js",
   "scripts": {
+    "build": "node ../../make.js build --task AppCenterDistributeV3",
+    "serverBuild": "node ../../make.js serverBuild --task AppCenterDistributeV3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

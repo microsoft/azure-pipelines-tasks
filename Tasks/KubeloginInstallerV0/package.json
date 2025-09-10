@@ -5,6 +5,7 @@
   "main": "kubelogin.js",
   "scripts": {
     "build": "node ../../make.js build --task KubeloginInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task KubeloginInstallerV0",
     "test": "node ../../make.js test --task KubeloginInstallerV0"
   },
   "repository": {
