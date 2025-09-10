@@ -15,7 +15,6 @@
         },
         {
             "name": "feedUrl",
-            "aliases": ["azureDevOpsServiceConnectionCrossOrgFeedUrl"],
             "label": "ms-resource:loc.input.label.feedUrl",
             "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
             "type": "string",

@@ -31,8 +31,8 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             // We have to check both input names because only WIF versions of the task are aware of aliases 
-            "isFeedUrlIncluded": !!(tl.getInput("feedUrl") || tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
-            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")) || isValidFeed(tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!(tl.getInput("workloadIdentityServiceConnection")|| tl.getInput("azureDevOpsServiceConnection")),
             "isServiceConnectionIncluded": !!serviceConnections.length
         });

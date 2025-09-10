@@ -4,6 +4,8 @@
   "description": ".Net Core Installer",
   "main": "dotnetcoreinstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task DotNetCoreInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task DotNetCoreInstallerV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,7 +29,7 @@
     "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "1.8.9"
   },
   "devDependencies": {
