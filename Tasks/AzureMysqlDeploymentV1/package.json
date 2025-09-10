@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure MySQL",
   "main": "azuremysqldeploy.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureMysqlDeploymentV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureMysqlDeploymentV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

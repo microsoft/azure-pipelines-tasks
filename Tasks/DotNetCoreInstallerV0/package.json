@@ -4,6 +4,8 @@
   "description": ".Net Core Installer",
   "main": "dotnetcoreinstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task DotNetCoreInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task DotNetCoreInstallerV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

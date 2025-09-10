@@ -4,6 +4,8 @@
   "description": "Use Node Eco-System",
   "main": "usenode.js",
   "scripts": {
+    "build": "node ../../make.js build --task UseNodeV1",
+    "serverBuild": "node ../../make.js serverBuild --task UseNodeV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

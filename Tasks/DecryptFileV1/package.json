@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Decrypt Task",
   "main": "decrypt.js",
   "scripts": {
+    "build": "node ../../make.js build --task DecryptFileV1",
+    "serverBuild": "node ../../make.js serverBuild --task DecryptFileV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

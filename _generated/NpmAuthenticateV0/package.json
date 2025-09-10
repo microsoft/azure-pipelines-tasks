@@ -4,6 +4,8 @@
   "description": "Azure Pipelines npm Authenticate Task",
   "main": "npmauth.js",
   "scripts": {
+    "build": "node ../../make.js build --task NpmAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task NpmAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

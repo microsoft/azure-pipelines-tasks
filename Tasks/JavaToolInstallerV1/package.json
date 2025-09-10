@@ -5,6 +5,7 @@
   "main": "javaToolInstaller.js",
   "scripts": {
     "build": "node ../../make.js build --task JavaToolInstallerV1",
+    "serverBuild": "node ../../make.js serverBuild --task JavaToolInstallerV1",
     "test": "node ../../make.js test --task JavaToolInstallerV1"
   },
   "repository": {

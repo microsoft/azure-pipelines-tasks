@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Task for building and deploying Azure Container Apps.",
   "main": "azurecontainerapps.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureContainerAppsV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureContainerAppsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
