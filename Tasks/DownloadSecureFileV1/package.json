@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Download Secure File Task",
   "main": "predownloadsecurefile.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadSecureFileV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadSecureFileV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

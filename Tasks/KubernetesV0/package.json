@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task KubernetesV0",
+    "serverBuild": "node ../../make.js serverBuild --task KubernetesV0"
+  },
   "dependencies": {
     "@types/del": "^2.2.0",
     "@types/glob": "^5.0.10",
