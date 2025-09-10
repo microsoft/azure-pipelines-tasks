@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task DuffleInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task DuffleInstallerV0"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
@@ -10,5 +14,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

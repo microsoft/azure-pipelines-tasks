@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Cocoa Pods Task",
   "main": "cocoapods.js",
   "scripts": {
+    "build": "node ../../make.js build --task CocoaPodsV0",
+    "serverBuild": "node ../../make.js serverBuild --task CocoaPodsV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
