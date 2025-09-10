@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Publish Test Results Task",
   "main": "publishtestresults.js",
   "scripts": {
+    "build": "node ../../make.js build --task PublishTestResultsV2",
+    "serverBuild": "node ../../make.js serverBuild --task PublishTestResultsV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
