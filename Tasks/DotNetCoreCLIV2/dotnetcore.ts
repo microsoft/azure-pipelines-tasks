@@ -157,9 +157,14 @@ export class dotNetExe {
             return false;
         }
 
-        const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
-        tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
-        return testRunner === 'Microsoft.Testing.Platform';
+        try {
+            const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
+            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            return testRunner === 'Microsoft.Testing.Platform';
+        } catch (error) {
+            tl.warning(`Error occurred reading global.json: ${error}`);
+            return false;
+        }
     }
 
     private async executeTestCommand(): Promise<void> {
