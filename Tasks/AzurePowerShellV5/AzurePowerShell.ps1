@@ -35,7 +35,21 @@ $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
 $versionTolerance = 3
 
+
 . (Join-Path $PSScriptRoot "Utility.ps1") 
+Write-Host "FF $(Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2')"
+# Check for opensslv4 and openssl342 executables, write their paths and versions
+if (Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2') {
+    $opensslPath = Join-Path $PSScriptRoot 'ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe'
+} else {
+    $opensslPath = Join-Path $PSScriptRoot 'ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe'
+}
+if (Test-Path $opensslPath) {
+    $v = & $opensslPath version
+    Write-Host "OpenSSL version used by task: $v ($opensslPath)"
+} else {
+    Write-Host "OpenSSL not found in expected location: $opensslPath"
+}
 if ($targetAzurePs -eq $otherVersion) {
     if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
