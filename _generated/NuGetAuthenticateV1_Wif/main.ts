@@ -32,12 +32,13 @@ async function main(): Promise<void> {
         }
 
         // Warning case: User provides feedUrl without providing a WIF service connection 
-        // In the future, we will shift to breaking behavior
         if (entraWifServiceConnectionName) {
             // Happy path, continue with flow
         } else if (feedUrl) {
             tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
             feedUrl = null;
+            
+            // In the future, we will shift to breaking behavior
             // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
         }
 
