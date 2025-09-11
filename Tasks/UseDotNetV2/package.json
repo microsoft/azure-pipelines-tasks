@@ -4,6 +4,8 @@
   "description": "Use .Net Core",
   "main": "usedotnet.js",
   "scripts": {
+    "build": "node ../../make.js build --task UseDotNetV2",
+    "serverBuild": "node ../../make.js serverBuild --task UseDotNetV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
