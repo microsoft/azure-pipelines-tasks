@@ -4,6 +4,8 @@
   "description": "MySQL Deployment",
   "main": "mysqldeploy.js",
   "scripts": {
+    "build": "node ../../make.js build --task MysqlDeploymentOnMachineGroupV1",
+    "serverBuild": "node ../../make.js serverBuild --task MysqlDeploymentOnMachineGroupV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

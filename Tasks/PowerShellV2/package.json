@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "node ../../make.js build --task PowerShellV2",
+    "serverBuild": "node ../../make.js serverBuild --task PowerShellV2",
     "test": "node ../../make.js test --task PowerShellV2"
   },
   "author": "Microsoft Corporation",

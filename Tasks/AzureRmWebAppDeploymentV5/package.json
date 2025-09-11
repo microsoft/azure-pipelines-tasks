@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure RM App Service Deployment",
   "main": "AzureRmWebAppDeployment.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureRmWebAppDeploymentV5",
+    "serverBuild": "node ../../make.js serverBuild --task AzureRmWebAppDeploymentV5",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "node ../../make.js build --task SshV0",
+    "serverBuild": "node ../../make.js serverBuild --task SshV0",
     "test": "node ../../make.js test --task SshV0"
   },
   "dependencies": {
