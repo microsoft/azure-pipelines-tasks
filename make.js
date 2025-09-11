@@ -235,6 +235,13 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
 
     writeUpdatedsFromGenTasks = true;
     await CLI.serverBuild(argv);
+    CLI.validate(argv);
+}
+
+CLI.validate = function()
+{
+    const allTasks = getTaskList(taskList);
+    run(`node ci/check-node-executor-agent-version.js --task "@(${allTasks.join("|")})"`);
 }
 
 CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
