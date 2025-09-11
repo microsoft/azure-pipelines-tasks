@@ -118,6 +118,15 @@ steps:
     )
   displayName: Push release branch
 
+- script: node ./ci/check-dependencies.js
+  displayName: Check dependencies for updates
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['System.PullRequest.TargetBranch'], 'master')
+    )
+
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   # remove SourceBranch condition after merging users/merlynop/node20merge-2 ; see https://github.com/microsoft/azure-pipelines-tasks/pull/20819
