@@ -159,8 +159,12 @@ function ConvertTo-Pfx {
         $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe"
         $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.cnf"
     }
-    $versionOutput = & $openSSLExePath version
-    Write-Verbose "OpenSSL version: $versionOutput"
+    try {
+        $versionOutput = & $openSSLExePath version
+        Write-Verbose "OpenSSL version: $versionOutput"
+    } catch {
+        Write-Host "There was an error while getting the OpenSSL version $_"
+    }
     $env:RANDFILE=".rnd"
 
     $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`"  -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1"
