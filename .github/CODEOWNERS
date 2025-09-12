@@ -38,9 +38,9 @@ Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team
 
 Tasks/AzureCloudPowerShellDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
+Tasks/AzureContainerAppsV0/    @naziml    @tarunramsinghani
 
-Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
+Tasks/AzureContainerAppsV1/    @naziml    @tarunramsinghani
 
 Tasks/AzureFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -337,7 +337,7 @@ Tasks/NodeTaskRunnerInstallerV0/    @microsoft/azure-pipelines-tasks-and-agent @
 Tasks/NodeToolV0/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI rotation: Azure Container Registry / Triage
-Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT
+Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT @tarunramsinghani
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 

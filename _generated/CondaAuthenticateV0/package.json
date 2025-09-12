@@ -4,6 +4,8 @@
   "description": "Authenticate conda client.",
   "main": "condaAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task CondaAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task CondaAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -5,6 +5,7 @@
   "main": "kubelogin.js",
   "scripts": {
     "build": "node ../../make.js build --task KubeloginInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task KubeloginInstallerV0",
     "test": "node ../../make.js test --task KubeloginInstallerV0"
   },
   "repository": {
@@ -26,7 +27,7 @@
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-azure-arm-rest": "3.259.2",
-    "azure-pipelines-tool-lib": "^2.0.4"
+    "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
     "typescript": "5.1.6"
