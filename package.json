@@ -12,7 +12,9 @@
     "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package"
+    "package": "node make.js package",
+    "build:parallel": "node build-parallel.js build",
+    "serverBuild:parallel": "node build-parallel.js serverBuild"
   },
   "repository": {
     "type": "git",
@@ -47,7 +49,8 @@
     "shelljs": "^0.8.5",
     "typed-rest-client": "^1.8.9",
     "typescript": "4.0.2",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "pnpm": "^10.13.1"
   },
   "dependencies": {
     "agent-base": "^6.0.2"

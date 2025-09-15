@@ -337,6 +337,11 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     async function installNodeAndBuildTasks(nodeMajorVersion, nodeFullVersion, buildTaskList, builtTasks) {
         await util.installNodeAsync(nodeMajorVersion.toString());
         ensureTool('node', '--version', `v${nodeFullVersion}`);
+
+        if(argv.onlyPreBuildSteps) {
+            return;
+        }
+
         for (const taskName of buildTaskList) {
             const taskKey = `${taskName}-${nodeMajorVersion}`;
             if (!builtTasks.has(taskKey)) {

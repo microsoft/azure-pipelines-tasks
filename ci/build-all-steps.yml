@@ -128,7 +128,7 @@ steps:
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master'),
-      not(contains(variables['System.PullRequest.SourceBranch'], 'users/bhatibhavesh/addbuildtestcommands'))
+      not(contains(variables['System.PullRequest.SourceBranch'], 'users/bhatibhavesh/concurrentbuild'))
     )
 
 # Clean
