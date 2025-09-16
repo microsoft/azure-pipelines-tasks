@@ -22,16 +22,16 @@ function convertTaskPatternToWorkspaceFilters(taskPattern) {
         if (tasks.length === 0) {
             return [];
         } else if (tasks.length === 1) {
-            return ['--filter', `./Tasks/${tasks[0]}`];
+            return ['--filter', `"./Tasks/${tasks[0]}"`];
         } else {
             // Create a single filter pattern that matches multiple task paths
             const pathPattern = `./Tasks/{${tasks.join(',')}}`;
-            return ['--filter', pathPattern];
+            return ['--filter', `"${pathPattern}"`];
         }
     }
     
     // Handle single task or other patterns - use path-based filter
-    return ['--filter', `./Tasks/${taskPattern}`];
+    return ['--filter', `"./Tasks/${taskPattern}"`];
 }
 
 /**
