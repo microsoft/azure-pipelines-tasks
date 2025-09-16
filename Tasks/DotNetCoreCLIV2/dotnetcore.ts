@@ -3,7 +3,7 @@ import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
-import * as toml from 'toml';
+import * as JSON5 from 'json5';
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -147,12 +147,24 @@ export class dotNetExe {
     }
 
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("dotnet.config")) {
+        if (!tl.exist("global.json")) {
+            tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let dotnetConfig = fs.readFileSync("dotnet.config", 'utf8');
-        return toml.parse(dotnetConfig).dotnet?.test?.runner?.name === 'Microsoft.Testing.Platform';
+        let globalJsonContents = fs.readFileSync("global.json", 'utf8');
+        if (!globalJsonContents.length) {
+            return false;
+        }
+
+        try {
+            const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
+            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            return testRunner === 'Microsoft.Testing.Platform';
+        } catch (error) {
+            tl.warning(`Error occurred reading global.json: ${error}`);
+            return false;
+        }
     }
 
     private async executeTestCommand(): Promise<void> {

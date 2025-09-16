@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureAppServiceManageV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureAppServiceManageV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
