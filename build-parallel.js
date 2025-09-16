@@ -126,11 +126,12 @@ async function runBuild(additionalArgs = []) {
         '-r',
         '--aggregate-output',
         '--reporter=append-only',
-        '--workspace-concurrency=0',
+        '--workspace-concurrency=2',
         ...workspaceArgs,  // Move workspace filters before 'run'
         'run',
         'build',
-        '--skipPrebuildSteps'
+        '--skipPrebuildSteps',
+        '--enableConcurrentTaskBuild'
     ];
 
     console.log('Running parallel build...');
@@ -173,11 +174,12 @@ async function runServerBuild(additionalArgs = []) {
         '-r',
         '--aggregate-output',
         '--reporter=append-only',
-        '--workspace-concurrency=0',
+        '--workspace-concurrency=2',
         ...workspaceArgs,  // Move workspace filters before 'run'
         'run',
         'serverBuild',
-        '--skipPrebuildSteps'
+        '--skipPrebuildSteps',
+        '--enableConcurrentTaskBuild'
     ];
 
     console.log('Running parallel server build...');

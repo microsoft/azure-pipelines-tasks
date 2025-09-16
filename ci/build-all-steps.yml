@@ -136,7 +136,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+- script: node build-parallel.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
 

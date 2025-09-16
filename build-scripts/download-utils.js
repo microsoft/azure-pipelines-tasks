@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { mkdir, rm, test, cd } = require('shelljs');
 
-var repoPath = __dirname;
+var repoPath = path.join(__dirname, '..');
 var downloadPath = path.join(repoPath, '_download');
 
 var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck) {
