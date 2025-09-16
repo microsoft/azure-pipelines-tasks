@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 259,
-    "Patch": 5
+    "Minor": 261,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -186,7 +186,8 @@
       "parameters": {
         "testPlan": "$(testPlan)"
       },
-      "resultSelector": "jsonpath:$.value[*]"
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "Azure Test Plan - $(testSelector)",
