@@ -179,6 +179,7 @@
       "required": false,
       "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
     },
+
     {
       "name": "selectOrConfig",
       "aliases": [
