@@ -4,7 +4,6 @@ import path = require('path');
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
-import javaCommon = require('azure-pipelines-tasks-java-common/java-common');
 
 import { AzureStorageArtifactDownloader } from './AzureStorageArtifacts/AzureStorageArtifactDownloader';
 import { JavaFilesExtractor, BIN_FOLDER } from './FileExtractor/JavaFilesExtractor';
@@ -35,13 +34,9 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
-    let extendedJavaHome: string;      
-    if(jdkArchitectureOption.toLowerCase() === 'arm64'){
-        extendedJavaHome = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption.toLowerCase()}`;
-    } else {
-        extendedJavaHome = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
-    }
-    
+    const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
+    const extendedARMJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption.toLowerCase()}`;
+
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
@@ -49,7 +44,10 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
-        const preInstalledJavaDirectory: string | undefined = javaCommon.findJavaHome(versionSpec, jdkArchitectureOption);
+        let preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        if (!preInstalledJavaDirectory) {
+            preInstalledJavaDirectory = process.env[extendedARMJavaHome];
+        }
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
@@ -131,14 +129,14 @@ async function installJDK(sourceFile: string, fileExtension: string, archiveExtr
 
         const pkgPath: string = getPackagePath(volumePath);
         try {
-            jdkDirectory = await installPkg(pkgPath, versionSpec);
+            jdkDirectory = await installPkg(pkgPath, extendedJavaHome, versionSpec);
         } finally {
             // In case of an error, there is still a need to detach the disk image
             await taskutils.detach(volumePath);
         }
     }
     else if (fileExtension === '.pkg' && os.platform() === 'darwin') {
-        jdkDirectory = await installPkg(sourceFile, versionSpec);
+        jdkDirectory = await installPkg(sourceFile, extendedJavaHome, versionSpec);
     }
     else {
         const createExtractDirectory: boolean = taskLib.getBoolInput('createExtractDirectory', false);
@@ -221,7 +219,7 @@ function getPackagePath(volumePath: string): string {
  * @param versionSpec Version of JDK to install.
  * @returns Promise<string>
  */
-async function installPkg(pkgPath: string, versionSpec: string): Promise<string> {
+async function installPkg(pkgPath: string, extendedJavaHome: string, versionSpec: string): Promise<string> {
     if (!fs.existsSync(pkgPath)) {
         throw new Error('PkgPathDoesNotExist');
     }
@@ -238,8 +236,7 @@ async function installPkg(pkgPath: string, versionSpec: string): Promise<string>
     let jdkDirectory: string;
 
     if (newJDKs.length === 0) {
-        var jdkArchitectureOption = taskLib.getInput('jdkArchitectureOption', true);
-        const preInstalledJavaDirectory: string | undefined = javaCommon.findJavaHome(versionSpec, jdkArchitectureOption);
+        const preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
