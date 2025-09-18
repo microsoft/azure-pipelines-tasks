@@ -11,46 +11,43 @@ let osArch: string = os.arch();
 
 async function run() {
     try {
-        let version = tl.getInput('version', true).trim();
+        const rawVersion = tl.getInput('version', true);
+        if (!rawVersion || ['null','undefined',''].includes(rawVersion.trim().toLowerCase())) {
+            throw new Error("Input 'version' is required and must not be empty, 'null' or 'undefined'.");
+        }
+        const version = rawVersion.trim();
         let downloadBaseUrl: string = tl.getInput('goDownloadUrl', false);
-        await getGo(version, downloadBaseUrl);
-        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version, customBaseUrl: String(!!downloadBaseUrl) });
+        const resolvedVersion = await getGo(version, downloadBaseUrl);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, customBaseUrl: String(!!downloadBaseUrl) });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
-async function getGo(version: string, baseUrl?: string) {
-    // Resolve version and caching strategy
+async function getGo(version: string, baseUrl?: string): Promise<string> {
     const resolved = await resolveVersionAndCache(version, baseUrl);
+    tl.debug(`resolveVersionAndCache result filenameVersion=${resolved.filenameVersion} cacheVersion=${resolved.cacheVersion ?? '<?>'} toolName=${resolved.toolName} (type=${typeof resolved.cacheVersion})`);
     let toolPath: string | null = null;
 
     if (resolved.cacheVersion) {
-        toolPath = toolLib.findLocalTool('go', resolved.cacheVersion);
+        toolPath = toolLib.findLocalTool(resolved.toolName, resolved.cacheVersion);
     }
 
     if (!toolPath) {
-        // download, extract, and optionally cache
-        toolPath = await acquireGo(resolved.filenameVersion, baseUrl, resolved.cacheVersion);
+        toolPath = await acquireGo(resolved.filenameVersion, baseUrl, resolved.cacheVersion, resolved.toolName);
         tl.debug("Go tool is available under " + toolPath);
     }
 
     setGoEnvironmentVariables(toolPath);
-
     const binPath = path.join(toolPath, 'bin');
-    // prepend the tools path. instructs the agent to prepend for future tasks
     toolLib.prependPath(binPath);
+    return resolved.filenameVersion;
 }
 
-
-async function acquireGo(filenameVersion: string, baseUrl?: string, cacheVersion?: string): Promise<string> {
-    //
-    // Download - a tool installer intimately knows how to get the tool (and construct urls)
-    //
+async function acquireGo(filenameVersion: string, baseUrl?: string, cacheVersion?: string, toolName: string = 'go'): Promise<string> {
     let fileName: string = getFileName(filenameVersion);
     let downloadUrl: string = getDownloadUrl(fileName, baseUrl);
-    // Always log the actual download URL
     tl.debug(`Resolved Go download URL: ${downloadUrl}`);
     console.log(`Downloading Go from ${downloadUrl}`);
     let downloadPath: string = null;
@@ -58,40 +55,31 @@ async function acquireGo(filenameVersion: string, baseUrl?: string, cacheVersion
         downloadPath = await toolLib.downloadTool(downloadUrl);
     } catch (error) {
         tl.debug(error);
-
-        // cannot localized the string here because to localize we need to set the resource file.
-        // which can be set only once. azure-pipelines-tool-lib/tool, is already setting it to different file.
-        // So left with no option but to hardcode the string. Other tasks are doing the same.
-        throw (util.format("Failed to download version %s. Please verify that the version is valid and resolve any other issues. %s", filenameVersion, error));
+        throw (util.format(
+            "Failed to download version %s. Please verify that the version is valid and resolve any other issues. %s",
+            filenameVersion, error));
     }
 
-    //make sure agent version is latest then 2.115.0
     tl.assertAgent('2.115.0');
 
-    //
-    // Extract
-    //
-    let extPath: string;
-    extPath = tl.getVariable('Agent.TempDirectory');
+    let extPath: string = tl.getVariable('Agent.TempDirectory');
     if (!extPath) {
         throw new Error("Expected Agent.TempDirectory to be set");
     }
 
     if (osPlat == 'win32') {
         extPath = await toolLib.extractZip(downloadPath);
-    }
-    else {
+    } else {
         extPath = await toolLib.extractTar(downloadPath);
     }
 
-    //
-    // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
-    //
     let toolRoot = path.join(extPath, "go");
     if (cacheVersion) {
-        return await toolLib.cacheDir(toolRoot, 'go', cacheVersion);
+        tl.debug(`Invoking cacheDir with tool='${toolName}' cacheVersion='${cacheVersion}' (type=${typeof cacheVersion})`);
+        return await toolLib.cacheDir(toolRoot, toolName, cacheVersion);
+    } else {
+        tl.debug(`Skipping cacheDir because cacheVersion='${cacheVersion}'`);
     }
-    // If cacheVersion is not provided, use the extracted path directly (no caching)
     return toolRoot;
 }
 
@@ -106,23 +94,20 @@ function getFileName(version: string): string {
         arch = "386";
     }
     let ext: string = osPlat == "win32" ? "zip" : "tar.gz";
-    let filename: string = util.format("go%s.%s-%s.%s", version, platform, arch, ext);
-    return filename;
+    return util.format("go%s.%s-%s.%s", version, platform, arch, ext);
 }
 
 function getDownloadUrl(filename: string, baseUrl?: string): string {
-    let base: string = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://storage.googleapis.com/golang";
+    // Always append the filename; aka.ms/golang/release/latest supports per-file paths.
+    let base = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://storage.googleapis.com/golang";
     base = base.replace(/\/+$/, '');
-    return util.format("%s/%s", base, filename);
+    return `${base}/${filename}`;
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
     tl.setVariable('GOROOT', goRoot);
-
     let goPath: string = tl.getInput("goPath", false);
     let goBin: string = tl.getInput("goBin", false);
-
-    // set GOPATH and GOBIN as user value
     if (!util.isNullOrUndefined(goPath)) {
         tl.setVariable("GOPATH", goPath);
     }
@@ -132,7 +117,7 @@ function setGoEnvironmentVariables(goRoot: string) {
 }
 
 function isSemverWithPatch(version: string): boolean {
-    return /^\d+\.\d+\.\d+$/.test(version.trim());
+    return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?(?:\+[0-9A-Za-z-.]+)?$/.test(version.trim());
 }
 
 function hasMajorMinorOnly(version: string): boolean {
@@ -140,31 +125,29 @@ function hasMajorMinorOnly(version: string): boolean {
 }
 
 function isOfficialBaseUrl(baseUrl?: string): boolean {
-    // Treat as official only when:
-    // - No baseUrl provided (defaults to Google storage), or
-    // - Exact known Google hosts and paths:
-    //    * https://storage.googleapis.com/golang
     if (!baseUrl || !baseUrl.trim()) return true;
-
     const raw = baseUrl.trim();
     try {
         const u = new URL(raw);
         const host = u.hostname.toLowerCase();
-        const p = u.pathname.replace(/\/+$/, '').toLowerCase(); // strip trailing slashes
-
+        const p = u.pathname.replace(/\/+$/, '').toLowerCase();
         if (host === 'storage.googleapis.com' && (p === '/golang' || p === '')) return true;
-
-        // Any other host/path is treated as custom (non-official)
         return false;
     } catch {
-        // Invalid URL string => treat as custom to avoid unintended metadata fetch
         return false;
     }
 }
 
-function includesLatestKeyword(url?: string): boolean {
-    if (!url) return false;
-    return url.toLowerCase().includes('latest');
+function isAkaMsLatest(baseUrl?: string): boolean {
+    if (!baseUrl) return false;
+    try {
+        const u = new URL(baseUrl.trim());
+        const host = u.hostname.toLowerCase();
+        const p = u.pathname.replace(/\/+$/, '').toLowerCase();
+        return host === 'aka.ms' && p === '/golang/release/latest';
+    } catch {
+        return false;
+    }
 }
 
 async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<string> {
@@ -182,14 +165,14 @@ async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<strin
         tl.debug(`Downloading Go releases metadata from ${metadataUrl}`);
         jsonPath = await toolLib.downloadTool(metadataUrl);
     } catch (error) {
-        throw new Error(`Failed to download Go releases metadata: ${error.message}`);
+        throw new Error(`Failed to download Go releases metadata: ${(error as any).message}`);
     }
     const raw = fs.readFileSync(jsonPath, 'utf8');
 
     let releases: any[];
     try {
         releases = JSON.parse(raw);
-    } catch (e) {
+    } catch {
         throw new Error('Failed to parse Go releases metadata from go.dev');
     }
 
@@ -213,35 +196,105 @@ async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<strin
     return `${major}.${minor}.${maxPatch}`;
 }
 
-async function resolveVersionAndCache(version: string, baseUrl?: string): Promise<{ filenameVersion: string, cacheVersion?: string }> {
-    const v = version.trim().replace(/^v/i, ''); // Remove leading 'v' if present to account for user mistakes
+async function getMicrosoftLatestPatchFromManifest(majorMinorVersion: string): Promise<string> {
+    const mm = majorMinorVersion.replace(/^go/i, '').replace(/^v/i, '');
+    const manifestUrl = `https://aka.ms/golang/release/latest/go${mm}.assets.json`;
+    tl.debug(`Downloading Microsoft Go manifest from ${manifestUrl}`);
+    let jsonPath: string;
+    try {
+        jsonPath = await toolLib.downloadTool(manifestUrl);
+    } catch (e) {
+        throw new Error(`Failed to download Microsoft Go manifest for ${majorMinorVersion}: ${(e as any).message}`);
+    }
+    const raw = fs.readFileSync(jsonPath, 'utf8');
+
+    let parsed: any;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        parsed = undefined;
+    }
+
+    let full: string | undefined;
+    if (parsed && typeof parsed === 'object') {
+        if (typeof parsed.version === 'string') {
+            full = parsed.version;
+        } else if (Array.isArray(parsed.assets)) {
+            for (const a of parsed.assets) {
+                if (a && typeof a.version === 'string') {
+                    full = a.version;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!full) {
+        // Fallback regex scan
+        const m = /"version"\s*:\s*"go(\d+\.\d+\.\d+)"/.exec(raw) || /"go(\d+\.\d+\.\d+)"/.exec(raw);
+        if (m) {
+            full = `go${m[1]}`;
+        }
+    }
+
+    if (!full) {
+        throw new Error(`Could not resolve full patch version from Microsoft manifest for ${majorMinorVersion}`);
+    }
+    // Accept versions with or without a leading 'go' prefix and optional prerelease/build metadata
+    // Examples: 1.24.7-1, go1.24.7-rc1, 1.24.7-1+meta, go1.24.7
+    const semverMatch = /^(?:go)?(\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?(?:\+[0-9A-Za-z-.]+)?)$/.exec(full.trim());
+    if (!semverMatch) {
+        throw new Error(`Unexpected version format in Microsoft manifest: ${full}`);
+    }
+    return semverMatch[1];
+}
+
+async function resolveVersionAndCache(version: string, baseUrl?: string): Promise<{ filenameVersion: string, cacheVersion?: string, toolName: string }> {
+    const v = version.trim().replace(/^v/i, '');
+    if (!v) {
+        throw new Error("Version input resolved to empty string.");
+    }
     const official = isOfficialBaseUrl(baseUrl);
+    const akaLatest = isAkaMsLatest(baseUrl);
+    // Cache differentiation: use distinct toolName values ('go' vs 'go-aka') so cacheVersion can remain a pure semver.
+    // cacheVersion MUST be a valid semver string accepted by tool-lib; adding prefixes caused null normalization and failures.
 
     if (official) {
         if (isSemverWithPatch(v)) {
-            return { filenameVersion: v, cacheVersion: v };
+            return { filenameVersion: v, cacheVersion: v, toolName: 'go' };
         }
         if (hasMajorMinorOnly(v)) {
-            const resolved = await getLatestPatchFromGoDev(v);
-            return { filenameVersion: resolved, cacheVersion: resolved };
-        }
-        // Fallback to semantic conversion for other formats (e.g., "1")
-        throw new Error("For official Go URLs, the version spec must be in 'major.minor' (e.g., '1.10') or 'major.minor.patch' (e.g., '1.10.2') format.");
-    } else {
-        const urlHasLatest = includesLatestKeyword(baseUrl);
-        if (isSemverWithPatch(v)) {
-            return { filenameVersion: v, cacheVersion: v };
-        }
-        if (hasMajorMinorOnly(v) || /^\d+$/.test(v)) {
-            if (!urlHasLatest) {
-                throw new Error("Custom URL provided without 'latest' in the URL requires a full semantic version (major.minor.patch).");
+            let resolved: string | undefined;
+            try {
+                resolved = await getLatestPatchFromGoDev(v);
+            } catch (e: any) {
+                const msg = String(e?.message || e || '');
+                if (/Could not find a stable patch version/i.test(msg)) {
+                    throw new Error(`Requested Go minor ${v} has no stable patch release yet. Specify a full patch once released (e.g. ${v}.0) or use an existing released minor (e.g. 1.23).`);
+                }
+                throw new Error(`Failed to resolve latest patch for ${v}: ${msg}`);
             }
-            // Allow major.minor (or major) when custom URL indicates 'latest'; skip caching due to unknown exact patch
-            return { filenameVersion: v };
+            if (!resolved) {
+                throw new Error(`Could not resolve a stable patch for ${v}.`);
+            }
+            return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go' };
         }
-        // Unknown format: try as-is (no caching)
-        return { filenameVersion: v };
+        throw new Error("Official Go version must be 'major.minor' (e.g. 1.22) or 'major.minor.patch' (e.g. 1.22.3).");
     }
+
+    if (akaLatest) {
+        if (isSemverWithPatch(v)) {
+            // Already a full patch; cache directly
+            return { filenameVersion: v, cacheVersion: v, toolName: 'go-aka' };
+        }
+        if (hasMajorMinorOnly(v)) {
+            const resolved = await getMicrosoftLatestPatchFromManifest(v);
+            return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
+        }
+        throw new Error("For https://aka.ms/golang/release/latest use 'major.minor' (e.g. 1.25) or 'major.minor.patch' (e.g. 1.25.3).");
+    }
+
+    throw new Error("Unsupported custom baseUrl. Only https://storage.googleapis.com/golang and https://aka.ms/golang/release/latest are allowed.");
 }
 
 run();
