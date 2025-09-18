@@ -897,9 +897,34 @@ var createTaskLocJson = function (taskPath) {
 };
 exports.createTaskLocJson = createTaskLocJson;
 
+// Enhanced UUID/GUID validation using node-uuid package
+var validateUuid = function (uuid) {
+    if (!uuid || typeof uuid !== 'string') {
+        return false;
+    }
+
+    // Basic format check - must match UUID pattern (allows all variants)
+    var uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidPattern.test(uuid)) {
+        return false;
+    }
+
+    try {
+        const uuidLib = require('node-uuid');
+        
+        // node-uuid.parse() returns a buffer if valid, throws if invalid
+        var parsed = uuidLib.parse(uuid);
+        
+        // If parse succeeds and returns a 16-byte buffer, the UUID is valid
+        return parsed && parsed.length === 16;
+    } catch (error) {
+        return false;
+    }
+};
+
 // Validates the structure of a task.json file.
 var validateTask = function (task) {
-    if (!task.id || !check.isUUID(task.id)) {
+    if (!task.id || !validateUuid(task.id)) {
         fail('id is a required guid');
     };
 
@@ -2062,5 +2087,6 @@ async function getCurrentSprint() {
 }
 
 exports.getCurrentSprint = getCurrentSprint;
+exports.validateUuid = validateUuid;
 
 //------------------------------------------------------------------------------
