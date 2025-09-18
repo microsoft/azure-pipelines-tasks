@@ -35,6 +35,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     let compressedFileExtension: string;
     let jdkDirectory: string;
     const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
+    const extendedARMJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption.toLowerCase()}`;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -43,7 +44,10 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
-        const preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        let preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        if (!preInstalledJavaDirectory) {
+            preInstalledJavaDirectory = process.env[extendedARMJavaHome];
+        }
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
@@ -60,7 +64,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
             const fileNameAndPath: string = taskLib.getInput('azureCommonVirtualFile', true);
             const azureDownloader = new AzureStorageArtifactDownloader(
                 taskLib.getInput('azureResourceManagerEndpoint', true),
-                taskLib.getInput('azureStorageAccountName', true), 
+                taskLib.getInput('azureStorageAccountName', true),
                 taskLib.getInput('azureContainerName', true),
                 "",
                 taskLib.getInput('azureResourceGroupName', false),
