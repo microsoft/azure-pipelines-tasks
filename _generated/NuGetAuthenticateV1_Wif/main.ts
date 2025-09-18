@@ -31,6 +31,17 @@ async function main(): Promise<void> {
             return;
         }
 
+        // Warning case: User provides feedUrl without providing a WIF service connection 
+        if (entraWifServiceConnectionName) {
+            // Happy path, continue with flow
+        } else if (feedUrl) {
+            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
+            feedUrl = null;
+            
+            // In the future, we will shift to breaking behavior
+            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
+        }
+
         // Validate input is valid feed URL
         if (feedUrl && !isValidFeed(feedUrl)) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidFeedUrl", feedUrl));
@@ -50,13 +61,6 @@ async function main(): Promise<void> {
             configureCredProviderForSameOrganizationFeeds(ProtocolType.NuGet, entraWifServiceConnectionName);
 
             return;
-        } else if (feedUrl) {
-            // Warning case: User provides feedUrl without providing a WIF service connection
-            tl.warning(tl.loc("Warn_IgnoringFeedUrl"));
-            feedUrl = null;
-
-            // In the future, we will shift to breaking behavior
-            // tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Error_NuGetWithFeedUrlNotSupported"));
         }
 
         // Configure the credential provider for both same-organization feeds and service connections
@@ -68,8 +72,8 @@ async function main(): Promise<void> {
             'NuGetAuthenticate.ForceReinstallCredentialProvider': forceReinstallCredentialProvider,
             "FederatedFeedAuthCount": federatedFeedAuthSuccessCount,
             // We have to check both input names because only WIF versions of the task are aware of aliases 
-            "isFeedUrlIncluded": !!(tl.getInput("feedUrl") || tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
-            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")) || isValidFeed(tl.getInput("azureDevOpsServiceConnectionCrossOrgFeedUrl")),
+            "isFeedUrlIncluded": !!tl.getInput("feedUrl"),
+            "isFeedUrlValid": isValidFeed(tl.getInput("feedUrl")),
             "isEntraWifServiceConnectionNameIncluded": !!(tl.getInput("workloadIdentityServiceConnection")|| tl.getInput("azureDevOpsServiceConnection")),
             "isServiceConnectionIncluded": !!serviceConnections.length
         });

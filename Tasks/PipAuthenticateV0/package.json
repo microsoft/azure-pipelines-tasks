@@ -4,6 +4,8 @@
   "description": "Authenticate pip client.",
   "main": "pipAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task PipAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task PipAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +25,7 @@
     "azure-pipelines-task-lib": "^4.1.0",
     "azure-pipelines-tasks-packaging-common": "3.242.2",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {

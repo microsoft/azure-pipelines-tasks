@@ -4,6 +4,8 @@
   "description": "NuGet Authenticate",
   "main": "main.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

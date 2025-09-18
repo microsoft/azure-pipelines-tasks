@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure Function Deployment",
   "main": "azurermWebappdeployment.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureFunctionAppV2",
+    "serverBuild": "node ../../make.js serverBuild --task AzureFunctionAppV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
