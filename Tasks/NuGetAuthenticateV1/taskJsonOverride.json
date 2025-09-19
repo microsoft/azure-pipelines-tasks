@@ -1,6 +1,17 @@
 {
     "inputs": [
         {
+            "name": "nuGetServiceConnections",
+            "type": "connectedService:ExternalNuGetFeed",
+            "label": "Service connection credentials for feeds outside this organization",
+            "required": false,
+            "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "True"
+            }
+        },
+        {
             "name": "workloadIdentityServiceConnection",
             "aliases": ["azureDevOpsServiceConnection"],
             "label": "'Azure DevOps' Service Connection",
@@ -28,17 +39,6 @@
             "label": "Reinstall the credential provider even if already installed",
             "defaultValue": "false",
             "helpMarkDown": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider."
-        },
-        {
-            "name": "nuGetServiceConnections",
-            "type": "connectedService:ExternalNuGetFeed",
-            "label": "Service connection credentials for feeds outside this organization",
-            "required": false,
-            "helpMarkDown": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-            "properties": {
-                "EditableOptions": "False",
-                "MultiSelectFlatList": "True"
-            }
         }
     ]
 }
