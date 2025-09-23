@@ -3,6 +3,7 @@ const Downloader = require('nodejs-file-downloader');
 const path = require('path');
 const fs = require('fs');
 const { mkdir, rm, test, cd } = require('shelljs');
+const crypto = require('crypto');
 
 var repoPath = path.join(__dirname, '..');
 var downloadPath = path.join(repoPath, '_download');
@@ -33,7 +34,6 @@ var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck) {
     // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
 
-    var crypto = require('crypto');
     var newScrubbedUrl = crypto.createHash('sha256').update(scrubbedUrl).digest('hex');
 
     var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
