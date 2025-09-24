@@ -1,6 +1,17 @@
 {
     "inputs": [
         {
+            "name": "nuGetServiceConnections",
+            "type": "connectedService:ExternalNuGetFeed",
+            "label": "ms-resource:loc.input.label.nuGetServiceConnections",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "True"
+            }
+        },
+        {
             "name": "workloadIdentityServiceConnection",
             "aliases": ["azureDevOpsServiceConnection"],
             "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
@@ -28,17 +39,6 @@
             "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
             "defaultValue": "false",
             "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
-        },
-        {
-            "name": "nuGetServiceConnections",
-            "type": "connectedService:ExternalNuGetFeed",
-            "label": "ms-resource:loc.input.label.nuGetServiceConnections",
-            "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
-            "properties": {
-                "EditableOptions": "False",
-                "MultiSelectFlatList": "True"
-            }
         }
     ]
 }
