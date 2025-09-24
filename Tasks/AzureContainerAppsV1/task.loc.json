@@ -128,6 +128,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
+      "name": "kind",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.kind"
+    },
+    {
       "name": "targetPort",
       "type": "string",
       "label": "ms-resource:loc.input.label.targetPort",
