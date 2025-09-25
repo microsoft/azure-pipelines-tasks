@@ -45,7 +45,10 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
         let preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
+        // MS-hosted runners set JAVA_HOME_<version>_arm64 variable for pre-installed ARM JDKs.
+        // If JAVA_HOME_<version>_ARM64 is not found, search for JAVA_HOME_<version>_arm64.
         if (!preInstalledJavaDirectory) {
+            // Using process.env to read the environment variable as taskLib.getVariable converts the name to upper case.
             preInstalledJavaDirectory = process.env[extendedARMJavaHome];
         }
         if (!preInstalledJavaDirectory) {
