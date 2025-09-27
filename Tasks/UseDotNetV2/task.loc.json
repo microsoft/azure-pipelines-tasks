@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 263,
-    "Patch": 0
+    "Patch": 3
   },
   "satisfies": [
     "DotNetCore"
@@ -78,6 +78,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion"
+    },
+    {
+      "name": "checkDotnetCLI",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkDotnetCLI",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkDotnetCLI",
+      "groupName": "advanced"
     },
     {
       "name": "includePreviewVersions",
