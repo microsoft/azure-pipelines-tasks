@@ -363,6 +363,10 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         banner('Build successful', true);
     }
 
+    // ASA Security Analysis - Cleanup
+    const asa = require('./build-scripts/asa.js');
+    asa.cleanup();
+
     // Track tasks that have been built with specific node versions to avoid duplicates
     async function installNodeAndBuildTasks(nodeMajorVersion, nodeFullVersion, buildTaskList, builtTasks, buildResults) {
         await util.installNodeAsync(nodeMajorVersion.toString());

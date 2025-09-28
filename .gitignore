@@ -37,6 +37,7 @@ _package/
 _test/
 _working/
 _gendocs/
+_asa-reports/
 
 # Roslyn cache directories
 *.ide/

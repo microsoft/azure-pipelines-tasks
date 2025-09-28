@@ -13,6 +13,7 @@ const semver = require('semver');
 const shell = require('shelljs');
 
 const makeOptions = require('./make-options.json');
+const asa = require('./build-scripts/asa.js');
 
 const args = minimist(process.argv.slice(2));
 
@@ -198,6 +199,11 @@ function performNpmAudit(taskPath) {
 
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
+    var taskName = path.basename(taskPath);
+    
+    // ASA Security Analysis - Collect Baseline
+    asa.collectBaseline(taskName);
+    
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
@@ -244,6 +250,9 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     }
+
+    // ASA Security Analysis - Collect Post-Build State
+    asa.collectPostBuild(taskName);
 
     cd(originalDir);
 }
