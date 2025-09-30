@@ -1,5 +1,9 @@
 {
   "name": "AzureFileCopyV2",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureFileCopyV3",
+    "serverBuild": "node ../../make.js serverBuild --task AzureFileCopyV3"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",

@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 262,
-    "Patch": 1
+    "Minor": 263,
+    "Patch": 5
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -31,7 +31,8 @@
       "properties": {
         "EditableOptions": "False",
         "MultiSelectFlatList": "False"
-      }
+      },
+      "visibleRule": "nuGetServiceConnections == ''"
     },
     {
       "name": "feedUrl",
@@ -39,7 +40,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "visibleRule": "workloadIdentityServiceConnection != ''"
     },
     {
       "name": "forceReinstallCredentialProvider",
@@ -76,14 +78,18 @@
   },
   "messages": {
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
+    "Error_InvalidFeedUrl": "ms-resource:loc.messages.Error_InvalidFeedUrl",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
+    "Error_NuGetWithFeedUrlNotSupported": "ms-resource:loc.messages.Error_NuGetWithFeedUrlNotSupported",
+    "Error_NuGetWithWIFNotSupported": "ms-resource:loc.messages.Error_NuGetWithWIFNotSupported",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
-    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.262.0",
+    "Default": "1.263.4",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.262.1"
+    "wif_242": "1.263.5"
   }
 }

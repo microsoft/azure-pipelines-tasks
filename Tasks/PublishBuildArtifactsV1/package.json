@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Publish Build Artifacts Task",
   "main": "publishbuildartifacts.js",
   "scripts": {
+    "build": "node ../../make.js build --task PublishBuildArtifactsV1",
+    "serverBuild": "node ../../make.js serverBuild --task PublishBuildArtifactsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

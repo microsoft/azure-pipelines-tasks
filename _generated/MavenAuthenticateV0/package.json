@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Maven Authenticate Task",
   "main": "mavenauth.js",
   "scripts": {
+    "build": "node ../../make.js build --task MavenAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task MavenAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

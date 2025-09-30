@@ -4,6 +4,8 @@
   "description": "Node Tool Installer",
   "main": "nodetool.js",
   "scripts": {
+    "build": "node ../../make.js build --task NodeToolV0",
+    "serverBuild": "node ../../make.js serverBuild --task NodeToolV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +30,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.7",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "1.8.4"
   },
   "devDependencies": {

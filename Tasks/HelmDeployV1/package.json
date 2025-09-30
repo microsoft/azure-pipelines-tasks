@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task HelmDeployV1",
+    "serverBuild": "node ../../make.js serverBuild --task HelmDeployV1"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
@@ -9,7 +13,7 @@
     "azure-pipelines-tasks-azure-arm-rest": "3.259.2",
     "azure-pipelines-tasks-docker-common": "^2.242.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
-    "azure-pipelines-tasks-securefiles-common": "^2.262.0",
+    "azure-pipelines-tasks-securefiles-common": "^2.263.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
     "del": "2.2.0",
     "moment": "^2.29.4"

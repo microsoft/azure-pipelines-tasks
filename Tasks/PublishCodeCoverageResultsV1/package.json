@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task PublishCodeCoverageResultsV1",
+    "serverBuild": "node ../../make.js serverBuild --task PublishCodeCoverageResultsV1"
+  },
   "dependencies": {
     "@types/node": "^20.11.0",
     "@types/mocha": "^5.2.7",

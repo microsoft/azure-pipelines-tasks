@@ -4,6 +4,8 @@
   "description": "Azure Pipelines InstallAppleCertificate Task",
   "main": "preinstallcert.js",
   "scripts": {
+    "build": "node ../../make.js build --task InstallAppleCertificateV2",
+    "serverBuild": "node ../../make.js serverBuild --task InstallAppleCertificateV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +23,7 @@
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-ios-signing-common": "2.227.0",
-    "azure-pipelines-tasks-securefiles-common": "2.262.0"
+    "azure-pipelines-tasks-securefiles-common": "2.263.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

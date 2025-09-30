@@ -4,6 +4,8 @@
   "description": "Authenticate Twine client",
   "main": "twineAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task TwineAuthenticateV1",
+    "serverBuild": "node ../../make.js serverBuild --task TwineAuthenticateV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,6 +1,10 @@
 {
   "name": "AzureResourceGroupDeployment",
   "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureResourceGroupDeploymentV2",
+    "serverBuild": "node ../../make.js serverBuild --task AzureResourceGroupDeploymentV2"
+  },
   "dependencies": {
     "@types/node": "^20.3.1",
     "agent-base": "6.0.2",

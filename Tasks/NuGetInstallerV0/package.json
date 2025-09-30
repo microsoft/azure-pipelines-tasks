@@ -4,6 +4,8 @@
   "description": "Nuget Installer Build Task",
   "main": "nugetinstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetInstallerV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

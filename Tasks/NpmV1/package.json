@@ -4,6 +4,8 @@
   "description": "Azure Pipelines npm Task",
   "main": "npmtask.js",
   "scripts": {
+    "build": "node ../../make.js build --task NpmV1",
+    "serverBuild": "node ../../make.js serverBuild --task NpmV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

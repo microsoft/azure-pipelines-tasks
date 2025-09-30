@@ -2,6 +2,10 @@
   "name": "vsts-tasks-vstest",
   "description": "Azure Pipelines VSTEST Task",
   "main": "VSTest.js",
+  "scripts": {
+    "build": "node ../../make.js build --task VsTestV3",
+    "serverBuild": "node ../../make.js serverBuild --task VsTestV3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"

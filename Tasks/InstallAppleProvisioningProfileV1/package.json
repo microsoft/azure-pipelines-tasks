@@ -4,6 +4,8 @@
   "description": "Azure Pipelines InstallAppleProvisioningProfile Task",
   "main": "preinstallprovprofile.js",
   "scripts": {
+    "build": "node ../../make.js build --task InstallAppleProvisioningProfileV1",
+    "serverBuild": "node ../../make.js serverBuild --task InstallAppleProvisioningProfileV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +23,7 @@
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-ios-signing-common": "2.0.3-preview",
-    "azure-pipelines-tasks-securefiles-common": "2.262.0"
+    "azure-pipelines-tasks-securefiles-common": "2.263.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

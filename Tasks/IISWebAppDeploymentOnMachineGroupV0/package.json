@@ -4,6 +4,8 @@
   "description": "Azure Pipelines  IIS WebApp Deployment On Machine Group",
   "main": "DeployIISWebApp.js",
   "scripts": {
+    "build": "node ../../make.js build --task IISWebAppDeploymentOnMachineGroupV0",
+    "serverBuild": "node ../../make.js serverBuild --task IISWebAppDeploymentOnMachineGroupV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

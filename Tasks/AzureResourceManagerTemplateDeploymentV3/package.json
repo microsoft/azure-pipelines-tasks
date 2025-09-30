@@ -1,6 +1,10 @@
 {
   "name": "AzureResourceManagerTemplateDeployment",
   "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureResourceManagerTemplateDeploymentV3",
+    "serverBuild": "node ../../make.js serverBuild --task AzureResourceManagerTemplateDeploymentV3"
+  },
   "dependencies": {
     "@types/node": "^20.3.1",
     "agent-base": "^6.0.2",
