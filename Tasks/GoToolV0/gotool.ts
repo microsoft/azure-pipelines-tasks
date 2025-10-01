@@ -125,29 +125,24 @@ function hasMajorMinorOnly(version: string): boolean {
     return /^\d+\.\d+$/.test(version.trim());
 }
 
-function isOfficialBaseUrl(baseUrl?: string): boolean {
-    if (!baseUrl || !baseUrl.trim()) return true;
+type GoBaseChannel = 'official' | 'akaLatest' | 'unsupported';
+
+function classifyBaseUrl(baseUrl?: string): { type: GoBaseChannel; normalized?: string } {
+    if (!baseUrl || !baseUrl.trim()) return { type: 'official' };
     const raw = baseUrl.trim();
     try {
         const u = new URL(raw);
         const host = u.hostname.toLowerCase();
         const p = u.pathname.replace(/\/+$/, '').toLowerCase();
-        if (host === 'storage.googleapis.com' && (p === '/golang' || p === '')) return true;
-        return false;
+        if (host === 'storage.googleapis.com' && (p === '/golang' || p === '')) {
+            return { type: 'official', normalized: raw };
+        }
+        if (host === 'aka.ms' && p === '/golang/release/latest') {
+            return { type: 'akaLatest', normalized: raw };
+        }
+        return { type: 'unsupported', normalized: raw };
     } catch {
-        return false;
-    }
-}
-
-function isAkaMsLatest(baseUrl?: string): boolean {
-    if (!baseUrl) return false;
-    try {
-        const u = new URL(baseUrl.trim());
-        const host = u.hostname.toLowerCase();
-        const p = u.pathname.replace(/\/+$/, '').toLowerCase();
-        return host === 'aka.ms' && p === '/golang/release/latest';
-    } catch {
-        return false;
+        return { type: 'unsupported' };
     }
 }
 
@@ -243,8 +238,9 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
     if (!v) {
         throw new Error("Version input resolved to empty string.");
     }
-    const official = isOfficialBaseUrl(baseUrl);
-    const akaLatest = isAkaMsLatest(baseUrl);
+    const channel = classifyBaseUrl(baseUrl);
+    const official = channel.type === 'official';
+    const akaLatest = channel.type === 'akaLatest';
     // Cache differentiation: use distinct toolName values ('go' vs 'go-aka') so cacheVersion can remain a pure semver.
     // cacheVersion MUST be a valid semver string accepted by tool-lib; adding prefixes caused null normalization and failures.
 
