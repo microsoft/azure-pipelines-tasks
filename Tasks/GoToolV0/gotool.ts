@@ -213,7 +213,7 @@ async function getMicrosoftLatestFromManifest(majorMinorOrPatch: string): Promis
         manifestId = `${parts.major}.${parts.minor}.${parts.patch}`;
     }
     const manifestUrl = `https://aka.ms/golang/release/latest/go${manifestId}.assets.json`;
-    tl.debug(`Downloading Microsoft Go manifest from ${manifestUrl}`);
+    tl.debug(`Downloading Microsoft build of Go manifest from ${manifestUrl}`);
     let jsonPath: string;
     try {
         jsonPath = await toolLib.downloadTool(manifestUrl);
