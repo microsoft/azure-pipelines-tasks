@@ -117,7 +117,8 @@ function setGoEnvironmentVariables(goRoot: string) {
 }
 
 function isSemverWithPatch(version: string): boolean {
-    return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?(?:\+[0-9A-Za-z-.]+)?$/.test(version.trim());
+    // Accepts versions of the form major.minor.patch or major.minor.patch-revision
+    return /^\d+\.\d+\.\d+(?:-\d+)?$/.test(version.trim());
 }
 
 function hasMajorMinorOnly(version: string): boolean {
@@ -150,14 +151,22 @@ function isAkaMsLatest(baseUrl?: string): boolean {
     }
 }
 
-async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<string> {
-    const normalized = majorMinorVersion.replace(/^go/i, '').replace(/^v/i, '');
-    const parts = normalized.split('.');
-    if (parts.length < 2) {
-        throw new Error(`Invalid major.minor version: ${majorMinorVersion}`);
+function parseGoVersionParts(input: string): { major: number; minor: number; patch?: number } {
+    const normalized = input.replace(/^go/i, '').replace(/^v/i, '').trim();
+    const m = /^(\d+)\.(\d+)(?:\.(\d+))?$/.exec(normalized);
+    if (!m) {
+        throw new Error(`Invalid version format: ${input}`);
     }
-    const major = parseInt(parts[0], 10);
-    const minor = parseInt(parts[1], 10);
+    return {
+        major: parseInt(m[1], 10),
+        minor: parseInt(m[2], 10),
+        patch: m[3] ? parseInt(m[3], 10) : undefined
+    };
+}
+
+async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<string> {
+    // Unified parsing helper (also used by Microsoft manifest resolver) to avoid index discrepancies.
+    const { major, minor } = parseGoVersionParts(majorMinorVersion);
 
     const metadataUrl = 'https://go.dev/dl/?mode=json&include=all';
     let jsonPath: string;
@@ -196,57 +205,37 @@ async function getLatestPatchFromGoDev(majorMinorVersion: string): Promise<strin
     return `${major}.${minor}.${maxPatch}`;
 }
 
-async function getMicrosoftLatestPatchFromManifest(majorMinorVersion: string): Promise<string> {
-    const mm = majorMinorVersion.replace(/^go/i, '').replace(/^v/i, '');
-    const manifestUrl = `https://aka.ms/golang/release/latest/go${mm}.assets.json`;
+
+async function getMicrosoftLatestFromManifest(majorMinorOrPatch: string): Promise<string> {
+    const parts = parseGoVersionParts(majorMinorOrPatch);
+    let manifestId = `${parts.major}.${parts.minor}`;
+    if (typeof parts.patch === 'number') {
+        manifestId = `${parts.major}.${parts.minor}.${parts.patch}`;
+    }
+    const manifestUrl = `https://aka.ms/golang/release/latest/go${manifestId}.assets.json`;
     tl.debug(`Downloading Microsoft Go manifest from ${manifestUrl}`);
     let jsonPath: string;
     try {
         jsonPath = await toolLib.downloadTool(manifestUrl);
     } catch (e) {
-        throw new Error(`Failed to download Microsoft Go manifest for ${majorMinorVersion}: ${(e as any).message}`);
+        throw new Error(`Failed to download Microsoft Go manifest for ${manifestId}: ${(e as any).message}`);
     }
     const raw = fs.readFileSync(jsonPath, 'utf8');
-
     let parsed: any;
     try {
         parsed = JSON.parse(raw);
     } catch {
-        parsed = undefined;
+        throw new Error('Failed to parse Microsoft Go manifest JSON');
     }
-
-    let full: string | undefined;
-    if (parsed && typeof parsed === 'object') {
-        if (typeof parsed.version === 'string') {
-            full = parsed.version;
-        } else if (Array.isArray(parsed.assets)) {
-            for (const a of parsed.assets) {
-                if (a && typeof a.version === 'string') {
-                    full = a.version;
-                    break;
-                }
-            }
-        }
+    if (!parsed || typeof parsed.version !== 'string') {
+        throw new Error('Microsoft manifest missing top-level version');
     }
-
-    if (!full) {
-        // Fallback regex scan
-        const m = /"version"\s*:\s*"go(\d+\.\d+\.\d+)"/.exec(raw) || /"go(\d+\.\d+\.\d+)"/.exec(raw);
-        if (m) {
-            full = `go${m[1]}`;
-        }
+    const ver = String(parsed.version).trim();
+    const m = /^(?:go)?(\d+\.\d+\.\d(?:-\d+)?)$/i.exec(ver);
+    if (!m) {
+        throw new Error(`Unexpected version format in Microsoft manifest: ${ver}`);
     }
-
-    if (!full) {
-        throw new Error(`Could not resolve full patch version from Microsoft manifest for ${majorMinorVersion}`);
-    }
-    // Accept versions with or without a leading 'go' prefix and optional prerelease/build metadata
-    // Examples: 1.24.7-1, go1.24.7-rc1, 1.24.7-1+meta, go1.24.7
-    const semverMatch = /^(?:go)?(\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?(?:\+[0-9A-Za-z-.]+)?)$/.exec(full.trim());
-    if (!semverMatch) {
-        throw new Error(`Unexpected version format in Microsoft manifest: ${full}`);
-    }
-    return semverMatch[1];
+    return m[1];
 }
 
 async function resolveVersionAndCache(version: string, baseUrl?: string): Promise<{ filenameVersion: string, cacheVersion?: string, toolName: string }> {
@@ -283,15 +272,18 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
     }
 
     if (akaLatest) {
-        if (isSemverWithPatch(v)) {
-            // Already a full patch; cache directly
-            return { filenameVersion: v, cacheVersion: v, toolName: 'go-aka' };
+        // Microsoft aka channel: resolve to manifest top-level for minor or plain patch
+        if (!(hasMajorMinorOnly(v) || isSemverWithPatch(v))) {
+            throw new Error("For https://aka.ms/golang/release/latest use 'major.minor' (e.g. 1.25) or 'major.minor.patch' (e.g. 1.25.3 or 1.25.3-1).");
         }
         if (hasMajorMinorOnly(v)) {
-            const resolved = await getMicrosoftLatestPatchFromManifest(v);
+            const resolved = await getMicrosoftLatestFromManifest(v);
             return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
         }
-        throw new Error("For https://aka.ms/golang/release/latest use 'major.minor' (e.g. 1.25) or 'major.minor.patch' (e.g. 1.25.3).");
+        // If a patch is provided without numeric revision (e.g. 1.24.7), lift to latest -rev from manifest
+        const hasNumericRev = /^\d+\.\d+\.\d+-\d+$/.test(v);
+        const resolved = hasNumericRev ? v : await getMicrosoftLatestFromManifest(v);
+        return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
     }
 
     throw new Error("Unsupported custom baseUrl. Only https://storage.googleapis.com/golang and https://aka.ms/golang/release/latest are allowed.");
