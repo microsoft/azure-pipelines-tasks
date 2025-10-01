@@ -1,5 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2'
 }
 
 function Add-Certificate {
@@ -362,11 +363,23 @@ function ConvertTo-Pfx {
     else {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
-     $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
-     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
-     $env:RANDFILE=".rnd"
-     $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
-     $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+    if(-not $featureFlags.useOpenssLatestVersion) {
+        $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
+    }
+    else{
+        $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
+     }
+    try {
+        $versionOutput = & $openSSLExePath version
+        Write-Verbose "OpenSSL version: $versionOutput"
+    } catch {
+        Write-Host "There was an error while getting the OpenSSL version $_"
+    }
+    $env:RANDFILE=".rnd"
+    $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
     return $pfxFilePath, $pfxFilePassword
 }
 

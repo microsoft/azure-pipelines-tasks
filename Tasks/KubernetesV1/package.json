@@ -16,7 +16,7 @@
     "azure-pipelines-tasks-docker-common": "2.242.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.252.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "del": "2.2.0",
     "moment": "^2.29.4"
   },
