@@ -5,7 +5,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
-import url = require('url');
 import request = require('request');
 
 import { JobSearch } from './jobsearch';
@@ -55,7 +54,13 @@ export class Job {
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
         } else {
             // backup check in case job is running on a different server name than the endpoint
-            this.Identifier = url.parse(this.TaskUrl).path.substr(1);
+            try {
+                const parsedUrl = new URL(this.TaskUrl);
+                this.Identifier = parsedUrl.pathname.substr(1);
+            } catch (error) {
+                // If URL parsing fails, use a fallback
+                this.Identifier = this.TaskUrl;
+            }
             const jobStringIndex: number = this.Identifier.indexOf('job/');
             if (jobStringIndex > 0) {
                 // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl
