@@ -3,12 +3,11 @@ import * as ftp from "basic-ftp";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import * as url from "url";
 import { MatchOptions } from "azure-pipelines-task-lib/task";
 
 interface FtpOptions {
     // url
-    serverEndpointUrl: url.Url;
+    serverEndpointUrl: URL;
 
     // credentials
     username: string;
@@ -160,14 +159,14 @@ function findFiles(ftpOptions: FtpOptions): string[] {
 }
 
 function getFtpOptions(): FtpOptions {
-    let serverEndpointUrl: url.UrlWithStringQuery;
+    let serverEndpointUrl: URL;
     let username: string;
     let password: string;
 
     if (tl.getInput("credsType") === "serviceEndpoint") {
         // server endpoint
         const serverEndpoint: string = tl.getInput("serverEndpoint", true)!;
-        serverEndpointUrl = url.parse(
+        serverEndpointUrl = new URL(
             tl.getEndpointUrl(serverEndpoint, false)!
         );
 
@@ -179,7 +178,7 @@ function getFtpOptions(): FtpOptions {
         password = serverEndpointAuth["parameters"]["password"];
     } else {
         // user entered credentials directly
-        serverEndpointUrl = url.parse(tl.getInput("serverUrl", true)!);
+        serverEndpointUrl = new URL(tl.getInput("serverUrl", true)!);
         username = tl.getInput("username", true)!;
         password = tl.getInput("password", true)!;
     }

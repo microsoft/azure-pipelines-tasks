@@ -1,5 +1,4 @@
 import tl = require('azure-pipelines-task-lib/task');
-import url = require('url');
 import Q = require('q');
 import path = require('path');
 
@@ -9,7 +8,7 @@ import ftputils = require('./ftputils');
 
 export class FtpOptions {
     // url
-    serverEndpointUrl: url.Url;
+    serverEndpointUrl: URL;
 
     // credentials
     username: string;
@@ -34,13 +33,13 @@ function getFtpOptions(): FtpOptions {
     if (tl.getInput('credsType') === 'serviceEndpoint') {
         // server endpoint
         let serverEndpoint: string = tl.getInput('serverEndpoint', true);
-        options.serverEndpointUrl = url.parse(tl.getEndpointUrl(serverEndpoint, false));
+        options.serverEndpointUrl = new URL(tl.getEndpointUrl(serverEndpoint, false));
 
         let serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
         options.username = serverEndpointAuth['parameters']['username'];
         options.password = serverEndpointAuth['parameters']['password'];
     } else if (tl.getInput('credsType') === 'inputs') {
-        options.serverEndpointUrl = url.parse(tl.getInput('serverUrl', true));
+        options.serverEndpointUrl = new URL(tl.getInput('serverUrl', true));
         options.username = tl.getInput('username', true);
         options.password = tl.getInput('password', true);
     }
