@@ -7,10 +7,10 @@ import os = require('os');
 import mockHelper = require('../../lib/mockHelper');
 import fs = require('fs');
 import shell = require('shelljs');
-import uuid = require('node-uuid');
+import crypto = require('crypto');
 var ps = shell.which('powershell.exe');
 var psr = null;
-const tmpFileName = path.join(os.tmpdir(), uuid.v1() + ".json");
+const tmpFileName = path.join(os.tmpdir(), crypto.randomUUID() + ".json");
 const testDllPath = path.join(__dirname, "data", "testDlls");
 const sysVstestLocation = "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
 

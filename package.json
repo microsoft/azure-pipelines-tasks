@@ -42,7 +42,6 @@
     "minimist": "^1.2.8",
     "mocha": "^11.7.2",
     "node-fetch": "2.6.11",
-    "node-uuid": "1.4.6",
     "nodejs-file-downloader": "^4.11.1",
     "nyc": "^15.1.0",
     "q": "1.4.1",
