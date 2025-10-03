@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 262,
+    "Minor": 264,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -126,6 +126,13 @@
       "label": "Application runtime stack",
       "required": false,
       "helpMarkDown": "The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of `<platform>:<version>`. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md"
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "label": "Container App kind",
+      "required": false,
+      "helpMarkDown": "Set to `functionapp` to get built in support and autoscaling to run Azure functions on Azure Container apps."
     },
     {
       "name": "targetPort",
