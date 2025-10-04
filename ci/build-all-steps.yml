@@ -118,6 +118,15 @@ steps:
     )
   displayName: Push release branch
 
+- script: node ./ci/check-node-executor-agent-version.js --task "$(getTaskPattern.task_pattern)"
+  displayName: Verify relation between node executor and minimum agent version
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
+
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   # remove SourceBranch condition after merging users/merlynop/node20merge-2 ; see https://github.com/microsoft/azure-pipelines-tasks/pull/20819
