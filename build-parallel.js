@@ -3,6 +3,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const minimist = require('minimist');
+const fs = require('fs');
 
 /**
  * Convert task glob pattern to pnpm workspace filters using path-based approach
@@ -104,11 +105,13 @@ function executeCommand(command, args, options = {}) {
 async function runBuild(additionalArgs = []) {
     // Parse arguments using minimist (same as make.js)
     const argv = minimist(additionalArgs);
-    
+
+    failIfTasksMissing(argv);
+
     // First run pre-build steps
     console.log('Running pre-build steps...');
     try {
-        const preBuildArgs = ['make.js', 'build', '--onlyPreBuildSteps', ...additionalArgs];
+        const preBuildArgs = ['make.js', 'build', '--onlyPreBuildSteps', '--enableConcurrentTaskBuild', ...additionalArgs];
         const preBuildExitCode = await executeCommand('node', preBuildArgs);
         if (preBuildExitCode !== 0) {
             console.error('Pre-build steps failed');
@@ -124,6 +127,7 @@ async function runBuild(additionalArgs = []) {
     const workspaceArgs = convertArgsToWorkspaceArgs(argv);
     const args = [
         '-r',
+        '--report-summary',
         '--aggregate-output',
         '--reporter=append-only',
         '--workspace-concurrency=2',
@@ -138,6 +142,7 @@ async function runBuild(additionalArgs = []) {
     console.log('pnpm command:', 'pnpm', args.join(' '));
     try {
         const exitCode = await executeCommand(pnpmPath, args);
+        printBuildSummary();
         process.exit(exitCode);
     } catch (error) {
         console.error('Error running build:', error.message);
@@ -152,11 +157,12 @@ async function runBuild(additionalArgs = []) {
 async function runServerBuild(additionalArgs = []) {
     // Parse arguments using minimist (same as make.js)
     const argv = minimist(additionalArgs);
-    
+    failIfTasksMissing(argv);
+
     // First run pre-build steps
     console.log('Running pre-build steps for server build...');
     try {
-        const preBuildArgs = ['make.js', 'serverBuild', '--onlyPreBuildSteps', ...additionalArgs];
+        const preBuildArgs = ['make.js', 'build', '--onlyPreBuildSteps', '--enableConcurrentTaskBuild', ...additionalArgs];
         const preBuildExitCode = await executeCommand('node', preBuildArgs);
         if (preBuildExitCode !== 0) {
             console.error('Pre-build steps failed for server build');
@@ -172,6 +178,7 @@ async function runServerBuild(additionalArgs = []) {
     const workspaceArgs = convertArgsToWorkspaceArgs(argv);
     const args = [
         '-r',
+        '--report-summary',
         '--aggregate-output',
         '--reporter=append-only',
         '--workspace-concurrency=2',
@@ -186,6 +193,7 @@ async function runServerBuild(additionalArgs = []) {
     console.log('pnpm command:', 'pnpm', args.join(' '));
     try {
         const exitCode = await executeCommand(pnpmPath, args);
+        printBuildSummary();
         process.exit(exitCode);
     } catch (error) {
         console.error('Error running server build:', error.message);
@@ -219,4 +227,65 @@ switch (command) {
         console.log('        - Glob pattern: --task "@(Task1|Task2|Task3)" → --filter "./Tasks/{Task1,Task2,Task3}"');
         console.log('        - Single task: --task "Task1" → --filter "./Tasks/Task1"');
         process.exit(1);
+}
+
+// Print build summary
+const printBuildSummary = () => {
+    const summaryPath = path.join(__dirname, 'pnpm-exec-summary.json');
+    if (!fs.existsSync(summaryPath)) {
+        console.log('No build summary found.');
+        return;
+    }
+    const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+    const execStatus = summary.executionStatus || {};
+
+    let total = 0, success = 0, failed = 0, skipped = 0, running = 0;
+    for (const task in execStatus) {
+        total++;
+        const status = execStatus[task].status;
+        if (status === 'passed') success++;
+        else if (status === 'failure') failed++;
+        else if (status === 'running') running++;
+        else skipped++;
+    }
+
+    console.log('');
+    console.log('📊 BUILD SUMMARY');
+    console.log('================================================================================');
+    console.log(` Total tasks built:        ${total}`);
+    console.log(` ✅ Successful:            ${success}`);
+    console.log(` ❌ Failed:                ${failed}`);
+    console.log(` ⏭️  Skipped:               ${skipped}`);
+    console.log(` 🟡 Running:               ${running}`);
+    console.log('===================================');
+};
+
+/**
+ * Checks if all requested tasks exist in ./Tasks directory. Exits with error if any are missing.
+ */
+function failIfTasksMissing(argv) {
+    const argvTask = argv.task;
+    let requestedTasks = [];
+    if (argvTask) {
+        if (argvTask.startsWith('@(') && argvTask.endsWith(')')) {
+            requestedTasks = argvTask.slice(2, -1).split('|').map(t => t.trim());
+        } else {
+            requestedTasks = [argvTask];
+        }
+    }
+    if (requestedTasks.length) {
+        // Check existence in ./Tasks directory
+        const tasksDir = path.join(__dirname, 'Tasks');
+        let missingTasks = [];
+        for (const t of requestedTasks) {
+            const taskPath = path.join(tasksDir, t);
+            if (!fs.existsSync(taskPath)) {
+                missingTasks.push(t);
+            }
+        }
+        if (missingTasks.length) {
+            console.error(`Error: The following tasks do not exist: ${missingTasks.join(', ')}`);
+            process.exit(2);
+        }
+    }
 }

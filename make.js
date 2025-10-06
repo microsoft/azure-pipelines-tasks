@@ -342,6 +342,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         rm('-Rf', genTaskCommonPathLocal);
     }
 
+    // Do not print build summary for concurrent builds, It will be printed when
+    // When all the Tasks are built
+    if(argv.enableConcurrentTaskBuild) {
+        return;
+    }
+
     // Print build summary
     console.log('\n' + '='.repeat(80));
     console.log('📊 BUILD SUMMARY');
