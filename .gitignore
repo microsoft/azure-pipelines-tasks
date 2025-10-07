@@ -227,3 +227,5 @@ _generated_local/
 # Auto-cloned dependencies during build
 task-lib/
 tasks-common/
+
+pnpm-exec-summary.json
