@@ -208,6 +208,17 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
+    it('build passes when zero match found with empty string', async () => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "build";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
     it('test throws warning when zero match found', async () => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
