@@ -140,6 +140,8 @@ async function execBuild() {
     // 5. Always publish test results even if tests fail, causing this task to fail.
     // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
 
+    setUpConnectedServiceEnvironmentVariables();
+
     ccReportDir = await execEnableCodeCoverage();
     var userRunFailed: boolean = false;
     var codeAnalysisFailed: boolean = false;
@@ -650,6 +652,25 @@ function replaceImageSourceToBase64(dir: string): void {
         writeDomAsHtml(dir, dom, 'index.html')
     } catch (error) {
         tl.warning('Fail to replace images source to base64' + error)
+    }
+}
+
+function setUpConnectedServiceEnvironmentVariables() {
+    var connectedService = tl.getInput('ConnectedServiceName');
+    if(connectedService) {
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, false);
+        if (authScheme && authScheme.toLowerCase() == "workloadidentityfederation") {
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            tl.debug('Environment variables AZURESUBSCRIPTION_SERVICE_CONNECTION_ID,AZURESUBSCRIPTION_CLIENT_ID and AZURESUBSCRIPTION_TENANT_ID are set');
+        }
+        else {
+            tl.warning('Connected service is not of type Workload Identity Federation');
+        }
+    }
+    else {
+        tl.debug('No connected service set');
     }
 }
 

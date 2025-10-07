@@ -2,22 +2,25 @@
     "inputs": [
         {
             "name": "workloadIdentityServiceConnection",
-            "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+            "aliases": ["azureDevOpsServiceConnection"],
+            "label": "'Azure DevOps' Service Connection",
             "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
             "type": "connectedService:workloadidentityuser",
             "required": false,
             "properties": {
               "EditableOptions": "False",
               "MultiSelectFlatList": "False"
-            }
+            },
+            "visibleRule": "nuGetServiceConnections == ''"
         },
         {
             "name": "feedUrl",
             "label": "Azure Artifacts URL",
-            "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+            "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
             "type": "string",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "visibleRule": "workloadIdentityServiceConnection != ''"
         },
         {
             "name": "forceReinstallCredentialProvider",

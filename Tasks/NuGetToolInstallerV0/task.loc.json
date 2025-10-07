@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 260,
     "Patch": 0
   },
   "preview": false,
@@ -46,6 +46,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nugettoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nugettoolinstaller.js",
       "argumentFormat": ""
     }

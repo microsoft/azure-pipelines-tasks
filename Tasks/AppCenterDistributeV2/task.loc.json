@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 262,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -189,6 +189,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "appcenterdistribute.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
     }

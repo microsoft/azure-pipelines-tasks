@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Run Manual and Automated Test execution Task",
   "main": "runTestPlan.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureTestPlanV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureTestPlanV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,21 +19,20 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "@types/mocha": "^9.1.1",
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^4.15.0",
     "azure-pipelines-tasks-docker-common": "^2.242.0",
-    "azure-pipelines-tasks-utility-common": "^3.212.0",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-devops-node-api": "^12.2.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "^1.8.9",
-    "axios": "^1.7.7",
     "performance-now": "0.2.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

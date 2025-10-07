@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 244,
+    "Minor": 263,
     "Patch": 0
   },
   "demands": [],
@@ -43,6 +43,10 @@
       "target": "src//duffle.js"
     },
     "Node16": {
+      "target": "src//duffle.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "src//duffle.js",
       "argumentFormat": ""
     }

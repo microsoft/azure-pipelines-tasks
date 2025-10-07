@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "Produktionsbranch",
   "loc.input.help.production_branch": "Produktionsbranch. Wenn die angegebene Bereitstellungsumgebung leer ist, sind Bereitstellungen aus anderen Branches Vorschauumgebungen.",
   "loc.input.label.data_api_location": "Speicherort der Daten-API",
-  "loc.input.help.data_api_location": "Verzeichnisspeicherort der Daten-API-Quelldateien relativ zum Arbeitsverzeichnis"
+  "loc.input.help.data_api_location": "Verzeichnisspeicherort der Daten-API-Quelldateien relativ zum Arbeitsverzeichnis",
+  "loc.input.label.azure_access_token": "Azure-Zugriffstoken",
+  "loc.input.help.azure_access_token": "Zugriffstoken zum Authentifizieren und Autorisieren der Bereitstellung",
+  "loc.input.label.default_hostname": "Standardhostname",
+  "loc.input.help.default_hostname": "Standardhostname der App"
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 243,
-    "Patch": 10
+    "Minor": 263,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -180,8 +180,8 @@
         "login": "login",
         "logout": "logout",
         "ls": "ls",
-        "package": "package",
         "push": "push",
+        "package": "package",
         "rollback": "rollback",
         "upgrade": "upgrade",
         "uninstall": "uninstall"
@@ -215,7 +215,7 @@
       "type": "string",
       "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
       "defaultValue": "",
-      "visibleRule": "chartType == Name",
+      "visibleRule": "chartType == Name || command == create",
       "required": "true",
       "groupName": "commands"
     },
@@ -225,7 +225,17 @@
       "type": "filePath",
       "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
       "defaultValue": "",
-      "visibleRule": "chartType == FilePath || command == package",
+      "visibleRule": "chartType == FilePath || command == package || command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "remoteRepo",
+      "label": "Remote Repo",
+      "type": "string",
+      "helpMarkDown": "The remote repository where the chart will be pushed.",
+      "defaultValue": "",
+      "visibleRule": "command == push",
       "required": "true",
       "groupName": "commands"
     },
@@ -247,7 +257,7 @@
       "type": "string",
       "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
       "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
+      "visibleRule": "command == install || command == upgrade || command == rollback || command == uninstall || command == delete",
       "groupName": "commands"
     },
     {
@@ -485,7 +495,7 @@
     {
       "target": "azureResourceGroupForACR",
       "endpointId": "$(azureSubscriptionEndpointForACR)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
@@ -516,6 +526,10 @@
     },
     "Node10": {
       "target": "src//downloadsecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -525,6 +539,10 @@
     },
     "Node10": {
       "target": "src//helm.js"
+    },
+    "Node20_1": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -534,6 +552,10 @@
     },
     "Node10": {
       "target": "src//deletesecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 246,
+    "Minor": 263,
     "Patch": 0
   },
   "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
@@ -143,6 +143,10 @@
     "Node16": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -151,6 +155,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }

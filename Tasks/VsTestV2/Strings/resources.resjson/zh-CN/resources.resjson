@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 测试",
   "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.description": "使用 Visual Studio Test (VsTest)运行程序运行单元测试和功能测试(Selenium、Appium、编码的 UI 测试等)。可以运行 MsTest、xUnit、NUnit、Chutzpah (适用于使用 QUnit、Mocha 和 Jasmine 的 JavaScript 测试)等具有 Visual Studio 测试适配器的测试框架。使用此任务(版本 2)可使测试分布在多个代理上。",
+  "loc.description": "使用 Visual Studio Test (VsTest)运行器运行单元和功能测试(Selenium、Appium、编码 UI 测试等)。可以运行 MsTest、xUnit、NUnit、Chutzpah (适用于使用 QUnit、Mocha 和 Jasmine 的 JavaScript 测试)等具有 Visual Studio 测试适配器的测试框架。使用此任务(版本 2 或更高版本)可将测试分布在多个代理上。",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li>使用代理作业运行测试:<b></b> 跨生成、版本和测试的统一代理也允许将自动代理用于测试目的。可使用多代理作业设置来分配测试。可使用多配置作业设置来复制不同配置中的测试。<a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">详细信息</a></li><li>测试影响分析:<b></b> 自动选择和运行仅验证代码更改所需的测试。</li><li>使用 Visual Studio 测试平台安装程序任务<b></b>运行测试，而无需完整地安装 Visual Studio。</li></ul>",
   "loc.group.displayName.testSelection": "测试选择",

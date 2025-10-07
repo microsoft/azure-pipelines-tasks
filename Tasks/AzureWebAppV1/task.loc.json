@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 245,
+    "Minor": 264,
     "Patch": 0
   },
   "minimumAgentVersion": "2.209.0",
@@ -123,6 +123,47 @@
       "properties": {
         "EditableOptions": "True"
       },
+      "options": {
+        "DOTNETCORE|9.0": ".NET 9.0",
+        "DOTNETCORE|8.0": ".NET 8.0",
+        "DOTNETCORE|7.0": ".NET 7.0",
+        "DOTNETCORE|6.0": ".NET 6.0",
+        "NODE|22-lts": "Node 22 LTS",
+        "NODE|20-lts": "Node 20 LTS",
+        "NODE|18-lts": "Node 18 LTS",
+        "NODE|16-lts": "Node 16 LTS",
+        "PYTHON|3.13": "Python 3.13",
+        "PYTHON|3.12": "Python 3.12",
+        "PYTHON|3.11": "Python 3.11",
+        "PYTHON|3.10": "Python 3.10",
+        "PYTHON|3.9": "Python 3.9",
+        "PYTHON|3.8": "Python 3.8",
+        "PHP|8.3": "PHP 8.3",
+        "PHP|8.2": "PHP 8.2",
+        "PHP|8.1": "PHP 8.1",
+        "PHP|8.0": "PHP 8.0",
+        "JAVA|21-java21": "Java 21",
+        "JAVA|17-java17": "Java 17",
+        "JAVA|11-java11": "Java 11",
+        "JAVA|8-jre8": "Java 8",
+        "JBOSSEAP|8-java17": "JBoss EAP 8 (Java 17)",
+        "JBOSSEAP|8-java11": "JBoss EAP 8 (Java 11)",
+        "JBOSSEAP|7-java17": "JBoss EAP 7 (Java 17)",
+        "JBOSSEAP|7-java11": "JBoss EAP 7 (Java 11)",
+        "JBOSSEAP|7-java8": "JBoss EAP 7 (Java 8)",
+        "TOMCAT|10.1-java21": "Tomcat 10.1 (Java 21)",
+        "TOMCAT|10.1-java17": "Tomcat 10.1 (Java 17)",
+        "TOMCAT|10.1-java11": "Tomcat 10.1 (Java 11)",
+        "TOMCAT|10.0-java17": "Tomcat 10.0 (Java 17)",
+        "TOMCAT|10.0-java11": "Tomcat 10.0 (Java 11)",
+        "TOMCAT|10.0-jre8": "Tomcat 10.0 (Java 8)",
+        "TOMCAT|9.0-java21": "Tomcat 9.0 (Java 21)",
+        "TOMCAT|9.0-java17": "Tomcat 9.0 (Java 17)",
+        "TOMCAT|9.0-java11": "Tomcat 9.0 (Java 11)",
+        "TOMCAT|9.0-jre8": "Tomcat 9.0 (Java 8)",
+        "TOMCAT|8.5-java11": "Tomcat 8.5 (Java 11)",
+        "TOMCAT|8.5-jre8": "Tomcat 8.5 (Java 8)"
+      },
       "visibleRule": "appType = webAppLinux"
     },
     {
@@ -184,6 +225,14 @@
         "runFromPackage": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
+    },
+    {
+      "name": "siteContainersConfig",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.siteContainersConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.siteContainersConfig"
     }
   ],
   "outputVariables": [
@@ -218,15 +267,6 @@
         "ResourceGroupName": "$(resourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-    },
-    {
-      "target": "runtimeStack",
-      "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
-      "parameters": {
-        "osTypeSelected": "Linux"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -236,6 +276,10 @@
     },
     "Node16": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -388,6 +432,10 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
+    "SiteContainersNotSupportedWithPublishProfileAuthentication": "ms-resource:loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication",
+    "StartedUpdatingSiteContainers": "ms-resource:loc.messages.StartedUpdatingSiteContainers",
+    "UpdatingSiteContainer": "ms-resource:loc.messages.UpdatingSiteContainer",
+    "CompletedUpdatingSiteContainers": "ms-resource:loc.messages.CompletedUpdatingSiteContainers"
   }
 }

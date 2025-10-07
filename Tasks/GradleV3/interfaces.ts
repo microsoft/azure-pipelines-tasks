@@ -17,6 +17,8 @@ export interface ICodeCoverageSettings {
     isMultiModule: boolean;
     gradle5xOrHigher: boolean;
     gradleVersion: string;
+    useJacocoTemplateV2forSingleModule: boolean;
+    useJacocoTemplateV2forMultiModule: boolean;
 }
 
 export interface IPublishCodeCoverageSettings {

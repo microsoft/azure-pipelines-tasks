@@ -42,8 +42,9 @@ namespace BuildConfigGen.Debugging
             int major = versionNode["Major"]!.GetValue<int>();
             int minor = versionNode["Minor"]!.GetValue<int>();
             int patch = versionNode["Patch"]!.GetValue<int>();
+            string? build = versionNode["Build"]?.GetValue<string>() ?? null;
 
-            var version = new TaskVersion(major, minor, patch);
+            var version = new TaskVersion(major, minor, patch, build);
 
             LaunchConfig.AddConfigForTask(
                 taskId: taskConfig["id"]!.GetValue<string>(),

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio テスト",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.description": "Visual Studio Test (VsTest) ランナーを使用して、ユニット テストおよび機能テスト (Selenium、Appium、コード化された UI テストなど) を実行します。MsTest、xUnit、NUnit、Chutzpah (QUnit、Mocha、Jasmine を使用した JavaScript テスト向け) などの Visual Studio テスト アダプターを持つテスト フレームワークを実行できます。テストは、このタスク (バージョン 2) を使用して複数のエージェント上で配布できます。",
+  "loc.description": "Visual Studio Test (VsTest) ランナーを使用して、ユニット テストおよび機能テスト (Selenium、Appium、コード化された UI テストなど) を実行します。MsTest、xUnit、NUnit、Chutzpah (QUnit、Mocha、Jasmine を使用した JavaScript テスト向け) などの Visual Studio テスト アダプターを持つフレームワークをテストします。テストは、このタスク (バージョン 2) を使用する複数のエージェント上に分散できます。",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.releaseNotes": "<ul><li><b>エージェント ジョブを使用したテストの実行:</b> ビルド、リリース、テストの統合エージェントでは、テスト用に自動化エージェントを使用することもできます。複数エージェント ジョブ設定を使用してテストを分散できます。複数構成ジョブ設定は、さまざまな構成でテストを複製するために使用できます。<a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">詳細情報</a></li><li><b>テストの影響分析:</b> コード変更を検証するために必要なテストのみを自動的に選択し、実行します。</li><li><b>Visual Studio テスト プラットフォーム インストーラー タスク</b>を使用すると、完全な Visual Studio インストールなしでテストを実行できます。</li></ul>",
   "loc.group.displayName.testSelection": "テストの選択",

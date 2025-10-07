@@ -4,5 +4,8 @@
   "loc.description": "Conda 用戶端的驗證工作",
   "loc.instanceNameFormat": "Conda 驗證",
   "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
-  "loc.messages.AddingAuthChannel": "正在新增權杖 %s 的驗證"
+  "loc.messages.AddingAuthChannel": "正在新增權杖 %s 的驗證",
+  "loc.messages.Info_AddingFederatedFeedAuth": "正在新增來自服務連線 %s 的驗證資訊",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "已成功新增服務連線 %s 的驗證。",
+  "loc.messages.FailedToGetServiceConnectionAuth": "無法取得服務連線的同盟認證: %s。"
 }

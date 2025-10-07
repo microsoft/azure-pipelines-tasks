@@ -73,7 +73,7 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
             tl.setVariable("DockerComposeOutput", resultPaths);
             tl.setResult(tl.TaskResult.Succeeded, "");
         }, function failure(err) {
-            tl.setResult(tl.TaskResult.Failed, err.message);
+            tl.setSanitizedResult(tl.TaskResult.Failed, err.message);
         })
         .done();
     });

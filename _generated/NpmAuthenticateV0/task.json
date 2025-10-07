@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 262,
     "Patch": 0
   },
   "runsOn": [
@@ -42,6 +42,10 @@
     },
     "Node16": {
       "target": "npmauth.js"
+    },
+    "Node20_1": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -50,6 +54,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
@@ -78,14 +86,14 @@
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-    "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+    "MissingFeedUrlOrServiceConnection": "If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.",
     "SkippingParsingNpmrc": "Skipping parsing npmrc",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_1": "0.246.1",
-    "wif_242": "0.246.2"
+    "Default": "0.262.0",
+    "LocalPackages": "0.249.4",
+    "wif_242": "0.262.1"
   }
 }

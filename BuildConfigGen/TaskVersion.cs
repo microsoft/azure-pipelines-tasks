@@ -1,69 +1,66 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Text;
 
-internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
+public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 {
-    public TaskVersion(String version)
+    public TaskVersion(string version)
     {
-        Int32 major, minor, patch;
-        String? semanticVersion;
+        VersionParser.ParseVersion(
+            version,
+            out int major,
+            out int minor,
+            out int patch,
+            out string? preRelease,
+            out string? build);
 
-        VersionParser.ParseVersion(version, out major, out minor, out patch, out semanticVersion);
         Major = major;
         Minor = minor;
         Patch = patch;
+        Build = build;
 
-        if (semanticVersion != null)
+        if (string.Equals(preRelease, TestBuildVersion, StringComparison.OrdinalIgnoreCase))
         {
-            if (semanticVersion.Equals("test", StringComparison.OrdinalIgnoreCase))
-            {
-                IsTest = true;
-            }
-            else
-            {
-                throw new ArgumentException("semVer");
-            }
+            // For backwards compatibility
+            IsTest = true;
         }
+        else if (!string.IsNullOrEmpty(preRelease))
+        {
+            // This condition is there to prevent backwards compatibility problems if we have to roll this change back.
+            // We are not going to relax the condition until the rollout is successful.
+            throw new ArgumentException("semVer");
+        }
+    }
+    public TaskVersion(int major, int minor, int overidePatch, string? build = null)
+    {
+        if (overidePatch < 0)
+        {
+            throw new Exception($"Bug, overridePatch must be >=0, got {overidePatch}");
+        }
+
+        Major = major;
+        Minor = minor;
+        Patch = overidePatch;
+        Build = build;
     }
 
     private TaskVersion(TaskVersion taskVersionToClone)
     {
-        this.IsTest = taskVersionToClone.IsTest;
-        this.Major = taskVersionToClone.Major;
-        this.Minor = taskVersionToClone.Minor;
-        this.Patch = taskVersionToClone.Patch;
+        Major = taskVersionToClone.Major;
+        Minor = taskVersionToClone.Minor;
+        Patch = taskVersionToClone.Patch;
+        Build = taskVersionToClone.Build;
+        IsTest = taskVersionToClone.IsTest;
     }
 
-    public TaskVersion(int major, int minor, int overidePatch)
-    {
-        Major = major;
-        Minor = minor;
-        Patch = overidePatch;
-    }
+    public int Major { get; }
 
-    public Int32 Major
-    {
-        get;
-        set;
-    }
+    public int Minor { get; }
 
-    public Int32 Minor
-    {
-        get;
-        set;
-    }
+    public int Patch { get; }
 
-    public Int32 Patch
-    {
-        get;
-        set;
-    }
+    public string? Build { get; }
 
-    public Boolean IsTest
-    {
-        get;
-        set;
-    }
+    public bool IsTest { get; }
 
     public TaskVersion Clone()
     {
@@ -72,12 +69,22 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 
     public TaskVersion CloneWithMinorAndPatch(int minor, int overridePatch)
     {
-        return new TaskVersion(Major, minor, overridePatch);
+        return new TaskVersion(Major, minor, overridePatch, Build);
     }
 
     public TaskVersion CloneWithPatch(int overridePatch)
     {
-        return new TaskVersion(Major, Minor, overridePatch);
+        return new TaskVersion(Major, Minor, overridePatch, Build);
+    }
+
+    public TaskVersion CloneWithMajor(int major)
+    {
+        return new TaskVersion(major, Minor, Patch, Build);
+    }
+
+    public TaskVersion CloneWithBuild(string? build)
+    {
+        return new TaskVersion(Major, Minor, Patch, build);
     }
 
     public static implicit operator String(TaskVersion version)
@@ -85,44 +92,65 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         return version.ToString();
     }
 
-    public override String ToString()
+    internal string MinorPatchToString()
     {
         String suffix = String.Empty;
         if (IsTest)
         {
-            suffix = "-test";
+            throw new NotImplementedException();
         }
 
-        return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}{3}", Major, Minor, Patch, suffix);
+        return String.Format(CultureInfo.InvariantCulture, "{1}.{2}{3}", Major, Minor, Patch, suffix);
     }
 
-    public override int GetHashCode()
+    public override string ToString()
     {
-        return this.ToString().GetHashCode();
+        StringBuilder sb = new StringBuilder()
+            .Append(Major).Append('.').Append(Minor).Append('.').Append(Patch);
+
+        if (!string.IsNullOrEmpty(Build))
+        {
+            sb = sb.Append('+').Append(Build);
+        }
+
+        return sb.ToString();
     }
 
-    public Int32 CompareTo(TaskVersion? other)
+    public override int GetHashCode() => ToString().GetHashCode();
+
+    public int CompareTo(TaskVersion? other)
     {
         if (other is null)
         {
-            throw new ArgumentNullException("other");
+            throw new ArgumentNullException(nameof(other));
         }
 
-        Int32 rc = Major.CompareTo(other.Major);
-        if (rc == 0)
+        int rc = Major.CompareTo(other.Major);
+        if (rc != 0)
         {
-            rc = Minor.CompareTo(other.Minor);
-            if (rc == 0)
-            {
-                rc = Patch.CompareTo(other.Patch);
-                if (rc == 0 && this.IsTest != other.IsTest)
-                {
-                    rc = this.IsTest ? -1 : 1;
-                }
-            }
+            return rc;
         }
 
-        return rc;
+        rc = Minor.CompareTo(other.Minor);
+        if (rc != 0)
+        {
+            return rc;
+        }
+
+        rc = Patch.CompareTo(other.Patch);
+        if (rc != 0)
+        {
+            return rc;
+        }
+
+        if (rc != 0)
+        {
+            return rc;
+        }
+
+        return string.IsNullOrEmpty(Build) && !string.IsNullOrEmpty(other.Build) ? 1
+             : !string.IsNullOrEmpty(Build) && string.IsNullOrEmpty(other.Build) ? -1
+             : 0; // build versions are incomparable, but the default should always go first
     }
 
     public Boolean Equals(TaskVersion? other)
@@ -132,7 +160,11 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
             return false;
         }
 
-        return this.CompareTo(other) == 0;
+        return Major == other.Major
+            && Minor == other.Minor
+            && Patch == other.Patch
+            && IsTest == other.IsTest
+            && string.Equals(Build, other.Build, StringComparison.Ordinal);
     }
 
     public override bool Equals(object? obj)
@@ -150,7 +182,7 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         return v1.Equals(v2);
     }
 
-    public static Boolean operator !=(TaskVersion v1, TaskVersion v2)
+    public static bool operator !=(TaskVersion v1, TaskVersion v2)
     {
         if (v1 is null)
         {
@@ -160,32 +192,33 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
         return !v1.Equals(v2);
     }
 
-    public static Boolean operator <(TaskVersion v1, TaskVersion v2)
+    public static bool operator <(TaskVersion v1, TaskVersion v2)
     {
         ArgumentUtility.CheckForNull(v1, nameof(v1));
         ArgumentUtility.CheckForNull(v2, nameof(v2));
         return v1.CompareTo(v2) < 0;
     }
 
-    public static Boolean operator >(TaskVersion v1, TaskVersion v2)
+    public static bool operator >(TaskVersion v1, TaskVersion v2)
     {
         ArgumentUtility.CheckForNull(v1, nameof(v1));
         ArgumentUtility.CheckForNull(v2, nameof(v2));
         return v1.CompareTo(v2) > 0;
     }
 
-    public static Boolean operator <=(TaskVersion v1, TaskVersion v2)
+    public static bool operator <=(TaskVersion v1, TaskVersion v2)
     {
         ArgumentUtility.CheckForNull(v1, nameof(v1));
         ArgumentUtility.CheckForNull(v2, nameof(v2));
         return v1.CompareTo(v2) <= 0;
     }
 
-    public static Boolean operator >=(TaskVersion v1, TaskVersion v2)
+    public static bool operator >=(TaskVersion v1, TaskVersion v2)
     {
         ArgumentUtility.CheckForNull(v1, nameof(v1));
         ArgumentUtility.CheckForNull(v2, nameof(v2));
         return v1.CompareTo(v2) >= 0;
     }
-}
 
+    public const string TestBuildVersion = "test";
+}

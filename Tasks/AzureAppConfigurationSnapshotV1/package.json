@@ -8,6 +8,8 @@
     },
     "main": "index.js",
     "scripts": {
+        "build": "node ../../make.js build --task AzureAppConfigurationSnapshotV1",
+        "serverBuild": "node ../../make.js serverBuild --task AzureAppConfigurationSnapshotV1",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Microsoft Corporation",
@@ -19,7 +21,7 @@
         "@types/node": "^20.3.1",
         "@types/mocha": "^5.2.7",
         "agent-base": "^6.0.2",
-        "azure-pipelines-tasks-azure-arm-rest": "^3.242.1",
+        "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
         "azure-pipelines-task-lib": "^4.13.0",
         "lodash": "^4.17.21"
     },

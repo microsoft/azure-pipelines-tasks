@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 245,
-    "Patch": 22
+    "Minor": 263,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -48,6 +48,14 @@
       "defaultValue": "**/bin/**/*.pdb",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
+    },
+    {
+      "name": "Manifest",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Manifest",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Manifest"
     },
     {
       "name": "IndexSources",
@@ -193,6 +201,10 @@
     "Node16": {
       "target": "PreJobExecutionPublishSymbols.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "PreJobExecutionPublishSymbols.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -206,6 +218,10 @@
       "target": "clienttoolmain.js"
     },
     "Node16": {
+      "target": "clienttoolmain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "clienttoolmain.js",
       "argumentFormat": ""
     }
@@ -246,6 +262,7 @@
     "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
-    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport"
+    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport",
+    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound"
   }
 }

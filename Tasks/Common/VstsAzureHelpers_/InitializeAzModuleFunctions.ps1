@@ -1,5 +1,5 @@
 $featureFlags = @{
-    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
 }
 
 # Dot source Utility functions.
@@ -25,30 +25,10 @@ function Initialize-AzModule {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         Write-Verbose "Importing Az Modules."
         
+        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
         if ($featureFlags.retireAzureRM) {
-            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
-
-            if (Get-Command Get-AzConfig -ErrorAction SilentlyContinue) {
-
-                $configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
-                if ($configValue -ne $null -and $configValue.Value -eq $true) {
-                    # Update-AzConfig is a part of Az.Accounts
-                    if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
-                        Write-Verbose "Supressing breaking changes warnings of Az module."
-                        Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
-                        Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az  -Scope Process
-                    } else {
-                        Write-Verbose "Update-AzConfig cmdlet is not available."
-                    }                            
-                } else {
-                    Write-Verbose "No need to update the config." 
-                } 
-                 
-            } else {
-                 Write-Verbose "Get-AzConfig cmdlet is not available."
-            }  
-
-            # Enable-AzureRmAlias for azureRm compability
+            Initialize-AzConfig
+             # Enable-AzureRmAlias for azureRm compability
             if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
                 Write-Verbose "Enable-AzureRmAlias for backward compability"
                 Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
@@ -56,11 +36,13 @@ function Initialize-AzModule {
             } else {
                 Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
             }
-
-        } else  {
-            # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
-            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+        } else {
+             $azureRMModuleInstalled = Get-Module -Name AzureRM -ListAvailable -ErrorAction SilentlyContinue
+            
+          if ($azureRMModuleInstalled) {
+            # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.   
             Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_RMDeprecationMessage) -AsOutput 
+          }
         }
 
         $azAccountsVersion = [System.Version]::new(
@@ -82,6 +64,72 @@ function Initialize-AzModule {
     finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+}
+
+function Initialize-AzConfig {
+    if ([System.Convert]::ToBoolean($env:USE_FIXED_AZ_CONFIG_INIT)) {
+        Initialize-AzConfigNew
+    } else {
+        Initialize-AzConfigOld
+    }
+}
+
+function Initialize-AzConfigOld {
+    if (Get-Command Get-AzConfig -ErrorAction SilentlyContinue) {
+
+        $configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
+        if ($null -ne $configValue -and $configValue.Value -eq $true) {
+            # Update-AzConfig is a part of Az.Accounts
+            if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
+                Write-Verbose "Supressing breaking changes warnings of Az module."
+                Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
+                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
+            } else {
+                Write-Verbose "Update-AzConfig cmdlet is not available."
+            }                            
+        } else {
+            Write-Verbose "No need to update the config." 
+        } 
+         
+    } else {
+         Write-Verbose "Get-AzConfig cmdlet is not available."
+    }  
+}
+
+function Initialize-AzConfigNew {
+    Write-Verbose "Initializing Az Config."
+
+    if (![bool](Get-Command Update-AzConfig -ErrorAction SilentlyContinue)) {
+        Write-Verbose "Update-AzConfig cmdlet is not available."
+        return
+    }
+
+    try {
+        # This should be the first Az command to prevent possible StackOverflow that might occur within the Az module
+        Write-Host "##[command]Update-AzConfig -CheckForUpgrade $false -AppliesTo Az -Scope Process"
+        Update-AzConfig -CheckForUpgrade $false -AppliesTo Az -Scope Process
+    }
+    catch {
+        # This might happen when current Az module does not support CheckForUpgrade yet. It should be safe to continue.
+        Write-Verbose "Failed to disable CheckForUpgrade." 
+    }
+
+    if (![bool](Get-Command Get-AzConfig -ErrorAction SilentlyContinue)) {
+        Write-Verbose "Get-AzConfig cmdlet is not available."
+        return         
+    } 
+
+    Write-Host "##[command]Get-AzConfig -AppliesTo Az"
+    $configValue = Get-AzConfig -AppliesTo Az | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
+    if ($null -eq $configValue -or $configValue.Value -eq $false) {
+        Write-Verbose "No need to update the config."
+        return    
+    } 
+
+    Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process"
+    Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
+
+    Write-Verbose "Az Config initialized."
 }
 
 # Not used, keep now in case if we need to revert back to the old implementation.

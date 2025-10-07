@@ -16,15 +16,19 @@ steps:
   inputs:
     versionSpec: 20.x
 
-# npm install
-- script: npm install
-  displayName: Npm install
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+# npm ci
+- script: npm ci
+  displayName: Npm ci
 
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
-    npm install
-  displayName: Npm install min agent demands
+    npm ci
+  displayName: Npm ci min agent demands
 
 - script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands

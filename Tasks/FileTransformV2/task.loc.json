@@ -17,10 +17,9 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 244,
+    "Minor": 264,
     "Patch": 0
   },
-  "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -40,12 +39,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.folderPath"
     },
     {
+      "name": "enableXmlTransform",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableXmlTransform",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.enableXmlTransform"
+    },
+    {
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
       "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules"
+      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
+      "visibleRule": "enableXmlTransform == true"
     },
     {
       "name": "jsonTargetFiles",
@@ -64,6 +72,14 @@
       "defaultValue": "",
       "groupName": "VariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.xmlTargetFiles"
+    },
+    {
+      "name": "errorOnInvalidSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.errorOnInvalidSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.errorOnInvalidSubstitution"
     }
   ],
   "execution": {
@@ -72,6 +88,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "filetransform.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }

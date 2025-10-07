@@ -2,6 +2,7 @@
     "inputs": [
         {
             "name": "workloadIdentityServiceConnection",
+            "aliases": ["azureDevOpsServiceConnection"],
             "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
             "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
             "type": "connectedService:workloadidentityuser",
@@ -9,7 +10,8 @@
             "properties": {
               "EditableOptions": "False",
               "MultiSelectFlatList": "False"
-            }
+            },
+            "visibleRule": "nuGetServiceConnections == ''"
         },
         {
             "name": "feedUrl",
@@ -17,7 +19,8 @@
             "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
             "type": "string",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "visibleRule": "workloadIdentityServiceConnection != ''"
         },
         {
             "name": "forceReinstallCredentialProvider",

@@ -1,31 +1,16 @@
 {
   "rm": [
-        {
-            "items": [
-                "node_modules/https-proxy-agent/node_modules/agent-base",
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ],
+      {
+          "items": [
+              "node_modules/https-proxy-agent/node_modules/agent-base",
+              "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base"
+          ],
+          "options": "-Rf"
+      }
+  ],
   "common": [
     {
       "module": "../Common/PowershellHelpers",
-      "type": "ps"
-    },
-    {
-      "module": "../Common/VstsAzureHelpers_",
-      "type": "ps"
-    },
-    {
-        "module": "../Common/VstsAzureRestHelpers_",
-        "type": "ps"
-    },
-    {
-      "module": "../Common/Deployment/TelemetryHelper",
       "type": "ps"
     },
     {
@@ -33,7 +18,7 @@
       "type": "ps"
     },
     {
-      "module": "../Common/Sanitizer",
+      "module": "../Common/VstsAzureRestHelpers_",
       "type": "ps"
     }
   ],
@@ -98,7 +83,7 @@
       },
       {
         "name": "VstsTaskSdk",
-        "version": "0.21.0",
+        "version": "0.9.0",
         "repository": "https://www.powershellgallery.com/api/v2/",
         "cp": [
           {

@@ -10,12 +10,20 @@ import * as nutil from 'azure-pipelines-tasks-packaging-common/nuget/Utility';
 import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { RequestOptions } from 'azure-pipelines-tasks-packaging-common/universal/RequestUtilities';
 
 export async function run(): Promise<void> {
     console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+        const timeout: number = utility.getRequestTimeout();
+        const webApiOptions: RequestOptions = { 
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout,
+            } 
+        };
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet, webApiOptions);
     } catch (error) {
         tl.debug('Unable to get packaging URIs');
         logError(error);

@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 245,
-    "Patch": 2
+    "Minor": 263,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -505,6 +505,14 @@
       "required": "false",
       "groupName": "generalAdvanced",
       "visibleRule": "command != restore && command != push && command != pack"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "defaultValue": 300000,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout"
     }
   ],
   "dataSourceBindings": [
@@ -529,6 +537,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
     }

@@ -7,6 +7,8 @@
   "loc.input.help.notifyUsers": "Senden Sie eine E-Mail an bestimmte Benutzer (oder Gruppen), um diese über ausstehende manuelle Überprüfungen zu informieren. Nur in den genehmigenden Personen angegebene Benutzer können eine manuelle Überprüfung durchführen.",
   "loc.input.label.approvers": "Genehmigende Personen",
   "loc.input.help.approvers": "Geben Sie Benutzer/Gruppen/Projektteams durch Kommas getrennt an, um auf eine manuelle Überprüfung zu reagieren. Wenn keine Eingabe vorhanden ist, können Benutzer mit der Berechtigung zum Erstellen einer Warteschlange Maßnahmen ergreifen.",
+  "loc.input.label.allowApproversToApproveTheirOwnRuns": "Genehmigern erlauben, ihre eigenen Ausführungen zu genehmigen",
+  "loc.input.help.allowApproversToApproveTheirOwnRuns": "Wenn dies zutrifft, kann die genehmigende Person ihre eigene Ausführung genehmigen.",
   "loc.input.label.instructions": "Anleitung",
   "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser die manuelle Überprüfung fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu dieser manuellen Überprüfung treffen.",
   "loc.input.label.onTimeout": "Bei Zeitlimit",

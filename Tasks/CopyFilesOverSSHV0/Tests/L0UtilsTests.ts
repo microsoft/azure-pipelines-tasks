@@ -1,5 +1,5 @@
 import assert = require('assert');
-import * as  utils from '../utils';
+import * as utils from '../utils';
 
 export function run() {
     context('Utils tests: ', function () {

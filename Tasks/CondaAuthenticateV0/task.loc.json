@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
-    "Patch": 0
+    "Minor": 247,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -24,6 +24,10 @@
     },
     "Node16": {
       "target": "condaauthenticatemain.js"
+    },
+    "Node20_1": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

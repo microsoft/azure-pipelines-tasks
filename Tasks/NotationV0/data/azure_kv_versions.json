@@ -2,6 +2,35 @@
     {
         "darwin": {
             "amd64": {
+                "checksum": "4c360d362a9448b46f98046257d5b270b2c5b1beb04c14263e59cead898902c9",
+                "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.1/notation-azure-kv_1.2.1_darwin_amd64.tar.gz"
+            },
+            "arm64": {
+                "checksum": "bf6e07fdf309c194c99870c8a2a326fa14f9f7572fcf61948d1fcb3249ab3285",
+                "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.1/notation-azure-kv_1.2.1_darwin_arm64.tar.gz"
+            }
+        },
+        "linux": {
+            "amd64": {
+                "checksum": "67c5ccaaf28dd44d2b6572684d84e344a02c2258af1d65ead3910b3156d3eaf5",
+                "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.1/notation-azure-kv_1.2.1_linux_amd64.tar.gz"
+            },
+            "arm64": {
+                "checksum": "77bbdfb785e22f8b1cae46392200a453a428009c4450a8dc86e10551cc06f28e",
+                "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.1/notation-azure-kv_1.2.1_linux_arm64.tar.gz"
+            }
+        },
+        "version": "1.2.1",
+        "windows": {
+            "amd64": {
+                "checksum": "416eb490a83e8371407cbff1abe0588c84b8cdd34372f936cb1f913b7d0da8c1",
+                "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.1/notation-azure-kv_1.2.1_windows_amd64.zip"
+            }
+        }
+    },
+    {
+        "darwin": {
+            "amd64": {
                 "checksum": "4b5a3480fc1d6844a69f7d9483530e9be24a74441fd571ccd5eec9f6a5337eed",
                 "url": "https://github.com/Azure/notation-azure-kv/releases/download/v1.2.0/notation-azure-kv_1.2.0_darwin_amd64.tar.gz"
             },

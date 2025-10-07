@@ -58,9 +58,10 @@ async function run() {
             });
         }
 
-        process.on("SIGINT", () => {
-            tl.debug('Started cancellation of executing script');
-            bash.killChildProcess();
+        ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGTERM', 'EXIT'].forEach((signal) => {
+            process.on(signal, () => {
+                bash.killChildProcess(signal as NodeJS.Signals);
+            });
         });
 
         // Run bash.

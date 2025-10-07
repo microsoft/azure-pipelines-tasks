@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 264,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -128,6 +128,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
+      "name": "kind",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.kind"
+    },
+    {
       "name": "targetPort",
       "type": "string",
       "label": "ms-resource:loc.input.label.targetPort",
@@ -176,6 +183,10 @@
     },
     "Node16": {
       "target": "azurecontainerapps.js"
+    },
+    "Node20_1": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

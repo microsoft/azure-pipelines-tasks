@@ -9,6 +9,7 @@ import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 var utils = require('./utils.js');
 
 const testRunIdLineRegexp = /Test run id: "([^"]+)"/;
+const personalAccessTokenRegexp = /^.{76}AZDO.{4}$/;
 
 function getEndpointAPIToken(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
@@ -206,7 +207,7 @@ async function setTestRunIdBuildPropertyAsync(testRunId: string) {
         let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
         let projectId = tl.getVariable('System.TeamProjectId');
         let buildId = tl.getVariable('Build.BuildId');
-        let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
+        let auth = token.length == (52 || personalAccessTokenRegexp.test(token)) ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
         let vsts: apim.WebApi = new apim.WebApi(url, auth);
         let conn: lim.ConnectionData = await vsts.connect();
         let buildApi = await vsts.getBuildApi();

@@ -4,7 +4,7 @@
   "loc.description": "Authentication task for the pip client used for installing Python distributions",
   "loc.instanceNameFormat": "Pip Authenticate",
   "loc.group.displayName.feedAuthentication": "Feeds and Authentication",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
   "loc.input.label.feedUrl": "Azure Artifacts Feeds url.",
   "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.",

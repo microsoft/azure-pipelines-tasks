@@ -16,9 +16,13 @@ steps:
   inputs:
     versionSpec: 6.0.0
 
-# npm install
-- script: npm install
-  displayName: npm install
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+# npm ci
+- script: npm ci
+  displayName: npm ci
 
 # Set variables
 - powershell: .\ci\set-publish-variables.ps1

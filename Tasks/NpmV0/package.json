@@ -4,6 +4,8 @@
   "description": "Azure Pipelines npm Task",
   "main": "npmtask.js",
   "scripts": {
+    "build": "node ../../make.js build --task NpmV0",
+    "serverBuild": "node ../../make.js serverBuild --task NpmV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,10 +21,13 @@
   "dependencies": {
     "azure-pipelines-task-lib": "4.2.0",
     "azure-pipelines-tasks-packaging-common": "^3.244.0",
-    "azure-pipelines-tasks-utility-common": "^3.0.2",
-    "@types/node": "^16.11.39"
+    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "@types/node": "^20.3.1"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

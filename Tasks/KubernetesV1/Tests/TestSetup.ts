@@ -108,6 +108,35 @@ nock('https://management.azure.com', {
                 kubeConfig: '{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}'
             }
         }).persist();
+nock('https://management.azure.com', {
+    reqheaders: {
+        "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+        "content-type": "application/json; charset=utf-8"
+    }
+}).post("/subscriptions/sId/resourceGroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/myCluster1/listClusterUserCredential?api-version=2024-05-01")
+.reply(200, {
+    kubeconfigs: [{ 
+        name: "clusterUser",
+        value: "base46kubeconfig"
+    },
+    { 
+        name: "customUser",
+        value: "base46kubeconfig"
+    }]
+    }).persist();
+
+    nock('https://management.azure.com', {
+    reqheaders: {
+        "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+        "content-type": "application/json; charset=utf-8"
+    }
+}).post("/subscriptions/sId/resourceGroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/myCluster1/listClusterAdminCredential?api-version=2024-05-01")
+.reply(200, {
+    kubeconfigs: [{ 
+        name: "clusterAdmin",
+        value: "base46kubeconfig"
+    }]
+    }).persist();
 
 // provide answers for task mock
 let a = {

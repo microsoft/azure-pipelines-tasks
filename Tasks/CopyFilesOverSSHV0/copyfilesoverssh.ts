@@ -100,23 +100,6 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     return files;
 }
 
-function prepareFiles(filesToCopy: string[], sourceFolder: string, targetFolder: string, flattenFolders: boolean) {
-    return filesToCopy.map(x => {
-        let targetPath = path.posix.join(
-            targetFolder,
-            flattenFolders
-                ? path.basename(x)
-                : x.substring(sourceFolder.length).replace(/^\\/g, "").replace(/^\//g, "")
-        );
-
-        if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
-            targetPath = `./${targetPath}`;
-        }
-
-        return [x, utils.unixyPath(targetPath)];
-    });
-}
-
 function getUniqueFolders(filesToCopy: string[]) {
     const foldersSet = new Set<string>();
 
@@ -229,7 +212,9 @@ async function newRun() {
 
     // If the contents were parsed into an array and the first element was set as default "**",
     // then upload the entire directory
-    if (contents.length === 1 && contents[0] === "**") {
+    // If the flattedFolders option is set to true, we should bypass this step.
+    // This is because the uploadFolder method does not support uploading directories when folders are flattened.
+    if (contents.length === 1 && contents[0] === "**" && !flattenFolders) {
         tl.debug("Upload a directory to a remote machine");
 
         try {
@@ -258,28 +243,32 @@ async function newRun() {
         }
     }
 
-    const preparedFiles = prepareFiles(filesToCopy, sourceFolder, targetFolder, flattenFolders);
+    const preparedFiles = utils.prepareFiles(filesToCopy, sourceFolder, targetFolder, flattenFolders);
 
     tl.debug(`Number of files to copy = ${preparedFiles.length}`);
     tl.debug(`filesToCopy = ${preparedFiles}`);
 
     console.log(tl.loc('CopyingFiles', preparedFiles.length));
 
-    // Create remote folders structure
-    const folderStructure = getUniqueFolders(preparedFiles.map(x => x[1]).sort());
+    // If the folders are not flattened, create the remote folders structure
+    // otherwise, create the folders structure before files are uploaded
+    if (!flattenFolders) {
+        // Create remote folders structure
+        const folderStructure = getUniqueFolders(preparedFiles.map(x => x[1]).sort());
 
-    for (const foldersPath of folderStructure) {
-        try {
-            await sshHelper.createRemoteDirectory(foldersPath);
-            console.log(tl.loc("FolderCreated", foldersPath));
-        } catch (error) {
-            await sshHelper.closeConnection();
-            tl.setResult(tl.TaskResult.Failed, tl.loc('TargetNotCreated', foldersPath, error));
-            return;
+        for (const foldersPath of folderStructure) {
+            try {
+                await sshHelper.createRemoteDirectory(foldersPath);
+                console.log(tl.loc("FolderCreated", foldersPath));
+            } catch (error) {
+                await sshHelper.closeConnection();
+                tl.setResult(tl.TaskResult.Failed, tl.loc('TargetNotCreated', foldersPath, error));
+                return;
+            }
         }
-    }
 
-    console.log(tl.loc("FoldersCreated", folderStructure.length));
+        console.log(tl.loc("FoldersCreated", folderStructure.length));
+    }
 
     const delayBetweenUploads = parseInt(tl.getInput('delayBetweenUploads'));
 

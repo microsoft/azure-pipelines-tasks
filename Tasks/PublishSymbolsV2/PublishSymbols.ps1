@@ -14,7 +14,6 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
 Import-Module $PSScriptRoot\ps_modules\PowershellHelpers\PowershellHelpers.psm1
-$env:RETIRE_AZURERM_POWERSHELL_MODULE = $true;
 
 function Get-SymbolServiceUri ([string]$collectionUri)
 {

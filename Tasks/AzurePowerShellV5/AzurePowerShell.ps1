@@ -14,6 +14,10 @@ $input_pwsh = Get-VstsInput -Name pwsh -AsBool -Default $false
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
 $validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
+$hostEnv = "ADO/AzurePowerShell@v5`_$($env:AGENT_OS)`_$($env:AGENT_NAME)`_$($env:BUILD_DEFINITIONNAME)`_$($env:BUILD_BUILDID)`_$($env:RELEASE_DEFINITIONNAME)`_$($env:RELEASE_RELEASEID)"
+$env:AZUREPS_HOST_ENVIRONMENT = $hostEnv
+Write-Host "AZUREPS_HOST_ENVIRONMENT: $env:AZUREPS_HOST_ENVIRONMENT"
+
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
 if ($scriptType -eq "FilePath") {
@@ -29,7 +33,9 @@ if ($scriptArguments -match '[\r\n]') {
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
+$versionTolerance = 3
 
+. (Join-Path $PSScriptRoot "Utility.ps1") 
 if ($targetAzurePs -eq $otherVersion) {
     if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
@@ -43,11 +49,14 @@ $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList
 
 if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
+      
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
 . $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
+
+Initialize-ModuleVersionValidation -moduleName "azure-powershell" -targetAzurePs $targetAzurePs -displayModuleName "Az" -versionsToReduce $versionTolerance 
 
 if ($validateScriptSignature) {
     try {

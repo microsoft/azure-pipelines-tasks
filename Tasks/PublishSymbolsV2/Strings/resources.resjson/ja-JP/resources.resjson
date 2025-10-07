@@ -8,6 +8,8 @@
   "loc.input.help.SymbolsFolder": "シンボル ファイルを検索するソース フォルダーへのパス。既定値は $(Build.SourcesDirectory) です。それ以外の場合は、$(Build.BinariesDirectory)/MyProject などのルート指定のパスを指定してください",
   "loc.input.label.SearchPattern": "検索パターン",
   "loc.input.help.SearchPattern": "発行する PDB ファイルの検出に使用するパターン。",
+  "loc.input.label.Manifest": "",
+  "loc.input.help.Manifest": "",
   "loc.input.label.IndexSources": "ソースのインデックスを作成する",
   "loc.input.help.IndexSources": "PDB ファイルにソース サーバー情報を挿入するかどうかを示します。このオプションは Windows エージェントでのみサポートされています。",
   "loc.input.label.PublishSymbols": "シンボルを発行する",
@@ -71,5 +73,6 @@
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "ライブラリ dbghelp.dll は予期しないパスから既に読み込まれています。必要なパス '{0}'。実際のパス '{0}'。",
   "loc.messages.UnsupportedSourceProvider0": "ソースのインデックス作成のサポートされていないソース プロバイダー '{0}'。",
   "loc.messages.Win32Error0FromMethod1": "メソッド '{1}' から Win32 エラー '{0}' が発生しました。",
-  "loc.messages.NodeVersionSupport": "ノード v{0} は、2024 年 8 月 31 日からサポートされなくなりました。ノード 16 以降のパイプライン エージェントを最新バージョンにアップグレードしてください。"
+  "loc.messages.NodeVersionSupport": "ノード v{0} は、2024 年 8 月 31 日からサポートされなくなりました。ノード 16 以降のパイプライン エージェントを最新バージョンにアップグレードしてください。",
+  "loc.messages.ManifestFileNotFound": ""
 }

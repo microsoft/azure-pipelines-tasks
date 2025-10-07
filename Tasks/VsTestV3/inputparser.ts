@@ -172,13 +172,15 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
     tl.debug("TestResultsFolder: " + resultsDir);
     addResultsDirectoryToTelemetry(resultsDir);
-    
+    inputDataContract.TestReportingSettings.DonotPublishTestResults = tl.getBoolInput('donotPublishTestResults');
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = 0;
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "donothing";
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
+    inputDataContract.TestReportingSettings.CustomLoggerConfig = tl.getInput('customLoggerConfig');
+    
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');

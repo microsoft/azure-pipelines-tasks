@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 243,
-    "Patch": 2
+    "Minor": 263,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -86,6 +86,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "containerstructuretest.js",
       "argumentFormat": ""
     }

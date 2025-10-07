@@ -7,6 +7,8 @@
   "loc.input.help.notifyUsers": "将手动验证挂起电子邮件发送到特定用户(或组)。只有审批者中指定的用户才能执行手动验证。",
   "loc.input.label.approvers": "审批者",
   "loc.input.help.approvers": "指定用户/组/项目团队(以逗号分隔)，以执行手动验证。如果没有输入，则具有队列生成权限的用户将能够执行操作。",
+  "loc.input.label.allowApproversToApproveTheirOwnRuns": "允许审批者批准自己的运行",
+  "loc.input.help.allowApproversToApproveTheirOwnRuns": "如果是这样，审批者将能够批准自己的运行",
   "loc.input.label.instructions": "说明",
   "loc.input.help.instructions": "将向用户显示这些说明，以便恢复或拒绝手动验证。用户根据这些说明，对此手动验证作出知情的决策。",
   "loc.input.label.onTimeout": "超时时",

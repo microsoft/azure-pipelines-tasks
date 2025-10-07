@@ -3,7 +3,7 @@ import tl = require("azure-pipelines-task-lib/task");
 
 export class ScriptTypeFactory {
     public static getSriptType(): ScriptType {
-        let scriptType: string = tl.getInput("scriptType", true);
+        let scriptType: string = tl.getInput("scriptType", true).toLowerCase();
         let scriptLocation: string = tl.getInput("scriptLocation", true);
         if (!(['inlinescript', 'scriptpath'].find((acceptedValue) => { return scriptLocation.toLowerCase() === acceptedValue; }))) {
             throw new Error(tl.loc('UnacceptedScriptLocationValue', scriptLocation));

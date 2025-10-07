@@ -2,8 +2,9 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
+      "aliases": ["azureDevOpsServiceConnection"],
+      "label": "'Azure DevOps' Service Connection",
+      "helpMarkDown": "Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -14,7 +15,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts URL",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+      "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
       "type": "string",
       "defaultValue": "",
       "required": false

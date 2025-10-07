@@ -3,6 +3,8 @@
 parameters:
 - name: deploy_all_tasks
   type: boolean
+- name: useSemverBuildConfig
+  type: boolean
 
 steps:
 # Clean
@@ -21,23 +23,35 @@ steps:
   inputs:
     versionSpec: 20.x
 
-# npm install
-- script: npm install
-  displayName: npm install
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+# npm ci
+- script: npm ci
+  displayName: npm ci
 
 # Clean
 - script: node make.js clean
   displayName: Clean tasks
 
 # Build tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(task_pattern)" $(includeLocalPackagesBuildConfigParameter)
   displayName: Build tasks using pattern
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false), eq(${{ parameters.useSemverBuildConfig }}, false))
+
+- script: node make.js serverBuild --task "$(task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true;
+  displayName: Build tasks using pattern
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false), eq(${{ parameters.useSemverBuildConfig }}, true))
 
 # Build all tasks
-- script: node make.js serverBuild
+- script: node make.js serverBuild $(includeLocalPackagesBuildConfigParameter)
   displayName: Build all tasks
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true), eq(${{ parameters.useSemverBuildConfig }}, false))
+
+- script: node make.js serverBuild $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true;
+  displayName: Build all tasks
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true), eq(${{ parameters.useSemverBuildConfig }}, true))
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually

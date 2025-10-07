@@ -1,0 +1,31 @@
+{
+    "name": "vsts-azureappconfiguration-import-task",
+    "version": "1.0.0",
+    "description": "The project is a Azure DevOps extension used push key-values from a configuration file into your App Configuration store",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "main": "index.js",
+    "scripts": {
+        "build": "node ../../make.js build --task AzureAppConfigurationImportV10",
+        "serverBuild": "node ../../make.js serverBuild --task AzureAppConfigurationImportV10",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@azure/app-configuration": "1.5.0",
+        "@azure/app-configuration-importer-file-source": "1.1.2-preview",
+        "@azure/identity": "^3.1.2",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^20.3.1",
+        "agent-base": "^6.0.2",
+        "azure-pipelines-task-lib": "^4.13.0",
+        "azure-pipelines-tasks-azure-arm-rest": "^3.254.0"
+    },
+    "devDependencies": {
+        "typescript": "5.1.6"
+    }
+}

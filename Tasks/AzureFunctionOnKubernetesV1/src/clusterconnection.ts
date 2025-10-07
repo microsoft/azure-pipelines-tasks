@@ -23,7 +23,7 @@ export default class ClusterConnection {
 
     private loadClusterType(connectionType: string): any {
         if(connectionType === "Azure Resource Manager") {
-            return require("./clusters/armkubernetescluster");
+            return require("azure-pipelines-tasks-azure-arm-rest/aksUtility")
         }
         else {
             return require("./clusters/generickubernetescluster");
@@ -32,9 +32,15 @@ export default class ClusterConnection {
     
     // get kubeconfig file path
     private async getKubeConfig(connectionType): Promise<string> {
-        return this.loadClusterType(connectionType).getKubeConfig().then((config) => {
-            return config;
-        });
+        if (connectionType === "Azure Resource Manager") {
+            const clusterName : string = tl.getInput("kubernetesCluster", true);
+            const azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", true);
+            const resourceGroup : string = tl.getInput("azureResourceGroup", true);
+            const useClusterAdmin: boolean = tl.getBoolInput('useClusterAdmin');
+            return this.loadClusterType(connectionType).getKubeConfig(azureSubscriptionEndpoint, resourceGroup, clusterName, useClusterAdmin)
+        } else {
+            return this.loadClusterType(connectionType).getKubeConfig()
+        }
     }
 
     private async initialize(): Promise<void> {

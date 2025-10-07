@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Deploy Azure Function on Kubernetes",
   "main": "src//run.js",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureFunctionOnKubernetesV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureFunctionOnKubernetesV0"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
@@ -12,11 +16,11 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
@@ -24,5 +28,8 @@
     "azure-pipelines-tasks-docker-common": "^2.242.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
     "js-yaml": "3.13.1"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

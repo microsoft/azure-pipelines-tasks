@@ -17,10 +17,9 @@ namespace BuildConfigGen
         private static partial Regex elseAndEndIfPreprocess();
 
 
-        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> validConfigPreprocessorVariableNames, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
+        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> validConfigPreprocessorVariableNames, string configName, bool retainOtherPreprocessingInstructions, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
         {
             const string ifCommand = "if";
-            const string elseIfCommand = "elseif";
             const string endIfCommand = "endif";
             const string elseCommand = "else";
 
@@ -32,6 +31,7 @@ namespace BuildConfigGen
 
             bool inIfBlock = false;
             bool inElseBlock = false;
+            bool matchingOtherConfig = false;
 
             string? currentExpression = null;
             bool ifBlockMatched = false;
@@ -57,9 +57,9 @@ namespace BuildConfigGen
                         validationErrors.Add($"Error {file}:{lineNumber}: # should not be preceeded by spaces");
                     }
 
-                    if (startPreprocessMatch.Groups["command"].Value != ifCommand && startPreprocessMatch.Groups["command"].Value != elseIfCommand)
+                    if (startPreprocessMatch.Groups["command"].Value != ifCommand)
                     {
-                        validationErrors.Add($"Error {file}:{lineNumber}: command after # must be if or elseif (case-sensitive), when followed by a space and expression of 0 or more characters");
+                        validationErrors.Add($"Error {file}:{lineNumber}: command after # must be if when followed by a space and expression of 0 or more characters");
                     }
 
                     if (startPreprocessMatch.Groups["spacesAfterHash"].Value != " ")
@@ -79,7 +79,7 @@ namespace BuildConfigGen
 
                     if (expressions.Contains(expression))
                     {
-                        validationErrors.Add($"Error {file}:{lineNumber}: expression already encountered in IF / ELSEIF expression={expression}");
+                        validationErrors.Add($"Error {file}:{lineNumber}: expression already encountered in IF expression={expression}");
                     }
                     else
                     {
@@ -117,31 +117,25 @@ namespace BuildConfigGen
 
                             if (inIfBlock)
                             {
-                                validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #if or #ifelse block detected, not allowed");
+                                validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #if block detected, not allowed");
                             }
 
                             inIfBlock = true;
+                            matchingOtherConfig = false;
 
                             if (currentExpression == configName)
                             {
                                 ifBlockMatched = true;
-                            }
-                            break;
-                        case elseIfCommand:
-                            if (!inIfBlock)
+                            } 
+                            else if (retainOtherPreprocessingInstructions)
                             {
-                                validationErrors.Add($"Error {file}:{lineNumber}: #elseif detected without matching #if block");
-                            }
-
-                            if (currentExpression == configName)
-                            {
-                                ifBlockMatched = true;
+                                matchingOtherConfig = true;
                             }
                             break;
                         case elseCommand:
                             if (!inIfBlock)
                             {
-                                validationErrors.Add($"Error {file}:{lineNumber}: #else detected without matching #if or #ifelse block");
+                                validationErrors.Add($"Error {file}:{lineNumber}: #else detected without matching #if block");
                             }
 
                             inIfBlock = false;
@@ -155,7 +149,7 @@ namespace BuildConfigGen
                             }
                             else
                             {
-                                validationErrors.Add($"Error {file}:{lineNumber}: #endif detected without matching #if, #ifelse, or #else block");
+                                validationErrors.Add($"Error {file}:{lineNumber}: #endif detected without matching #if or #else block");
                             }
 
                             inIfBlock = false;
@@ -189,32 +183,25 @@ namespace BuildConfigGen
                     throw new Exception("BUG: state error: currentExpression must be null when inIfBlock is false");
                 }
 
-                /*
-                        if (inIfBlock || inElseBlock)
-                        {
-                            if (ifBlockMatched is null)
-                            {
-                                throw new Exception($"BUG: state error: ifBlockMatched must be not be null if (inIfBlock={inIfBlock} or inElseBlock={inElseBlock})");
-                            }
-                        }
-                        else
-                        {
-                            if (ifBlockMatched is not null)
-                            {
-                                throw new Exception($"BUG: state error: ifBlockMatched must be null if not (inIfBlock={inIfBlock} or inElseBlock={inElseBlock})");
-                            }
-                        }
-                */
-
                 if (lineIsDirective)
                 {
                     madeChanges = true;
+
+                    if (matchingOtherConfig)
+                    {
+                        output.AppendLine(line);
+                    }
+
+                    if (command == endIfCommand)
+                    {
+                        matchingOtherConfig = false;
+                    }
                 }
                 else
                 {
                     if (inIfBlock)
                     {
-                        if (currentExpression == configName)
+                        if (currentExpression == configName || matchingOtherConfig)
                         {
                             output.AppendLine(line);
                         }
@@ -223,7 +210,7 @@ namespace BuildConfigGen
                     }
                     else if (inElseBlock)
                     {
-                        if (!ifBlockMatched)
+                        if (!ifBlockMatched || matchingOtherConfig)
                         {
                             output.AppendLine(line);
                         }
@@ -244,7 +231,7 @@ namespace BuildConfigGen
 
             if (inElseBlock)
             {
-                validationErrors.Add($"Error {file}:{lineNumber}: still in #ifelse block at EOF");
+                validationErrors.Add($"Error {file}:{lineNumber}: still in #else block at EOF");
             }
 
             //File.WriteAllText(file, output.ToString());

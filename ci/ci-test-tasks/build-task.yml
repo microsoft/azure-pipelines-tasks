@@ -22,7 +22,7 @@ steps:
   displayName: Clean tasks
 
 # Build
-- script: node make.js serverBuild --task "${{ parameters.task }}"
+- script: node make.js serverBuild --task "${{ parameters.task }}" $(includeLocalPackagesBuildConfigParameter)
   displayName: ${{ parameters.task }} build
 
 # Check diff for task sources

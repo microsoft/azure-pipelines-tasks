@@ -3,6 +3,10 @@
   "loc.helpMarkDown": "",
   "loc.description": "Authentifizierungsaufgabe für den Cargo-Client zum Installieren der Verteilung von Cargo-Kisten",
   "loc.instanceNameFormat": "Cargo-Authentifizierung für $(configFile)",
+  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
+  "loc.input.help.workloadIdentityServiceConnection": "Wenn dies festgelegt ist, ist \"registryNames\" erforderlich. Alle anderen Eingaben werden ignoriert.",
+  "loc.input.label.registryNames": "Registrierungsnamen aus \"config.toml\"",
+  "loc.input.help.registryNames": "Durch Trennzeichen getrennte Liste von Registrierungsnamen, die in \"config.toml\" für die Authentifizierung angegeben sind. Wenn diese Option festgelegt ist, ist workloadIdentityServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit cargoServiceConnections.",
   "loc.input.label.configFile": "Zu authentifizierende config.toml-Datei",
   "loc.input.help.configFile": "Pfad zur Datei „config.toml“, die die Registrierungen angibt, mit denen Sie arbeiten möchten. Wählen Sie die Datei und nicht den Ordner aus, z. B. „/.cargo/config.toml“.",
   "loc.input.label.cargoServiceConnections": "Anmeldeinformationen für Registrierungen außerhalb dieser Organisation/Sammlung",
@@ -13,5 +17,11 @@
   "loc.messages.ConfigTomlMissingRegistry": "Die ausgewählte config.toml-Datei muss eine Registrierungstabelle enthalten.",
   "loc.messages.AuthenticatingThisConfigToml": "Die Authentifizierung für die in dieser config.toml-Datei unter %s aufgeführte Registrierung wird hinzugefügt.",
   "loc.messages.AddingAuthRegistry": "Authentifizierung für Registrierung wird hinzugefügt: %s mit Tokenname: %s",
-  "loc.messages.AddingAuthExternalRegistry": "Authentifizierung für externe Registrierung wird hinzugefügt: %s mit Tokenname: %s"
+  "loc.messages.AddingAuthExternalRegistry": "Authentifizierung für externe Registrierung wird hinzugefügt: %s mit Tokenname: %s",
+  "loc.messages.ConnectionAlreadySet": "Für die Registrierung %s wurde bereits eine Authentifizierung für eine %s-Verbindung festgelegt.",
+  "loc.messages.ConnectionAlreadySetOverwriting": "Für die Registrierung %s wurde bereits eine Authentifizierung für eine %s-Verbindung festgelegt. Die vorhandene Authentifizierung wird überschrieben.",
+  "loc.messages.AuthTelemetry": "%s interne Feeds, %s externe Repositorys und %s Verbunddienstverbindungen authentifiziert",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Verbundanmeldeinformationen können nicht von der Dienstverbindung abgerufen werden: %s.",
+  "loc.messages.MissingRegistryNameOrServiceConnection": "Sowohl der Registrierungsname als auch die Dienstverbindung müssen festgelegt werden und dürfen nicht leer sein.",
+  "loc.messages.RegistryNotFound": "Die eingegebenen Registrierungsnamen \"%s\" entsprechen keiner Registrierung in \"config.toml\"."
 }

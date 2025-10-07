@@ -3,6 +3,10 @@
   "version": "1.0.7",
   "description": "Archive Files Task",
   "main": "archivefilestask.js",
+  "scripts": {
+    "build": "node ../../make.js build --task ArchiveFilesV2",
+    "serverBuild": "node ../../make.js serverBuild --task ArchiveFilesV2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -15,10 +19,10 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/node": "^16.11.39",
-    "azure-pipelines-task-lib": "^4.15.0"
+    "@types/node": "^20.3.1",
+    "azure-pipelines-task-lib": "^5.2.1"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 262,
     "Patch": 0
   },
   "runsOn": [
@@ -76,6 +76,10 @@
     },
     "Node16": {
       "target": "main.js"
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

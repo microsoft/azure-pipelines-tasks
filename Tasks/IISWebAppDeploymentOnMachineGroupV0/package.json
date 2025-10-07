@@ -4,6 +4,8 @@
   "description": "Azure Pipelines  IIS WebApp Deployment On Machine Group",
   "main": "DeployIISWebApp.js",
   "scripts": {
+    "build": "node ../../make.js build --task IISWebAppDeploymentOnMachineGroupV0",
+    "serverBuild": "node ../../make.js serverBuild --task IISWebAppDeploymentOnMachineGroupV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,12 +20,12 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "16.18.61",
+    "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common": "^4.243.0",
+    "azure-pipelines-tasks-webdeployment-common": "^4.260.0",
     "q": "1.4.1"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

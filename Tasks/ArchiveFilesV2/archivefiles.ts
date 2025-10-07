@@ -94,7 +94,7 @@ function getOptions(): tr.IExecSyncOptions {
         tl.debug("cwd (include root folder)= " + dirName);
         return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
     } else {
-        var stats: tl.FsStats = tl.stats(rootFolderOrFile);
+        var stats: fs.Stats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
             dirName = path.dirname(rootFolderOrFile);
         } else {
@@ -328,7 +328,7 @@ function doWork() {
         if (tl.exist(archiveFile)) {
             if (replaceExistingArchive) {
                 try {
-                    var stats: tl.FsStats = tl.stats(archiveFile);
+                    var stats: fs.Stats = tl.stats(archiveFile);
                     if (stats.isFile()) {
                         console.log(tl.loc('RemoveBeforeCreation', archiveFile));
                         tl.rmRF(archiveFile);

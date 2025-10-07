@@ -121,6 +121,11 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
     $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = $serviceConnectionId
     $env:AZURESUBSCRIPTION_CLIENT_ID = $endpointObject.servicePrincipalClientID
     $env:AZURESUBSCRIPTION_TENANT_ID = $endpointObject.tenantId
+
+    if (![System.Convert]::ToBoolean($env:DISABLE_INSTALL_MODULE_FIX)) {
+        # This is a workaround for the issue where Clear-AzContext removes Install-Module command from the session 
+        $null = Get-Command "Install-Module" -ErrorAction SilentlyContinue
+    }    
 }
 else {
     #  Provide an additional, custom, credentials-related error message. Will handle localization later

@@ -275,4 +275,4 @@ export class DotNetCoreVersionFetcher {
     private httpCallbackClient: httpClient.HttpClient;
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";

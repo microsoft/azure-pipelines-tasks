@@ -1,3 +1,21 @@
+parameters:
+- name: includeLocalPackagesBuildConfig
+  displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
+  type: boolean
+  default: false # Note: keep in sync with /azure-pipelines.yml
+
+variables:
+- name: includeLocalPackagesBuildConfigParameter
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '--includeLocalPackagesBuildConfig'
+  ${{ else }}:
+    value: ''
+- name: IncludeLocalPackagesBuildConfigTest
+  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
+    value: '1'
+  ${{ else }}:
+    value: ''
+
 trigger:
   - master
   - releases/*
@@ -6,7 +24,7 @@ jobs:
 - job: detect_changes
   displayName: Detect changes
   pool:
-    vmImage: ubuntu-20.04
+    vmImage: ubuntu-22.04
   steps:
   - script: |
       git fetch origin master

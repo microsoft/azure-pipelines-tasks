@@ -12,6 +12,17 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
+const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
+if (nodeVersion > 16) {
+    require("dns").setDefaultResultOrder("ipv4first");
+    tl.debug("Set default DNS lookup order to ipv4 first");
+}
+
+if (nodeVersion > 19) {
+    require("net").setDefaultAutoSelectFamily(false);
+    tl.debug("Set default auto select family to false");
+}
+
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
     private channels: Channel[];
@@ -20,9 +31,14 @@ export class DotNetCoreVersionFetcher {
     constructor(explicitVersioning: boolean = false) {
         this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
+        const timeout: number = this.getRequestTimeout();
         var requestOptions: httpInterfaces.IRequestOptions = {
             allowRetries: true,
-            maxRetries: 3
+            maxRetries: 3,
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout: timeout
+            }
         };
 
         if (proxyUrl) {
@@ -302,6 +318,16 @@ export class DotNetCoreVersionFetcher {
     private getCurrentDir(): string {
         return __dirname;
     }
+
+    private getRequestTimeout(): number {
+        let timeout = 60_000 * 5;
+        const inputValue: string = tl.getInput('requestTimeout', false);
+        if (!(Number.isNaN(Number(inputValue)))) {
+            const maxTimeout = 60_000 * 10;
+            timeout = Math.min(parseInt(inputValue), maxTimeout);
+        }
+        return timeout;
+    }
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";

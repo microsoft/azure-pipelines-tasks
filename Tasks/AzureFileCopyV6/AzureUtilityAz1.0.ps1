@@ -2,22 +2,47 @@
 
 . "$PSScriptRoot/AzureUtilityRest.ps1"
 
-function Get-AzureStorageAccountResourceGroupName
-{
+function Get-AzureStorageAccountResourceGroupName {
     param([string]$storageAccountName)
 
-    $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
-    if (-not [string]::IsNullOrEmpty($storageAccountName))
-    {
-        Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-        $azureStorageAccountResourceDetails = Az.Storage\Get-AzStorageAccount -ErrorAction Stop | Where-Object { $_.StorageAccountName -eq $storageAccountName } 
-          
-        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+    $ARMStorageAccountResourceType = "Microsoft.Storage/storageAccounts"
 
+    if (-not [string]::IsNullOrEmpty($storageAccountName)) {
+        Write-Verbose "[Azure Call] Getting resource details for Azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+
+        $maxRetries = 3
+        $retryDelay = 30
+
+        for ($retryCnt = 0; $retryCnt -le $maxRetries; $retryCnt++) { 
+            try {
+                # Attempt to get the Azure Storage Account details
+                $azureStorageAccountResourceDetails = Az.Storage\Get-AzStorageAccount -ErrorAction Stop |
+                    Where-Object { $_.StorageAccountName -eq $storageAccountName }
+                Write-Verbose "[Azure Call] Retrieved resource details successfully for Azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"    
+                # If successful, exit the loop
+                break
+            }
+            catch {
+                $errorMessage = $_.Exception.Message                 
+                # Retry logic for HTTP 429 (Too Many Requests)
+                if ($_.Exception.Response.StatusCode -eq 429) {
+                    Write-Verbose "Exception Message: $($_.Exception.Response.Message)"
+                    Write-Verbose "Exception Response StatusCode: $($_.Exception.Response.StatusCode)"
+                    # Wait before retrying
+                    Start-Sleep -Seconds $retryDelay
+                    continue
+                }
+                else {
+                    # For other errors, display the message and exit the loop
+                    Write-Verbose "[Error]: $errorMessage"
+                    break
+                }
+            }
+        }
+        
         $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
-        if ([string]::IsNullOrEmpty($azureResourceGroupName))
-        {
-            Write-Verbose "(ARM)Storage account: $storageAccountName not found"
+        if ([string]::IsNullOrEmpty($azureResourceGroupName)) {
+            Write-Verbose "(ARM) Storage account: $storageAccountName not found"
             Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
             Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
         }
@@ -384,7 +409,7 @@ function Import-AzModule
         else {
             # Import the module.
             Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force  3>$null
         }
     }
 }

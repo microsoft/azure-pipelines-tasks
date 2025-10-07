@@ -3,7 +3,7 @@
   "name": "AzureTestPlan",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-test-plan-v0?view=azure-pipelines",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -13,13 +13,23 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
+    "Minor": 263,
     "Patch": 0
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -35,8 +45,32 @@
       }
     },
     {
-      "name": "testPlan",
+      "name": "testPlanOrRunSelector",
       "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlanOrRunSelector",
+      "defaultValue": "testPlan",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlanOrRunSelector",
+      "options": {
+        "testPlan": "Test plan",
+        "testRun": "Test run"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testRunId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunId",
+      "defaultValue": "$(test.RunId)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunId",
+      "visibleRule": "testPlanOrRunSelector = testRun"
+    },
+    {
+      "name": "testPlan",
+      "type": "string",
       "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
       "required": true,
@@ -44,7 +78,8 @@
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testSuite",
@@ -54,10 +89,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "required": true,
       "properties": {
-        "MultiSelect": "True",
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testConfiguration",
@@ -77,20 +112,30 @@
       "label": "ms-resource:loc.input.label.testLanguageInput",
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
-        "Java-Maven": "Java-Maven",
-        "Java-Gradle": "Java-Gradle",
-        "Python": "Python",
-        "Go": "Go",
-        "Jest": "Jest"
+        "JavaMaven": "Java - Maven",
+        "JavaGradle": "Java - Gradle",
+        "Python": "Python - PyTest",
+        "JavaScriptJest": "JavaScript - Jest",
+        "Playwright": "JavaScript/TypeScript - Playwright"
       }
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.mergeTestResults",
-      "defaultValue": "false",
+      "name": "pomFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pomFilePath",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
+      "helpMarkDown": "ms-resource:loc.input.help.pomFilePath",
+      "visibleRule": "testLanguageInput = JavaMaven"
+    },
+    {
+      "name": "gradleFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gradleFilePath",
+      "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
       "name": "publishRunAttachments",
@@ -105,7 +150,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
@@ -128,16 +173,6 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
-    {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",
       "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/configurations?api-version=3.0-preview.1",
@@ -147,7 +182,7 @@
     {
       "target": "testSuite",
       "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?api-version=3.0-preview.2",
       "parameters": {
         "testPlan": "$(testPlan)"
       },
@@ -163,6 +198,10 @@
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -176,9 +215,5 @@
     "chmodGradlew": "ms-resource:loc.messages.chmodGradlew",
     "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
-  },
-  "_buildConfigMapping": {
-    "Default": "0.238.4",
-    "Node20-225": "0.238.5"
   }
 }

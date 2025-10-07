@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 245,
+    "Minor": 263,
     "Patch": 0
   },
   "demands": [],
@@ -52,6 +52,10 @@
     },
     "Node16": {
       "target": "src//dockertoolinstaller.js"
+    },
+    "Node20_1": {
+      "target": "src//dockertoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

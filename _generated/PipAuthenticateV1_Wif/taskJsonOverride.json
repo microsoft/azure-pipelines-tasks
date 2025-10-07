@@ -2,7 +2,8 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "aliases": ["azureDevOpsServiceConnection"],
+      "label": "'Azure DevOps' Service Connection",
       "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
       "type": "connectedService:workloadidentityuser",
       "required": false,

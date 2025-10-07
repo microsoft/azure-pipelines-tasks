@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://aka.ms/armtaskreadme)",
   "loc.description": "ARM(Azure Resource Manager) 템플릿을 모든 배포 범위에 배포",
   "loc.instanceNameFormat": "ARM 템플릿 배포: $(deploymentScope) 범위",
-  "loc.releaseNotes": "- 모든 배포 범위에서 배포 지원이 추가되었습니다.\n - 모든 VM 관련 작업을 제거했습니다.",
+  "loc.releaseNotes": "- bicepparam에 대한 지원이 추가되었습니다.",
   "loc.group.displayName.AzureDetails": "Azure 세부 정보",
   "loc.group.displayName.Template": "템플릿",
   "loc.group.displayName.Advanced": "고급",
@@ -38,6 +38,8 @@
   "loc.input.help.deploymentOutputs": "현재 배포 개체의 출력 섹션이 포함될 출력 변수의 변수 이름을 문자열 형식으로 제공합니다. \"ConvertFrom-Json\" PowerShell cmdlet을 사용하여 JSON 개체를 구문 분석하고 개별 출력 값에 액세스할 수 있습니다. 자세한 내용은 [이 링크](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)를 참조하세요.",
   "loc.input.label.addSpnToEnvironment": "재정의 매개 변수의 서비스 주체 정보 액세스",
   "loc.input.help.addSpnToEnvironment": "선택한 Azure 엔드포인트의 서비스 주체 ID 및 키를 스크립트의 실행 환경에 추가합니다. 재정의 매개 변수에 '$servicePrincipalId' 및 '$servicePrincipalKey' 변수를 사용할 수 있습니다(예: '-key $servicePrincipalKey').",
+  "loc.input.label.useWithoutJSON": "JSON.Stringify가 적용되지 않은 개별 출력 값 사용",
+  "loc.input.help.useWithoutJSON": "개별 출력 값은 기본적으로 JSON.Stringify를 통해 변환됩니다. 출력 값을 JSON.Stringify를 통해 변환하지 않고 그대로 사용하려면 이 옵션을 활성화하세요. 자세한 내용은 [이 항목](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)을 참조하세요.",
   "loc.messages.CheckResourceGroupExistence": "리소스 그룹 %s이(가) 있는지 확인하는 중입니다.",
   "loc.messages.ResourceGroupStatusFetchFailed": "리소스 그룹 상태를 확인하지 못했습니다. 오류: %s.",
   "loc.messages.ResourceGroupStatus": "리소스 그룹이 있음: %s.",
@@ -93,5 +95,11 @@
   "loc.messages.AzureCLINotFound": "에이전트에서 Azure CLI를 찾을 수 없습니다.",
   "loc.messages.FailedToFetchAzureCLIVersion": "에이전트에서 az cli 버전을 가져오지 못했습니다. 오류: %s",
   "loc.messages.BicepBuildFailed": "\"az bicep 빌드\"가 실패했습니다. 오류: %s",
-  "loc.messages.BicepFileCleanupFailed": "Bicep 파일을 삭제하지 못했습니다. 오류: %s"
+  "loc.messages.BicepFileCleanupFailed": "Bicep 파일을 삭제하지 못했습니다. 오류: %s",
+  "loc.messages.LoginFailed": "Azure 로그인 실패: %s",
+  "loc.messages.MSILoginFailed": "관리 서비스 ID를 사용하여 Azure 로그인 실패: %s",
+  "loc.messages.AuthSchemeNotSupported": "인증 체계 %s은(는) 지원되지 않습니다.",
+  "loc.messages.ErrorInSettingUpSubscription": "구독 설정 오류: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\"이 실패했습니다. 오류: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam 파일을 사용하려면 Azure CLI 버전이 >= 2.47.0이어야 함"
 }

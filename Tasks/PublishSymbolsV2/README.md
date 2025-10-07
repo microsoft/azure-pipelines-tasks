@@ -24,6 +24,8 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 
 * **SearchPattern**: The pattern used to discover the pdb files to publish. 
 
+* **Manifest**: The path to a file containing more symbol client keys to publish. 
+
 * **IndexSources**: Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents.
 
 * **PublishSymbols**: Indicates whether to publish the symbol files.
@@ -62,7 +64,8 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 6) Run command at root "npm i"
 7) Run command at root "node make.js build --task PublishSymbolsV2"
 8) Refer files generated at "_build" to test locally
-9) Check-in files changed from ".\Tasks\PublishSymbolsV2\" and files generated from "_generated"
+9) Check-in files changed from ".\Tasks\PublishSymbolsV2\" and files generated from "_generated". Do not checkin files from "_build"
+
 
 ```yaml
 

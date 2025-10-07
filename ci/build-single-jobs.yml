@@ -9,6 +9,10 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: publishToDistributedTaskTest
+  displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
+  type: boolean
+  default: false
 
 jobs:
 # Build Single Task and stage hotfix
@@ -32,7 +36,10 @@ jobs:
       - output: nuget
         packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
         packageParentPath: '$(Build.SourcesDirectory)'
-        publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+        ${{ if eq(parameters.publishToDistributedTaskTest, true) }}:
+          publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
+        ${{ else }}:
+          publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
         nuGetFeedType: internal
         displayName: Push Nuget package
         allowPackageConflicts: $(COURTESY_PUSH)

@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 245,
-    "Patch": 4
+    "Minor": 262,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -197,6 +197,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "azureclitask.js",
       "argumentFormat": ""
     }

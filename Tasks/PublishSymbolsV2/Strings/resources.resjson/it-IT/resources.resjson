@@ -8,6 +8,8 @@
   "loc.input.help.SymbolsFolder": "Percorso della cartella in cui vengono cercati i file di simboli. L'impostazione predefinita è $(Build.SourcesDirectory). In caso contrario, specificare un percorso completo, ad esempio: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Criteri di ricerca",
   "loc.input.help.SearchPattern": "Criterio usato per individuare i file PDB da pubblicare.",
+  "loc.input.label.Manifest": "",
+  "loc.input.help.Manifest": "",
   "loc.input.label.IndexSources": "Indicizza origini",
   "loc.input.help.IndexSources": "Indica se inserire informazioni sul server di origine nei file PDB. Questa opzione è supportata solo negli agenti Windows.",
   "loc.input.label.PublishSymbols": "Pubblica simboli",
@@ -71,5 +73,6 @@
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La libreria dbghelp.dll è già stata caricata da un percorso imprevisto. Percorso previsto: '{0}'. Percorso effettivo: '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "Il provider di origine '{0}' non è supportato per l'indicizzazione origine.",
   "loc.messages.Win32Error0FromMethod1": "È stato rilevato l'errore Win32 '{0}' restituito dal metodo '{1}'.",
-  "loc.messages.NodeVersionSupport": "Il nodo v{0} non è più supportato a partire dal 31/08/2024. Aggiornare l'agente della pipeline alla versione più recente per Node 16 o versione successiva."
+  "loc.messages.NodeVersionSupport": "Il nodo v{0} non è più supportato a partire dal 31/08/2024. Aggiornare l'agente della pipeline alla versione più recente per Node 16 o versione successiva.",
+  "loc.messages.ManifestFileNotFound": ""
 }

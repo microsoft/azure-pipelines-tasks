@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Install SSK Key Task",
   "main": "preinstallsshkey.js",
   "scripts": {
+    "build": "node ../../make.js build --task InstallSSHKeyV0",
+    "serverBuild": "node ../../make.js serverBuild --task InstallSSHKeyV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,12 +20,15 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.59",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.5.1",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-securefiles-common": "2.1.0"
+    "azure-pipelines-tasks-securefiles-common": "2.263.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

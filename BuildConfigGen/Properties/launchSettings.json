@@ -2,7 +2,11 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": " --task PipAuthenticateV1   "
+      "commandLineArgs": "--all-tasks --write-updates"
+    },
+    "BuildConfigGenNew": {
+      "commandName": "Project",
+      "commandLineArgs": "--use-semver-build-config --all-tasks --write-updates"
     }
   }
 }

@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Cocoa Pods Task",
   "main": "cocoapods.js",
   "scripts": {
+    "build": "node ../../make.js build --task CocoaPodsV0",
+    "serverBuild": "node ../../make.js serverBuild --task CocoaPodsV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,10 +20,10 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.18.105",
+    "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0"
   },
   "devDependencies": {
-    "typescript": "4.9.5"
+    "typescript": "5.1.6"
   }
 }

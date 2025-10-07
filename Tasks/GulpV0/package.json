@@ -1,6 +1,10 @@
 {
   "name": "vsts-gulp-task",
   "description": "Azure Pipelines gulp tasks",
+  "scripts": {
+    "build": "node ../../make.js build --task GulpV0",
+    "serverBuild": "node ../../make.js serverBuild --task GulpV0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -13,11 +17,11 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
-    "minimatch": "^3.0.4"
+    "minimatch": "^4.0.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

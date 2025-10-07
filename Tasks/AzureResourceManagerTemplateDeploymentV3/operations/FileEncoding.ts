@@ -17,19 +17,19 @@ export class FileEncoding {
 function detectFileEncodingWithBOM(buffer: Buffer): FileEncoding {
     tl.debug('Detecting file encoding using BOM');
     var type: string;
-    if (buffer.slice(0, 3).equals(new Buffer([239, 187, 191]))) {
+    if (buffer.slice(0, 3).equals(Buffer.from([239, 187, 191]))) {
         type = 'utf-8';
     }
-    else if (buffer.slice(0, 4).equals(new Buffer([255, 254, 0, 0]))) {
+    else if (buffer.slice(0, 4).equals(Buffer.from([255, 254, 0, 0]))) {
         type = 'utf-32le';
     }
-    else if (buffer.slice(0, 2).equals(new Buffer([254, 255]))) {
+    else if (buffer.slice(0, 2).equals(Buffer.from([254, 255]))) {
         type = 'utf-16be';
     }
-    else if (buffer.slice(0, 2).equals(new Buffer([255, 254]))) {
+    else if (buffer.slice(0, 2).equals(Buffer.from([255, 254]))) {
         type = 'utf-16le';
     }
-    else if (buffer.slice(0, 4).equals(new Buffer([0, 0, 254, 255]))) {
+    else if (buffer.slice(0, 4).equals(Buffer.from([0, 0, 254, 255]))) {
         type = 'utf-32be';
     }
     else {

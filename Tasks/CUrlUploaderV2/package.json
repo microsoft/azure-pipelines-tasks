@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Curl Uploader Task",
   "main": "curluploader.js",
   "scripts": {
+    "build": "node ../../make.js build --task CUrlUploaderV2",
+    "serverBuild": "node ../../make.js serverBuild --task CUrlUploaderV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,11 +20,11 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/node": "^16.18.105",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0"
   },
   "devDependencies": {
-    "typescript": "4.9.5"
+    "typescript": "5.1.6"
   }
 }

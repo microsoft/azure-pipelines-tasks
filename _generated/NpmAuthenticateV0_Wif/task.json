@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
-    "Patch": 2
+    "Minor": 262,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -21,8 +21,11 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. Service Connections for external organizations/collection and custom endpoints are not compatible.",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
+      "label": "'Azure DevOps' Service Connection",
+      "helpMarkDown": "Credentials to use for registries located a project's .npmrc file. Use with feedUrl to specify credentials used for the single registry in a .npmrc file. Not compatible with customEndpoint.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -33,7 +36,7 @@
     {
       "name": "feedUrl",
       "label": "Azure Artifacts URL",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
+      "helpMarkDown": "If this is set, azureDevOpsServiceConnection is required. Not compatible with customEndpoint. Feed Url should be in the npm registry format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
       "type": "string",
       "defaultValue": "",
       "required": false
@@ -105,14 +108,14 @@
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
-    "MissingFeedUrlOrServiceConnection": "Both feed url and service connection need to be set and cannot be empty.",
+    "MissingFeedUrlOrServiceConnection": "If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.",
     "SkippingParsingNpmrc": "Skipping parsing npmrc",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.246.0",
-    "Node20_229_1": "0.246.1",
-    "wif_242": "0.246.2"
+    "Default": "0.262.0",
+    "LocalPackages": "0.249.4",
+    "wif_242": "0.262.1"
   }
 }

@@ -36,24 +36,11 @@ function detect_platform_and_runtime_id ()
     fi
 }
 
-function cmd_build ()
-{
-    heading "Building"
-    dotnet build -o bin $SOLUTION_PATH || failed build
-    #change execution flag to allow running with sudo
-    if [[ ("$CURRENT_PLATFORM" == "linux") || ("$CURRENT_PLATFORM" == "darwin") ]]; then
-        chmod +x "bin/BuildConfigGen"
-    fi
-
-}
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=$1
 pushd "$SCRIPT_DIR"
 source "$SCRIPT_DIR/Misc/helpers.sh"
-
-DOTNETSDK_ROOT="$SCRIPT_DIR/_dotnetsdk"
-DOTNETSDK_VERSION="8.0.100"
-DOTNETSDK_INSTALLDIR="$DOTNETSDK_ROOT/$DOTNETSDK_VERSION"
+DOTNETSDK_INSTALLDIR=$2
+DOTNETSDK_VERSION=$3
 
 detect_platform_and_runtime_id
 echo "Current platform: $CURRENT_PLATFORM"
@@ -74,10 +61,8 @@ if [[ (! -d "${DOTNETSDK_INSTALLDIR}") || (! -e "${DOTNETSDK_INSTALLDIR}/.${DOTN
     # run dotnet-install.ps1 on windows, dotnet-install.sh on linux
     if [[ ("$CURRENT_PLATFORM" == "windows") ]]; then
         echo "Convert ${DOTNETSDK_INSTALLDIR} to Windows style path"
-        sdkinstallwindow_path=${DOTNETSDK_INSTALLDIR:1}
-        sdkinstallwindow_path=${sdkinstallwindow_path:0:1}:${sdkinstallwindow_path:1}
         architecture=$( echo $DETECTED_RUNTIME_ID | cut -d "-" -f2)
-        powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& \"./Misc/dotnet-install.ps1\" -Version ${DOTNETSDK_VERSION} -InstallDir \"${sdkinstallwindow_path}\" -Architecture ${architecture}  -NoPath; exit \$LastExitCode;" || checkRC dotnet-install.ps1
+        powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& \"./Misc/dotnet-install.ps1\" -Version ${DOTNETSDK_VERSION} -InstallDir \"${DOTNETSDK_INSTALLDIR}\" -Architecture ${architecture}  -NoPath; exit \$LastExitCode;" || checkRC dotnet-install.ps1
     else
         bash ./Misc/dotnet-install.sh --version ${DOTNETSDK_VERSION} --install-dir "${DOTNETSDK_INSTALLDIR}" --no-path || checkRC dotnet-install.sh
     fi
@@ -91,6 +76,3 @@ echo "Adding .NET to PATH ${DOTNETSDK_INSTALLDIR}"
 export PATH=${DOTNETSDK_INSTALLDIR}:$PATH
 echo "Path = $PATH"
 echo ".NET Version = $(dotnet --version)"
-
-SOLUTION_PATH="$SCRIPT_DIR/BuildConfigGen.sln"
-cmd_build

@@ -222,6 +222,7 @@ var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 var taskNameIsSet = process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
+var deployAllTasks = process.env['DEPLOY_ALL_TASKSVAR'] && process.env['DEPLOY_ALL_TASKSVAR'].toLowerCase() === 'true';
 
 if (taskNameIsSet) {
     var taskName = process.env['TASKNAME'];
@@ -240,7 +241,9 @@ const ciBuildReasonList = [AzpBuildReason.Individualci, AzpBuildReason.Batchedci
 
 async function filterTasks () {
     try {
-        if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
+        if (deployAllTasks) {
+            setTaskVariables(makeOptions.tasks, makeOptions.tasks);
+        } else if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
             // If CI, we will compare any tasks that have updated versions.
             const tasks = await getTasksToBuildForCI();
             setTaskVariables(tasks, tasks);

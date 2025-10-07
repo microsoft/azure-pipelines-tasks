@@ -36,5 +36,9 @@
   "loc.input.label.production_branch": "Рабочая ветвь",
   "loc.input.help.production_branch": "Рабочая ветвь. Если указан этот параметр, а среда развертывания пуста, развертывания из других ветвей будут производиться в предварительных средах",
   "loc.input.label.data_api_location": "Расположение API данных",
-  "loc.input.help.data_api_location": "Расположение каталога исходных файлов API данных относительно рабочего каталога"
+  "loc.input.help.data_api_location": "Расположение каталога исходных файлов API данных относительно рабочего каталога",
+  "loc.input.label.azure_access_token": "Маркер доступа Azure",
+  "loc.input.help.azure_access_token": "Маркер доступа, используемый для проверки подлинности и авторизации развертывания",
+  "loc.input.label.default_hostname": "Имя узла по умолчанию",
+  "loc.input.help.default_hostname": "Имя узла приложения по умолчанию"
 }

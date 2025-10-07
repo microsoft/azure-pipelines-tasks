@@ -87,7 +87,6 @@ The parameters of the task are described in details, including examples, to show
 
 The task creates the following as output variables:
 * **StorageContainerUri**: When copying files to an Azure container, this parameter returns the Uri of the container were the files were copied to.
-* **StorageContainerSasToken**: When copying files to an Azure container, a SasToken is created and returned.  By default, this token expires after 4 hours.
 
 Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#use-output-variables-from-tasks) documentation and naming the step, we can then reference the variables like so:
 
@@ -104,7 +103,6 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
   
 - script: | 
     echo $(AzureFileCopy.StorageContainerUri)
-    echo $(AzureFileCopy.StorageContainerSasToken)
 ```
 
 ### Known Limitations :

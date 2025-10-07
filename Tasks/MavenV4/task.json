@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 245,
+    "Minor": 263,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -49,6 +49,16 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "mavenPOMFile",
       "aliases": [
@@ -227,6 +237,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.21": "JDK 21",
         "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
@@ -258,12 +269,13 @@
       "label": "JDK architecture",
       "defaultValue": "x64",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
+      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
       "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     },
     {
@@ -473,6 +485,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "maventask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "maventask.js",
       "argumentFormat": ""
     }

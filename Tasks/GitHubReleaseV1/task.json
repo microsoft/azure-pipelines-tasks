@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 262,
     "Patch": 0
   },
   "demands": [],
@@ -30,7 +30,7 @@
   "inputs": [
     {
       "name": "gitHubConnection",
-      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
       "label": "GitHub connection (OAuth or PAT)",
       "defaultValue": "",
       "required": true,
@@ -259,6 +259,10 @@
       "target": "main.js"
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

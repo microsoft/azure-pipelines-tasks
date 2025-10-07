@@ -12,7 +12,9 @@
     "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package"
+    "package": "node make.js package",
+    "auth": "artifacts-npm-credprovider",
+    "installCredProvider": "npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/"
   },
   "repository": {
     "type": "git",
@@ -32,23 +34,22 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "devDependencies": {
     "adm-zip": "0.4.13",
+    "agent-base": "^6.0.2",
     "azure-devops-node-api": "^12.2.0",
+    "fast-xml-parser": "^4.3.6",
     "js-yaml": "^3.13.1",
-    "minimatch": "3.0.2",
+    "minimatch": "^3.1.2",
     "minimist": "^1.2.8",
-    "mocha": "^6.2.3",
+    "mocha": "^11.7.2",
     "node-fetch": "2.6.11",
     "node-uuid": "1.4.6",
     "nodejs-file-downloader": "^4.11.1",
     "nyc": "^15.1.0",
     "q": "1.4.1",
-    "semver": "4.3.3",
+    "semver": "5.7.2",
     "shelljs": "^0.8.5",
     "typed-rest-client": "^1.8.9",
     "typescript": "4.0.2",
     "validator": "^13.7.0"
-  },
-  "dependencies": {
-    "agent-base": "^6.0.2"
   }
 }
