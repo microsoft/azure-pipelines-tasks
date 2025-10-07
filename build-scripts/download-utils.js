@@ -167,10 +167,12 @@ var run = function (cl, inheritStreams, noHeader, throwOnError) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        if(throwOnError)
+        if (throwOnError)
         {
             throw new Error('Failed to run: ' + cl + ' exit code: ' + err.status);
-        }else{
+        }
+        else
+        {
             process.exit(1);
         }
     }
