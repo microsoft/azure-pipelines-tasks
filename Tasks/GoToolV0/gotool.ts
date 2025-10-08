@@ -277,6 +277,7 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
             return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
         }
         // If a patch is provided without numeric revision (e.g. 1.24.7), lift to latest -rev from manifest
+        // If numeric revision is provided for a patch (e.g. 1.24.7-1) use the provided revision
         const hasNumericRev = /^\d+\.\d+\.\d+-\d+$/.test(v);
         const resolved = hasNumericRev ? v : await getMicrosoftLatestFromManifest(v);
         return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
