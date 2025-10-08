@@ -10,7 +10,8 @@
     "Build"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
