@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 263,
+    "Minor": 264,
     "Patch": 0
   },
   "satisfies": [
@@ -30,12 +30,30 @@
   ],
   "inputs": [
     {
+      "name": "useGoMod",
+      "type": "boolean",
+      "label": "Use go.mod",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Select this option to install the Go version matching the specified go.mod file. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input."
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify path from where go.mod files should be searched when using `Use go.mod`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.",
+      "visibleRule": "useGoMod = true"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "Version",
       "defaultValue": "1.10",
       "required": true,
-      "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
+      "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3",
+      "visibleRule": "useGoMod = false"
     },
     {
       "name": "goPath",
