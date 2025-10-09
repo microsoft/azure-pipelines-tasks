@@ -78,7 +78,8 @@ async function getStableHelmVersion(): Promise<string> {
             if (response && response.tag_name) {
                 let currentHelmVerison = semver.clean(response.tag_name.toString());
                 if (currentHelmVerison) {
-                    if (currentHelmVerison.toString().indexOf('rc') == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
+                    let currentHelmPrerelease = semver.prerelease(currentHelmVerison.toString()) || [];
+                    if (['rc', 'beta', 'alpha'].indexOf(currentHelmPrerelease[0]) == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
                         //If current helm version is not a pre release and is greater than latest helm version
                         latestHelmVersion = currentHelmVerison;
                     }
