@@ -180,6 +180,9 @@ async function run() {
     }
     finally {
         try {
+            tl.debug('Before ImportVstsAzureHelpers');
+            const removeAzContextPath = path.join(path.resolve(__dirname),'RemoveAzContext.ps1');
+            const importHelpersPath = path.join(path.resolve(__dirname),'ImportVstsAzureHelpers.ps1');
             const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
                 .arg('-NoLogo')
                 .arg('-NoProfile')
@@ -187,9 +190,9 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`)
-                .arg(`. '${path.join(path.resolve(__dirname),'ImportVstsAzureHelpers.ps1')}'`);
+                .arg(`. '${removeAzContextPath}'; . '${importHelpersPath}'`);
 
+            tl.debug('After ImportVstsAzureHelpers');
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
                     failOnStdErr: false,
