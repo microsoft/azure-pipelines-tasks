@@ -1,12 +1,5 @@
-Write-Verbose "Import VstsAzureHelpers_ 1"
-Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
-
-Write-Verbose "Import VstsAzureHelpers_ 2"
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-
-Write-Verbose "Import VstsAzureHelpers_ 3"
-$moduleName = "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
-$module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -ArgumentList @{ NonInteractive = $true }
 
 . "$PSScriptRoot/Utility.ps1"
 . "$PSScriptRoot/ps_modules/VstsAzureHelpers_/Utility.ps1"
