@@ -13,6 +13,7 @@ const semver = require('semver');
 const shell = require('shelljs');
 
 const makeOptions = require('./make-options.json');
+const downloadUtils = require('./build-scripts/download-utils.js');
 
 const args = minimist(process.argv.slice(2));
 
@@ -479,6 +480,10 @@ var downloadFileAsync = async function (url) {
 exports.downloadFileAsync = downloadFileAsync;
 
 var downloadArchiveAsync = async function (url, omitExtensionCheck) {
+    if(args.enableConcurrentTaskBuild) {
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+    }
+
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');

@@ -14,7 +14,9 @@
     "testLegacy": "node make.js testLegacy",
     "package": "node make.js package",
     "auth": "artifacts-npm-credprovider",
-    "installCredProvider": "npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/"
+    "installCredProvider": "npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/",
+    "build:parallel": "node build-parallel.js build",
+    "serverBuild:parallel": "node build-parallel.js serverBuild"
   },
   "repository": {
     "type": "git",
@@ -50,6 +52,7 @@
     "shelljs": "^0.8.5",
     "typed-rest-client": "^1.8.9",
     "typescript": "4.0.2",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "pnpm": "^10.13.1"
   }
 }

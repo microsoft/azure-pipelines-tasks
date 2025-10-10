@@ -342,6 +342,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         rm('-Rf', genTaskCommonPathLocal);
     }
 
+    // Do not print build summary for concurrent builds, It will be printed when
+    // When all the Tasks are built
+    if(argv.enableConcurrentTaskBuild) {
+        return;
+    }
+
     // Print build summary
     console.log('\n' + '='.repeat(80));
     console.log('📊 BUILD SUMMARY');
@@ -367,6 +373,11 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     async function installNodeAndBuildTasks(nodeMajorVersion, nodeFullVersion, buildTaskList, builtTasks, buildResults) {
         await util.installNodeAsync(nodeMajorVersion.toString());
         ensureTool('node', '--version', `v${nodeFullVersion}`);
+
+        if(argv.onlyPreBuildSteps) {
+            return;
+        }
+
         for (const taskName of buildTaskList) {
             const taskKey = `${taskName}-${nodeMajorVersion}`;
             if (!builtTasks.has(taskKey)) {
