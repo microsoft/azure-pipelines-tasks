@@ -180,6 +180,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
+        let cleanupExitCode = 0;
         try {
             const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
                 .arg('-NoLogo')
@@ -197,13 +198,16 @@ async function run() {
                     outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
                     ignoreReturnCode: true
                 };
-            await powershell.exec(options);
+            cleanupExitCode = await powershell.exec(options);
+            tl.debug(`Cleanup (RemoveAzContext.ps1) exit code: ${cleanupExitCode}`);
         }
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
-            //if (tl.getPipelineFeature('SetTaskResultFailed')) {
-                tl.setResult(tl.TaskResult.Failed, err.message);
-            //}
+            tl.setResult(tl.TaskResult.Failed, err.message);
+        }
+        // If cleanup failed and the main logic did not already fail, set task result to failed
+        if (cleanupExitCode !== 0 && tl.getTaskResult() !== tl.TaskResult.Failed) {
+            tl.setResult(tl.TaskResult.Failed, `Cleanup (RemoveAzContext.ps1) failed with exit code ${cleanupExitCode}`);
         }
     }
 }
