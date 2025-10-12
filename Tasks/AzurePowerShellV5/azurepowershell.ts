@@ -197,11 +197,8 @@ async function run() {
                     outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
                     ignoreReturnCode: true
                 };
-            let cleanupExitCode = await powershell.exec(options);
+            await powershell.exec(options);
             tl.debug(`Cleanup (RemoveAzContext.ps1) exit code: ${cleanupExitCode}`);
-            if (cleanupExitCode !== 0) {
-                tl.setResult(tl.TaskResult.Failed, 'Cleanup failed');
-            }
         }
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
