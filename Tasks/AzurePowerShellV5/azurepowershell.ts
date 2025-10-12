@@ -201,6 +201,9 @@ async function run() {
         }
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
+            //if (tl.getPipelineFeature('SetTaskResultFailed')) {
+                tl.setResult(tl.TaskResult.Failed, err.message);
+            //}
         }
     }
 }
