@@ -198,6 +198,7 @@ async function run() {
                     ignoreReturnCode: true
                 };
             let cleanupExitCode = await powershell.exec(options);
+            tl.debug(`Cleanup (RemoveAzContext.ps1) exit code: ${cleanupExitCode}`);
             if (cleanupExitCode !== 0) {
                 tl.setResult(tl.TaskResult.Failed, 'Cleanup failed');
             }
