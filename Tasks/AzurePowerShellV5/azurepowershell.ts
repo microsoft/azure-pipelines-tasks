@@ -198,7 +198,6 @@ async function run() {
                     ignoreReturnCode: true
                 };
             await powershell.exec(options);
-            tl.debug(`Cleanup (RemoveAzContext.ps1) exit code: ${cleanupExitCode}`);
         }
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
