@@ -205,8 +205,7 @@ async function run() {
             tl.debug("Az-clearContext not completed due to an error");
             tl.setResult(tl.TaskResult.Failed, err.message);
         }
-        // If cleanup failed and the main logic did not already fail, set task result to failed
-        if (cleanupExitCode !== 0 && tl.getTaskResult() !== tl.TaskResult.Failed) {
+        if (cleanupExitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, `Cleanup (RemoveAzContext.ps1) failed with exit code ${cleanupExitCode}`);
         }
     }
