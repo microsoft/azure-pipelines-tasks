@@ -4,6 +4,8 @@
   "description": "Azure App Service Settings",
   "main": "azurewebappsettings.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureAppServiceSettingsV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureAppServiceSettingsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

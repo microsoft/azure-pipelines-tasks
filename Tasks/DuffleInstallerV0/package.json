@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task DuffleInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task DuffleInstallerV0"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
@@ -6,9 +10,12 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^1.3.2"
+    "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

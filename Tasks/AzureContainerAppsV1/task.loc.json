@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 255,
+    "Minor": 264,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -126,6 +126,13 @@
       "label": "ms-resource:loc.input.label.runtimeStack",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.kind"
     },
     {
       "name": "targetPort",

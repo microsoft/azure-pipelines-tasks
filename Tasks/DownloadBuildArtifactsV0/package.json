@@ -4,6 +4,8 @@
   "description": "Download Build Artifacts Task",
   "main": "download.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadBuildArtifactsV0",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadBuildArtifactsV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

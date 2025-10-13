@@ -4,6 +4,8 @@
   "description": "Download Fileshare Artifacts Task",
   "main": "download.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadFileshareArtifactsV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadFileshareArtifactsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

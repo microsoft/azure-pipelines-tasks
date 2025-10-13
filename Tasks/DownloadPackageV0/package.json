@@ -4,6 +4,8 @@
   "description": "Download Package Task",
   "main": "downloadPackages.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadPackageV0",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadPackageV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

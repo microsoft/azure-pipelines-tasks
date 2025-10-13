@@ -4,6 +4,8 @@
   "description": "",
   "main": "npm.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadGitHubNpmPackageV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadGitHubNpmPackageV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,5 +30,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

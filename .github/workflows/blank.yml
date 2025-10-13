@@ -16,13 +16,13 @@ jobs:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         configuration-path: "./issue-rules.yml"
 
-    - name: Set Node.js 10.x
+    - name: Set Node.js 20.x
       uses: actions/setup-node@master
       with:
-        version: 10.x
+        version: 20.x
 
     # Need to explicitly install @octokit/rest seperately or else it will mess with our typings.
-    - run: npm install && npm install @octokit/rest@18.12.x
+    - run: npm ci && npm install @octokit/rest@18.12.x
 
     - name: File bugs
       run: node ci/file-bugs.js

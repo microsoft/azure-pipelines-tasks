@@ -4,6 +4,8 @@
   "description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
   "main": "userubynversion.js",
   "scripts": {
+    "build": "node ../../make.js build --task UseRubyVersionV0",
+    "serverBuild": "node ../../make.js serverBuild --task UseRubyVersionV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +30,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.7"
+    "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
     "typescript": "5.1.6"

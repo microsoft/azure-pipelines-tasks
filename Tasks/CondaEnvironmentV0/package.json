@@ -4,6 +4,8 @@
   "description": "Create and activate a Conda environment.",
   "main": "conda.js",
   "scripts": {
+    "build": "node ../../make.js build --task CondaEnvironmentV0",
+    "serverBuild": "node ../../make.js serverBuild --task CondaEnvironmentV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +24,7 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tool-lib": "^2.0.7"
+    "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
     "typescript": "5.1.6"
