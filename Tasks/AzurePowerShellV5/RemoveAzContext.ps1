@@ -1,4 +1,4 @@
-#Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
+Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
