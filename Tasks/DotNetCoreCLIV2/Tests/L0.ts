@@ -317,7 +317,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.ran('dotnet publish web/project.csproj'), 'should have run dotnet publish');
         // Verify that the logger argument is NOT present
-        assert(!tr.ran(/.*-dl:CentralLogger.*/), 'should NOT have logger argument when feature flag is disabled');
+        assert(!tr.stdOutContained('-dl:CentralLogger'), 'should NOT have logger argument when feature flag is disabled');
         assert(tr.stdOutContained('published without logger'), 'should have published without logger');
     });
 
