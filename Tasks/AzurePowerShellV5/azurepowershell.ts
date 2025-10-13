@@ -19,9 +19,9 @@ async function run() {
 
     const env = process.env;
     const hostEnv = `ADO/AzurePowerShell@v5_${env.AGENT_OS || ""}_${env.AGENT_NAME || ""}_${env.BUILD_DEFINITIONNAME || ""}_${env.BUILD_BUILDID || ""}_${env.RELEASE_DEFINITIONNAME || ""}_${env.RELEASE_RELEASEID || ""}`;
-    
+
     process.env.AZUREPS_HOST_ENVIRONMENT = hostEnv;
-    console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);    
+    console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -137,6 +137,7 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
+        const importSdk = path.join(path.resolve(__dirname), 'ImportVstsTaskSdk.ps1');
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -144,7 +145,7 @@ async function run() {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${filePath.replace(/'/g, "''")}'`);
+            .arg(`. '${importSdk}'; . '${filePath.replace(/'/g, "''")}'`);
 
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
@@ -187,7 +188,7 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
+                .arg(`. '${path.join(path.resolve(__dirname), 'RemoveAzContext.ps1')}'`);
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
@@ -207,7 +208,7 @@ async function run() {
 async function getInstalledAzModuleVersion(): Promise<string | null> {
     try {
         tl.debug('Checking installed Az PowerShell module version...');
-        
+
         // PowerShell command to get the installed Az module version
         const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
@@ -217,7 +218,7 @@ async function getInstalledAzModuleVersion(): Promise<string | null> {
             .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${path.join(path.resolve(__dirname),'Utility.ps1')}'; Get-InstalledMajorRelease -moduleName 'Az' -iswin $false`);
-            
+
         const result = await powershell.execSync()
         if (result.code === 0 && result.stdout) {
             const version = result.stdout.trim();
