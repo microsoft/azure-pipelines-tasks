@@ -190,8 +190,7 @@ export class dotNetExe {
         // Use empty string when no project file is specified to operate on the current directory
         const projectFiles = this.getProjectFiles();
         if (projectFiles.length === 0) {
-            tl.warning(tl.loc('noProjectFilesFound'));
-            return;
+            throw tl.loc('noProjectFilesFound');
         }
 
         const failedProjects: string[] = [];
