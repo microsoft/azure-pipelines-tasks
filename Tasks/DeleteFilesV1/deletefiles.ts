@@ -1,6 +1,9 @@
 import path = require('path');
 import os = require('os');
+import fs = require('fs');
 import tl = require('azure-pipelines-task-lib/task');
+import fastGlob = require('fast-glob');
+
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 (() => {
@@ -30,15 +33,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
         return;
     }
 
-    // find all files
-    let foundPaths: string[] = tl.find(sourceFolder, {
-        allowBrokenSymbolicLinks: true,
-        followSpecifiedSymbolicLink: true,
-        followSymbolicLinks: true
-    });
-
     // short-circuit if not exists
-    if (!foundPaths.length) {
+    if (!tl.exist(sourceFolder)) {
         tl.debug('source folder not found. nothing to delete.');
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFiles"));
         return;
@@ -55,9 +51,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     // a normalization function that could be trusted 100% to match the format produced by tl.find().
     // For example if the input contains "\\\share", it would need to be normalized as "\\share". To
     // avoid worrying about catching every normalization edge case, checking the item name suffices instead.
-    if (buildCleanup &&
-        foundPaths.some((itemPath: string) => path.basename(itemPath).toLowerCase() == '000admin')) {
-
+    if (buildCleanup && fastGlob.globSync('000admin.*', { cwd: sourceFolder, caseSensitiveMatch: false,  }).length) {
         tl.warning(tl.loc('SkippingSymbolStore', sourceFolder))
         return;
     }
@@ -73,7 +67,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // apply the match patterns
-    let matches: string[] = matchPatterns(foundPaths, patterns, matchOptions);
+    let matches: string[] = matchPatterns(sourceFolder, patterns, matchOptions);
     
     // sort by length (descending) so files are deleted before folders
     matches = matches.sort((a: string, b: string) => {
@@ -99,9 +93,9 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     // if there wasn't an error, check if there's anything in the folder tree other than folders
     // if not, delete the root as well
     if (removeSourceFolder && !errorHappened) {
-        foundPaths = tl.find(sourceFolder);
+        const foundPaths = fs.readdirSync(sourceFolder);
 
-        if (foundPaths.length === 1) {
+        if (foundPaths.length === 0) {
             try {
                 tl.rmRF(sourceFolder);
             }
@@ -152,19 +146,19 @@ function joinPattern(sourcePath: string, pattern: string): string {
  * @param {Object} options - Match options
  * @return {string[]} Result matches
  */
-function matchPatterns(paths: string[], patterns: string[], options: any): string[] {
-    const allMatches = tl.match(paths, patterns, null, options);
+function matchPatterns(sourceFolder: string, patterns: string[], options: any): string[] {
+    const isFilePattern = patterns.some(pattern => pattern.includes('.'))
 
-    const hasExcludePatterns = patterns.find(pattern => {
-        const negateMarkIndex = pattern.indexOf('!');
-        return negateMarkIndex > -1 && getNegateMarksNumber(pattern, negateMarkIndex) % 2 === 1; 
-    })
-    if(!hasExcludePatterns){
-        return allMatches;
-    }
+    const result = fastGlob.globSync(patterns, {
+        cwd: sourceFolder,
+        caseSensitiveMatch: !options.nocase,
+        dot: options.dot,
+        onlyFiles: isFilePattern,
+        absolute: true
+    });
 
-    const excludedPaths = paths.filter(path => !~allMatches.indexOf(path));
-    return allMatches.filter(match => {
-        return !excludedPaths.find(excludedPath => excludedPath.indexOf(match) === 0);
-    })
+    const sourceFolderAbs = path.resolve(sourceFolder);
+    const resultsInSourceFolder = result.filter(item => path.resolve(item).startsWith(sourceFolderAbs));
+
+    return resultsInSourceFolder;
 } 
