@@ -50,6 +50,15 @@
       "label": "ms-resource:loc.input.label.goBin",
       "helpMarkDown": "ms-resource:loc.input.help.goBin",
       "groupName": "advanced"
+    },
+    {
+      "name": "goDownloadUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goDownloadUrl",
+      "required": false,
+      "defaultValue": "https://storage.googleapis.com/golang",
+      "helpMarkDown": "ms-resource:loc.input.help.goDownloadUrl",
+      "groupName": "advanced"
     }
   ],
   "execution": {

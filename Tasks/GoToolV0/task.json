@@ -50,6 +50,15 @@
       "label": "GOBIN",
       "helpMarkDown": "A custom value for the GOBIN environment variable.",
       "groupName": "advanced"
+    },
+    {
+      "name": "goDownloadUrl",
+      "type": "string",
+      "label": "Go download base URL",
+      "required": false,
+      "defaultValue": "https://storage.googleapis.com/golang",
+      "helpMarkDown": "Optional base URL for downloading Go archives. Defaults to https://storage.googleapis.com/golang",
+      "groupName": "advanced"
     }
   ],
   "execution": {
