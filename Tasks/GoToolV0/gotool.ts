@@ -101,7 +101,7 @@ function getFileName(version: string): string {
 }
 
 function getDownloadUrl(filename: string): string {
-    return util.format("https://storage.googleapis.com/golang/%s", filename);
+    return util.format("https://go.dev/dl/%s", filename);
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
