@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureAppServiceManageV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureAppServiceManageV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,8 +24,8 @@
     "@types/q": "1.0.7",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
-    "azure-pipelines-tasks-utility-common": "^3.225.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "q": "1.4.1",
     "xml2js": "^0.5.0"
   },

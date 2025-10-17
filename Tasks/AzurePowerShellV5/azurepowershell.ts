@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
@@ -18,9 +19,9 @@ async function run() {
 
     const env = process.env;
     const hostEnv = `ADO/AzurePowerShell@v5_${env.AGENT_OS || ""}_${env.AGENT_NAME || ""}_${env.BUILD_DEFINITIONNAME || ""}_${env.BUILD_BUILDID || ""}_${env.RELEASE_DEFINITIONNAME || ""}_${env.RELEASE_RELEASEID || ""}`;
-    
+
     process.env.AZUREPS_HOST_ENVIRONMENT = hostEnv;
-    console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);    
+    console.log(`AZUREPS_HOST_ENVIRONMENT: ${hostEnv}`);
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -48,11 +49,15 @@ async function run() {
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
-        let otherVersion = "OtherVersion"
+        const otherVersion = "OtherVersion"
+        const fetchingModule = "azure-powershell"
+        const moduleDisplayName = "Az module"
+        const majorversionTolerance = 3
 
         if (targetAzurePs == otherVersion) {
             if (customTargetAzurePs != "") {
                 targetAzurePs = customTargetAzurePs;
+                await validateAzModuleVersion(fetchingModule, customTargetAzurePs, moduleDisplayName, majorversionTolerance, true)
             }
             else {
                 console.log(tl.loc('InvalidAzurePsVersion',customTargetAzurePs));
@@ -60,6 +65,12 @@ async function run() {
         }
         else {
             targetAzurePs = ""
+             if (tl.getPipelineFeature('ShowWarningOnOlderAzureModules')) {
+                const azVersionResult = await getInstalledAzModuleVersion();
+                if (azVersionResult) {
+                    await validateAzModuleVersion(fetchingModule, azVersionResult, moduleDisplayName, majorversionTolerance, true)
+                }
+             }
         }
 
         var endpoint = JSON.stringify(endpointObject);
@@ -126,6 +137,7 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
+        const importSdk = path.join(path.resolve(__dirname), 'ImportVstsTaskSdk.ps1');
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -133,7 +145,7 @@ async function run() {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${filePath.replace(/'/g, "''")}'`);
+            .arg(`. '${importSdk}'; . '${filePath.replace(/'/g, "''")}'`);
 
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
@@ -176,7 +188,7 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
+                .arg(`. '${path.join(path.resolve(__dirname), 'RemoveAzContext.ps1')}'`);
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
@@ -190,6 +202,36 @@ async function run() {
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
         }
+    }
+}
+
+async function getInstalledAzModuleVersion(): Promise<string | null> {
+    try {
+        tl.debug('Checking installed Az PowerShell module version...');
+
+        // PowerShell command to get the installed Az module version
+        const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-Command')
+            .arg(`. '${path.join(path.resolve(__dirname),'Utility.ps1')}'; Get-InstalledMajorRelease -moduleName 'Az' -iswin $false`);
+
+        const result = await powershell.execSync()
+        if (result.code === 0 && result.stdout) {
+            const version = result.stdout.trim();
+            if (version && version !== '' && version !== '0.0.0') {
+                tl.debug(`Found installed Az module version: ${version}`);
+                return version;
+            }
+        }
+        tl.debug('Az PowerShell module not found on the agent');
+        return null;
+    } catch (error) {
+        tl.debug(`Error checking installed Az module version: ${error.message}`);
+        return null;
     }
 }
 

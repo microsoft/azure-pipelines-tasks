@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 255,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -215,6 +215,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.deployScriptArguments",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "canDeleteTempFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canDeleteTempFolder",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.canDeleteTempFolder",
+      "defaultValue": false,
       "groupName": "DeploymentInputs"
     },
     {

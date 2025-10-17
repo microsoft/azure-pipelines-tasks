@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 255,
-    "Patch": 1
+    "Minor": 264,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -289,6 +289,8 @@
         "NODE|10": "NODE|10 (functionapp v2/v3)",
         "NODE|12": "NODE|12 (functionapp v3)",
         "NODE|14": "NODE|14 (functionapp v3)",
+        "NODE|20": "NODE|20 (functionapp v4)",
+        "NODE|22": "NODE|22 (functionapp v4)",
         "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
         "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
         "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"

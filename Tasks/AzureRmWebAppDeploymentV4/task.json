@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 255,
-    "Patch": 1
+    "Minor": 264,
+    "Patch": 0
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -242,6 +242,8 @@
         "NODE|10": "NODE|10 (functionapp v2/v3)",
         "NODE|12": "NODE|12 (functionapp v3)",
         "NODE|14": "NODE|14 (functionapp v3)",
+        "NODE|20": "NODE|20 (functionapp v4)",
+        "NODE|22": "NODE|22 (functionapp v4)",
         "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
         "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
         "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"

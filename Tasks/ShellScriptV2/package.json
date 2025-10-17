@@ -4,6 +4,8 @@
   "description": "Azure Pipelines ShellScript Task",
   "main": "shellscript.js",
   "scripts": {
+    "build": "node ../../make.js build --task ShellScriptV2",
+    "serverBuild": "node ../../make.js serverBuild --task ShellScriptV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -4,6 +4,8 @@
   "description": "Create and activate a Conda environment.",
   "main": "pythonscript.js",
   "scripts": {
+    "build": "node ../../make.js build --task PythonScriptV0",
+    "serverBuild": "node ../../make.js serverBuild --task PythonScriptV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

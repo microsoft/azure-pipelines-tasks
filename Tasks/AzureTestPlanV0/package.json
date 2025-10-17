@@ -4,8 +4,9 @@
   "description": "Azure Pipelines Run Manual and Automated Test execution Task",
   "main": "runTestPlan.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../make.js build --task AzureTestPlanV0"
+    "build": "node ../../make.js build --task AzureTestPlanV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureTestPlanV0",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,9 @@
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^4.15.0",
     "azure-pipelines-tasks-docker-common": "^2.242.0",
-    "azure-pipelines-tasks-utility-common": "^3.212.0",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-devops-node-api": "^12.2.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "^1.8.9",
     "performance-now": "0.2.0"
   },

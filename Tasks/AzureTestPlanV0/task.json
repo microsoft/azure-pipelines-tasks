@@ -3,7 +3,7 @@
   "name": "AzureTestPlan",
   "friendlyName": "Azure Test Plan",
   "description": "Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-test-plan-v0?view=azure-pipelines",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
   "visibility": [
@@ -13,13 +13,23 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 255,
-    "Patch": 2
+    "Minor": 263,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -105,7 +115,8 @@
         "JavaMaven": "Java - Maven",
         "JavaGradle": "Java - Gradle",
         "Python": "Python - PyTest",
-        "JavaScriptJest": "JavaScript - Jest"
+        "JavaScriptJest": "JavaScript - Jest",
+        "Playwright": "JavaScript/TypeScript - Playwright"
       }
     },
     {

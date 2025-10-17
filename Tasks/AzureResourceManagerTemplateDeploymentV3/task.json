@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 255,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -342,6 +342,6 @@
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
     "BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file",
-    "ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"  
+    "ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
   }
 }

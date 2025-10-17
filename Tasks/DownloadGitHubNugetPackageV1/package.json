@@ -4,6 +4,8 @@
   "description": "",
   "main": "dotnetrestore.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadGitHubNugetPackageV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadGitHubNugetPackageV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,7 +27,7 @@
     "azure-pipelines-tasks-packaging-common": "^3.214.0",
     "q": "^1.4.1",
     "typed-rest-client": "^1.8.9",
-    "azure-pipelines-tasks-utility-common": "^3.212.0"
+    "azure-pipelines-tasks-utility-common": "3.258.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

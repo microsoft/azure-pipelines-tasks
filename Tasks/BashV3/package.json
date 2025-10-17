@@ -5,6 +5,7 @@
   "main": "bash.js",
   "scripts": {
     "build": "node ../../make.js build --task BashV3",
+    "serverBuild": "node ../../make.js serverBuild --task BashV3",
     "test": "node ../../make.js test --task BashV3"
   },
   "repository": {
@@ -21,7 +22,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.17.3",
-    "azure-pipelines-tasks-utility-common": "^3.230.0",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

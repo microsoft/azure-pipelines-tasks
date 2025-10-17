@@ -3,7 +3,7 @@
   "name": "AzureTestPlan",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-test-plan-v0?view=azure-pipelines",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -13,13 +13,23 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 255,
-    "Patch": 2
+    "Minor": 263,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -105,7 +115,8 @@
         "JavaMaven": "Java - Maven",
         "JavaGradle": "Java - Gradle",
         "Python": "Python - PyTest",
-        "JavaScriptJest": "JavaScript - Jest"
+        "JavaScriptJest": "JavaScript - Jest",
+        "Playwright": "JavaScript/TypeScript - Playwright"
       }
     },
     {

@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure RM App Service Deployment",
   "main": "azurermwebappdeployment.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureWebAppV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureWebAppV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,9 +25,9 @@
     "agent-base": "6.0.2",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
-    "azure-pipelines-tasks-utility-common": "^3.0.3",
-    "azure-pipelines-tasks-webdeployment-common": "4.243.1",
+    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-webdeployment-common": "4.260.0",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "q": "1.4.1",

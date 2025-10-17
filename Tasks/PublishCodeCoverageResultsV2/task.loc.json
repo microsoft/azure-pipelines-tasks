@@ -10,13 +10,14 @@
     "Build"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 252,
-    "Patch": 1
+    "Minor": 264,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",

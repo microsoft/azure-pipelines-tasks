@@ -4,6 +4,8 @@
   "description": "Nuget Installer Build Task",
   "main": "nugetinstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetInstallerV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetInstallerV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,11 +23,14 @@
     "@types/node": "^20.3.1",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-tasks-packaging-common": "3.206.0",
-    "azure-pipelines-tasks-utility-common": "^3.198.1",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-pipelines-task-lib": "^4.17.2",
     "xmlreader": "^0.2.3"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

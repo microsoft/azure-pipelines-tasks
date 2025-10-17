@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 255,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -93,6 +93,7 @@
       "defaultValue": true,
       "groupName": "AzureDetails"
     },
+   
     {
       "name": "managedImageName",
       "type": "string",
@@ -215,6 +216,14 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "Specify the arguments to be passed to deployment script.",
+      "groupName": "DeploymentInputs"
+    }, {
+      "name": "canDeleteTempFolder",
+      "type": "boolean",
+      "label": "Delete temp folder",
+      "required": true,
+      "helpMarkDown": "This option allows you to remove temporary folder",
+      "defaultValue": false,
       "groupName": "DeploymentInputs"
     },
     {

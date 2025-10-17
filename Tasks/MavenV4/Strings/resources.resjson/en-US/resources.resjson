@@ -41,7 +41,7 @@
   "loc.input.label.jdkUserInputPath": "JDK path",
   "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "JDK architecture",
-  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of the JDK.",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.mavenVersionSelection": "Maven version",
   "loc.input.help.mavenVersionSelection": "Uses either the default Maven version or the version in the specified custom path.",
   "loc.input.label.mavenPath": "Maven path",

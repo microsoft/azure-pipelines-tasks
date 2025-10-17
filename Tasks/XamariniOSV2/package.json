@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Xamarin iOS Task",
   "main": "xamarinios.js",
   "scripts": {
+    "build": "node ../../make.js build --task XamariniOSV2",
+    "serverBuild": "node ../../make.js serverBuild --task XamariniOSV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

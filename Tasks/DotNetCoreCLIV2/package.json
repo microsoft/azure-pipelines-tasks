@@ -4,6 +4,8 @@
   "description": "Dotnet core exe",
   "main": "dotnetcore.js",
   "scripts": {
+    "build": "node ../../make.js build --task DotNetCoreCLIV2",
+    "serverBuild": "node ../../make.js serverBuild --task DotNetCoreCLIV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,8 +25,8 @@
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "4.16.0",
     "azure-pipelines-tasks-packaging-common": "3.246.2",
-    "azure-pipelines-tasks-utility-common": "3.246.0",
-    "toml": "^3.0.0",
+    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "json5": "^2.2.3",
     "uuid": "3.2.1"
   },
   "devDependencies": {

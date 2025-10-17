@@ -50,3 +50,17 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 We accept issue reports both here (file a GitHub issue) and in [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html).
 
 Do you think there might be a security issue? Have you been phished or identified a security vulnerability? Please don't report it here - let us know by sending an email to secure@microsoft.com.
+
+## Deprecated Tasks
+
+Some tasks in this repository have been deprecated and are no longer actively maintained. Deprecated tasks will display a warning banner when used in pipelines, and will be removed after a 90-day notice period.
+
+**If you are using a deprecated task**, please migrate to the recommended replacement task as soon as possible to avoid disruption to your pipelines.
+
+For a complete list of deprecated tasks, their deprecation dates, and migration guidance, see **[DEPRECATION.md](DEPRECATION.md)**.
+
+### Common reasons for deprecation:
+- **Retired Azure services** - The underlying Azure service has been retired or replaced
+- **Security improvements** - Newer versions use more secure authentication methods (e.g., Workload Identity Federation)
+- **Outdated dependencies** - The task uses deprecated tools or libraries (e.g., older versions of AzCopy, PowerShell modules)
+- **Better alternatives available** - Superseded by newer task versions with improved functionality

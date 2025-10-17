@@ -10,7 +10,7 @@ import { MavenTestExecutor } from '../Automated Flow/TestExecutors/MavenTestExec
 import { GradleTestExecutor } from './TestExecutors/GradleTestExecutor';
 import { PythonTestExecutor } from './TestExecutors/PythonTestExecutor';
 import { JestTestExecutor } from './TestExecutors/JestTestExecutor';
-
+import { PlaywrightTestExecutor } from './TestExecutors/PlaywrightTestExecutor';
 export async function newAutomatedTestsFlow(
     testPlanInfo: TestPlanData, 
     testSelectorInput: string, 
@@ -27,7 +27,7 @@ export async function newAutomatedTestsFlow(
         return handleNoTestsFound(testSelectorInput);
     }
 
-    // Initialize test executor
+    // Initialize test executor    
     const testExecutor = getTestExecutor(testLanguage.toLowerCase());
 
     if (!testExecutor) {
@@ -158,6 +158,8 @@ function getTestExecutor(testLanguage: string): ITestExecutor {
             return new PythonTestExecutor();
         case 'javascriptjest':
             return new JestTestExecutor();
+        case 'playwright': 
+            return new PlaywrightTestExecutor();
         default:
             return null;
     }

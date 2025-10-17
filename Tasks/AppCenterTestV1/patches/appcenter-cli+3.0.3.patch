@@ -1,0 +1,74 @@
+diff --git a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
+index af2f6c9..b176a3e 100644
+--- a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
++++ b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/android/pom.xml
+@@ -11,7 +11,7 @@
+     <dependency>
+       <groupId>io.appium</groupId>
+       <artifactId>java-client</artifactId>
+-      <version>7.6.0</version>
++      <version>9.4.0</version>
+     </dependency>
+     <dependency>
+       <groupId>junit</groupId>
+@@ -28,7 +28,7 @@
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-beans</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>com.google.code.gson</groupId>
+@@ -38,12 +38,12 @@
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-expression</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-context</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>commons-io</groupId>
+diff --git a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
+index af2f6c9..b176a3e 100644
+--- a/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
++++ b/node_modules/appcenter-cli/dist/commands/test/lib/templates/appium/ios/pom.xml
+@@ -11,7 +11,7 @@
+     <dependency>
+       <groupId>io.appium</groupId>
+       <artifactId>java-client</artifactId>
+-      <version>7.6.0</version>
++      <version>9.4.0</version>
+     </dependency>
+     <dependency>
+       <groupId>junit</groupId>
+@@ -28,7 +28,7 @@
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-beans</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>com.google.code.gson</groupId>
+@@ -38,12 +38,12 @@
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-expression</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-context</artifactId>
+-      <version>5.3.39</version>
++      <version>5.3.45</version>
+     </dependency>
+     <dependency>
+       <groupId>commons-io</groupId>

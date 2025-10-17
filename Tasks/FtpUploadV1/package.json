@@ -3,6 +3,10 @@
   "version": "1.0.1",
   "description": "FTP Upload Task",
   "main": "ftpuploadtask.js",
+  "scripts": {
+    "build": "node ../../make.js build --task FtpUploadV1",
+    "serverBuild": "node ../../make.js serverBuild --task FtpUploadV1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
