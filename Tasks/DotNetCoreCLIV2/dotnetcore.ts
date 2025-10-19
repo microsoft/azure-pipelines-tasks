@@ -28,6 +28,7 @@ export class dotNetExe {
     private arguments: string;
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
+
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
     private workingDirectory: string;
@@ -39,6 +40,7 @@ export class dotNetExe {
         this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
+
         this.workingDirectory = tl.getPathInput("workingDirectory", false);
     }
 
@@ -298,10 +300,16 @@ export class dotNetExe {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
-                if (moveZipToOutputSource) {
+                
+                // Check if we should create directory for ZIP output (legacy behavior)
+                // Feature flag controls this: when enabled, uses simplified behavior (no directory creation)
+                const useSimplifiedZipBehavior = tl.getPipelineFeature('DotNetCoreCLIZipAfterPublishSimplified');
+                if (moveZipToOutputSource && !useSimplifiedZipBehavior) {
+                    // Legacy behavior: create directory and move ZIP file into it
                     fs.mkdirSync(outputSource);
                     fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
                 }
+                // If feature flag is enabled, leave ZIP file at original location (simplified behavior)
             }
             else {
                 throw tl.loc("noPublishFolderFoundToZip", projectFile);
