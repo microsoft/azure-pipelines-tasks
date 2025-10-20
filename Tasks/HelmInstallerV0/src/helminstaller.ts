@@ -71,10 +71,33 @@ function getHelmDownloadURL(version: string): string {
 
 async function getStableHelmVersion(): Promise<string> {
     try {
-        const downloadPath = await toolLib.downloadTool(helmAllReleasesUrl);
-        const responseArray = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
+        let allReleases: any[] = [];
+        let page = 1;
+        const perPage = 100; // GitHub API max per page
+        let hasMorePages = true;
+
+        // Fetch all pages of releases
+        while (hasMorePages) {
+            const pagedUrl = `${helmAllReleasesUrl}?page=${page}&per_page=${perPage}`;
+            const downloadPath = await toolLib.downloadTool(pagedUrl);
+            const pageResponseArray = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
+            
+            if (pageResponseArray.length === 0) {
+                // No more releases on this page
+                hasMorePages = false;
+            } else {
+                allReleases = allReleases.concat(pageResponseArray);
+                page++;
+                
+                // If we got less than the requested per_page amount, we've reached the last page
+                if (pageResponseArray.length < perPage) {
+                    hasMorePages = false;
+                }
+            }
+        }
+
         let latestHelmVersion = semver.clean(stableHelmVersion);
-        responseArray.forEach(response => {
+        allReleases.forEach(response => {
             if (response && response.tag_name) {
                 let currentHelmVerison = semver.clean(response.tag_name.toString());
                 if (currentHelmVerison) {
