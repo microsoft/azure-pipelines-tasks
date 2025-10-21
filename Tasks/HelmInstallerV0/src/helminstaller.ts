@@ -16,15 +16,34 @@ const stableHelmVersion = "v3.1.2"
 
 export async function getHelmVersion(): Promise<string> {
     var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false);
+    console.log(`##[debug]checkLatestHelmVersion: ${checkLatestHelmVersion}`);
     if (checkLatestHelmVersion) {
         return await getStableHelmVersion();
     }
 
-    return utils.sanitizeVersionString(tl.getInput("helmVersion", true));
+    var inputVersion = tl.getInput("helmVersion", true);
+    console.log(`##[debug]raw helmVersion input: ${inputVersion}`);
+    var sanitizedVersion = utils.sanitizeVersionString(inputVersion);
+    console.log(`##[debug]sanitized helmVersion: ${sanitizedVersion}`);
+    return sanitizedVersion;
 }
 
 export async function downloadHelm(version: string): Promise<string> {
+    console.log(`##[debug]downloadHelm called with version: ${version}`);
+    
+    // Try to find exact match first
     var cachedToolpath = toolLib.findLocalTool(helmToolName, version);
+    console.log(`##[debug]cachedToolpath result for exact version ${version}: ${cachedToolpath}`);
+    
+    // If no exact match found, ensure we don't get a different version by mistake
+    if (cachedToolpath) {
+        // Verify the cached path contains the exact version we want
+        if (!cachedToolpath.includes(version)) {
+            console.log(`##[debug]Cached path ${cachedToolpath} doesn't contain requested version ${version}, ignoring cache`);
+            cachedToolpath = null;
+        }
+    }
+    
     if (!cachedToolpath) {
         try {
             var helmDownloadPath = await toolLib.downloadTool(getHelmDownloadURL(version), helmToolName + "-" + version + "-" + uuidV4() + ".zip");
