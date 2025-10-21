@@ -2,6 +2,7 @@ parameters:
   os: ''
   useSemverBuildConfig: false
   generateReleaseNotes: true
+  enableCgScanAllTasks: false
 
 steps:
 
@@ -114,7 +115,8 @@ steps:
       succeeded(),
       in(variables['build.reason'], 'Schedule', 'Manual'),
       eq(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne('${{ parameters.enableCgScanAllTasks }}', 'true')
     )
   displayName: Push release branch
 
@@ -174,13 +176,15 @@ steps:
       and(
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
+        ne(variables['numTasks'], 0),
+        ne('${{ parameters.enableCgScanAllTasks }}', 'true')
       )
 
   # Sign all task zips as nuget packages
   - template: /ci/sign-all-tasks.yml@self
     parameters:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+    condition: ne('${{ parameters.enableCgScanAllTasks }}', 'true')
 
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js false
@@ -189,7 +193,8 @@ steps:
       and(
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
+        ne(variables['numTasks'], 0),
+        ne('${{ parameters.enableCgScanAllTasks }}', 'true')
       )
 
 # Test
@@ -237,7 +242,8 @@ steps:
         in(variables['build.reason'], 'Schedule', 'Manual'),
         eq(variables['COURTESY_PUSH'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-        eq(${{ parameters.generateReleaseNotes }}, true)
+        eq(${{ parameters.generateReleaseNotes }}, true),
+        ne('${{ parameters.enableCgScanAllTasks }}', 'true')
       )
     continueOnError: true
     displayName: Create Release
