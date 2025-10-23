@@ -50,6 +50,19 @@
       "label": "GOBIN",
       "helpMarkDown": "A custom value for the GOBIN environment variable.",
       "groupName": "advanced"
+    },
+    {
+      "name": "goDownloadSource",
+      "type": "pickList",
+      "label": "Go download source",
+      "required": false,
+      "defaultValue": "official",
+      "options": {
+        "official": "Official Go downloads (go.dev/dl)",
+        "microsoft": "Microsoft Go builds (aka.ms/golang)"
+      },
+      "helpMarkDown": "Choose the source for downloading Go binaries. Official Go downloads from go.dev/dl (default) or Microsoft Go builds from aka.ms/golang",
+      "groupName": "advanced"
     }
   ],
   "execution": {

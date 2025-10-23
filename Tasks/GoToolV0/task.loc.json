@@ -50,6 +50,19 @@
       "label": "ms-resource:loc.input.label.goBin",
       "helpMarkDown": "ms-resource:loc.input.help.goBin",
       "groupName": "advanced"
+    },
+    {
+      "name": "goDownloadSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.goDownloadSource",
+      "required": false,
+      "defaultValue": "official",
+      "options": {
+        "official": "Official Go downloads (go.dev/dl)",
+        "microsoft": "Microsoft Go builds (aka.ms/golang)"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.goDownloadSource",
+      "groupName": "advanced"
     }
   ],
   "execution": {
