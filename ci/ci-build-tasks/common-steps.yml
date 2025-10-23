@@ -1,3 +1,13 @@
+parameters:
+- name: task_name
+  displayName: 'Task names to build (e.g. BashV3,AzureCLIV1,PowerShellV2) or leave empty to build all tasks'
+  type: string
+  default: ''
+- name: build_all_tasks
+  displayName: 'Build all tasks (ignore task_name parameter)'
+  type: boolean
+  default: true
+
 steps:
 
 # Clean
@@ -24,3 +34,28 @@ steps:
 - script: npm ci
   displayName: npm ci
 
+# Get tasks to build (variables already set at pipeline level)
+- script: node ./ci/filter-tasks.js
+  displayName: Determine tasks to build
+  name: getTaskPattern
+  env:
+    PACKAGE_ENDPOINT: $(Package.Endpoint)
+    PACKAGE_TOKEN: $(System.AccessToken)
+
+- script: node ./ci/before-build-check-tasks.js
+  displayName: Before build task validation
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
+
+# Clean tasks
+- script: node make.js clean
+  displayName: Clean tasks
+
+# Build Tasks
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
