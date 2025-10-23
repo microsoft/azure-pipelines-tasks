@@ -1,0 +1,26 @@
+# Build all tasks for Component Governance checks
+
+trigger: none
+
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    stages:
+    - stage: main
+      jobs:
+      - job: build_all_tasks_for_cg_check
+        displayName: Build all tasks for CG check
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-windows-2022
+          os: windows
+        steps:
+        - template: /ci/ci-build-tasks/common-steps.yml@self
+

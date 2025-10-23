@@ -1,0 +1,26 @@
+steps:
+
+# Clean
+- checkout: self
+  clean: true
+
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.x
+
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+# npm ci
+- script: npm ci
+  displayName: npm ci
+

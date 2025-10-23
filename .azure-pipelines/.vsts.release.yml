@@ -76,7 +76,7 @@ variables:
   ${{ else }}:
     value: 'false'
 - name: DEPLOY_ALL_TASKSVAR
-  ${{ if or(eq(parameters.task_deployment,'Deploy all Tasks'), eq(variables['ENABLE_CG_SCAN_ALL_TASKS'], 'true')) }}:
+  ${{ if eq(parameters.task_deployment,'Deploy all Tasks') }}:
     value: 'true'
   ${{ else }}:
     value: 'false'
@@ -141,7 +141,6 @@ extends:
           parameters:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
-            enableCgScanAllTasks: $(ENABLE_CG_SCAN_ALL_TASKS)
 
       # Publish
       - job: publish
@@ -149,7 +148,7 @@ extends:
         timeoutInMinutes: 360
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'), ne(variables['ENABLE_CG_SCAN_ALL_TASKS'], 'true'))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
@@ -183,8 +182,7 @@ extends:
                 eq(variables['build.reason'], 'Manual'),
                 eq(variables['FORCE_COURTESY_PUSH'], 'true')
               )
-            ),
-            ne(variables['ENABLE_CG_SCAN_ALL_TASKS'], 'true')
+            )
           )
         templateContext:
           outputs:
@@ -207,7 +205,7 @@ extends:
         dependsOn:
         - courtesy_push
         - build_all_windows
-        condition: and(succeeded(), ne(variables['ENABLE_CG_SCAN_ALL_TASKS'], 'true'))
+        condition: succeeded()
         timeoutInMinutes: 360
         pool:
           name: 1ES-ABTT-Shared-Pool
