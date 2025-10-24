@@ -1,4 +1,3 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -7,9 +6,6 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs for cached official Go version
 tmr.setInput('version', '1.22.3');
-
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
@@ -34,13 +30,6 @@ tmr.registerMock('os', {
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
         console.log(`Telemetry: ${area}.${feature} - version: ${properties.version}`);
-    }
-});
-
-// Mock fs (not needed when using cached version)
-tmr.registerMock('fs', {
-    readFileSync: function(filePath: string, encoding: string) {
-        return JSON.stringify([]);
     }
 });
 

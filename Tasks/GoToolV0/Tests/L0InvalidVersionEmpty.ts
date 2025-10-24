@@ -1,4 +1,3 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -7,9 +6,6 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set empty version input - should fail validation
 tmr.setInput('version', '');
-
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
 
 // Mock os module
 tmr.registerMock('os', {

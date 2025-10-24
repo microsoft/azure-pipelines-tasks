@@ -1,4 +1,3 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -8,9 +7,6 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // Set inputs for cached Microsoft Go version
 tmr.setInput('version', '1.25.0');
 tmr.setInput('goDownloadBaseUrl', 'https://aka.ms/golang/release/latest');
-
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {

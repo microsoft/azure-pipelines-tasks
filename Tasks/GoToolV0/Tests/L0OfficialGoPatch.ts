@@ -1,4 +1,3 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as fs from 'fs';
@@ -58,13 +57,6 @@ tmr.registerMock('os', {
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
         console.log(`Telemetry: ${area}.${feature} - version: ${properties.version}`);
-    }
-});
-
-// Mock fs (not needed for full patch version, but included for safety)
-tmr.registerMock('fs', {
-    readFileSync: function(filePath: string, encoding: string) {
-        return JSON.stringify([]);
     }
 });
 

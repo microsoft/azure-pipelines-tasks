@@ -1,4 +1,3 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -6,10 +5,7 @@ let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set null version input - should fail validation
-tmr.setInput('version', 'null');
-
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
+tmr.setInput('version', null);
 
 // Mock os module
 tmr.registerMock('os', {

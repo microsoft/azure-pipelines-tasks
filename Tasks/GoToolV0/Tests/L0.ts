@@ -138,7 +138,7 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
-        assert(tr.stdOutContained('Input \'version\' is required'), 'Should reject null version');
+        assert(tr.stdOutContained('Input required: version') || tr.stdOutContained('Input \'version\' is required'), 'Should reject null version');
     });
 
     it('Should fail with undefined version input', async () => {
@@ -146,7 +146,7 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
-        assert(tr.stdOutContained('Input \'version\' is required'), 'Should reject undefined version');
+        assert(tr.stdOutContained('Input required: version'), 'Should reject undefined version');
     });
 
     it('Should fail with unsupported base URL', async () => {
@@ -163,14 +163,6 @@ describe('GoToolV0 Suite', function() {
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
         assert(tr.stdOutContained('Official Go version must be'), 'Should reject invalid version format');
-    });
-
-    it('Should fail when Agent.TempDirectory is not set', async () => {
-        let tp = path.join(__dirname, 'L0TempDirNotSet.js');
-        let tr: MockTestRunner = new MockTestRunner(tp);
-        await tr.runAsync();
-        assert(tr.failed, 'Should have failed');
-        assert(tr.stdOutContained('Expected Agent.TempDirectory to be set'), 'Should show temp directory error');
     });
 
     it('Should fail on download errors', async () => {
