@@ -56,7 +56,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.goDownloadBaseUrl",
       "required": false,
-      "defaultValue": "",
+      "defaultValue": "https://go.dev/dl",
       "helpMarkDown": "ms-resource:loc.input.help.goDownloadBaseUrl",
       "groupName": "advanced"
     }

@@ -117,7 +117,7 @@ function setGoEnvironmentVariables(goRoot: string) {
 
 function isSemverWithPatch(version: string): boolean {
     // Accepts versions of the form major.minor.patch or major.minor.patch-revision
-    return /^\d+\.\d+\.\d+(?:-\d+)?$/.test(version.trim());
+    return /^\d+\.\d+\.\d+(?:-\d+)?$/.test(version);
 }
 
 function hasMajorMinorOnly(version: string): boolean {
