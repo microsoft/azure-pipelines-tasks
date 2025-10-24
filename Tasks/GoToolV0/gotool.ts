@@ -98,7 +98,7 @@ function getFileName(version: string): string {
 }
 
 function getDownloadUrl(filename: string, baseUrl?: string): string {
-    let base = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://storage.googleapis.com/golang";
+    let base = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://go.dev/dl";
     base = base.replace(/\/+$/, '');
     return `${base}/${filename}`;
 }
@@ -133,7 +133,7 @@ function classifyBaseUrl(baseUrl?: string): { type: GoBaseChannel; normalized?: 
         const u = new URL(raw);
         const host = u.hostname.toLowerCase();
         const p = u.pathname.replace(/\/+$/, '').toLowerCase();
-        if (host === 'storage.googleapis.com' && (p === '/golang' || p === '')) {
+        if (host === 'go.dev' && (p === '/dl' || p === '')) {
             return { type: 'official', normalized: raw };
         }
         if (host === 'aka.ms' && p === '/golang/release/latest') {
@@ -282,7 +282,7 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
         return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
     }
 
-    throw new Error("Invalid download URL. Only https://storage.googleapis.com/golang and https://aka.ms/golang/release/latest are allowed.");
+    throw new Error("Invalid download URL. Only https://go.dev/dl and https://aka.ms/golang/release/latest are allowed.");
 }
 
 run();

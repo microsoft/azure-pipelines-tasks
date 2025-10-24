@@ -14,13 +14,13 @@ describe('GoToolV0 Suite', function() {
         // Cleanup if needed
     });
 
-    // Official Go (storage.googleapis.com) tests
+    // Official Go (go.dev) tests
     it('Should install official Go with full patch version', async () => {
         let tp = path.join(__dirname, 'L0OfficialGoPatch.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('https://storage.googleapis.com/golang/go1.22.3'), 'Should use official Google storage URL');
+        assert(tr.stdOutContained('https://go.dev/dl/go1.22.3'), 'Should use official Go storage URL');
         assert(tr.stdOutContained('Caching tool: go version: 1.22.3'), 'Should cache with toolName "go"');
     });
 
@@ -30,7 +30,7 @@ describe('GoToolV0 Suite', function() {
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
         assert(tr.stdOutContained('Resolved 1.21 to 1.21.5'), 'Should resolve to latest patch via go.dev API');
-        assert(tr.stdOutContained('https://storage.googleapis.com/golang/go1.21.5'), 'Should download resolved version');
+        assert(tr.stdOutContained('https://go.dev/dl/go1.21.5'), 'Should download resolved version');
     });
 
     // Microsoft Go (aka.ms) tests
@@ -130,7 +130,7 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
-        assert(tr.stdOutContained('Input \'version\' is required'), 'Should show validation error');
+        assert(tr.stdOutContained('Input required: version'), 'Should show validation error');
     });
 
     it('Should fail with null version input', async () => {

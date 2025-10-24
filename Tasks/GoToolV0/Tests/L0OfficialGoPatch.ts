@@ -1,16 +1,23 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import * as fs from 'fs';
+
+// Create temporary directory for test
+const tempDir = path.join(__dirname, '_temp');
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+}
+
+// Mock environment variables BEFORE creating TaskMockRunner
+process.env['AGENT_TEMPDIRECTORY'] = tempDir;
 
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs for official Go with full patch version
 tmr.setInput('version', '1.22.3');
-// No goDownloadBaseUrl means official storage.googleapis.com
-
-// Mock environment variables  
-tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
+// No goDownloadBaseUrl means official go.dev
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
@@ -20,7 +27,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
     },
     downloadTool: function(url: string) {
         console.log(`Download URL: ${url}`);
-        if (url.includes('https://storage.googleapis.com/golang/go1.22.3')) {
+        if (url.includes('https://go.dev/dl/go1.22.3')) {
             return Promise.resolve('/mock/download/go1.22.3.tar.gz');
         } else {
             throw new Error(`Unexpected download URL: ${url}`);

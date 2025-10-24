@@ -19,10 +19,17 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         // Return cached path to simulate found Microsoft build
         return '/mock/cache/go-aka/1.25.0';
     },
+    downloadTool: function(url: string) {
+        // Microsoft Go needs to download manifest even when version is cached
+        console.log(`Downloading manifest from: ${url}`);
+        if (url.includes('go1.25.0.assets.json')) {
+            return Promise.resolve('/mock/manifest.json');
+        }
+        throw new Error(`Unexpected download URL: ${url}`);
+    },
     prependPath: function(toolPath: string) {
         console.log(`Adding to PATH: ${toolPath}`);
     }
-    // Note: downloadTool, extractTar, cacheDir should NOT be called when cached version exists
 });
 
 // Mock os module
@@ -38,9 +45,23 @@ tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     }
 });
 
-// Mock fs (not needed when using cached version)
+// Mock fs to return manifest data
 tmr.registerMock('fs', {
     readFileSync: function(filePath: string, encoding: string) {
+        console.log(`Reading file: ${filePath}`);
+        if (filePath.includes('manifest.json')) {
+            // Return Microsoft Go manifest with version field (lowercase)
+            return JSON.stringify({
+                version: "1.25.0-1",
+                files: [
+                    {
+                        filename: "go1.25.0-1.linux-amd64.tar.gz",
+                        os: "linux",
+                        arch: "amd64"
+                    }
+                ]
+            });
+        }
         return JSON.stringify({});
     }
 });

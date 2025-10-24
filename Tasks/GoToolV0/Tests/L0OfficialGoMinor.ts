@@ -1,16 +1,23 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import * as fs from 'fs';
+
+// Create temporary directory for test
+const tempDir = path.join(__dirname, '_temp');
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+}
+
+// Mock environment variables BEFORE creating TaskMockRunner
+process.env['AGENT_TEMPDIRECTORY'] = tempDir;
 
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs for official Go with major.minor format
+// Set inputs for official Go with major.minor version
 tmr.setInput('version', '1.21');
-// No goDownloadBaseUrl means official storage.googleapis.com
-
-// Mock environment variables  
-tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
+// No goDownloadBaseUrl means official go.dev
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
