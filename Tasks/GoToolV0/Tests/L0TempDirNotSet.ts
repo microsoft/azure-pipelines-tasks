@@ -8,8 +8,8 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // Set inputs
 tmr.setInput('version', '1.21.3');
 
-// Don't set Agent.TempDirectory to simulate missing environment variable
-// process.env['Agent.TempDirectory'] = undefined;
+// Explicitly set Agent.TempDirectory to empty/undefined to simulate missing environment variable
+tmr.setVariableName('Agent.TempDirectory', '', false);
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
