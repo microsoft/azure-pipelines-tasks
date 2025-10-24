@@ -52,16 +52,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "goDownloadSource",
-      "type": "pickList",
-      "label": "Go download source",
+      "name": "goDownloadBaseUrl",
+      "type": "string",
+      "label": "Go download base URL",
       "required": false,
-      "defaultValue": "official",
-      "options": {
-        "official": "Official Go downloads (go.dev/dl)",
-        "microsoft": "Microsoft Go builds (aka.ms/golang)"
-      },
-      "helpMarkDown": "Choose the source for downloading Go binaries. Official Go downloads from go.dev/dl (default) or Microsoft Go builds from aka.ms/golang",
+      "defaultValue": "",
+      "helpMarkDown": "Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supports go.dev/dl and aka.ms/golang/release/latest",
       "groupName": "advanced"
     }
   ],

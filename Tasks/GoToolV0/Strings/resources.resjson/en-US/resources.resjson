@@ -10,8 +10,8 @@
   "loc.input.help.goPath": "A custom value for the GOPATH environment variable.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "A custom value for the GOBIN environment variable.",
-  "loc.input.label.goDownloadSource": "Go download source",
-  "loc.input.help.goDownloadSource": "Choose the source for downloading Go binaries. Official Go downloads from go.dev/dl (default) or Microsoft Go builds from aka.ms/golang",
+  "loc.input.label.goDownloadBaseUrl": "Go download base URL",
+  "loc.input.help.goDownloadBaseUrl": "Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supports go.dev/dl and aka.ms/golang/release/latest",
   "loc.messages.FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
   "loc.messages.TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
 }

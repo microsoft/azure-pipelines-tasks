@@ -24,6 +24,11 @@ This task can run on Windows, Linux, or Mac machines.
  
     For more details about the versions, see [Go Language Release Page](https://golang.org/doc/devel/release.html).
  
-* **GOPATH\*:** Specify a new value for the GOPATH environment variable if you want to modify it.
-* **GOBIN\*:** Specify a new value for the GOBIN environment variable if you want to modify it.
+* **GOPATH:** Specify a new value for the GOPATH environment variable if you want to modify it.
+
+* **GOBIN:** Specify a new value for the GOBIN environment variable if you want to modify it.
+
+* **Go download base URL:** Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supported URLs:
+  - `https://go.dev/dl` - Official Go distribution site (default)
+  - `https://aka.ms/golang/release/latest` - Microsoft's builds of Go with additional patches and enhancements
 
