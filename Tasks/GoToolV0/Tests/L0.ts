@@ -14,30 +14,73 @@ describe('GoToolV0 Suite', function() {
         // Cleanup if needed
     });
 
-    it('Should generate correct download URL with new go.dev domain', async () => {
-        let tp = path.join(__dirname, 'L0UrlGeneration.js');
+    // Official Go (storage.googleapis.com) tests
+    it('Should install official Go with full patch version', async () => {
+        let tp = path.join(__dirname, 'L0OfficialGoPatch.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('https://go.dev/dl/go1.21.3'), 'Should use new go.dev/dl URL');
+        assert(tr.stdOutContained('https://storage.googleapis.com/golang/go1.22.3'), 'Should use official Google storage URL');
+        assert(tr.stdOutContained('Caching tool: go version: 1.22.3'), 'Should cache with toolName "go"');
     });
 
-    it('Should handle Microsoft download source correctly', async () => {
-        let tp = path.join(__dirname, 'L0CustomBaseUrl.js');
+    it('Should resolve official Go major.minor to latest patch', async () => {
+        let tp = path.join(__dirname, 'L0OfficialGoMinor.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('https://aka.ms/golang/release/latest/go1.21.3'), 'Should use Microsoft download URL');
+        assert(tr.stdOutContained('Resolved 1.21 to 1.21.5'), 'Should resolve to latest patch via go.dev API');
+        assert(tr.stdOutContained('https://storage.googleapis.com/golang/go1.21.5'), 'Should download resolved version');
     });
 
-    it('Should resolve latest patch version for major.minor input', async () => {
-        let tp = path.join(__dirname, 'L0VersionResolution.js');
+    // Microsoft Go (aka.ms) tests
+    it('Should install Microsoft Go with major.minor version', async () => {
+        let tp = path.join(__dirname, 'L0MicrosoftGoMinor.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Resolved version 1.21 to 1.21.5'), 'Should resolve to latest patch');
+        assert(tr.stdOutContained('https://aka.ms/golang/release/latest/go1.25.0'), 'Should use Microsoft aka.ms URL');
+        assert(tr.stdOutContained('Caching tool: go-aka version: 1.25.0'), 'Should cache with toolName "go-aka"');
     });
 
+    it('Should install Microsoft Go with patch version', async () => {
+        let tp = path.join(__dirname, 'L0MicrosoftGoPatch.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('https://aka.ms/golang/release/latest/go1.24.7'), 'Should use Microsoft URL');
+        assert(tr.stdOutContained('Caching tool: go-aka version: 1.24.7-2'), 'Should resolve to latest revision from manifest');
+    });
+
+    it('Should install Microsoft Go with revision format', async () => {
+        let tp = path.join(__dirname, 'L0MicrosoftGoRevision.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('https://aka.ms/golang/release/latest/go1.24.7-1'), 'Should use exact revision');
+        assert(tr.stdOutContained('Caching tool: go-aka version: 1.24.7-1'), 'Should cache with specified revision');
+    });
+
+    // Caching tests
+    it('Should use cached official Go version', async () => {
+        let tp = path.join(__dirname, 'L0CachedOfficial.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('Found cached tool: go version 1.22.3'), 'Should find cached version');
+        assert(!tr.stdOutContained('Downloading Go from'), 'Should not download when cached');
+    });
+
+    it('Should use cached Microsoft Go version', async () => {
+        let tp = path.join(__dirname, 'L0CachedMicrosoft.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('Found cached tool: go-aka version 1.25.0'), 'Should find cached Microsoft build');
+        assert(!tr.stdOutContained('Downloading Go from'), 'Should not download when cached');
+    });
+
+    // Environment variable tests
     it('Should set environment variables correctly', async () => {
         let tp = path.join(__dirname, 'L0EnvironmentVariables.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
@@ -48,40 +91,78 @@ describe('GoToolV0 Suite', function() {
         assert(tr.stdOutContained('##vso[task.setvariable variable=GOBIN'), 'Should set GOBIN');
     });
 
-    it('Should generate correct filename for different platforms', async () => {
-        let tp = path.join(__dirname, 'L0CrossPlatformFilename.js');
+    // Cross-platform tests
+    it('Should generate correct filename for Windows', async () => {
+        let tp = path.join(__dirname, 'L0FilenameWindows.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Windows: go1.21.3.windows-amd64.zip') || 
-               tr.stdOutContained('Linux: go1.21.3.linux-amd64.tar.gz') ||
-               tr.stdOutContained('Darwin: go1.21.3.darwin-amd64.tar.gz'), 'Should generate correct platform-specific filename');
+        assert(tr.stdOutContained('go1.22.3.windows-amd64.zip'), 'Should generate Windows zip filename');
     });
 
-    it('Should use cached version when available', async () => {
-        let tp = path.join(__dirname, 'L0CachedVersion.js');
+    it('Should generate correct filename for Linux', async () => {
+        let tp = path.join(__dirname, 'L0FilenameLinux.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Found cached Go version'), 'Should use cached version');
-        assert(!tr.stdOutContained('Downloading Go from'), 'Should not download when cached');
+        assert(tr.stdOutContained('go1.22.3.linux-amd64.tar.gz'), 'Should generate Linux tar.gz filename');
     });
 
-    it('Should download and install Go successfully', async () => {
-        let tp = path.join(__dirname, 'L0InstallSuccess.js');
+    it('Should generate correct filename for Darwin/macOS', async () => {
+        let tp = path.join(__dirname, 'L0FilenameDarwin.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Downloading Go from'), 'Should download Go');
-        assert(tr.stdOutContained('Go tool is available'), 'Should report success');
+        assert(tr.stdOutContained('go1.22.3.darwin-amd64.tar.gz'), 'Should generate Darwin tar.gz filename');
     });
 
-    it('Should fail with invalid version input', async () => {
-        let tp = path.join(__dirname, 'L0InvalidVersion.js');
+    it('Should generate correct filename for ARM64 architecture', async () => {
+        let tp = path.join(__dirname, 'L0FilenameArm64.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('go1.22.3.linux-arm64.tar.gz'), 'Should generate ARM64 filename');
+    });
+
+    // Error handling tests
+    it('Should fail with empty version input', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionEmpty.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
         assert(tr.stdOutContained('Input \'version\' is required'), 'Should show validation error');
+    });
+
+    it('Should fail with null version input', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionNull.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('Input \'version\' is required'), 'Should reject null version');
+    });
+
+    it('Should fail with undefined version input', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionUndefined.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('Input \'version\' is required'), 'Should reject undefined version');
+    });
+
+    it('Should fail with unsupported base URL', async () => {
+        let tp = path.join(__dirname, 'L0InvalidBaseUrl.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('Invalid download URL'), 'Should reject unsupported URLs');
+    });
+
+    it('Should fail with invalid version format for official Go', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionFormat.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('Official Go version must be'), 'Should reject invalid version format');
     });
 
     it('Should fail when Agent.TempDirectory is not set', async () => {
@@ -98,5 +179,13 @@ describe('GoToolV0 Suite', function() {
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
         assert(tr.stdOutContained('Failed to download version'), 'Should show download failure');
+    });
+
+    it('Should fail when go.dev API returns no matching version', async () => {
+        let tp = path.join(__dirname, 'L0NoMatchingVersion.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('has no stable patch release yet'), 'Should indicate no stable release');
     });
 });

@@ -5,8 +5,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set invalid/empty version input
-tmr.setInput('version', ''); // Empty version should fail
+// Set null version input - should fail validation
+tmr.setInput('version', 'null');
 
 // Mock environment variables
 process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');

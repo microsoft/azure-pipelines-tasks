@@ -5,8 +5,9 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs for version resolution (major.minor format)
+// Set inputs for official Go with major.minor format
 tmr.setInput('version', '1.21');
+// No goDownloadBaseUrl means official storage.googleapis.com
 
 // Mock environment variables  
 tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
@@ -22,7 +23,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
             console.log('Fetching Go releases metadata for version resolution');
             return Promise.resolve('/mock/metadata/releases.json');
         } else if (url.includes('go1.21.5')) {
-            console.log('Resolved version 1.21 to 1.21.5');
+            console.log('Resolved 1.21 to 1.21.5');
             return Promise.resolve('/mock/download/go1.21.5.tar.gz');
         } else {
             throw new Error(`Unexpected download URL: ${url}`);
@@ -31,8 +32,11 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
     extractTar: function(downloadPath: string) {
         return Promise.resolve('/mock/extract/path');
     },
+    extractZip: function(downloadPath: string) {
+        return Promise.resolve('/mock/extract/path');
+    },
     cacheDir: function(sourceDir: string, tool: string, version: string) {
-        console.log(`Caching Go version ${version}`);
+        console.log(`Caching tool: ${tool} version: ${version}`);
         return Promise.resolve('/mock/cache/go/1.21.5');
     },
     prependPath: function(toolPath: string) {

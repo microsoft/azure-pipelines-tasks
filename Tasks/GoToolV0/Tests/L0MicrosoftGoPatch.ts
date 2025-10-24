@@ -5,33 +5,28 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs
-tmr.setInput('version', '1.21.3');
+// Set inputs for Microsoft Go with patch version (should resolve to latest revision)
+tmr.setInput('version', '1.24.7');
+tmr.setInput('goDownloadBaseUrl', 'https://aka.ms/golang/release/latest');
 
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
-
-// Mock different platforms to test filename generation
-let testPlatforms = [
-    { platform: 'win32', arch: 'x64', expected: 'go1.21.3.windows-amd64.zip' },
-    { platform: 'linux', arch: 'x64', expected: 'go1.21.3.linux-amd64.tar.gz' },
-    { platform: 'darwin', arch: 'arm64', expected: 'go1.21.3.darwin-arm64.tar.gz' }
-];
-
-let currentPlatform = testPlatforms[Math.floor(Math.random() * testPlatforms.length)];
+// Mock environment variables  
+tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function(toolName: string, version: string) {
+        console.log(`Looking for cached tool: ${toolName} version ${version}`);
         return null; // Not found, will trigger download
     },
     downloadTool: function(url: string) {
         console.log(`Download URL: ${url}`);
-        if (url.includes(currentPlatform.expected)) {
-            console.log(`${currentPlatform.platform.charAt(0).toUpperCase() + currentPlatform.platform.slice(1)}: ${currentPlatform.expected}`);
-            return Promise.resolve('/mock/download/path');
+        if (url === 'https://aka.ms/golang/release/latest/go1.24.7.assets.json') {
+            // Mock downloading Microsoft manifest
+            return Promise.resolve('/mock/manifest/go1.24.7.assets.json');
+        } else if (url.includes('https://aka.ms/golang/release/latest/go1.24.7')) {
+            return Promise.resolve('/mock/download/go1.24.7-2.tar.gz');
         } else {
-            throw new Error(`Expected filename ${currentPlatform.expected} not found in URL: ${url}`);
+            throw new Error(`Unexpected download URL: ${url}`);
         }
     },
     extractTar: function(downloadPath: string) {
@@ -41,33 +36,35 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         return Promise.resolve('/mock/extract/path');
     },
     cacheDir: function(sourceDir: string, tool: string, version: string) {
-        return Promise.resolve('/mock/cache/go/1.21.3');
+        console.log(`Caching tool: ${tool} version: ${version}`);
+        return Promise.resolve('/mock/cache/go-aka/1.24.7-2');
     },
     prependPath: function(toolPath: string) {
         console.log(`Adding to PATH: ${toolPath}`);
     }
 });
 
-// Mock os module with test platform
+// Mock os module
 tmr.registerMock('os', {
-    platform: () => currentPlatform.platform,
-    arch: () => currentPlatform.arch
+    platform: () => 'linux',
+    arch: () => 'x64'
 });
 
 // Mock telemetry
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
-        console.log(`Telemetry: ${area}.${feature}`);
+        console.log(`Telemetry: ${area}.${feature} - version: ${properties.version}`);
     }
 });
 
-// Mock fs for version resolution
+// Mock fs to read manifest
 tmr.registerMock('fs', {
     readFileSync: function(filePath: string, encoding: string) {
-        return JSON.stringify([{
-            version: "go1.21.3",
-            stable: true
-        }]);
+        // Mock Microsoft manifest for Go 1.24.7 with revision -2
+        return JSON.stringify({
+            version: "1.24.7-2",
+            files: []
+        });
     }
 });
 

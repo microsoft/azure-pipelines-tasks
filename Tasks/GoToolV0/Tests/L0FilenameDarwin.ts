@@ -5,9 +5,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs for Microsoft download source
-tmr.setInput('version', '1.21.3');
-tmr.setInput('goDownloadSource', 'microsoft');
+// Set inputs
+tmr.setInput('version', '1.22.3');
 
 // Mock environment variables  
 tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
@@ -15,48 +14,45 @@ tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function(toolName: string, version: string) {
-        return null; // Not found, will trigger download
+        return null;
     },
     downloadTool: function(url: string) {
         console.log(`Download URL: ${url}`);
-        if (url.includes('https://aka.ms/golang/release/latest/go1.21.3')) {
-            console.log('✓ Correct Microsoft download URL used');
-            return Promise.resolve('/mock/download/path');
+        if (url.includes('go1.22.3.darwin-amd64.tar.gz')) {
+            console.log('✓ Correct filename for Darwin/macOS');
+            return Promise.resolve('/mock/download/go.tar.gz');
         } else {
-            throw new Error(`Unexpected URL: ${url}`);
+            throw new Error(`Unexpected filename in URL: ${url}`);
         }
     },
     extractTar: function(downloadPath: string) {
         return Promise.resolve('/mock/extract/path');
     },
     cacheDir: function(sourceDir: string, tool: string, version: string) {
-        return Promise.resolve('/mock/cache/go/1.21.3');
+        return Promise.resolve('/mock/cache/go/1.22.3');
     },
     prependPath: function(toolPath: string) {
         console.log(`Adding to PATH: ${toolPath}`);
     }
 });
 
-// Mock os module
+// Mock os module - Darwin/macOS
 tmr.registerMock('os', {
-    platform: () => 'linux',
+    platform: () => 'darwin',
     arch: () => 'x64'
 });
 
 // Mock telemetry
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
-        console.log(`Telemetry: ${area}.${feature} - downloadSource: ${properties.downloadSource}`);
+        console.log(`Telemetry: ${area}.${feature}`);
     }
 });
 
-// Mock fs for version resolution
+// Mock fs
 tmr.registerMock('fs', {
     readFileSync: function(filePath: string, encoding: string) {
-        return JSON.stringify([{
-            version: "go1.21.3",
-            stable: true
-        }]);
+        return JSON.stringify([]);
     }
 });
 

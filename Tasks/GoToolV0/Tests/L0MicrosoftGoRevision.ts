@@ -5,29 +5,36 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs
-tmr.setInput('version', '1.21.3');
+// Set inputs for Microsoft Go with revision format (exact version)
+tmr.setInput('version', '1.24.7-1');
+tmr.setInput('goDownloadBaseUrl', 'https://aka.ms/golang/release/latest');
 
-// Mock environment variables
-process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
+// Mock environment variables  
+tmr.setVariableName('Agent.TempDirectory', '/tmp/agent');
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function(toolName: string, version: string) {
+        console.log(`Looking for cached tool: ${toolName} version ${version}`);
         return null; // Not found, will trigger download
     },
     downloadTool: function(url: string) {
-        console.log(`Downloading Go from ${url}`);
-        return Promise.resolve('/mock/download/go1.21.3.tar.gz');
+        console.log(`Download URL: ${url}`);
+        if (url.includes('https://aka.ms/golang/release/latest/go1.24.7-1')) {
+            return Promise.resolve('/mock/download/go1.24.7-1.tar.gz');
+        } else {
+            throw new Error(`Unexpected download URL: ${url}`);
+        }
     },
     extractTar: function(downloadPath: string) {
-        console.log(`Extracting ${downloadPath}`);
+        return Promise.resolve('/mock/extract/path');
+    },
+    extractZip: function(downloadPath: string) {
         return Promise.resolve('/mock/extract/path');
     },
     cacheDir: function(sourceDir: string, tool: string, version: string) {
-        let cachedPath = '/mock/cache/go/1.21.3';
-        console.log(`Go tool is available under ${cachedPath}`);
-        return Promise.resolve(cachedPath);
+        console.log(`Caching tool: ${tool} version: ${version}`);
+        return Promise.resolve('/mock/cache/go-aka/1.24.7-1');
     },
     prependPath: function(toolPath: string) {
         console.log(`Adding to PATH: ${toolPath}`);
@@ -43,17 +50,14 @@ tmr.registerMock('os', {
 // Mock telemetry
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
-        console.log(`Telemetry: ${area}.${feature}`);
+        console.log(`Telemetry: ${area}.${feature} - version: ${properties.version}`);
     }
 });
 
-// Mock fs for version resolution
+// Mock fs (not needed for exact revision, but included for safety)
 tmr.registerMock('fs', {
     readFileSync: function(filePath: string, encoding: string) {
-        return JSON.stringify([{
-            version: "go1.21.3",
-            stable: true
-        }]);
+        return JSON.stringify({});
     }
 });
 

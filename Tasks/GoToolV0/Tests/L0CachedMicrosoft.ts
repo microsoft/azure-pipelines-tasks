@@ -5,8 +5,9 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set inputs
-tmr.setInput('version', '1.21.3');
+// Set inputs for cached Microsoft Go version
+tmr.setInput('version', '1.25.0');
+tmr.setInput('goDownloadBaseUrl', 'https://aka.ms/golang/release/latest');
 
 // Mock environment variables
 process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
@@ -14,9 +15,9 @@ process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function(toolName: string, version: string) {
-        console.log('Found cached Go version');
-        // Return cached path to simulate found version
-        return '/mock/cache/go/1.21.3';
+        console.log(`Found cached tool: ${toolName} version ${version}`);
+        // Return cached path to simulate found Microsoft build
+        return '/mock/cache/go-aka/1.25.0';
     },
     prependPath: function(toolPath: string) {
         console.log(`Adding to PATH: ${toolPath}`);
@@ -33,7 +34,14 @@ tmr.registerMock('os', {
 // Mock telemetry
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: function(area: string, feature: string, properties: any) {
-        console.log(`Telemetry: ${area}.${feature}`);
+        console.log(`Telemetry: ${area}.${feature} - version: ${properties.version}`);
+    }
+});
+
+// Mock fs (not needed when using cached version)
+tmr.registerMock('fs', {
+    readFileSync: function(filePath: string, encoding: string) {
+        return JSON.stringify({});
     }
 });
 

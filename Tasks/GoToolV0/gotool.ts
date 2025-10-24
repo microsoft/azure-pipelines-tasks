@@ -16,17 +16,17 @@ async function run() {
             throw new Error("Input 'version' is required and must not be empty, 'null' or 'undefined'.");
         }
         const version = rawVersion.trim();
-        const downloadSource: string = tl.getInput('goDownloadSource', false) || 'official';
-        const resolvedVersion = await getGo(version, downloadSource);
-        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, downloadSource: downloadSource });
+        let downloadBaseUrl: string = tl.getInput('goDownloadBaseUrl', false);
+        const resolvedVersion = await getGo(version, downloadBaseUrl);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, customBaseUrl: String(!!downloadBaseUrl) });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
-async function getGo(version: string, downloadSource: string): Promise<string> {
-    const resolved = await resolveVersionAndCache(version, downloadSource);
+async function getGo(version: string, baseUrl?: string): Promise<string> {
+    const resolved = await resolveVersionAndCache(version, baseUrl);
     tl.debug(`resolveVersionAndCache result filenameVersion=${resolved.filenameVersion} cacheVersion=${resolved.cacheVersion ?? '<?>'} toolName=${resolved.toolName} (type=${typeof resolved.cacheVersion})`);
     let toolPath: string | null = null;
 
@@ -35,7 +35,7 @@ async function getGo(version: string, downloadSource: string): Promise<string> {
     }
 
     if (!toolPath) {
-        toolPath = await acquireGo(resolved.filenameVersion, downloadSource, resolved.cacheVersion, resolved.toolName);
+        toolPath = await acquireGo(resolved.filenameVersion, baseUrl, resolved.cacheVersion, resolved.toolName);
         tl.debug("Go tool is available under " + toolPath);
     }
 
@@ -45,9 +45,9 @@ async function getGo(version: string, downloadSource: string): Promise<string> {
     return resolved.filenameVersion;
 }
 
-async function acquireGo(filenameVersion: string, downloadSource: string, cacheVersion?: string, toolName: string = 'go'): Promise<string> {
+async function acquireGo(filenameVersion: string, baseUrl?: string, cacheVersion?: string, toolName: string = 'go'): Promise<string> {
     let fileName: string = getFileName(filenameVersion);
-    let downloadUrl: string = getDownloadUrl(fileName, downloadSource);
+    let downloadUrl: string = getDownloadUrl(fileName, baseUrl);
     tl.debug(`Resolved Go download URL: ${downloadUrl}`);
     console.log(`Downloading Go from ${downloadUrl}`);
     let downloadPath: string = null;
@@ -97,14 +97,10 @@ function getFileName(version: string): string {
     return util.format("go%s.%s-%s.%s", version, platform, arch, ext);
 }
 
-function getDownloadUrl(filename: string, downloadSource: string): string {
-    let baseUrl: string;
-    if (downloadSource === 'microsoft') {
-        baseUrl = "https://aka.ms/golang/release/latest";
-    } else {
-        baseUrl = "https://go.dev/dl";
-    }
-    return `${baseUrl}/${filename}`;
+function getDownloadUrl(filename: string, baseUrl?: string): string {
+    let base = (baseUrl && baseUrl.trim()) ? baseUrl.trim() : "https://storage.googleapis.com/golang";
+    base = base.replace(/\/+$/, '');
+    return `${base}/${filename}`;
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
@@ -128,8 +124,26 @@ function hasMajorMinorOnly(version: string): boolean {
     return /^\d+\.\d+$/.test(version.trim());
 }
 
-// Simplified source classification - no longer needed for URL validation
-type GoDownloadSource = 'official' | 'microsoft';
+type GoBaseChannel = 'official' |  'microsoft' | 'unsupported';
+
+function classifyBaseUrl(baseUrl?: string): { type: GoBaseChannel; normalized?: string } {
+    if (!baseUrl || !baseUrl.trim()) return { type: 'official' };
+    const raw = baseUrl.trim();
+    try {
+        const u = new URL(raw);
+        const host = u.hostname.toLowerCase();
+        const p = u.pathname.replace(/\/+$/, '').toLowerCase();
+        if (host === 'storage.googleapis.com' && (p === '/golang' || p === '')) {
+            return { type: 'official', normalized: raw };
+        }
+        if (host === 'aka.ms' && p === '/golang/release/latest') {
+            return { type:  'microsoft', normalized: raw };
+        }
+        return { type: 'unsupported', normalized: raw };
+    } catch {
+        return { type: 'unsupported' };
+    }
+}
 
 function parseGoVersionParts(input: string): { major: number; minor: number; patch?: number } {
     const normalized = input.replace(/^go/i, '').replace(/^v/i, '').trim();
@@ -218,15 +232,14 @@ async function getMicrosoftLatestFromManifest(majorMinorOrPatch: string): Promis
     return m[1];
 }
 
-async function resolveVersionAndCache(version: string, downloadSource: string): Promise<{ filenameVersion: string, cacheVersion?: string, toolName: string }> {
+async function resolveVersionAndCache(version: string, baseUrl?: string): Promise<{ filenameVersion: string, cacheVersion?: string, toolName: string }> {
     const v = version.trim().replace(/^v/i, '');
     if (!v) {
         throw new Error("Version input resolved to empty string.");
     }
-
-    const isOfficial = downloadSource === 'official';
-    const isMicrosoft = downloadSource === 'microsoft';
-    
+    const channel = classifyBaseUrl(baseUrl);
+    const isOfficial = channel.type === 'official';
+    const isMicrosoft = channel.type === 'microsoft';
     // Cache differentiation: use distinct toolName values ('go' vs 'go-aka') so cacheVersion can remain a pure semver.
     // cacheVersion MUST be a valid semver string accepted by tool-lib; adding prefixes caused null normalization and failures.
 
@@ -269,7 +282,7 @@ async function resolveVersionAndCache(version: string, downloadSource: string): 
         return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
     }
 
-    throw new Error("Invalid download source. Only 'official' and 'microsoft' are supported.");
+    throw new Error("Invalid download URL. Only https://storage.googleapis.com/golang and https://aka.ms/golang/release/latest are allowed.");
 }
 
 run();
