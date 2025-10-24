@@ -180,4 +180,13 @@ describe('GoToolV0 Suite', function() {
         assert(tr.failed, 'Should have failed');
         assert(tr.stdOutContained('has no stable patch release yet'), 'Should indicate no stable release');
     });
+
+    // Security tests for URL validation against SSRF attacks
+    it('Should block URL parser confusion attack (@-based)', async () => {
+        let tp = path.join(__dirname, 'L0SecurityURLValidation.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed with malicious URL');
+        assert(tr.stdOutContained('Invalid download URL'), 'Should reject malicious URL with validation error');
+    });
 });
