@@ -121,7 +121,7 @@ function isSemverWithPatch(version: string): boolean {
 }
 
 function hasMajorMinorOnly(version: string): boolean {
-    return /^\d+\.\d+$/.test(version.trim());
+    return /^\d+\.\d+$/.test(version);
 }
 
 type GoBaseChannel = 'official' |  'microsoft' | 'unsupported';
@@ -133,7 +133,7 @@ function classifyBaseUrl(baseUrl?: string): { type: GoBaseChannel; normalized?: 
         const u = new URL(raw);
         const host = u.hostname.toLowerCase();
         const p = u.pathname.replace(/\/+$/, '').toLowerCase();
-        if (host === 'go.dev' && (p === '/dl' || p === '')) {
+        if (host === 'go.dev' && p === '/dl') {
             return { type: 'official', normalized: raw };
         }
         if (host === 'aka.ms' && p === '/golang/release/latest') {
@@ -145,16 +145,69 @@ function classifyBaseUrl(baseUrl?: string): { type: GoBaseChannel; normalized?: 
     }
 }
 
-function parseGoVersionParts(input: string): { major: number; minor: number; patch?: number } {
+class ParsedGoVersion {
+    major: number;
+    minor: number;
+    patch?: number;
+    revision?: number;
+    original: string;
+    
+    constructor(major: number, minor: number, patch?: number, revision?: number, original?: string) {
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+        this.revision = revision;
+        this.original = original || '';
+    }
+    
+    // Helper methods for clear version classification
+    hasPatchOnly(): boolean {
+        return this.patch !== undefined && this.revision === undefined;
+    }
+    
+    hasRevision(): boolean {
+        return this.revision !== undefined;
+    }
+    
+    isMajorMinorOnly(): boolean {
+        return this.patch === undefined && this.revision === undefined;
+    }
+    
+    toString(): string {
+        let result = `${this.major}.${this.minor}`;
+        if (this.patch !== undefined) {
+            result += `.${this.patch}`;
+        }
+        if (this.revision !== undefined) {
+            result += `-${this.revision}`;
+        }
+        return result;
+    }
+}
+
+function parseGoVersion(input: string): ParsedGoVersion {
     const normalized = input.replace(/^go/i, '').replace(/^v/i, '').trim();
-    const m = /^(\d+)\.(\d+)(?:\.(\d+))?$/.exec(normalized);
+    // Parse: major.minor[.patch][-revision]
+    const m = /^(\d+)\.(\d+)(?:\.(\d+))?(?:-(\d+))?$/.exec(normalized);
     if (!m) {
         throw new Error(`Invalid version format: ${input}`);
     }
+    
+    return new ParsedGoVersion(
+        parseInt(m[1], 10),
+        parseInt(m[2], 10),
+        m[3] ? parseInt(m[3], 10) : undefined,
+        m[4] ? parseInt(m[4], 10) : undefined,
+        normalized
+    );
+}
+
+function parseGoVersionParts(input: string): { major: number; minor: number; patch?: number } {
+    const parsed = parseGoVersion(input);
     return {
-        major: parseInt(m[1], 10),
-        minor: parseInt(m[2], 10),
-        patch: m[3] ? parseInt(m[3], 10) : undefined
+        major: parsed.major,
+        minor: parsed.minor,
+        patch: parsed.patch
     };
 }
 
@@ -237,6 +290,15 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
     if (!v) {
         throw new Error("Version input resolved to empty string.");
     }
+    
+    // Parse version once for clear classification
+    let parsed: ParsedGoVersion;
+    try {
+        parsed = parseGoVersion(v);
+    } catch (e: any) {
+        throw new Error(`Invalid version format: ${version}`);
+    }
+    
     const channel = classifyBaseUrl(baseUrl);
     const isOfficial = channel.type === 'official';
     const isMicrosoft = channel.type === 'microsoft';
@@ -244,10 +306,18 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
     // cacheVersion MUST be a valid semver string accepted by tool-lib; adding prefixes caused null normalization and failures.
 
     if (isOfficial) {
-        if (isSemverWithPatch(v)) {
+        // Official Go: only accepts major.minor or major.minor.patch (no revision)
+        if (parsed.hasRevision()) {
+            throw new Error("Official Go version must be 'major.minor' (e.g. 1.22) or 'major.minor.patch' (e.g. 1.22.3).");
+        }
+        
+        if (parsed.hasPatchOnly()) {
+            // Full patch version specified - use as-is
             return { filenameVersion: v, cacheVersion: v, toolName: 'go' };
         }
-        if (hasMajorMinorOnly(v)) {
+        
+        if (parsed.isMajorMinorOnly()) {
+            // Resolve to latest patch
             let resolved: string | undefined;
             try {
                 resolved = await getLatestPatchFromGoDev(v);
@@ -263,23 +333,30 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
             }
             return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go' };
         }
+        
         throw new Error("Official Go version must be 'major.minor' (e.g. 1.22) or 'major.minor.patch' (e.g. 1.22.3).");
     }
 
     if (isMicrosoft) {
-        // Microsoft aka channel: resolve to manifest top-level for minor or plain patch
-        if (!(hasMajorMinorOnly(v) || isSemverWithPatch(v))) {
-            throw new Error("For Microsoft Go builds use 'major.minor' (e.g. 1.25) or 'major.minor.patch' (e.g. 1.25.3 or 1.25.3-1).");
-        }
-        if (hasMajorMinorOnly(v)) {
+        // Microsoft aka channel: accepts major.minor, major.minor.patch, or major.minor.patch-revision
+        if (parsed.isMajorMinorOnly()) {
+            // Resolve to latest patch-revision from manifest
             const resolved = await getMicrosoftLatestFromManifest(v);
             return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
         }
-        // If a patch is provided without numeric revision (e.g. 1.24.7), lift to latest -rev from manifest
-        // If numeric revision is provided for a patch (e.g. 1.24.7-1) use the provided revision
-        const hasNumericRev = /^\d+\.\d+\.\d+-\d+$/.test(v);
-        const resolved = hasNumericRev ? v : await getMicrosoftLatestFromManifest(v);
-        return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
+        
+        if (parsed.hasPatchOnly()) {
+            // Patch without revision: resolve to latest revision from manifest
+            const resolved = await getMicrosoftLatestFromManifest(v);
+            return { filenameVersion: resolved, cacheVersion: resolved, toolName: 'go-aka' };
+        }
+        
+        if (parsed.hasRevision()) {
+            // Full version with revision specified - use as-is
+            return { filenameVersion: v, cacheVersion: v, toolName: 'go-aka' };
+        }
+        
+        throw new Error("For Microsoft Go builds use 'major.minor' (e.g. 1.25) or 'major.minor.patch' (e.g. 1.25.3 or 1.25.3-1).");
     }
 
     throw new Error("Invalid download URL. Only https://go.dev/dl and https://aka.ms/golang/release/latest are allowed.");

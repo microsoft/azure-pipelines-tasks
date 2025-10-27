@@ -76,7 +76,7 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Found cached tool: go-aka version 1.25.0'), 'Should find cached Microsoft build');
+        assert(tr.stdOutContained('Found cached tool: go-aka version 1.25.0-1'), 'Should find cached Microsoft build with resolved version');
         assert(!tr.stdOutContained('Downloading Go from'), 'Should not download when cached');
     });
 
@@ -157,12 +157,20 @@ describe('GoToolV0 Suite', function() {
         assert(tr.stdOutContained('Invalid download URL'), 'Should reject unsupported URLs');
     });
 
-    it('Should fail with invalid version format for official Go', async () => {
-        let tp = path.join(__dirname, 'L0InvalidVersionFormat.js');
+    it('Should fail with unparseable version format', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionFormatParseError.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
-        assert(tr.stdOutContained('Official Go version must be'), 'Should reject invalid version format');
+        assert(tr.stdOutContained('Invalid version format'), 'Should reject version that cannot be parsed');
+    });
+
+    it('Should fail when official Go version includes revision', async () => {
+        let tp = path.join(__dirname, 'L0InvalidVersionFormatOfficialWithRevision.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'Should have failed');
+        assert(tr.stdOutContained('Official Go version must be'), 'Should reject revision syntax for official Go');
     });
 
     it('Should fail on download errors', async () => {

@@ -13,7 +13,8 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function(toolName: string, version: string) {
         console.log(`Found cached tool: ${toolName} version ${version}`);
         // Return cached path to simulate found Microsoft build
-        return '/mock/cache/go-aka/1.25.0';
+        // Note: version should be the fully qualified version (1.25.0-1) after manifest resolution
+        return '/mock/cache/go-aka/1.25.0-1';
     },
     downloadTool: function(url: string) {
         // Microsoft Go needs to download manifest even when version is cached

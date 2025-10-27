@@ -29,6 +29,6 @@ This task can run on Windows, Linux, or Mac machines.
 * **GOBIN:** Specify a new value for the GOBIN environment variable if you want to modify it.
 
 * **Go download base URL:** Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supported URLs:
-  - `https://go.dev/dl` - Official Go distribution site (default)
-  - `https://aka.ms/golang/release/latest` - Microsoft's builds of Go with additional patches and enhancements
+  - `https://go.dev/dl` - [Official Go distribution](https://go.dev/dl/). (default)
+  - `https://aka.ms/golang/release/latest` - the [Microsoft build of Go](https://github.com/microsoft/go), a fork of the official Go distribution. See [the Migration Guide](https://github.com/microsoft/go/blob/microsoft/main/eng/doc/MigrationGuide.md) for an introduction to this build.
 
