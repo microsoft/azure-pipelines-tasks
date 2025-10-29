@@ -1,16 +1,14 @@
-"use strict";
-
 import * as tl from "azure-pipelines-task-lib/task";
-import * as fs from 'fs';
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import { getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
-import * as utils from "./utils";
 import { findDockerFile } from "azure-pipelines-tasks-docker-common/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 import Q = require('q');
+
+import * as utils from "./utils";
 
 const matchPatternForDigestAndSize = new RegExp(/sha256\:([\w]+)(\s+)size\:\s([\w]+)/);
 let publishMetadataResourceIds: string[] = [];
@@ -223,7 +221,7 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
 
 function extractDigestFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string {
     // SampleCommandOutput : The push refers to repository [xyz.azurecr.io/acr-helloworld]
-    // 3b7670606102: Pushed 
+    // 3b7670606102: Pushed
     // e2af85e4b310: Pushed ce8609e9fdad: Layer already exists
     // f2b18e6d6636: Layer already exists
     // 62: digest: sha256:5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60 size: 5718
@@ -255,14 +253,8 @@ async function sendRequestToImageStore(requestBody: string, requestUrl: string):
 
     try {
         tl.debug("Sending request for pushing image to Image meta data store");
-        const response = await sendRequest(request);
-        return response;
+        return await sendRequest(request);
+    } catch (error) {
+        return Promise.reject(`Unable to push to Image Details Artifact Store, Error: ${error}`);
     }
-    catch (error) {
-        tl.debug("Unable to push to Image Details Artifact Store, Error: " + error);
-    }
-
-    return Promise.resolve();
 }
-
-
