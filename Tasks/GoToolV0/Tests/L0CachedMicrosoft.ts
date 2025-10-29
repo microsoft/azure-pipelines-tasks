@@ -6,7 +6,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs for cached Microsoft Go version
 tmr.setInput('version', '1.25.0');
-tmr.setInput('goDownloadBaseUrl', 'https://aka.ms/golang/release/latest');
+tmr.setInput('goDownloadUrl', 'https://aka.ms/golang/release/latest');
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {

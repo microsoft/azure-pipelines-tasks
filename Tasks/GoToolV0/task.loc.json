@@ -52,12 +52,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "goDownloadBaseUrl",
+      "name": "goDownloadUrl",
       "type": "string",
-      "label": "ms-resource:loc.input.label.goDownloadBaseUrl",
+      "label": "ms-resource:loc.input.label.goDownloadUrl",
       "required": false,
       "defaultValue": "https://go.dev/dl",
-      "helpMarkDown": "ms-resource:loc.input.help.goDownloadBaseUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.goDownloadUrl",
       "groupName": "advanced"
     }
   ],

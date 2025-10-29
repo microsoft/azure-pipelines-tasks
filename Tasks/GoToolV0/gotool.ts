@@ -17,9 +17,9 @@ async function run() {
         }
         const version = rawVersion.trim();
         
-        const downloadBaseUrl = resolveDownloadBaseUrl();
-        const resolvedVersion = await getGo(version, downloadBaseUrl);
-        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, customBaseUrl: String(!!downloadBaseUrl) });
+        const downloadUrl = resolveDownloadUrl();
+        const resolvedVersion = await getGo(version, downloadUrl);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, customBaseUrl: String(!!downloadUrl) });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -347,28 +347,28 @@ async function resolveVersionAndCache(version: string, baseUrl?: string): Promis
 }
 
 /**
- * Resolves the download base URL by checking both task parameter and environment variable.
+ * Resolves the download URL by checking both task parameter and environment variable.
  * Task parameter takes precedence over environment variable.
- * @returns The resolved download base URL or undefined if neither is set
+ * @returns The resolved download URL or undefined if neither is set
  */
-function resolveDownloadBaseUrl(): string | undefined {
+function resolveDownloadUrl(): string | undefined {
     // Support both task input parameter and environment variable
-    const inputBaseUrl = tl.getInput('goDownloadBaseUrl', false);
-    const envBaseUrl = tl.getVariable('GoTool.GoDownloadBaseUrl');
+    const inputUrl = tl.getInput('goDownloadUrl', false);
+    const envUrl = tl.getVariable('GoTool.GoDownloadUrl');
 
     // Determine which URL source to use (parameter takes precedence)
-    let downloadBaseUrl: string | undefined;
-    if (inputBaseUrl && envBaseUrl) {
-        tl.debug('Both goDownloadBaseUrl parameter and GoTool.GoDownloadBaseUrl environment variable are set. Using parameter value.');
-        downloadBaseUrl = inputBaseUrl;
-    } else if (envBaseUrl) {
-        tl.debug('Using GoTool.GoDownloadBaseUrl environment variable for download URL.');
-        downloadBaseUrl = envBaseUrl;
+    let downloadUrl: string | undefined;
+    if (inputUrl && envUrl) {
+        tl.debug('Both goDownloadUrl parameter and GoTool.GoDownloadUrl environment variable are set. Using parameter value.');
+        downloadUrl = inputUrl;
+    } else if (envUrl) {
+        tl.debug('Using GoTool.GoDownloadUrl environment variable for download URL.');
+        downloadUrl = envUrl;
     } else {
-        downloadBaseUrl = inputBaseUrl;
+        downloadUrl = inputUrl;
     }
 
-    return downloadBaseUrl;
+    return downloadUrl;
 }
 
 run();

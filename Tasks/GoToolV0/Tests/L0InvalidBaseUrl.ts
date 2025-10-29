@@ -6,7 +6,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs with unsupported base URL
 tmr.setInput('version', '1.21.3');
-tmr.setInput('goDownloadBaseUrl', 'https://example.com/go');
+tmr.setInput('goDownloadUrl', 'https://example.com/go');
 
 // Mock os module
 tmr.registerMock('os', {

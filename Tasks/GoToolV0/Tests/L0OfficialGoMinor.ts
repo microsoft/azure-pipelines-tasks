@@ -16,7 +16,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs for official Go with major.minor version
 tmr.setInput('version', '1.21');
-// No goDownloadBaseUrl means official go.dev
+// No goDownloadUrl means official go.dev
 
 // Mock tool lib functions
 tmr.registerMock('azure-pipelines-tool-lib/tool', {

@@ -10,14 +10,14 @@ if (!fs.existsSync(tempDir)) {
 
 // Mock environment variables BEFORE creating TaskMockRunner
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
-process.env['GOTOOL_GODOWNLOADBASEURL'] = 'https://example.com/alternate';
+process.env['GOTOOL_GODOWNLOADURL'] = 'https://example.com/alternate';
 
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs - both parameter and environment variable
 tmr.setInput('version', '1.21.3');
-tmr.setInput('goDownloadBaseUrl', 'https://go.dev/dl');
+tmr.setInput('goDownloadUrl', 'https://go.dev/dl');
 
 // Mock tool-lib
 tmr.registerMock('azure-pipelines-tool-lib/tool', {

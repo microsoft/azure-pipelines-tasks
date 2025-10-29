@@ -52,12 +52,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "goDownloadBaseUrl",
+      "name": "goDownloadUrl",
       "type": "string",
-      "label": "Go download base URL",
+      "label": "Go download URL",
       "required": false,
       "defaultValue": "https://go.dev/dl",
-      "helpMarkDown": "Base URL for downloading Go from a mirror location. By default, Go is downloaded from https://go.dev/dl or https://aka.ms/golang/release/latest. You can also set the GoTool.GoDownloadBaseUrl environment variable.",
+      "helpMarkDown": "URL for downloading Go from a mirror location. By default, Go is downloaded from https://go.dev/dl or https://aka.ms/golang/release/latest. You can also set the GoTool.GoDownloadUrl environment variable.",
       "groupName": "advanced"
     }
   ],

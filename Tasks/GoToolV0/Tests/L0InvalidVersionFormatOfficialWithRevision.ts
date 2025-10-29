@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set version with revision for official Go (not allowed - only Microsoft Go supports revisions)
 tmr.setInput('version', '1.22.3-1');
-// Don't set goDownloadBaseUrl, so it defaults to official Go
+// Don't set goDownloadUrl, so it defaults to official Go
 
 // Mock environment variables
 process.env['Agent.TempDirectory'] = path.join(__dirname, 'temp');

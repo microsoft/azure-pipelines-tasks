@@ -73,7 +73,7 @@ console.log(`Testing attack vector: ${attackUrl}`);
 
 // Set inputs with malicious URL
 tmr.setInput('version', '1.21.3');
-tmr.setInput('goDownloadBaseUrl', attackUrl);
+tmr.setInput('goDownloadUrl', attackUrl);
 
 // Mock tool lib functions - these should NOT be called if validation works
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
