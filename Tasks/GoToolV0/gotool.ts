@@ -21,6 +21,7 @@ async function run() {
         const inputBaseUrl = tl.getInput('goDownloadBaseUrl', false);
         const envBaseUrl = tl.getVariable('GO_DOWNLOAD_BASE_URL');
 
+        // Determine which URL source to use (parameter takes precedence)
         let downloadBaseUrl: string | undefined;
 
         if (inputBaseUrl && envBaseUrl) {
