@@ -57,7 +57,7 @@
       "label": "Go download base URL",
       "required": false,
       "defaultValue": "https://go.dev/dl",
-      "helpMarkDown": "Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supports https://go.dev/dl and https://aka.ms/golang/release/latest",
+      "helpMarkDown": "Base URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supports https://go.dev/dl and https://aka.ms/golang/release/latest. Can also be set via GO_DOWNLOAD_BASE_URL environment variable. If both are set, the parameter takes precedence.",
       "groupName": "advanced"
     }
   ],

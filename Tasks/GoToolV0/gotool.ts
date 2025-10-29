@@ -16,7 +16,23 @@ async function run() {
             throw new Error("Input 'version' is required and must not be empty, 'null' or 'undefined'.");
         }
         const version = rawVersion.trim();
-        const downloadBaseUrl = tl.getInput('goDownloadBaseUrl', false);
+        
+        // Support both task input parameter and environment variable
+        const inputBaseUrl = tl.getInput('goDownloadBaseUrl', false);
+        const envBaseUrl = tl.getVariable('GO_DOWNLOAD_BASE_URL');
+
+        let downloadBaseUrl: string | undefined;
+
+        if (inputBaseUrl && envBaseUrl) {
+            tl.debug('Both goDownloadBaseUrl parameter and GO_DOWNLOAD_BASE_URL environment variable are set. Using parameter value.');
+            downloadBaseUrl = inputBaseUrl;
+        } else if (envBaseUrl) {
+            tl.debug('Using GO_DOWNLOAD_BASE_URL environment variable for download URL.');
+            downloadBaseUrl = envBaseUrl;
+        } else {
+            downloadBaseUrl = inputBaseUrl;
+        }
+
         const resolvedVersion = await getGo(version, downloadBaseUrl);
         telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version: resolvedVersion, customBaseUrl: String(!!downloadBaseUrl) });
     }
