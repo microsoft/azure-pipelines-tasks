@@ -19,16 +19,16 @@ async function run() {
         
         // Support both task input parameter and environment variable
         const inputBaseUrl = tl.getInput('goDownloadBaseUrl', false);
-        const envBaseUrl = tl.getVariable('GO_DOWNLOAD_BASE_URL');
+        const envBaseUrl = tl.getVariable('GoTool.GoDownloadBaseUrl');
 
         // Determine which URL source to use (parameter takes precedence)
         let downloadBaseUrl: string | undefined;
 
         if (inputBaseUrl && envBaseUrl) {
-            tl.debug('Both goDownloadBaseUrl parameter and GO_DOWNLOAD_BASE_URL environment variable are set. Using parameter value.');
+            tl.debug('Both goDownloadBaseUrl parameter and GoTool.GoDownloadBaseUrl environment variable are set. Using parameter value.');
             downloadBaseUrl = inputBaseUrl;
         } else if (envBaseUrl) {
-            tl.debug('Using GO_DOWNLOAD_BASE_URL environment variable for download URL.');
+            tl.debug('Using GoTool.GoDownloadBaseUrl environment variable for download URL.');
             downloadBaseUrl = envBaseUrl;
         } else {
             downloadBaseUrl = inputBaseUrl;

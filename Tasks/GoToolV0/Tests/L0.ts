@@ -199,12 +199,12 @@ describe('GoToolV0 Suite', function() {
     });
 
     // Environment variable tests for goDownloadBaseUrl
-    it('Should use GO_DOWNLOAD_BASE_URL environment variable when parameter is not set', async () => {
+    it('Should use GoTool.GoDownloadBaseUrl environment variable when parameter is not set', async () => {
         let tp = path.join(__dirname, 'L0EnvVarOnly.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Using GO_DOWNLOAD_BASE_URL environment variable'), 'Should log environment variable usage');
+        assert(tr.stdOutContained('Using GoTool.GoDownloadBaseUrl environment variable'), 'Should log environment variable usage');
         assert(tr.stdOutContained('go.dev/dl'), 'Should use URL from environment variable');
     });
 
@@ -213,11 +213,11 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('Both goDownloadBaseUrl parameter and GO_DOWNLOAD_BASE_URL environment variable are set'), 'Should log precedence decision');
+        assert(tr.stdOutContained('Both goDownloadBaseUrl parameter and GoTool.GoDownloadBaseUrl environment variable are set'), 'Should log precedence decision');
         assert(tr.stdOutContained('Correctly using parameter URL over environment variable'), 'Should use parameter URL');
     });
 
-    it('Should fail with invalid URL in GO_DOWNLOAD_BASE_URL environment variable', async () => {
+    it('Should fail with invalid URL in GoTool.GoDownloadBaseUrl environment variable', async () => {
         let tp = path.join(__dirname, 'L0InvalidEnvVarUrl.js');
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();

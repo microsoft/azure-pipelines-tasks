@@ -10,7 +10,7 @@ if (!fs.existsSync(tempDir)) {
 
 // Mock environment variables BEFORE creating TaskMockRunner
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
-process.env['GO_DOWNLOAD_BASE_URL'] = 'https://go.dev/dl';
+process.env['GOTOOL_GODOWNLOADBASEURL'] = 'https://go.dev/dl';
 
 let taskPath = path.join(__dirname, '..', 'gotool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
