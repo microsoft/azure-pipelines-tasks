@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-
+import * as fs from 'fs';
 import * as semver from 'semver';
 
 import * as task from 'azure-pipelines-task-lib/task';
@@ -12,6 +12,7 @@ import * as toolUtil  from './toolutil';
 
 import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 import { TaskParameters } from './interfaces';
+import { resolveArchitecture } from './archutil';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
@@ -94,16 +95,29 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
+    const effectiveArch = resolveArchitecture(parameters.architecture);
+    task.debug(`Effective architecture resolved to: ${effectiveArch}`);
+
     // Throw warning if Python version is 3.5
-    if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
-        task.warning(task.loc('PythonVersionRetirement'));
+
+    // if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
+    //     task.warning(task.loc('PythonVersionRetirement'));
+    // }
+    
+    {
+        const coerced = semver.coerce(parameters.versionSpec);
+        if (coerced && semver.satisfies(coerced, "3.5.*")) {
+            task.warning(task.loc('PythonVersionRetirement'));
+        }
     }
+
 
     if (isExactVersion(semanticVersionSpec)) {
         task.warning(task.loc('ExactVersionNotRecommended'));
     }
 
-    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    //let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, effectiveArch);
     // Python version not found in local cache, try to download and install
     
     if (!installDir) {
@@ -111,14 +125,20 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         if (!parameters.disableDownloadFromRegistry) {
             try {
                 task.debug('Trying to download python from registry.');
-                await installPythonVersion(semanticVersionSpec, parameters);
-                installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                // await installPythonVersion(semanticVersionSpec, parameters);
+                // installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                await installPythonVersion(semanticVersionSpec, { ...parameters, architecture: effectiveArch });
+                installDir = tool.findLocalTool('Python', semanticVersionSpec, effectiveArch);
+
                 if (installDir) {
                     task.debug(`Successfully installed python from registry to ${installDir}.`);
                 }
-            } catch (err) {
-                task.error(task.loc('DownloadFailed', err.toString()));
+            
+            } catch (err: unknown) {
+            const details = err instanceof Error ? err.toString() : String(err);
+            task.error(task.loc('DownloadFailed', details));
             }
+        
         }
     }
 
@@ -133,17 +153,33 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
             .map(s => `${s} (x64)`)
             .join(os.EOL);
 
+            
+        const arm64Versions = tool.findLocalToolVersions('Python', 'arm64')
+                .map(s => `${s} (arm64)`)
+                .join(os.EOL);
         throw new Error([
-            task.loc('VersionNotFound', parameters.versionSpec, parameters.architecture),
+            task.loc('VersionNotFound', parameters.versionSpec, effectiveArch),
             task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
             x86Versions,
             x64Versions,
+            arm64Versions,
             task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
             task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
         ].join(os.EOL));
     }
 
     task.setVariable('pythonLocation', installDir);
+    //task.setVariable('LD_LIBRARY_PATH', `${path.join(installDir, 'lib')}:${process.env.LD_LIBRARY_PATH || ''}`, false, true);
+
+    const libCandidates = [
+        path.join(installDir, 'lib'),
+        path.join(installDir, 'python', 'lib'),
+        path.join(installDir, 'lib64')
+    ];
+    const libDir = libCandidates.find(p => fs.existsSync(p)) || libCandidates[0];
+
+    task.setVariable('LD_LIBRARY_PATH', `${libDir}:${process.env.LD_LIBRARY_PATH || ''}`, false, true);
+
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
         toolUtil.prependPathSafe(binDir(installDir, platform))
