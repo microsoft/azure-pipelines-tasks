@@ -1,5 +1,5 @@
 # Global code owner for the code that is orphan and for changes across the repo like refactoring. 
-*  @azure-pipelines-admin
+*  @microsoft/azure-pipelines-admin
 
 ci/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
@@ -38,9 +38,9 @@ Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team
 
 Tasks/AzureCloudPowerShellDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureContainerAppsV0/    @naziml    @tarunramsinghani
+Tasks/AzureContainerAppsV0/       @tarunramsinghani
 
-Tasks/AzureContainerAppsV1/    @naziml    @tarunramsinghani
+Tasks/AzureContainerAppsV1/        @tarunramsinghani
 
 Tasks/AzureFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -99,14 +99,14 @@ Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-servi
 
 Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan
+Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg  @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan
 
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
-Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @menxiao
+Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps 
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
-Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
+Tasks/AzureTestPlanV0/       @microsoft/adoautotest
 
 Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan 
 
@@ -140,7 +140,7 @@ Tasks/CocoaPodsV0/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsingh
 
 Tasks/Common/artifacts-common/     @microsoft/azure-artifacts-packages
 
-Tasks/Common/AzureRmDeploy-common/   @vincentdass    @microsoft/release-management-task-team @manolerazvan 
+Tasks/Common/AzureRmDeploy-common/      @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/Deployment/     @microsoft/release-management-task-team @manolerazvan  
 
@@ -152,17 +152,17 @@ Tasks/Common/ServiceFabricHelpers/   @microsoft/release-management-task-team @ma
 
 Tasks/Common/TlsHelper_/      @arjgupta
 
-Tasks/Common/VstsAzureHelpers_/     @vincentdass
+Tasks/Common/VstsAzureHelpers_/     
 
-Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  
+Tasks/Common/VstsAzureRestHelpers_/  
 
 Tasks/Common/azure-arm-rest/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    
+Tasks/Common/azure-blobstorage-artifactProvider/          
 
-Tasks/Common/coveragepublisher/     @manos  @microsoft/adoautotest
+Tasks/Common/coveragepublisher/       @microsoft/adoautotest
 
 Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
@@ -226,11 +226,11 @@ Tasks/DownloadPackageV0/       @microsoft/azure-artifacts-packages
 
 Tasks/DownloadPackageV1/       @microsoft/azure-artifacts-packages
 
-Tasks/DownloadPipelineArtifactV0/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/DownloadPipelineArtifactV0/      @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
-Tasks/DownloadPipelineArtifactV1/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/DownloadPipelineArtifactV1/      @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
-Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
 Tasks/DownloadSecureFileV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
@@ -248,7 +248,7 @@ Tasks/FtpUploadV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsingh
 
 Tasks/FuncToolsInstallerV0/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/GitHubCommentV0/     @ds-ms
+Tasks/GitHubCommentV0/     
 
 Tasks/GitHubReleaseV0/     @microsoft/release-management-task-team @manolerazvan 
 
@@ -337,7 +337,7 @@ Tasks/NodeTaskRunnerInstallerV0/    @microsoft/azure-pipelines-tasks-and-agent @
 Tasks/NodeToolV0/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI rotation: Azure Container Registry / Triage
-Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT @tarunramsinghani
+Tasks/NotationV0/ @JeyJeyGao  @tarunramsinghani
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 
@@ -383,23 +383,23 @@ Tasks/PowerShellOnTargetMachinesV3/  @microsoft/release-management-task-team @ma
 
 Tasks/PublishBuildArtifactsV1/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/PublishCodeCoverageResultsV1/    @manos  @microsoft/adoautotest
+Tasks/PublishCodeCoverageResultsV1/      @microsoft/adoautotest
 
-Tasks/PublishCodeCoverageResultsV2/    @manos  @microsoft/adoautotest
+Tasks/PublishCodeCoverageResultsV2/      @microsoft/adoautotest
 
-Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
-Tasks/PublishPipelineArtifactV1/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/PublishPipelineArtifactV1/       @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
 Tasks/PublishPipelineMetadataV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/PublishSymbolsV2/    @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/PublishSymbolsV2/    @carl-tanner @fadnavistanmay @b-barthel  @kunalkaroth
 
-Tasks/PublishTestResultsV1/    @manos  @microsoft/adoautotest
+Tasks/PublishTestResultsV1/      @microsoft/adoautotest
 
-Tasks/PublishTestResultsV2/    @manos  @microsoft/adoautotest
+Tasks/PublishTestResultsV2/      @microsoft/adoautotest
 
-Tasks/ContainerStructureTestV0/    @manos  @microsoft/adoautotest
+Tasks/ContainerStructureTestV0/      @microsoft/adoautotest
 
 Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @manolerazvan
 
@@ -411,15 +411,15 @@ Tasks/PythonScriptV0/      @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/QueryWorkItemsV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/QuickPerfTestV1/     @manos  @microsoft/adoautotest
+Tasks/QuickPerfTestV1/       @microsoft/adoautotest
 
-Tasks/ReviewAppV0/   @ds-ms
+Tasks/ReviewAppV0/   
 
-Tasks/RunDistributedTestsV1/   @manos  @microsoft/adoautotest
+Tasks/RunDistributedTestsV1/     @microsoft/adoautotest
 
-Tasks/RunJMeterLoadTestV1/     @manos  @microsoft/adoautotest
+Tasks/RunJMeterLoadTestV1/       @microsoft/adoautotest
 
-Tasks/RunLoadTestV1/   @manos  @microsoft/adoautotest
+Tasks/RunLoadTestV1/     @microsoft/adoautotest
 
 Tasks/ServiceFabricComposeDeployV0/    @microsoft/release-management-task-team @manolerazvan 
 
@@ -455,13 +455,13 @@ Tasks/UseRubyVersionV0/    @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/VSBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/VsTestV1/    @manos  @microsoft/adoautotest
+Tasks/VsTestV1/      @microsoft/adoautotest
 
-Tasks/VsTestV2/    @manos  @microsoft/adoautotest
+Tasks/VsTestV2/      @microsoft/adoautotest
 
-Tasks/VsTestV3/    @manos  @microsoft/adoautotest
+Tasks/VsTestV3/      @microsoft/adoautotest
 
-Tasks/VsTestPlatformToolInstallerV1/   @manos  @microsoft/adoautotest
+Tasks/VsTestPlatformToolInstallerV1/     @microsoft/adoautotest
 
 Tasks/WindowsMachineFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
