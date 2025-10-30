@@ -135,8 +135,8 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
                 }
             
             } catch (err: unknown) {
-            const details = err instanceof Error ? err.toString() : String(err);
-            task.error(task.loc('DownloadFailed', details));
+                task.error(task.loc('DownloadFailed', err.toString()));
+                throw err;
             }
         
         }
