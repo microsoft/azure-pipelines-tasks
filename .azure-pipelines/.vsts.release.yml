@@ -85,6 +85,8 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: tasksBuildArtifact
+  value: 'allTasks'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -134,8 +136,8 @@ extends:
                   ne(variables['numTasks'], 0)
                 )
               PathtoPublish: _package/tasks.zip
-              ArtifactName: package
               sbomBuildDropPath: $(Build.SourcesDirectory)/_package
+              ArtifactName: $(tasksBuildArtifact)
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
@@ -219,7 +221,7 @@ extends:
             displayName: 'Publish package artifact'
             PathtoPublish: _package/tasks.zip
             sbomBuildDropPath: $(Build.SourcesDirectory)/_package
-            ArtifactName: allTasks
+            ArtifactName: $(tasksBuildArtifact)
         steps:
         - template: /ci/build-all-tasks.yml@self
           parameters:

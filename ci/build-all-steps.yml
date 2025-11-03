@@ -17,6 +17,12 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
 # Use node 20, npm 9
 - task: NodeTool@0
   displayName: Use node 20
@@ -168,7 +174,7 @@ steps:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # Stage tasks individually into the package directory
-  - script: node ./ci/stage-package.js false individually
+  - script: node ./ci/stage-package.js true individually
     displayName: Stage tasks individually into the package directory
     condition: |
       and(
@@ -183,7 +189,7 @@ steps:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js false
+  - script: node ./ci/stage-package.js
     displayName: Stage all the tasks into a single zip for upload
     condition: |
       and(
