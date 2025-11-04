@@ -16,7 +16,6 @@ steps:
 
 - powershell: |
     $releaseBranch = "$(branchName)"
-    $isDryRun = "$(isDryRun)"
 
     # add config entry to avoid errors while pulling
     git config --global user.email "$(username)@microsoft.com"
@@ -29,22 +28,18 @@ steps:
 
     # Pull commits from remote and push branch to git
     git checkout -b $releaseBranch
-    if( $isDryRun -eq 'true' ) {
-      Write-Host "DRY RUN: Skipping Git push operations to remote repository"
-    }else{
-        Write-Host "Trying to pull the remote branch.."
-        git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-        if (-not $?) {
-          Write-Host "Failed to pull the remote branch. This is expected if the remote branch doesn't exist."
-        }
-        Write-Host "Trying to push to the remote branch.."
-        git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    Write-Host "Trying to pull the remote branch.."
+    git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    if (-not $?) {
+      Write-Host "Failed to pull the remote branch. This is expected if the remote branch doesn't exist."
     }
+    Write-Host "Trying to push to the remote branch.."
+    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  condition: eq(variables['isDryRun'], 'false')
   displayName: Push release branch
 
 - powershell: |
     $releaseBranch = "$(branchName)"
-    $isDryRun = "$(isDryRun)"
 
     if (($(currentSprintWeek) -eq 3) -or ($isDryRun -eq 'true')) {
       cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes

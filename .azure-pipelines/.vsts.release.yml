@@ -136,8 +136,8 @@ extends:
                   ne(variables['numTasks'], 0)
                 )
               PathtoPublish: _package/tasks.zip
-              sbomBuildDropPath: $(Build.SourcesDirectory)/_package
               ArtifactName: $(tasksBuildArtifact)
+              sbomBuildDropPath: $(Build.SourcesDirectory)/_package
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
@@ -215,8 +215,7 @@ extends:
         condition: |
           and(
             succeeded(),
-            eq(variables['COURTESY_PUSH'], 'true'),
-            in(variables['build.reason'], 'Schedule', 'Manual'),
+            eq(variables['build.reason'], 'Manual'),
             eq(variables['Build.SourceBranch'], 'refs/heads/master')
           )
         templateContext:
