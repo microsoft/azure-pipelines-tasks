@@ -50,3 +50,11 @@ steps:
     }
   continueOnError: true
   displayName: Create Release
+
+- powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
+  displayName: Send MS Teams notification
+  condition: or(eq(variables['build.reason'], 'Schedule'), eq(variables['build.reason'], 'Manual'))
+  env:
+    PR_ID: $(courtesyPushPR_ID)
+    PR_LINK: $(courtesyPushPR_LINK)
+    TEAMS_WEBHOOK: $(MSTeamsUri)

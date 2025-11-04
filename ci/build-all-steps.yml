@@ -6,8 +6,7 @@ parameters:
 steps:
 
 # Clean
-- checkout: self
-  clean: true
+ 
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
@@ -131,6 +130,22 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
+# Test
+- script: node make.js test
+  displayName: Run tests
+  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
+
+- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
+  displayName: Legacy tests with node 6
+  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
+
+# Publish code coverage result
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
+
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
@@ -158,21 +173,6 @@ steps:
         ne(variables['build.reason'], 'PullRequest'),
         ne(variables['numTasks'], 0)
       )
-
-# Test
-- script: node make.js test
-  displayName: Run tests
-  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
-- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
-  displayName: Legacy tests with node 6
-  condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
-
-# Publish code coverage result
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:

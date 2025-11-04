@@ -172,9 +172,9 @@ Generated: ${new Date().toISOString()}`
         const prLink = `https://${orgUrl}/${project}/_git/${repo}/pullrequest/${PR.pullRequestId}`;
         console.log(`Link to the PR: ${prLink}`);
         
-        // Set Azure Pipeline variables
-        console.log(`##vso[task.setvariable variable=PR_ID]${PR.pullRequestId}`);
-        console.log(`##vso[task.setvariable variable=PR_LINK]${prLink}`);
+        // Set Azure Pipeline variables (both for current job and as outputs for dependent jobs)
+        console.log(`##vso[task.setvariable variable=PR_ID;isOutput=true]${PR.pullRequestId}`);
+        console.log(`##vso[task.setvariable variable=PR_LINK;isOutput=true]${prLink}`);
         
         return {
             prId: PR.pullRequestId,
@@ -194,8 +194,8 @@ Generated: ${new Date().toISOString()}`
         const dummyPrId = `DRYRUN-${timestamp}`;
         const dummyPrLink = `https://${orgUrl}/${project}/_git/${repo}/pullrequest/DRYRUN-${timestamp}`;
         
-        console.log(`##vso[task.setvariable variable=PR_ID]${dummyPrId}`);
-        console.log(`##vso[task.setvariable variable=PR_LINK]${dummyPrLink}`);
+        console.log(`##vso[task.setvariable variable=PR_ID;isOutput=true]${dummyPrId}`);
+        console.log(`##vso[task.setvariable variable=PR_LINK;isOutput=true]${dummyPrLink}`);
         
         console.log(`DRYRUN: Generated dummy PR_ID = ${dummyPrId}`);
         console.log(`DRYRUN: Generated dummy PR_LINK = ${dummyPrLink}`);

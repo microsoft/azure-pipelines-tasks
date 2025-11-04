@@ -212,6 +212,9 @@ extends:
           os: windows
         dependsOn:
         - courtesy_push
+        variables:
+          courtesyPushPR_ID: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_ID']]
+          courtesyPushPR_LINK: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_LINK']]
         condition: |
           and(
             succeeded(),
