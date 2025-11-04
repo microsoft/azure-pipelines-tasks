@@ -2,6 +2,11 @@ var fs = require('fs');
 var path = require('path');
 var util = require('./ci-util');
 
+// Parse command line arguments (positional)
+// Usage: node stage-milestone.js <skipLayoutVersion> <tasksBuildArtifact>
+var skipLayoutVersion = process.argv[2] === 'true';
+var tasksBuildArtifact = process.argv[3] || 'package';
+
 // initialize _package
 util.initializePackagePath();
 
@@ -10,10 +15,12 @@ fs.mkdirSync(util.milestoneLayoutPath);
 
 // mark the layout with a version number.
 // servicing supports both this new format and the legacy layout format as well.
-fs.writeFileSync(path.join(util.milestoneLayoutPath, 'layout-version.txt'), '2');
+// Skip if --skip-layout-version flag is passed (layout-version.txt already exists in extracted artifact)
+if (!skipLayoutVersion) {
+    fs.writeFileSync(path.join(util.milestoneLayoutPath, 'layout-version.txt'), '2');
+}
 
 // extract the artifact
-var tasksBuildArtifact = process.env.TASKS_BUILD_ARTIFACT;
 var artifactZipPath = path.join(process.env.SYSTEM_ARTIFACTSDIRECTORY, tasksBuildArtifact, "tasks.zip");
 var artifactPath = path.join(util.packagePath, "package");
 util.expandTasks(artifactZipPath, artifactPath);

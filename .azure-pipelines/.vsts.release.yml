@@ -201,3 +201,25 @@ extends:
         steps:
         - checkout: self
         - template: /ci/courtesy-push.yml@self
+      
+      # GitHub Release
+      - job: github_release
+        displayName: Create GitHub Release
+        timeoutInMinutes: 60
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-windows-2022
+          os: windows
+        dependsOn:
+        - courtesy_push
+        condition: |
+          and(
+            succeeded(),
+            eq(variables['COURTESY_PUSH'], 'true'),
+            in(variables['build.reason'], 'Schedule', 'Manual'),
+            eq(variables['Build.SourceBranch'], 'refs/heads/master')
+          )
+        templateContext:
+          outputs: []
+        steps:
+        - template: /ci/github-release.yml@self

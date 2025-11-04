@@ -39,10 +39,8 @@ steps:
 
 # Stage milestone
 # TODO: Rename this.. we are staging task packages not the milestone.
-- script: node .\ci\stage-milestone.js
+- script: node .\ci\stage-milestone.js true $(tasksBuildArtifact)
   displayName: Stage milestone
-  env:
-    TASKS_BUILD_ARTIFACT: $(tasksBuildArtifact)
 
 # Stage per task NuGet package
 - script: npm run package
