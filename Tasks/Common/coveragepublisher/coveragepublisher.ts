@@ -216,7 +216,7 @@ function getMaskedProxyUrl(url: string): string {
         const parsedUrl = new URL(url);
         if (parsedUrl.username || parsedUrl.password) {
             // Mask both username and password for security
-            return `${parsedUrl.protocol}//***: ***@${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
+            return `${parsedUrl.protocol}//***:***@${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
         }
         return url;
     } catch {
