@@ -294,7 +294,7 @@
         "statefulset": "statefulset",
         "replicationcontroller": "replicationcontroller"
       },
-      "helpMarkDown": "Kind of K8s object; deployment, replicaSet, statefulSet, replicationController etc.",
+      "helpMarkDown": "Kind of K8s object; deployment, replicaset, statefulset, replicationcontroller etc.",
       "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
