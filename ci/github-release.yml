@@ -55,6 +55,6 @@ steps:
   displayName: Send MS Teams notification
   condition: or(eq(variables['build.reason'], 'Schedule'), eq(variables['build.reason'], 'Manual'))
   env:
-    PR_ID: $(courtesyPushPR_ID)
-    PR_LINK: $(courtesyPushPR_LINK)
+    PR_ID: $(courtesy_push_pr_id)
+    PR_LINK: $(courtesy_push_pr_link)
     TEAMS_WEBHOOK: $(MSTeamsUri)

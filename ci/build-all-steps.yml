@@ -6,7 +6,8 @@ parameters:
 steps:
 
 # Clean
- 
+- checkout: self
+  clean: true
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:

@@ -213,8 +213,8 @@ extends:
         dependsOn:
         - courtesy_push
         variables:
-          courtesyPushPR_ID: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_ID']]
-          courtesyPushPR_LINK: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_LINK']]
+          courtesy_push_pr_id: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_ID']]
+          courtesy_push_pr_link: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_LINK']]
         condition: |
           and(
             succeeded(),

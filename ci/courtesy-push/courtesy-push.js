@@ -172,7 +172,7 @@ Generated: ${new Date().toISOString()}`
         const prLink = `https://${orgUrl}/${project}/_git/${repo}/pullrequest/${PR.pullRequestId}`;
         console.log(`Link to the PR: ${prLink}`);
         
-        // Set Azure Pipeline variables (both for current job and as outputs for dependent jobs)
+        // Set Azure Pipeline variables
         console.log(`##vso[task.setvariable variable=PR_ID;isOutput=true]${PR.pullRequestId}`);
         console.log(`##vso[task.setvariable variable=PR_LINK;isOutput=true]${prLink}`);
         
