@@ -5,7 +5,7 @@ import * as rest from 'typed-rest-client';
 import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as osutil from './osutil';
-
+import * as fs from 'fs';
 import { TaskParameters, PythonRelease, PythonFileInfo } from './interfaces';
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json';
@@ -22,6 +22,12 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
 
     task.debug(`Extracted python archive to ${pythonInstallerDir}; running installation script`);
 
+    const pythonLibDir =
+      [path.join(pythonInstallerDir, 'python', 'lib'),
+       path.join(pythonInstallerDir, 'lib'),
+       path.join(pythonInstallerDir, 'python', 'lib64')]
+      .find(p => fs.existsSync(p)) || path.join(pythonInstallerDir, 'python', 'lib');
+
     const installerScriptOptions = {
         cwd: pythonInstallerDir,
         windowsHide: true
@@ -30,7 +36,17 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
     if (os.platform() === 'win32') {
         return task.exec('powershell', './setup.ps1', installerScriptOptions);
     } else {
-        return task.exec('bash', './setup.sh', installerScriptOptions);
+        //return task.exec('bash', './setup.sh', installerScriptOptions);
+    const linuxOpts = {
+            ...installerScriptOptions,
+            env: {
+                ...process.env,
+                LD_LIBRARY_PATH: `${pythonLibDir}:${process.env.LD_LIBRARY_PATH || ''}`
+            }
+        };
+        task.debug(`Using LD_LIBRARY_PATH=${linuxOpts.env!.LD_LIBRARY_PATH}`);
+        return task.exec('bash', './setup.sh', linuxOpts);
+
     }
 }
 
@@ -44,7 +60,7 @@ export async function installPythonVersion(versionSpec: string, parameters: Task
  */
 async function downloadPythonVersion(versionSpec: string, parameters: TaskParameters): Promise<string> {
     const auth = `token ${parameters.githubToken}`;
-    const additionalHeaders = {};
+    const additionalHeaders: Record<string, string> = {};
     if (parameters.githubToken) {
         additionalHeaders['Authorization'] = auth;
     } else {
@@ -71,7 +87,14 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     task.debug(`Found matching file for system: ${matchingPythonFile.filename}`);
 
-    const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, matchingPythonFile.filename, null, additionalHeaders);
+    // const pythonArchivePath: string = await tool.downloadTool(matchingPythonFile.download_url, matchingPythonFile.filename, null, additionalHeaders);
+    
+    const pythonArchivePath: string = await tool.downloadTool(
+            matchingPythonFile.download_url,
+            matchingPythonFile.filename,
+            undefined,
+            additionalHeaders
+        );
 
     task.debug(`Downloaded python archive to ${pythonArchivePath}`);
 
