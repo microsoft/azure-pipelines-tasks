@@ -13,7 +13,7 @@
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-docker-common": "2.0.6",
     "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
-    "azure-pipelines-tasks-utility-common": "^3.265.1",
+    "azure-pipelines-tasks-utility-common": "^3.210.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "del": "2.2.0",
     "js-yaml": "3.13.1",
