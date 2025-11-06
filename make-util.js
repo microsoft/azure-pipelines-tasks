@@ -24,7 +24,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -392,9 +392,13 @@ exports.ensureTool = ensureTool;
 const node20Version = '20.17.0';
 exports.node20Version = node20Version;
 
+const node24Version = '24.10.0';
+exports.node24Version = node24Version;
+
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: node20Version
+        20: node20Version,
+        24: node24Version
     };
 
     if (!nodeVersion) {

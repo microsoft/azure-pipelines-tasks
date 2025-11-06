@@ -128,7 +128,7 @@ function validateTaskPaths() {
         .concat(fs.existsSync(genTaskPath) ? fs.readdirSync(genTaskPath).map(taskName => path.join(genTaskPath, taskName)) : [])
         .concat(fs.existsSync(genTaskPathLocal) ? fs.readdirSync(genTaskPathLocal).map(taskName => path.join(genTaskPathLocal, taskName)) : []);
 
-    const invalidPaths = paths.filter(taskPath => test('-d', taskPath) && !test('-f', path.join(taskPath, 'task.json')) && !taskPath.includes('_buildConfigs'));
+    const invalidPaths = paths.filter(taskPath => test('-d', taskPath) && !test('-f', path.join(taskPath, 'task.json')) && !taskPath.includes('_buildConfigs') && !taskPath.endsWith('Common'));
     if (invalidPaths.length > 0) {
         fail(`The following paths do not contain task.json and need to be cleaned up:\n${invalidPaths.join('\n')}. They were likely left over after syncing.\nTo clean, use 'git clean -dn' to see what would be deleted and 'git clean -df' to delete the paths.`);
     }
@@ -310,21 +310,27 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
     // Wrap build function  to store files that changes after the build
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, genTaskPathLocal, argv.includeLocalPackagesBuildConfig, writeUpdatedsFromGenTasks);
-    const { allTasksNode20, allTasksDefault } = allTasks.
+    const { allTasksNode20, allTasksNode24, allTasksDefault } = allTasks.
         reduce((res, taskName) => {
-            if (getNodeVersion(taskName, argv.includeLocalPackagesBuildConfig) == 20) {
+            const nodeVersion = getNodeVersion(taskName, argv.includeLocalPackagesBuildConfig);
+            if (nodeVersion == 24) {
+                res.allTasksNode24.push(taskName)
+            } else if (nodeVersion == 20) {
                 res.allTasksNode20.push(taskName)
             } else {
                 res.allTasksDefault.push(taskName)
             }
 
             return res;
-        }, {allTasksNode20: [], allTasksDefault: []})
+        }, {allTasksNode20: [], allTasksNode24: [], allTasksDefault: []})
 
     const builtTasks = new Set();
 
     // This code is structured to support installing/building with multiple node versions in the future, including the same task for multiple node versions
-    // Currently, we only support Node.js 20
+    // Currently, we support Node.js 20 and 24
+    if (allTasksNode24.length > 0) {
+        await installNodeAndBuildTasks(24, util.node24Version, allTasksNode24, builtTasks, buildResults);
+    }
     if (allTasksNode20.length > 0) {
         await installNodeAndBuildTasks(20, util.node20Version, allTasksNode20, builtTasks, buildResults);
     }
@@ -415,6 +421,7 @@ function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
 
     // get node runner from task.json
     const handlers = getTaskNodeVersion(taskPath, taskName);
+    if (handlers.includes(24)) return 24;
     if (handlers.includes(20)) return 20;
 
     return 10;
