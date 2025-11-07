@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "Укажите относительный путь к сценарию PowerShell (для Windows) или сценарию оболочки (для Linux) для развертывания пакета. Сценарий должен содержаться в указанном выше пути к пакету. Поддерживаются шаблоны minimatch. Пример пути: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "Аргументы сценария развертывания",
   "loc.input.help.deployScriptArguments": "Укажите аргументы, которые будут переданы в сценарий развертывания.",
+  "loc.input.label.canDeleteTempFolder": "Delete temp folder",
+  "loc.input.help.canDeleteTempFolder": "This option allows you to remove temporary folder",
   "loc.input.label.additionalBuilderParameters": "Дополнительные параметры сборщика",
   "loc.input.help.additionalBuilderParameters": "В режиме автоматического создания шаблона Packer задача создает шаблон Packer со сборщиком Azure. Этот сборщик служит для создания образа компьютера. В сборщик Azure можно добавить параметры для настройки созданного шаблона Packer. Например, задайте параметр ssh_tty=true, если используется базовый образ CentOS и для запуска sudo требуется телетайп.<br/>Чтобы просмотреть и изменить дополнительные параметры в таблице, щелкните многоточие (…) рядом с текстовым полем.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "Пропустить очистку временных файлов при отзыве",
