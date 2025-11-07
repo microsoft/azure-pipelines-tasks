@@ -64,6 +64,7 @@ stages:
         gitHubPatVariable: '$(GitHubPAT)'
         isAutoCompletePrSelected: false
         gitHubPrMergeMethod: 'squash'
+        isDeletePrSourceBranchSelected: false
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     
@@ -118,10 +119,10 @@ stages:
       displayName: 'Send MS Teams notification about PR opened'
       env:
         TEAMS_WEBHOOK: $(MSTeamsUri)
-      condition: and(succeeded(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(succeeded(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))
 
     - powershell: .\ci\localization-updates\send-notifications.ps1 -IsPRCreated $false -RepoName "Tasks"
       displayName: 'Send MS Teams notification about error'
       env:
         TEAMS_WEBHOOK: $(MSTeamsUri)
-      condition: and(failed(), eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule'))
+      condition: and(failed(), or(and(eq(variables['SHOULDCREATEPR'], 'True'), eq(variables['build.reason'], 'Schedule')), eq(variables['build.reason'], 'Manual')))

@@ -223,3 +223,4 @@ _dotnetsdk/
 FilesOverriddenForConfigGoHereREADME.txt
 
 _generated_local/
+Localize/localize-pipeline.yml
