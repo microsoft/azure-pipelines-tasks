@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "数据 API 位置",
   "loc.input.help.data_api_location": "相对于工作目录的数据 API 源文件的目录位置",
   "loc.input.label.azure_access_token": "Azure 访问令牌",
-  "loc.input.help.azure_access_token": "用于对部署进行身份验证和授权的访问令牌",
+  "loc.input.help.azure_access_token": "Access Token used for deployment. Not required if passed as a variable",
   "loc.input.label.default_hostname": "默认主机名",
-  "loc.input.help.default_hostname": "应用的默认主机名"
+  "loc.input.help.default_hostname": "Default hostname for deployment. Not required if passed as an environment variable"
 }

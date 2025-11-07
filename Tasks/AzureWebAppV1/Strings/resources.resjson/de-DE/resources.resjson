@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Bearbeiten Sie Web-App-Konfigurationseinstellungen entsprechend der Syntax \"-Schlüssel Wert\". Ein Wert mit Leerzeichen muss in doppelte Anführungszeichen eingeschlossen werden. <br /> Beispiel: -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "Bereitstellungsmethode",
   "loc.input.help.deploymentMethod": "Wählen Sie die Bereitstellungsmethode für die App aus.",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Ungültiges App Service-Paket oder ungültiger App Service-Ordnerpfad angegeben: %s",
   "loc.messages.SetParamFilenotfound0": "Datei zum Festlegen der Parameter nicht gefunden: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Die XML-Transformationen wurden erfolgreich angewendet.",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Der Java-JAR-Pfad ist nicht vorhanden.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Fehler beim Aktualisieren der Application Insights-Ressource \"%s\". Fehler: %s",
   "loc.messages.InvalidDockerImageName": "Ungültiger Docker Hub-Imagename angegeben.",
-  "loc.messages.MsBuildPackageNotSupported": "Die Bereitstellung eines mit MSBuild generierten Pakets wird nicht unterstützt. Ändern Sie das Paketformat, oder verwenden Sie die Aufgabe für die Azure App Service-Bereitstellung."
+  "loc.messages.MsBuildPackageNotSupported": "Die Bereitstellung eines mit MSBuild generierten Pakets wird nicht unterstützt. Ändern Sie das Paketformat, oder verwenden Sie die Aufgabe für die Azure App Service-Bereitstellung.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }

@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Modifiez les paramètres de configuration Web App qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> Exemple : - phpVersion 5.6 -linuxFXVersion : node|6.11",
   "loc.input.label.deploymentMethod": "Méthode de déploiement",
   "loc.input.help.deploymentMethod": "Choisissez la méthode de déploiement de l'application.",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Chemin de dossier ou package App Service fourni non valide : %s",
   "loc.messages.SetParamFilenotfound0": "Fichier de définition de paramètres introuvable : %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Transformations XML correctement appliquées",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Le chemin du fichier jar Java n'est pas présent",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
   "loc.messages.InvalidDockerImageName": "Le nom fourni pour l'image Docker Hub est non valide.",
-  "loc.messages.MsBuildPackageNotSupported": "Le déploiement du package généré par msBuild n'est pas pris en charge. Changez le format du package, ou utilisez la tâche de déploiement Azure App Service."
+  "loc.messages.MsBuildPackageNotSupported": "Le déploiement du package généré par msBuild n'est pas pris en charge. Changez le format du package, ou utilisez la tâche de déploiement Azure App Service.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }
