@@ -24,6 +24,8 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 
 * **SearchPattern**: The pattern used to discover the pdb files to publish. 
 
+* **Manifest**: The path to a file containing more symbol client keys to publish. 
+
 * **IndexSources**: Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents.
 
 * **PublishSymbols**: Indicates whether to publish the symbol files.

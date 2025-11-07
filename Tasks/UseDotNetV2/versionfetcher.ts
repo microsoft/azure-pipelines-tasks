@@ -12,7 +12,6 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
-#if NODE20
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
     require("dns").setDefaultResultOrder("ipv4first");
@@ -23,7 +22,6 @@ if (nodeVersion > 19) {
     require("net").setDefaultAutoSelectFamily(false);
     tl.debug("Set default auto select family to false");
 }
-#endif
 
 export class DotNetCoreVersionFetcher {
     private explicitVersioning: boolean = false;
@@ -332,4 +330,4 @@ export class DotNetCoreVersionFetcher {
     }
 }
 
-const DotNetCoreReleasesIndexUrl: string = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+const DotNetCoreReleasesIndexUrl: string = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";

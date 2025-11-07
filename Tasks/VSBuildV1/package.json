@@ -1,6 +1,10 @@
 {
   "name": "vsts-tasks-vsbuild",
   "description": "Azure Pipelines VSBuild Task",
+  "scripts": {
+    "build": "node ../../make.js build --task VSBuildV1",
+    "serverBuild": "node ../../make.js serverBuild --task VSBuildV1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -15,7 +19,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-msbuildhelpers": "^3.231.0"
+    "azure-pipelines-tasks-msbuildhelpers": "^3.259.1"
   },
   "devDependencies": {
     "typescript": "4.0.2"

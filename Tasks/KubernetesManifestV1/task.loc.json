@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 2
+    "Minor": 265,
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
@@ -398,6 +398,15 @@
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
         "message": "Enter a valid value for timeout."
       }
+    },
+    {
+      "name": "resourceType",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceType",
+      "defaultValue": "Microsoft.ContainerService/managedClusters",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceType",
+      "visibleRule": "action = deploy"
     }
   ],
   "dataSourceBindings": [
@@ -430,6 +439,10 @@
     },
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node20_1": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

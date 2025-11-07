@@ -8,6 +8,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+        "build": "node ../../make.js build --task AzureAppConfigurationExportV10",
+        "serverBuild": "node ../../make.js serverBuild --task AzureAppConfigurationExportV10",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Microsoft Corporation",
@@ -21,7 +23,7 @@
         "@types/mocha": "^5.2.7",
         "agent-base": "^6.0.2",
         "azure-pipelines-task-lib": "^4.13.0",
-        "azure-pipelines-tasks-azure-arm-rest": "^3.242.1"
+        "azure-pipelines-tasks-azure-arm-rest": "^3.263.1"
     },
     "devDependencies": {
         "typescript": "5.1.6"

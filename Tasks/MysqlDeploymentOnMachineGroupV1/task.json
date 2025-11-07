@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 246,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -106,6 +106,10 @@
       "target": "mysqldeploy.js"
     },
     "Node16": {
+      "target": "mysqldeploy.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "mysqldeploy.js",
       "argumentFormat": ""
     }

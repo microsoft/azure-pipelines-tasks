@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 248,
-    "Patch": 2
+    "Minor": 261,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -419,6 +419,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "Custom Logger Configuration",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....'",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "Upload test attachments",
@@ -426,6 +435,16 @@
       "required": false,
       "helpMarkDown": "Opt in/out of publishing run level attachments.",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "Disable publishing test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
     },
     {
       "name": "failOnMinTestsNotRun",
@@ -562,6 +581,10 @@
     },
     "Node16": {
       "target": "runvstest.js"
+    },
+    "Node20_1": {
+      "target": "runvstest.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

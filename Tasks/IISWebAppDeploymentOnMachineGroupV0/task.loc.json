@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 246,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -137,6 +137,10 @@
       "target": "deployiiswebapp.js"
     },
     "Node16": {
+      "target": "deployiiswebapp.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "deployiiswebapp.js",
       "argumentFormat": ""
     }

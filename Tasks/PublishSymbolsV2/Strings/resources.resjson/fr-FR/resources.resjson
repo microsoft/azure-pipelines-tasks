@@ -10,6 +10,8 @@
   "loc.input.help.SymbolsFolder": "Chemin du dossier de recherche des fichiers de symboles. La valeur par défaut est $(Build.SourcesDirectory). Sinon, spécifiez un chemin associé à une racine. Exemple : $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Modèle de recherche",
   "loc.input.help.SearchPattern": "Modèle utilisé pour découvrir les fichiers pdb à publier.",
+  "loc.input.label.Manifest": "",
+  "loc.input.help.Manifest": "",
   "loc.input.label.IndexSources": "Indexer les sources",
   "loc.input.help.IndexSources": "Indique s’il faut injecter des informations sur le serveur source dans les fichiers PDB. Cette option est uniquement prise en charge sur les agents Windows.",
   "loc.input.label.PublishSymbols": "Publier les symboles",
@@ -73,5 +75,6 @@
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La bibliothèque dbghelp.dll est déjà chargée à partir d'un chemin inattendu. Le chemin attendu est '{0}'. Le chemin réel est '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "Fournisseur de source '{0}' non pris en charge pour l'indexation des sources.",
   "loc.messages.Win32Error0FromMethod1": "Erreur Win32 '{0}' rencontrée dans la méthode '{1}'.",
-  "loc.messages.NodeVersionSupport": "Le nœud v{0} n’est plus pris en charge à compter du 31/08/2024. Veuillez mettre à niveau l’agent de pipeline vers la dernière version pour le nœud 16 ou version ultérieure."
+  "loc.messages.NodeVersionSupport": "Le nœud v{0} n’est plus pris en charge à compter du 31/08/2024. Veuillez mettre à niveau l’agent de pipeline vers la dernière version pour le nœud 16 ou version ultérieure.",
+  "loc.messages.ManifestFileNotFound": ""
 }

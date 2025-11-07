@@ -15,7 +15,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 248,
+    "Minor": 253,
     "Patch": 0
   },
   "inputs": [
@@ -40,7 +40,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.allowApproversToApproveTheirOwnRuns",
       "required": false,
-      "defaultValue": "false",
+      "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.allowApproversToApproveTheirOwnRuns"
     },
     {

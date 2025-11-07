@@ -15,7 +15,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 248,
+        "Minor": 253,
         "Patch": 0
     },
     "inputs": [
@@ -40,7 +40,7 @@
             "type": "boolean",
             "label": "Allow approvers to approve their own run",
             "required": false,
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "If this is true, approver will be able to approve their own run"            
         },
         {

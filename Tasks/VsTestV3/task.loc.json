@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 248,
-    "Patch": 2
+    "Minor": 261,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -419,6 +419,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customLoggerConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customLoggerConfig",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishRunAttachments",
@@ -426,6 +435,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "donotPublishTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.donotPublishTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.donotPublishTestResults",
+      "groupName": "reportingOptions",
+      "visibleRule": "runInParallel = false"
     },
     {
       "name": "failOnMinTestsNotRun",
@@ -562,6 +581,10 @@
     },
     "Node16": {
       "target": "runvstest.js"
+    },
+    "Node20_1": {
+      "target": "runvstest.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

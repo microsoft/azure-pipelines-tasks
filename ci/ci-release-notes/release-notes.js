@@ -21,10 +21,14 @@ const octokit = new Octokit({ auth: argv.token });
  * @param {string} newRelease  - Sprint version of the checked release
  * @returns {Promise<void>} - Exit from the program if the version already exists
  */
-async function verifyNewReleaseTagOk(newRelease) {
+async function verifyNewReleaseTagOk(newRelease,isDryRun) {
     if (!newRelease || !newRelease.match(VALID_RELEASE_RE)) {
         console.log(`Invalid version '${newRelease}'. Version must be in the form of <major>.<minor>.<patch> where each level is 0-999`);
         process.exit(-1);
+    }
+    if (isDryRun === 'true') {
+        console.log('DRY RUN: Skipping actual tag verification step');
+        return;
     }
     try {
         var tag = 'v' + newRelease;
@@ -133,18 +137,35 @@ async function fetchPRsForRelease(baseBranch, version) {
  * @param {Array<Object>} PRs - PRs to get the changed files for
  * @returns {Array<Object>} - Modified files for the PRs which contains tasks options. 
  */
+async function getAllFilesForPR(pull_number) {
+    const files = [];
+    let page = 1;
+
+    while (true) {
+        const response = await octokit.pulls.listFiles({
+            owner: OWNER,
+            repo: REPO,
+            pull_number,
+            per_page: 100,
+            page
+        });
+
+        files.push(...response.data.map(file => file.filename));
+
+        if (response.data.length < 100) break; // Exit loop if fewer than 100 files are returned
+        page++;
+    }
+    console.log(`Files for PR ${pull_number}:`, files);
+    return files;
+}
+
 async function getPRsFiles(PRs) {
     for (let i = 0; i < PRs.length; i++) {
         const PR = PRs[i];
         const pull_number = PR.number;
         console.log(`Fetching files for PR ${pull_number}`);
-        const response = await octokit.pulls.listFiles({
-            owner: OWNER,
-            repo: REPO,
-            pull_number
-        });
 
-        const files = response.data.map(file => file.filename);
+        const files = await getAllFilesForPR(pull_number);
 
         for (let j = 0; j < files.length; j++) {
             const file = files[j];
@@ -187,8 +208,9 @@ async function main() {
     const version = argv.version ? String(argv.version) : null;
     const branch = argv.branch || 'master';
     const releaseBranch = argv.releaseBranch;
+    const isDryRun= argv.isDryRun;
 
-    console.log({version, branch, releaseBranch});
+    console.log({version, branch, releaseBranch,isDryRun});
     try {
         if (!version) {
             console.log('Error: You must supply a version');
@@ -200,14 +222,19 @@ async function main() {
             process.exit(-1);
         }
 
-        await verifyNewReleaseTagOk(version);
+        await verifyNewReleaseTagOk(version,isDryRun);
         checkGitStatus();
         
         const data = await fetchPRsForRelease(branch, version);
         console.log(`Found ${data.length} PRs`);
         const PRs = await getPRsFiles(data);
         const releaseNotes = tempGen.generateReleaseNotesForPRs(PRs, version);
-        await createRelease(releaseNotes, version, releaseBranch);
+        console.log('Release Notes:\n', releaseNotes); // Output release notes to console
+        if(isDryRun=== 'true'){
+            console.log('DRY RUN: Skipping actual release creation');
+        }else{
+            await createRelease(releaseNotes, version, releaseBranch);
+        }
     } catch (err) {
         throw err;
     }

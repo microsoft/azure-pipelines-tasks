@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 248,
+    "Minor": 265,
     "Patch": 0
   },
   "demands": [],
@@ -180,6 +180,7 @@
         "login": "login",
         "logout": "logout",
         "ls": "ls",
+        "push": "push",
         "package": "package",
         "rollback": "rollback",
         "upgrade": "upgrade",
@@ -214,7 +215,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.chartName",
       "defaultValue": "",
-      "visibleRule": "chartType == Name",
+      "visibleRule": "chartType == Name || command == create",
       "required": "true",
       "groupName": "commands"
     },
@@ -224,7 +225,17 @@
       "type": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.chartPath",
       "defaultValue": "",
-      "visibleRule": "chartType == FilePath || command == package",
+      "visibleRule": "chartType == FilePath || command == package || command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "remoteRepo",
+      "label": "ms-resource:loc.input.label.remoteRepo",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.remoteRepo",
+      "defaultValue": "",
+      "visibleRule": "command == push",
       "required": "true",
       "groupName": "commands"
     },
@@ -246,7 +257,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.releaseName",
       "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
+      "visibleRule": "command == install || command == upgrade || command == rollback || command == uninstall || command == delete",
       "groupName": "commands"
     },
     {
@@ -515,6 +526,10 @@
     },
     "Node10": {
       "target": "src//downloadsecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -524,6 +539,10 @@
     },
     "Node10": {
       "target": "src//helm.js"
+    },
+    "Node20_1": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -533,6 +552,10 @@
     },
     "Node10": {
       "target": "src//deletesecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

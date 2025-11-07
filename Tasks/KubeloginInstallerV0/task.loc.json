@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 264,
     "Patch": 0
   },
   "demands": [],
@@ -30,6 +30,14 @@
       "label": "ms-resource:loc.input.label.kubeloginVersion",
       "defaultValue": "latest",
       "helpMarkDown": "ms-resource:loc.input.help.kubeloginVersion"
+    },
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
     }
   ],
   "execution": {
@@ -38,6 +46,10 @@
     },
     "Node10": {
       "target": "kubelogin.js"
+    },
+    "Node20_1": {
+      "target": "kubelogin.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

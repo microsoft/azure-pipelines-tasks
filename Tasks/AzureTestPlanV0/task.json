@@ -2,8 +2,8 @@
   "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
   "name": "AzureTestPlan",
   "friendlyName": "Azure Test Plan",
-  "description": "Run manual and automated tests in test plan in Java and python language",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "description": "Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript",
+  "helpUrl": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-test-plan-v0?view=azure-pipelines",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
   "visibility": [
@@ -13,13 +13,23 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
+    "Minor": 263,
     "Patch": 0
   },
   "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select an Azure Resource Manager service connection"
+    },
     {
       "name": "testSelector",
       "type": "pickList",
@@ -35,16 +45,41 @@
       }
     },
     {
-      "name": "testPlan",
+      "name": "testPlanOrRunSelector",
       "type": "pickList",
+      "label": "Select tests using",
+      "defaultValue": "testPlan",
+      "required": true,
+      "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
+      "options": {
+        "testPlan": "Test plan",
+        "testRun": "Test run"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testRunId",
+      "type": "string",
+      "label": "Test Run",
+      "defaultValue": "$(test.RunId)",
+      "required": true,
+      "helpMarkDown": "Test run based selection is used when triggering automated test runs from the test hub, value for this should be kept as it is",
+      "visibleRule": "testPlanOrRunSelector = testRun"
+    },
+    {
+      "name": "testPlan",
+      "type": "string",
       "label": "Test plan",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a test plan containing test suites with test cases.",
+      "helpMarkDown": "Type or paste the test plan ID containing test suites with test cases.",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testSuite",
@@ -54,10 +89,10 @@
       "helpMarkDown": "Select one or more test suites containing test cases.",
       "required": true,
       "properties": {
-        "MultiSelect": "True",
         "DisableManageLink": "True",
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "testPlanOrRunSelector = testPlan"
     },
     {
       "name": "testConfiguration",
@@ -77,11 +112,11 @@
       "label": "Select Test framework language",
       "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
-        "JavaMaven": "Java-Maven",
-        "JavaGradle": "Java-Gradle",
-        "Python": "Python",
-        "Go": "Go",
-        "Jest": "Jest"
+        "JavaMaven": "Java - Maven",
+        "JavaGradle": "Java - Gradle",
+        "Python": "Python - PyTest",
+        "JavaScriptJest": "JavaScript - Jest",
+        "Playwright": "JavaScript/TypeScript - Playwright"
       }
     },
     {
@@ -103,14 +138,6 @@
       "visibleRule": "testLanguageInput = JavaGradle"
     },
     {
-      "name": "mergeTestResults",
-      "type": "boolean",
-      "label": "Merge test results",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
-    },
-    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "Upload test results files",
@@ -123,7 +150,7 @@
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "Fail if there are test failures",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
     },
@@ -146,16 +173,6 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "testPlan",
-      "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
-    },
-    {
       "target": "testConfiguration",
       "endpointId": "tfs:teamfoundation",
       "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/configurations?api-version=3.0-preview.1",
@@ -165,7 +182,7 @@
     {
       "target": "testSuite",
       "endpointId": "tfs:teamfoundation",
-      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?api-version=3.0-preview.2",
       "parameters": {
         "testPlan": "$(testPlan)"
       },
@@ -179,6 +196,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
     }

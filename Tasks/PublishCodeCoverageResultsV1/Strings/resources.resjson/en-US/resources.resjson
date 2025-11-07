@@ -4,7 +4,7 @@
   "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
-  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "Summary file",
   "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "Path to Source files",

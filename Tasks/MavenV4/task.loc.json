@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 247,
+    "Minor": 264,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -237,6 +237,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.21": "JDK 21",
         "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
@@ -273,7 +274,8 @@
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     },
     {
@@ -483,6 +485,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "maventask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "maventask.js",
       "argumentFormat": ""
     }

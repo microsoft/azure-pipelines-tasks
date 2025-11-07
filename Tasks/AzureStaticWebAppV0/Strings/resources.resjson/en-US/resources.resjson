@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "Data api location",
   "loc.input.help.data_api_location": "Directory location of the Data API source files relative to working directory",
   "loc.input.label.azure_access_token": "Azure Access Token",
-  "loc.input.help.azure_access_token": "Access token used to authenticate and authorize the deployment",
+  "loc.input.help.azure_access_token": "Access Token used for deployment. Not required if passed as a variable",
   "loc.input.label.default_hostname": "Default Hostname",
-  "loc.input.help.default_hostname": "Default Hostname of the app"
+  "loc.input.help.default_hostname": "Default hostname for deployment. Not required if passed as an environment variable"
 }

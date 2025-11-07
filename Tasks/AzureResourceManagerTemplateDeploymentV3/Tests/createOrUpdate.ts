@@ -49,11 +49,16 @@ var bicepbuildwithWarning = `az bicep build --file "${path.join(__dirname, "CSMw
 var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant" --allow-no-subscriptions`;
 var azaccountSet = `az account set --subscription "sId"`;
 var azlogoutCommand = `az account clear`
+var azVersion = `az --version`
 
 var exec = {}
 const successExec = {
     "code": 0,
     "stdout": "Executed Successfully"
+}
+const successAzExec = {
+    "code": 0,
+    "stdout": "azure-cli 2.66.0"
 }
 exec[bicepbuildCmd] = successExec;
 exec[bicepbuildwithspaceinpathCmd] = successExec;
@@ -63,6 +68,7 @@ exec[bicepbuildwithWarning] = successExec;
 exec[azloginCommand] = successExec;
 exec[azaccountSet] = successExec;
 exec[azlogoutCommand] = successExec;
+exec[azVersion] = successAzExec;
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {

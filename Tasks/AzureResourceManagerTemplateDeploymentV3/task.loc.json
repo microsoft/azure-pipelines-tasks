@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 247,
-    "Patch": 4
+    "Minor": 264,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -273,6 +273,10 @@
     },
     "Node10": {
       "target": "main.js"
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -337,6 +341,7 @@
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "BicepParamBuildFailed": "ms-resource:loc.messages.BicepParamBuildFailed",
-    "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
+    "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam",
+    "ErrorWhileOverrideParameterUndefined": "ms-resource:loc.messages.ErrorWhileOverrideParameterUndefined"
   }
 }

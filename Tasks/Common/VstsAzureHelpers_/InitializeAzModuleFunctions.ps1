@@ -37,8 +37,12 @@ function Initialize-AzModule {
                 Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
             }
         } else {
+             $azureRMModuleInstalled = Get-Module -Name AzureRM -ListAvailable -ErrorAction SilentlyContinue
+            
+          if ($azureRMModuleInstalled) {
             # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.   
             Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_RMDeprecationMessage) -AsOutput 
+          }
         }
 
         $azAccountsVersion = [System.Version]::new(

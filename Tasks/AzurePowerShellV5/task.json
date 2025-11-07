@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 248,
-    "Patch": 2
+    "Minor": 265,
+    "Patch": 0
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -190,6 +190,10 @@
     "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -201,6 +205,7 @@
     "JS_ExitCode": "PowerShell exited with code '%s'.",
     "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-    "PS_ExitCode": "PowerShell exited with code '{0}'."
+    "PS_ExitCode": "PowerShell exited with code '{0}'.",
+    "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
   }
 }

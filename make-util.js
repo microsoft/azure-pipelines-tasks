@@ -1,15 +1,21 @@
-var check = require('validator').default;
-var fs = require('fs');
-var makeOptions = require('./make-options.json');
-var minimatch = require('minimatch');
-var ncp = require('child_process');
-var os = require('os');
-var path = require('path');
-var process = require('process');
-var semver = require('semver');
-var shell = require('shelljs');
-const { XMLParser } = require("fast-xml-parser");
-const Downloader = require("nodejs-file-downloader");
+const ncp = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const process = require('process');
+
+const { XMLParser } = require('fast-xml-parser');
+const minimatch = require('minimatch');
+const minimist = require('minimist');
+const Downloader = require('nodejs-file-downloader');
+const check = require('validator').default;
+const semver = require('semver');
+const shell = require('shelljs');
+
+const makeOptions = require('./make-options.json');
+const downloadUtils = require('./build-scripts/download-utils.js');
+
+const args = minimist(process.argv.slice(2));
 
 // global paths
 var repoPath = __dirname;
@@ -154,6 +160,43 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+function performNpmAudit(taskPath) {
+    console.log('\n🛫 Running npm audit...');
+
+    if (process.env['TF_BUILD']) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit in build pipeline because it is not supported in the pipeline.`);
+        return;
+    }
+
+    if (args.BypassNpmAudit) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit because --BypassNpmAudit argument is set.`);
+        return;
+    }
+
+    try {
+        const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
+            stdio: 'pipe',
+            encoding: 'utf8',
+            shell: true
+        });
+
+        if (auditResult.error) {
+            console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
+            console.log('👉 Please see details by running the command');
+            console.log(`\tnpm audit --prefix ${taskPath}`);
+            console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
+            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
+            process.exit(1);
+        } else {
+            console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
+        }
+    } catch (error) {
+        console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
+        console.error(error.message);
+        process.exit(1);
+    }
+}
+
 var buildNodeTask = function (taskPath, outDir, isServerBuild) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
@@ -190,6 +233,8 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         }
         cd(taskPath);
     }
+
+    performNpmAudit(taskPath);
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
@@ -344,23 +389,21 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+const node20Version = '20.17.0';
+exports.node20Version = node20Version;
+
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: 'v20.17.0',
-        16: 'v16.20.2',
-        14: 'v14.10.1',
-        10: 'v10.24.1',
-        6: 'v6.10.3',
-        5: 'v5.10.1',
+        20: node20Version
     };
 
     if (!nodeVersion) {
-        nodeVersion = versions[20];
+        nodeVersion = 'v' + versions[20];
     } else {
         if (!versions[nodeVersion]) {
             fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
         };
-        nodeVersion = versions[nodeVersion];
+        nodeVersion = 'v' + versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {
@@ -437,6 +480,10 @@ var downloadFileAsync = async function (url) {
 exports.downloadFileAsync = downloadFileAsync;
 
 var downloadArchiveAsync = async function (url, omitExtensionCheck) {
+    if(args.enableConcurrentTaskBuild) {
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+    }
+
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -463,7 +510,7 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
 
     var crypto = require('crypto');
-    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+    var newScrubbedUrl = crypto.createHash('sha256').update(scrubbedUrl).digest('hex');
 
     var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
@@ -855,9 +902,34 @@ var createTaskLocJson = function (taskPath) {
 };
 exports.createTaskLocJson = createTaskLocJson;
 
+// Enhanced UUID/GUID validation using node-uuid package
+var validateUuid = function (uuid) {
+    if (!uuid || typeof uuid !== 'string') {
+        return false;
+    }
+
+    // Basic format check - must match UUID pattern (allows all variants)
+    var uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidPattern.test(uuid)) {
+        return false;
+    }
+
+    try {
+        const uuidLib = require('node-uuid');
+        
+        // node-uuid.parse() returns a buffer if valid, throws if invalid
+        var parsed = uuidLib.parse(uuid);
+        
+        // If parse succeeds and returns a 16-byte buffer, the UUID is valid
+        return parsed && parsed.length === 16;
+    } catch (error) {
+        return false;
+    }
+};
+
 // Validates the structure of a task.json file.
 var validateTask = function (task) {
-    if (!task.id || !check.isUUID(task.id)) {
+    if (!task.id || !validateUuid(task.id)) {
         fail('id is a required guid');
     };
 
@@ -1368,7 +1440,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create the full task name so we don't need to rely on the folder name.
             var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
-            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) { 
+            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) {
                 for (let i in taskJsonContents._buildConfigMapping) {
                     if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
                         // take only first part of the name
@@ -1379,7 +1451,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 }
             }
             // Create xml entry for UnifiedDependencies
-            unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
+            unifiedDepsContent.push(`  <PackageVersion Include="${fullTaskName}" Version="${taskVersion}" AvailableAtDeployTime="true" />`);
 
             // Create xml entry that we need to configure servicing file
             servicingXmlContent.push(getServicingXmlContent(taskFolderName, fullTaskName, taskVersion));
@@ -1684,11 +1756,12 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
 const getTaskNodeVersion = function(buildPath, taskName) {
+    const fallbackNode = 20;
     const nodes = new Set();
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 10');
-        nodes.add(10);
+        console.warn(`Unable to find task.json, defaulting to use Node ${fallbackNode}`);
+        nodes.add(fallbackNode);
         return Array.from(nodes);
     }
 
@@ -1703,7 +1776,7 @@ const getTaskNodeVersion = function(buildPath, taskName) {
             const currExecutor = key.toLocaleLowerCase();
             if (!currExecutor.startsWith('node')) continue;
             const version = currExecutor.replace('node', '');
-            nodes.add(parseInt(version) || 20);
+            nodes.add(parseInt(version) || fallbackNode);
         }
     }
 
@@ -1711,14 +1784,14 @@ const getTaskNodeVersion = function(buildPath, taskName) {
         return Array.from(nodes);
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10 taskName=' + taskName);
-    nodes.add(10);
+    console.warn(`Unable to determine execution type from task.json, defaulting to use Node ${fallbackNode} taskName=${taskName}`);
+    nodes.add(fallbackNode);
     return Array.from(nodes);
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
 /**
- * 
+ *
  * @param {String} buildPath - Path to the build folder
  * @param {String} taskName - Name of the task
  * @returns { Boolean } true if the task is a node task
@@ -1726,12 +1799,12 @@ exports.getTaskNodeVersion = getTaskNodeVersion;
 var isNodeTask = function(buildPath, taskName) {
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) return false;
-    
+
     const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     const taskJson = JSON.parse(taskJsonContents);
     const execution = ['execution', 'prejobexecution','postjobexecution']
         .map(key => taskJson[key]);
-    
+
     for (const executors of execution) {
         if (!executors) continue;
         for (const key of Object.keys(executors)) {
@@ -1797,14 +1870,15 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
+ * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     var tasks = taskList.join('|')
     ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
-    var programPath = `dotnet run --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
 
     const args = [
         "--task",
@@ -1815,7 +1889,7 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
         args.push("--current-sprint");
         args.push(sprintNumber);
     }
-    
+
     var writeUpdateArg = "";
     if(writeUpdates)
     {
@@ -1824,8 +1898,11 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 
     if(includeLocalPackagesBuildConfig)
     {
-        writeUpdateArg += " --include-local-packages-build-config";        
+        writeUpdateArg += " --include-local-packages-build-config";
     }
+    if (useSemverBuildConfig === true || useSemverBuildConfig === 'true') {
+        writeUpdateArg += " --use-semver-build-config";
+    } 
 
     var debugAgentDirArg = "";
     if(debugAgentDir) {
@@ -1945,27 +2022,27 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 
         const [ baseTaskName, config ] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
-            .filter(function (item) { 
+            .filter(function (item) {
                 // ignore node_modules
                 if (item.indexOf("node_modules") !== -1) return false
                 // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
                 if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
-                
+
                 return true;
             });
 
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-            
-            if (config) {  
+
+            if (config) {
                 if(config==="LocalPackages"){
                     dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
                 }else{
                     dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
                 }
             }
-            
+
             // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
@@ -1986,5 +2063,35 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
 }
 
 exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
+
+function getChangedTasks() {
+    const changedTasks = [];
+    const changedFiles = run('git diff --name-only origin/master', false, true).split('\n');
+
+    changedFiles.forEach((file) => {
+        if (file.startsWith('Tasks/')) {
+            const taskName = file.split('/')[1];
+            if (!changedTasks.includes(taskName)) {
+                changedTasks.push(taskName);
+            }
+        }
+    });
+    return changedTasks;
+}
+
+exports.getChangedTasks = getChangedTasks;
+
+async function getCurrentSprint() {
+    const result = await fetch("https://whatsprintis.it", {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    return result.json();
+}
+
+exports.getCurrentSprint = getCurrentSprint;
+exports.validateUuid = validateUuid;
 
 //------------------------------------------------------------------------------

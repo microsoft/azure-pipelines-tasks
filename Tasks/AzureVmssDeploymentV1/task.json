@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 4
+    "Minor": 264,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -166,11 +166,11 @@
   ],
   "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "execution": {
-    "Node20_1": {
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -224,6 +224,8 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
     "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "UploadingToStorageBlobsAuthenticationFailed": "Failed to upload custom scripts to azure blob storage. Please ensure that the subscription has the 'Storage Blob Data Contributor' role assigned for storage account '%s'.",
+    "SettingVMExtensionFailedwithAuthentication": "Failed to install VM custom script extension on VMSS. Error: %s. Please ensure that the subscription has the 'Contributor' role assigned for vmss '%s'. "
   }
 }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 246,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -65,6 +65,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "cocoapods.js",
       "argumentFormat": ""
     }

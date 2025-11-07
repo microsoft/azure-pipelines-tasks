@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 247,
-    "Patch": 2
+    "Minor": 264,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -537,6 +537,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
     }

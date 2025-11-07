@@ -1,6 +1,10 @@
 {
   "name": "vsts-tasks-jenkinsdownloadartifacts",
   "description": "Azure Pipelines Jenkins Download Task",
+  "scripts": {
+    "build": "node ../../make.js build --task JenkinsDownloadArtifactsV1",
+    "serverBuild": "node ../../make.js serverBuild --task JenkinsDownloadArtifactsV1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -9,19 +13,23 @@
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/uuid": "^8.3.0",
     "agent-base": "^6.0.2",
     "artifact-engine": "^1.5.5",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.242.2",
+    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
     "azure-storage": "2.10.4",
     "decompress-zip": "0.3.3",
+    "extract-zip": "2.0.1",
     "fs-extra": "5.0.0",
     "handlebars": "^4.7.7",
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^2.5.4"
   }
 }

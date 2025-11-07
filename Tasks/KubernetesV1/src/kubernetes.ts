@@ -138,7 +138,6 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var result = [];
     return commandImplementation.run(clusterConnection, command, (data) => result.push(data))
         .fin(function cleanup() {
-            console.log("commandOutput" + result);
             const resultString = result.toString();
             const commandOutputLength = resultString.length;
             if (commandOutputLength > environmentVariableMaximumSize) {

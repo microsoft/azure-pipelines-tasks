@@ -18,7 +18,7 @@ This feature is implemented by supporting patterns in version input: `version`. 
 ### How it works:
 The correct version needs to be identified in case user enters pattern based version such as 2.2.x. This is how the exact needed version and its information is extracted:
 
-- [releases-index.json](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json) The file containing links to all .Net Core release channels is download and read into a JSON object `releasesIndex`. This is used to find all available release channels and links to their releases.json.
+- [releases-index.json](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json) The file containing links to all .Net Core release channels is download and read into a JSON object `releasesIndex`. This is used to find all available release channels and links to their releases.json.
 
 - The `version` input is divided into three sections:
   - Major

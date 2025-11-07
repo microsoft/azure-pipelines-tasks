@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
+    "Minor": 260,
     "Patch": 0
   },
   "runsOn": [
@@ -479,6 +479,10 @@
     "Node16": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -543,6 +547,8 @@
     "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
-    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth",
+    "LIB_WhichNotFound_Linux": "ms-resource:loc.messages.LIB_WhichNotFound_Linux",
+    "Error_IncompatibleUbuntuVersion": "ms-resource:loc.messages.Error_IncompatibleUbuntuVersion"
   }
 }

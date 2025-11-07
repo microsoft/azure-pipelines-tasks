@@ -4,6 +4,8 @@
   "description": "MySQL Deployment",
   "main": "mysqldeploy.js",
   "scripts": {
+    "build": "node ../../make.js build --task MysqlDeploymentOnMachineGroupV1",
+    "serverBuild": "node ../../make.js serverBuild --task MysqlDeploymentOnMachineGroupV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,10 +20,10 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "16.18.39",
+    "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
     "azure-pipelines-task-lib": "4.3.1",
-    "azure-pipelines-tasks-webdeployment-common": "^4.243.1",
+    "azure-pipelines-tasks-webdeployment-common": "^4.260.0",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
     "normalize-path": "2.0.1",
@@ -31,6 +33,9 @@
     "zip-stream": "1.1.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

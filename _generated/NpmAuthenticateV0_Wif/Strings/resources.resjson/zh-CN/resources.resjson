@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "用于此组织/集合外部的注册表的凭据",
   "loc.input.help.customEndpoint": "用于位于项目的 .npmrc 中的外部注册表的凭据。对于此组织/集合中的注册表，请将其留空；将自动使用生成的凭据。",
   "loc.input.label.workloadIdentityServiceConnection": "\"Azure DevOps\" 服务连接",
-  "loc.input.help.workloadIdentityServiceConnection": "如果已设置此项，则需要 feedUrl。外部组织/集合和自定义终结点的服务连接不兼容。",
+  "loc.input.help.workloadIdentityServiceConnection": "用于注册表的凭据位于项目的 .npmrc 文件中。与 feedUrl 一起使用以指定 .npmrc 文件中用于单个注册表的凭据。与 customEndpoint 不兼容。",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.feedUrl": "如果设定了此设置，则需要 azureDevOpsServiceConnection。与 customEndpoint 不兼容。源 URL 应采用 npm 注册表格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "找到生成凭据",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "正在为源 %s 添加服务连接 %s 中的身份验证信息",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "已成功为源 %s 添加身份验证。",
   "loc.messages.FailedToGetServiceConnectionAuth": "无法从服务连接 %s 获取联合凭据。",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "源 URL 和服务连接都需要进行设置，不能为空。",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "如果提供了源 URL，则必须提供 \"Azure DevOps\" 服务连接，并且该连接不能为空。",
   "loc.messages.SkippingParsingNpmrc": "正在跳过分析 npmrc",
   "loc.messages.DuplicateCredentials": "注册表“%s”的身份验证已在以前设置。正在使用新配置覆盖。",
   "loc.messages.FoundEndpointCredentials": "已找到为“%s”服务连接设置的凭据。"

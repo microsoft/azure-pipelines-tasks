@@ -409,7 +409,7 @@ function Import-AzModule
         else {
             # Import the module.
             Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force  3>$null
         }
     }
 }

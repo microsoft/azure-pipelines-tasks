@@ -1,13 +1,14 @@
 const { run } = require('./ci-util');
 const { resolve } = require('node:path');
 const { readFileSync } = require('node:fs');
+const { existsSync } = require('fs');
 
 const cwd = process.cwd();
 const packageLocks = run(`git --no-pager diff --name-only origin/master`).split('\n').filter(x => x.endsWith('package-lock.json')).map(x => resolve(cwd, x));
 const incorrectPackageLocks = [];
 
 for (const packageLock of packageLocks) {
-    if (readFileSync(packageLock, 'utf8').indexOf('registry.npmjs.org') !== -1) {
+    if (existsSync(packageLock) && readFileSync(packageLock, 'utf8').indexOf('registry.npmjs.org') !== -1) {
         incorrectPackageLocks.push(packageLock);
     }
 }

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 0
+    "Minor": 264,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -130,6 +130,14 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
+    },
+    {
+      "name": "siteContainersConfig",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.siteContainersConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.siteContainersConfig"
     }
   ],
   "outputVariables": [
@@ -171,6 +179,10 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -331,6 +343,9 @@
     "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
     "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
     "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
-    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
+    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation",
+    "StartedUpdatingSiteContainers": "ms-resource:loc.messages.StartedUpdatingSiteContainers",
+    "UpdatingSiteContainer": "ms-resource:loc.messages.UpdatingSiteContainer",
+    "CompletedUpdatingSiteContainers": "ms-resource:loc.messages.CompletedUpdatingSiteContainers"
   }
 }

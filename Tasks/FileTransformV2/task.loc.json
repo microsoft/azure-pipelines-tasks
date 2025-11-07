@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 248,
+    "Minor": 264,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -72,6 +72,14 @@
       "defaultValue": "",
       "groupName": "VariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.xmlTargetFiles"
+    },
+    {
+      "name": "errorOnInvalidSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.errorOnInvalidSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.errorOnInvalidSubstitution"
     }
   ],
   "execution": {
@@ -80,6 +88,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "filetransform.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }

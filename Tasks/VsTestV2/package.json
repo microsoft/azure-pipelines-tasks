@@ -2,6 +2,10 @@
   "name": "vsts-tasks-vstest",
   "description": "Azure Pipelines VSTEST Task",
   "main": "VSTest.js",
+  "scripts": {
+    "build": "node ../../make.js build --task VsTestV2",
+    "serverBuild": "node ../../make.js serverBuild --task VsTestV2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -13,22 +17,26 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
-    "@types/q": "^1.5.0",
-    "azure-pipelines-task-lib": "^4.1.0",
     "is-unc-path": "^1.0.0",
     "performance-now": "0.2.0",
     "request": "2.87.0",
     "string": "3.3.1",
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
-    "xml2js": "0.4.16"
+    "azure-pipelines-task-lib": "^4.1.0",
+    "xml2js": "0.4.16",
+    "@types/node": "^20.11.0",
+    "@types/mocha": "^5.2.7",
+    "@types/q": "^1.5.0"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
+  },
+  "overrides": {
+    "qs": "^6.14.0",
+    "form-data": "^2.5.4"
   }
 }

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
+    "Minor": 263,
     "Patch": 0
   },
   "deprecated": true,
@@ -87,6 +87,10 @@
     },
     "Node16": {
       "target": "dotnetcoreinstaller.js"
+    },
+    "Node20_1": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

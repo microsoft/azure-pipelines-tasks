@@ -2,14 +2,14 @@
     "id": "fd186364-adb5-43c0-91ea-c5f9daa5b747",
     "name": "AzureAppConfigurationImport",
     "friendlyName": "Azure App Configuration Import",
-    "description": "Push key-values to an Azure App Configuration instance",
-    "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline",
+    "description": "Import settings from configuration files into Azure App Configuration through build or deployment pipelines",
+    "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-import-task",
     "helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-    "category": "Utility",
+    "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 247,
+        "Minor": 265,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
@@ -180,7 +180,7 @@
             "label": "Tags",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies one or more tag that should be added to key-value settings being pushed to App Configuration. Tags should be of a valid JSON format and can span multiple lines. Example: {\"tag1\": \"value1\", \"tag2\": \"value2\"}",
+            "helpMarkDown": "Specifies one or more tag that should be added to key-value settings being imported to App Configuration. Tags should be of a valid JSON format and can span multiple lines. Example: {\"tag1\": \"value1\", \"tag2\": \"value2\"}",
             "groupName": "Options",
             "properties": {
                 "EditableOptions": "True"
@@ -193,7 +193,7 @@
             "label": "Exclude feature flags",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Specifies whether or not any feature flags provided in the configuration file will be pushed to App Configuration.",
+            "helpMarkDown": "Specifies whether or not any feature flags provided in the configuration file will be imported to App Configuration.",
             "groupName": "Options",
             "properties": {
                 "EditableOptions": "True"
@@ -283,7 +283,7 @@
         "InvalidTagsWithSample": "Invalid format for parameter 'Tags'. Sample 'Tags': {\"name1\": \"value1\", \"name2\":, \"value2\"}.",
         "InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
         "InvalidTypeInTags": "Invalid type in parameter 'Tags'. Only strings supported",
-        "AzureAppConfigurationPushTaskStartingUp": "Azure App Configuration Push Task is starting up...",
+        "AzureAppConfigurationImportTaskStartingUp": "Azure App Configuration Import Task is starting up...",
         "AzureSubscriptionTitle": "Azure Subscription:",
         "AppConfigurationEndpointTitle": "App Configuration Endpoint:",
         "StrictTitle": "Strict:",

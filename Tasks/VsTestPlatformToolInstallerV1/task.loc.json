@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 248,
+    "Minor": 263,
     "Patch": 0
   },
   "satisfies": [
@@ -111,6 +111,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "vstestplatformtoolinstaller.js",
       "argumentFormat": ""
     }

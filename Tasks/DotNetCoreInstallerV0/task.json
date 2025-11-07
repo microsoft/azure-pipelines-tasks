@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 263,
     "Patch": 0
   },
   "satisfies": [
@@ -50,6 +50,10 @@
       "target": "dotnetcoreinstaller.js"
     },
     "Node16": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "dotnetcoreinstaller.js",
       "argumentFormat": ""
     }

@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 3
+    "Minor": 263,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -46,13 +46,21 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
-    "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+    "Error_InvalidFeedUrl": "The provided feed URL '%s' is not a valid Azure DevOps feed URL.",
+    "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and azureDevOpsServiceConnection must be set together.",
+    "Error_NuGetWithFeedUrlNotSupported": "Cannot specify both nuGetServiceConnections and feedUrl input parameters.",
+    "Error_NuGetWithWIFNotSupported": "Cannot specify both nuGetServiceConnections and azureDevOpsServiceConnection(workloadIdentityServiceConnection) input parameters.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
-    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+    "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
   }
 }

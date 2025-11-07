@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
+    "Minor": 262,
     "Patch": 0
   },
   "runsOn": [
@@ -119,6 +119,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nugetinstaller.js",
       "argumentFormat": ""
     }

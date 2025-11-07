@@ -4,6 +4,8 @@
   "description": "Nuget Build Task",
   "main": "nuget.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,9 +22,9 @@
     "azure-pipelines-task-lib": "^4.1.0",
     "azure-pipelines-tasks-packaging-common-v3": "^3.213.0",
     "azure-pipelines-tasks-packaging-common": "3.221.1",
-    "@types/node": "^16.11.39"
+    "@types/node": "^20.3.1"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

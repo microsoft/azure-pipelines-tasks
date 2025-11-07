@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 248,
+    "Minor": 265,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -196,6 +196,10 @@
       "argumentFormat": ""
     },
     "Node10": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 2
+    "Minor": 265,
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
@@ -398,6 +398,15 @@
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
         "message": "Enter a valid value for timeout."
       }
+    },
+    {
+      "name": "resourceType",
+      "type": "string",
+      "label": "Resource type",
+      "defaultValue": "Microsoft.ContainerService/managedClusters",
+      "required": false,
+      "helpMarkDown": "The type of the resource (fleet, managed cluster)",
+      "visibleRule": "action = deploy"
     }
   ],
   "dataSourceBindings": [
@@ -430,6 +439,10 @@
     },
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node20_1": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

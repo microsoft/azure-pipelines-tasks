@@ -3,13 +3,13 @@
   "name": "AzureAppConfigurationExport",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/pull-key-value-devops-pipeline",
+  "helpUrl": "https://learn.microsoft.com/azure/azure-app-configuration/azure-pipeline-export-task",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 247,
+    "Minor": 264,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

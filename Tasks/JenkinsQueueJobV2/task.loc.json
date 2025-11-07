@@ -14,8 +14,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 246,
-    "Patch": 2
+    "Minor": 265,
+    "Patch": 0
   },
   "groups": [
     {
@@ -143,6 +143,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "jenkinsqueuejobtask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }

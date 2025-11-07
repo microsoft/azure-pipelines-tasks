@@ -10,6 +10,8 @@
   "loc.input.help.SymbolsFolder": "기호 파일을 검색할 폴더의 경로입니다. 기본값은 $(Build.SourcesDirectory)입니다. 그렇지 않으면 루트 경로를 지정하세요(예: $(Build.BinariesDirectory)/MyProject).",
   "loc.input.label.SearchPattern": "검색 패턴",
   "loc.input.help.SearchPattern": "게시할 pdb 파일을 검색하는 데 사용된 패턴입니다.",
+  "loc.input.label.Manifest": "",
+  "loc.input.help.Manifest": "",
   "loc.input.label.IndexSources": "소스 인덱싱",
   "loc.input.help.IndexSources": "원본 서버 정보를 PDB 파일에 주입할지 여부를 나타냅니다. 이 옵션은 Windows 에이전트에서만 지원됩니다.",
   "loc.input.label.PublishSymbols": "기호 게시",
@@ -73,5 +75,6 @@
   "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "라이브러리 dbghelp.dll이 예기치 않은 경로에서 이미 로드되었습니다. 예상된 경로: '{0}'. 실제 경로: '{0}'.",
   "loc.messages.UnsupportedSourceProvider0": "소스 인덱싱에 대해 지원되지 않는 원본 공급자 '{0}'입니다.",
   "loc.messages.Win32Error0FromMethod1": "메서드 '{1}'에서 Win32 오류 '{0}'이(가) 발생했습니다.",
-  "loc.messages.NodeVersionSupport": "Node v{0}은(는) 2024/08/31부터 더 이상 지원되지 않습니다. 파이프라인 에이전트를 노드 16 이상의 최신 버전으로 업그레이드하세요."
+  "loc.messages.NodeVersionSupport": "Node v{0}은(는) 2024/08/31부터 더 이상 지원되지 않습니다. 파이프라인 에이전트를 노드 16 이상의 최신 버전으로 업그레이드하세요.",
+  "loc.messages.ManifestFileNotFound": ""
 }

@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 248,
+    "Minor": 262,
     "Patch": 0
   },
   "demands": [],
@@ -259,6 +259,10 @@
       "target": "main.js"
     },
     "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }

@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 247,
+    "Minor": 264,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -242,6 +242,8 @@
         "NODE|10": "NODE|10 (functionapp v2/v3)",
         "NODE|12": "NODE|12 (functionapp v3)",
         "NODE|14": "NODE|14 (functionapp v3)",
+        "NODE|20": "NODE|20 (functionapp v4)",
+        "NODE|22": "NODE|22 (functionapp v4)",
         "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
         "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
         "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
@@ -501,6 +503,10 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -656,6 +662,7 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
-    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth",
+    "BasicAuthNotSupported": "ms-resource:loc.messages.BasicAuthNotSupported"
   }
 }

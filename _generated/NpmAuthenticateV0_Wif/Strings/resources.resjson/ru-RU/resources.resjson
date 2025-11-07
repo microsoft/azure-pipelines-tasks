@@ -8,7 +8,7 @@
   "loc.input.label.customEndpoint": "Учетные данные для реестров за пределами этой организации или коллекции",
   "loc.input.help.customEndpoint": "Учетные данные, которые следует использовать для внешних реестров, находящихся в файле NPMRC проекта. Для реестров в данной организации или коллекции оставьте это поле пустым; учетные данные сборки используются автоматически.",
   "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
-  "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задан, требуется feedUrl. Подключения к службам для внешних организаций/коллекции и настраиваемых конечных точек несовместимы.",
+  "loc.input.help.workloadIdentityServiceConnection": "Учетные данные для использования в реестрах, расположенных в NPMRC-файле проекта. Используйте с feedUrl, чтобы указать учетные данные, применяемые для одного реестра в файле NPMRC. Несовместимо с customEndpoint.",
   "loc.input.label.feedUrl": "URL-адрес Azure Artifacts",
   "loc.input.help.feedUrl": "Если этот параметр задан, требуется azureDevOpsServiceConnection. Несовместимо с customEndpoint. URL-адрес веб-канала должен быть в формате реестра npm, например https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/npm/registry/",
   "loc.messages.FoundBuildCredentials": "Найдены учетные данные сборки",
@@ -34,7 +34,7 @@
   "loc.messages.Info_AddingFederatedFeedAuth": "Добавление сведений о проверке подлинности из подключения службы %s для веб-канала %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Проверка подлинности для веб-канала %s добавлена.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Не удалось получить федеративные учетные данные из подключения службы: %s.",
-  "loc.messages.MissingFeedUrlOrServiceConnection": "Необходимо настроить и URL-адрес веб-канала, и подключение к службе. Они не могут быть пустыми.",
+  "loc.messages.MissingFeedUrlOrServiceConnection": "Если указан URL-адрес канала, необходимо указать подключение службы \"Azure DevOps\" и оно не может быть пустым.",
   "loc.messages.SkippingParsingNpmrc": "Пропуск синтаксического анализа npmrc",
   "loc.messages.DuplicateCredentials": "Проверка подлинности для реестра \"%s\" была настроена ранее. Перезапись с новой конфигурацией.",
   "loc.messages.FoundEndpointCredentials": "Найдены настроенные учетные данные для подключения к службе \"%s\"."

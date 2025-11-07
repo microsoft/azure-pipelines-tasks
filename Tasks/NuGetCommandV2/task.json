@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 247,
+    "Minor": 260,
     "Patch": 0
   },
   "runsOn": [
@@ -479,6 +479,10 @@
     "Node16": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -543,6 +547,8 @@
     "Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)",
     "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-    "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+    "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.",
+    "LIB_WhichNotFound_Linux": "Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.",
+    "Error_IncompatibleUbuntuVersion": "The task has failed because you are using Ubuntu 24.04 or later without mono installed. See https://aka.ms/nuget-task-mono for more information."
   }
 }

@@ -2,7 +2,11 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": "--task \"MavenV3|MavenV4\" --include-local-packages-build-config --write-updates"
+      "commandLineArgs": "--all-tasks --write-updates"
+    },
+    "BuildConfigGenNew": {
+      "commandName": "Project",
+      "commandLineArgs": "--use-semver-build-config --all-tasks --write-updates"
     }
   }
 }

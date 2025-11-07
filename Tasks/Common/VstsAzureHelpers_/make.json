@@ -130,13 +130,37 @@
                         "dest": "netstandard/"
                     }
                 ]
+            },
+            {
+                "name": "VstsTaskSdk",
+                "version": "0.21.0",
+                "repository": "https://www.powershellgallery.com/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "*.dll",
+                            "*.ps1",
+                            "*.psd1",
+                            "*.psm1",
+                            "lib.json",
+                            "Strings"
+                        ],
+                        "dest": "ps_modules/VstsTaskSdk/",
+                        "options": "-R"
+                    }
+                ]
             }
         ],
         "archivePackages": [
             {
-                "archiveName": "openssl.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M153/openssl.zip",
-                "dest": "./openssl"
+                "archiveName": "openssl_new3.4.0.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.4.0/M252/openssl.zip",
+                "dest": "./opensslv4"
+            },
+            {
+                "archiveName": "openssl_new3.4.2.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.4.2/M262/openssl.zip",
+                "dest": "./opensslv3.4.2"
             }
         ]
     }

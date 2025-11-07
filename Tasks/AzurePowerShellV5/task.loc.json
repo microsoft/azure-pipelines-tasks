@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 248,
-    "Patch": 2
+    "Minor": 265,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -190,6 +190,10 @@
     "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -201,6 +205,7 @@
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode"
+    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
+    "Az_LowerVersionWarning": "ms-resource:loc.messages.Az_LowerVersionWarning"
   }
 }

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 0
+    "Minor": 264,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -163,6 +163,10 @@
     },
     "Node10": {
       "target": "azurefunctiononcontainerdeployment.js"
+    },
+    "Node20_1": {
+      "target": "azurefunctiononcontainerdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

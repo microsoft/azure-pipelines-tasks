@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 4
+    "Minor": 264,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -166,11 +166,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node20_1": {
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -224,6 +224,8 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UploadingToStorageBlobsAuthenticationFailed": "ms-resource:loc.messages.UploadingToStorageBlobsAuthenticationFailed",
+    "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication"
   }
 }

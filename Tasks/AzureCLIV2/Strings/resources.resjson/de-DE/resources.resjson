@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) oder [Azure CLI-Dokumentation anzeigen](https://docs.microsoft.com/cli/azure/)",
   "loc.description": "Hiermit werden Azure CLI-Befehle für ein Azure-Abonnement in einem PowerShell Core-/Shellskript (bei Ausführung für einen Linux-Agent) oder einem PowerShell-/PowerShell Core-/Batchskript (bei Ausführung für einen Windows-Agent) ausgeführt.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
-  "loc.releaseNotes": "Neuerungen in Version 2.0:\n– Unterstützung für PowerShell- und PowerShell Core-Skripts. \n– PowerShell Core arbeitet mit plattformübergreifenden Agents (Linux, macOS oder Windows). Stellen Sie sicher, dass der Agent PowerShell-Version 6 oder höher verwendet. \n– Ein PowerShell-Skript funktioniert nur mit dem Windows-Agent. Stellen Sie sicher, dass der Agent PowerShell-Version 5 oder niedriger verwendet.",
+  "loc.releaseNotes": "Neuerungen in Version 2.0:\n– Unterstützung für PowerShell- und PowerShell Core-Skripts. \n– PowerShell Core arbeitet mit plattformübergreifenden Agents (Linux, macOS oder Windows). Stellen Sie sicher, dass der Agent PowerShell-Version 6 oder höher verwendet. \n– Ein PowerShell-Skript funktioniert nur mit dem Windows-Agent. Stellen Sie sicher, dass der Agent PowerShell-Version 5 oder niedriger verwendet.",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.connectedServiceNameARM": "Azure Resource Manager-Verbindung",
   "loc.input.help.connectedServiceNameARM": "Wählen Sie eine Azure Resource Manager-Dienstverbindung für die Bereitstellung aus.",

@@ -135,7 +135,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, includeSymbols: boolean, includeSource: boolean, version: string, properties: string[], verbosity: string): Q.Promise<number> {
+async function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, includeSymbols: boolean, includeSource: boolean, version: string, properties: string[], verbosity: string): Promise<number> {
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");
@@ -175,5 +175,5 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
         dotnet.arg(verbosity);
     }
 
-    return dotnet.exec({ cwd: path.dirname(packageFile) } as IExecOptions);
+    return dotnet.execAsync({ cwd: path.dirname(packageFile) } as IExecOptions) as Promise<number>;
 }

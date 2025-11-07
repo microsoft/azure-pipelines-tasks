@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Configuration Export",
   "loc.helpMarkDown": "Email AzureAppConfig@microsoft.com for questions.",
-  "loc.description": "Download key-values to task variables from Azure App Configuration",
+  "loc.description": "Export key-values from Azure App Configuration to task variables in your build or deployment pipelines",
   "loc.instanceNameFormat": "Azure App Configuration",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Subscription for the Azure App Configuration instance.",
@@ -27,7 +27,7 @@
   "loc.messages.InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
   "loc.messages.SecretUrlCannotBeEmpty": "Secret url cannot be empty",
   "loc.messages.InvalidSecretUrl": "Invalid secret Url",
-  "loc.messages.AzureAppConfigurationTaskIsStartingUp": "Azure App Configuration Task is starting up...",
+  "loc.messages.AzureAppConfigurationTaskIsStartingUp": "Azure App Configuration Export Task is starting up...",
   "loc.messages.AzureSubscriptionTitle": "Azure Subscription:",
   "loc.messages.AppConfigurationEndpointTitle": "App Configuration Endpoint:",
   "loc.messages.SelectionModeTitle": "Selection Mode:",

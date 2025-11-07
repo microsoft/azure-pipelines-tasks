@@ -35,7 +35,7 @@ async function run() {
         const testResultsFiles: string = tl.getInput('testResultsFiles', true);
         const inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
         const gradle5xOrHigher: boolean = tl.getBoolInput('gradle5xOrHigher');
-
+        const inputOptions:string = tl.getInput('options', false);
         const isCodeCoverageOpted: boolean = (typeof codeCoverageTool !== 'undefined' && codeCoverageTool && codeCoverageTool.toLowerCase() !== 'none');
         const buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
 
@@ -170,7 +170,7 @@ async function run() {
         };
         await publishCodeCoverageResultsAsync(publishCodeCoverageSettings);
 
-        const taskResult: ITaskResult = resolveTaskResult(codeAnalysisResult);
+        const taskResult: ITaskResult = resolveTaskResult(codeAnalysisResult, inputTasks, inputOptions);
         tl.setResult(taskResult.status, taskResult.message);
         // END: Run code analysis
     } catch (err) {

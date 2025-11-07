@@ -3,12 +3,13 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 import * as nuGetGetter from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter";
 import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
-import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import { VersionInfo } from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";
 import * as nugetPublish from "./nugetpublisher";
 import * as nugetRestore from "./nugetrestore";
+import * as linuxUtility from "./linuxutility";
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
 
@@ -21,22 +22,27 @@ async function main(): Promise<void> {
     let nugetVersion: string;
     let msBuildVersion: string;
     try {
+        if (linuxUtility.detectUnsupportedUbuntuVersion()) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_IncompatibleUbuntuVersion"));
+            return;
+        }
+
         msBuildVersion = await nuGetGetter.getMSBuildVersionString();
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
-                    || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
+            || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
             const cachedVersionToUse = await nuGetGetter.cacheBundledNuGet();
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
         const nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
-        if (nugetVersionInfo && nugetVersionInfo.fileVersion){
+        if (nugetVersionInfo && nugetVersionInfo.fileVersion) {
             nugetVersion = nugetVersionInfo.fileVersion.toString();
         }
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
-    } finally{
+    } finally {
         _logNugetStartupVariables(nuGetPath, nugetVersion, msBuildVersion);
     }
 
@@ -86,44 +92,44 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string, msBu
             }, []);
         }
         const nugetTelem = {
-                "command": tl.getInput("command"),
-                "NUGET_EXE_TOOL_PATH_ENV_VAR": tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
-                "NUGET_EXE_CUSTOM_LOCATION": tl.getVariable(NUGET_EXE_CUSTOM_LOCATION),
-                "searchPatternPack": tl.getPathInput("searchPatternPack"),
-                "configurationToPack": tl.getInput("configurationToPack"),
-                "versioningScheme": tl.getInput("versioningScheme"),
-                "includeReferencedProjects": tl.getBoolInput("includeReferencedProjects"),
-                "versionEnvVar": tl.getInput("versioningScheme") === "byEnvVar" ?
-                    tl.getVariable(tl.getInput("versionEnvVar")) : null,
-                "requestedMajorVersion": tl.getInput("requestedMajorVersion"),
-                "requestedMinorVersion": tl.getInput("requestedMinorVersion"),
-                "requestedPatchVersion": tl.getInput("requestedPatchVersion"),
-                "packTimezone": tl.getInput("packTimezone"),
-                "buildProperties": tl.getInput("buildProperties"),
-                "basePath": tl.getInput("basePath"),
-                "verbosityPack": tl.getInput("verbosityPack"),
-                "includeSymbols": tl.getBoolInput("includeSymbols"),
-                "NuGet.UseLegacyFindFiles": tl.getVariable("NuGet.UseLegacyFindFiles"),
-                "NuGetTasks.IsHostedTestEnvironment": tl.getVariable("NuGetTasks.IsHostedTestEnvironment"),
-                "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-                "NuGet.OverwritePackagingCollectionUrl": tl.getVariable("NuGet.OverwritePackagingCollectionUrl"),
-                "externalendpoint": externalendpoint,
-                "externalendpoints": externalendpoints,
-                "allowpackageconflicts": tl.getInput("allowpackageconflicts"),
-                "includenugetorg": tl.getInput("includenugetorg"),
-                "nocache": tl.getInput("nocache"),
-                "disableparallelprocessing": tl.getInput("disableParallelProcessing"),
-                "nugetconfigpath": tl.getInput("nugetconfigpath"),
-                "nugetfeedtype": nugetfeedtype,
-                "searchpatternpush": tl.getInput("searchpatternpush"),
-                "selectorconfig": tl.getInput("selectorconfig"),
-                "solution": tl.getInput("solution"),
-                "verbositypush": tl.getInput("verbositypush"),
-                "verbosityrestore": tl.getInput("verbosityrestore"),
-                "nuGetPath": nuGetPath,
-                "nugetVersion": nugetVersion,
-                "msBuildVersion": msBuildSemVer
-            };
+            "command": tl.getInput("command"),
+            "NUGET_EXE_TOOL_PATH_ENV_VAR": tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
+            "NUGET_EXE_CUSTOM_LOCATION": tl.getVariable(NUGET_EXE_CUSTOM_LOCATION),
+            "searchPatternPack": tl.getPathInput("searchPatternPack"),
+            "configurationToPack": tl.getInput("configurationToPack"),
+            "versioningScheme": tl.getInput("versioningScheme"),
+            "includeReferencedProjects": tl.getBoolInput("includeReferencedProjects"),
+            "versionEnvVar": tl.getInput("versioningScheme") === "byEnvVar" ?
+                tl.getVariable(tl.getInput("versionEnvVar")) : null,
+            "requestedMajorVersion": tl.getInput("requestedMajorVersion"),
+            "requestedMinorVersion": tl.getInput("requestedMinorVersion"),
+            "requestedPatchVersion": tl.getInput("requestedPatchVersion"),
+            "packTimezone": tl.getInput("packTimezone"),
+            "buildProperties": tl.getInput("buildProperties"),
+            "basePath": tl.getInput("basePath"),
+            "verbosityPack": tl.getInput("verbosityPack"),
+            "includeSymbols": tl.getBoolInput("includeSymbols"),
+            "NuGet.UseLegacyFindFiles": tl.getVariable("NuGet.UseLegacyFindFiles"),
+            "NuGetTasks.IsHostedTestEnvironment": tl.getVariable("NuGetTasks.IsHostedTestEnvironment"),
+            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+            "NuGet.OverwritePackagingCollectionUrl": tl.getVariable("NuGet.OverwritePackagingCollectionUrl"),
+            "externalendpoint": externalendpoint,
+            "externalendpoints": externalendpoints,
+            "allowpackageconflicts": tl.getInput("allowpackageconflicts"),
+            "includenugetorg": tl.getInput("includenugetorg"),
+            "nocache": tl.getInput("nocache"),
+            "disableparallelprocessing": tl.getInput("disableParallelProcessing"),
+            "nugetconfigpath": tl.getInput("nugetconfigpath"),
+            "nugetfeedtype": nugetfeedtype,
+            "searchpatternpush": tl.getInput("searchpatternpush"),
+            "selectorconfig": tl.getInput("selectorconfig"),
+            "solution": tl.getInput("solution"),
+            "verbositypush": tl.getInput("verbositypush"),
+            "verbosityrestore": tl.getInput("verbosityrestore"),
+            "nuGetPath": nuGetPath,
+            "nugetVersion": nugetVersion,
+            "msBuildVersion": msBuildSemVer
+        };
 
         telemetry.emitTelemetry("Packaging", "NuGetCommand", nugetTelem);
     } catch (err) {
