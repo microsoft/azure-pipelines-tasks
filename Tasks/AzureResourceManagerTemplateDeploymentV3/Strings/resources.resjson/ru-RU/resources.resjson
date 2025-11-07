@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "Схема проверки подлинности %s не поддерживается",
   "loc.messages.ErrorInSettingUpSubscription": "Ошибка при настройке подписки: %s",
   "loc.messages.BicepParamBuildFailed": "Сбой \"az bicep build-param\". Ошибка: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Версия Azure CLI должна быть >= 2.47.0, чтобы использовать файл .bicepparam."
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Версия Azure CLI должна быть >= 2.47.0, чтобы использовать файл .bicepparam.",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
 }

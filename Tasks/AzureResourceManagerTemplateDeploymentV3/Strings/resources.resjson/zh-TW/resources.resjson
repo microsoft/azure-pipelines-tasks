@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "不支援驗證結構描述 %s",
   "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" 已失敗。錯誤: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本應 >= 2.47.0，才能使用 .bicepparam 檔案"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本應 >= 2.47.0，才能使用 .bicepparam 檔案",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
 }
