@@ -788,7 +788,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.typescriptVersion, config.shouldUpdateLocalPkgs);
+                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.typescriptVersion);
                             }
 
                         }
@@ -1170,7 +1170,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, string? typescriptVersion, bool shouldUpdateTaskLib)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, string? typescriptVersion)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
