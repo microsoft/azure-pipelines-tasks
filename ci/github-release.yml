@@ -35,12 +35,18 @@ steps:
     }
     Write-Host "Trying to push to the remote branch.."
     git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-  condition: eq(variables['isDryRun'], 'false')
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['isDryRun'], 'false'),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
   displayName: Push release branch
 
 - powershell: |
     $releaseBranch = "$(branchName)"
-
+    $isDryRun = "$(isDryRun)"
     if (($(currentSprintWeek) -eq 3) -or ($isDryRun -eq 'true')) {
       cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
       npm ci
@@ -48,12 +54,18 @@ steps:
     } else {
       echo "Skipping since release notes generating on week 3"
     }
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      eq(${{ parameters.generateReleaseNotes }}, true)
+    )
   continueOnError: true
   displayName: Create Release
 
 - powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
   displayName: Send MS Teams notification
-  condition: or(eq(variables['build.reason'], 'Schedule'), eq(variables['build.reason'], 'Manual'))
   env:
     PR_ID: $(courtesy_push_pr_id)
     PR_LINK: $(courtesy_push_pr_link)

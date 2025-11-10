@@ -218,8 +218,7 @@ extends:
         condition: |
           and(
             succeeded(),
-            eq(variables['build.reason'], 'Manual'),
-            eq(variables['Build.SourceBranch'], 'refs/heads/master')
+            in(variables['build.reason'], 'Schedule', 'Manual')
           )
         templateContext:
           outputs: []
