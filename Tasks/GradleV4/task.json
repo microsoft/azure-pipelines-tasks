@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 264,
+    "Minor": 266,
     "Patch": 0
   },
   "releaseNotes": "The Code Coverage option is deprecated. Refer to the [PublishCodeCoverageResultsV2 Task] (https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines) to get code coverage results.",
