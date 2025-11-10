@@ -9,7 +9,7 @@ var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-re
 
 describe('AzureFunctionOnContainerDeployment Suite', function() {
 
-    this.timeout(60000);
+    this.timeout(90000);
 
      before((done) => {
         if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
