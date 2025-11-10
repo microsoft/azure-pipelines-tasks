@@ -75,10 +75,10 @@ async function getStableHelmVersion(): Promise<string> {
         const responseArray = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
         let latestHelmVersion = semver.clean(stableHelmVersion);
         responseArray.forEach(response => {
-            if (response && response.tag_name) {
+            if (response && response.tag_name && !response.prerelease) {
                 let currentHelmVerison = semver.clean(response.tag_name.toString());
                 if (currentHelmVerison) {
-                    if (currentHelmVerison.toString().indexOf('rc') == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
+                    if (semver.gt(currentHelmVerison, latestHelmVersion)) {
                         //If current helm version is not a pre release and is greater than latest helm version
                         latestHelmVersion = currentHelmVerison;
                     }
