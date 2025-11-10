@@ -58,8 +58,7 @@ steps:
     and(
       succeeded(),
       eq(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-      eq(${{ parameters.generateReleaseNotes }}, true)
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
   continueOnError: true
   displayName: Create Release
