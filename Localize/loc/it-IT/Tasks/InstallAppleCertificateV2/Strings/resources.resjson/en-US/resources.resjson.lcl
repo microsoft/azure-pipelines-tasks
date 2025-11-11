@@ -283,7 +283,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Errore durante l'analisi del certificato. Ciò potrebbe essere causato da un algoritmo non supportato. Se si usa un certificato precedente con una nuova versione di OpenSSL, provare a impostare il flag -legacy nell'input opensslPkcsArgs.]]></Val>
+            <Val><![CDATA[Errore durante l'analisi del certificato. Ciò potrebbe essere causato da un algoritmo non supportato. Se usi un certificato precedente con una nuova versione di OpenSSL, prova a impostare il flag -legacy nell'input opensslPkcsArgs.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
