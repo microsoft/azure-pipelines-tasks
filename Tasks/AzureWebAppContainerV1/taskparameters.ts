@@ -38,7 +38,7 @@ export class TaskParametersUtility {
         let appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.OSType = appDetails["osType"];
-        taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.indexOf("Linux") !=-1;
+        taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.toLowerCase().indexOf("linux") !=-1;
 
         // Used for SiteContainers apps.
         const siteContainersConfigInput = tl.getInput('siteContainersConfig');
