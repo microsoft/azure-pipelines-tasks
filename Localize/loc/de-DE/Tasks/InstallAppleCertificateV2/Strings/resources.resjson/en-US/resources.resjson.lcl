@@ -112,7 +112,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Arguments for extraction certificate information using openssl.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Argumente für Extraktionszertifikatinformationen mit OpenSSL.]]></Val>
+            <Val><![CDATA[Argumente für Extraktionszertifikatinformationen mit openssl.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

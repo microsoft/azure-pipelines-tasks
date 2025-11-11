@@ -13,7 +13,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Decrypt a file using OpenSSL]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Hiermit wird eine Datei mit OpenSSL entschlüsselt.]]></Val>
+            <Val><![CDATA[Datei mit OpenSSL entschlüsseln]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -145,7 +145,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl failed with error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[openssl-Fehler: %s]]></Val>
+            <Val><![CDATA[openssl fehlgeschlagen mit Fehler: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -154,7 +154,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl exited with return code: %d]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[openssl wurde mit dem folgenden Rückgabecode beendet: %d]]></Val>
+            <Val><![CDATA[openssl wurde mit folgendem Rückgabecode beendet: %d]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
