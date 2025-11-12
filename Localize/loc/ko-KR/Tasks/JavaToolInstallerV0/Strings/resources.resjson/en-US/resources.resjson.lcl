@@ -110,10 +110,13 @@
       </Item>
       <Item ItemId=";loc.input.help.jdkArchitectureOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The architecture (x86, x64) of the JDK.]]></Val>
+          <Val><![CDATA[The architecture (x86, x64, arm64) of the JDK.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[JDK의 아키텍처(x86, x64)입니다.]]></Val>
+            <Val><![CDATA[JDK의 아키텍처(x86, x64, arm64)입니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The architecture (x86, x64) of the JDK.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

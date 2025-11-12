@@ -39,10 +39,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/]]></Val>
+          <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Если этот параметр задан, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с nuGetServiceConnections. URL-адрес веб-канала должен быть в формате индекса службы NuGet, например https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/]]></Val>
+            <Val><![CDATA[Если этот параметр задан, требуется azureDevOpsServiceConnection. Все остальные входные данные игнорируются. Несовместимо с nuGetServiceConnections. URL-адрес канала должен быть в формате индекса сервиса NuGet, например: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -121,11 +124,41 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_InvalidFeedUrl" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The provided feed URL '%s' is not a valid Azure DevOps feed URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Предоставленный URL-адрес канала "%s" не является допустимым URL-адресом канала Azure DevOps.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feedUrl and workloadIdentityServiceConnection must be set together.]]></Val>
+          <Val><![CDATA[Both feedUrl and azureDevOpsServiceConnection must be set together.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Параметры feedUrl и workloadIdentityServiceConnection должны быть настроены вместе.]]></Val>
+            <Val><![CDATA[Необходимо одновременно настроить feedUrl и azureDevOpsServiceConnection.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feedUrl and workloadIdentityServiceConnection must be set together.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NuGetWithFeedUrlNotSupported" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot specify both nuGetServiceConnections and feedUrl input parameters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удается указать одновременно входные параметры nuGetServiceConnections и feedUrl.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NuGetWithWIFNotSupported" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot specify both nuGetServiceConnections and azureDevOpsServiceConnection(workloadIdentityServiceConnection) input parameters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удается указать оба входных параметра nuGetServiceConnections и azureDevOpsServiceConnection(workloadIdentityServiceConnection).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -162,6 +195,15 @@
           <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Добавление сведений о проверке подлинности из подключения службы %s для веб-канала %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warn_IgnoringFeedUrl" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring feedUrl]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Игнорирование feedUrl]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

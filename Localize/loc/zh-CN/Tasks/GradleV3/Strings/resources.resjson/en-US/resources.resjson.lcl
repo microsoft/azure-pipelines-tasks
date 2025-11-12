@@ -165,10 +165,13 @@
       </Item>
       <Item ItemId=";loc.input.help.jdkArchitecture" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally supply the architecture (x86, x64) of the JDK.]]></Val>
+          <Val><![CDATA[Optionally supply the architecture (x86, x64, arm64) of the JDK.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[可以选择提供 JDK 的体系结构(x86、x64)。]]></Val>
+            <Val><![CDATA[可以选择提供 JDK 的体系结构(x86、x64、arm64)。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Optionally supply the architecture (x86, x64) of the JDK.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

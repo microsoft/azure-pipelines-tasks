@@ -12,10 +12,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run manual and automated tests in test plan in Java and python language]]></Val>
+          <Val><![CDATA[Run manual and automated tests points of test plan for different testing frameworks like Maven and Gradle for Java, PyTest for Python and Jest for JavaScript]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Java 및 python 언어로 테스트 계획에서 수동 및 자동화된 테스트 실행]]></Val>
+            <Val><![CDATA[Java용 Maven 및 Gradle, Python용 PyTest, JavaScript용 Jest와 같은 다양한 테스트 프레임워크에 대한 테스트 계획의 수동 및 자동 테스트 포인트를 실행합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run manual and automated tests in test plan in Java and python language]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -33,6 +36,15 @@
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613742)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[[이 작업에 대한 자세한 정보]5D;(https://go.microsoft.com/fwlink/?LinkID=613742)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 서비스 연결을 선택합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -64,11 +76,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.mergeTestResults" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.gradleFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option.]]></Val>
+          <Val><![CDATA[Relative path from the repository root to the build.gradle file.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[각 결과 파일에 대해 테스트 실행이 만들어집니다. 결과를 단일 테스트 실행에 병합하려면 이 옵션을 선택합니다. 성능 향상을 위한 최적화를 위해 이 옵션과 관계없이 결과 파일이 100개가 넘는 경우 결과가 한 번의 실행으로 병합됩니다.]]></Val>
+            <Val><![CDATA[리포지토리 루트에서 build.gradle 파일까지의 상대 경로입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.pomFilePath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Relative path from the repository root to the Maven POM file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Maven POM 파일의 리포지토리 루트로부터의 상대 경로입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -102,9 +123,30 @@
       </Item>
       <Item ItemId=";loc.input.help.testPlan" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select a test plan containing test suites with test cases.]]></Val>
+          <Val><![CDATA[Type or paste the test plan ID containing test suites with test cases.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[테스트 사례가 있는 테스트 도구 모음을 포함하여 테스트 계획을 선택합니다.]]></Val>
+            <Val><![CDATA[테스트 사례와 함께 테스트 스위트가 포함된 테스트 계획 ID를 입력하거나 붙여넣으세요.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select a test plan containing test suites with test cases.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.testPlanOrRunSelector" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[<ul><li><b>테스트 어셈블리: </b>테스트가 들어 있는 테스트 어셈블리를 하나 이상 지정하려면 이 옵션을 사용합니다. 필요한 경우 필터 조건을 지정하여 특정 테스트만 선택할 수 있습니다.</li><li><b>테스트 계획: </b>테스트 계획에서 자동화된 테스트 메서드가 연결되어 있는 테스트를 실행하려면 이 옵션을 사용합니다.</li><li><b>테스트 실행: </b>테스트 허브에서 테스트를 실행할 환경을 설정하는 경우 이 옵션을 사용합니다. CI/CD(연속 통합/연속 배포) 파이프라인에서 테스트를 실행하는 경우에는 이 옵션을 사용할 수 없습니다.</li>]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.testRunId" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test run based selection is used when triggering automated test runs from the test hub, value for this should be kept as it is]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 허브에서 자동화된 테스트 실행을 트리거할 때 테스트 실행 기반 선택이 사용됩니다. 이 값은 변경하지 말고 그대로 유지해야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -123,6 +165,15 @@
           <Val><![CDATA[Select one or more test suites containing test cases.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[테스트 사례가 포함된 하나 이상의 테스트 도구 모음을 선택하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 연결]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -154,11 +205,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.mergeTestResults" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.gradleFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Merge test results]]></Val>
+          <Val><![CDATA[Gradle file path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[테스트 결과 병합]]></Val>
+            <Val><![CDATA[Gradle 파일 경로]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.pomFilePath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Pom file path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pom 파일 경로]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -195,6 +255,24 @@
           <Val><![CDATA[Test plan]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[테스트 계획]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.testPlanOrRunSelector" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select tests using]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[다음을 사용하여 테스트 선택]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.testRunId" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test Run]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[테스트 실행]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

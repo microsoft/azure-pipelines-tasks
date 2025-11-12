@@ -488,12 +488,12 @@
       </Item>
       <Item ItemId=";loc.messages.UnacceptedScriptLocationValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be 'inlineScript' or 'scriptPath']]></Val>
+          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[%s 不是任务输入“脚本位置”(YAML 中的 scriptLocation) 的有效值。值可以是“inlineScript”或“scriptPath”]]></Val>
+            <Val><![CDATA[%s 不是任务输入“脚本位置”(YAML 中的 scriptLocation)的有效值。值可以是 "inlineScript" 或 "scriptPath"]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
+            <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be 'inlineScript' or 'scriptPath']]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
