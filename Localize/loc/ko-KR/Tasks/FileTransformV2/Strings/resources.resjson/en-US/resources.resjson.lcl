@@ -45,6 +45,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[변수 치환 전에 구성 변환이 실행됩니다.<br/>XML 변환은 Windows 플랫폼에서만 지원됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If selected, the pipeline fails if the target files are empty or if the substitution fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[선택한 경우, 대상 파일이 비어 있거나 치환 작업에 실패하면 파이프라인이 실패합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.folderPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File path to the package or a folder.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.zip.]]></Val>
@@ -65,10 +83,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xmlTargetFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
+          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables. <br/>Note: We are replacing double quotes with single quotes in the XML to avoid escaping issues that can occur in XML.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[변수 값을 대체할 새 줄로 구분된 파일 목록을 제공합니다. 루트 폴더에 상대적인 파일 이름을 제공해야 합니다. <br/>XML의 경우 빌드 또는 릴리스 파이프라인에 정의된 변수가 구성 파일 및 parameters .xml의 appSettings, applicationSettings 및 connectionStrings 섹션에 있는 'key' 또는 'name' 항목과 일치됩니다. <br/> 구성이 변환된 후 변수 대체가 실행됩니다. </br> 참고: 빌드/릴리스 파이프라인에 정의된 사용자 지정 변수만 대체에 사용됩니다. 기본/시스템 정의 파이프라인 변수는 제외됩니다. <br/>참고: 릴리스 파이프라인 및 스테이지에서 동일한 변수를 정의하면 스테이지 변수가 릴리스 파이프라인 변수를 대신합니다.]]></Val>
+            <Val><![CDATA[변수 값을 치환할 파일 목록을 새 줄로 구분하여 제공하세요. 루트 폴더를 기준으로 파일 이름을 제공해야 합니다. <br/>XML의 경우, 빌드 또는 릴리스 파이프라인에 정의된 변수는 모든 구성 파일 및 parameters.xml의 appSettings, applicationSettings, connectionStrings 섹션에 있는 'key' 또는 'name' 항목과 일치합니다. <br/> 구성 변환 후에 변수 치환이 실행됩니다. </br> 참고: 빌드/릴리스 파이프라인에 정의된 사용자 지정 변수만 치환에 사용됩니다. 기본/시스템 정의 파이프라인 변수는 제외됩니다. <br/>참고: 릴리스 파이프라인과 스테이지에 동일한 변수가 정의되어 있는 경우, 스테이지 변수가 릴리스 파이프라인 변수를 치환합니다. <br/>참고: XML에서 발생할 수 있는 문제를 이스케이프하지 않도록 큰따옴표를 XML의 작은따옴표로 바꿉니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -77,6 +98,24 @@
           <Val><![CDATA[Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[다음 구문을 사용하는 변환 파일 규칙을 새 줄로 구분된 목록으로 지정합니다. <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML transformation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[XML 변환]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error on empty files and invalid substitution.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[빈 파일이나 잘못된 치환이 있을 경우 오류가 발생합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

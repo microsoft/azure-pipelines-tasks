@@ -99,6 +99,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 서비스 연결을 선택합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.arguments" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected.]]></Val>
@@ -303,6 +312,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[태스크가 .NET 패키지를 가져오기 위해 수행하는 HTTP 요청에 대한 시간 제한 값을 제공합니다. 값은 밀리초입니다. 기본값은 300000밀리초(5분)입니다. 600000밀리초(10분)를 초과할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.requestedMajorVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The 'X' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
@@ -425,6 +443,15 @@
           <Val><![CDATA[If true, folder created by the publish command will be zipped.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[True이면 게시 명령으로 만든 폴더가 압축됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 연결]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -638,6 +665,15 @@
           <Val><![CDATA[Publish web projects]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[웹 프로젝트 게시]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set timeout for package download request]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[패키지 다운로드 요청에 대한 시간 제한 설정]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

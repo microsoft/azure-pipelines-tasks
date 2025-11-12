@@ -76,6 +76,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Simple batching based on the number of tests and agents participating in the test run. When the batch size is automatically determined, each batch contains `(total number of tests / number of agents)` tests. If a batch size is specified, each batch will contain the specified number of tests.]]></Val>
@@ -130,6 +136,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the running time (sec) per batch]]></Val>
@@ -154,6 +166,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[バッチとはテストのグループのことです。テストのバッチによってそのテストが同時に実行され、バッチの結果が公開されます。タスクを実行するジョブが複数のエージェントを使用するように設定されている場合、各エージェントにより、並列で実行される利用可能なテストのバッチが選択されます。<br><br><b>テストとエージェントの数に基づく:</b> テストの実行に参加するテストとエージェントの数に基づき、単純にバッチにまとめます。<br><br><b>テストの過去の実行時間に基づく:</b> このバッチ処理では、テストのバッチを作成するために要した過去の実行時間を考慮に入れて、各バッチの実行時間がほぼ等しくなるようにします。<br><br><b>テスト アセンブリに基づく:</b> 1 つのアセンブリからのテストが一緒にバッチにまとめられます。]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -439,6 +457,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 接続]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch options]]></Val>
@@ -493,6 +520,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Logger Configuration]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running time (sec) per batch]]></Val>
@@ -517,6 +550,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[バッチ テスト]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable publishing test results]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

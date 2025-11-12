@@ -76,6 +76,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sélectionner une connexion de service Azure Resource Manager]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Simple batching based on the number of tests and agents participating in the test run. When the batch size is automatically determined, each batch contains `(total number of tests / number of agents)` tests. If a batch size is specified, each batch will contain the specified number of tests.]]></Val>
@@ -130,6 +139,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisez cette option si vous disposez d’un enregistreur personnalisé. Pour l’utiliser, indiquez le nom de l’enregistreur ainsi que ses paramètres au format suivant : « friendlyName;key1=value1;key2=value2;.... »]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the running time (sec) per batch]]></Val>
@@ -153,6 +171,15 @@
           <Val><![CDATA[A batch is a group of tests. A batch of tests runs its tests at the same time and results are published for the batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on the number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Un lot est un groupe de tests. Dans un lot de tests, tous les tests s'exécutent en même temps. Les résultats du lot sont ensuite publiés. Si le travail au cours duquel la tâche s'exécute est configurée pour utiliser plusieurs agents, chaque agent choisit les lots de tests disponibles pour s'exécuter en parallèle.<br><br><b>En fonction du nombre de tests et d'agents :</b> traitement par lot simple basé sur le nombre de tests et d'agents impliqués dans la série de tests.<br><br><b>En fonction du temps d'exécution des tests :</b> ce traitement par lot prend en compte le temps d'exécution pour créer des lots de tests où chaque lot a environ le même temps d'exécution.<br><br><b>En fonction des assemblys de tests :</b> les tests d'un assembly sont regroupés.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si cette option est activée, les résultats des tests ne sont pas publiés dans le cadre de cette tâche. Utiliser plutôt la tâche Publier les résultats des tests]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -439,6 +466,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Connexion Azure Resource Manager]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch options]]></Val>
@@ -493,6 +529,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Logger Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Configuration personnalisée de l’enregistreur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running time (sec) per batch]]></Val>
@@ -516,6 +561,15 @@
           <Val><![CDATA[Batch tests]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Tests par lot]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable publishing test results]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Désactiver la publication des résultats des tests]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

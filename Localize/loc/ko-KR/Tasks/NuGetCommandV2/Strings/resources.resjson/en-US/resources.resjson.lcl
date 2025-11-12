@@ -768,6 +768,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncompatibleUbuntuVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The task has failed because you are using Ubuntu 24.04 or later without mono installed. See https://aka.ms/nuget-task-mono for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[모노가 설치되지 않은 상태에서 Ubuntu 24.04 이상을 사용 중이어서 작업이 실패했습니다. 자세한 내용은 https://aka.ms/nuget-task-mono를 참조하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -944,6 +953,15 @@
           <Val><![CDATA[Using version: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[버전 %s 사용]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.LIB_WhichNotFound_Linux" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[실행 파일 '%s'을(를) 찾을 수 없습니다. 파일 경로가 존재하는지, 또는 PATH 환경 변수에 지정된 디렉터리 내에서 파일을 찾을 수 있는지 확인하세요. 또한 파일 모드를 확인해 실행 가능한 파일인지도 점검해 보세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

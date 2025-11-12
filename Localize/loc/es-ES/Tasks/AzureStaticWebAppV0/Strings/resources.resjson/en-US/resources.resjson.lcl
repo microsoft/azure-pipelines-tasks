@@ -75,10 +75,13 @@
       </Item>
       <Item ItemId=";loc.input.help.azure_access_token" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          <Val><![CDATA[Access Token used for deployment. Not required if passed as a variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Token de acceso usado para autenticar y autorizar la implementación]]></Val>
+            <Val><![CDATA[Token de acceso utilizado para la implementación. No es necesario si se pasa como variable]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -129,10 +132,13 @@
       </Item>
       <Item ItemId=";loc.input.help.default_hostname" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default Hostname of the app]]></Val>
+          <Val><![CDATA[Default hostname for deployment. Not required if passed as an environment variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre de host predeterminado de la aplicación]]></Val>
+            <Val><![CDATA[Nombre de host predeterminado para la implementación. No es necesario si se pasa como variable de entorno]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default Hostname of the app]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -145,7 +145,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl failed with error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[OpenSSL이 실패했습니다(오류: %s).]]></Val>
+            <Val><![CDATA[OpenSSL이 %s 오류로 인해 실패했습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -154,7 +154,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl exited with return code: %d]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[OpenSSL이 종료되었습니다(반환 코드: %d).]]></Val>
+            <Val><![CDATA[OpenSSL이 %d 반환 코드와 함께 종료되었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

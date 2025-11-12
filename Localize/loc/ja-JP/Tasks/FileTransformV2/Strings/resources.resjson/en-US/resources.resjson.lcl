@@ -45,6 +45,18 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If selected, the pipeline fails if the target files are empty or if the substitution fails.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.folderPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File path to the package or a folder.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.zip.]]></Val>
@@ -65,10 +77,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xmlTargetFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables. <br/>Note: We are replacing double quotes with single quotes in the XML to avoid escaping issues that can occur in XML.]]></Val>
+          <Tgt Cat="Text" Stat="Update" Orig="New">
             <Val><![CDATA[変数の値を置換するファイルの改行区切りリストを指定します。ファイル名はルート フォルダーから相対指定されます。<br/>XML の場合、ビルドまたはリリース パイプラインで定義された変数は、構成ファイルおよび parameters.xml の appSettings、applicationSettings、connectionStrings セクションの 'key' または 'name' エントリに対して照合されます。<br/> 変数の置換は、構成変換の後に実行されます。</br> 注: 置換では、ビルドまたはリリース パイプラインで定義されているカスタム変数のみが使用されます。既定のまたはシステム定義のパイプライン変数は除外されます。<br/>注: リリース パイプラインとステージで同じ変数が定義されている場合、ステージ変数はリリース パイプライン変数より優先されます。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -78,6 +93,21 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[次の構文を使用して、変換ファイル ルールの改行区切りリストを指定します: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML transformation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[XML 変換]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error on empty files and invalid substitution.]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

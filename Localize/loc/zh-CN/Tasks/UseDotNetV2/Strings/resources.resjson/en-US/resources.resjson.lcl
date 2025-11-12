@@ -81,6 +81,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[为此任务获取 .NET 包的 HTTP 请求提供超时值。该值以毫秒为单位。默认值为 300000 毫秒(5 分钟)。不能超过 600000 毫秒(10 分钟)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.useGlobalJson" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.]]></Val>
@@ -92,19 +101,25 @@
       </Item>
       <Item ItemId=";loc.input.help.version" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[指定要安装的 .NET Core SDK 或运行时的版本。<br/>可按以下格式提供版本<li>2.x   => 安装最新主要版本。</li><li>2.2.x => 安装最新主要版本和次要版本</li><li>2.2.104 => 安装确切版本</li><br/>从 releases.json 中查找 `version` 的值，以安装 SDK/运行时。指向该 major.minor 版本的 releases.json 的链接可在[版本索引文件****]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)中找到。例如指向 releases.json 2.2 版本的链接为 https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+            <Val><![CDATA[指定要安装的 .NET Core SDK 或运行时版本。<br/>版本可采用以下格式<li>2.x => 安装主要版本中的最新版本。</li><li> 2.2.x => 安装主要版本和次要版本中的最新版本</li><li> 2.2.104 => 安装确切版本</li><br/>从 releases.json 中查找用于安装 SDK/运行时的 version 值。可在 [releases-index 文件]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)中找到该 major.minor 版本的 releases.json 的链接。例如，2.2 版本的 releases.json 链接为 https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.vsVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)]]></Val>
+          <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[指定要安装 .NET Core SDK 的兼容 Visual Studio 的版本。请指定完整的 VS 版本(如 16.6.4)，其中包含主要版本、次要版本和补丁号。从 releases.json 查找用于安装 SDK/运行时的“版本”值。在 [releases-index 文件]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)中可以找到该 major.minor 版本的 releases.json 的链接 ]]></Val>
+            <Val><![CDATA[指定要安装 .NET Core SDK 的兼容 Visual Studio 的版本。请指定完整的 VS 版本(如 16.6.4)，其中包含主要版本、次要版本和补丁号，从 releases.json 查找用于安装 SDK/运行时的“版本”值。可在 [releases-index 文件]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)中找到该 major.minor 版本的 releases.json 的链接]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -149,6 +164,15 @@
           <Val><![CDATA[Perform Multi Level Lookup]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[执行多级查找]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set timeout for package download request]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[设置包下载请求的超时时间]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -830,10 +854,13 @@
       </Item>
       <Item ItemId=";loc.messages.VersionNumberHasTheWrongFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[版本号 %s 的格式不正确。可按以下格式提供版本: 2.x   => 安装最新主要版本。2.2.x => 安装最新主要版本和次要版本。2.2.104 => 安装确切版本。从 releases.json 中查找 `version` 值，以安装 SDK/运行时。指向该 major.minor 版本的 releases.json 的链接可在[版本索引文件****]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)中找到。例如指向 releases.json 2.2 版本的链接为 https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+            <Val><![CDATA[版本号 %s 格式不正确。版本可采用以下格式: 2.x => 安装主要版本中的最新版本。2.2.x => 安装主要版本和次要版本中的最新版本。2.2.104 => 安装确切版本。从 releases.json 中查找用于安装 SDK/运行时的 `version` 值。可在 [releases-index 文件]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)中找到该 major.minor 版本的 releases.json 的链接。例如，2.2 版本的 releases.json 链接为 https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

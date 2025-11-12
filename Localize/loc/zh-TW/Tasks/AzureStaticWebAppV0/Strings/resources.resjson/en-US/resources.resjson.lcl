@@ -75,10 +75,13 @@
       </Item>
       <Item ItemId=";loc.input.help.azure_access_token" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          <Val><![CDATA[Access Token used for deployment. Not required if passed as a variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[用來驗證及授權部署的存取權杖]]></Val>
+            <Val><![CDATA[用於部署的存取權杖。如果當作變數傳遞，則不需要]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -129,10 +132,13 @@
       </Item>
       <Item ItemId=";loc.input.help.default_hostname" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default Hostname of the app]]></Val>
+          <Val><![CDATA[Default hostname for deployment. Not required if passed as an environment variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[應用程式的預設主機名稱]]></Val>
+            <Val><![CDATA[部署的預設主機名稱。若以環境變數傳遞則不需要]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default Hostname of the app]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

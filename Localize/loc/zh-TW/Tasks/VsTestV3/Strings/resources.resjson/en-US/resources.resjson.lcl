@@ -76,6 +76,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[選取 Azure Resource Manager 服務連線]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Simple batching based on the number of tests and agents participating in the test run. When the batch size is automatically determined, each batch contains `(total number of tests / number of agents)` tests. If a batch size is specified, each batch will contain the specified number of tests.]]></Val>
@@ -130,6 +139,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果您有自訂記錄器，則使用此選項。若要使用，請使用以下格式提供記錄器名稱及其參數: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the running time (sec) per batch]]></Val>
@@ -153,6 +171,15 @@
           <Val><![CDATA[A batch is a group of tests. A batch of tests runs its tests at the same time and results are published for the batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on the number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[批次是一組測試。測試批次會同時執行其測試，然後為該批次發佈結果。若工作執行所在的作業設定為使用多個代理程式，每個代理程式會挑選任何可用測試批次來平行執行。<br><br><b>依測試和代理程式的數目分批:</b> 簡易批次，依參與測試回合的測試和代理程式數目分批。<br><br><b>依過去的測試執行時間分批:</b> 這會考量過去的執行時間來建立測試批次，使每個批次的執行時間都大概相等。<br><br><b>依測試組件分批:</b> 來自同一個組件的測試分在同一批。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果開啟此選項，測試結果將不會在此工作當中發佈。改為使用發佈測試結果工作]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -439,6 +466,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 連線]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch options]]></Val>
@@ -493,6 +529,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Logger Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[自訂記錄器組態]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running time (sec) per batch]]></Val>
@@ -516,6 +561,15 @@
           <Val><![CDATA[Batch tests]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[批次測試]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable publishing test results]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[停用發佈測試結果]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

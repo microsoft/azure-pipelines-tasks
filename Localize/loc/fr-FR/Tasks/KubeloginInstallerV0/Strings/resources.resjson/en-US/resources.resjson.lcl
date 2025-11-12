@@ -37,11 +37,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.gitHubConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A GitHub connection is needed to prevent anonymous requests limits to the Github API for [Azure/kubelogin]5D;(https://github.com/azure/kubelogin) from impacting the installation. Leaving this empty may cause failures if the request limit is reached. This connection does not require ANY permissions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Une connexion GitHub est nécessaire pour éviter que les limites des requêtes anonymes à l’API GitHub pour [Azure/kubelogin]5D;(https://github.com/azure/kubelogin) n’impactent l’installation. Laisser ce champ vide peut entraîner des échecs si la limite de requêtes est atteinte. Cette connexion ne requiert AUCUNE autorisation.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.kubeloginVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The version of kubelogin to use]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Version de kubelogin à utiliser]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.gitHubConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[GitHub Connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Connexion GitHub]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

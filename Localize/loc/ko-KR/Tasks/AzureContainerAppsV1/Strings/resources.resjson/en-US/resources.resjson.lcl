@@ -163,6 +163,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.kind" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set to `functionapp` to get built in support and autoscaling to run Azure functions on Azure Container apps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure 컨테이너 앱에서 Azure 함수를 실행하려면 기본 제공 지원과 자동 스케일링을 위해 'functionapp'으로 설정하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.location" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The location that the Container App (and other created resources) will be deployed to.]]></Val>
@@ -330,6 +339,15 @@
           <Val><![CDATA[Ingress setting]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[수신 설정]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.kind" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Container App kind]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[컨테이너 앱 종류]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -144,6 +144,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.siteContainersConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Provide siteContainers-config JSON for SiteContainers deployments.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Предоставьте siteContainers-config JSON для развертываний SiteContainers.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.slotName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter or Select an existing Slot other than the Production slot.]]></Val>
@@ -270,6 +279,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.siteContainersConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Site Containers Config]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Конфигурация контейнеров сайта]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.slotName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Slot]]></Val>
@@ -383,6 +401,15 @@
           <Val><![CDATA[Cannot update deployment status : Unique Deployment ID cannot be retrieved]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Не удается обновить состояние развертывания: не удается получить уникальный идентификатор развертывания.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CompletedUpdatingSiteContainers" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Completed updating site containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Выполнено обновление контейнеров сайта.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1242,6 +1269,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Контейнеры сайта не поддерживают проверку подлинности с помощью профиля публикации. Используйте проверку подлинности подключения к службе.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.StartedUpdatingSiteContainers" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Started updating site containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Начато обновление контейнеров сайта.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.SuccessfullyAddedReleaseAnnotation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added release annotation to the Application Insight : %s]]></Val>
@@ -1508,6 +1553,15 @@
           <Val><![CDATA[Trying to update App Service Configuration settings. Data: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Выполняется попытка изменить параметры конфигурации Службы приложений. Данные: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UpdatingSiteContainer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Updating site container: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Обновление контейнера сайта: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

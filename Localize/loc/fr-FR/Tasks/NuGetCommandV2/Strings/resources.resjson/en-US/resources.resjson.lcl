@@ -768,6 +768,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncompatibleUbuntuVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The task has failed because you are using Ubuntu 24.04 or later without mono installed. See https://aka.ms/nuget-task-mono for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nous n’avons pas pu effectuer la tâche, car vous utilisez Ubuntu 24.04 ou une version ultérieure sans Mono installée. Pour découvrir plus d’informations, consultez https://aka.ms/nuget-task-mono.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -944,6 +953,15 @@
           <Val><![CDATA[Using version: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Utilisation de la version : %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.LIB_WhichNotFound_Linux" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nous ne pouvons pas localiser le fichier exécutable : « %s ». Veuillez vérifier que le chemin d’accès du fichier existe ou que le fichier se trouve au sein d’un répertoire spécifié par la variable d’environnement PATH. Vérifiez également le mode du fichier pour confirmer qu’il est exécutable.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

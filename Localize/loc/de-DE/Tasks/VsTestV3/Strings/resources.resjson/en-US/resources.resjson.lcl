@@ -76,6 +76,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Simple batching based on the number of tests and agents participating in the test run. When the batch size is automatically determined, each batch contains `(total number of tests / number of agents)` tests. If a batch size is specified, each batch will contain the specified number of tests.]]></Val>
@@ -130,6 +136,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify the running time (sec) per batch]]></Val>
@@ -154,6 +166,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ein Batch ist eine Gruppe von Tests. Für einen Batch von Tests werden die Tests gleichzeitig ausgeführt, und die Ergebnisse werden für den Batch veröffentlicht. Wenn der Auftrag, in dem die Aufgabe ausgeführt wird, für die Verwendung mehrerer Agents konfiguriert ist, wählt jeder Agent alle verfügbaren Testbatches aus, die parallel ausgeführt werden sollen.<br><br><b>Basierend auf der Anzahl von Tests und Agents:</b> Einfache Batchverarbeitung basierend auf der Anzahl von Tests und Agents, die am Testlauf beteiligt sind.<br><br><b>Basierend auf der Laufzeit vergangener Tests:</b> Diese Batchverarbeitung berücksichtigt die Laufzeit vergangener Tests, um Testbatches so zu erstellen, dass jeder Batch in etwa die gleiche Laufzeit aufweist.<br><br><b>Basierend auf Testassemblys:</b> Tests aus einer Assembly werden in einem Batch zusammengefasst.]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -439,6 +457,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager-Verbindung]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.batchingBasedOnAgentsOption" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch options]]></Val>
@@ -493,6 +520,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Logger Configuration]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.customRunTimePerBatchValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running time (sec) per batch]]></Val>
@@ -517,6 +550,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Batchtests]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable publishing test results]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

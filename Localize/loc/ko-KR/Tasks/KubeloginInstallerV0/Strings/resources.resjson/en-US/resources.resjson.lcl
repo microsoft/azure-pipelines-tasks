@@ -37,11 +37,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.gitHubConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A GitHub connection is needed to prevent anonymous requests limits to the Github API for [Azure/kubelogin]5D;(https://github.com/azure/kubelogin) from impacting the installation. Leaving this empty may cause failures if the request limit is reached. This connection does not require ANY permissions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[GitHub API에 대한 익명 요청 제한이 [Azure/kubelogin]5D;(https://github.com/azure/kubelogin) 설치에 영향을 미치지 않도록 GitHub 연결이 필요합니다. 이 항목을 비워 두면 요청 제한에 도달했을 때 실패가 발생할 수 있습니다. 이 연결은 어떤 권한도 필요하지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.kubeloginVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The version of kubelogin to use]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[사용할 kubelogin 버전]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.gitHubConnection" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[GitHub Connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[GitHub 연결]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

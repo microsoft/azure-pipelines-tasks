@@ -768,6 +768,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_IncompatibleUbuntuVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The task has failed because you are using Ubuntu 24.04 or later without mono installed. See https://aka.ms/nuget-task-mono for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Задача не выполнена, поскольку вы используете Ubuntu 24.04 или более позднюю версию без установленного mono. Дополнительные сведения см. по адресу https://aka.ms/nuget-task-mono.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_NoMatchingFilesFoundForPattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No matching files were found with search pattern: %s]]></Val>
@@ -944,6 +953,15 @@
           <Val><![CDATA[Using version: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Используемая версия: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.LIB_WhichNotFound_Linux" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось найти исполняемый файл: "%s". Убедитесь, что путь к файлу существует или файл находится в одном из каталогов, указанных в переменной окружения PATH. Также проверьте режим файла, чтобы убедиться, что файл является исполняемым.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

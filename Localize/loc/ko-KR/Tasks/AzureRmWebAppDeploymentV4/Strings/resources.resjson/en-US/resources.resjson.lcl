@@ -765,6 +765,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BasicAuthNotSupported" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[App Service is configured to not use basic authentication and failed to use MSDeploy token authentication.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[App Service가 기본 인증을 사용하지 않도록 설정되어 있으며 MSDeploy 토큰 인증에도 실패했습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot perform XML transformations on a non-Windows platform.]]></Val>

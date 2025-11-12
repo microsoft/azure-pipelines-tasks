@@ -73,6 +73,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.allowBrokenSymbolicLinks" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set false to fail build when task finds broken symbolic link during publishing tests result]]></Val>
@@ -156,10 +162,13 @@
       </Item>
       <Item ItemId=";loc.input.help.jdkArchitecture" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally supply the architecture (x86, x64) of the JDK.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[Optionally supply the architecture (x86, x64, arm64) of the JDK.]]></Val>
+          <Tgt Cat="Text" Stat="Update" Orig="New">
             <Val><![CDATA[必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Optionally supply the architecture (x86, x64) of the JDK.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -354,6 +363,15 @@
           <Val><![CDATA[Provide a name for the test run.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[テストの実行の名前を指定します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager 接続]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

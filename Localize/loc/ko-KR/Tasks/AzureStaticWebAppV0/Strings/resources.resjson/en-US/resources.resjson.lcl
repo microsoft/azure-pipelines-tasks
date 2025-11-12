@@ -75,10 +75,13 @@
       </Item>
       <Item ItemId=";loc.input.help.azure_access_token" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          <Val><![CDATA[Access Token used for deployment. Not required if passed as a variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[배포를 인증하고 권한을 부여하는 데 사용되는 액세스 토큰]]></Val>
+            <Val><![CDATA[배포에 사용되는 액세스 토큰입니다. 변수로 전달되는 경우에는 필요하지 않습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Access token used to authenticate and authorize the deployment]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -129,10 +132,13 @@
       </Item>
       <Item ItemId=";loc.input.help.default_hostname" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default Hostname of the app]]></Val>
+          <Val><![CDATA[Default hostname for deployment. Not required if passed as an environment variable]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[앱의 기본 호스트 이름]]></Val>
+            <Val><![CDATA[배포의 기본 호스트 이름입니다. 환경 변수로 전달되는 경우에는 필요하지 않습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default Hostname of the app]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

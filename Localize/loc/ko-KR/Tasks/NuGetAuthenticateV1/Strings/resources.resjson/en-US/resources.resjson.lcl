@@ -39,10 +39,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/]]></Val>
+          <Val><![CDATA[If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 설정을 지정하면 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. nuGetServiceConnections와 호환되지 않습니다. 피드 URL은 NuGet 서비스 인덱스 형식(예: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/)이어야 합니다.]]></Val>
+            <Val><![CDATA[이 설정을 지정하면 azureDevOpsServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. nuGetServiceConnections와 호환되지 않습니다. 피드 URL은 NuGet 서비스 인덱스 형식(예: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/)이어야 합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -121,11 +124,41 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_InvalidFeedUrl" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The provided feed URL '%s' is not a valid Azure DevOps feed URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[제공된 피드 URL '%s'은(는) 올바른 Azure DevOps 피드 URL이 아닙니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_MissingFeedUrlOrServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Both feedUrl and workloadIdentityServiceConnection must be set together.]]></Val>
+          <Val><![CDATA[Both feedUrl and azureDevOpsServiceConnection must be set together.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[feedUrl과 workloadIdentityServiceConnection을 모두 함께 설정해야 합니다.]]></Val>
+            <Val><![CDATA[feedUrl과 azureDevOpsServiceConnection을 모두 함께 설정해야 합니다.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Both feedUrl and workloadIdentityServiceConnection must be set together.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NuGetWithFeedUrlNotSupported" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot specify both nuGetServiceConnections and feedUrl input parameters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[nuGetServiceConnections와 feedUrl 입력 매개 변수를 동시에 지정할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NuGetWithWIFNotSupported" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot specify both nuGetServiceConnections and azureDevOpsServiceConnection(workloadIdentityServiceConnection) input parameters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[nuGetServiceConnections와 azureDevOpsServiceConnection(workloadIdentityServiceConnection) 입력 매개 변수를 동시에 지정할 수 없습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -162,6 +195,15 @@
           <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[피드 %s에 대한 서비스 연결 %s의 인증 정보를 추가하는 중]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warn_IgnoringFeedUrl" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring feedUrl]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[feedUrl 무시]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

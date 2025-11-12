@@ -45,6 +45,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[配置转换将在变量替换之前运行。<br/>仅 Windows 平台支持 XML 转换。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If selected, the pipeline fails if the target files are empty or if the substitution fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果选中，当目标文件为空或替换失败时，管道将失败。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.folderPath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File path to the package or a folder.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.zip.]]></Val>
@@ -65,10 +83,13 @@
       </Item>
       <Item ItemId=";loc.input.help.xmlTargetFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
+          <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables. <br/>Note: We are replacing double quotes with single quotes in the XML to avoid escaping issues that can occur in XML.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[提供文件的新行分隔列表以替换变量值。提供相对于根文件夹的文件名。<br/>对于 XML，在生成或发布管道中定义的变量将与任何配置文件和 parameters.xml 的 appSettings、applicationSettings 和 connectionStrings 部分中的 "key" 或 "name" 项匹配。<br/> 变量替换在配置转换后运行。</br> 注意: 替换过程中仅使用在生成/发布管道中定义的自定义变量。默认/系统定义的管道变量排除在外。<br/>注意: 如果在发布管道中和阶段中定义了相同变量，则阶段变量将取代发布管道变量。]]></Val>
+            <Val><![CDATA[提供以新行分隔的文件列表，用于替换变量值。将提供相对于根文件夹的文件名。<br/>对于 XML，生成或发布管道中定义的变量将与任何配置文件和 parameters.xml 的 appSettings、applicationSettings 和 connectionStrings 部分中的 "key" 或 "name" 条目匹配。<br/> 变量替换在配置转换后运行。</br>注意: 仅在替换中使用生成/发布管道中定义的自定义变量。排除默认变量/系统定义的管道变量。<br/>注意: 如果在发布管道和阶段中定义了相同的变量，则阶段变量将取代发布管道变量。<br/>注意: 我们将在 XML 中将双引号替换为单引号，以避免在 XML 中发生转义问题。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -77,6 +98,24 @@
           <Val><![CDATA[Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[使用以下语法提供使用行分隔的新转换文件规则列表: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML transformation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[XML 转换]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error on empty files and invalid substitution.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[出现空文件和无效替换时发生错误。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
