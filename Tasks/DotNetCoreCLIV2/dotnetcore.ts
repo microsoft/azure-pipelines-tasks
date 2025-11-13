@@ -118,7 +118,7 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
-            if (this.isBuildCommand()) {
+            if (this.isBuildCommand() || (this.isPublishCommand() && this.shouldUsePublishLogger())) {
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -461,6 +461,20 @@ export class dotNetExe {
 
     private isRunCommand(): boolean {
         return this.command === "run";
+    }
+
+    private shouldUsePublishLogger(): boolean {
+        // Feature flag to control MSBuild logger for dotnet publish command
+        // Default: enabled (opt-out pattern) - users can disable if needed
+        // Set DISTRIBUTEDTASK_TASKS_DISABLEDOTNETPUBLISHLOGGER=true to disable
+        const disablePublishLogger = tl.getPipelineFeature('DisableDotNetPublishLogger');
+        
+        if (disablePublishLogger) {
+            tl.debug('MSBuild logger disabled for dotnet publish via feature flag DisableDotNetPublishLogger');
+            return false;
+        }
+        
+        return true;
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {

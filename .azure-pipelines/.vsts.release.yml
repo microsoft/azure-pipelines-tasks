@@ -94,6 +94,8 @@ extends:
     featureFlags:
       autoBaseline: false
     sdl:
+      binskim:
+        preReleaseVersion: '4.3.1'
       sbom:
         enabled: true
       baseline:
