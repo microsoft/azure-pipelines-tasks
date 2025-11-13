@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 261,
+    "Minor": 262,
     "Patch": 0
   },
   "demands": [
@@ -224,14 +224,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "visibleRule": "vstestLocationMethod = version",
       "groupName": "executionOptions",
-      "options": {
-        "latest": "Latest",
-        "17.0": "Visual Studio 2022",
-        "16.0": "Visual Studio 2019",
-        "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015",
-        "toolsInstaller": "Installed by Tools Installer"
-      },
+        "options": {
+            "latest": "Latest",
+            "18.0": "Visual Studio 2026",
+            "17.0": "Visual Studio 2022",
+            "16.0": "Visual Studio 2019",
+            "15.0": "Visual Studio 2017",
+            "14.0": "Visual Studio 2015",
+            "toolsInstaller": "Installed by Tools Installer"
+        },
       "properties": {
         "EditableOptions": "True"
       }
