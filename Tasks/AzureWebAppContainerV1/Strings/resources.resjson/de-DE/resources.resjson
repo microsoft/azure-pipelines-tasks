@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "Bearbeiten Sie Web-App-Anwendungseinstellungen entsprechend der Syntax \"-Schlüssel Wert\". Ein Wert mit Leerzeichen muss in doppelte Anführungszeichen eingeschlossen werden. <br /> <b>Beispiel</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Konfigurationseinstellungen",
   "loc.input.help.configurationStrings": "Bearbeiten Sie Web-App-Konfigurationseinstellungen entsprechend der Syntax \"-Schlüssel Wert\". Ein Wert mit Leerzeichen muss in doppelte Anführungszeichen eingeschlossen werden. <br /> Beispiel: -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Ungültiges App Service-Paket oder ungültiger App Service-Ordnerpfad angegeben: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Die Dienstverbindungsdetails für Azure App Service wurden abgerufen: \"%s\"",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Fehler: Keine solche Bereitstellungsmethode vorhanden.",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Fehler bei der Bereitstellung für die Webanwendung \"%s\". Geben Sie für einen einzelnen Container einen gültigen Imagenamen an. Bei mehreren Containern ist eine Docker Compose-Datei erforderlich, und die Angabe eines Imagenamens ist optional. Geben Sie Imagenamen an, wenn die Tags in der Docker Compose-Datei ersetzt werden müssen.",
   "loc.messages.SingleContainerDeployment": "Für die Web-App \"%s\" wird eine Bereitstellung mit einem einzelnen Container durchgeführt, weil nur die Imagedetails angegeben wurden.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Es wird eine Bereitstellung mit mehreren Containern für die Web-App \"%s\" mit Transformation der Docker Compose-Datei durchgeführt, weil sowohl ein Imagename als auch eine Docker Compose-Datei angegeben wurden.",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Es wird eine Bereitstellung mit mehreren Containern für die Web-App \"%s\" ohne Transformation der Docker Compose-Datei durchgeführt, weil nur eine Docker Compose-Datei angegeben wurde."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Es wird eine Bereitstellung mit mehreren Containern für die Web-App \"%s\" ohne Transformation der Docker Compose-Datei durchgeführt, weil nur eine Docker Compose-Datei angegeben wurde.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating Site Containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating Site Containers."
 }

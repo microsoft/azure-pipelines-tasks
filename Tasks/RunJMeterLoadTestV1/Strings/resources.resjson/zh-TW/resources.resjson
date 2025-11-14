@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "雲端式 Apache JMeter 負載測試",
-  "loc.helpMarkDown": "此工作可用來觸發雲端中使用 Azure Pipelines 的 Apache JMeter 負載測試。[深入了解] (https://go.microsoft.com/fwlink/?LinkId=784929)。",
+  "loc.helpMarkDown": "This task can be used to trigger an Apache JMeter load test in cloud using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "在雲端中執行 Apache JMeter 負載測試",
   "loc.instanceNameFormat": "Apache JMeter 測試 $(LoadTest)",
   "loc.input.label.connectedServiceName": "Azure Pipelines 連線",

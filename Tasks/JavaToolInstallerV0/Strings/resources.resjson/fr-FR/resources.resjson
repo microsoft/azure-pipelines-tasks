@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "Version du kit JDK",
   "loc.input.help.versionSpec": "Numéro de version du kit JDK disponible dans le chemin. Utilisez un nombre entier pour la version, par exemple 10",
   "loc.input.label.jdkArchitectureOption": "Architecture du kit JDK",
-  "loc.input.help.jdkArchitectureOption": "Architecture (x86, x64) du kit JDK.",
+  "loc.input.help.jdkArchitectureOption": "Architecture (x86, x64, arm64) du JDK.",
   "loc.input.label.jdkSourceOption": "Source du kit JDK",
   "loc.input.help.jdkSourceOption": "Source du kit JDK compressé.",
   "loc.input.label.jdkFile": "Fichier du kit JDK",

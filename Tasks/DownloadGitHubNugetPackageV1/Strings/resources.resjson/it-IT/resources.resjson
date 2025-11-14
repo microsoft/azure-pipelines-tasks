@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Scarica pacchetti NuGet di GitHub",
-  "loc.helpMarkDown": "[Vedere la documentazione di .NET Core] (https://docs.microsoft.com/dotnet/core/)",
+  "loc.helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
   "loc.description": "Ripristina i pacchetti NuGet con l'interfaccia della riga di comando di dotnet",
   "loc.instanceNameFormat": "dotnet restore",
   "loc.group.displayName.restoreAuth": "Feed e autenticazione",

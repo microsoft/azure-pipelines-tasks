@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Kubelogin $(kubeloginVersion) installieren",
   "loc.input.label.kubeloginVersion": "Kubelogin-Version",
   "loc.input.help.kubeloginVersion": "Die zu verwendende Kubelogin-Version",
+  "loc.input.label.gitHubConnection": "GitHub-Verbindung",
+  "loc.input.help.gitHubConnection": "Eine GitHub-Verbindung ist erforderlich, um zu verhindern, dass anonyme Anfragenlimits der GitHub-API für [Azure/kubelogin](https://github.com/azure/kubelogin) die Installation beeinträchtigen. Wenn dieses Feld leer bleibt, kann es zu Fehlern kommen, sobald das Anfragenlimit erreicht ist. Für diese Verbindung sind keine Berechtigungen erforderlich.",
   "loc.messages.Info_VerifyKubeloginInstallation": "Kubelogin-Installation wird überprüft...",
   "loc.messages.Info_ResolvedToolFromCache": "Aus Toolcache aufgelöst: %s",
   "loc.messages.Info_UsingToolPath": "Verwendeter Toolpfad: %s",

@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "PowerShell wurde beendet mit dem Code \"%s\".",
   "loc.messages.JS_Stderr": "PowerShell hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
-  "loc.messages.PS_ExitCode": "PowerShell wurde beendet mit dem Code \"{0}\"."
+  "loc.messages.PS_ExitCode": "PowerShell wurde beendet mit dem Code \"{0}\".",
+  "loc.messages.Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
 }
