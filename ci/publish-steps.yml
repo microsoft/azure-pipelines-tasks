@@ -27,16 +27,19 @@ steps:
 # Set variables
 - powershell: .\ci\set-publish-variables.ps1
   displayName: Set publish variables
+  env:
+    TASKS_BUILD_ARTIFACT: $(tasksBuildArtifact)
 
 # Download slices
 - powershell: .\ci\download-built.ps1
   displayName: Download built packages
   env:
     SYSTEM_ACCESSTOKEN: $(system.accessToken)
+    TASKS_BUILD_ARTIFACT: $(tasksBuildArtifact)
 
 # Stage milestone
 # TODO: Rename this.. we are staging task packages not the milestone.
-- script: node .\ci\stage-milestone.js
+- script: node .\ci\stage-milestone.js $(tasksBuildArtifact)
   displayName: Stage milestone
 
 # Stage per task NuGet package
