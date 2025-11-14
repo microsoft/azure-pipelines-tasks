@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "安装 Kubelogin $(kubeloginVersion)",
   "loc.input.label.kubeloginVersion": "Kubelogin 版本",
   "loc.input.help.kubeloginVersion": "要使用的 Kubelogin 版本",
+  "loc.input.label.gitHubConnection": "GitHub 连接",
+  "loc.input.help.gitHubConnection": "需要 GitHub 连接，以防止对 [Azure/kubelogin](https://github.com/azure/kubelogin) 的 Github API 的匿名请求限制影响安装。如果达到请求限制，留空此选项可能会导致失败。此连接不需要任何权限。",
   "loc.messages.Info_VerifyKubeloginInstallation": "正在验证 Kubelogin 安装...",
   "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
   "loc.messages.Info_UsingToolPath": "使用工具路径: %s",

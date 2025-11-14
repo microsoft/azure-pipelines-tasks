@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<LS_SETTINGS_FILE>
+  <LS_SETTINGS_DESCRIPTION>
+    <![CDATA[]]>
+  </LS_SETTINGS_DESCRIPTION>
+  <optionSet id="LSOptions">
+    <optionSet id="Defaults" displayName="Option Defaults">
+      <optionSet id="Espresso" displayName="Espresso"/>
+      <optionSet id="Parsers" displayName="Parsers"/>
+    </optionSet>
+    <optionSet id="User" displayName="User Overrides">
+      <optionSet id="Espresso" displayName="Espresso"/>
+      <optionSet id="Parsers" displayName="Parsers"/>
+    </optionSet>
+    <optionSet id="Project" displayName="Project Overrides">
+      <optionSet id="Espresso" displayName="Espresso"/>
+      <optionSet id="Parsers" displayName="Parsers">
+        <optionSet id="Parser 210" displayName="POMXML Parser options" helpText="View file locXML.xml for details.">
+          <option id="stripLocTags" displayName="Remove loc ID/comments on generate" helpText="With this option turned on, localization IDs/comments will be removed from generated target files.">
+            <boolean defaultValue="0" currentValue="1"/>
+          </option>
+          <option id="IncTermNoResId" displayName="Include Terms that have no Resource Identifier" helpText="With this option turned off, only those terms with user defined resource id will be exposed.">
+            <boolean defaultValue="1" currentValue="0"/>
+          </option>
+          <option id="settingFile" displayName="Loc Setting File" helpText="With this option, users specify their own loc setting file.">
+            <string defaultValue="locxml.xml" currentValue="locxml_P210WxlSchemaV4.xml"/>
+          </option>
+          <option id="POMXMLUpdateLocCommentsOnly" displayName="Update Loc Instructions (_locComment) only" helpText="With this option turned ON and the Update Instructions option turned ON only Loc Instructions (_locComment) will be imported into the instruction field. If a localizable item does not have an explicit _locComment then the instruction field will be left blank.">
+            <boolean defaultValue="0" currentValue="1"/>
+          </option>
+        </optionSet>
+      </optionSet>
+    </optionSet>
+  </optionSet>
+</LS_SETTINGS_FILE>

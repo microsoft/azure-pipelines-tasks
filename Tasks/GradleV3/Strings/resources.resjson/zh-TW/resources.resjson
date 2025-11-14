@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK 路徑",
   "loc.input.help.jdkUserInputPath": "將 JAVA_HOME 設定為指定路徑。",
   "loc.input.label.jdkArchitecture": "JDK 架構",
-  "loc.input.help.jdkArchitecture": "選擇性地提供 JDK 的架構 (x86、x64)。",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.gradleOpts": "設定 GRADLE_OPTS",
   "loc.input.help.gradleOpts": "設定 GRADLE_OPTS 環境變數，用以傳送命令列引數以啟動 JVM。xmx 旗標會指定 JVM 可用的記憶體上限。",
   "loc.input.label.sqAnalysisEnabled": "執行 SonarQube 或 SonarCloud 分析",

@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "Edite la configuración de la aplicación web siguiendo la sintaxis -clave valor. Si un valor contiene espacios, debe ponerlo entre comillas dobles.<br /> <b>Ejemplo:</b> -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Opciones de configuración",
   "loc.input.help.configurationStrings": "Edite opciones de configuración de aplicación web la sintaxis-valor de clave. Valor que contenga espacios debe incluirse entre comillas dobles. <br /> Ejemplo: - phpVersion 5.6 - linuxFxVersion: nodo|6.11",
+  "loc.input.label.siteContainersConfig": "Configuración de contenedores de sitio",
+  "loc.input.help.siteContainersConfig": "Proporcione el JSON siteContainers-config para las implementaciones de SiteContainers.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Paquete App Service o ruta de acceso de carpeta proporcionados no válidos: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Se obtuvieron detalles de conexión de servicio para Azure App Service: \"%s\"",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : No existe tal método de implementación",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Error al implementar en la aplicación web \"%s\". Para un único contenedor, especifique simplemente un nombre de imagen válido. Para un contenedor múltiple, es obligatorio especificar un archivo de Docker Compose; la especificación de nombres de imagen es opcional. Los nombres de imágenes proporcionados se usan si es necesario sustituir las etiquetas del archivo de Docker Compose.",
   "loc.messages.SingleContainerDeployment": "Implementación de contenedor único en la aplicación web \"%s\", ya que solo se especificaron los detalles de la imagen.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Implementación de varios contenedores en la aplicación web \"%s\" con transformación del archivo de Docker Compose, ya que se ha especificado tanto el nombre de la imagen como el archivo de Docker Compose.",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Implementación de varios contenedores en la aplicación web \"%s\" sin transformación del archivo de Docker Compose, ya que solo se ha especificado el archivo de Docker Compose."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Implementación de varios contenedores en la aplicación web \"%s\" sin transformación del archivo de Docker Compose, ya que solo se ha especificado el archivo de Docker Compose.",
+  "loc.messages.StartedUpdatingSiteContainers": "Se ha iniciado la actualización de contenedores de sitio.",
+  "loc.messages.UpdatingSiteContainer": "Actualizando SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Se ha completado la actualización de contenedores de sitio."
 }

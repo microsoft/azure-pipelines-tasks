@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "JDK バージョン",
   "loc.input.help.versionSpec": "パスで使用可能にする JDK バージョンを指定する数値です。整数バージョン (10 など) を使用する",
   "loc.input.label.jdkArchitectureOption": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitectureOption": "JDK のアーキテクチャ (x86、x64)。",
+  "loc.input.help.jdkArchitectureOption": "The architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.jdkSourceOption": "JDK ソース",
   "loc.input.help.jdkSourceOption": "圧縮された JDK のソース。",
   "loc.input.label.jdkFile": "JDK ファイル",

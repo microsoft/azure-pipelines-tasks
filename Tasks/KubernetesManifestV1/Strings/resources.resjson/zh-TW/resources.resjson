@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "選取 Docker 登錄服務連線。需要向登錄驗證的命令必須選取此選項。",
   "loc.input.label.rolloutStatusTimeout": "推出狀態逾時",
   "loc.input.help.rolloutStatusTimeout": "結束監看推出狀態前所要等候的時間長度 (秒)",
+  "loc.input.label.resourceType": "Resource type",
+  "loc.input.help.resourceType": "The type of the resource (fleet, managed cluster)",
   "loc.messages.DownloadPathForStableTxt": "stable.txt 的下載路徑: %s",
   "loc.messages.DownloadKubeCtlFailed": "無法下載版本為 %s 的 kubectl 用戶端。請檢查版本是否正確 https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "無法從 %s 下載 kubernetes 穩定版本檔案。回到 %s",

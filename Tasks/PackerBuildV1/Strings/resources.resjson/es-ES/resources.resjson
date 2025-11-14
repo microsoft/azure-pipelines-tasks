@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "Especifique la ruta de acceso relativa al script de PowerShell (para Windows) o al script de shell (para Linux) que implementa el paquete. Este script debe estar incluido en la ruta de acceso del paquete seleccionada anteriormente. Admite un patrón de minimatch. Ruta de acceso de ejemplo: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "Argumentos del script de implementación",
   "loc.input.help.deployScriptArguments": "Especifique los argumentos que deben pasarse al script de implementación.",
+  "loc.input.label.canDeleteTempFolder": "Eliminar carpeta temporal",
+  "loc.input.help.canDeleteTempFolder": "Esta opción le permite quitar la carpeta temporal",
   "loc.input.label.additionalBuilderParameters": "Parámetros adicionales del compilador",
   "loc.input.help.additionalBuilderParameters": "En el modo de plantilla Packer generada automáticamente, la tarea crea una plantilla Packer con un compilador de Azure. Este compilador se usa para generar una imagen de máquina. Puede agregar claves al compilador de Azure para personalizar la plantilla Packer generada. Por ejemplo, puede establecer ssh_tty=true en el caso de que use una imagen base de CentOS y necesite tener un tty para ejecutar sudo.<br/>Para ver o editar los parámetros adicionales en una cuadrícula, haga clic en “…” junto al cuadro de texto.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "Omitir limpieza de archivos temporales durante el desaprovisionamiento",
