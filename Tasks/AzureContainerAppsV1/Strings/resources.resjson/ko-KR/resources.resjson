@@ -30,6 +30,8 @@
   "loc.input.help.containerAppEnvironment": "애플리케이션에서 사용할 Azure 컨테이너 앱 환경의 이름입니다. 제공되지 않은 경우 컨테이너 앱의 리소스 그룹에 있는 기존 환경이 사용되고, 그렇지 않으면 환경이 `<container-app-name>-env` 형식으로 만들어집니다.",
   "loc.input.label.runtimeStack": "Application Runtime 스택",
   "loc.input.help.runtimeStack": "Azure 컨테이너 앱에 배포할 때 애플리케이션이 실행되는 플랫폼 버전 스택입니다. 이 값은 `<platform>:<version>` 형식으로 제공되어야 합니다. 제공되지 않으면 이 값은 제공된 애플리케이션의 내용을 기반으로 Oryx에 의해 결정됩니다. Oryx에 대해 지원되는 런타임 스택에 대한 자세한 내용은 다음 문서를 참조하세요. https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md",
+  "loc.input.label.kind": "Container App kind",
+  "loc.input.help.kind": "Set to `functionapp` to get built in support and autoscaling to run Azure functions on Azure Container apps.",
   "loc.input.label.targetPort": "애플리케이션 대상 포트",
   "loc.input.help.targetPort": "애플리케이션 실행을 위해 지정된 포트입니다. 값이 제공되지 않고 작성기가 실행 가능한 애플리케이션 이미지를 빌드하는 데 사용되는 경우 대상 포트는 Python 애플리케이션의 경우 80, 다른 모든 플랫폼 애플리케이션의 경우 8080으로 설정됩니다. 컨테이너 앱을 만들 때 값이 제공되지 않으면 대상 포트가 기본값인 80이 됩니다. 참고: 이 작업을 사용하여 컨테이너 앱을 업데이트하는 경우 수신 속성의 변경 내용에 따라 대상 포트에 제공되지 않은 경우 대상 포트가 업데이트될 수 있습니다.",
   "loc.input.label.location": "컨테이너 앱의 위치",

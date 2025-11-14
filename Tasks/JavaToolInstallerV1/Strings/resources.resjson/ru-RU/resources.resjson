@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "Версия JDK",
   "loc.input.help.versionSpec": "Число, определяющее версию JDK, которая должна быть доступна по пути. Используйте целочисленный номер версии, например 10",
   "loc.input.label.jdkArchitectureOption": "Архитектура JDK",
-  "loc.input.help.jdkArchitectureOption": "Архитектура JDK (x86, x64).",
+  "loc.input.help.jdkArchitectureOption": "The architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.jdkSourceOption": "Источник JDK",
   "loc.input.help.jdkSourceOption": "Источник сжатого пакета JDK.",
   "loc.input.label.jdkFile": "Файл JDK",

@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "Путь к JDK",
   "loc.input.help.jdkUserInputPath": "Установка для JAVA_HOME определенного пути.",
   "loc.input.label.jdkArchitecture": "Архитектура JDK",
-  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64).",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.gradleOpts": "Задать GRADLE_OPTS",
   "loc.input.help.gradleOpts": "Задает переменную среды GRADLE_OPTS, которая используется для отправки аргументов командной строки, запускающих JVM. Флаг xmx указывает максимальный объем памяти, доступный JVM.",
   "loc.input.label.sqAnalysisEnabled": "Запустить анализ SonarQube или SonarCloud",

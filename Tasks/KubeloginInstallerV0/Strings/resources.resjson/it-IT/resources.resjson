@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Installare Kubelogin $(kubeloginVersion)",
   "loc.input.label.kubeloginVersion": "versione di kubelogin",
   "loc.input.help.kubeloginVersion": "Versione di Kubelogin da usare",
+  "loc.input.label.gitHubConnection": "GitHub Connection",
+  "loc.input.help.gitHubConnection": "A GitHub connection is needed to prevent anonymous requests limits to the Github API for [Azure/kubelogin](https://github.com/azure/kubelogin) from impacting the installation. Leaving this empty may cause failures if the request limit is reached. This connection does not require ANY permissions.",
   "loc.messages.Info_VerifyKubeloginInstallation": "Verifica dell'installazione di Kubelogin in corso...",
   "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
   "loc.messages.Info_UsingToolPath": "Uso del percorso dello strumento: %s",

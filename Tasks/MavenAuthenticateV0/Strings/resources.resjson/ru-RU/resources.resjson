@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Подробнее об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Предоставляет учетные данные для веб-каналов Azure Artifacts и внешних репозиториев Maven",
   "loc.instanceNameFormat": "Проверка подлинности Maven",
-  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Пользователь Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra\"",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "Это — подключение к службе пользователя Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra. Если этот параметр задан, входные данные mavenServiceConnections будут игнорироваться.",
   "loc.input.label.artifactsFeeds": "Веб-каналы",
   "loc.input.label.mavenServiceConnections": "Учетные данные для репозиториев за пределами этой организации и коллекции",

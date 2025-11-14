@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[이 작업에 대해 자세히 알아보기](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Azure Artifacts 피드 및 외부 maven 리포지토리에 대한 자격 증명을 제공합니다.",
   "loc.instanceNameFormat": "Maven 인증",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra 워크로드 ID 지원 Azure DevOps 사용자' 서비스 연결",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "Entra 워크로드 ID 지원 Azure DevOps 사용자 서비스 연결입니다. 이를 설정하면 입력 mavenServiceConnections가 무시됩니다.",
   "loc.input.label.artifactsFeeds": "피드",
   "loc.input.label.mavenServiceConnections": "이 조직/컬렉션 외부 리포지토리에 대한 자격 증명",

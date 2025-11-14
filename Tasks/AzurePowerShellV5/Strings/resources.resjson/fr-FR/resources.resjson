@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "Arrêt de PowerShell. Code de sortie : '%s'.",
   "loc.messages.JS_Stderr": "PowerShell a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
-  "loc.messages.PS_ExitCode": "Arrêt de PowerShell. Code de sortie : '{0}'."
+  "loc.messages.PS_ExitCode": "Arrêt de PowerShell. Code de sortie : '{0}'.",
+  "loc.messages.Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
 }

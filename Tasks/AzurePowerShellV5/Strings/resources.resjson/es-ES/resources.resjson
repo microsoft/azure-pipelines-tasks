@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "PowerShell se cerró con el código \"%s\".",
   "loc.messages.JS_Stderr": "PowerShell escribió una o varias líneas en la secuencia de error estándar.",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
-  "loc.messages.PS_ExitCode": "PowerShell se cerró con el código \"{0}\"."
+  "loc.messages.PS_ExitCode": "PowerShell se cerró con el código \"{0}\".",
+  "loc.messages.Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
 }

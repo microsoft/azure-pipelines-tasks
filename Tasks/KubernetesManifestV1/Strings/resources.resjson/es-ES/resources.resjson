@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Seleccione una conexión de servicio de registro de Docker. Obligatorio para los comandos que deben autenticarse en un registro.",
   "loc.input.label.rolloutStatusTimeout": "Tiempo de expiración del estado de lanzamiento",
   "loc.input.help.rolloutStatusTimeout": "Intervalo de tiempo (en segundos) que debe esperarse antes de finalizar la inspección del estado de lanzamiento.",
+  "loc.input.label.resourceType": "Resource type",
+  "loc.input.help.resourceType": "The type of the resource (fleet, managed cluster)",
   "loc.messages.DownloadPathForStableTxt": "Ruta de acceso de descarga para stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "No se puede descargar el cliente kubectl de la versión %s. Compruebe si la versión es correcta: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "No se puede descargar el archivo de versión estable de kubernetes de %s. Revirtiendo a %s",

@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "指定用以部署套件之 PowerShell 指令碼 (適用於 Windows) 或 Shell 指令碼 (適用於 Linux) 的相對路徑。此指令碼應該包含在上列選取的套件路徑中。支援 minimatch 模式。範例路徑: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "部署指令碼引數",
   "loc.input.help.deployScriptArguments": "請指定要傳遞給部署指令碼的引數。",
+  "loc.input.label.canDeleteTempFolder": "Delete temp folder",
+  "loc.input.help.canDeleteTempFolder": "This option allows you to remove temporary folder",
   "loc.input.label.additionalBuilderParameters": "其他產生器參數",
   "loc.input.help.additionalBuilderParameters": "在自動產生的 Packer 範本模式中，工作會使用 Azure 產生器建立 Packer 範本。此產生器可用以產生電腦映像。您可以將金鑰新增至 Azure 產生器中，以自訂產生的 Packer 範本。例如，若目前使用 CentOS 基底映像，且您需要有 tty 才可執行 sudo，在此情況下請設定 ssh_tty=true。<br/>若要檢視/編輯方格中的其他參數，請按一下文字方塊旁的 [...]。",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "在取消佈建期間跳過清除暫存檔案",

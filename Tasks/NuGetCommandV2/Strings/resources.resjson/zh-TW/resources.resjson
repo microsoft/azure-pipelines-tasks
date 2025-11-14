@@ -136,5 +136,7 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失敗，結束代碼: (%s)，錯誤: (%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "目前已為此工作啟用 IncludeNugetOrg。若要解决此警告，請編輯建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服務連線並非使用支援的驗證方法。請使用個人存取權杖型驗證的服務連線。"
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服務連線並非使用支援的驗證方法。請使用個人存取權杖型驗證的服務連線。",
+  "loc.messages.LIB_WhichNotFound_Linux": "Unable to locate executable file: '%s'. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "The task has failed because you are using Ubuntu 24.04 or later without mono installed. See https://aka.ms/nuget-task-mono for more information."
 }
