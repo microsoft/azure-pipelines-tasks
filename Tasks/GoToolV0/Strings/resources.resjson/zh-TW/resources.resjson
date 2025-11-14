@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "GOPATH 環境變數的自訂值。",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 環境變數的自訂值。",
+  "loc.input.label.goDownloadUrl": "Go 下載 URL",
+  "loc.input.help.goDownloadUrl": "用於下載 Go 二進位檔的 URL。僅支援 https://go.dev/dl (official) 和 https://aka.ms/golang/release/latest (Microsoft build) 支援。若已省略，將會使用官方 Go 下載 URL (https://go.dev/dl)。如果兩者都已設定，此參數優先於 GOTOOL_GODOWNLOADURL 環境變數。",
   "loc.messages.FailedToDownload": "無法下載 Go %s 版。請驗證版本有效，並解決其他任何問題。錯誤: %s",
   "loc.messages.TempDirNotSet": "應設定 'Agent.TempDirectory' 環境變數。"
 }
