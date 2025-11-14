@@ -26,7 +26,7 @@ For example: - You can have 2 Chef server tasks, one which creates a new deploym
 
 Gate tasks, in a typical usage will primarily do one kind of activity and that activity will be "query an external system". You will typically not create a new resource in a gate because gates run N times in a deployment and creating N resources in a single deployment does not look natural.
 
-So a good gate will typically query an external system. For example:- Querying work items is a good gate because the result of the query can change in between runs. Similarly querying azure monitors is a good gate because the health of the monitors of a live system can change in between runs. But creation of new work item is not a good gate as you dont want to create N work items in a run given that work item is a long lived object. 
+So a good gate will typically query an external system. For example:- Querying work items is a good gate because the result of the query can change in between runs. Similarly querying azure monitors is a good gate because the health of the monitors of a live system can change in between runs. But creation of new work item is not a good gate as you don't want to create N work items in a run given that work item is a long lived object. 
 
 With sprint 144, multiple activities can be clubbed in a gate. This can be leveraged in scenarios where you need to create a resource on an external system and query the resource status N times. The resource will be created only once in the first run and subsequent runs will skip the creation and query the resource status. For example:- Trigger policy evaluation and query N times to check if the evaluation is complete. Once complete, evaluate the results. 
 
