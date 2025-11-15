@@ -90,7 +90,7 @@
     Determines the SDK version from a user specified global.json file
     Note: global.json must have a value for 'SDK:Version'
 .PARAMETER DownloadTimeout
-    Determines timeout duration in seconds for dowloading of the SDK file
+    Determines timeout duration in seconds for downloading of the SDK file
     Default: 1200 seconds (20 minutes)
 #>
 [cmdletbinding()]
