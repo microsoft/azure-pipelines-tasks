@@ -12,7 +12,7 @@ $azureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $validRG
 
 Register-Mock Get-FilteredAzureVMsInResourceGroup {}
 
-# Test 1 "should call Get-FilteredAzureVMsInResourceGroup with proper paramters"
+# Test 1 "should call Get-FilteredAzureVMsInResourceGroup with proper parameters"
 Get-FilteredAzureRMVMsInResourceGroup -azureRMVMResources $azureRMVMResources -resourceFilteringMethod "tags" -filter ""
 Assert-WasCalled Get-FilteredAzureVMsInResourceGroup -Times 1 -ParametersEvaluator {
     $resourceFilteringMethod -eq "tags"-and $filter -eq "" -and $azureVMResources.Count -eq $azureRMVMResources.Count
