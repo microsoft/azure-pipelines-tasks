@@ -318,7 +318,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
         assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml clean package'), 'it should have run mvn -f pom.xml package');
+        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml clean verify'), 'it should have run mvn -f pom.xml verify');
 
         const readOriginalPomXmlLogIndex = testRunner.stdout.indexOf('Reading original pom.xml');
         assert(readOriginalPomXmlLogIndex !== -1, 'should have read original pom.xml');
@@ -330,7 +330,7 @@ describe("Maven L0 Suite", function () {
         assert(readOriginalPomXmlLogIndex < wroteModifiedPomXmlLogIndex, 'it shouldn\'t have saved pom.xml before writing modified pom.xml contents');
         assert(wroteModifiedPomXmlLogIndex < wroteOriginalPomXmlLogIndex, 'it shouldn\'t have restored original pom.xml before writing modified pom.xml contents');
 
-        assert(testRunner.invokedToolCount === 4, 'should have run maven exactly 4 times: ' + testRunner.invokedToolCount);
+        assert(testRunner.invokedToolCount === 3, 'should have run maven exactly 3 times: ' + testRunner.invokedToolCount);
         assert(testRunner.stderr.length === 0, 'should not have written to stderr=' + testRunner.stderr);
         assert(testRunner.succeeded, 'task should have succeeded');
     });
