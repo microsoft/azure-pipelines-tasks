@@ -210,6 +210,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.25": "JDK 25",
         "1.21": "JDK 21",
         "1.17": "JDK 17",
         "1.11": "JDK 11",
