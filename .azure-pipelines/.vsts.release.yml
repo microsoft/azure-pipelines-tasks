@@ -85,6 +85,8 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: tasksBuildArtifact
+  value: 'allTasks'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -134,7 +136,7 @@ extends:
                   ne(variables['numTasks'], 0)
                 )
               PathtoPublish: _package/tasks.zip
-              ArtifactName: package
+              ArtifactName: $(tasksBuildArtifact)
               sbomBuildDropPath: $(Build.SourcesDirectory)/_package
         steps:
         - template: /ci/build-all-steps.yml@self
@@ -199,30 +201,26 @@ extends:
         steps:
         - checkout: self
         - template: /ci/courtesy-push.yml@self
-
-      - job: build_all_tasks_for_deployments
-        displayName: Build all tasks for deployments (Windows)
-        dependsOn:
-        - courtesy_push
-        - build_all_windows
-        condition: succeeded()
-        timeoutInMinutes: 360
+      
+      # GitHub Release
+      - job: github_release
+        displayName: Create GitHub Release
+        timeoutInMinutes: 60
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
           os: windows
+        dependsOn:
+        - courtesy_push
         variables:
-          task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
+          courtesy_push_pr_id: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_ID']]
+          courtesy_push_pr_link: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_LINK']]
+        condition: |
+          and(
+            succeeded(),
+            in(variables['build.reason'], 'Schedule', 'Manual')
+          )
         templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish package artifact'
-            PathtoPublish: _package/tasks.zip
-            sbomBuildDropPath: $(Build.SourcesDirectory)/_package
-            ArtifactName: allTasks
+          outputs: []
         steps:
-        - template: /ci/build-all-tasks.yml@self
-          parameters:
-            deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all Tasks') }}
-            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
-      
+        - template: /ci/github-release.yml@self

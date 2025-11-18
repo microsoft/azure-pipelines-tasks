@@ -3,7 +3,8 @@ $ErrorActionPreference = 'Stop'
 Add-Type -Assembly 'System.IO.Compression.FileSystem'
 try {
     # Download the package
-    $downloadUrl = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$env:BUILD_BUILDID/artifacts?artifactName=package&%24format=zip&api-version=3"
+    $tasksBuildArtifact = $env:TASKS_BUILD_ARTIFACT
+    $downloadUrl = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$env:BUILD_BUILDID/artifacts?artifactName=$tasksBuildArtifact&%24format=zip&api-version=3"
     $downloadTarget = "$env:SYSTEM_ARTIFACTSDIRECTORY\package.zip"
     Write-Host "Downloading: '$downloadUrl' to target '$downloadTarget'"
     $webClient = New-Object System.Net.WebClient
