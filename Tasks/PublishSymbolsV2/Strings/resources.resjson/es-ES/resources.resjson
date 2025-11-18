@@ -10,8 +10,8 @@
   "loc.input.help.SymbolsFolder": "Ruta de acceso a la carpeta en la que se buscan los archivos de símbolos. El valor predeterminado es $(Build.SourcesDirectory). De lo contrario, especifique una ruta de acceso raíz, por ejemplo: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Patrón de búsqueda",
   "loc.input.help.SearchPattern": "Patrón usado para detectar los archivos pdb que se van a publicar.",
-  "loc.input.label.Manifest": "",
-  "loc.input.help.Manifest": "",
+  "loc.input.label.Manifest": "Manifiesto",
+  "loc.input.help.Manifest": "La ruta a un archivo que contiene más claves de cliente de símbolos para publicar.",
   "loc.input.label.IndexSources": "Indexar orígenes",
   "loc.input.help.IndexSources": "Indique si se debe insertar la información del servidor de origen en los archivos PDB. Esta opción solo se admite en agentes de Windows.",
   "loc.input.label.PublishSymbols": "Publicar símbolos",
@@ -76,5 +76,5 @@
   "loc.messages.UnsupportedSourceProvider0": "Proveedor de origen no admitido '{0}' para la indexación de origen.",
   "loc.messages.Win32Error0FromMethod1": "Error de Win32 '{0}' del método '{1}'.",
   "loc.messages.NodeVersionSupport": "Node v{0} ya no se admite a partir del 31/08/2024. Actualice el agente de canalización a la última versión de Node 16 o posterior.",
-  "loc.messages.ManifestFileNotFound": ""
+  "loc.messages.ManifestFileNotFound": "No se encontró el archivo de manifiesto en \"{0}\"."
 }
