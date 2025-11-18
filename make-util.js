@@ -1876,7 +1876,7 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, configs) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, configs, bumpMainTask) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
@@ -1905,6 +1905,9 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
         writeUpdateArg += " --write-updates";
     }
 
+    if(bumpMainTask) {
+        writeUpdateArg += " --bump-main-task";
+    }
     if(includeLocalPackagesBuildConfig)
     {
         writeUpdateArg += " --include-local-packages-build-config";

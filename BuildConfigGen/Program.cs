@@ -88,6 +88,7 @@ namespace BuildConfigGen
         /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
         /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
         /// <param name="useSemverBuildConfig">If true, the semver "build" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3).</param>
+        /// <param name="bumpMainTask">If true, update the main task.json version independently of generated configs</param>
         static void Main(
             string? task = null,
             string? configs = null,
@@ -97,12 +98,13 @@ namespace BuildConfigGen
             bool getTaskVersionTable = false,
             string? debugAgentDir = null,
             bool includeLocalPackagesBuildConfig = false,
-            bool useSemverBuildConfig = false)
+            bool useSemverBuildConfig = false,
+            bool bumpMainTask = false)
         {
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, bumpMainTask);
             }
             catch (Exception e2)
             {
@@ -133,7 +135,8 @@ namespace BuildConfigGen
             bool getTaskVersionTable,
             string? debugAgentDir,
             bool includeLocalPackagesBuildConfig,
-            bool useSemverBuildConfig)
+            bool useSemverBuildConfig,
+            bool bumpMainTask)
         {
             if (allTasks)
             {
@@ -343,7 +346,8 @@ namespace BuildConfigGen
                         hasGlobalVersion: globalVersion is not null,
                         generatedFolder: generatedFolder,
                         altGeneratedFolder: altGeneratedFolder,
-                        useSemverBuildConfig: useSemverBuildConfig);
+                        useSemverBuildConfig: useSemverBuildConfig,
+                        bumpMainTask: bumpMainTask);
                 }
 
                 debugConfGen.WriteLaunchConfigurations();
@@ -604,7 +608,8 @@ namespace BuildConfigGen
             bool hasGlobalVersion,
             string generatedFolder,
             string altGeneratedFolder,
-            bool useSemverBuildConfig)
+            bool useSemverBuildConfig,
+            bool bumpMainTask)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -773,6 +778,11 @@ namespace BuildConfigGen
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.json");
                             WriteInputTaskJson(taskTargetPath, taskVersionState.configTaskVersionMapping, "task.loc.json");
 
+                            if (bumpMainTask)
+                            {
+                                WriteBumpedMainTaskJson(taskTargetPath, currentSprint, "task.json");
+                                WriteBumpedMainTaskJson(taskTargetPath, currentSprint, "task.loc.json");
+                            }
                             if (config.ManagePackageJsonInOverride())
                             {
                                 GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath, generatedFolder, task);
@@ -1707,6 +1717,24 @@ always-auth=true", false);
             }
         }
 
+        private static void WriteBumpedMainTaskJson(string taskTarget, int currentSprint, string fileName)
+        {
+            string inputTaskPath = Path.Combine(taskTarget, fileName);
+            JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
+
+            if (inputTaskNode["version"]!["Minor"]!.GetValue<int>() != currentSprint)
+            {
+                inputTaskNode["version"]!["Minor"] = currentSprint;
+                inputTaskNode["version"]!["Patch"] = 0;
+
+            }
+            else
+            {
+                inputTaskNode["version"]!["Patch"] = inputTaskNode["version"]!["Patch"]!.GetValue<int>() + 1;
+            }
+
+            ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+        }
         private static void WriteVersionMapFile(string versionMapFile, TaskStateStruct taskStateStruct, HashSet<Config.ConfigRecord> targetConfigs)
         {
             if (targetConfigs.Where(c => !c.isDefault && !c.useGlobalVersion && !c.mergeToBase).Any())

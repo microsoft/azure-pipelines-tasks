@@ -257,7 +257,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         const makeOptions = fileToJson(makeOptionsPath);
 
         // Verify generated files across tasks are up-to-date
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig, argv.useSemverBuildConfig || false, argv.configs);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig, argv.useSemverBuildConfig || false, argv.configs, argv.bumpMainTask);
     }
 
     if (argv.includeLocalPackagesBuildConfig)
