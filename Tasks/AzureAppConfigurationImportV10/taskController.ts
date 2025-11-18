@@ -1,11 +1,11 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { TaskParameters } from "./taskParameters";
-import { 
-    AppConfigurationImporter, 
-    ConfigurationFormat, 
+import {
+    AppConfigurationImporter,
+    ConfigurationFormat,
     ConfigurationProfile,
     ImportResult,
-    ImportMode, 
+    ImportMode,
     ArgumentError } from "@azure/app-configuration-importer";
 import { FileConfigurationSettingsSource, FileConfigurationSyncOptions } from "@azure/app-configuration-importer-file-source";
 import { AppConfigurationClient } from '@azure/app-configuration';
@@ -36,7 +36,7 @@ export class TaskController {
     }
 
     public async sync(): Promise<void> {
-        
+
         const format: string = this._taskParameters.useFilePathExtension ? this._taskParameters.filePath.split('.').pop().toLowerCase() : this._taskParameters.fileFormat;
 
         console.log(tl.loc("AzureAppConfigurationImportTaskStartingUp"));
@@ -103,6 +103,8 @@ export class TaskController {
                 this._taskParameters.dryRun);
         }
         catch (error) {
+            tl.debug(error);
+
             if (error instanceof RestError) {
 
                 if (error.statusCode == 403) {
@@ -120,7 +122,7 @@ export class TaskController {
             }
             throw error;
         }
-        
+
         console.log(tl.loc("SuccessfullyUploadedConfigurations", successCount));
     }
 }

@@ -20,6 +20,7 @@ async function run(): Promise<void> {
         tl.setResult(tl.TaskResult.Succeeded, "", true);
     }
     catch (e) {
+        tl.debug(e);
 
         if (Utils.IsInstanceOf(e, "ArgumentError") ||Utils.IsInstanceOf(e, "ParseError") || e instanceof AppConfigurationError) {
 
