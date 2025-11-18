@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK 경로",
   "loc.input.help.jdkUserInputPath": "JAVA_HOME을 지정된 경로로 설정합니다.",
   "loc.input.label.jdkArchitecture": "JDK 아키텍처",
-  "loc.input.help.jdkArchitecture": "선택적으로 JDK의 아키텍처(x86, x64)를 제공하세요.",
+  "loc.input.help.jdkArchitecture": "선택적으로 JDK의 아키텍처(x86, x64, arm64)를 제공하세요.",
   "loc.input.label.gradleOpts": "GRADLE_OPTS 설정",
   "loc.input.help.gradleOpts": "JVM을 시작하기 위해 명령줄 인수를 보내는 데 사용되는 GRADLE_OPTS 환경 변수를 설정합니다. xmx 플래그는 JVM에 사용 가능한 최대 메모리를 지정합니다.",
   "loc.input.label.sqAnalysisEnabled": "SonarQube 또는 SonarCloud 분석 실행",
