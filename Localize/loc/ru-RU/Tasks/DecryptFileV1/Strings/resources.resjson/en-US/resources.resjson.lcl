@@ -145,7 +145,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl failed with error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Сбой openssl с ошибкой %s]]></Val>
+            <Val><![CDATA[Сбой OpenSSL с ошибкой %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -154,7 +154,7 @@
         <Str Cat="Text">
           <Val><![CDATA[openssl exited with return code: %d]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[openssl завершила работу с кодом возврата: %d]]></Val>
+            <Val><![CDATA[OpenSSL завершила работу с кодом возврата: %d]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -81,6 +81,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Provide a timeout value for HTTP requests that the task makes to obtain the .NET package. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[タスクから発行される .NET パッケージ取得用の HTTP 要求のタイムアウト値を指定します。値はミリ秒単位です。既定値は 300,000 ミリ秒 (5 分) です。600,000 ミリ秒 (10 分) を超える値は指定できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.useGlobalJson" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.]]></Val>
@@ -92,19 +101,25 @@
       </Item>
       <Item ItemId=";loc.input.help.version" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[インストールする .NET Core SDK またはランタイムのバージョンを指定します。<br/>バージョンは以下の形式で指定できます<li>2.x   => メジャー バージョンが最新のものをインストールします。</li><li>2.2.x => メジャー バージョンとマイナー バージョンが最新のものをインストールします</li><li>2.2.104 => バージョンが正確に一致するものをインストールします</li><br/>SDK またはランタイムをインストールするために release.json で `version` の値を探します。その major.minor バージョンの releases.json へのリンクは [**releases-index ファイル**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json) からわかります。たとえば、2.2 バージョンの releases.json へのリンクは https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json です]]></Val>
+            <Val><![CDATA[インストールする .NET Core SDK またはランタイムのバージョンを指定します。<br/>バージョンは次の形式で指定できます。<li>2.x => 指定されたメジャー バージョンの最新版をインストールします。</li><li>2.2.x => 指定されたメジャーおよびマイナー バージョンの最新版をインストールします。</li><li>2.2.104 => 厳密に指定されたバージョンをインストールします。</li><br/>releases.json ファイルに含まれる SDK/ランタイム インストール用の `version` 値を検索してください。この major.minor バージョンの releases.json に対するリンクは、[**releases-index ファイル**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)内にあります。たとえば、2.2 バージョンの releases.json へのリンクは https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json です。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.vsVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)]]></Val>
+          <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[.NET Core SDK をインストールする、互換性のある Visual Studio のバージョンを指定します。メジャー バージョン、マイナー バージョン、パッチ番号を含む 16.6.4 などの完全な VS バージョンを指定します。releases.jsから SDK またはランタイムをインストールするための 'version' の値を検索します。この major.minor バージョンの releases.js へのリンクは、[**releases-index ファイル**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)にあります。]]></Val>
+            <Val><![CDATA[.NET Core SDK のインストールの対象である、互換性のある Visual Studio のバージョンを指定します。メジャー バージョン、マイナー バージョン、パッチ番号を含む完全な VS バージョン (例: 16.6.4) を指定します。releases.json ファイルに含まれる SDK/ランタイム インストール用の `version` 値を検索してください。この major.minor バージョンの releases.json に対するリンクは、[**releases-index ファイル**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)内にあります。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -149,6 +164,15 @@
           <Val><![CDATA[Perform Multi Level Lookup]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[複数レベルの検索を実行]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set timeout for package download request]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パッケージのダウンロード要求のタイムアウトを設定します]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -830,10 +854,13 @@
       </Item>
       <Item ItemId=";loc.messages.VersionNumberHasTheWrongFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[バージョン番号 %s の形式が正しくありません。バージョンは次の形式で指定できます。2.x   => メジャー バージョンが最新のものをインストールします。2.2.x => メジャー バージョンとマイナー バージョンが最新のものをインストールします。2.2.104 => バージョンが正確に一致するものをインストールします。SDK またはランタイムのインストール用の 'version' の値を release.json で探します。その major.minor バージョンの releases.json へのリンクは [**releases-index ファイル**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json) からわかります。たとえば、2.2 バージョンの releases.json へのリンクは https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json です]]></Val>
+            <Val><![CDATA[バージョン番号 %s の形式が正しくありません。バージョンは次の形式で指定できます: 2.x => 指定されたメジャー バージョンの最新版をインストールします。2.2.x => 指定されたメジャーおよびマイナー バージョンの最新版をインストールします。2.2.104 => 厳密に指定されたバージョンをインストールします。releases.json ファイルに含まれる SDK/ランタイム インストール用の `version` 値を検索してください。この major.minor バージョンの releases.json に対するリンクは、[**releases-index ファイル**]5D;(https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)内にあります。たとえば、2.2 バージョンの releases.json へのリンクは https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json です。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**]5D;(https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

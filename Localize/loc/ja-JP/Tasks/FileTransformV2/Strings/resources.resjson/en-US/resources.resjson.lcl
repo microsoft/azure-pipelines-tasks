@@ -48,12 +48,18 @@
       <Item ItemId=";loc.input.help.enableXmlTransform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[構成変換は変数の置換の前に実行されます。<br/>XML 変換は Windows プラットフォームでのみサポートされています。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If selected, the pipeline fails if the target files are empty or if the substitution fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[選択すると、ターゲット ファイルが空の場合や置換に失敗した場合にはパイプラインが失敗します。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -78,8 +84,8 @@
       <Item ItemId=";loc.input.help.xmlTargetFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables. <br/>Note: We are replacing double quotes with single quotes in the XML to avoid escaping issues that can occur in XML.]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[変数の値を置換するファイルの改行区切りリストを指定します。ファイル名はルート フォルダーから相対指定されます。<br/>XML の場合、ビルドまたはリリース パイプラインで定義された変数は、構成ファイルおよび parameters.xml の appSettings、applicationSettings、connectionStrings セクションの 'key' または 'name' エントリに対して照合されます。<br/> 変数の置換は、構成変換の後に実行されます。</br> 注: 置換では、ビルドまたはリリース パイプラインで定義されているカスタム変数のみが使用されます。既定のまたはシステム定義のパイプライン変数は除外されます。<br/>注: リリース パイプラインとステージで同じ変数が定義されている場合、ステージ変数はリリース パイプライン変数より優先されます。]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[変数値を置き換えるファイルの一覧を改行区切りで指定します。ファイル名はルート フォルダーからの相対パスで指定してください。<br/>XML の場合、ビルドまたはリリース パイプラインで定義された変数は、構成ファイルと parameters.xml に含まれる appSettings、applicationSettings、connectionStrings セクションの 'key' または 'name' エントリと照合されます。<br/> 変数の置換は、構成の変換後に実行されます。</br> 注: 置換に使われるのは、ビルド/リリース パイプラインで定義されたカスタム変数のみです。既定またはシステム定義のパイプライン変数は除外されます。<br/>注: リリース パイプライン内とステージ内に同じ変数が定義されている場合、リリース パイプライン変数よりもステージ変数が優先されます。<br/>注: XML でエスケープの問題が発生する可能性を回避するために、XML 内の二重引用符を単一引用符に置き換える作業を進めています。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.]]></Val>
@@ -108,6 +114,9 @@
       <Item ItemId=";loc.input.label.errorOnInvalidSubstitution" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Error on empty files and invalid substitution.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[空のファイルおよび無効な置換をエラーにします。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

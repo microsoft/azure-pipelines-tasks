@@ -79,6 +79,9 @@
       <Item ItemId=";loc.input.help.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select an Azure Resource Manager service connection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Resource Manager サービス接続を選択します]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -139,6 +142,9 @@
       <Item ItemId=";loc.input.help.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use this option if you have a custom logger. To use, provide the logger name along with its parameters in the following format: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このオプションは、カスタム ロガーをお使いの場合に使用します。使用するには、ロガー名とそのパラメーターを次の形式で指定してください: 'friendlyName;key1=value1;key2=value2;....']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -172,6 +178,9 @@
       <Item ItemId=";loc.input.help.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this option is turned on, test results won't be published as part of this task. Use Publish Test Results task instead]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このオプションがオンの場合、テスト結果はこのタスクの一部として公開されません。代わりに [テスト結果の公開]5D; タスクを使用してください]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -523,6 +532,9 @@
       <Item ItemId=";loc.input.label.customLoggerConfig" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom Logger Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[カスタム ロガーの構成]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -556,6 +568,9 @@
       <Item ItemId=";loc.input.label.donotPublishTestResults" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Disable publishing test results]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テスト結果の公開を無効にする]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
