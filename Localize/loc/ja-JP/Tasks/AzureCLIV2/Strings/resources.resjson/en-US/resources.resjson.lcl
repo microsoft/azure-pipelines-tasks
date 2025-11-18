@@ -488,12 +488,12 @@
       </Item>
       <Item ItemId=";loc.messages.UnacceptedScriptLocationValue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be 'inlineScript' or 'scriptPath']]></Val>
+          <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[%s は、タスク入力 'Script Location' (YAML の scriptLocation) に対して有効な値ではありません。値には 'inlineScript' または 'scriptPath' を指定できます]]></Val>
+            <Val><![CDATA[%s は、タスク入力 'Script Location' (YAML の scriptLocation) に対して有効な値ではありません。指定できる値は 'inlineScript' または 'scriptPath' です]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath']]></Val>
+            <Val><![CDATA[%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be 'inlineScript' or 'scriptPath']]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
