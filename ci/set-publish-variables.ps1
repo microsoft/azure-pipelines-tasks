@@ -29,3 +29,7 @@ $now = [System.DateTime]::UtcNow
 $aggregateVersion = "1.$('{0:yyyyMMdd}' -f $now).$([System.Math]::Floor($now.timeofday.totalseconds))-$env:BUILD_SOURCEBRANCHNAME-$commit"
 Write-Host "Aggregate version: '$aggregateVersion'"
 Write-Host "##vso[task.setVariable variable=aggregate_version]$aggregateVersion"
+
+$tasksBuildArtifact = $env:TASKS_BUILD_ARTIFACT
+Write-Host "Artifact name: '$tasksBuildArtifact'"
+Write-Host "##vso[task.setVariable variable=artifact_name]$tasksBuildArtifact"

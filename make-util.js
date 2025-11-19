@@ -13,6 +13,7 @@ const semver = require('semver');
 const shell = require('shelljs');
 
 const makeOptions = require('./make-options.json');
+const downloadUtils = require('./build-scripts/download-utils.js');
 
 const args = minimist(process.argv.slice(2));
 
@@ -179,20 +180,20 @@ function performNpmAudit(taskPath) {
             shell: true
         });
 
-        if (auditResult.error) {
+        if (auditResult.status) {
             console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
             console.log('👉 Please see details by running the command');
             console.log(`\tnpm audit --prefix ${taskPath}`);
             console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
-            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
-            process.exit(1);
+            console.log(`\tnode make.js build --task ${args.task} --BypassNpmAudit`);
+            throw new Error(`npm audit failed with exit code: ${auditResult.status}`);
         } else {
             console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
         }
     } catch (error) {
         console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
         console.error(error.message);
-        process.exit(1);
+        throw error;
     }
 }
 
@@ -479,6 +480,10 @@ var downloadFileAsync = async function (url) {
 exports.downloadFileAsync = downloadFileAsync;
 
 var downloadArchiveAsync = async function (url, omitExtensionCheck) {
+    if(args.enableConcurrentTaskBuild) {
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+    }
+
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -911,10 +916,10 @@ var validateUuid = function (uuid) {
 
     try {
         const uuidLib = require('node-uuid');
-        
+
         // node-uuid.parse() returns a buffer if valid, throws if invalid
         var parsed = uuidLib.parse(uuid);
-        
+
         // If parse succeeds and returns a 16-byte buffer, the UUID is valid
         return parsed && parsed.length === 16;
     } catch (error) {
@@ -1897,7 +1902,7 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
     }
     if (useSemverBuildConfig === true || useSemverBuildConfig === 'true') {
         writeUpdateArg += " --use-semver-build-config";
-    } 
+    }
 
     var debugAgentDirArg = "";
     if(debugAgentDir) {

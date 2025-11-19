@@ -27,15 +27,11 @@ steps:
 - template: /ci/get-AzDo-pat.yml@self
 
 - script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
+  name: createCourtesyPushPR
   displayName: Update unified deps and create branch
   env:
     TOKEN: $(AzDo_PAT)
     BRANCH_NAME: $(branchName)
     DRYRUN: $(isDryRun)
     USERNAME: $(username)
-    
-- powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
-  displayName: Send MS Teams notification
-  condition: or(eq(variables['build.reason'], 'Schedule'), eq(variables['build.reason'], 'Manual'))
-  env:
-    TEAMS_WEBHOOK: $(MSTeamsUri)
+
