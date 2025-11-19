@@ -1,0 +1,186 @@
+name: Branch Cleanup
+
+on:
+  schedule:
+    # Run on the first Monday of every month at 2 AM UTC
+    - cron: '0 2 1-7 * 1'
+  workflow_dispatch:
+    inputs:
+      months:
+        description: 'Delete branches older than N months'
+        required: true
+        default: '24'
+        type: number
+      dry_run:
+        description: 'Dry run (preview only, do not delete)'
+        required: true
+        default: true
+        type: boolean
+      create_issue:
+        description: 'Create an issue with the list of deleted branches'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  branch-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clean up old branches
+        env:
+          MONTHS: ${{ github.event.inputs.months || '24' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          CREATE_ISSUE: ${{ github.event.inputs.create_issue || 'true' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          
+          echo "Branch Cleanup - $(date)"
+          echo "Retention period: $MONTHS months"
+          echo "Dry run mode: $DRY_RUN"
+          echo "Create issue: $CREATE_ISSUE"
+          
+          cutoff=$(date -d "-$MONTHS months" +%s)
+          total=0
+          preserved=0
+          cleanup=0
+          remain=0
+          preserved_list=()
+          cleanup_list=()
+          remain_list=()
+          deleted_count=0
+          
+          # Create temporary files for output
+          cleanup_file=$(mktemp)
+          preserved_file=$(mktemp)
+          remain_file=$(mktemp)
+          
+          echo "Analyzing branches..."
+          
+          # List all remote branches
+          while read branch date; do
+            total=$((total+1))
+            bname=${branch#origin/}
+            
+            # Skip HEAD reference
+            if [[ "$bname" == "HEAD" ]]; then
+              continue
+            fi
+            
+            # Protected branches (never delete)
+            if [[ "$bname" == "master" ]] || [[ "$bname" == main ]] || [[ "$bname" == release* ]] || [[ "$bname" == Localize* ]] || [[ "$bname" == Localization* ]]; then
+              preserved=$((preserved+1))
+              preserved_list+=("$bname")
+              echo "$bname" >> "$preserved_file"
+              continue
+            fi
+            
+            # Check if branch should be cleaned up
+            if [[ $date -lt $cutoff ]]; then
+              cleanup=$((cleanup+1))
+              cleanup_list+=("$bname")
+              echo "$bname" >> "$cleanup_file"
+            else
+              remain=$((remain+1))
+              remain_list+=("$bname")
+              echo "$bname" >> "$remain_file"
+            fi
+          done < <(git for-each-ref --format='%(refname:short) %(committerdate:unix)' refs/remotes/ | grep -v "HEAD ->")
+          
+          echo "=== Branch Analysis Summary ==="
+          echo "Total branches: $total"
+          echo "Protected branches: $preserved"
+          echo "Branches to cleanup: $cleanup"
+          echo "Branches that will remain: $remain"
+          echo ""
+          
+          if [[ $cleanup -eq 0 ]]; then
+            echo "✅ No branches need cleanup at this time."
+            exit 0
+          fi
+          
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "🔍 DRY RUN MODE - No branches will be deleted"
+            echo ""
+            echo "Branches that would be deleted:"
+            for branch in "${cleanup_list[@]}"; do
+              echo "  - $branch"
+            done
+          else
+            echo "🗑️  CLEANUP MODE - Deleting branches..."
+            
+            # Delete branches
+            for branch in "${cleanup_list[@]}"; do
+              echo "Deleting branch: $branch"
+              if git push origin --delete "$branch" 2>/dev/null; then
+                deleted_count=$((deleted_count+1))
+                echo "  ✅ Deleted: $branch"
+              else
+                echo "  ❌ Failed to delete: $branch (may already be deleted or protected)"
+              fi
+            done
+            
+            echo ""
+            echo "✅ Cleanup completed. Deleted $deleted_count branches."
+          fi
+          
+          # Create issue if requested (only in actual cleanup mode)
+          if [[ "$CREATE_ISSUE" == "true" && "$DRY_RUN" == "false" && $deleted_count -gt 0 ]]; then
+            echo ""
+            echo "📝 Creating GitHub issue with cleanup report..."
+            
+            # Prepare issue body
+            issue_body=$(cat << EOF
+          # Branch Cleanup Report - $(date +"%Y-%m-%d")
+          
+          ## Summary
+          This is an automated report of the monthly branch cleanup that was performed today.
+          
+          - **Branches deleted**: $deleted_count
+          - **Retention policy**: Branches older than $MONTHS months
+          - **Protected branches**: master, main, release*, Localize*, Localization*
+          
+          ## Deleted Branches
+          The following branches were deleted as part of this cleanup:
+          
+          EOF
+            )
+            
+            # Add deleted branches to issue body
+            for branch in "${cleanup_list[@]}"; do
+              issue_body+=$'\n'"- \`$branch\`"
+            done
+            
+            issue_body+=$'\n\n'"## Policy"$'\n'
+            issue_body+="This cleanup was performed according to our [monthly branch cleanup policy](https://github.com/microsoft/azure-pipelines-tasks/blob/master/.github/workflows/branch-cleanup.yml)."$'\n\n'
+            issue_body+="If you believe a branch was deleted in error, please:"$'\n'
+            issue_body+="1. Check if you have a local copy of the branch"$'\n'
+            issue_body+="2. Create a new branch from your local copy if needed"$'\n'
+            issue_body+="3. Reply to this issue with details about the branch and why it should be restored"$'\n'
+            
+            # Create the issue using GitHub CLI API call
+            curl -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/microsoft/azure-pipelines-tasks/issues" \
+              -d "{\"title\":\"Branch Cleanup Report - $(date +'%Y-%m-%d')\",\"body\":$(echo "$issue_body" | jq -R -s .)}"
+          fi
+          
+          # Clean up temp files
+          rm -f "$cleanup_file" "$preserved_file" "$remain_file"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "Branch cleanup workflow completed at $(date)"
+          echo "Check the logs above for detailed results."
