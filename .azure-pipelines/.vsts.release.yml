@@ -36,10 +36,6 @@ parameters:
   displayName: skipPublish (Not for production use)
   type: boolean
   default: false
-- name: publishToDistributedTaskTest
-  displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
-  type: boolean
-  default: false  
 - name: dryRun
   displayName: Dry Run (no push, no PR, no feed publish)
   type: boolean
@@ -148,6 +144,10 @@ extends:
       - job: courtesy_push
         displayName: Courtesy Push
         timeoutInMinutes: 540
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-windows-2022
+          os: windows
         dependsOn:
         - build_all_windows
         condition: |
@@ -156,19 +156,12 @@ extends:
             eq(variables['tasksSkipPublish'], 'false'),
             and(
               eq(variables['COURTESY_PUSH'], 'true'),
-              or(
-                eq(variables['build.reason'], 'Schedule'),
-                and(
-                  eq(variables['build.reason'], 'Manual'),
-                  eq(variables['FORCE_COURTESY_PUSH'], 'true')
-                )
+              and(
+                eq(variables['build.reason'], 'Manual'),
+                eq(variables['FORCE_COURTESY_PUSH'], 'true')
               )
             )
           )
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
         templateContext:
           outputs:
           - output: buildArtifacts
@@ -178,7 +171,7 @@ extends:
           - output: nuget
             packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            ${{ if or(eq(parameters.dryRun, true), eq(parameters.publishToDistributedTaskTest, true)) }}:
+            ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
             ${{ else }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
@@ -204,7 +197,7 @@ extends:
         condition: |
           and(
             succeeded(),
-            in(variables['build.reason'], 'Schedule', 'Manual')
+            eq(variables['build.reason'], 'Manual')
           )
         templateContext:
           outputs: []
