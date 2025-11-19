@@ -144,13 +144,27 @@ extends:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
 
-      # Publish
-      - job: publish
-        displayName: Publish Nuget Artifacts
-        timeoutInMinutes: 360
+      # Courtesy Push
+      - job: courtesy_push
+        displayName: Courtesy Push
+        timeoutInMinutes: 540
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
+        condition: |
+          and(
+            succeeded(),
+            eq(variables['tasksSkipPublish'], 'false'),
+            and(
+              eq(variables['COURTESY_PUSH'], 'true'),
+              or(
+                eq(variables['build.reason'], 'Schedule'),
+                and(
+                  eq(variables['build.reason'], 'Manual'),
+                  eq(variables['FORCE_COURTESY_PUSH'], 'true')
+                )
+              )
+            )
+          )
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
@@ -161,37 +175,10 @@ extends:
             displayName: 'Publish per task NuGet package artifact'
             PathtoPublish: _package/nuget-packages
             ArtifactName: IndividualNuGetPackages
-        steps:
-        - template: /ci/publish-steps.yml@self
-        
-      # Courtesy Push
-      - job: courtesy_push
-        displayName: Courtesy Push
-        timeoutInMinutes: 180
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        dependsOn:
-        - publish
-        condition: |
-          and(
-            succeeded(),
-            eq(variables['COURTESY_PUSH'], 'true'),
-            or(
-              eq(variables['build.reason'], 'Schedule'),
-              and(
-                eq(variables['build.reason'], 'Manual'),
-                eq(variables['FORCE_COURTESY_PUSH'], 'true')
-              )
-            )
-          )
-        templateContext:
-          outputs:
           - output: nuget
-            packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
+            packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            ${{ if or(eq(parameters.dryRun, true),eq(parameters.publishToDistributedTaskTest, true)) }}:
+            ${{ if or(eq(parameters.dryRun, true), eq(parameters.publishToDistributedTaskTest, true)) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
             ${{ else }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
@@ -199,8 +186,7 @@ extends:
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
         steps:
-        - checkout: self
-        - template: /ci/courtesy-push.yml@self
+        - template: /ci/courtesy-push-steps.yml@self
       
       # GitHub Release
       - job: github_release
