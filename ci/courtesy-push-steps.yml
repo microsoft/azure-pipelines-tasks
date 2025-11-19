@@ -58,15 +58,6 @@ steps:
     npm ci
   displayName: npm ci (courtesy-push)
 
-# Copy local nuget packages to mimic the artifact download structure
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/_package/nuget-packages'
-    Contents: '**'
-    TargetFolder: '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages'
-    OverWrite: true
-  displayName: Copy nuget packages to artifact location
-
 - powershell: $(Build.SourcesDirectory)/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
@@ -78,7 +69,7 @@ steps:
 - template: /ci/generate-branch-name.yml@self
 - template: /ci/get-AzDo-pat.yml@self
 
-- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
+- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/_package/nuget-packages/unified_deps.xml
   name: createCourtesyPushPR
   displayName: Update unified deps and create branch
   env:
