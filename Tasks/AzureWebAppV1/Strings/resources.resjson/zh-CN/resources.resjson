@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "按照语法 -key 值编辑 Web 应用配置设置。包含空格的值应括在双引号中。<br />示例: -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "部署方法",
   "loc.input.help.deploymentMethod": "选择应用的部署方法。",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "提供了无效的应用服务包或文件夹路径: %s",
   "loc.messages.SetParamFilenotfound0": "设置的参数文件未找到: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 转换已成功应用",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Java jar 路径不存在",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "未能更新 Application Insights“%s”资源。错误: %s",
   "loc.messages.InvalidDockerImageName": "提供的 Docker Hub 映像名称无效。",
-  "loc.messages.MsBuildPackageNotSupported": "不支持部署 msBuild 生成的包。请更改包格式或使用 Azure 应用服务部署任务。"
+  "loc.messages.MsBuildPackageNotSupported": "不支持部署 msBuild 生成的包。请更改包格式或使用 Azure 应用服务部署任务。",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }

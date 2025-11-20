@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Fournit des informations d'identification pour les flux Azure Artifacts et les dépôts Maven externes",
   "loc.instanceNameFormat": "Authentification Maven",
-  "loc.input.label.workloadIdentityServiceConnection": "Connexion de service « Utilisateur Azure DevOps adossé à l’ID de charge de travail Entra »",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "Il s’agit d’une connexion de service utilisateur Azure DevOps basée sur l’identificateur de charge de travail Entra. Si cette option est définie, l'entrée mavenServiceConnections sera ignorée.",
   "loc.input.label.artifactsFeeds": "Flux",
   "loc.input.label.mavenServiceConnections": "Informations d'identification des dépôts situés en dehors de cette organisation/collection",

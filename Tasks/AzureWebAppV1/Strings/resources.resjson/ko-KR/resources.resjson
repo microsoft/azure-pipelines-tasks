@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "구문 -key 값 다음에 오는 웹앱 구성 설정을 편집합니다. 공백이 포함되는 값은 큰따옴표로 묶어야 합니다.<br /> 예 : -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "배포 방법",
   "loc.input.help.deploymentMethod": "앱의 배포 방법을 선택합니다.",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "잘못된 App Service 패키지 또는 폴더 경로를 제공했습니다. %s",
   "loc.messages.SetParamFilenotfound0": "매개 변수 설정 파일을 찾을 수 없습니다. %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 변환을 적용했습니다.",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Java jar 경로가 없습니다.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
   "loc.messages.InvalidDockerImageName": "지정한 Docker Hub 이미지 이름이 잘못되었습니다.",
-  "loc.messages.MsBuildPackageNotSupported": "msBuild에서 생성된 패키지를 배포할 수 없습니다. 패키지 형식을 변경하거나 Azure App Service 배포 작업을 사용하세요."
+  "loc.messages.MsBuildPackageNotSupported": "msBuild에서 생성된 패키지를 배포할 수 없습니다. 패키지 형식을 변경하거나 Azure App Service 배포 작업을 사용하세요.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }

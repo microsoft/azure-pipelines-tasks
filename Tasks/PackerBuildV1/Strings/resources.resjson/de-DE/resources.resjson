@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "Geben Sie den relativen Pfad zu einem PowerShell-Skript (für Windows) oder einem Shell-Skript (für Linux) an, das das Paket bereitstellt. Dieses Skript muss im oben ausgewählten Paketpfad enthalten sein. Unterstützt das Minimatch-Muster. Beispielpfad: \"deploy/**/scripts/windows/deploy.ps1\"",
   "loc.input.label.deployScriptArguments": "Bereitstellungsskriptargumente",
   "loc.input.help.deployScriptArguments": "Geben Sie die Argumente an, die an das Bereitstellungsskript übergeben werden.",
+  "loc.input.label.canDeleteTempFolder": "Delete temp folder",
+  "loc.input.help.canDeleteTempFolder": "This option allows you to remove temporary folder",
   "loc.input.label.additionalBuilderParameters": "Zusätzliche Generatorparameter",
   "loc.input.help.additionalBuilderParameters": "Im Modus für automatisch generierte Packer-Vorlagen erstellt die Aufgabe eine Packer-Vorlage mit einem Azure-Generator. Dieser Generator dient zum Erstellen eines Computerimages. Sie können dem Azure-Generator Schlüssel hinzufügen, um die erstellte Packer-Vorlage anzupassen. Legen Sie z. B. \"ssh_tty=true\" fest, wenn Sie ein CentOS-Basisimage verwenden und Sie ein tty zum Ausführen von sudo benötigen.<br/>Klicken Sie neben dem Textfeld auf \"...\", um die zusätzlichen Parameter in einem Raster anzuzeigen/zu bearbeiten.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "Beim Aufheben der Bereitstellung die Bereinigung der temporären Dateien überspringen",

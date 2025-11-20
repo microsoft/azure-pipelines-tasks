@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "按照语法 -key 值编辑 Web 应用应用程序设置。包含空格的值应括在双引号中。<br /><b>示例</b>: -Port 5000 -RequestTimeout <br />-WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "配置设置",
   "loc.input.help.configurationStrings": "按照语法 -key 值编辑 Web 应用配置设置。包含空格的值应括在双引号中。<br />示例: -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "提供了无效的应用服务包或文件夹路径: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "已获取 Azure 应用服务“%s”的服务连接详细信息",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "错误: 不存在此种部署方法",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "部署到 webapp“%s”失败。对于单个容器，只需指定有效的映像名称。对于多个容器，需要指定 Docker Compose 文件，并且可以选择性指定映像名称。如果 Docker Compose 文件中的标记需要替换，则提供映像名称。",
   "loc.messages.SingleContainerDeployment": "将单个容器部署到 webapp \"%s\"，因为仅指定了映像详细信息。",
   "loc.messages.MultiContainerDeploymentWithTransformation": "将多个容器部署到 webapp“%s”并且转换 Docker Compose 文件，因为指定了映像名称和 Docker Compose 文件",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "将多个容器部署到 webapp“%s”而不转换 Docker Compose 文件，因为仅指定了 Docker Compose 文件。"
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "将多个容器部署到 webapp“%s”而不转换 Docker Compose 文件，因为仅指定了 Docker Compose 文件。",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating Site Containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating Site Containers."
 }

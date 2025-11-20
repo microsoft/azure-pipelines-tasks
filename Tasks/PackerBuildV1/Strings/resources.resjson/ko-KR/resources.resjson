@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "패키지를 배포하는 PowerShell 스크립트(Windows) 또는 셸 스크립트(Linux)에 대한 상대 경로를 지정합니다. 위에서 선택한 패키지 경로에 이 스크립트를 포함해야 합니다. minimatch 패턴을 지원합니다. 예제 경로: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "배포 스크립트 인수",
   "loc.input.help.deployScriptArguments": "인수가 배포 스크립트로 전달되도록 지정합니다.",
+  "loc.input.label.canDeleteTempFolder": "Delete temp folder",
+  "loc.input.help.canDeleteTempFolder": "This option allows you to remove temporary folder",
   "loc.input.label.additionalBuilderParameters": "추가 작성기 매개 변수",
   "loc.input.help.additionalBuilderParameters": "자동 생성된 Packer 템플릿 모드에서 작업은 Azure 작성기를 사용하여 Packer 템플릿을 만듭니다. 이 작성기는 컴퓨터 이미지를 생성하는 데 사용됩니다. Azure 작성기에 키를 추가하여 생성된 Packer 템플릿을 사용자 지정할 수 있습니다. 예를 들어 CentOS 기본 이미지를 사용 중이며 sudo를 실행하기 위해 tty가 있어야 하는 경우 ssh_tty=true를 설정합니다.<br/>표에서 추가 매개 변수를 확인/편집하려면 텍스트 상자 옆에 있는 “…”을 클릭하세요.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "프로비전 해제 중 임시 파일 정리 건너뛰기",
