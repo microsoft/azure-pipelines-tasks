@@ -231,6 +231,8 @@
         "task.loc.json",
         "Tests"
     ],
+    "Node24": [],
+    "Node24_overwrite": [],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
