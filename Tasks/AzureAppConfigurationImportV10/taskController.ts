@@ -103,6 +103,8 @@ export class TaskController {
                 this._taskParameters.dryRun);
         }
         catch (error) {
+            tl.debug(error);
+
             if (error instanceof RestError) {
 
                 if (error.statusCode == 403) {
