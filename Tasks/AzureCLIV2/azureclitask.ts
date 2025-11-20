@@ -255,6 +255,8 @@ export class azureclitask {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);        
+        const allowNoSubscriptions: boolean = tl.getBoolInput("allowNoSubscriptions", false);
+        const EMPTY_GUID: string = "00000000-0000-0000-0000-000000000000";
 
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -328,8 +330,12 @@ export class azureclitask {
         }
 
         this.isLoggedIn = true;
-        if (!!subscriptionID) {
-            //set the subscription imported to the current subscription
+        const shouldSkipSubscription: boolean = allowNoSubscriptions || (subscriptionID && subscriptionID.toLowerCase() === EMPTY_GUID);
+        if (shouldSkipSubscription) {
+            tl.debug("allowNoSubscriptions enabled or empty GUID supplied; skipping 'az account set' step.");
+            console.log(tl.loc('SkippingSubscriptionContext'));
+        } else if (!!subscriptionID) {
+            // set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
         }
     }

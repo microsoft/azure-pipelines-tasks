@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
   "loc.description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
-  "loc.releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below.",
+  "loc.releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below. \n- Added 'Allow no Azure subscriptions' option to support identities with no subscription access.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectedServiceNameARM": "Azure Resource Manager connection",
   "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager service connection for the deployment",
@@ -31,6 +31,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
   "loc.input.label.visibleAzLogin": "az login output visibility",
   "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
+  "loc.input.label.allowNoSubscriptions": "Allow no Azure subscriptions",
+  "loc.input.help.allowNoSubscriptions": "If true, the task will not attempt to set a subscription context and will allow logins where the identity has access to no subscriptions. You can also supply an all-zero SubscriptionID (00000000-0000-0000-0000-000000000000) in the service connection to implicitly skip setting the subscription context.",
   "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
   "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
   "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
@@ -54,5 +56,6 @@
   "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server",
   "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
   "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
+  "loc.messages.SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
 }

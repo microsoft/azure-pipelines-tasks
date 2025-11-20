@@ -7,6 +7,7 @@ This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azur
 - Supports running PowerShell and PowerShell Core script.
 - PowerShell Core script works with Xplat agents  (Windows, Linux or OSX), make sure the agent has PowerShell version 6 or more.
 - Powershell script works only with Windows agent, make sure the agent has PowerShell version 5 or below.
+- Supports authentication without selecting any Azure subscription, useful for tenant/directory level commands.
 
 ## Contact Information
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
@@ -15,7 +16,8 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 The following pre-requisites need to be setup in the target machine(s) for the task to work properly.
 
 #### **Azure Subscription**
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the settings section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+This refers to the Azure Resource Manager (ARM) service connection you select in the task (its internal input name is `connectedServiceNameARM` or `azureSubscription`). To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the settings section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+- If your service connection intentionally has no access subscriptions, enable the task input **Allow no Azure subscriptions** (or configure the service connection with an empty GUID as the Subscription ID: `00000000-0000-0000-0000-000000000000`) so the task skips setting a subscription context and supports tenant/directory‑level commands.
 - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
 - For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 

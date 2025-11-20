@@ -6,7 +6,7 @@
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
-  "releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below.",
+  "releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below. \n- Added 'Allow no Azure subscriptions' option to support identities with no subscription access.",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 264,
+    "Minor": 265,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -182,6 +182,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "Allow no Azure subscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If true, the task will not attempt to set a subscription context and will allow logins where the identity has access to no subscriptions. You can also supply an all-zero SubscriptionID (00000000-0000-0000-0000-000000000000) in the service connection to implicitly skip setting the subscription context.",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "[Experimental] Keep Azure CLI session active",
@@ -228,5 +237,6 @@
     "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
     "RefreshingAzSession": "Attempting to refresh az-cli session...",
     "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+    ,"SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
   }
 }

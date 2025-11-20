@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 264,
+    "Minor": 265,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -182,6 +182,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowNoSubscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowNoSubscriptions",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.keepAzSessionActive",
@@ -227,6 +236,7 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
   }
 }
