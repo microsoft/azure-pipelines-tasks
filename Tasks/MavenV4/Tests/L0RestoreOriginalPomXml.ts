@@ -60,6 +60,10 @@ const answers: TaskLibAnswers = {
             code: 0,
             stdout: 'Maven package done'
         },
+        '/home/bin/maven/bin/mvn -f pom.xml clean verify': {
+            code: 0,
+            stdout: 'Maven verify done'
+        },
         '/home/bin/maven/bin/mvn -f pom.xml verify -Dmaven.test.skip=true': {
             code: 0,
             stdout: 'something'
