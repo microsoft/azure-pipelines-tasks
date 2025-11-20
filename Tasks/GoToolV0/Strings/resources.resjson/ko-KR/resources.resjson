@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "GOPATH 환경 변수에 대한 사용자 지정 값입니다.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 환경 변수에 대한 사용자 지정 값입니다.",
+  "loc.input.label.goDownloadUrl": "다운로드 URL 이동",
+  "loc.input.help.goDownloadUrl": "Go 바이너리를 다운로드할 URL입니다. https://go.dev/dl(공식) 및 https://aka.ms/golang/release/latest(Microsoft 빌드)만 지원됩니다. 생략하면 공식 Go 다운로드 URL(https://go.dev/dl)이 사용됩니다. 이 매개 변수는 GOTOOL_GODOWNLOADURL 환경 변수보다 우선 적용됩니다.",
   "loc.messages.FailedToDownload": "Go 버전 %s을(를) 다운로드하지 못했습니다. 버전이 유효한지 확인하고 다른 문제를 모두 해결하세요. 오류: %s",
   "loc.messages.TempDirNotSet": "'Agent.TempDirectory' 환경 변수를 설정해야 합니다."
 }
