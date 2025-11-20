@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "Пользовательское значение переменной среды GOPATH.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "Пользовательское значение переменной среды GOBIN.",
+  "loc.input.label.goDownloadUrl": "URL-адрес для загрузки Go",
+  "loc.input.help.goDownloadUrl": "URL-адрес для загрузки бинарных файлов Go. Поддерживаются только https://go.dev/dl (официальный) и https://aka.ms/golang/release/latest (сборка Майкрософт). Если пропущено, будет использован официальный URL-адрес для загрузки Go (https://go.dev/dl). Этот параметр имеет приоритет над переменной среды GOTOOL_GODOWNLOADURL, если установлены оба параметра.",
   "loc.messages.FailedToDownload": "Не удалось скачать версию Go %s. Проверьте правильность версии и устраните другие ошибки. Ошибка: %s",
   "loc.messages.TempDirNotSet": "Переменная среды Agent.TempDirectory должна была быть задана."
 }

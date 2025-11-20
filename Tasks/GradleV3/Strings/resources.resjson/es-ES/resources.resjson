@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "Ruta de acceso de JDK",
   "loc.input.help.jdkUserInputPath": "Establece JAVA_HOME en la ruta de acceso especificada.",
   "loc.input.label.jdkArchitecture": "Arquitectura JDK",
-  "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) del JDK.",
+  "loc.input.help.jdkArchitecture": "Opcionalmente, proporcione la arquitectura (x86, x64, arm64) del JDK.",
   "loc.input.label.gradleOpts": "Establecer GRADLE_OPTS",
   "loc.input.help.gradleOpts": "Establece la variable de entorno GRADLE_OPTS, que se utiliza para enviar argumentos de línea de comandos para iniciar JVM. La marca xmx especifica la cantidad de memoria máxima disponible para JVM.",
   "loc.input.label.sqAnalysisEnabled": "Ejecutar análisis de SonarQube o SonarCloud",

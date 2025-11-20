@@ -136,5 +136,7 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Échec de la commande nuget avec le code de sortie (%s) et l'erreur (%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg est actuellement activé pour cette tâche. Pour résoudre cet avertissement, modifiez votre tâche de build et définissez 'includeNuGetOrg' sur 'false' ou désélectionnez 'Use packages from NuGet.org'.",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Nous n’avons pas pu restaurer des paquets. Editez votre tâche de build et mettez 'includeNuGetOrg' à 'false' ou désélectionnez 'Use packages from NuGet.org'.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Nous ne pouvons pas localiser le fichier exécutable : « %s ». Veuillez vérifier que le chemin d’accès du fichier existe ou que le fichier se trouve au sein d’un répertoire spécifié par la variable d’environnement PATH. Vérifiez également le mode du fichier pour confirmer qu’il est exécutable.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Nous n’avons pas pu effectuer la tâche, car vous utilisez Ubuntu 24.04 ou une version ultérieure sans Mono installée. Pour découvrir plus d’informations, consultez https://aka.ms/nuget-task-mono."
 }
