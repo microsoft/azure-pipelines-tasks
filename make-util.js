@@ -13,6 +13,7 @@ const semver = require('semver');
 const shell = require('shelljs');
 
 const makeOptions = require('./make-options.json');
+const downloadUtils = require('./build-scripts/download-utils.js');
 
 const args = minimist(process.argv.slice(2));
 
@@ -179,20 +180,20 @@ function performNpmAudit(taskPath) {
             shell: true
         });
 
-        if (auditResult.error) {
+        if (auditResult.status) {
             console.log(`\x1b[A\x1b[K❌ npm audit failed because the build task at "${taskPath}" has vulnerable dependencies.`);
             console.log('👉 Please see details by running the command');
             console.log(`\tnpm audit --prefix ${taskPath}`);
             console.log('or execute the command with --BypassNpmAudit argument to skip the auditing');
-            console.log(`\tnode make.js --build --task ${args.task} --BypassNpmAudit`);
-            process.exit(1);
+            console.log(`\tnode make.js build --task ${args.task} --BypassNpmAudit`);
+            throw new Error(`npm audit failed with exit code: ${auditResult.status}`);
         } else {
             console.log('\x1b[A\x1b[K✅ npm audit completed successfully.');
         }
     } catch (error) {
         console.error('\x1b[A\x1b[K❌ "performNpmAudit" failed.');
         console.error(error.message);
-        process.exit(1);
+        throw error;
     }
 }
 
@@ -479,6 +480,10 @@ var downloadFileAsync = async function (url) {
 exports.downloadFileAsync = downloadFileAsync;
 
 var downloadArchiveAsync = async function (url, omitExtensionCheck) {
+    if(args.enableConcurrentTaskBuild) {
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+    }
+
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -897,9 +902,34 @@ var createTaskLocJson = function (taskPath) {
 };
 exports.createTaskLocJson = createTaskLocJson;
 
+// Enhanced UUID/GUID validation using node-uuid package
+var validateUuid = function (uuid) {
+    if (!uuid || typeof uuid !== 'string') {
+        return false;
+    }
+
+    // Basic format check - must match UUID pattern (allows all variants)
+    var uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidPattern.test(uuid)) {
+        return false;
+    }
+
+    try {
+        const uuidLib = require('node-uuid');
+
+        // node-uuid.parse() returns a buffer if valid, throws if invalid
+        var parsed = uuidLib.parse(uuid);
+
+        // If parse succeeds and returns a 16-byte buffer, the UUID is valid
+        return parsed && parsed.length === 16;
+    } catch (error) {
+        return false;
+    }
+};
+
 // Validates the structure of a task.json file.
 var validateTask = function (task) {
-    if (!task.id || !check.isUUID(task.id)) {
+    if (!task.id || !validateUuid(task.id)) {
         fail('id is a required guid');
     };
 
@@ -1840,8 +1870,9 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
+ * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
@@ -1868,6 +1899,9 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     if(includeLocalPackagesBuildConfig)
     {
         writeUpdateArg += " --include-local-packages-build-config";
+    }
+    if (useSemverBuildConfig === true || useSemverBuildConfig === 'true') {
+        writeUpdateArg += " --use-semver-build-config";
     }
 
     var debugAgentDirArg = "";
@@ -2058,5 +2092,6 @@ async function getCurrentSprint() {
 }
 
 exports.getCurrentSprint = getCurrentSprint;
+exports.validateUuid = validateUuid;
 
 //------------------------------------------------------------------------------

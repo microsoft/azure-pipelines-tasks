@@ -1,3 +1,5 @@
+# Global code owner for the code that is orphan and for changes across the repo like refactoring. 
+*  @azure-pipelines-admin
 
 ci/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
@@ -38,9 +40,9 @@ Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team
 
 Tasks/AzureCloudPowerShellDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
+Tasks/AzureContainerAppsV0/    @naziml    @tarunramsinghani
 
-Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
+Tasks/AzureContainerAppsV1/    @naziml    @tarunramsinghani
 
 Tasks/AzureFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -62,11 +64,11 @@ Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @ma
 
 Tasks/AzureFunctionOnKubernetesV0/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @manolerazvan @vhavrysh 
+Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureFunctionV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
+Tasks/AzureIoTEdgeV2/     @marianan 
 
 Tasks/AzureKeyVaultV1/     @microsoft/release-management-task-team @manolerazvan 
 
@@ -102,7 +104,7 @@ Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-servi
 Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan
 
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
-Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
+Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
@@ -142,7 +144,7 @@ Tasks/Common/artifacts-common/     @microsoft/azure-artifacts-packages
 
 Tasks/Common/AzureRmDeploy-common/   @vincentdass    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/Deployment/   @bishal-pdMSFT  @microsoft/release-management-task-team @manolerazvan  
+Tasks/Common/Deployment/     @microsoft/release-management-task-team @manolerazvan  
 
 Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
@@ -150,27 +152,27 @@ Tasks/Common/RemoteDeployer/   @arjgupta
 
 Tasks/Common/ServiceFabricHelpers/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/TlsHelper_/   @rajatagrawal-dev   @arjgupta
+Tasks/Common/TlsHelper_/      @arjgupta
 
-Tasks/Common/VstsAzureHelpers_/  @rajatagrawal-dev   @vincentdass
+Tasks/Common/VstsAzureHelpers_/     @vincentdass
 
-Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  @rajatagrawal-dev
+Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  
 
 Tasks/Common/azure-arm-rest/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
+Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    
 
 Tasks/Common/coveragepublisher/     @manos  @microsoft/adoautotest
 
 Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
+Tasks/Common/kubernetes-common/   
 
 Tasks/Common/packaging-common/     @microsoft/azure-artifacts-packages
 
-Tasks/Common/utility-common/       @nishubansal    @ds-ms
+Tasks/Common/utility-common/       
 
 Tasks/Common/webdeployment-common/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -337,7 +339,7 @@ Tasks/NodeTaskRunnerInstallerV0/    @microsoft/azure-pipelines-tasks-and-agent @
 Tasks/NodeToolV0/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI rotation: Azure Container Registry / Triage
-Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT
+Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT @tarunramsinghani
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 
@@ -363,11 +365,11 @@ Tasks/NuGetToolInstallerV0/    @microsoft/azure-artifacts-packages
 
 Tasks/NuGetToolInstallerV1/    @microsoft/azure-artifacts-packages
 
-Tasks/OpenPolicyAgentInstallerV0/
+Tasks/OpenPolicyAgentInstallerV0/ 
 
-Tasks/PackerBuildV0/   @bishal-pdmsft
+Tasks/PackerBuildV0/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/PackerBuildV1/   @bishal-pdmsft
+Tasks/PackerBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/PipAuthenticateV0/     @microsoft/azure-artifacts-packages
 
@@ -395,11 +397,11 @@ Tasks/PublishPipelineMetadataV0/    @microsoft/release-management-task-team @man
 
 Tasks/PublishSymbolsV2/    @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/PublishTestResultsV1/    @shailesh-sk
+Tasks/PublishTestResultsV1/    @manos  @microsoft/adoautotest
 
-Tasks/PublishTestResultsV2/    @shailesh-sk
+Tasks/PublishTestResultsV2/    @manos  @microsoft/adoautotest
 
-Tasks/ContainerStructureTestV0/    @manos
+Tasks/ContainerStructureTestV0/    @manos  @microsoft/adoautotest
 
 Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @manolerazvan
 

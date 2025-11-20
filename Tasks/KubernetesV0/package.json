@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task KubernetesV0",
+    "serverBuild": "node ../../make.js serverBuild --task KubernetesV0"
+  },
   "dependencies": {
     "@types/del": "^2.2.0",
     "@types/glob": "^5.0.10",
@@ -10,11 +14,14 @@
     "azure-pipelines-task-lib": "4.3.1",
     "azure-pipelines-tasks-docker-common": "^2.242.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.252.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "3.265.1",
     "del": "2.2.0",
     "js-yaml": "3.13.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

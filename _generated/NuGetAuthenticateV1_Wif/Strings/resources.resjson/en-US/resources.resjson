@@ -6,14 +6,18 @@
   "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
   "loc.input.help.workloadIdentityServiceConnection": "If this is set, feedUrl is required. All other inputs are ignored.",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
-  "loc.input.help.feedUrl": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.help.feedUrl": "If this is set, azureDevOpsServiceConnection is required. All other inputs are ignored. Not compatible with nuGetServiceConnections. Feed Url should be in the NuGet service index format, e.g. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
   "loc.input.label.forceReinstallCredentialProvider": "Reinstall the credential provider even if already installed",
   "loc.input.help.forceReinstallCredentialProvider": "If the credential provider is already installed in the user profile, determines if it is overwritten with the task-provided credential provider. This may upgrade (or potentially downgrade) the credential provider.",
   "loc.input.label.nuGetServiceConnections": "Service connection credentials for feeds outside this organization",
   "loc.input.help.nuGetServiceConnections": "Comma-separated list of NuGet service connection names for feeds outside this organization/collection. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
   "loc.messages.Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and workloadIdentityServiceConnection must be set together.",
+  "loc.messages.Error_InvalidFeedUrl": "The provided feed URL '%s' is not a valid Azure DevOps feed URL.",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and azureDevOpsServiceConnection must be set together.",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "Cannot specify both nuGetServiceConnections and feedUrl input parameters.",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "Cannot specify both nuGetServiceConnections and azureDevOpsServiceConnection(workloadIdentityServiceConnection) input parameters.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
-  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s."
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
+  "loc.messages.Warn_IgnoringFeedUrl": "Ignoring feedUrl"
 }

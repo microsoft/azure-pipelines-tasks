@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 259,
-    "Patch": 3
+    "Minor": 266,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.209.0",
   "groups": [
@@ -225,6 +225,14 @@
         "runFromPackage": "Run From Package"
       },
       "helpMarkDown": "Choose the deployment method for the app."
+    },
+    {
+      "name": "siteContainersConfig",
+      "type": "multiLine",
+      "label": "Site Containers Config",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Provide siteContainers-config JSON for SiteContainers deployments."
     }
   ],
   "outputVariables": [
@@ -424,6 +432,10 @@
     "JarPathNotPresent": "Java jar path is not present",
     "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
     "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-    "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+    "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+    "SiteContainersNotSupportedWithPublishProfileAuthentication" : "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+    "StartedUpdatingSiteContainers": "Started updating site containers.",
+    "UpdatingSiteContainer": "Updating site container: %s",
+    "CompletedUpdatingSiteContainers": "Completed updating site containers."
   }
 }

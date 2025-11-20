@@ -5,6 +5,7 @@ import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azu
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtilityExt } from './operations/AzureAppServiceUtilityExt';
 import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
+import { SiteContainersDeploymentUtility } from './operations/SiteContainersDeploymentUtility';
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 import { TaskParameters } from './taskparameters';
@@ -45,8 +46,15 @@ export class AzureRmWebAppDeploymentProvider{
             this.taskParams["StartupCommand"] = null;
         }
 
-        let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+        if (this.taskParams.SiteContainers && this.taskParams.SiteContainers.length > 0) {
+            tl.debug("Updating site containers.");
+            let siteContainersDeploymentUtility: SiteContainersDeploymentUtility = new SiteContainersDeploymentUtility(this.appService);
+            await siteContainersDeploymentUtility.updateSiteContainers(this.taskParams.SiteContainers);
+        } else {
+            let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
+            await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+        }
+
         await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
     }
 

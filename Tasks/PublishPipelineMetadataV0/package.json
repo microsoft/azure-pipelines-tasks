@@ -13,6 +13,8 @@
     "typescript": "5.1.6"
   },
   "scripts": {
+    "build": "node ../../make.js build --task PublishPipelineMetadataV0",
+    "serverBuild": "node ../../make.js serverBuild --task PublishPipelineMetadataV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Microsoft Corporation",

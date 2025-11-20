@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 261,
+    "Minor": 264,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -269,12 +269,13 @@
       "label": "JDK architecture",
       "defaultValue": "x64",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
+      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
       "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     },
     {

@@ -4,6 +4,8 @@
   "description": "Download Package Task",
   "main": "downloadPackages.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadPackageV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadPackageV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,12 +24,15 @@
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "3.3.1",
     "azure-pipelines-tasks-packaging-common": "^3.246.1",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "3.265.1",
     "decompress-zip": "0.3.3",
-    "tar-fs": "3.1.0",
+    "tar-fs": "3.1.1",
     "extract-zip": "2.0.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }
