@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Ruta de acceso al archivo de la solución, packages.config o project.json que hace referencia a los paquetes que se van a restaurar.",
   "loc.input.label.selectOrConfig": "Fuentes para usar",
   "loc.input.help.selectOrConfig": "Seleccione una fuente de Azure Artifacts o NuGet.org aquí, o bien confirme un archivo nuget.config en el repositorio del código fuente y establezca aquí su ruta de acceso.",
-  "loc.input.label.feedRestore": "Usar paquetes de esta fuente de Azure Artifacts/TFS",
+  "loc.input.label.feedRestore": "Use paquetes de esta fuente Azure Artifacts/TFS. Seleccione en la lista desplegable o escriba el nombre de la fuente [nombre del proyecto/].",
   "loc.input.help.feedRestore": "Incluya la fuente seleccionada en el archivo NuGet.config generado. Debe tener Azure Artifacts instalado y con licencia para poder seleccionar una fuente aquí.",
   "loc.input.label.includeNuGetOrg": "Usar paquetes de NuGet.org",
   "loc.input.help.includeNuGetOrg": "Incluya NuGet.org en el archivo NuGet.config generado.",
@@ -135,5 +135,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Actualizando la versión de NuGet.exe a %s desde %s. Podrían producirse cambios de comportamiento o cambios importantes a medida que NuGet se actualice a una nueva versión. Si quiere evitarlo, anule la selección de la opción \"Comprobar la última versión\" en la tarea.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Error del comando nuget con el código de salida (%s) y el error (%s).",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg está habilitado actualmente para esta tarea. Para resolver esta advertencia, edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La conexión de servicio no usa un método de autenticación compatible. Use una conexión de servicio con autenticación basada en token de acceso personal.",
+  "loc.messages.LIB_WhichNotFound_Linux": "No se encuentra el archivo ejecutable: ''%s''. Compruebe que la ruta de acceso del archivo existe o que el archivo se puede encontrar en un directorio especificado por la variable de entorno PATH. Compruebe también el modo de archivo para comprobar que el archivo es ejecutable.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Error en la tarea porque está usando Ubuntu 24.04 o posterior sin mono instalado. Consulte https://aka.ms/nuget-task-mono para obtener más información."
 }
