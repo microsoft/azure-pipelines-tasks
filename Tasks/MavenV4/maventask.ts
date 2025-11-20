@@ -245,15 +245,23 @@ async function execBuild() {
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }
-            if (isCodeCoverageOpted && ccTool.toLowerCase() === "jacoco") {
-                const verifyOrLaterPhases = ['verify', 'install', 'deploy'];
-                const hasVerifyOrLater = mavenGoals.some(goal => verifyOrLaterPhases.includes(goal));
-                
-                if (!hasVerifyOrLater) {
-                    mvnRun.arg('verify');
+
+            if (tl.getPipelineFeature('RemoveDuplicateMavenRun')) {
+                if (isCodeCoverageOpted && ccTool.toLowerCase() === "jacoco") {
+                    const verifyOrLaterPhases = ['verify', 'install', 'deploy'];
+                    const hasVerifyOrLater = mavenGoals.some(goal => 
+                        verifyOrLaterPhases.includes(goal.toLowerCase())
+                    );
+ 
+                    if (!hasVerifyOrLater) {
+                        mvnRun.arg('verify');
+                    }
+                    else {
+                        mvnRun.arg(mavenGoals);
+                    }
                 }
-                else{
-                    mvnRun.arg(mavenGoals);    
+                else {
+                    mvnRun.arg(mavenGoals);
                 }
             }
             else{
@@ -464,8 +472,34 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
     if (isCodeCoverageOpted) {
         tl.debug("Collecting code coverage reports");
-        publishCCToTfs();
-        defer.resolve(true);
+        if (tl.getPipelineFeature('RemoveDuplicateMavenRun')){
+            publishCCToTfs();
+            defer.resolve(true);
+        }
+        else{
+            if (ccTool.toLowerCase() == "jacoco") {
+            var mvnReport = tl.tool(mvnExec);
+            mvnReport.arg('-f');
+            mvnReport.arg(mavenPOMFile);
+            mvnReport.line(mavenOptions);
+            mvnReport.arg("verify");
+            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
+            mvnReport.exec().then(function (code) {
+                publishCCToTfs();
+                defer.resolve(true);
+            }).fail(function (err) {
+                sendCodeCoverageEmptyMsg();
+                defer.reject(err);
+            });
+        }
+        else {
+            if (ccTool.toLowerCase() == "cobertura") {
+                publishCCToTfs();
+            }
+            defer.resolve(true);
+        }
+        }
+        
     }
 
     return defer.promise;
