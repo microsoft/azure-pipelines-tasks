@@ -248,4 +248,18 @@ describe("Pull configuration settings test", function(){
             assert.strictEqual(tr.errorIssues[0], "loc_mock_InvalidSecretUrl");
         },tr);
     });
+
+    it("Trim any trailing forward slash in a store endpoint", async()=> {
+        const taskPath = path.join(__dirname, "downloadKVWithInvalidStoreEndpoint.js");
+        const tr = new MockTestRunner(taskPath);
+
+        await tr.runAsync();
+
+        runValidations(()=>{ 
+            assert.strictEqual(tr.succeeded, true, "should have succeeded");
+            assert.strictEqual(tr.warningIssues.length, 0, "should have no warnings");
+            assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
+            assert.ok(tr.stdout.indexOf("loc_mock_AppConfigurationEndpointTitle https://Test.azconfig.io") >= 0, "App Configuration Endpoint: https://Test.azconfig.io");
+        },tr);
+    });
 })
