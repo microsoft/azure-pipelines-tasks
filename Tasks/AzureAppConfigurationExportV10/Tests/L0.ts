@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import path = require('path');
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
-describe("Pull configuration settings test", function(){
+describe("Export task configuration settings test", function(){
     this.timeout(30000);
 
     before(async ()=> {
