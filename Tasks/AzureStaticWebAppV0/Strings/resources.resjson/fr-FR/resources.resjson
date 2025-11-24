@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "Emplacement de l’API de données",
   "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail",
   "loc.input.label.azure_access_token": "Jeton d’accès Azure",
-  "loc.input.help.azure_access_token": "Jeton d’accès utilisé pour authentifier et autoriser le déploiement",
+  "loc.input.help.azure_access_token": "Jeton d’accès utilisé pour le déploiement. Non requis s’il est passé en tant que variable",
   "loc.input.label.default_hostname": "Nom d’hôte par défaut",
-  "loc.input.help.default_hostname": "Nom d’hôte par défaut de l’application"
+  "loc.input.help.default_hostname": "Nom d’hôte par défaut pour le déploiement. Non requis si passé en tant que variable d’environnement"
 }
