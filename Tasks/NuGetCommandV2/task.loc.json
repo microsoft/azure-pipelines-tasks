@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 260,
+    "Minor": 266,
     "Patch": 0
   },
   "runsOn": [
@@ -322,7 +322,8 @@
         "off": "Off",
         "byPrereleaseNumber": "Use the date and time",
         "byEnvVar": "Use an environment variable",
-        "byBuildNumber": "Use the build number"
+        "byBuildNumber": "Use the build number",
+        "bySemVerBuildNumber": "Use full SemVer build number"
       }
     },
     {
