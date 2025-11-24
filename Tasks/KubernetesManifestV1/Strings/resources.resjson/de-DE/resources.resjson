@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Wählen Sie eine Dienstverbindung für die Docker-Registrierung aus. Erforderlich für Befehle, die eine Authentifizierung bei einer Registrierung erfordern.",
   "loc.input.label.rolloutStatusTimeout": "Timeout für Rolloutstatus",
   "loc.input.help.rolloutStatusTimeout": "Die Wartezeit (in Sekunden) bis zum Beenden der Überwachung des Rolloutstatus.",
+  "loc.input.label.resourceType": "Ressourcentyp",
+  "loc.input.help.resourceType": "Der Typ der Ressource (Flotte, verwalteter Cluster)",
   "loc.messages.DownloadPathForStableTxt": "Downloadpfad für „stable.txt“: %s",
   "loc.messages.DownloadKubeCtlFailed": "Der Kubernetes-Client von Version „%s“ kann nicht heruntergeladen werden. Überprüfen Sie, ob die Version korrekt ist: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Die stabile Kubernetes-Version kann nicht aus „%s“ heruntergeladen werden. Es wird ein Fallback auf „%s“ durchgeführt.",
