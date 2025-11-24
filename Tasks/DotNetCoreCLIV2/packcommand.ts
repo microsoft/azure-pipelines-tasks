@@ -74,6 +74,22 @@ export async function run(): Promise<void> {
 
                 version = versionMatches[0];
                 break;
+             
+            case "bySemVerBuildNumber":
+                tl.debug("Getting version number using SemVer build number");
+
+                let semVerBuildNumber: string = tl.getVariable("BUILD_BUILDNUMBER");
+                tl.debug(`Build number: ${semVerBuildNumber}`);
+
+                 // Validate full SemVer 2.0 format
+                let semVerRegex = /^\d+\.\d+\.\d+(?:\.\d+)?(?:[-\w\.]+)?(?:\+[0-9A-Za-z\-\.]+)?$/;
+                if (!semVerRegex.test(semVerBuildNumber)) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidSemVer"));
+
+                version = semVerBuildNumber;
+                break;
+                }
+
         }
 
         tl.debug(`Version to use: ${version}`);
