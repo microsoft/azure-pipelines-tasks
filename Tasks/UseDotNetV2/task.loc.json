@@ -80,12 +80,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion"
     },
     {
-      "name": "checkDotnetCLI",
+      "name": "checkForExistingVersion",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.checkDotnetCLI",
+      "label": "ms-resource:loc.input.label.checkForExistingVersion",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.checkDotnetCLI",
+      "helpMarkDown": "ms-resource:loc.input.help.checkForExistingVersion",
       "groupName": "advanced"
     },
     {

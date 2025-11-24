@@ -80,12 +80,12 @@
       "helpMarkDown": "Specify version of compatible visual studio for which .NET core sdk to install. Specifiy complete vs-version like 16.6.4 containing major version, minor version and patch number.Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)"
     },
     {
-      "name": "checkDotnetCLI",
+      "name": "checkForExistingVersion",
       "type": "boolean",
-      "label": "Check is version installed via dotnet",
+      "label": "Check for existing installation",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Select if you want to check is version already installed via dotnet CLI",
+      "helpMarkDown": "Select if you want to detect if the specified version is already installed before attempting to download. Use only when installationPath is Empty i.e. set to default value",
       "groupName": "advanced"
     },
     {

@@ -18,7 +18,7 @@ function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
 
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
-    let checkDotnetCLI: boolean = tl.getBoolInput('checkDotnetCLI');
+    let checkForExistingVersion: boolean = tl.getBoolInput('checkForExistingVersion');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
     let vsVersionSpec = tl.getInput('vsVersion');
@@ -38,7 +38,7 @@ async function run() {
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
 
         // check is dotnet installed via dotnet cli 
-        if (checkDotnetCLI) isDotnetInstalled = await isCompatibleDotnetVersionInstalled(versionSpec, vsVersionSpec, useGlobalJson, packageType, workingDirectory, includePreviewVersions);
+        if (checkForExistingVersion) isDotnetInstalled = await isCompatibleDotnetVersionInstalled(versionSpec, vsVersionSpec, useGlobalJson, packageType, workingDirectory, includePreviewVersions);
 
         if (!isDotnetInstalled) {
             await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
