@@ -94,7 +94,6 @@ extends:
     sdl:
       binskim:
         preReleaseVersion: '4.3.1'
-        scanOutputDirectoryOnly: true
       sbom:
         enabled: true
       baseline:
