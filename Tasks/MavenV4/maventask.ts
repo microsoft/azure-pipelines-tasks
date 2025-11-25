@@ -246,25 +246,16 @@ async function execBuild() {
                 mvnRun.arg('clean');
             }
 
-            if (tl.getPipelineFeature('RemoveDuplicateMavenRun')) {
-                if (isCodeCoverageOpted && ccTool.toLowerCase() === "jacoco") {
-                    const verifyOrLaterPhases = ['verify', 'install', 'deploy'];
-                    const hasVerifyOrLater = mavenGoals.some(goal => 
-                        verifyOrLaterPhases.includes(goal.toLowerCase())
-                    );
+            if (tl.getPipelineFeature('RemoveDuplicateMavenRun') && isCodeCoverageOpted && ccTool.toLowerCase() === "jacoco") {
+                const verifyOrLaterPhases = ['verify', 'install', 'deploy'];
+                const hasVerifyOrLater = mavenGoals.some(goal => verifyOrLaterPhases.includes(goal.toLowerCase()));
  
-                    if (!hasVerifyOrLater) {
-                        mvnRun.arg('verify');
-                    }
-                    else {
-                        mvnRun.arg(mavenGoals);
-                    }
-                }
-                else {
+                if (!hasVerifyOrLater) {
+                    mvnRun.arg('verify');
+                } else {
                     mvnRun.arg(mavenGoals);
                 }
-            }
-            else{
+            } else {
                 mvnRun.arg(mavenGoals);
             }
 
