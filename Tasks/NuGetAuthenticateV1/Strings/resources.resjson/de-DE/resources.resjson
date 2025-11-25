@@ -7,13 +7,17 @@
   "loc.input.help.nuGetServiceConnections": "Durch Trennzeichen getrennte Liste mit NuGet-Dienstverbindungsnamen für Feeds außerhalb dieser Organisation/Sammlung. Lassen Sie dieses Feld für Feeds in dieser Organisation/Sammlung leer. Es werden automatisch die Anmeldeinformationen des Builds verwendet.",
   "loc.input.label.forceReinstallCredentialProvider": "Anmeldeinformationsanbieter neu installieren, auch wenn er bereits installiert ist",
   "loc.input.help.forceReinstallCredentialProvider": "Wenn der Anmeldeinformationsanbieter bereits im Benutzerprofil installiert ist, wird bestimmt, ob er mit dem durch die Aufgabe angegebenen Anmeldeinformationsanbieter überschrieben wird. Hierdurch wird möglicherweise ein Upgrade (oder Downgrade) für den Anmeldeinformationsanbieter durchgeführt.",
-  "loc.input.help.feedUrl": "Wenn diese Option festgelegt ist, ist workloadIdentityServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit nuGetServiceConnections. Die Feed-URL muss im NuGet-Dienstindexformat vorliegen, z. B. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.help.feedUrl": "Wenn diese Option festgelegt ist, ist azureDevOpsServiceConnection erforderlich. Alle anderen Eingaben werden ignoriert. Nicht kompatibel mit nuGetServiceConnections. Die Feed-URL muss im NuGet-Dienstindexformat vorliegen, z. B. https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
   "loc.input.label.feedUrl": "Azure Artifacts-URL",
   "loc.input.help.workloadIdentityServiceConnection": "Wenn dies festgelegt ist, ist feedUrl erforderlich. Alle anderen Eingaben werden ignoriert.",
   "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
   "loc.messages.Error_ServiceConnectionExists": "Für den Endpunkt ist bereits eine Dienstverbindung vorhanden.",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Sowohl feedUrl als auch workloadIdentityServiceConnection müssen zusammen festgelegt werden.",
+  "loc.messages.Error_InvalidFeedUrl": "Die angegebene Feed-URL „%s“ ist keine gültige Azure DevOps-Feed-URL.",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl und azureDevOpsServiceConnection müssen zusammen festgelegt werden.",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "Die Eingabeparameter „nuGetServiceConnections“ und „feedUrl“ können nicht gleichzeitig angegeben werden.",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "Die Eingabeparameter „nuGetServiceConnections“ und „azureDevOpsServiceConnection(workloadIdentityServiceConnection)“ können nicht gleichzeitig angegeben werden.",
   "loc.messages.Info_AddingFederatedFeedAuth": "Verbundanmeldeinformationen können nicht von der Dienstverbindung abgerufen werden:",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Authentifizierungsinformationen der Dienstverbindung %s werden für Feed %s hinzugefügt",
-  "loc.messages.FailedToGetServiceConnectionAuth": "Die Authentifizierung für den Feed %s wurde erfolgreich hinzugefügt."
+  "loc.messages.FailedToGetServiceConnectionAuth": "Die Authentifizierung für den Feed %s wurde erfolgreich hinzugefügt.",
+  "loc.messages.Warn_IgnoringFeedUrl": "feedUrl wird ignoriert"
 }
