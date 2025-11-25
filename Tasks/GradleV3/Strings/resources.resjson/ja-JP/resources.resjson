@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK パス",
   "loc.input.help.jdkUserInputPath": "指定したパスに JAVA_HOME を設定します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。",
+  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64、arm64) を指定します。",
   "loc.input.label.gradleOpts": "GRADLE_OPTS の設定",
   "loc.input.help.gradleOpts": "JVM を起動するためにコマンド ライン引数を送信するときに使用する GRADLE_OPTS 環境変数を設定します。xmx フラグは JVM で使用可能な最大メモリを指定します。",
   "loc.input.label.sqAnalysisEnabled": "SonarQube 解析または SonarCloud 解析の実行",
