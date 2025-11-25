@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "데이터 API 위치",
   "loc.input.help.data_api_location": "작업 디렉터리를 기준으로 하는 데이터 API 원본 파일의 디렉터리 위치",
   "loc.input.label.azure_access_token": "Azure 액세스 토큰",
-  "loc.input.help.azure_access_token": "배포를 인증하고 권한을 부여하는 데 사용되는 액세스 토큰",
+  "loc.input.help.azure_access_token": "배포에 사용되는 액세스 토큰입니다. 변수로 전달되는 경우에는 필요하지 않습니다.",
   "loc.input.label.default_hostname": "기본 호스트 이름",
-  "loc.input.help.default_hostname": "앱의 기본 호스트 이름"
+  "loc.input.help.default_hostname": "배포의 기본 호스트 이름입니다. 환경 변수로 전달되는 경우에는 필요하지 않습니다."
 }

@@ -30,6 +30,8 @@
   "loc.input.help.containerAppEnvironment": "要与应用程序一起使用的 Azure 容器应用环境的名称。如果未提供，则将使用容器应用的资源组中的现有环境，否则，将以 `<container-app-name>-env` 格式创建环境。",
   "loc.input.label.runtimeStack": "应用程序运行时堆栈",
   "loc.input.help.runtimeStack": "将应用程序部署到 Azure 容器应用时运行的平台版本堆栈。这应以 `<platform>:<version>` 的形式提供。如果未提供，则此值由 Oryx 根据所提供应用程序的内容确定。有关 Oryx 支持的运行时堆栈的详细信息，请查看以下文档: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md",
+  "loc.input.label.kind": "容器应用种类",
+  "loc.input.help.kind": "设置为 `functionapp` 以获得内置支持和自动缩放，从而在 Azure 容器应用上运行 Azure 函数。",
   "loc.input.label.targetPort": "应用程序目标端口",
   "loc.input.help.targetPort": "应用程序要运行的指定端口。如果未提供任何值，并且生成器用于生成可运行的应用程序映像，则对于 Python 应用程序，目标端口将被设置为 80，其他所有平台应用程序的目标端口将设置为 8080。如果在创建容器应用时未提供任何值，则目标端口将默认为 80。注意:使用此任务更新容器应用时，如果没有根据入口属性的更改提供目标端口，则可能会更新目标端口。",
   "loc.input.label.location": "容器应用的位置",
