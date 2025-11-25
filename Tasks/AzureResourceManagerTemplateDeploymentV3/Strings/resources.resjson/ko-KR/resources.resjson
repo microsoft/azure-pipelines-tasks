@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "인증 체계 %s은(는) 지원되지 않습니다.",
   "loc.messages.ErrorInSettingUpSubscription": "구독 설정 오류: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\"이 실패했습니다. 오류: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam 파일을 사용하려면 Azure CLI 버전이 >= 2.47.0이어야 함"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam 파일을 사용하려면 Azure CLI 버전이 >= 2.47.0이어야 함",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
 }

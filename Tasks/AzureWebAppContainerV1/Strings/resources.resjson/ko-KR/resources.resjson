@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "구문 -key 값 다음에 오는 웹앱 응용 프로그램 설정을 편집합니다. 공백이 포함되는 값은 큰따옴표로 묶어야 합니다.<br /> <b>예</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "구성 설정",
   "loc.input.help.configurationStrings": "구문 -key 값 다음에 오는 웹앱 구성 설정을 편집합니다. 공백이 포함되는 값은 큰따옴표로 묶어야 합니다.<br /> 예 : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "잘못된 App Service 패키지 또는 폴더 경로를 제공했습니다. %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Azure App Service '%s'에 대한 서비스 연결 정보를 가져왔습니다.",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "오류: 해당 배포 방법이 없습니다.",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "'%s' 웹앱에 배포하지 못했습니다. 단일 컨테이너의 경우 유효한 이미지 이름만 지정하면 됩니다. 다중 컨테이너의 경우 Docker-Compose 파일 지정은 필수이고, 이미지 이름 지정은 선택 사항입니다. Docker-Compose 파일의 태그를 대체해야 하는 경우 제공되는 이미지 이름입니다.",
   "loc.messages.SingleContainerDeployment": "이미지 정보만 지정했으므로 '%s' 웹앱에 단일 컨테이너 배포를 수행합니다.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "이미지 이름과 Docker-Compose 파일을 둘 다 지정했으므로 Docker-Compose 파일을 변환하여 '%s' 웹앱에 다중 컨테이너 배포를 수행합니다.",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Docker-Compose 파일만 지정했으므로 Docker-Compose 파일을 변환하지 않고 '%s' 웹앱에 다중 컨테이너 배포를 수행합니다."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Docker-Compose 파일만 지정했으므로 Docker-Compose 파일을 변환하지 않고 '%s' 웹앱에 다중 컨테이너 배포를 수행합니다.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating Site Containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating Site Containers."
 }

@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "Le schéma d'authentification %s n'est pas pris en charge",
   "loc.messages.ErrorInSettingUpSubscription": "Erreur lors de la configuration de l’abonnement : %s",
   "loc.messages.BicepParamBuildFailed": "Échec de « az bicep build-param ». Erreur : %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La version d’Azure CLI doit être supérieure ou égale à 2.47.0 pour utiliser le fichier .bicepparam"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La version d’Azure CLI doit être supérieure ou égale à 2.47.0 pour utiliser le fichier .bicepparam",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
 }

@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "Versión de JDK",
   "loc.input.help.versionSpec": "Número que especifica la versión de JDK que estará disponible en la ruta de acceso. Use un número entero para la versión; por ejemplo, 10.",
   "loc.input.label.jdkArchitectureOption": "Arquitectura JDK",
-  "loc.input.help.jdkArchitectureOption": "La arquitectura (x86, x64) de JDK.",
+  "loc.input.help.jdkArchitectureOption": "The architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.jdkSourceOption": "Origen de JDK",
   "loc.input.help.jdkSourceOption": "Origen de JDK comprimido.",
   "loc.input.label.jdkFile": "Archivo JDK",

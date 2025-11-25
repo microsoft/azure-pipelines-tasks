@@ -10,8 +10,8 @@
   "loc.input.help.SymbolsFolder": "在其中搜索符号文件的文件夹的路径。默认为 $(Build.SourcesDirectory)。在其他情况下，指定根路径。例如: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "搜索模式",
   "loc.input.help.SearchPattern": "用于发现要发布的 pdb 文件的模式。",
-  "loc.input.label.Manifest": "",
-  "loc.input.help.Manifest": "",
+  "loc.input.label.Manifest": "Manifest",
+  "loc.input.help.Manifest": "The path to a file containing more symbol client keys to publish.",
   "loc.input.label.IndexSources": "编制源索引",
   "loc.input.help.IndexSources": "指示是否将源服务器信息注入 PDB 文件。此选项仅在 Windows 代理上受支持。",
   "loc.input.label.PublishSymbols": "发布符号",
@@ -76,5 +76,5 @@
   "loc.messages.UnsupportedSourceProvider0": "不受源索引编制支持的源提供程序“{0}”。",
   "loc.messages.Win32Error0FromMethod1": "在方法“{1}”中遇到 Win32 错误“{0}”。",
   "loc.messages.NodeVersionSupport": "从 2024 年 8 月 31 日起不再支持 Node v{0}。请将管道代理升级到最新版本以使用 Node 16 或更高版本。",
-  "loc.messages.ManifestFileNotFound": ""
+  "loc.messages.ManifestFileNotFound": "Manifest file not found at '{0}'."
 }

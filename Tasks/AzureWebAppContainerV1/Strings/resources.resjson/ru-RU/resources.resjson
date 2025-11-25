@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "Измените параметры веб-приложения после значения -key в синтаксисе. Значение с пробелами должно быть заключено в двойные кавычки.<br /> <b>Пример</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Параметры конфигурации",
   "loc.input.help.configurationStrings": "Измените параметры настройки веб-приложения после значения -key в синтаксисе. Значение с пробелами должно быть заключено в двойные кавычки.<br /> Пример: -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Указан недопустимый путь к пакету службы приложений или папке: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Получены сведения о подключении к службе приложений Azure: \"%s\"",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Ошибка: такого метода развертывания не существует.",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Не удалось выполнить развертывание в веб-приложение \"%s\". Для одного контейнера просто укажите допустимое имя образа. Для нескольких контейнеров указание файла Docker-Compose является обязательным, а указание имен образов — нет. Предоставляются имена образов, если необходимо заменить теги в файле Docker-Compose.",
   "loc.messages.SingleContainerDeployment": "Одноконтейнерное развертывание в веб-приложение \"%s\", так как были указаны только сведения об образе.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Многоконтейнерное развертывание в веб-приложение \"%s\" с преобразованием файла Docker-Compose, так как были указаны имя образа и файл Docker-Compose",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Многоконтейнерное развертывание в веб-приложение \"%s\" без преобразования файла Docker-Compose, так как был указан только файл Docker-Compose."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Многоконтейнерное развертывание в веб-приложение \"%s\" без преобразования файла Docker-Compose, так как был указан только файл Docker-Compose.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating Site Containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating Site Containers."
 }

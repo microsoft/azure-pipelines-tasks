@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "No se admite el esquema de autenticación %s.",
   "loc.messages.ErrorInSettingUpSubscription": "Error en la configuración de la suscripción: %s",
   "loc.messages.BicepParamBuildFailed": "Error de \"az bicep build-param\". Error: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versión de la CLI de Azure debe ser >= 2.47.0 para usar el archivo .bicepparam"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versión de la CLI de Azure debe ser >= 2.47.0 para usar el archivo .bicepparam",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
 }

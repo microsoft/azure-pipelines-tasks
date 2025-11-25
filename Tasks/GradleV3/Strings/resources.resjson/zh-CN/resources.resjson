@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK 路径",
   "loc.input.help.jdkUserInputPath": "将 JAVA_HOME 设置到给定路径。",
   "loc.input.label.jdkArchitecture": "JDK 体系结构",
-  "loc.input.help.jdkArchitecture": "可以选择提供 JDK 的体系结构(x86、x64)。",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.gradleOpts": "设置 GRADLE_OPTS",
   "loc.input.help.gradleOpts": "设置 GRADLE_OPTS 环境变量，此变量将用于发送命令行参数以启动 JVM。xmx 标志将指定 JVM 可用的最大内存。",
   "loc.input.label.sqAnalysisEnabled": "运行 SonarQube 或 SonarCloud 分析",

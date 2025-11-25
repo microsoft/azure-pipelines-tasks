@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "GOPATH 环境变量的自定义值。",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 环境变量的自定义值。",
+  "loc.input.label.goDownloadUrl": "Go download URL",
+  "loc.input.help.goDownloadUrl": "URL for downloading Go binaries. Only https://go.dev/dl (official) and https://aka.ms/golang/release/latest (Microsoft build) are supported. If omitted, the official Go download URL (https://go.dev/dl) will be used. This parameter takes priority over the GOTOOL_GODOWNLOADURL environment variable if both are set.",
   "loc.messages.FailedToDownload": "无法下载 Go 版本 %s。请验证该版本是否有效并解决发生的任何其他问题。错误: %s",
   "loc.messages.TempDirNotSet": "应设置 \"Agent.TempDirectory\" 环境变量。"
 }

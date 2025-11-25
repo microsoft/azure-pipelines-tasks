@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Consente di selezionare una connessione al servizio Registro Docker. È obbligatorio per i comandi che devono eseguire l'autenticazione con un registro.",
   "loc.input.label.rolloutStatusTimeout": "Timeout per stato di implementazione",
   "loc.input.help.rolloutStatusTimeout": "Intervallo di tempo (in secondi) da attendere prima di terminare il controllo sullo stato di implementazione",
+  "loc.input.label.resourceType": "Resource type",
+  "loc.input.help.resourceType": "The type of the resource (fleet, managed cluster)",
   "loc.messages.DownloadPathForStableTxt": "Percorso di download per stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Non è possibile scaricare il client kubectl della versione %s. Verificare se la versione è corretta: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Non è possibile scaricare il file della versione stabile di kubernetes da %s. Verrà eseguito il fallback a %s",

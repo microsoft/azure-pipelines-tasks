@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "PowerShell 已退出，代码为“%s”。",
   "loc.messages.JS_Stderr": "PowerShell 向标准错误流写入一个或多个行。",
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
-  "loc.messages.PS_ExitCode": "PowerShell 已退出，代码为“{0}”。"
+  "loc.messages.PS_ExitCode": "PowerShell 已退出，代码为“{0}”。",
+  "loc.messages.Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
 }

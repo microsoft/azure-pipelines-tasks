@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK-Pfad",
   "loc.input.help.jdkUserInputPath": "Legt JAVA_HOME auf den angegebenen Pfad fest.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
-  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.input.label.gradleOpts": "GRADLE_OPTS festlegen",
   "loc.input.help.gradleOpts": "Legt die Umgebungsvariable GRADLE_OPTS fest, die zum Senden von Befehlszeilenargumenten zum Starten von JVM verwendet wird. Das Kennzeichen „xmx“ gibt den maximalen Arbeitsspeicher an, der für JVM verfügbar ist.",
   "loc.input.label.sqAnalysisEnabled": "SonarQube- oder SonarCloud-Analyse ausführen",

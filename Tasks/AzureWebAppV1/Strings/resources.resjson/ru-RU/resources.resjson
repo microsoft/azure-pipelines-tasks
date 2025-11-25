@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Измените параметры настройки веб-приложения после значения -key в синтаксисе. Значение с пробелами должно быть заключено в двойные кавычки.<br /> Пример: -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "Метод развертывания",
   "loc.input.help.deploymentMethod": "Выберите метод развертывания для приложения.",
+  "loc.input.label.siteContainersConfig": "Site Containers Config",
+  "loc.input.help.siteContainersConfig": "Provide siteContainers-config JSON for SiteContainers deployments.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Указан недопустимый путь к пакету службы приложений или папке: %s",
   "loc.messages.SetParamFilenotfound0": "Заданный файл параметров не найден: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML-преобразования успешно применены.",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Отсутствует путь к jar-файлу Java.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Не удалось обновить ресурс Application Insights \"%s\". Ошибка: %s",
   "loc.messages.InvalidDockerImageName": "Указано недопустимое имя образа Docker Hub.",
-  "loc.messages.MsBuildPackageNotSupported": "Развертывание созданного пакета msBuild не поддерживается. Измените формат пакета или используйте задачу развертывания Службы приложений Azure."
+  "loc.messages.MsBuildPackageNotSupported": "Развертывание созданного пакета msBuild не поддерживается. Измените формат пакета или используйте задачу развертывания Службы приложений Azure.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "Site Containers are not supported with Publish Profile authentication. Please use Service Connection authentication.",
+  "loc.messages.StartedUpdatingSiteContainers": "Started updating site containers.",
+  "loc.messages.UpdatingSiteContainer": "Updating site container: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Completed updating site containers."
 }
