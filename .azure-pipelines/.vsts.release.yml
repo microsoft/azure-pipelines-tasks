@@ -153,14 +153,9 @@ extends:
         condition: |
           and(
             succeeded(),
-            eq(variables['tasksSkipPublish'], 'false'),
-            and(
-              eq(variables['COURTESY_PUSH'], 'true'),
-              and(
-                eq(variables['build.reason'], 'Manual'),
-                eq(variables['FORCE_COURTESY_PUSH'], 'true')
-              )
-            )
+            eq(variables['COURTESY_PUSH'], 'true'),
+            eq(variables['build.reason'], 'Manual'),
+            eq(variables['FORCE_COURTESY_PUSH'], 'true')
           )
         templateContext:
           outputParentDirectory: $(Build.SourcesDirectory)/_package
@@ -173,7 +168,7 @@ extends:
           - output: nuget
             packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            condition: succeeded()
+            condition: and(succeeded(), eq(variables['tasksSkipPublish'], 'false'))
             ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
             ${{ else }}:
@@ -200,7 +195,8 @@ extends:
         condition: |
           and(
             succeeded(),
-            eq(variables['build.reason'], 'Manual')
+            eq(variables['build.reason'], 'Manual'),
+            eq(variables['tasksSkipPublish'], 'false')
           )
         templateContext:
           outputs: []
