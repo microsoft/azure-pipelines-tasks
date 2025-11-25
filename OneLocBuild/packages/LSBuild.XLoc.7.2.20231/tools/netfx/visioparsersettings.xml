@@ -1,0 +1,832 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisioLocalise MajorVersion="15" MinorVersion="1" RevVersion="1" xmlns:dc="http://purl.org/dc/elements/1.1/" 
+               xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+               xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+  <!--This is the settings file for controlling the behaviours of the Visio Document parser. Be very careful with any updates made here.-->
+  <!--The Global Symbol $LCID$ will be replaced automatically with the current LCID for the language being generated.-->
+  <IsXflagged>
+    <!--These terms will not be Updates to the LCX or if they are preceded with an ! exclamation mark-->
+    <XFlagEntry>-height/</XFlagEntry>
+    <XFlagEntry>actions.</XFlagEntry>
+    <XFlagEntry>setf</XFlagEntry>
+    <XFlagEntry>char.</XFlagEntry>
+    <XFlagEntry>controls.</XFlagEntry>
+    <XFlagEntry>connections.</XFlagEntry>
+    <XFlagEntry>geometry.</XFlagEntry>
+    <XFlagEntry>geometry1.</XFlagEntry>
+    <XFlagEntry>geometry2.</XFlagEntry>
+    <XFlagEntry>geometry3.</XFlagEntry>
+    <XFlagEntry>geometry4.</XFlagEntry>
+    <XFlagEntry>geometry5.</XFlagEntry>
+    <XFlagEntry>user.</XFlagEntry>
+    <XFlagEntry>thepage!</XFlagEntry>
+    <XFlagEntry>scratch.</XFlagEntry>
+    <XFlagEntry>prop.</XFlagEntry>
+    <XFlagEntry>hidetext</XFlagEntry>
+    <XFlagEntry>linecolor</XFlagEntry>
+    <XFlagEntry>lineweight</XFlagEntry>
+    <XFlagEntry>rgb(</XFlagEntry>
+    <XFlagEntry>shapeclass</XFlagEntry>
+    <XFlagEntry>shapetype</XFlagEntry>
+    <XFlagEntry>subshapetype</XFlagEntry>
+    <XFlagEntry>eventdrop</XFlagEntry>
+    <XFlagEntry>pinx</XFlagEntry>
+    <XFlagEntry>piny</XFlagEntry>
+    <XFlagEntry>flipx</XFlagEntry>
+    <XFlagEntry>flipy</XFlagEntry>
+    <XFlagEntry>!controls.</XFlagEntry>
+    <XFlagEntry>0u</XFlagEntry>
+    <XFlagEntry>0.##u</XFlagEntry>
+    <XFlagEntry>0.##%</XFlagEntry>
+    <XFlagEntry>0.### u</XFlagEntry>
+    <XFlagEntry>0 ##</XFlagEntry>
+    <XFlagEntry>0/#</XFlagEntry>
+    <XFlagEntry>0;0.0;0.00;0.000;0.0000</XFlagEntry>
+    <XFlagEntry>\\</XFlagEntry>
+    <XFlagEntry>linepattern</XFlagEntry>
+    <XFlagEntry>fillforegnd</XFlagEntry>
+    <XFlagEntry>rounding</XFlagEntry>
+    <XFlagEntry>endarrow</XFlagEntry>
+    <XFlagEntry>beginarrow</XFlagEntry>
+  </IsXflagged>
+  <VisioDocumentSettings>
+    <!--These are the settings for items to extract from the Visio content files.-->
+    <DocumentSheet Type="20" Loc="1">
+      <Section MatchOnAttributeValuePair="N:User" Type="24">
+        <Row Type="25">
+          <Cell MatchOnAttributeValuePair="N:Value" Type="26" Loc="1" >
+            <V Category="USV" Comment="Document Sheet User Value" Loc="1" Attribute="1"/>
+          </Cell>
+        </Row>
+      </Section>
+    </DocumentSheet>
+    <BuildVersion Type="2" Comment="Build Version">
+      <property MatchOnAttributeValuePair="name:BuildNumberEdited" Loc="1" Type="19">
+        <vt:i4 Category="BLD" Comment="Build Number{Locked}" Loc="1"/>
+      </property>
+    </BuildVersion>
+    <DocumentProperties Type="2" Comment="Document Properties">
+      <dc:title Category="DTL" Comment="Title {MaxLength=2082}" Loc="1" Type="8" />
+      <dc:creator Category="DCR" Comment="Creator {MaxLength=2082}" Loc="1" Type="8" />
+      <cp:keywords Category="DKY" Comment="Stencil Keyword {MaxLength=1023}" Type="3" Loc="1" />
+      <dc:subject Category="DST" Comment="Subject {MaxLength=2082}" Loc="1" Type="8" />
+      <dc:description Category="DDN" Comment="Description {MaxLength=2082}" Loc="1" Type="8" />
+      <cp:category Category="DCG" Comment="Document Category" Loc="1" Type="8" />
+      <property MatchOnAttributeValuePair="name:_VPID_ALTERNATENAMES" Loc="1" Type ="8">
+        <vt:lpwstr Category="DAN" Comment="Alternate Names {MaxLength=255} {Locked=!1041,1042,1028,2052,1040,1036,1031,1053,3082,1043,1030,1046,1035,1044} Alternate name must be the same as the one in MSIMUI.lcl. " Loc="1" Type ="8"/>
+      </property>
+    </DocumentProperties>
+    <Masters Type="2">
+      <Master ID="NameU" Loc="1" Type="5">
+        <NameU Category="MNM" Comment="Master Name {MaxLength=255}" Attribute="1" Loc="1" />
+        <Prompt Category="MPT" Comment="Master Prompt  {MaxLength=1023}" Attribute="1" Loc="1" />
+        <PageSheet Loc="1" Type="9">
+          <Section MatchOnAttributeValuePair="N:Layer" Loc="1" Type="24">
+            <Row ID="IX" Loc="1" Type="25">
+              <Cell MatchOnAttributeValuePair="N:Name" Loc="1" Type="26">
+                <V Category="LNM" Comment="visLayerName  {MaxLength=255}" Attribute="1" Loc="1" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:Property" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="N">
+              <Cell MatchOnAttributeValuePair="N:Value" Loc="1" Type="26">
+                <V Category="CPV" Comment="Custom Properties Value {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Prompt" Loc="1" Type="26">
+                <V Category="CPP" Comment="Custom Properties Prompt {MaxLength=32767}" Attribute="1" Loc="0" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Label" Loc="1" Type="26">
+                <V Category="CPL" Comment="Custom Properties Label {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Format" Loc="1" Type="26">
+                <V Category="CPF" Comment="Custom Properties Format {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:User" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="ID">
+              <Cell MatchOnAttributeValuePair="N:Value" Type="26">
+                <V Category="USV" Comment="User Value" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Prompt" Type="26" >
+                <V Category="USP" Comment="User Value Prompt" Attribute="1" Loc="0" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:Actions" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="ID">
+              <Cell MatchOnAttributeValuePair="N:Action" Type="26">
+                <V Category="AAN" Comment="Action Action {MaxLength=255}" Attribute="1" Loc="0" Formula="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Menu" Type="26" >
+                <V Category="AMN" Comment="Action Menu {MaxLength=32767}" Attribute="1" Loc="1" Formula="1"/>
+              </Cell>
+            </Row>
+          </Section>
+          <Cell MatchOnAttributeValuePair="N:ShapeKeywords" Loc="1" Type="26">
+            <V Comment="Shape Keyword" Category="SGK" Loc="1" Attribute="1" />
+          </Cell>
+        </PageSheet>
+      </Master>
+    </Masters>
+    <Shapes Type="6" Loc="1">
+        <Shape ID="ID" Type="7" Loc="1">
+        <Cell MatchOnAttributeValuePair="N:Comment" Loc="1" Type="26">
+          <V Category="CTT" Comment="Control ToolTip {MaxLength=32767}" Attribute="1" Loc="1" />
+        </Cell>
+        <Section MatchOnAttributeValuePair="N:User" Loc="1" Type="24">
+          <Row Loc="1" Type="25" ID="ID">
+            <Cell MatchOnAttributeValuePair="N:Value" Type="26">
+              <V Category="USV" Comment="User Value" Attribute="1" Loc="1" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:Prompt" Type="26" >
+              <V Category="USP" Comment="User Value Prompt" Attribute="1" Loc="0" />
+            </Cell>
+          </Row>
+        </Section>
+        <Section MatchOnAttributeValuePair="N:Property" Loc="1" Type="24">
+          <Row Loc="1" Type="25" ID="N">
+            <Cell MatchOnAttributeValuePair="N:Value" Loc="1" Type="26">
+              <V Category="CPV" Comment="Custom Properties Value {MaxLength=32767}" Attribute="1" Loc="1" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:Prompt" Loc="1" Type="26">
+              <V Category="CPP" Comment="Custom Properties Prompt {MaxLength=32767}" Attribute="1" Loc="0" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:Label" Loc="1" Type="26">
+              <V Category="CPL" Comment="Custom Properties Label {MaxLength=32767}" Attribute="1" Loc="1" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:Format" Loc="1" Type="26">
+              <V Category="CPF" Comment="Custom Properties Format {MaxLength=32767}" Attribute="1" Loc="1" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:SortKey" Loc="1" Type="26">
+              <V Category="CPS" Comment="Custom Properties Sort Key" Attribute="1" Loc="1" />
+            </Cell>
+          </Row>
+        </Section>
+        <Section MatchOnAttributeValuePair="N:Control" Loc="1" Type="24">
+          <Row Loc="1" Type="25" ID="ID">
+            <Cell MatchOnAttributeValuePair="N:Prompt" Loc="1" Type="26">
+              <V Category="CTT" Comment="Control Tooltip {MaxLength=32767}" Attribute="1" Loc="1" Formula="1" />
+            </Cell>
+          </Row>
+        </Section>
+        <Section MatchOnAttributeValuePair="N:Connection" Loc="1" Type="24">
+          <Row Loc="1" Type="25" ID="IX">
+            <Cell MatchOnAttributeValuePair="N:Prompt" Loc="1" Type="26">
+              <F Category="" Comment="" Attribute="1" />
+            </Cell>
+          </Row>
+        </Section>
+        <Section MatchOnAttributeValuePair="N:Actions" Loc="1" Type="24">
+          <Row Loc="1" Type="25" ID="ID">
+            <Cell MatchOnAttributeValuePair="N:Action" Type="26">
+              <V Category="AAN" Comment="Action Action {MaxLength=255}" Attribute="1" Loc="0" Formula="1" />
+            </Cell>
+            <Cell MatchOnAttributeValuePair="N:Menu" Type="26" >
+              <V Category="AMN" Comment="Action Menu {MaxLength=32767}" Attribute="1" Loc="1" Formula="1" />
+            </Cell>
+          </Row>
+        </Section>
+        <Section MatchOnAttributeValuePair="N:ActionTag" Loc="1" Type="24">
+          <Row Loc="1" Type="25">
+            <Cell MatchOnAttributeValuePair="N:Description" Type="26">
+              <V Category="ATD" Comment="ActionTag Description" Attribute="1" Loc="1" />
+            </Cell>
+          </Row>
+        </Section>
+		<Section MatchOnAttributeValuePair="N:Field" Loc="1" Type="24">
+		  <Row Loc="1" Type="25" ID="ID">
+			<Cell MatchOnAttributeValuePair="N:Value" Loc="1" Type="26">
+			  <V Category="FDV" Comment="Field Value {Locked}" Attribute="1" Loc="1" Formula="1" />
+			</Cell>
+		  </Row>
+		</Section>
+        <Text Category="STX" Comment="Shape Text" Loc="1" Value="1"  Type="27"/>
+      </Shape>
+    </Shapes>
+    <Pages Type="2" Loc="1">
+      <Page ID="NameU" Loc="1" Type="14">
+        <NameU Category="PNM" Comment="Page Name" Loc="1" Attribute="1" />
+        <PageSheet Loc="1" Type="9">
+          <Section MatchOnAttributeValuePair="N:Layer" Loc="1" Type="24">
+            <Row ID="IX" Loc="1" Type="25">
+              <Cell MatchOnAttributeValuePair="N:Name" Loc="1" Type="26">
+                <V Category="LNM" Comment="visLayerName  {MaxLength=255}" Attribute="1" Loc="1" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:Property" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="N">
+              <Cell MatchOnAttributeValuePair="N:Value" Loc="1" Type="26">
+                <V Category="CPV" Comment="Custom Properties Value {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Prompt" Loc="1" Type="26">
+                <V Category="CPP" Comment="Custom Properties Prompt {MaxLength=32767}" Attribute="1" Loc="0" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Label" Loc="1" Type="26">
+                <V Category="CPL" Comment="Custom Properties Label {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Format" Loc="1" Type="26">
+                <V Category="CPF" Comment="Custom Properties Format {MaxLength=32767}" Attribute="1" Loc="1" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:User" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="ID">
+              <Cell MatchOnAttributeValuePair="N:Value" Type="26">
+                <V Category="USV" Comment="User Value" Attribute="1" Loc="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Prompt" Type="26" >
+                <V Category="USP" Comment="User Value Prompt" Attribute="1" Loc="0" />
+              </Cell>
+            </Row>
+          </Section>
+          <Section MatchOnAttributeValuePair="N:Actions" Loc="1" Type="24">
+            <Row Loc="1" Type="25" ID="ID">
+              <Cell MatchOnAttributeValuePair="N:Action" Type="26">
+                <V Category="AAN" Comment="Action Action {MaxLength=255}" Attribute="1" Loc="0" Formula="1" />
+              </Cell>
+              <Cell MatchOnAttributeValuePair="N:Menu" Type="26" >
+                <V Category="AMN" Comment="Action Menu {MaxLength=32767}" Attribute="1" Loc="1" Formula="1"/>
+              </Cell>
+            </Row>
+          </Section>
+          <Cell MatchOnAttributeValuePair="N:ShapeKeywords" Loc="1" Type="26">
+            <V Comment="Shape Keyword" Category="SGK" Loc="1" Attribute="1" />
+          </Cell>
+        </PageSheet>
+      </Page>
+    </Pages>
+    <StyleSheets Type="2" Loc="1">
+      <StyleSheet ID="ID" Type="12" Loc="1">
+        <NameU Category="SNM" Comment="Style Name {MaxLength=255}" Attribute="1" Loc="1" Type="17" />
+      </StyleSheet>
+    </StyleSheets>
+    <RuleSets Type="2" Loc="1">
+      <RuleSet ID="NameU" Loc="1" Type="22">
+        <NameU Category="VRS" Comment="Validation RuleSet  Name" Attribute="1" Loc="1"></NameU>
+        <Description Category="VRD" Comment="Validation RuleSet  Description" Attribute="1" Loc="1"></Description>
+        <Rule ID="NameU" Loc="1" Type="23">
+          <NameU Category="VRN" Comment="Validation Rule Name" Attribute="1" Loc="0"></NameU>
+          <Category Category="VRC" Comment="Validation Rule  Category"  Attribute="1" Loc="1"></Category>
+          <Description Category="VRD" Comment="Validation Rule Description" Attribute="1" Loc="1"></Description>
+        </Rule>
+      </RuleSet>
+    </RuleSets>
+    <TheEnd>Don't remove this placeholder</TheEnd>
+  </VisioDocumentSettings>
+  <DOMPostProcessings>
+    <!-- These items will be processed after translation during generate. -->
+
+    <!-- Set LCID for all files -->
+    <ReplaceDocLangID Expression="//DocumentSheet/Cell[@N='DocLangID' and @V='en-US']/@V" LocalizedValue="$LCID$" LCID="ALL">Set the DocLangID</ReplaceDocLangID>
+    <ReplaceLangID Expression="//Cell[@N='LangID']/@V" LocalizedValue="$LCID$" LCID="ALL"></ReplaceLangID>
+    <ReplaceLanguage DocumentUri="/docProps/core.xml" Expression="//dc:language" LocalizedValue="$LCID$" LCID="ALL"></ReplaceLanguage>
+
+    <!-- BiDi: Set FlipX to 1 for BiDi langs -->
+    <FlipXValue_actdir_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="actdir_m.vstx" />
+    <FlipXValue_appl_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="appl_m.vssx" />
+	<FlipXValue_appl_visio2013_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="appl_visio2013_m.vssx" />
+    <FlipXValue_audit_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="audit_m.vstx" />
+    <FlipXValue_ba_grp_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="ba_grp_m.vssx" />
+    <FlipXValue_basflo_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="basflo_m.vstx" />
+    <FlipXValue_basicd_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="basicd_m.vstx" />
+    <FlipXValue_block_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="block_m.vstx" />
+    <FlipXValue_bordrs_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="bordrs_m.vssx" />
+    <FlipXValue_bpmn_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="bpmn_m.vssx" />
+    <FlipXValue_bpmn_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="bpmn_m.vstx" />
+    <FlipXValue_bstorm_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="bstorm_m.vstx" />
+    <FlipXValue_calndr_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="calndr_m.vssx" />
+    <FlipXValue_calndr_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="calndr_m.vstx" />
+    <FlipXValue_calout_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="calout_m.vssx" />
+    <FlipXValue_causef_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="causef_m.vssx" />
+    <FlipXValue_ceilpl_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="ceilpl_m.vstx" />
+    <FlipXValue_chart_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="chart_m.vstx" />
+    <FlipXValue_comole_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="comole_m.vstx" />
+    <FlipXValue_compln_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="compln_m.vssx" />
+    <FlipXValue_conlog_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="conlog_m.vstx" />
+    <FlipXValue_connec_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="connec_m.vssx" />
+    <FlipXValue_datflo_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="datflo_m.vstx" />
+    <FlipXValue_datmod_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="datmod_m.vstx" />
+    <FlipXValue_dbchen_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbchen_m.vssx" />
+    <FlipXValue_dbchen_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbchen_m_vstx" />
+    <FlipXValue_dbcrow_m_vssx_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbcrow_m.vssx" />
+    <FlipXValue_dbcrow_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbcrow_m.vstx" />
+    <FlipXValue_dbidef1x_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbidef1x_m.vssx" />
+    <FlipXValue_dbidef1x_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbidef1x_m.vstx" />
+    <FlipXValue_dbuml_m_vssx_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbuml_m.vssx" />
+    <FlipXValue_dbuml_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="dbuml_m.vstx" />
+    <FlipXValue_drilld_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="drilld_m.vssx" />
+    <FlipXValue_drilld_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="drilld_m.vstx" />
+    <FlipXValue_dtlnet_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="dtlnet_m.vstx" />
+    <FlipXValue_dwgcnv_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="dwgcnv_m.vstx" />
+    <FlipXValue_eechip_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="eechip_m.vstx" />
+    <FlipXValue_eegenr_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="eegenr_m.vstx" />
+    <FlipXValue_eeics_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="eeics_m.vstx" />
+    <FlipXValue_eesys_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="eesys_m.vstx" />
+    <FlipXValue_eletel_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="eletel_m.vstx" />
+    <FlipXValue_entapp_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="entapp_m.vstx" />
+    <FlipXValue_epc_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="epc_m.vstx" />
+    <FlipXValue_fault_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="fault_m.vstx" />
+    <FlipXValue_flrpln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="flrpln_m.vstx" />
+    <FlipXValue_fpall_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="fpall_m.vstx" />
+    <FlipXValue_gantt_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="gantt_m.vstx" />
+    <FlipXValue_hompln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="hompln_m.vstx" />
+    <FlipXValue_hvac_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="hvac_m.vstx" />
+    <FlipXValue_idef0_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="idef0_m.vstx" />
+    <FlipXValue_itil_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="itil_m.vstx" />
+    <FlipXValue_ldapdr_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="ldapdr_m.vstx" />
+    <FlipXValue_legend_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="legend_m.vssx" />
+    <FlipXValue_map_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="map_m.vstx" />
+    <FlipXValue_map3d_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="map3d_m.vstx" />
+    <FlipXValue_meall_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="meall_m.vstx" />
+    <FlipXValue_mrktdg_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="mrktdg_m.vstx" />
+    <FlipXValue_netw_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="netw_m.vstx" />
+    <FlipXValue_offlyt_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="offlyt_m.vstx" />
+    <FlipXValue_orgblt_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgblt_m.vssx" />
+    <FlipXValue_orgbnd_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgbnd_m.vssx" />
+    <FlipXValue_orgch_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgch_m.vssx" />
+    <FlipXValue_orgch_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgch_m.vstx" />
+    <FlipXValue_orgcns_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgcns_m.vssx" />
+    <FlipXValue_orgnch_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgnch_m.vssx" />
+    <FlipXValue_orgico_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgico_m.vssx" />
+    <FlipXValue_orgpan_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgpan_m.vssx" />
+    <FlipXValue_orgper_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgper_m.vssx" />
+    <FlipXValue_orgpet_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgpet_m.vssx" />
+    <FlipXValue_orgpip_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgpip_m.vssx" />
+    <FlipXValue_orgsto_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgsto_m.vssx" />
+    <FlipXValue_orgtac_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgtac_m.vssx" />
+    <FlipXValue_orgwiz_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="orgwiz_m.vstx" />
+    <FlipXValue_pbasln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pbasln_m.vstx" />
+    <FlipXValue_pblank_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pblank_m.vstx" />
+    <FlipXValue_pcrtsk_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pcrtsk_m.vstx" />
+    <FlipXValue_pcshfl_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pcshfl_m.vstx" />
+    <FlipXValue_pedg_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pedg_m.vstx" />
+    <FlipXValue_pepipe_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pepipe_m.vstx" />
+    <FlipXValue_pert_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="pert_m.vssx" />
+    <FlipXValue_pert_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="pert_m.vstx" />
+    <FlipXValue_plmpip_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="plmpip_m.vstx" />
+    <FlipXValue_pltlyt_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pltlyt_m.vstx" />
+    <FlipXValue_prcimp_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="prcimp_m.vstx" />
+    <FlipXValue_prjmgt_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="prjmgt_m.vstx" />
+    <FlipXValue_projtl_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="projtl_m.vstx" />
+    <FlipXValue_prsavl_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="prsavl_m.vstx" />
+    <FlipXValue_prssts_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="prssts_m.vstx" />
+    <FlipXValue_pstrct_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="pstrct_m.vstx" />
+    <FlipXValue_ptskst_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="ptskst_m.vstx" />
+    <FlipXValue_rack_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="rack_m.vstx" />
+    <FlipXValue_sdcall_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="sdcall_m.vssx" />
+    <FlipXValue_sdcont_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="sdcont_m.vssx" />
+    <FlipXValue_sdl_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="sdl_m.vstx" />
+    <FlipXValue_secacc_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="secacc_m.vstx" />
+    <FlipXValue_sitpln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="sitpln_m.vstx" />
+    <FlipXValue_sixsig_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="sixsig_m.vstx" />
+    <FlipXValue_spcpln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="spcpln_m.vstx" />
+    <FlipXValue_spwa_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="spwa_m.vssx" />
+    <FlipXValue_spwa2_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="spwa2_m.vssx" />
+    <FlipXValue_spwc_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="spwc_m.vssx" />
+    <FlipXValue_spwc2_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="spwc2_m.vssx" />
+    <FlipXValue_spwt_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="spwt_m.vssx" />
+    <FlipXValue_spwt2_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="spwt2_m.vssx" />
+    <FlipXValue_timeln_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="timeln_m.vstx" />
+    <FlipXValue_title_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="title_m.vssx" />
+    <FlipXValue_tqm_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="tqm_m.vstx" />
+    <FlipXValue_uactme_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="uactme_m.vstx" />
+    <FlipXValue_useqme_m_vssx_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="useqme_m.vssx" />
+    <FlipXValue_useqme_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="useqme_m.vstx" />
+    <FlipXValue_ustame_m_vssx_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="ustame_m.vssx" />
+    <FlipXValue_ustame_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="ustame_m.vstx" />
+    <FlipXValue_ustrme_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="ustrme_m.vssx" />
+    <FlipXValue_ustrme_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="ustrme_m.vstx" />
+    <FlipXValue_uuseme_m_vssx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="uuseme_m.vssx" />
+    <FlipXValue_uuseme_m_vstx_1025 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="uuseme_m.vstx" />
+    <FlipXValue_vsm_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="vsm_m.vstx" />
+    <FlipXValue_webmap_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="webmap_m.vstx" />
+    <FlipXValue_websit_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="websit_m.vstx" />
+    <FlipXValue_wfcicn_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcicn_m.vssx" />
+    <FlipXValue_wfcrs_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcrs_m.vssx" />
+    <FlipXValue_wfctrl_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfctrl_m.vssx" />
+    <FlipXValue_wfdgm_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfdgm_m.vstx" />
+    <FlipXValue_wfdlgs_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfdlgs_m.vssx" />
+    <FlipXValue_wftlbr_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wftlbr_m.vssx" />
+    <FlipXValue_wfwicn_m_vssx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfwicn_m.vssx" />
+    <FlipXValue_wrkflo_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wrkflo_m.vstx" />
+    <FlipXValue_xfunc_m_vstx_1025 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="xfunc_m.vstx" />
+
+    <FlipXValue_actdir_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="actdir_m.vstx" />
+    <FlipXValue_appl_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="appl_m.vssx" />
+	<FlipXValue_appl_visio2013_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="appl_visio2013_m.vssx" />
+    <FlipXValue_audit_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="audit_m.vstx" />
+    <FlipXValue_ba_grp_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="ba_grp_m.vssx" />
+    <FlipXValue_basflo_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="basflo_m.vstx" />
+    <FlipXValue_basicd_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="basicd_m.vstx" />
+    <FlipXValue_block_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="block_m.vstx" />
+    <FlipXValue_bordrs_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="bordrs_m.vssx" />
+    <FlipXValue_bpmn_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="bpmn_m.vssx" />
+    <FlipXValue_bpmn_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="bpmn_m.vstx" />
+    <FlipXValue_bstorm_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="bstorm_m.vstx" />
+    <FlipXValue_calndr_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="calndr_m.vssx" />
+    <FlipXValue_calndr_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="calndr_m.vstx" />
+    <FlipXValue_calout_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="calout_m.vssx" />
+    <FlipXValue_causef_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="causef_m.vssx" />
+    <FlipXValue_ceilpl_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="ceilpl_m.vstx" />
+    <FlipXValue_chart_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="chart_m.vstx" />
+    <FlipXValue_comole_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="comole_m.vstx" />
+    <FlipXValue_compln_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="compln_m.vssx" />
+    <FlipXValue_conlog_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="conlog_m.vstx" />
+    <FlipXValue_connec_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="connec_m.vssx" />
+    <FlipXValue_datflo_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="datflo_m.vstx" />
+    <FlipXValue_datmod_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="datmod_m.vstx" />
+    <FlipXValue_dbchen_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbchen_m.vssx" />
+    <FlipXValue_dbchen_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbchen_m_vstx" />
+    <FlipXValue_dbcrow_m_vssx_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbcrow_m.vssx" />
+    <FlipXValue_dbcrow_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbcrow_m.vstx" />
+    <FlipXValue_dbidef1x_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbidef1x_m.vssx" />
+    <FlipXValue_dbidef1x_m.vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbidef1x_m.vstx" />
+    <FlipXValue_dbuml_m_vssx_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbuml_m.vssx" />
+    <FlipXValue_dbuml_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="dbuml_m.vstx" />
+    <FlipXValue_drilld_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="drilld_m.vssx" />
+    <FlipXValue_drilld_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="drilld_m.vstx" />
+    <FlipXValue_dtlnet_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="dtlnet_m.vstx" />
+    <FlipXValue_dwgcnv_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="dwgcnv_m.vstx" />
+    <FlipXValue_eechip_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="eechip_m.vstx" />
+    <FlipXValue_eegenr_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="eegenr_m.vstx" />
+    <FlipXValue_eeics_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="eeics_m.vstx" />
+    <FlipXValue_eesys_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="eesys_m.vstx" />
+    <FlipXValue_eletel_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="eletel_m.vstx" />
+    <FlipXValue_entapp_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="entapp_m.vstx" />
+    <FlipXValue_epc_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="epc_m.vstx" />
+    <FlipXValue_fault_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="fault_m.vstx" />
+    <FlipXValue_flrpln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="flrpln_m.vstx" />
+    <FlipXValue_fpall_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="fpall_m.vstx" />
+    <FlipXValue_gantt_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="gantt_m.vstx" />
+    <FlipXValue_hompln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="hompln_m.vstx" />
+    <FlipXValue_hvac_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="hvac_m.vstx" />
+    <FlipXValue_idef0_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="idef0_m.vstx" />
+    <FlipXValue_itil_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="itil_m.vstx" />
+    <FlipXValue_ldapdr_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="ldapdr_m.vstx" />
+    <FlipXValue_legend_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="legend_m.vssx" />
+    <FlipXValue_map_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="map_m.vstx" />
+    <FlipXValue_map3d_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="map3d_m.vstx" />
+    <FlipXValue_meall_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="meall_m.vstx" />
+    <FlipXValue_mrktdg_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="mrktdg_m.vstx" />
+    <FlipXValue_netw_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="netw_m.vstx" />
+    <FlipXValue_offlyt_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="offlyt_m.vstx" />
+    <FlipXValue_orgblt_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgblt_m.vssx" />
+    <FlipXValue_orgbnd_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgbnd_m.vssx" />
+    <FlipXValue_orgch_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgch_m.vssx" />
+    <FlipXValue_orgch_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgch_m.vstx" />
+    <FlipXValue_orgcns_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgcns_m.vssx" />
+    <FlipXValue_orgnch_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgnch_m.vssx" />
+    <FlipXValue_orgico_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgico_m.vssx" />
+    <FlipXValue_orgpan_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgpan_m.vssx" />
+    <FlipXValue_orgper_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgper_m.vssx" />
+    <FlipXValue_orgpet_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgpet_m.vssx" />
+    <FlipXValue_orgpip_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgpip_m.vssx" />
+    <FlipXValue_orgsto_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgsto_m.vssx" />
+    <FlipXValue_orgtac_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgtac_m.vssx" />
+    <FlipXValue_orgwiz_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="orgwiz_m.vstx" />
+    <FlipXValue_pbasln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pbasln_m.vstx" />
+    <FlipXValue_pblank_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pblank_m.vstx" />
+    <FlipXValue_pcrtsk_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pcrtsk_m.vstx" />
+    <FlipXValue_pcshfl_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pcshfl_m.vstx" />
+    <FlipXValue_pedg_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pedg_m.vstx" />
+    <FlipXValue_pepipe_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pepipe_m.vstx" />
+    <FlipXValue_pert_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="pert_m.vssx" />
+    <FlipXValue_pert_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="pert_m.vstx" />
+    <FlipXValue_plmpip_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="plmpip_m.vstx" />
+    <FlipXValue_pltlyt_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pltlyt_m.vstx" />
+    <FlipXValue_prcimp_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="prcimp_m.vstx" />
+    <FlipXValue_prjmgt_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="prjmgt_m.vstx" />
+    <FlipXValue_projtl_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="projtl_m.vstx" />
+    <FlipXValue_prsavl_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="prsavl_m.vstx" />
+    <FlipXValue_prssts_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="prssts_m.vstx" />
+    <FlipXValue_pstrct_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="pstrct_m.vstx" />
+    <FlipXValue_ptskst_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="ptskst_m.vstx" />
+    <FlipXValue_rack_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="rack_m.vstx" />
+    <FlipXValue_sdcall_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="sdcall_m.vssx" />
+    <FlipXValue_sdcont_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files = "sdcont_m.vssx"/>
+    <FlipXValue_sdl_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="sdl_m.vstx" />
+    <FlipXValue_secacc_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="secacc_m.vstx" />
+    <FlipXValue_sitpln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="sitpln_m.vstx" />
+    <FlipXValue_sixsig_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="sixsig_m.vstx" />
+    <FlipXValue_spcpln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="spcpln_m.vstx" />
+    <FlipXValue_spwa_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="spwa_m.vssx" />
+    <FlipXValue_spwa2_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="spwa2_m.vssx" />
+    <FlipXValue_spwc_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="spwc_m.vssx" />
+    <FlipXValue_spwc2_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="spwc2_m.vssx" />
+    <FlipXValue_spwt_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="spwt_m.vssx" />
+    <FlipXValue_spwt2_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="spwt2_m.vssx" />
+    <FlipXValue_timeln_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="timeln_m.vstx" />
+    <FlipXValue_title_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="title_m.vssx" />
+    <FlipXValue_tqm_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="tqm_m.vstx" />
+    <FlipXValue_uactme_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="uactme_m.vstx" />
+    <FlipXValue_useqme_m_vssx_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="useqme_m.vssx" />
+    <FlipXValue_useqme_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="useqme_m.vstx" />
+    <FlipXValue_ustame_m_vssx_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="ustame_m.vssx" />
+    <FlipXValue_ustame_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="ustame_m.vstx" />
+    <FlipXValue_ustrme_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="ustrme_m.vssx" />
+    <FlipXValue_ustrme_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="ustrme_m.vstx" />
+    <FlipXValue_uuseme_m_vssx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="uuseme_m.vssx" />
+    <FlipXValue_uuseme_m_vstx_1037 Expression="//Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="uuseme_m.vstx" />
+    <FlipXValue_vsm_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="vsm_m.vstx" />
+    <FlipXValue_webmap_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="webmap_m.vstx" />
+    <FlipXValue_websit_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="websit_m.vstx" />
+    <FlipXValue_wfcicn_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcicn_m.vssx" />
+    <FlipXValue_wfcrs_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx" />
+    <FlipXValue_wfctrl_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfctrl_m.vssx" />
+    <FlipXValue_wfdgm_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfdgm_m.vstx" />
+    <FlipXValue_wfdlgs_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfdlgs_m.vssx" />
+    <FlipXValue_wftlbr_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wftlbr_m.vssx" />
+    <FlipXValue_wfwicn_m_vssx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfwicn_m.vssx" />
+    <FlipXValue_wrkflo_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wrkflo_m.vstx" />
+    <FlipXValue_xfunc_m_vstx_1037 Expression="//Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="xfunc_m.vstx" />
+
+    <!-- BiDi: Revert FlipX values for these shapes only -->
+    <RevertFlipXValue_appl_cooker3_vssx_1025 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="appl_m.vssx" />
+	<RevertFlipXValue_appl_visio2013_cooker3_vssx_1025 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="appl_visio2013_m.vssx" />
+    <RevertFlipXValue_ba_grp_venn_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_pslice_vssx_1025 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_parc_vssx_1025 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_plus_vssx_1025 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_min_vssx_1025 DocumentUri="/visio/masters/master6.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_multiple_vssx_1025 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_division_vssx_1025 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_equal_vssx_1025 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_nequal_vssx_1025 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_bpmn_task_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_gateway_vssx_1025 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_IntEvent_vssx_1025 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_Endevent_vssx_1025 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_startevent_vssx_1025 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_collsub_vssx_1025 DocumentUri="/visio/masters/master6.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_expsub_vssx_1025 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_textannot_vssx_1025 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_message_vssx_1025 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_dataobject_vssx_1025 DocumentUri="/visio/masters/master13.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_datastore_vssx_1025 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_group_vssx_1025 DocumentUri="/visio/masters/master15.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_messageflow_vssx_1025 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_sequenceflow_vssx_1025 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_association_vssx_1025 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_connector_vstx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vstx" />
+    <RevertFlipXValue_causef_fishframe_vssx_1025 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="causef_m.vssx" />
+    <RevertFlipXValue_calndr_appointment_vssx_1025 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_attention_vssx_1025 DocumentUri="/visio/masters/master15.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_celebration_vssx_1025 DocumentUri="/visio/masters/master23.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_idea_vssx_1025 DocumentUri="/visio/masters/master16.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_moonphase_vssx_1025 DocumentUri="/visio/masters/master33.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_multidayevent_vssx_1025 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_pushpin_vssx_1025 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_reminder_vssx_1025 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_sports_vssx_1025 DocumentUri="/visio/masters/master25.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_todo_vssx_1025 DocumentUri="/visio/masters/master32.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelair_vssx_1025 DocumentUri="/visio/masters/master17.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelcar_vssx_1025 DocumentUri="/visio/masters/master19.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelship_vssx_1025 DocumentUri="/visio/masters/master20.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_vacation_vssx_1025 DocumentUri="/visio/masters/master22.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calout_tag_vssx_1025 DocumentUri="/visio/masters/master27.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="calout_m.vssx" />
+    <RevertFlipXValue_gantt_m_vstx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="gantt_m.vstx" />
+    <RevertFlipXValue_legend_fieldcontainer_vssx_1025 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="legend_m.vssx" />
+    <RevertFlipXValue_legend_innerlist_vssx_1025 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="legend_m.vssx" />
+    <RevertFlipXValue_legend_outerlist_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="legend_m.vssx" />
+    <RevertFlipXValue_sdcont_corners_vssx_1025 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="sdcont_m.vssx" />
+    <RevertFlipXValue_sdcont_snapshot_vssx_1025 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="sdcont_m.vssx" />
+    <RevertFlipXValue_spwt_starticon_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="spwt_m.vssx" />
+    <RevertFlipXValue_spwt_stopicon_vssx_1025 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="spwt_m.vssx" />
+    <RevertFlipXValue_spwt2_starticon_vssx_1025 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="spwt2_m.vssx" />
+    <RevertFlipXValue_spwt2_stopicon_vssx_1025 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="spwt2_m.vssx" />
+    <RevertFlipXValue_title_SIsymbol_vssx_1025 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="title_m.vssx" />
+    <RevertFlipXValue_wfcrs_background_vssx_1025 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_help_vssx_1025 DocumentUri="/visio/masters/master13.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_select_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_tooltip_vssx_1025 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfctrl_listbox_vssx_1025 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfctrl_treecontrol_vssx_1025 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfctrl_progressbar_vssx_1025 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfdlgs_applicationform_vssx_1025 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_dialogform_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_panel_vssx_1025 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_statusbar_vssx_1025 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_tabbar_vssx_1025 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_notificationbubble_vssx_1025 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_scrollbar_vssx_1025 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_questionicon_vssx_1025 DocumentUri="/visio/masters/master18.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wftlbr_dropdownmenu_vssx_1025 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wftlbr_m.vssx" />
+    <RevertFlipXValue_wftlbr_menubar_vssx_1025 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wftlbr_m.vssx" />
+    <RevertFlipXValue_wftlbr_menuitem_vssx_1025 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="wftlbr_m.vssx" />
+
+    <RevertFlipXValue_appl_cooker3_vssx_1037 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="appl_m.vssx" />
+	<RevertFlipXValue_appl_visio2013_cooker3_vssx_1037 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="appl_visio2013_m.vssx" />
+    <RevertFlipXValue_ba_grp_venn_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_pslice_vssx_1037 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_parc_vssx_1037 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_plus_vssx_1037 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_min_vssx_1037 DocumentUri="/visio/masters/master6.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_multiple_vssx_1037 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_division_vssx_1037 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_equal_vssx_1037 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_ba_grp_nequal_vssx_1037 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="ba_grp_m.vssx" />
+    <RevertFlipXValue_bpmn_task_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_gateway_vssx_1037 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_intevent_vssx_1037 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_endevent_vssx_1037 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_startevent_vssx_1037 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_collsub_vssx_1037 DocumentUri="/visio/masters/master6.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_expsub_vssx_1037 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_textannot_vssx_1037 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_message_vssx_1037 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_dataobject_vssx_1037 DocumentUri="/visio/masters/master13.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_datastore_vssx_1037 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_group_vssx_1037 DocumentUri="/visio/masters/master15.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_messageflow_vssx_1037 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_sequenceflow_vssx_1037 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_association_vssx_1037 DocumentUri="/visio/masters/master10.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx" />
+    <RevertFlipXValue_bpmn_connector_vstx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vstx" />
+    <RevertFlipXValue_causef_fishframe_vssx_1037 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="causef_m.vssx" />
+    <RevertFlipXValue_calndr_appointment_vssx_1037 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_attention_vssx_1037 DocumentUri="/visio/masters/master15.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_celebration_vssx_1037 DocumentUri="/visio/masters/master23.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_idea_vssx_1037 DocumentUri="/visio/masters/master16.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_moonphase_vssx_1037 DocumentUri="/visio/masters/master33.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_multidayevent_vssx_1037 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_pushpin_vssx_1037 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_reminder_vssx_1037 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_sports_vssx_1037 DocumentUri="/visio/masters/master25.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_todo_vssx_1037 DocumentUri="/visio/masters/master32.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelair_vssx_1037 DocumentUri="/visio/masters/master17.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelcar_vssx_1037 DocumentUri="/visio/masters/master19.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_travelship_vssx_1037 DocumentUri="/visio/masters/master20.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calndr_vacation_vssx_1037 DocumentUri="/visio/masters/master22.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calndr_m.vssx" />
+    <RevertFlipXValue_calout_tag_vssx_1037 DocumentUri="/visio/masters/master27.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="calout_m.vssx" />
+    <RevertFlipXValue_gantt_m_vstx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="gantt_m.vstx" />
+    <RevertFlipXValue_legend_fieldcontainer_vssx_1037 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="legend_m.vssx" />
+    <RevertFlipXValue_legend_innerlist_vssx_1037 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="legend_m.vssx" />
+    <RevertFlipXValue_legend_outerlist_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="legend_m.vssx" />
+    <RevertFlipXValue_sdcont_corners_vssx_1037 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="sdcont_m.vssx" />
+    <RevertFlipXValue_sdcont_snapshot_vssx_1037 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="sdcont_m.vssx" />
+    <RevertFlipXValue_spwt_starticon_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="spwt_m.vssx" />
+    <RevertFlipXValue_spwt_stopicon_vssx_1037 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="spwt_m.vssx" />
+    <RevertFlipXValue_spwt2_starticon_vssx_1037 DocumentUri="/visio/masters/master8.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="spwt2_m.vssx" />
+    <RevertFlipXValue_spwt2_stopicon_vssx_1037 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="spwt2_m.vssx" />
+    <RevertFlipXValue_title_SIsymbol_vssx_1037 DocumentUri="/visio/masters/master7.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="title_m.vssx" />
+    <RevertFlipXValue_wfcrs_background_vssx_1037 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_help_vssx_1037 DocumentUri="/visio/masters/master13.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_select_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfcrs_tooltip_vssx_1037 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfcrs_m.vssx" />
+    <RevertFlipXValue_wfctrl_listbox_vssx_1037 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfctrl_treecontrol_vssx_1037 DocumentUri="/visio/masters/master11.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfctrl_progressbar_vssx_1037 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfctrl_m.vssx" />
+    <RevertFlipXValue_wfdlgs_applicationform_vssx_1037 DocumentUri="/visio/masters/master2.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_dialogform_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_panel_vssx_1037 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_statusbar_vssx_1037 DocumentUri="/visio/masters/master5.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_tabbar_vssx_1037 DocumentUri="/visio/masters/master9.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_notificationbubble_vssx_1037 DocumentUri="/visio/masters/master14.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_scrollbar_vssx_1037 DocumentUri="/visio/masters/master12.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wfdlgs_questionicon_vssx_1037 DocumentUri="/visio/masters/master18.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wfdlgs_m.vssx" />
+    <RevertFlipXValue_wftlbr_dropdownmenu_vssx_1037 DocumentUri="/visio/masters/master3.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wftlbr_m.vssx" />
+    <RevertFlipXValue_wftlbr_menubar_vssx_1037 DocumentUri="/visio/masters/master1.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wftlbr_m.vssx" />
+    <RevertFlipXValue_wftlbr_menuitem_vssx_1037 DocumentUri="/visio/masters/master4.xml" Expression="//Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="wftlbr_m.vssx" />
+
+    <!-- BiDi: Bug fixing -->
+
+    <!-- Arabic bug fixes -->
+    <BPMN_PoolLane_HeadingPos_1025 DocumentUri="/visio/masters/master16.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section[@N='User']/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1025" Files="bpmn_m.vssx">change to fix O14#377501,383752</BPMN_PoolLane_HeadingPos_1025>
+    <BPMN_PoolLane_visDirection_1025 DocumentUri="/visio/masters/master16.xml" Expression="/MasterContents/Shapes/Shape/Section[@N='User']/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1025" Files="bpmn_m.vssx">change to fix O14#377501,383752</BPMN_PoolLane_visDirection_1025>
+    <LEGEND_InnerList_RTL_1025 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='RTL']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1025" Files="legend_m.vssx">change to fix O14#689674</LEGEND_InnerList_RTL_1025>
+    <SDCALL_Zoom_RevertSubshapeFlipX_1025 DocumentUri="/visio/masters/master7.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="sdcall_m.vssx" />
+    <SPWA_PinX_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='PinX']/@V" LocalizedValue="-0.37" LCID="1025" Files="spwa_m.vssx">change to fix O14#542070</SPWA_PinX_1025>
+    <SPWC_PinX_1025 Expression="/MasterContents/Shapes/Shape/Cell[@N='PinX']/@V" LocalizedValue="-0.32" LCID="1025" Files="spwc_m.vssx">change to fix O14#542070</SPWC_PinX_1025>
+    <WFCRS_Background_FlipX_1025 DocumentUri="/visio/masters/master11.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Background_FlipX_1025>
+    <WFCRS_Help_FlipX_1025 DocumentUri="/visio/masters/master13.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Help_FlipX_1025>
+    <WFCRS_Select_FlipX_1025 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Select_FlipX_1025>
+    <WFCRS_Tooltip_FlipX_1025 DocumentUri="/visio/masters/master14.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Tooltip_FlipX_1025>
+    <WFCTRL_ProgressBar_FlipX_1025 DocumentUri="/visio/masters/master14.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfctrl_m.vssx">change to fix O14#675201</WFCTRL_ProgressBar_FlipX_1025>
+    <WFDLGS_ScrollBar_FlipX_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfdlgs_m.vssx">change to fix O14#683462</WFDLGS_ScrollBar_FlipX_1025>
+    <WFDLGS_QuestionIcon_FlipX_1025 DocumentUri="/visio/masters/master18.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wfdlgs_m.vssx">Non bug: ar-sa only</WFDLGS_QuestionIcon_FlipX_1025>
+    <WFTLBR_MenuItem_FlipX_1025 DocumentUri="/visio/masters/master4.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wftlbr_m.vssx">change to fix O14#683462</WFTLBR_MenuItem_FlipX_1025>
+    <WFTLBR_MenuItemSub_FlipX_1025 DocumentUri="/visio/masters/master4.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape[@ID='13']/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1025" Files="wftlbr_m.vssx">change to fix O14#683462</WFTLBR_MenuItemSub_FlipX_1025>
+    <XFUNC_Swimlane_HeadingPos_1025 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1025" Files="xfunc_m.vssx">change to fix O14#377501,383752</XFUNC_Swimlane_HeadingPos_1025>
+    <XFUNC_Swimlane_visDirection_1025 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1025" Files="xfunc_m.vssx">change to fix O14#377501,383752</XFUNC_Swimlane_visDirection_1025>
+    <XFUNC_SwimlaneVertical_visDirection_1025 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1025" Files="xfunc_m.vssx">change to fix O14#658516</XFUNC_SwimlaneVertical_visDirection_1025>
+    <XFUNC_Swimlane_HeadingPos_PI_1025 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_Swimlane_HeadingPos_PI_1025>
+    <XFUNC_Swimlane_visDirection_PI_1025 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_Swimlane_visDirection_PI_1025>
+    <XFUNC_SwimlaneVertical_visDirection_PI_1025 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_SwimlaneVertical_visDirection_PI_1025>
+
+    <!-- Hebrew bug fixes -->
+    <BPMN_PoolLane_HeadingPos_1037 DocumentUri="/visio/masters/master16.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section[@N='User']/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1037" Files="bpmn_m.vssx">change to fix O14#377501,383752</BPMN_PoolLane_HeadingPos_1037>
+    <BPMN_PoolLane_visDirection_1037 DocumentUri="/visio/masters/master16.xml" Expression="/MasterContents/Shapes/Shape/Section[@N='User']/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1037" Files="bpmn_m.vssx">change to fix O14#377501,383752</BPMN_PoolLane_visDirection_1037>
+    <LEGEND_InnerList_RTL_1037 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='RTL']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1037" Files="legend_m.vssx">change to fix O14#689674</LEGEND_InnerList_RTL_1037>
+    <SDCALL_Zoom_RevertSubshapeFlipX_1037 DocumentUri="/visio/masters/master7.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="sdcall_m.vssx" />
+    <SPWA_PinX_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='PinX']/@V" LocalizedValue="-0.37" LCID="1037" Files="spwa_m.vssx">change to fix O14#542070</SPWA_PinX_1037>
+    <SPWC_PinX_1037 Expression="/MasterContents/Shapes/Shape/Cell[@N='PinX']/@V" LocalizedValue="-0.32" LCID="1037" Files="spwc_m.vssx">change to fix O14#542070</SPWC_PinX_1037>
+    <WFCRS_Background_FlipX_1037 DocumentUri="/visio/masters/master11.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Background_FlipX_1037>
+    <WFCRS_Help_FlipX_1037 DocumentUri="/visio/masters/master13.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Help_FlipX_1037>
+    <WFCRS_Help_FlipX_Question_1037 DocumentUri="/visio/masters/master13.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape[@ID='11']/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx">Need to flip back the ? for Hebrew only</WFCRS_Help_FlipX_Question_1037>
+    <WFCRS_Help_LocPinX_1037 DocumentUri="/visio/masters/master13.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape[@ID='11']/Cell[@N='LocPinX']/@F" LocalizedValue="Width*0" LCID="1037" AddPI="true" Files="wfcrs_m.vssx">Need to flip back the ? for Hebrew only</WFCRS_Help_LocPinX_1037>
+    <WFCRS_Select_FlipX_1037 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Select_FlipX_1037>
+    <WFCRS_Tooltip_FlipX_1037 DocumentUri="/visio/masters/master14.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfcrs_m.vssx">change to fix O14#675228</WFCRS_Tooltip_FlipX_1037>
+    <WFCTRL_ProgressBar_FlipX_1037 DocumentUri="/visio/masters/master14.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfctrl_m.vssx">change to fix O14#675201</WFCTRL_ProgressBar_FlipX_1037>
+    <WFDLGS_ScrollBar_FlipX_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wfdlgs_m.vssx">change to fix O14#683462</WFDLGS_ScrollBar_FlipX_1037>
+    <WFTLBR_MenuItem_FlipX_1037 DocumentUri="/visio/masters/master4.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wftlbr_m.vssx">change to fix O14#683462</WFTLBR_MenuItem_FlipX_1037>
+    <WFTLBR_MenuItemSub_FlipX_1037 DocumentUri="/visio/masters/master4.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape[@ID='13']/Cell[@N='FlipX']/@V" LocalizedValue="1" LCID="1037" Files="wftlbr_m.vssx">change to fix O14#683462</WFTLBR_MenuItemSub_FlipX_1037>
+    <XFUNC_Swimlane_HeadingPos_1037 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1037" Files="xfunc_m.vssx">change to fix O14#377501,383752</XFUNC_Swimlane_HeadingPos_1037>
+    <XFUNC_Swimlane_visDirection_1037 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1037" Files="xfunc_m.vssx">change to fix O14#377501,383752</XFUNC_Swimlane_visDirection_1037>
+    <XFUNC_SwimlaneVertical_visDirection_1037 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1037" Files="xfunc_m.vssx">change to fix O14#658516</XFUNC_SwimlaneVertical_visDirection_1037>
+    <XFUNC_Swimlane_HeadingPos_PI_1037 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_Swimlane_HeadingPos_PI_1037>
+    <XFUNC_Swimlane_visDirection_PI_1037 DocumentUri="/visio/masters/master1.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_Swimlane_visDirection_PI_1037>
+    <XFUNC_SwimlaneVertical_visDirection_PI_1037 DocumentUri="/visio/masters/master3.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="xfunc_m.vssx">change to fix O15#3104875</XFUNC_SwimlaneVertical_visDirection_PI_1037>
+
+    <!-- BiDi: Paragraph direction should be RTL -->
+    <ReplaceParagraphFlags_1025 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="1" LCID="1025"></ReplaceParagraphFlags_1025>
+    <ReplaceParagraphFlags_Inh_1025 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@F" LCID="1025" Action="Delete">Need to remove the inheritance formula</ReplaceParagraphFlags_Inh_1025>
+    <ReplaceParagraphFlags_1037 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="1" LCID="1037"></ReplaceParagraphFlags_1037>
+    <ReplaceParagraphFlags_Inh_1037 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@F" LCID="1037" Action="Delete">Need to remove the inheritance formula</ReplaceParagraphFlags_Inh_1037>
+
+    <!-- Bug fixing -->
+	<ReplaceParagraphFlags_1025 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="0" LCID="1025" Files="basiccircuit_diagram_r2l.vstx">Change to fix O16 Intl 35810</ReplaceParagraphFlags_1025>
+	<ReplaceParagraphFlags_1025 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="0" LCID="1025" Files="basicelectrical_diagram_r2l.vstx">Change to fix O16 Intl 35810</ReplaceParagraphFlags_1025>
+	<ReplaceParagraphFlags_1037 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="0" LCID="1037" Files="basiccircuit_diagram_r2l.vstx">Change to fix O16 Intl 35810</ReplaceParagraphFlags_1037>
+	<ReplaceParagraphFlags_1037 DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet/Section[@N='Paragraph']/Row/Cell[@N='Flags']/@V" LocalizedValue="0" LCID="1037" Files="basicelectrical_diagram_r2l.vstx">Change to fix O16 Intl 35810</ReplaceParagraphFlags_1037>
+    <WFCTRL_Button_Width_1041 DocumentUri="/visio/masters/master4.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='Width']" LocalizedValue="0.5511811023622047" LCID="1041" Files="wfctrl_m.vssx">change to fix O14Loc#8677</WFCTRL_Button_Width_1041>
+    <SetCharLangID_1025 Expression="/MasterContents/Shapes/Shape/Section/Row/Cell[@N='LangID']" LocalizedValue="en-US" LCID="1025" Files="logic_m.vssx">change to fix O14#3558</SetCharLangID_1025>
+    <AddPIToFormat Expression="//Cell[contains(@F,'FORMAT(')]/@V" Action="AddPIOnly" Files="dimeng_m.vssx">change to fix O15 2974969</AddPIToFormat>
+
+    <!-- Default orgchart to Notch style for ja-jp: Setting default style from Belt to Notch on the page -->
+    <NotchStyleToOrgChart_1041 DocumentUri="/visio/pages/pages.xml" Expression="//Row[@N='OrgChartStyle']/Cell[@N='Value']/@V" LocalizedValue="2" LCID="1041" Files="OrgCh_M.vstx">Change to fix O15 3023761</NotchStyleToOrgChart_1041>
+    <NotchStyleToOrgChartWiz_1041 DocumentUri="/visio/pages/pages.xml" Expression="//Row[@N='OrgChartStyle']/Cell[@N='Value']/@V" LocalizedValue="2" LCID="1041" Files="OrgWiz_M.vstx">Change to fix O15 3023761</NotchStyleToOrgChartWiz_1041>
+    <!-- Default orgchart to Notch style for ja-jp: Setting default docked stencil from Belt to Notch -->
+    <NotchStencilToOrgChart_1041 DocumentUri="/visio/windows.xml" Expression="//Window[contains(@Document,'ORGBLT_M.VSSX')]/@Document" LocalizedValue="ORGNCH_M.vssx" LCID="1041" Files="OrgCh_M.vstx">Change to fix O15 3023761</NotchStencilToOrgChart_1041>
+    <NotchStencilToOrgChartWiz_1041 DocumentUri="/visio/windows.xml" Expression="//Window[contains(@Document,'ORGBLT_M.VSSX')]/@Document" LocalizedValue="ORGNCH_M.vssx" LCID="1041" Files="OrgWiz_M.vstx">Change to fix O15 3023761</NotchStencilToOrgChartWiz_1041>
+
+    <!-- Default fonts need to be set -->
+    <DefaultFont_ja-jp DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="MS PGothic" LCID="1041">Change to fix O15 3056677</DefaultFont_ja-jp>
+    <DefaultAsianFont_ja-jp DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="MS PGothic" LCID="1041">Change to fix O15 3056677</DefaultAsianFont_ja-jp>
+
+    <DefaultFont_ko-kr DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="Malgun Gothic" LCID="1042">Change to fix O15 3056677</DefaultFont_ko-kr>
+    <DefaultAsianFont_ko-kr DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="Malgun Gothic" LCID="1042">Change to fix O15 3056677</DefaultAsianFont_ko-kr>
+
+    <DefaultFont_zh-cn DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="SimSun" LCID="2052">Change to fix O15 3056677</DefaultFont_zh-cn>
+    <DefaultAsianFont_zh-cn DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="SimSun" LCID="2052">Change to fix O15 3056677</DefaultAsianFont_zh-cn>
+
+    <DefaultFont_zh-tw DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="PMingLiU" LCID="1028">Change to fix O15 3056677</DefaultFont_zh-tw>
+    <DefaultAsianFont_zh-tw DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="PMingLiU" LCID="1028">Change to fix O15 3056677</DefaultAsianFont_zh-tw>
+
+    <DefaultFont_ar-sa DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="Calibri" LCID="1025">Change to fix O16 34291</DefaultFont_ar-sa>
+    <DefaultComplexScriptFont_ar-sa DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="Calibri" LCID="1025">Change to fix O16 34291</DefaultComplexScriptFont_ar-sa>
+
+    <DefaultFont_he-il DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='Font']/@V" LocalizedValue="Calibri" LCID="1037">Change to fix O16 34521</DefaultFont_he-il>
+    <DefaultComplexScriptFont_he-il DocumentUri="/visio/document.xml" Expression="/VisioDocument/StyleSheets/StyleSheet[@ID='0']/Section[@N='Character']/Row[@IX='0']/Cell[@N='AsianFont']/@V" LocalizedValue="Calibri" LCID="1037">Change to fix O16 34521</DefaultComplexScriptFont_he-il>
+
+    <!-- UML Activity Diagram -->
+    <UACTME_FlipX_Note_1025 DocumentUri="/visio/masters/master9.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_FlipX_Note_1037 DocumentUri="/visio/masters/master9.xml" Expression="/MasterContents/Shapes/Shape/Cell[@N='FlipX' and not(starts-with(@F,'GUARD'))]/@V" LocalizedValue="1" LCID="1037" Files="uactme_m.vssx" />
+
+    <UACTME_Swimlane_HeadingPos_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_visDirection_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_SwimlaneVertical_visDirection_1025 DocumentUri="/visio/masters/master8.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_HeadingPos_PI_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_visDirection_PI_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="uactme_m.vssx" />
+    <UACTME_SwimlaneVertical_visDirection_PI_1025 DocumentUri="/visio/masters/master8.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1025" Files="uactme_m.vssx" />
+
+    <UACTME_Swimlane_HeadingPos_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" LocalizedValue="1" LCID="1037" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_visDirection_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1037" Files="uactme_m.vssx" />
+    <UACTME_SwimlaneVertical_visDirection_1037 DocumentUri="/visio/masters/master8.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" LocalizedValue="0" LCID="1037" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_HeadingPos_PI_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Section/Row[@N='HeadingPos']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="uactme_m.vssx" />
+    <UACTME_Swimlane_visDirection_PI_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="uactme_m.vssx" />
+    <UACTME_SwimlaneVertical_visDirection_PI_1037 DocumentUri="/visio/masters/master8.xml" Expression="/MasterContents/Shapes/Shape/Section/Row[@N='visDirection']/Cell[@N='Value']/@V" Action="AddPIOnly" LCID="1037" Files="uactme_m.vssx" />
+
+    <!-- UML Database Modeling: Swap text margins -->
+    <DBUML_RemoveCircularRef_1025 Expression="//Cell[@N='RightMargin' and @F='LeftMargin']/@F" LocalizedValue="RightMargin" LCID="1025" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin1_1025 Expression="//Cell[@N='LeftMargin']/@N" LocalizedValue="LeftMarginTemp" LCID="1025" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin2_1025 Expression="//Cell[@N='RightMargin']/@N" LocalizedValue="LeftMargin" LCID="1025" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin3_1025 Expression="//Cell[@N='LeftMarginTemp']/@N" LocalizedValue="RightMargin" LCID="1025" Files="dbuml_m.vssx" />
+    <DBUML_RemoveCircularRef_1037 Expression="//Cell[@N='RightMargin' and @F='LeftMargin']/@F" LocalizedValue="RightMargin" LCID="1037" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin1_1037 Expression="//Cell[@N='LeftMargin']/@N" LocalizedValue="LeftMarginTemp" LCID="1037" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin2_1037 Expression="//Cell[@N='RightMargin']/@N" LocalizedValue="LeftMargin" LCID="1037" Files="dbuml_m.vssx" />
+    <DBUML_SwapTextMargin3_1037 Expression="//Cell[@N='LeftMarginTemp']/@N" LocalizedValue="RightMargin" LCID="1037" Files="dbuml_m.vssx" />
+
+    <!-- Crow's Foot Database Notation: Swap text margins -->
+    <DBCROW_SwapTextMargin1_1025 Expression="//Cell[@N='LeftMargin']/@N" LocalizedValue="LeftMarginTemp" LCID="1025" Files="dbcrow_m.vssx" />
+    <DBCROW_SwapTextMargin2_1025 Expression="//Cell[@N='RightMargin']/@N" LocalizedValue="LeftMargin" LCID="1025" Files="dbcrow_m.vssx" />
+    <DBCROW_SwapTextMargin3_1025 Expression="//Cell[@N='LeftMarginTemp']/@N" LocalizedValue="RightMargin" LCID="1025" Files="dbcrow_m.vssx" />
+    <DBCROW_SwapTextMargin1_1037 Expression="//Cell[@N='LeftMargin']/@N" LocalizedValue="LeftMarginTemp" LCID="1037" Files="dbcrow_m.vssx" />
+    <DBCROW_SwapTextMargin2_1037 Expression="//Cell[@N='RightMargin']/@N" LocalizedValue="LeftMargin" LCID="1037" Files="dbcrow_m.vssx" />
+    <DBCROW_SwapTextMargin3_1037 Expression="//Cell[@N='LeftMarginTemp']/@N" LocalizedValue="RightMargin" LCID="1037" Files="dbcrow_m.vssx" />
+
+    <BORDRS_Contemporary_1025 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1025" Files="bordrs_m.vssx" />
+    <BORDRS_Contemporary_1037 DocumentUri="/visio/masters/master12.xml" Expression="/MasterContents/Shapes/Shape/Shapes/Shape/Cell[@N='FlipX']/@V" LocalizedValue="0" LCID="1037" Files="bordrs_m.vssx" />
+
+  </DOMPostProcessings>
+  <GlobalSymbols>
+    <!-- This is a section for Global symbols that can be used in the setting file ro reduce duplicates of instructions-->
+    <CS_FONT_1025>1</CS_FONT_1025>
+    <CS_FONT_1037>1</CS_FONT_1037>
+    <ASIAN_FONT_2052>6</ASIAN_FONT_2052>
+    <PT_8>0.1111111111111111</PT_8>
+    <PT_10>0.1388888888888889</PT_10>
+    <PT_12>0.1666666666666667</PT_12>
+  </GlobalSymbols>
+</VisioLocalise>
