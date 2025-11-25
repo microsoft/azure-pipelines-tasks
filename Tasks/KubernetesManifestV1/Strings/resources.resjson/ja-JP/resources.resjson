@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Docker レジストリ サービス接続を選択します。レジストリを使って認証する必要のあるコマンドの場合に必要です。",
   "loc.input.label.rolloutStatusTimeout": "ロールアウトの状態のタイムアウト",
   "loc.input.help.rolloutStatusTimeout": "ロールアウトの状態の監視を終了するまでの待機時間 (秒)",
+  "loc.input.label.resourceType": "Resource type",
+  "loc.input.help.resourceType": "The type of the resource (fleet, managed cluster)",
   "loc.messages.DownloadPathForStableTxt": "stable.txt のダウンロード パス: %s",
   "loc.messages.DownloadKubeCtlFailed": "kubectl クライアント バージョン %s をダウンロードできません。適切なバージョンかどうか、https://github.com/kubernetes/kubernetes/releases で確認します",
   "loc.messages.DownloadStableVersionFailed": "%s から安定バージョンの Kubernetes ファイルをダウンロードできません。%s にフォールバックしています",

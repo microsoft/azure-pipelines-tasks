@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "Lo schema di autenticazione %s non è supportato",
   "loc.messages.ErrorInSettingUpSubscription": "Errore durante la configurazione della sottoscrizione: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" non riuscito. Errore: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versione dell'interfaccia della riga di comando di Azure deve essere >= 2.47.0 per usare il file con estensione bicepparam"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versione dell'interfaccia della riga di comando di Azure deve essere >= 2.47.0 per usare il file con estensione bicepparam",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "Nel file di metadati specificato '%s' mancano i metadati del parametro '%s'"
 }
