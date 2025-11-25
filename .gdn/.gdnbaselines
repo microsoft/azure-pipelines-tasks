@@ -2317,7 +2317,18 @@
       "memberOf": [
         "default"
       ],
-      "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x64.exe, fastlist-0.3.0-x86.exe) lack Control Flow Guard - not under our control",
+      "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x86.exe) lacks Control Flow Guard - not under our control",
+      "createdDate": "2025-11-24 00:00:00Z"
+    },
+    "f51b66848d5cc1ac54c0b6250853060ea4cf93461f113f4cdd0ab4bade214c89": {
+      "signature": "f51b66848d5cc1ac54c0b6250853060ea4cf93461f113f4cdd0ab4bade214c89",
+      "alternativeSignatures": [
+        "8ba7397e8a319de274c5245a25fbc405a6da27c7dfa5eac46dd47d7141216260"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x64.exe) lacks Control Flow Guard - not under our control",
       "createdDate": "2025-11-24 00:00:00Z"
     }
   }
