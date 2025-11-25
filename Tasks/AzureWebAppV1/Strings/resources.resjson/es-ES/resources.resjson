@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Edite opciones de configuración de aplicación web la sintaxis-valor de clave. Valor que contenga espacios debe incluirse entre comillas dobles. <br /> Ejemplo: - phpVersion 5.6 - linuxFxVersion: nodo|6.11",
   "loc.input.label.deploymentMethod": "Método de implementación",
   "loc.input.help.deploymentMethod": "Elija el método de implementación para la aplicación.",
+  "loc.input.label.siteContainersConfig": "Configuración de contenedores de sitio",
+  "loc.input.help.siteContainersConfig": "Proporcione el json siteContainers-config para las implementaciones de SiteContainers.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Paquete App Service o ruta de acceso de carpeta proporcionados no válidos: %s",
   "loc.messages.SetParamFilenotfound0": "No se ha encontrado el archivo de parámetros establecido: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Las transformaciones XML se aplicaron correctamente",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "La ruta de acceso de jar de Java no está presente.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "No se pudo actualizar el recurso de Application Insights \"%s\". Error: %s",
   "loc.messages.InvalidDockerImageName": "Se ha proporcionado un nombre de imagen de Docker Hub no válido.",
-  "loc.messages.MsBuildPackageNotSupported": "No se admite la implementación del paquete generado por msBuild. Cambie el formato del paquete o use la tarea Implementación de Azure App Service."
+  "loc.messages.MsBuildPackageNotSupported": "No se admite la implementación del paquete generado por msBuild. Cambie el formato del paquete o use la tarea Implementación de Azure App Service.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "No se admiten contenedores de sitio con la autenticación de perfil de publicación. Use la autenticación de conexión de servicio.",
+  "loc.messages.StartedUpdatingSiteContainers": "Se ha iniciado la actualización de contenedores de sitio.",
+  "loc.messages.UpdatingSiteContainer": "Actualizando el contenedor del sitio: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Se ha completado la actualización de contenedores de sitio."
 }
