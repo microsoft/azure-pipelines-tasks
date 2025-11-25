@@ -5,7 +5,7 @@
   "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
-  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV3/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
   "releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections.",
   "category": "Deploy",
   "visibility": [
