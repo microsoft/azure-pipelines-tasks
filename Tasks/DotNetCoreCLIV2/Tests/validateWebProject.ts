@@ -16,7 +16,12 @@ tmr.setInput('workingDirectory', process.env["workingDirectory"] ? process.env["
 process.env['TASK_TEST_TRACE'] = "true";
 
 var projectFile = path.join(__dirname, process.env["__projects__"]);
-var execCommand = "dotnet publish " + projectFile
+
+// Get out of the Tests folder to the task root folder. This will match the path used in the task.
+var loggerAssembly = path.join(__dirname, '..', 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
+var loggerString = `-dl:CentralLogger,"${loggerAssembly}"*ForwardingLogger,"${loggerAssembly}"`
+
+var execCommand = `dotnet publish ${projectFile} ${loggerString}`;
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {

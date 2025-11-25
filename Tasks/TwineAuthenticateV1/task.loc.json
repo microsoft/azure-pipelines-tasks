@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 248,
-    "Patch": 4
+    "Minor": 262,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",

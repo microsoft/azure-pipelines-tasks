@@ -5,15 +5,9 @@ steps:
   displayName: Install nuget
 
 - powershell: |
-    $sourcePath = "$(Build.SourcesDirectory)/azure-pipelines-tasks/.gdn"
-    $destinationPath = "$(Build.SourcesDirectory)/"
-    Copy-Item -Path $sourcePath -Destination $destinationPath -Recurse
-  displayName: Copy baseline files to root
-
-- powershell: |
-    cd azure-pipelines-tasks/ci/courtesy-push
-    npm install
-  displayName: npm install
+    cd $(Build.SourcesDirectory)/ci/courtesy-push
+    npm ci
+  displayName: npm ci
 
 - task: DownloadBuildArtifacts@0
   inputs:
@@ -21,40 +15,23 @@ steps:
     downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-  displayName: Update unified deps
-
-- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
+- powershell: $(Build.SourcesDirectory)/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
-- template: /ci/generate-branch-name.yml@self
-
 - powershell: |
-    $releaseBranch = "$(branchName)"
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    Write-Host "##vso[task.setVariable variable=currentDate]$currentDate"
+  displayName: Set currentDate variable
 
-    # Push branch to git
-    Write-Host "Pushing branch to AzureDevOps"
-    cd AzureDevOps
-    git checkout -b $releaseBranch
-    git config --global user.email "$(username)@microsoft.com"
-    git config --global user.name "$(username)"
-    git add Directory.Packages.props
-    git add Tfs\Service\Deploy\components\*
-    git commit -m "Courtesy bump of tasks"
-    git push origin $releaseBranch --force
-    Write-Host "Creating Pull Request"
-    cd ..\azure-pipelines-tasks\ci\courtesy-push
-    node open-courtesy-push-pull-request.js $releaseBranch
+- template: /ci/generate-branch-name.yml@self
+- template: /ci/get-AzDo-pat.yml@self
 
-    # Sleep 30 seconds to let PR be created
-    Start-Sleep -Seconds 30
-  displayName: Create PR in Azure DevOps
+- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/unified_deps.xml
+  name: createCourtesyPushPR
+  displayName: Update unified deps and create branch
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(AzDo_PAT)
+    BRANCH_NAME: $(branchName)
+    DRYRUN: $(isDryRun)
+    USERNAME: $(username)
 
-- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
-  displayName: Send MS Teams notification
-  condition: eq(variables['build.reason'], 'Schedule')
-  env:
-    TEAMS_WEBHOOK: $(MSTeamsUri)
-  

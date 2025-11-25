@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 259,
-    "Patch": 3
+    "Minor": 266,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.209.0",
   "groups": [
@@ -225,6 +225,14 @@
         "runFromPackage": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
+    },
+    {
+      "name": "siteContainersConfig",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.siteContainersConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.siteContainersConfig"
     }
   ],
   "outputVariables": [
@@ -424,6 +432,10 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
+    "SiteContainersNotSupportedWithPublishProfileAuthentication": "ms-resource:loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication",
+    "StartedUpdatingSiteContainers": "ms-resource:loc.messages.StartedUpdatingSiteContainers",
+    "UpdatingSiteContainer": "ms-resource:loc.messages.UpdatingSiteContainer",
+    "CompletedUpdatingSiteContainers": "ms-resource:loc.messages.CompletedUpdatingSiteContainers"
   }
 }

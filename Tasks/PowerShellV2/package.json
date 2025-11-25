@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "node ../../make.js build --task PowerShellV2",
+    "serverBuild": "node ../../make.js serverBuild --task PowerShellV2",
     "test": "node ../../make.js test --task PowerShellV2"
   },
   "author": "Microsoft Corporation",
@@ -17,7 +18,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "3.265.1",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

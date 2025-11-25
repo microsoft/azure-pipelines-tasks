@@ -1,6 +1,11 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
   "description": "Azure Pipelines Jenkins Queue Job Task",
+  "scripts": {
+    "build": "node ../../make.js build --task JenkinsQueueJobV2",
+    "serverBuild": "node ../../make.js serverBuild --task JenkinsQueueJobV2",
+    "test": "node ../../make.js test --task JenkinsQueueJobV2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
@@ -9,10 +14,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-  },
-  "scripts": {
-    "build": "node ../../make.js build --task JenkinsQueueJobV2",
-    "test": "node ../../make.js test --task JenkinsQueueJobV2"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
@@ -25,5 +26,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }
