@@ -139,7 +139,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Use XML Jacoco reports for SonarQube analysis. [More info]5D;(https://docs.sonarqube.org/latest/analysis/coverage/)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Использовать XML-отчеты Jacoco для анализа SonarQube. [Дополнительные сведения]5D; (https://docs.sonarqube.org/latest/analysis/coverage/)]]></Val>
+            <Val><![CDATA[Использовать XML-отчеты Jacoco для анализа SonarQube. [Дополнительные сведения]5D;(https://docs.sonarqube.org/latest/analysis/coverage/)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

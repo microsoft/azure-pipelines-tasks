@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Additional arguments passed to NuGet.exe push. [More Information]5D;(https://docs.microsoft.com/en-us/nuget/tools/cli-ref-push).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[NuGet.exe push に渡される追加引数。[詳細]5D; (https://docs.microsoft.com/ja-JP/nuget/tools/cli-ref-push)。]]></Val>
+            <Val><![CDATA[NuGet.exe push に渡される追加引数。[詳細]5D;(https://docs.microsoft.com/ja-JP/nuget/tools/cli-ref-push)。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

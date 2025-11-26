@@ -31,7 +31,7 @@
         <Str Cat="Text">
           <Val><![CDATA[This task can be used to trigger an Apache JMeter load test in cloud using Azure Pipelines. [Learn more]5D;(https://go.microsoft.com/fwlink/?LinkId=784929)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[此工作可用來觸發雲端中使用 Azure Pipelines 的 Apache JMeter 負載測試。[深入了解]5D; (https://go.microsoft.com/fwlink/?LinkId=784929)。]]></Val>
+            <Val><![CDATA[此工作可用來觸發雲端中使用 Azure Pipelines 的 Apache JMeter 負載測試。[深入了解]5D;(https://go.microsoft.com/fwlink/?LinkId=784929)。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

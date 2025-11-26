@@ -49,7 +49,7 @@
         <Str Cat="Text">
           <Val><![CDATA[[See the .NET Core documentation]5D;(https://docs.microsoft.com/dotnet/core/)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Vedere la documentazione di .NET Core]5D; (https://docs.microsoft.com/dotnet/core/)]]></Val>
+            <Val><![CDATA[[Vedere la documentazione di .NET Core]5D;(https://docs.microsoft.com/dotnet/core/)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

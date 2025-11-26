@@ -49,7 +49,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here]5D;(https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).]A; **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\* version of the task to download latest versions od .NET Core.**]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Especifique la versión exacta del entorno de ejecución o el SDK de .NET Core que se va a instalar.<br/>Busque el valor de "version-sdk" para instalar el SDK o de "version-runtime" para instalar el entorno de ejecución de cualquier versión [aquí]5D; (https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).]A; **NOTA: La tarea no funcionará con las nuevas versiones de .NET Core. Actualice a la versión 2.\* de la tarea para descargar las últimas versiones de .NET Core.**]]></Val>
+            <Val><![CDATA[Especifique la versión exacta del entorno de ejecución o el SDK de .NET Core que se va a instalar.<br/>Busque el valor de "version-sdk" para instalar el SDK o de "version-runtime" para instalar el entorno de ejecución de cualquier versión [aquí]5D;(https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).]A; **NOTA: La tarea no funcionará con las nuevas versiones de .NET Core. Actualice a la versión 2.\* de la tarea para descargar las últimas versiones de .NET Core.**]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

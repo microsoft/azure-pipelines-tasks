@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Path to the compose file that is to be deployed. [Variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ruta de acceso al archivo de Compose que se va a implementar. Se pueden usar [variables]5D; (https://go.microsoft.com/fwlink/?LinkID=550988) y comodines en la ruta de acceso.]]></Val>
+            <Val><![CDATA[Ruta de acceso al archivo de Compose que se va a implementar. Se pueden usar [variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) y comodines en la ruta de acceso.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
