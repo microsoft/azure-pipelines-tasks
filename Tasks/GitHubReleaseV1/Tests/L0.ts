@@ -14,8 +14,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.deleteActionKeyWord) >= 0, 'should have printed: ' + TestString.deleteActionKeyWord);
-
-        done();
     });
 
     it('Validate create action is called when action = create', async (done: Mocha.Done) => {
@@ -24,8 +22,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.createActionKeyWord) >= 0, 'should have printed: ' + TestString.createActionKeyWord);
-
-        done();
     });
 
     it('Validate create action is called when action = edit but no release is present for that tag.', async (done: Mocha.Done) => {
@@ -34,8 +30,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.editActionKeyWord) >= 0, 'should have printed: ' + TestString.editActionKeyWord);
-
-        done();
     });
 
     it('Validate edit action is called when action = edit but a release is present for that tag.', async (done: Mocha.Done) => {
@@ -44,8 +38,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.editAction2KeyWord) >= 0, 'should have printed: ' + TestString.editAction2KeyWord);
-
-        done();
     });
 
     it('Validate delete action is called when action = Delete. Validating if action is case insensitive or not.', async (done: Mocha.Done) => {
@@ -54,8 +46,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.deleteAction2KeyWord) >= 0, 'should have printed: ' + TestString.deleteAction2KeyWord);
-
-        done();
     });
 
     it('Validate task fails with correct error when action = create and no tag is present.', async (done: Mocha.Done) => {
@@ -64,8 +54,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.NoTagFoundKeyword) >= 0, 'should have printed: ' + TestString.NoTagFoundKeyword);
-
-        done();
     });
 
     it('Validate task fails with correct error when action input is invalid', async (done: Mocha.Done) => {
@@ -74,8 +62,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         await tr.runAsync();
 
         assert(tr.stdout.search(TestString.InvalidActionKeyword) >= 0, 'should have printed: ' + TestString.InvalidActionKeyword);
-
-        done();
     });
 
     it('Validate Utility class methods', async (done: Mocha.Done) => {
@@ -91,8 +77,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         assert(tr.stdout.search(TestString.extractRepositoryOwnerAndNameKeyword) >= 0, 'should have printed: ' + TestString.extractRepositoryOwnerAndNameKeyword);
         assert(tr.stdout.search(TestString.extractRepoAndIssueIdKeyword) >= 0, 'should have printed: ' + TestString.extractRepoAndIssueIdKeyword);
         assert(tr.stdout.search(TestString.getFirstLineKeyword) >= 0, 'should have printed: ' + TestString.getFirstLineKeyword);
-
-        done();
     });
 
     it('Validate Helper class methods', async (done: Mocha.Done) => {
@@ -104,8 +88,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         assert(tr.stdout.search(TestString.getTagForCreateActionWithTagPatternKeyword) >= 0, 'should have printed: ' + TestString.getTagForCreateActionWithTagPatternKeyword);
         assert(tr.stdout.search(TestString.getCommitShaFromTargetKeyword) >= 0, 'should have printed: ' + TestString.getCommitShaFromTargetKeyword);
         assert(tr.stdout.search(TestString.getReleaseIdForTagKeyword) >= 0, 'should have printed: ' + TestString.getReleaseIdForTagKeyword);
-
-        done();
     });
 
     it('Validate ChangeLog class methods', async (done: Mocha.Done) => {
@@ -119,8 +101,6 @@ describe('GitHubReleaseTaskTests Suite', function() {
         assert(tr.stdout.search("Tag Name: v1.2") >=0, 'should have printed: TagName: v1.2');
         assert(tr.stdout.search("Tag Name: pre_rel") >=0, 'should have printed: TagName: pre_rel');
         assert(tr.stdout.search("Tag Name: tagName") >=0, 'should have printed: TagName: tagName');
-
-        done();
     });
 
     it('Validate Action class methods', async (done: Mocha.Done) => {
@@ -131,7 +111,5 @@ describe('GitHubReleaseTaskTests Suite', function() {
         assert(tr.stdout.search(TestString.createReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.createReleaseSuccessKeyword);
         assert(tr.stdout.search(TestString.editReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.editReleaseSuccessKeyword);
         assert(tr.stdout.search(TestString.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.deleteReleaseSuccessKeyword);
-
-        done();
     });
 });
