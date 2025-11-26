@@ -1,18 +1,17 @@
-import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
-import { Inputs } from '../operations/Constants';
-import * as sinon from 'sinon';
+
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export class HelperTests {
 
     public static startTest() {
         let tp = path.join(__dirname, 'HelperL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
-        
+
         // Stub methods
         this.stub(tr);
-        
-        // Run the main.js 
+
+        // Run the main.js
         tr.run();
     }
 
@@ -26,15 +25,15 @@ export class HelperTests {
                             statusCode: 200,
                             headers: { "link": ""},
                             body: [
-                                { 
+                                {
                                     "commit": { "sha": "abc" },
                                     "name": "tagName"
                                 },
-                                { 
+                                {
                                     "commit": { "sha": "bcd" },
                                     "name": "test"
                                 },
-                                { 
+                                {
                                     "commit": { "sha": "bcd" },
                                     "name": "v1.12"
                                 }
