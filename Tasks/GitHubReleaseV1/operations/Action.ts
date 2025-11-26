@@ -14,15 +14,16 @@ export class Action {
      * But in our scenario, we assume it to be a single process, means if upload assets step fail then we say release is in dirty state and we would want it to be deleted as it is without assets yet.
      * So, we delete the created release as assets are not uploaded to it. And will want user to run the task again to create release with assets.
      * The delete release step is only reachable if user has specified any assets to upload and the upload step failed.
-     * @param githubEndpointToken
-     * @param repositoryName
-     * @param target
-     * @param tag
-     * @param releaseTitle
-     * @param releaseNote
-     * @param isDraft
-     * @param isPrerelease
-     * @param githubReleaseAssetInputPatterns
+     * @param githubEndpointToken - GitHub endpoint token for authentication
+     * @param repositoryName - Name of the repository
+     * @param target - Target commit or branch
+     * @param tag - Tag name for the release
+     * @param releaseTitle - Title of the release
+     * @param releaseNote - Release notes/description
+     * @param isDraft - Whether the release is a draft
+     * @param isPrerelease - Whether the release is a prerelease
+     * @param githubReleaseAssetInputPatterns - Patterns for assets to upload
+     * @param makeLatest - Whether to mark the release as latest
      */
     public async createReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], makeLatest: string): Promise<void> {
         console.log(tl.loc("CreatingRelease", tag));
@@ -65,16 +66,17 @@ export class Action {
 
     /**
      * Edits an existing release.
-     * @param githubEndpointToken
-     * @param repositoryName
-     * @param target
-     * @param tag
-     * @param releaseTitle
-     * @param releaseNote
-     * @param isDraft
-     * @param isPrerelease
-     * @param githubReleaseAssetInputPatterns
-     * @param releaseId
+     * @param githubEndpointToken - GitHub endpoint token for authentication
+     * @param repositoryName - Name of the repository
+     * @param target - Target commit or branch
+     * @param tag - Tag name for the release
+     * @param releaseTitle - Title of the release
+     * @param releaseNote - Release notes/description
+     * @param isDraft - Whether the release is a draft
+     * @param isPrerelease - Whether the release is a prerelease
+     * @param githubReleaseAssetInputPatterns - Patterns for assets to upload
+     * @param releaseId - ID of the release to edit
+     * @param makeLatest - Whether to mark the release as latest
      */
     public async editReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string, makeLatest: string): Promise<void> {
         console.log(tl.loc("EditingRelease", tag));
