@@ -42,6 +42,8 @@ async function run() {
 
         if (!isDotnetInstalled) {
             await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
+            // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
+            addDotNetCoreToolPath();
             tl.prependPath(installationPath);
             // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
             tl.setVariable('DOTNET_ROOT', installationPath);
@@ -51,8 +53,6 @@ async function run() {
         tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
 
-    // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
-    addDotNetCoreToolPath();
     // Install NuGet version specified by user or 4.9.6 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
