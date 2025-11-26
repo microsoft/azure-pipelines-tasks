@@ -58,7 +58,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[若指定輸入，其值會展開，並作為執行指令碼前要執行之啟動檔案的路徑。如果已定義環境變數 'BASH_ENV'，則工作只會針對目前的工作覆寫此變數。您可以透過 [link]5D; (https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html) 找到更多詳細資料。]]></Val>
+            <Val><![CDATA[若指定輸入，其值會展開，並作為執行指令碼前要執行之啟動檔案的路徑。如果已定義環境變數 'BASH_ENV'，則工作只會針對目前的工作覆寫此變數。您可以透過 [link]5D;(https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html) 找到更多詳細資料。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -64,7 +64,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information]5D;(https://aka.ms/minimatchexamples)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Percorsi dei file di riepilogo contenenti le statistiche di code coverage, ad esempio a livello di riga, metodo e classe. In un singolo report verranno uniti più file di riepilogo. Supporta più righe di criteri di corrispondenza minima. [Altre informazioni]5D; (https://aka.ms/minimatchexamples)]]></Val>
+            <Val><![CDATA[Percorsi dei file di riepilogo contenenti le statistiche di code coverage, ad esempio a livello di riga, metodo e classe. In un singolo report verranno uniti più file di riepilogo. Supporta più righe di criteri di corrispondenza minima. [Altre informazioni]5D;(https://aka.ms/minimatchexamples)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

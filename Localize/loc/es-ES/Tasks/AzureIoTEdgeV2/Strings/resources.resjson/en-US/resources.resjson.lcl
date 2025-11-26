@@ -223,7 +223,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store]5D;(http://schemastore.org/json/) to find latest schema.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Indique que este paso es erróneo si el manifiesto de implementación generado no supera la validación de esquema. Puede buscar "Azure IoT Edge Deployment" en el [almacenamiento del esquema JSON]5D; (http://schemastore.org/json/) para buscar el esquema más reciente.]]></Val>
+            <Val><![CDATA[Indique que este paso es erróneo si el manifiesto de implementación generado no supera la validación de esquema. Puede buscar "Azure IoT Edge Deployment" en el [almacenamiento del esquema JSON]5D;(http://schemastore.org/json/) para buscar el esquema más reciente.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

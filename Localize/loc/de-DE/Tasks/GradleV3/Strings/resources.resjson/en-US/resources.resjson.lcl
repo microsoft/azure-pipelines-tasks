@@ -131,7 +131,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info]5D;(https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Verwenden Sie das statische Analysetool FindBugs, um nach Fehlern im Code zu suchen. Ergebnisse werden als Buildartefakt hochgeladen. In Gradle 6.0 wurde dieses Plug-In entfernt. Verwenden Sie stattdessen das Spotbugs-Plug-In. [Weitere Informationen]5D; (https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
+            <Val><![CDATA[Verwenden Sie das statische Analysetool FindBugs, um nach Fehlern im Code zu suchen. Ergebnisse werden als Buildartefakt hochgeladen. In Gradle 6.0 wurde dieses Plug-In entfernt. Verwenden Sie stattdessen das Spotbugs-Plug-In. [Weitere Informationen]5D;(https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -215,7 +215,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info]5D;(https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Aktivieren Sie diese Option, um spotBugs auszuführen. Dieses Plug-in funktioniert mit Gradle v 5.6 oder höher. [Weitere Informationen]5D; (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
+            <Val><![CDATA[Aktivieren Sie diese Option, um spotBugs auszuführen. Dieses Plug-in funktioniert mit Gradle v 5.6 oder höher. [Weitere Informationen]5D;(https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
