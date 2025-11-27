@@ -389,7 +389,7 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-const node20Version = '20.17.0';
+const node20Version = '20.19.4';
 exports.node20Version = node20Version;
 
 const node24Version = '24.10.0';
