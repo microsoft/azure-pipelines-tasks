@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 262,
-    "Patch": 3
+    "Minor": 266,
+    "Patch": 0
   },
   "demands": [
     "ant"
@@ -210,6 +210,9 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.25": "JDK 25",
+        "1.21": "JDK 21",
+        "1.17": "JDK 17",
         "1.11": "JDK 11",
         "1.10": "JDK 10 (out of support)",
         "1.9": "JDK 9 (out of support)",
