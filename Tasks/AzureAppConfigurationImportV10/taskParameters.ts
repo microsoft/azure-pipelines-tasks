@@ -43,7 +43,7 @@ export class TaskParameters {
         taskParameters.profile = profile;
         taskParameters.useFilePathExtension = tl.getBoolInput("UseFilePathExtension", false);
         try {
-            taskParameters.configStoreUrl = tl.getInput("AppConfigurationEndpoint", true);
+            taskParameters.configStoreUrl = this.trimTrailingSlash(tl.getInput("AppConfigurationEndpoint", true));
             taskParameters.strict = tl.getBoolInput("Strict", true);
             connectedService = tl.getInput("ConnectedServiceName", true);
             taskParameters.filePath = tl.getPathInput("ConfigurationFile", true);
@@ -115,5 +115,12 @@ export class TaskParameters {
         }
 
         return taskParameters;
+    }
+
+    private static trimTrailingSlash(endpoint: string): string {
+        if (endpoint.endsWith("/")) {
+            return endpoint.slice(0,-1)
+        }
+        return endpoint;
     }
 }
