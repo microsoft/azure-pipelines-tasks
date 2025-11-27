@@ -45,7 +45,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true, string? typescriptVersion = "5.1.6");
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true, string? typescriptVersion = "5.1.6", string? taskLibVersion = null);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
@@ -69,9 +69,18 @@ namespace BuildConfigGen
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Wif");
             public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: false, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "LocalPackages", shouldUpdateLocalPkgs: true, useGlobalVersion: true, useAltGeneratedPath: true);
-            public static readonly ConfigRecord Node24 = new ConfigRecord(name: nameof(Node24), constMappingKey: "Node24-265", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", mergeToBase: false, typescriptVersion: "^5.7.2");
-            public static readonly ConfigRecord Node24_overwrite = new ConfigRecord(name: nameof(Node24_overwrite), constMappingKey: "Node24-265-overwrite", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", mergeToBase: true, typescriptVersion: "^5.7.2");
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, Node24, Node24_overwrite };
+            public static readonly ConfigRecord Node24_1 = new ConfigRecord(name: nameof(Node24_1), constMappingKey: "Node24_1", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_2 = new ConfigRecord(name: nameof(Node24_2), constMappingKey: "Node24_2", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_3 = new ConfigRecord(name: nameof(Node24_3), constMappingKey: "Node24_3", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_4 = new ConfigRecord(name: nameof(Node24_4), constMappingKey: "Node24_4", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_5 = new ConfigRecord(name: nameof(Node24_5), constMappingKey: "Node24_5", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_6 = new ConfigRecord(name: nameof(Node24_6), constMappingKey: "Node24_6", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_7 = new ConfigRecord(name: nameof(Node24_7), constMappingKey: "Node24_7", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_8 = new ConfigRecord(name: nameof(Node24_8), constMappingKey: "Node24_8", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_9 = new ConfigRecord(name: nameof(Node24_9), constMappingKey: "Node24_9", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_10 = new ConfigRecord(name: nameof(Node24_10), constMappingKey: "Node24_10", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static readonly ConfigRecord Node24_overwrite = new ConfigRecord(name: nameof(Node24_overwrite), constMappingKey: "Node24-265-overwrite", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: true, typescriptVersion: "^5.7.2", taskLibVersion: "^5.2.2");
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, Node24_1, Node24_2, Node24_3, Node24_4, Node24_5, Node24_6, Node24_7, Node24_8, Node24_9, Node24_10, Node24_overwrite };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -803,7 +812,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.typescriptVersion);
+                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.typescriptVersion, config.taskLibVersion);
                             }
 
                         }
@@ -1185,7 +1194,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, string? typescriptVersion)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, string? typescriptVersion, string? taskLibVersion)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
@@ -1199,22 +1208,30 @@ namespace BuildConfigGen
 
             if (shouldUpdateTaskLib)
             {
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azurermdeploycommon", "file:../../tasks-common/common-npm-packages/azurermdeploycommon/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codeanalysis-common", "file:../../tasks-common/common-npm-packages/codeanalysis-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codecoverage-tools", "file:../../tasks-common/common-npm-packages/codecoverage-tools/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-docker-common", "file:../../tasks-common/common-npm-packages/docker-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-ios-signing-common", "file:../../tasks-common/common-npm-packages/ios-signing-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-java-common", "file:../../tasks-common/common-npm-packages/java-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "file:../../tasks-common/common-npm-packages/kubernetes-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-msbuildhelpers", "file:../../tasks-common/common-npm-packages/msbuildhelpers/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-packaging-common", "file:../../tasks-common/common-npm-packages/packaging-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-securefiles-common", "file:../../tasks-common/common-npm-packages/securefiles-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-utility-common", "file:../../tasks-common/common-npm-packages/utility-common/_build");
-                UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-webdeployment-common", "file:../../tasks-common/common-npm-packages/webdeployment-common/_build");
+                // Upgrade task-lib to npm version if specified, otherwise use local file path
+                if (!string.IsNullOrEmpty(taskLibVersion))
+                {
+                    outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = taskLibVersion;
+                }
+                else
+                {
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", "file:../../task-lib/node/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-artifacts-common", "file:../../tasks-common/common-npm-packages/artifacts-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azp-tasks-az-blobstorage-provider", "file:../../tasks-common/common-npm-packages/az-blobstorage-provider/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azure-arm-rest", "file:../../tasks-common/common-npm-packages/azure-arm-rest/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-azurermdeploycommon", "file:../../tasks-common/common-npm-packages/azurermdeploycommon/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codeanalysis-common", "file:../../tasks-common/common-npm-packages/codeanalysis-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-codecoverage-tools", "file:../../tasks-common/common-npm-packages/codecoverage-tools/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-docker-common", "file:../../tasks-common/common-npm-packages/docker-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-ios-signing-common", "file:../../tasks-common/common-npm-packages/ios-signing-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-java-common", "file:../../tasks-common/common-npm-packages/java-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "file:../../tasks-common/common-npm-packages/kubernetes-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-msbuildhelpers", "file:../../tasks-common/common-npm-packages/msbuildhelpers/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-packaging-common", "file:../../tasks-common/common-npm-packages/packaging-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-securefiles-common", "file:../../tasks-common/common-npm-packages/securefiles-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-utility-common", "file:../../tasks-common/common-npm-packages/utility-common/_build");
+                    UpdateDepNode(outputNodePackagePathJsonNode, "azure-pipelines-tasks-webdeployment-common", "file:../../tasks-common/common-npm-packages/webdeployment-common/_build");
+                }
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json

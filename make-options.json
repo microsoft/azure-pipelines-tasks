@@ -231,7 +231,16 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node24": [],
+    "Node24_1": [],
+    "Node24_2": [],
+    "Node24_3": [],
+    "Node24_4": [],
+    "Node24_5": [],
+    "Node24_6": [],
+    "Node24_7": [],
+    "Node24_8": [],
+    "Node24_9": [],
+    "Node24_10": [],
     "Node24_overwrite": [],
     "wif_242": [
         "PipAuthenticateV1",
