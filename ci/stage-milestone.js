@@ -4,7 +4,7 @@ var util = require('./ci-util');
 
 // Parse command line arguments (positional)
 // Usage: node stage-milestone.js <tasksBuildArtifact>
-var tasksBuildArtifact = process.argv[2] || 'package';
+var tasksBuildArtifact = process.argv[2] || 'allTasks';
 
 // initialize _package
 util.initializePackagePath();
