@@ -1,6 +1,6 @@
 import { ChangeLog } from "../operations/ChangeLog";
-import { TestString } from "./TestStrings";
 import { ChangeLogStartCommit } from "../operations/Utility";
+import { TestString } from "./TestStrings";
 
 export class ChangeLogL0Tests {
     public static async startTests() {
@@ -14,7 +14,7 @@ export class ChangeLogL0Tests {
 
     public static async validateGetChangeLog1() {
         let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "commitBased");
-    
+
         if (changes === this.expectedCommitBasedChanges) {
             console.log(TestString.getChangeLogKeyword);
         }
@@ -55,7 +55,7 @@ export class ChangeLogL0Tests {
     public static readonly expectedCommitBasedChanges = "\n\n## loc_mock_ChangeLogTitle:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
     public static readonly expectedAllIssuesChanges = "\n\n## loc_mock_ChangeLogTitle:\n\n* #1: Incorrect color contrast in control panel\n* #2: Text alignment confusing in panel\n* #3: Fixed previous minor bugs\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
     public static readonly expectedIssueBasedChanges = "\n\n## loc_mock_ChangeLogTitle:\n\n\n### Closed UX Issues/PRs:\n\n\n* #1: Incorrect color contrast in control panel\n\n### Open Bugs:\n\n\n* #2: Text alignment confusing in panel\n* #3: Fixed previous minor bugs\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
-    
+
 }
 
 ChangeLogL0Tests.startTests();
