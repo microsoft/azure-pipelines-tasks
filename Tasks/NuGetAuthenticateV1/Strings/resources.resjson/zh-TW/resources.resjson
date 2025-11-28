@@ -7,13 +7,17 @@
   "loc.input.help.nuGetServiceConnections": "此組織/集合外部摘要之 NuGet 服務連線名稱的以逗點分隔清單。如需此組織/集合中的摘要，請將此項保留空白; 系統會自動使用組建的認證。",
   "loc.input.label.forceReinstallCredentialProvider": "即使已安裝認證提供者，也會重新安裝",
   "loc.input.help.forceReinstallCredentialProvider": "如果使用者設定檔中已安裝認證提供者，則會決定是否使用工作提供的認證提供者加以覆寫。這可能會將認證提供者升級 (也可能降級)。",
-  "loc.input.help.feedUrl": "如果設定此選項，則需要 workloadIdentityServiceConnection。忽略所有其他輸入。與 nuGetServiceConnections 不相容。摘要 URL 應該為 NuGet 服務索引格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.help.feedUrl": "如果設定此選項，則需要 azureDevOpsServiceConnection。忽略所有其他輸入。與 nuGetServiceConnections 不相容。摘要 URL 應該為 NuGet 服務索引格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
   "loc.input.label.feedUrl": "Azure Artifacts URL",
   "loc.input.help.workloadIdentityServiceConnection": "如設定此選項，則需要 feedUrl。忽略所有其他輸入。",
   "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 服務連線",
   "loc.messages.Error_ServiceConnectionExists": "端點已有現有的服務連線",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl 和 workloadIdentityServiceConnection 都必須設定。",
+  "loc.messages.Error_InvalidFeedUrl": "提供的摘要 URL '%s' 不是有效的 Azure DevOps 摘要 URL。",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl 和 azureDevOpsServiceConnection 必須一起設定。",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "無法同時指定 nuGetServiceConnections 和 feedUrl 輸入參數。",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "無法同時指定 nuGetServiceConnections 和 azureDevOpsServiceConnection(workloadIdentityServiceConnection) 輸入參數。",
   "loc.messages.Info_AddingFederatedFeedAuth": "無法取得服務連線的同盟認證",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "正在新增摘要 %s 的服務連線 %s 驗證資訊",
-  "loc.messages.FailedToGetServiceConnectionAuth": "已成功為摘要 %s 新增驗證。"
+  "loc.messages.FailedToGetServiceConnectionAuth": "已成功為摘要 %s 新增驗證。",
+  "loc.messages.Warn_IgnoringFeedUrl": "忽略 feedUrl"
 }

@@ -7,13 +7,17 @@
   "loc.input.help.nuGetServiceConnections": "Разделенный запятыми список имен подключений к службе NuGet для веб-каналов за пределами этой организации или коллекции. Для веб-каналов в этой организации или коллекции оставьте это поле пустым; учетные данные сборки используются автоматически.",
   "loc.input.label.forceReinstallCredentialProvider": "Переустановить поставщик учетных данных, даже если он уже установлен",
   "loc.input.help.forceReinstallCredentialProvider": "Если поставщик учетных данных уже установлен в профиле пользователя, этот параметр определяет, перезаписывается ли он поставщиком учетных данных, предоставленным задачей. Это может привести к обновлению (или, возможно, использованию более ранней версии) поставщика учетных данных.",
-  "loc.input.help.feedUrl": "Если этот параметр задан, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с nuGetServiceConnections. URL-адрес веб-канала должен быть в формате индекса службы NuGet, например https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.help.feedUrl": "Если этот параметр задан, требуется azureDevOpsServiceConnection. Все остальные входные данные игнорируются. Несовместимо с nuGetServiceConnections. URL-адрес канала должен быть в формате индекса сервиса NuGet, например: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
   "loc.input.label.feedUrl": "URL-адрес Azure Artifacts",
   "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задано, требуется feedUrl. Все остальные входные данные игнорируются.",
   "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
   "loc.messages.Error_ServiceConnectionExists": "Текущее подключение к службе уже существует для конечной точки",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Параметры feedUrl и workloadIdentityServiceConnection должны быть настроены вместе.",
+  "loc.messages.Error_InvalidFeedUrl": "Предоставленный URL-адрес канала \"%s\" не является допустимым URL-адресом канала Azure DevOps.",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Необходимо одновременно настроить feedUrl и azureDevOpsServiceConnection.",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "Не удается указать одновременно входные параметры nuGetServiceConnections и feedUrl.",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "Не удается указать оба входных параметра nuGetServiceConnections и azureDevOpsServiceConnection(workloadIdentityServiceConnection).",
   "loc.messages.Info_AddingFederatedFeedAuth": "Не удалось получить федеративные учетные данные из подключения к службе",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Добавление сведений о проверке подлинности из подключения службы %s для веб-канала %s",
-  "loc.messages.FailedToGetServiceConnectionAuth": "Проверка подлинности для веб-канала %s добавлена."
+  "loc.messages.FailedToGetServiceConnectionAuth": "Проверка подлинности для веб-канала %s добавлена.",
+  "loc.messages.Warn_IgnoringFeedUrl": "Игнорирование feedUrl"
 }

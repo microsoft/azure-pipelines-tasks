@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Расшифровать $(inFile)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cipher": "Шифрование",
-  "loc.input.help.cipher": "Шифрование, которое следует использовать. Полный список возможных значений см. в разделе [Сipher Suite Names (имена наборов шифрования)] (https://go.microsoft.com/fwlink/?LinkID=627129).",
+  "loc.input.help.cipher": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values.",
   "loc.input.label.inFile": "Зашифрованный файл",
   "loc.input.help.inFile": "Относительный путь к файлу для расшифровки.",
   "loc.input.label.passphrase": "Парольная фраза",
@@ -14,6 +14,6 @@
   "loc.input.help.outFile": "Необязательное имя файла для расшифрованного файла. Значение по умолчанию — зашифрованный файл с расширением .out.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочая папка для расшифровки. Значение по умолчанию — корень репозитория.",
-  "loc.messages.OpenSSLReturnCode": "openssl завершила работу с кодом возврата: %d",
-  "loc.messages.OpenSSLFailed": "Сбой openssl с ошибкой %s"
+  "loc.messages.OpenSSLReturnCode": "OpenSSL завершила работу с кодом возврата: %d",
+  "loc.messages.OpenSSLFailed": "Сбой OpenSSL с ошибкой %s"
 }
