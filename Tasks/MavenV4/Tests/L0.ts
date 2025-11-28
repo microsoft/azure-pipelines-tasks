@@ -4,7 +4,6 @@ import * as path from "path";
 import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
 
 import { cleanTemporaryFolders, createTemporaryFolders, getTempDir } from "./TestUtils";
-import * as tl from 'azure-pipelines-task-lib/task';
 
 describe("Maven L0 Suite", function () {
     before(async () => {
@@ -336,9 +335,9 @@ describe("Maven L0 Suite", function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('run maven with code coverage enabled and restore original pom.xml after (with feature flag enabled)', async function() {
+    it('run maven with code coverage enabled and restore original pom.xml after (with feature flag enabled for combined maven run)', async function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-        const testPath = path.join(__dirname, 'L0RestoreOriginalPomXmlWithFFEnabled.js');
+        const testPath = path.join(__dirname, 'L0RestoreOriginalPomXmlCombinedRun.js');
         const testRunner = new MockTestRunner(testPath);
 
         await testRunner.runAsync();
