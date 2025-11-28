@@ -43,6 +43,8 @@ extends:
     sdl:
       sbom:
         enabled: true
+      binskim:
+        preReleaseVersion: '4.3.1'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
