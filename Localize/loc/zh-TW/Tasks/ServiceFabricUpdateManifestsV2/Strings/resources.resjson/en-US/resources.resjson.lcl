@@ -40,7 +40,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Path to the application package. [Variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[應用程式套件的路徑。路徑中可以使用 [變數]5D; (https://go.microsoft.com/fwlink/?LinkID=550988) 和萬用字元。]]></Val>
+            <Val><![CDATA[應用程式套件的路徑。路徑中可以使用 [變數]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) 和萬用字元。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

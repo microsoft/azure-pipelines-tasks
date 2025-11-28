@@ -58,7 +58,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) are supported.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Percorso della cartella da memorizzare nella cache. Può essere completo o relativo a $(System.DefaultWorkingDirectory). I caratteri jolly non sono supportati. Le [variabili]5D; (https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate.]]></Val>
+            <Val><![CDATA[Percorso della cartella da memorizzare nella cache. Può essere completo o relativo a $(System.DefaultWorkingDirectory). I caratteri jolly non sono supportati. Le [variabili]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

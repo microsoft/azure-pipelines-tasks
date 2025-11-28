@@ -58,7 +58,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link]5D;(https://github.com/isaacs/minimatch#dot) for more info]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[È possibile eliminare i file che iniziano con un punto (.git, .dockerfile). Questi file vengono omessi, se non vengono specificati in modo esplicito, ad esempio '/.*'. Vedere questo [collegamento]5D; (https://github.com/isaacs/minimatch#dot) per altre informazioni]]></Val>
+            <Val><![CDATA[È possibile eliminare i file che iniziano con un punto (.git, .dockerfile). Questi file vengono omessi, se non vengono specificati in modo esplicito, ad esempio '/.*'. Vedere questo [collegamento]5D;(https://github.com/isaacs/minimatch#dot) per altre informazioni]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

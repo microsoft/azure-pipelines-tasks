@@ -67,7 +67,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version]5D;(https://go.microsoft.com/fwlink/?linkid=871498) task to add a version of Python to PATH.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Percorso assoluto dell'interprete Python da usare. Se non è specificato, l'attività userà l'interprete indicato in PATH.<br /> Eseguire l'attività [Usa versione di Python]5D; (https://go.microsoft.com/fwlink/?linkid=871498) per aggiungere una versione di Python a PATH.]]></Val>
+            <Val><![CDATA[Percorso assoluto dell'interprete Python da usare. Se non è specificato, l'attività userà l'interprete indicato in PATH.<br /> Eseguire l'attività [Usa versione di Python]5D;(https://go.microsoft.com/fwlink/?linkid=871498) per aggiungere una versione di Python a PATH.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
