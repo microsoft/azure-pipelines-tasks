@@ -99,7 +99,7 @@ function checkVersionInDotnetCLI(versionInfo: VersionInfo | VersionInfo[], packa
     }
 
     const result = dotnet.execSync();
-    if (result.code !== 0) return false;
+    if (!result || result.code == null || result.code !== 0) return false;
     const stdout = result.stdout;
 
     const notFoundedversions = versions.filter(version => !stdout.includes(version.getVersion()));
