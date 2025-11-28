@@ -166,7 +166,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Deployment scope of the deployment. To know more abour deployment scopes, refer this [link]5D;(https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ambito di distribuzione della distribuzione. Per altre informazioni sugli ambiti di distribuzione, vedere questo [collegamento]5D; (https://docs.microsoft.com/it-it/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)]]></Val>
+            <Val><![CDATA[Ambito di distribuzione della distribuzione. Per altre informazioni sugli ambiti di distribuzione, vedere questo [collegamento]5D;(https://docs.microsoft.com/it-it/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

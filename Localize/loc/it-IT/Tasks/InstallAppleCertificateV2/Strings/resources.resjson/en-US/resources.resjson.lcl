@@ -121,7 +121,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link]5D;(http://www.openradar.me/28524119) for more details.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se true- imposta l'ACL partition_id per la chiave privata importata, codesign non richiederà l'uso della chiave per la firma. Questa operazione non è necessaria per i keychain temporanei, almeno in MacOS High Sierra. Per altri dettagli, vedere il [link]5D; (http://www.openradar.me/28524119).]]></Val>
+            <Val><![CDATA[Se true- imposta l'ACL partition_id per la chiave privata importata, codesign non richiederà l'uso della chiave per la firma. Questa operazione non è necessaria per i keychain temporanei, almeno in MacOS High Sierra. Per altri dettagli, vedere il [collegamento]5D;(http://www.openradar.me/28524119).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
