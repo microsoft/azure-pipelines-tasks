@@ -58,7 +58,7 @@
         <Str Cat="Text">
           <Val><![CDATA[File paths to include as part of the copy. Supports multiple lines of match patterns. [More Information]5D;(https://go.microsoft.com/fwlink/?LinkID=708389)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Rutas de acceso de archivo que se incluirán como parte de la copia. Se admiten varias líneas de patrones de coincidencia. [Más información]5D; (https://go.microsoft.com/fwlink/?LinkID=708389)]]></Val>
+            <Val><![CDATA[Rutas de acceso de archivo que se incluirán como parte de la copia. Se admiten varias líneas de patrones de coincidencia. [Más información]5D;(https://go.microsoft.com/fwlink/?LinkID=708389)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

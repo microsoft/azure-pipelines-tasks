@@ -295,7 +295,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here]5D;(https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Si se establece esta opción, las pruebas se ejecutan en paralelo y aprovechan los núcleos disponibles en la máquina. Al hacerlo, se reemplaza el valor MaxCpuCount si se ha especificado en el archivo runsettings. [Haga clic aquí]5D; (https://aka.ms/paralleltestexecution) para obtener más información sobre cómo se ejecutan pruebas en paralelo.]]></Val>
+            <Val><![CDATA[Si se establece esta opción, las pruebas se ejecutan en paralelo y aprovechan los núcleos disponibles en la máquina. Al hacerlo, se reemplaza el valor MaxCpuCount si se ha especificado en el archivo runsettings. [Haga clic aquí]5D;(https://aka.ms/paralleltestexecution) para obtener más información sobre cómo se ejecutan pruebas en paralelo.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -304,7 +304,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Automatically select, and run only the tests needed to validate the code change. [More information]5D;(https://aka.ms/tialearnmore)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Seleccione automáticamente y ejecute solo las pruebas necesarias para validar el cambio de código. [Más información]5D; (https://aka.ms/tialearnmore)]]></Val>
+            <Val><![CDATA[Seleccione automáticamente y ejecute solo las pruebas necesarias para validar el cambio de código. [Más información]5D;(https://aka.ms/tialearnmore)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -403,7 +403,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Select one or more test suites containing automated test cases. Test case work items must be associated with an automated test method. [Learn more.]5D;(https://go.microsoft.com/fwlink/?linkid=847773]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Seleccione uno o varios conjuntos de pruebas que contengan casos de pruebas automatizadas. Los elementos de trabajo de los casos de prueba deben estar asociados a un método de pruebas automatizadas. [Más información]5D; (https://go.microsoft.com/fwlink/?linkid=847773)]]></Val>
+            <Val><![CDATA[Seleccione uno o varios conjuntos de pruebas que contengan casos de pruebas automatizadas. Los elementos de trabajo de los casos de prueba deben estar asociados a un método de pruebas automatizadas. [Más información]5D;(https://go.microsoft.com/fwlink/?linkid=847773)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

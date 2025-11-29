@@ -46,7 +46,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Encryption cypher to use. See [cypher suite names]5D;(https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Шифрование, которое следует использовать. Полный список возможных значений см. в разделе [Сipher Suite Names (имена наборов шифрования)]5D; (https://go.microsoft.com/fwlink/?LinkID=627129).]]></Val>
+            <Val><![CDATA[Шифрование, которое следует использовать. Полный список возможных значений см. в разделе [Сipher Suite Names (имена наборов шифрования)]5D;(https://go.microsoft.com/fwlink/?LinkID=627129).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this]5D;(https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Argumentos adicionales de Web Deploy que siguen la sintaxis -clave:valor.<br />Se aplicarán cuando se implemente la instancia de Azure App Service. Ejemplo: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Para más ejemplos de configuración de la operación de Web Deploy, consulte [aquí]5D; (https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
+            <Val><![CDATA[Argumentos adicionales de Web Deploy que siguen la sintaxis -clave:valor.<br />Se aplicarán cuando se implemente la instancia de Azure App Service. Ejemplo: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Para más ejemplos de configuración de la operación de Web Deploy, consulte [aquí]5D;(https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -112,7 +112,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Select the service connection type to use to deploy the Web App.<br />Select Publish Profile for using Visual Studio created Publish profile. [More Information]5D;(https://aka.ms/vsPublishProfile).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Seleccione el tipo de conexión de servicio que se va a usar para implementar la aplicación web.<br />Seleccione Perfil de publicación para usar el perfil de publicación creado por Visual Studio. [Más información]5D; (https://aka.ms/vsPublishProfile).]]></Val>
+            <Val><![CDATA[Seleccione el tipo de conexión de servicio que se va a usar para implementar la aplicación web.<br />Seleccione Perfil de publicación para usar el perfil de publicación creado por Visual Studio. [Más información]5D;(https://aka.ms/vsPublishProfile).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
