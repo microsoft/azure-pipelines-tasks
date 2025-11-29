@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this]5D;(https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Weitere Web Deploy-Argumente mit der Syntax "-key:value".<br />Diese werden angewendet, wenn der Azure App Service bereitgestellt wird. Beispiel: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Weitere Beispiele für Einstellungen für den Web Deploy-Vorgang finden Sie [hier]5D; (https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
+            <Val><![CDATA[Weitere Web Deploy-Argumente mit der Syntax -key:value.<br />Diese werden angewendet, wenn der Azure App Service bereitgestellt wird. Beispiel: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Weitere Beispiele für Einstellungen für den Web Deploy-Vorgang finden Sie [hier]5D;(https://go.microsoft.com/fwlink/?linkid=838471).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

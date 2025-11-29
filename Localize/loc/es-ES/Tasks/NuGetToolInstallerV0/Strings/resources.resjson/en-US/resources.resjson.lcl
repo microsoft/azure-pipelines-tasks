@@ -49,7 +49,7 @@
         <Str Cat="Text">
           <Val><![CDATA[A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions]5D;(http://dist.nuget.org/tools.json).]A;]A;If you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.]A;]A;Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Versión o intervalo de versiones que especifica la versión de NuGet que se pone a disposición en la ruta de acceso. Use x como carácter comodín. Consulte la [lista de versiones de NuGet disponibles]5D; (http://dist.nuget.org/tools.json).]A;]A;Para una versión preliminar, la especificación debe contener una versión principal, secundaria, de revisión y preliminar de la lista anterior.]A;]A;Ejemplos: 4.x, 3.3.x, 2.8.6, >=4.0.0-0]]></Val>
+            <Val><![CDATA[Versión o intervalo de versiones que especifica la versión de NuGet que se pone a disposición en la ruta de acceso. Use x como carácter comodín. Consulte la [lista de versiones de NuGet disponibles]5D;(http://dist.nuget.org/tools.json).]A;]A;Para una versión preliminar, la especificación debe contener una versión principal, secundaria, de revisión y preliminar de la lista anterior.]A;]A;Ejemplos: 4.x, 3.3.x, 2.8.6, >=4.0.0-0]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

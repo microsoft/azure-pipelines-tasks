@@ -49,7 +49,7 @@
         <Str Cat="Text">
           <Val><![CDATA[File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information]5D;(https://go.microsoft.com/fwlink/?LinkID=722333)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Пути к удаляемым файлам или папкам. Поддерживает несколько строк шаблонов minimatch. [Подробнее...]5D; (https://go.microsoft.com/fwlink/?LinkID=722333)]]></Val>
+            <Val><![CDATA[Пути к удаляемым файлам или папкам. Поддерживает несколько строк шаблонов minimatch. [Подробнее]5D;(https://go.microsoft.com/fwlink/?LinkID=722333)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The source folder that the deletion(s) will be run from. Empty is the root of the repo. Use [variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Исходная папка, из которой будет запускаться удаление. Если значение не указано, используется корень репозитория. Если в репозитории нет файлов, используйте [переменные]5D; (https://go.microsoft.com/fwlink/?LinkID=550988). Например, $(agent.builddirectory)]]></Val>
+            <Val><![CDATA[Исходная папка, из которой будет запускаться удаление. Если значение не указано, используется корень репозитория. Если в репозитории нет файлов, используйте [переменные]5D;(https://go.microsoft.com/fwlink/?LinkID=550988). Например, $(agent.builddirectory)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
