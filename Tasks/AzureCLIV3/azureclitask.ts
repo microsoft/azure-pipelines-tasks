@@ -358,7 +358,7 @@ export class azureclitask {
             }            
         }
         else {
-            throw tl.loc('AuthSchemeNotSupported', authScheme);
+            throw tl.loc('AuthSchemeNotSupportedForAzureRM', authScheme);
         }
 
         this.isLoggedIn = true;
@@ -394,7 +394,7 @@ export class azureclitask {
                 }
             }
             else {
-                throw tl.loc('AuthSchemeNotSupported', authScheme);
+                throw tl.loc('AuthSchemeNotSupportedForAzureDevOps', authScheme);
             }
         } catch (error) {
             const errorMessage = error?.message || error?.toString() || String(error);
