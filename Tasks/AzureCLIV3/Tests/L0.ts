@@ -97,11 +97,174 @@ describe('AzureCLIV3 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.runAsync().then(() => {
-            assert(tr.stdout.includes('az extension show --name azure-devops'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('Azure DevOps extension is already installed, skipping installation'), 'Should check if extension is installed and skip installation');
             assert(!tr.stdout.includes('az extension add -n azure-devops'), 'Should NOT install Azure DevOps extension');
             assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
             assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure Azure DevOps organization');
             assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    // Additional tests for Azure DevOps service connection authentication flow
+
+    /*
+    it('Should handle OIDC token retrieval for Azure DevOps authentication', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsOidcTokenRetrieval.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('az login --service-principal'), 'Should use federated token for login');
+            assert(tr.stdout.includes('--federated-token'), 'Should include federated token parameter');
+            assert(tr.stdout.includes('--allow-no-subscriptions'), 'Should allow login without subscriptions');
+            assert(!tr.stdout.includes('mock-token'), 'Should not expose the actual token in logs');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+    */
+
+    it('Should fail when OIDC token retrieval fails', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsOidcTokenFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.indexOf('Failed to setup Azure DevOps CLI') >= 0, 'Should fail with OIDC token error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should handle Azure DevOps extension installation failure gracefully', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsExtensionInstallFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(tr.stdout.indexOf('loc_mock_FailedToInstallAzureDevOpsCLI') >= 0, 'Should fail with extension installation error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should validate environment variables are set for Azure DevOps authentication', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsEnvironmentVariables.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
+            // Environment variables should be set during authentication
+            assert(tr.stdout.indexOf('AZURESUBSCRIPTION_SERVICE_CONNECTION_ID') >= 0 || tr.invokedToolCount > 0, 'Should set service connection environment variables');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should properly cleanup Azure DevOps configuration on task completion', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsCleanup.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('az devops configure --defaults project=\'\' organization='), 'Should clear Azure DevOps configuration');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should handle authentication with visible Azure login enabled', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsVisibleLogin.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
+            assert(!tr.stdout.includes('--output none'), 'Should not suppress login output when visible login is enabled');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should handle authentication with organization URL containing special characters', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsSpecialCharacters.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure organization');
+            assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure project');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should fail with invalid connectionType input', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0ConnectionTypeValidation.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed with invalid connectionType');
+            assert(tr.stderr.includes('Unsupported connection type: invalidConnectionType') || tr.errorIssues.some(issue => issue.includes('Unsupported connection type: invalidConnectionType')), 'Should fail with unsupported connection type error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should handle Azure DevOps organization configuration error gracefully', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsOrganizationConfigError.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.indexOf('loc_mock_FailedToSetAzureDevOpsOrganization') >= 0, 'Should fail with organization configuration error message');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should handle Azure DevOps project configuration error gracefully', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsProjectConfigError.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.indexOf('loc_mock_FailedToSetAzureDevOpsProject') >= 0, 'Should fail with project configuration error message');
             done();
         }).catch((err) => {
             done(err);

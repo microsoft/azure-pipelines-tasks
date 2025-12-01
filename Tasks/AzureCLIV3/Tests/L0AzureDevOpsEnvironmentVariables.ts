@@ -26,13 +26,12 @@ process.env['ENDPOINT_AUTH_SCHEME_TestAzureDevOpsConnection'] = 'WorkloadIdentit
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_SERVICEPRINCIPALID'] = 'test-sp-id';
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'test-tenant-id';
 
-process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
-    organizationUrl: 'https://dev.azure.com/testorg/'
-});
-process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
-
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
 process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
@@ -55,8 +54,12 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "azure-cli 2.50.0"
         },
         "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension not found"
+        },
+        "az extension add -n azure-devops -y": {
             "code": 0,
-            "stdout": "{\n  \"name\": \"azure-devops\",\n  \"version\": \"1.0.2\"\n}"
+            "stdout": "Azure DevOps CLI extension installed"
         },
         "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
             "code": 0,
@@ -70,7 +73,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "project configured"
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },
@@ -111,6 +114,24 @@ tmr.registerMock('./src/Utility', {
     Utility: {
         throwIfError: () => {},
         checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTempScriptPath: () => 'test-script-path',
+            getTool: () => Promise.resolve({
+                on: (event: string, callback: Function) => {
+                    // Mock event handler
+                },
+                exec: (options: any) => {
+                    console.log('Mock script execution successful');
+                    return Promise.resolve(0);
+                }
+            }),
+            cleanUp: () => Promise.resolve()
+        })
     }
 });
 

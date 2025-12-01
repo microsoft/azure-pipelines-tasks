@@ -272,10 +272,18 @@ export class azureclitask {
     }
 
     private static isAzureDevOpsExtensionInstalled(): boolean {
+        tl.debug("Checking if Azure DevOps extension is installed...");
         try {
-            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", { silent: true });
-            return result.code === 0;
+            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", { 
+                silent: true
+            });
+            if (result.code === 0) {
+                tl.debug("Azure DevOps extension is already installed, skipping installation.");
+                return true;
+            }
+            return false;
         } catch (error) {
+            tl.debug(`Azure DevOps extension not found: ${error}`);
             return false;
         }
     }
@@ -375,10 +383,12 @@ export class azureclitask {
             
             if (authScheme.toLowerCase() == "workloadidentityfederation") {
                 // Install Azure DevOps extension if not already installed
-                const extensionInstalled = await this.isAzureDevOpsExtensionInstalled();
+                const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
                 if (!extensionInstalled) {
-                    console.log("Azure DevOps extensions not found in working environment. Attempting installation.");
+                    console.log("Azure DevOps extension not found in working environment. Attempting installation.");
                     Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                } else {
+                    console.log("Azure DevOps extension is already installed, skipping installation.");
                 }
 
                 await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);

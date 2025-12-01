@@ -26,15 +26,9 @@ process.env['ENDPOINT_AUTH_SCHEME_TestAzureDevOpsConnection'] = 'WorkloadIdentit
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_SERVICEPRINCIPALID'] = 'test-sp-id';
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'test-tenant-id';
 
-process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
-    organizationUrl: 'https://dev.azure.com/testorg/'
-});
-process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
-
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
-process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -55,24 +49,12 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "azure-cli 2.50.0"
         },
         "az extension show --name azure-devops": {
-            "code": 0,
-            "stdout": "{\n  \"name\": \"azure-devops\",\n  \"version\": \"1.0.2\"\n}"
+            "code": 1,
+            "stdout": "Extension not found"
         },
-        "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
-            "code": 0,
-            "stdout": "Login successful"
-        },
-        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
-            "code": 0,
-            "stdout": "organization configured"
-        },
-        "az devops configure --defaults project=\"TestProject\"": {
-            "code": 0,
-            "stdout": "project configured"
-        },
-        "az devops configure --defaults organization='' project=''": {
-            "code": 0,
-            "stdout": "configuration cleared"
+        "az extension add -n azure-devops -y": {
+            "code": 1,
+            "stdout": "Failed to install extension: permission denied"
         },
         "bash*": {
             "code": 0,
@@ -109,8 +91,27 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
 
 tmr.registerMock('./src/Utility', {
     Utility: {
-        throwIfError: () => {},
+        throwIfError: (result, message) => {
+            if (result && result.code !== 0) {
+                throw new Error(message || 'Command failed');
+            }
+        },
         checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+// Mock the task library localization
+tmr.setVariableName('FailedToInstallAzureDevOpsCLI', 'loc_mock_FailedToInstallAzureDevOpsCLI');
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
     }
 });
 
