@@ -39,6 +39,9 @@ describe('VSBuild Suite', function () {
         it('(Select-VSVersion) falls back from 17', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom17.ps1'), done);
         })
+        it('(Select-VSVersion) falls back from 18', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom18.ps1'), done);
+        })
         it('(Select-VSVersion) falls forward from 12', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom12.ps1'), done);
         })
@@ -50,6 +53,12 @@ describe('VSBuild Suite', function () {
         })
         it('(Select-VSVersion) falls forward from 16', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom16.ps1'), done);
+        })
+        it('(Select-VSVersion) falls forward from 17', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom17.ps1'), done);
+        })
+        it('(Select-VSVersion) finds 18', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.Finds18.ps1'), done);
         })
         it('(Select-VSVersion) finds latest', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FindsLatest.ps1'), done);

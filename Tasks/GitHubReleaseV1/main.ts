@@ -1,5 +1,7 @@
-import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
+
+import tl = require("azure-pipelines-task-lib/task");
+
 import { Action } from "./operations/Action";
 import { Utility, ActionType, Delimiters, ChangeLogStartCommit, ChangeLogType } from './operations/Utility';
 import { Inputs} from "./operations/Constants";
@@ -12,7 +14,7 @@ class Main {
         try {
             var taskManifestPath = path.join(__dirname, "task.json");
             tl.debug("Setting resource path to " + taskManifestPath);
-            tl.setResourcePath(taskManifestPath);    
+            tl.setResourcePath(taskManifestPath);
 
             let actions = new Action();
             let helper = new Helper()
@@ -21,14 +23,14 @@ class Main {
             const githubEndpoint = tl.getInput(Inputs.gitHubConnection, true);
             const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
 
-            const repositoryName = tl.getInput(Inputs.repositoryName, true);    
+            const repositoryName = tl.getInput(Inputs.repositoryName, true);
 
             const action = tl.getInput(Inputs.action, true).toLowerCase();
             Utility.validateAction(action);
 
             let tagSource = tl.getInput(Inputs.tagSource);
             Utility.validateTagSource(tagSource, action);
-            
+
             let tag = tl.getInput(Inputs.tag);
             Utility.validateTag(tag, tagSource, action);
 
@@ -43,6 +45,7 @@ class Main {
 
                 const isPrerelease = tl.getBoolInput(Inputs.isPreRelease) || false;
                 const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
+                const makeLatest = tl.getInput(Inputs.makeLatest) || "true";
                 const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.assets, Delimiters.newLine);
 
                 if (action === ActionType.create) {
@@ -57,7 +60,7 @@ class Main {
                     if (!!tag) {
                         helper.publishTelemetry();
                         const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
-                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest);
                     }
                     else {
                         // If no tag found, then give warning.
@@ -78,11 +81,11 @@ class Main {
                     // Else create a new release.
                     if (!!releaseId) {
                         console.log(tl.loc("FetchReleaseForTagSuccess", tag));
-                        await actions.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
+                        await actions.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId, makeLatest);
                     }
                     else {
                         tl.warning(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
-                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest);
                     }
                 }
             }
@@ -119,7 +122,7 @@ class Main {
             }
 
             const changeLogCompareToReleaseTag = tl.getInput(Inputs.changeLogCompareToReleaseTag) || undefined;
-            // Generate the change log 
+            // Generate the change log
             // Get change log for top 250 commits only
             changeLog = await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogType, changeLogCompareToReleaseTag, changeLogLabels);
         }
