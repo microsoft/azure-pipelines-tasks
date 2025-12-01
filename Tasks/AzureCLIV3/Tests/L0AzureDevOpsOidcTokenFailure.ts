@@ -26,15 +26,13 @@ process.env['ENDPOINT_AUTH_SCHEME_TestAzureDevOpsConnection'] = 'WorkloadIdentit
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_SERVICEPRINCIPALID'] = 'test-sp-id';
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'test-tenant-id';
 
-process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
-    organizationUrl: 'https://dev.azure.com/testorg/'
-});
-process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
-
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'job-123';
+process.env['SYSTEM_PLANID'] = 'plan-456';
+process.env['SYSTEM_TEAMPROJECTID'] = 'project-789';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
-process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -55,49 +53,29 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "azure-cli 2.50.0"
         },
         "az extension show --name azure-devops": {
-            "code": 0,
-            "stdout": "{\n  \"name\": \"azure-devops\",\n  \"version\": \"1.0.2\"\n}"
+            "code": 1,
+            "stdout": "Extension not found"
         },
-        "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
+        "az extension add -n azure-devops -y": {
             "code": 0,
-            "stdout": "Login successful"
-        },
-        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
-            "code": 0,
-            "stdout": "organization configured"
-        },
-        "az devops configure --defaults project=\"TestProject\"": {
-            "code": 0,
-            "stdout": "project configured"
-        },
-        "az devops configure --defaults organization='' project=''": {
-            "code": 0,
-            "stdout": "configuration cleared"
-        },
-        "bash*": {
-            "code": 0,
-            "stdout": "test completed"
-        },
-        "*": {
-            "code": 0,
-            "stdout": "test completed"
+            "stdout": "Azure DevOps CLI extension installed"
         }
     },
     "exists": {
         "bash": true,
-        "C:\\ado\\temp": true,
-        "C:\\ado": true
+        "C:\\ado\\temp": true
     }
 };
 
 tmr.setAnswers(mockAnswers);
 
+// Mock to simulate OIDC token retrieval failure
 tmr.registerMock('azure-devops-node-api', {
     getHandlerFromToken: () => ({}),
     WebApi: function() {
         return {
             getTaskApi: () => Promise.resolve({
-                createOidcToken: () => Promise.resolve({ oidcToken: 'mock-token' })
+                createOidcToken: () => Promise.reject(new Error('Failed to retrieve OIDC token'))
             })
         };
     }
@@ -105,13 +83,6 @@ tmr.registerMock('azure-devops-node-api', {
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
-});
-
-tmr.registerMock('./src/Utility', {
-    Utility: {
-        throwIfError: () => {},
-        checkIfAzurePythonSdkIsInstalled: () => true
-    }
 });
 
 tmr.run();

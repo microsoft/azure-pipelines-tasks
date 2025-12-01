@@ -26,15 +26,13 @@ process.env['ENDPOINT_AUTH_SCHEME_TestAzureDevOpsConnection'] = 'WorkloadIdentit
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_SERVICEPRINCIPALID'] = 'test-sp-id';
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'test-tenant-id';
 
-process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
-    organizationUrl: 'https://dev.azure.com/testorg/'
-});
-process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
-
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'job-123';
+process.env['SYSTEM_PLANID'] = 'plan-456';
+process.env['SYSTEM_TEAMPROJECTID'] = 'project-789';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
-process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -55,8 +53,12 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "azure-cli 2.50.0"
         },
         "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension not found"
+        },
+        "az extension add -n azure-devops -y": {
             "code": 0,
-            "stdout": "{\n  \"name\": \"azure-devops\",\n  \"version\": \"1.0.2\"\n}"
+            "stdout": "Azure DevOps CLI extension installed"
         },
         "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
             "code": 0,
@@ -66,11 +68,12 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "organization configured"
         },
+        // This will fail to test FailedToSetAzureDevOpsProject error message
         "az devops configure --defaults project=\"TestProject\"": {
-            "code": 0,
-            "stdout": "project configured"
+            "code": 1,
+            "stdout": "Failed to configure project"
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },
@@ -107,10 +110,34 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
 });
 
+// Mock the task library localization for project error
+tmr.setVariableName('FailedToSetAzureDevOpsProject', 'loc_mock_FailedToSetAzureDevOpsProject');
+
 tmr.registerMock('./src/Utility', {
     Utility: {
-        throwIfError: () => {},
+        throwIfError: (result: any, message: string) => {
+            if (result && result.code !== 0) {
+                throw new Error(message);
+            }
+        },
         checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: (event: string, callback: Function) => {
+                    // Mock event handler
+                },
+                exec: (options: any) => {
+                    console.log('Mock script execution successful');
+                    return Promise.resolve(0);
+                }
+            }),
+            cleanUp: () => Promise.resolve()
+        })
     }
 });
 

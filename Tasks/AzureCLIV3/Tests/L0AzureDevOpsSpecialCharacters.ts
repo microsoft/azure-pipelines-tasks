@@ -27,12 +27,16 @@ process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_SERVICEPRINCIPALI
 process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'test-tenant-id';
 
 process.env['ENDPOINT_DATA_TestAzureDevOpsConnection'] = JSON.stringify({
-    organizationUrl: 'https://dev.azure.com/testorg/'
+    organizationUrl: 'https://dev.azure.com/test-org%20with%20spaces/'
 });
-process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/testorg/';
+process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/test-org%20with%20spaces/';
 
-process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
-process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/test-org%20with%20spaces/';
+process.env['SYSTEM_TEAMPROJECT'] = 'Test Project With Spaces';
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
 process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
@@ -62,15 +66,15 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Login successful"
         },
-        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
+        "az devops configure --defaults organization=\"https://dev.azure.com/test-org%20with%20spaces/\"": {
             "code": 0,
-            "stdout": "organization configured"
+            "stdout": "organization configured with special characters"
         },
-        "az devops configure --defaults project=\"TestProject\"": {
+        "az devops configure --defaults project=\"Test Project With Spaces\"": {
             "code": 0,
-            "stdout": "project configured"
+            "stdout": "project configured with spaces"
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },
@@ -111,6 +115,18 @@ tmr.registerMock('./src/Utility', {
     Utility: {
         throwIfError: () => {},
         checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
     }
 });
 
