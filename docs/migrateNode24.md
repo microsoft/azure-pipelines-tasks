@@ -6,7 +6,7 @@
 
 [Update `task-lib` and `tool-lib`](#update-task-lib-and-tool-lib)
 
-[Add `Node24_1` handler](#add-node24_1-handler)
+[Add `Node24` handler](#add-node24_1-handler)
 
 [Specify `minimumAgentVersion`](#specify-minimumagentversion)
 
