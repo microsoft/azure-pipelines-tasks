@@ -42,7 +42,7 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             assert(tr.failed, 'should have failed');
-            assert(tr.stdout.indexOf('loc_mock_AuthSchemeNotSupported ServicePrincipal') >= 0, 'Should have failed with unsupported auth scheme error');
+            assert(tr.stdout.indexOf('loc_mock_AuthSchemeNotSupportedForAzureDevOps ServicePrincipal') >= 0, 'Should have failed with unsupported auth scheme error');
             done();
         }).catch((err) => {
             done(err);
