@@ -180,7 +180,8 @@ Try
         }
         else 
         {
-            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            $enableVerboseLogging = [System.Convert]::ToBoolean($env:ENABLE_VERBOSE_LOGGING)
+            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
         }
     }
 }
