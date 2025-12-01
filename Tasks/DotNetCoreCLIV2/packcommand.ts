@@ -76,7 +76,7 @@ export async function run(): Promise<void> {
                 break;
         }
 
-        tl.debug(`Version to use: ${version}`);
+        tl.debug(`Version to use is: ${version}`);
 
         if (outputDir && !tl.exist(outputDir)) {
             tl.debug(`Creating output directory: ${outputDir}`);
