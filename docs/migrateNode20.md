@@ -1,3 +1,5 @@
+> **ℹ️ Note**: While Node 20 is currently supported, we recommend migrating to **Node 24** for the latest features and long-term support. See [migrateNode24.md](migrateNode24.md) for the Node 24 migration guide.
+
 ## Table of content
 
 [Update `typescript`](#update-typescript)
