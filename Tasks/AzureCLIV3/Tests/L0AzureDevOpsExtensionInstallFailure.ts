@@ -93,27 +93,60 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
 
 tmr.registerMock('./src/Utility', {
     Utility: {
-        throwIfError: (result, message) => {
+        checkIfAzurePythonSdkIsInstalled: function() {
+            return true;
+        },
+        throwIfError: function(result: any, errormsg?: string) {
             if (result && result.code !== 0) {
-                throw new Error(message || 'Command failed');
+                throw new Error(errormsg || 'Command failed');
             }
         },
-        checkIfAzurePythonSdkIsInstalled: () => true
+        getScriptPath: function(scriptLocation: string, fileExtensions: string[]) {
+            return Promise.resolve(path.join(__dirname, 'test-script.sh'));
+        },
+        getPowerShellScriptPath: function(scriptLocation: string, fileExtensions: string[], scriptArguments: string) {
+            return Promise.resolve(path.join(__dirname, 'test-script.ps1'));
+        },
+        createFile: function(filePath: string, data: string, options?: any) {
+            return Promise.resolve();
+        },
+        deleteFile: function(filePath: string) {
+            return Promise.resolve();
+        }
     }
 });
 
 // Mock the task library localization
 tmr.setVariableName('FailedToInstallAzureDevOpsCLI', 'loc_mock_FailedToInstallAzureDevOpsCLI');
 
+// Mock the ScriptType module
 tmr.registerMock('./src/ScriptType', {
     ScriptTypeFactory: {
-        getScriptType: () => ({
-            getTool: () => Promise.resolve({
-                on: () => {},
-                exec: () => Promise.resolve(0)
-            }),
-            cleanUp: () => Promise.resolve()
-        })
+        getScriptType: function() {
+            return {
+                getTool: function() {
+                    return Promise.resolve({
+                        on: function(event: string, callback: Function) {
+                            // No-op for event handlers
+                        },
+                        line: function(args: string) {
+                            // No-op for argument line
+                        },
+                        arg: function(args: string) {
+                            // No-op for arguments
+                            return this;
+                        },
+                        exec: function(options?: any) {
+                            console.log('Mock script execution completed');
+                            return Promise.resolve(0);
+                        }
+                    });
+                },
+                cleanUp: function() {
+                    return Promise.resolve();
+                }
+            };
+        }
     }
 });
 
