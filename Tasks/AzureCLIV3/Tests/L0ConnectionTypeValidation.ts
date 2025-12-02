@@ -16,6 +16,11 @@ tmr.setInput('useGlobalConfig', 'false');
 tmr.setInput('cwd', __dirname);
 
 process.env['AGENT_TEMPDIRECTORY'] = __dirname;
+process.env['AGENT_WORKFOLDER'] = __dirname;
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -42,6 +47,17 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tmr.setAnswers(mockAnswers);
+
+tmr.registerMock('azure-devops-node-api', {
+    getHandlerFromToken: () => ({}),
+    WebApi: function() {
+        return {
+            getTaskApi: () => Promise.resolve({
+                createOidcToken: () => Promise.resolve({ oidcToken: 'mock-token' })
+            })
+        };
+    }
+});
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'

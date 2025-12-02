@@ -48,25 +48,66 @@ process.env['UseAzVersion'] = 'false';
 
 let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "az": "/usr/bin/az",
-        "bash": "/bin/bash"
+        "az": "az",
+        "bash": "bash"
     },
     "checkPath": {
-        "/usr/bin/az": true,
-        "/bin/bash": true
+        "az": true,
+        "bash": true
     },
     "exec": {
-        "/usr/bin/az --version": {
+        "az --version": {
             "code": 0,
-            "stdout": "azure-cli 2.50.0\n"
+            "stdout": "azure-cli 2.50.0"
         },
-        "/usr/bin/az extension add -n azure-devops -y": {
+        "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension not found"
+        },
+        "az extension add -n azure-devops -y": {
             "code": 0,
-            "stdout": "Azure DevOps CLI extension installed\n"
+            "stdout": "Azure DevOps CLI extension installed"
         }
+    },
+    "exists": {
+        "bash": true
     }
 };
 
 tmr.setAnswers(mockAnswers);
+
+tmr.registerMock('azure-devops-node-api', {
+    getHandlerFromToken: () => ({}),
+    WebApi: function() {
+        return {
+            getTaskApi: () => Promise.resolve({
+                createOidcToken: () => Promise.resolve({ oidcToken: 'mock-token' })
+            })
+        };
+    }
+});
+
+tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
+    getSystemAccessToken: () => 'system-token'
+});
+
+tmr.registerMock('./src/Utility', {
+    Utility: {
+        throwIfError: () => {},
+        checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
+    }
+});
 
 tmr.run();

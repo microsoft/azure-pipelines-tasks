@@ -58,6 +58,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az extension show --name azure-devops": {
+            "code": 1,
+            "stdout": "Extension not found"
+        },
         "az extension add -n azure-devops -y": {
             "code": 0,
             "stdout": "Azure DevOps CLI extension installed"
@@ -99,6 +103,25 @@ tmr.registerMock('azure-devops-node-api', {
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
+});
+
+tmr.registerMock('./src/Utility', {
+    Utility: {
+        throwIfError: () => {},
+        checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
+    }
 });
 
 tmr.run();

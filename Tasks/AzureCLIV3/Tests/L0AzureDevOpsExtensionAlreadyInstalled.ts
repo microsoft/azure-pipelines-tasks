@@ -116,4 +116,16 @@ tmr.registerMock('./src/Utility', {
     }
 });
 
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
+    }
+});
+
 tmr.run();
