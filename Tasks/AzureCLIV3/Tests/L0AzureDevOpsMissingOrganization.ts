@@ -33,6 +33,10 @@ process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/t
 
 // process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 process.env['AGENT_WORKFOLDER'] = __dirname;
 

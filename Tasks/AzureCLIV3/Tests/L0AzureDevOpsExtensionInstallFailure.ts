@@ -28,6 +28,10 @@ process.env['ENDPOINT_AUTH_PARAMETER_TestAzureDevOpsConnection_TENANTID'] = 'tes
 
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
