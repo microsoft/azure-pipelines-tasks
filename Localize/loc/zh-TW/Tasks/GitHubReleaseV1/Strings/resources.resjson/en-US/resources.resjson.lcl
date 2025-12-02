@@ -144,6 +144,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定是否要將此版本指定為存放庫的「最新」版本。設定為 'false' 以防止將此版本標示為最新，或設定為 'legacy'，以根據建立日期和語意版本設定，使用 GitHub 的傳統最新版本判斷。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.releaseNotesFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the file which contains the release notes.]]></Val>
@@ -320,6 +329,15 @@
           <Val><![CDATA[Pre-release]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[發行前版本]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Make Latest]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設為最新]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

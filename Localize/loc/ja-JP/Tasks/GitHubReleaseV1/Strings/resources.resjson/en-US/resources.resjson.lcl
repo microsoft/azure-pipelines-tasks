@@ -144,6 +144,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このリリースをリポジトリの "最新" リリースとして指定するかどうかを設定します。最新リリースとしてマークしない場合は 'false' に設定し、作成日とセマンティック バージョニングに基づく GitHub のレガシの最新リリース判定を使用する場合は 'legacy' に設定します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.releaseNotesFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the file which contains the release notes.]]></Val>
@@ -320,6 +329,15 @@
           <Val><![CDATA[Pre-release]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[プレリリース]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Make Latest]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[最新にする]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
