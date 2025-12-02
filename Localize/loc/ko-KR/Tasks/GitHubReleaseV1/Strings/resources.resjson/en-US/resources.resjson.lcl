@@ -144,6 +144,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[이 릴리스를 리포지토리의 '최신' 릴리스로 지정할지 선택합니다. 이 릴리스를 최신 버전으로 표시하지 않도록 하려면 'false'로 설정하고, 생성 날짜 및 의미 체계 버전 관리를 기반으로 GitHub의 레거시 최신 릴리스 결정을 사용하도록 '레거시'로 설정합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.releaseNotesFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select the file which contains the release notes.]]></Val>
@@ -320,6 +329,15 @@
           <Val><![CDATA[Pre-release]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[시험판]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.makeLatest" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Make Latest]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[최신 버전 만들기]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

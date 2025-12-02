@@ -76,7 +76,7 @@
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation]5D;(https://docs.microsoft.com/nuget/)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[このタスクの詳細を表示]5D;(https://go.microsoft.com/fwlink/?LinkID=613747)、または [NuGet のドキュメントを参照]5D; (https://docs.microsoft.com/nuget/)]]></Val>
+            <Val><![CDATA[[このタスクの詳細を表示]5D;(https://go.microsoft.com/fwlink/?LinkID=613747)、または [NuGet のドキュメントを参照]5D;(https://docs.microsoft.com/nuget/)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

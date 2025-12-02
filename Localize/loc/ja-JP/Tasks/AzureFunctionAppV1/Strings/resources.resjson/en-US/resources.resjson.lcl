@@ -142,7 +142,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[サポートされているランタイム バージョンについては、[こちらのドキュメント]5D; (https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) をご覧ください。`DOCKER|microsoft/azure-functions-*` などの前の値は非推奨であるため、ドロップダウンから新しい値をお使いください。]]></Val>
+            <Val><![CDATA[サポートされているランタイム バージョンについては、[こちらのドキュメント]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) をご覧ください。`DOCKER|microsoft/azure-functions-*` などの前の値は非推奨であるため、ドロップダウンから新しい値をお使いください。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[Refer [this doc]5D;(https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown]]></Val>
