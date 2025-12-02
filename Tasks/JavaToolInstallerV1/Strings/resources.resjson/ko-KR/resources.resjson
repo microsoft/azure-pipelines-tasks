@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "JDK 버전",
   "loc.input.help.versionSpec": "경로에서 사용할 수 있도록 JDK 버전을 지정하는 숫자입니다. 10과 같은 정수 버전 사용",
   "loc.input.label.jdkArchitectureOption": "JDK 아키텍처",
-  "loc.input.help.jdkArchitectureOption": "JDK의 아키텍처(x86, x64)입니다.",
+  "loc.input.help.jdkArchitectureOption": "JDK의 아키텍처(x86, x64, arm64)입니다.",
   "loc.input.label.jdkSourceOption": "JDK 소스",
   "loc.input.help.jdkSourceOption": "압축된 JDK의 소스입니다.",
   "loc.input.label.jdkFile": "JDK 파일",

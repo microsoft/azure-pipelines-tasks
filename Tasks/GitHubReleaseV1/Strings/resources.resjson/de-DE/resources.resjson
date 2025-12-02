@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "Geben Sie an, ob das Release als (nicht veröffentlichter) Entwurf gespeichert werden soll. Bei Festlegung auf FALSE wird das Release veröffentlicht.",
   "loc.input.label.isPreRelease": "Vorabversion",
   "loc.input.help.isPreRelease": "Geben Sie an, ob das Release als Vorabversion gekennzeichnet werden soll.",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "Änderungsprotokoll hinzufügen",
   "loc.input.help.addChangeLog": "Bei Festlegung auf TRUE wird eine Liste der Änderungen (Commits und Issues) zwischen dieser und dem zuletzt veröffentlichten Release generiert und an die Versionshinweise angefügt.",
   "loc.input.label.changeLogCompareToRelease": "Vergleichen mit",
