@@ -13,7 +13,7 @@ tmr.setInput('inlineScript', 'echo "test"');
 tmr.setInput('failOnStandardError', 'false');
 tmr.setInput('visibleAzLogin', 'false');
 tmr.setInput('useGlobalConfig', 'false');
-tmr.setInput('cwd', 'C:\\test');
+tmr.setInput('cwd', __dirname);
 
 process.env['ENDPOINT_AUTH_TestAzureDevOpsConnection'] = JSON.stringify({
     scheme: 'WorkloadIdentityFederation',
@@ -32,7 +32,7 @@ process.env['SYSTEM_JOBID'] = 'job-123';
 process.env['SYSTEM_PLANID'] = 'plan-456';
 process.env['SYSTEM_TEAMPROJECTID'] = 'project-789';
 process.env['SYSTEM_HOSTTYPE'] = 'build';
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
+process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -87,9 +87,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exists": {
-        "bash": true,
-        "C:\\ado\\temp": true,
-        "C:\\ado": true
+        "bash": true
     }
 };
 

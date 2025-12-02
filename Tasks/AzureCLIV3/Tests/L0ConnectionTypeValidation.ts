@@ -13,9 +13,9 @@ tmr.setInput('inlineScript', 'echo "test"');
 tmr.setInput('failOnStandardError', 'false');
 tmr.setInput('visibleAzLogin', 'false');
 tmr.setInput('useGlobalConfig', 'false');
-tmr.setInput('cwd', 'C:\\test');
+tmr.setInput('cwd', __dirname);
 
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
+process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -37,9 +37,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exists": {
-        "bash": true,
-        "C:\\ado\\temp": true,
-        "C:\\ado": true
+        "bash": true
     }
 };
 
