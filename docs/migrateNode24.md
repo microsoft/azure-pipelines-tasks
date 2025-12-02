@@ -112,7 +112,6 @@ If several handlers are specified in the `task.json` file, the highest one will 
 
 `minimumAgentVersion` specified in the `task.json` file will trigger [an automatic upgrade](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#agent-version-and-upgrades) for agents less than the specified version.
 
-> **⚠️ Deprecation Notice**: Node 6, Node 10, and Node 16 are deprecated and on the end-of-life (EOL) path. We strongly recommend migrating to Node 20 or Node 24.
 
 * [Agent version `3.232.1`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v3.232.1) is the first version that supports `Node20_1` handler. If you want to run the task using at least `Node20_1` handler, set `minimumAgentVersion` to `3.232.1`.
 
