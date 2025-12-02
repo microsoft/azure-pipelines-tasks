@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "Укажите, следует ли сохранять выпуск в виде черновика (неопубликованным). Если задано значение false, выпуск будет опубликован.",
   "loc.input.label.isPreRelease": "Предварительный выпуск",
   "loc.input.help.isPreRelease": "Укажите, следует ли помечать выпуск как предварительную версию.",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "Добавить журнал изменений",
   "loc.input.help.addChangeLog": "Если задано значение \"true\", будет создан список изменений (фиксации и проблемы) между этим и последним опубликованным выпуском, который будет добавлен к заметкам о выпуске.",
   "loc.input.label.changeLogCompareToRelease": "Сравнить с",
