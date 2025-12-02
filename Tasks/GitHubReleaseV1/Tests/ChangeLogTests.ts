@@ -1,7 +1,6 @@
-import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
-import { Inputs } from '../operations/Constants';
-import * as sinon from 'sinon';
+
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export class ChangeLogTests {
 
@@ -9,12 +8,12 @@ export class ChangeLogTests {
         let tp = path.join(__dirname, 'ChangeLogL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
-        process.env["RELEASE_RELEASEWEBURL"] = "MOCK_RELEASE_URL"; 
-        
+        process.env["RELEASE_RELEASEWEBURL"] = "MOCK_RELEASE_URL";
+
         // Stub methods
         this.stub(tr);
-        
-        // Run the main.js 
+
+        // Run the main.js
         tr.run();
     }
 
@@ -63,7 +62,7 @@ export class ChangeLogTests {
                     getCommitsList: function() {
                         return {
                             statusCode: 200,
-                            body: { "commits": [ 
+                            body: { "commits": [
                                 {"sha": "abc", "commit": { "message": "Fixing issue #2 #3.\n\n desc #4 GH-5" } },
                                 {"sha": "xyz", "commit": { "message": "Fixing issue #56.\n\n desc Gh-9" } }
                             ] }

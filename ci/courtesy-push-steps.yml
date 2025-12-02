@@ -52,3 +52,29 @@ steps:
 - powershell: |
     Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"
   displayName: Update build number
+
+- powershell: |
+    cd $(Build.SourcesDirectory)/ci/courtesy-push
+    npm ci
+  displayName: npm ci (courtesy-push)
+
+- powershell: $(Build.SourcesDirectory)/ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
+
+- powershell: |
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    Write-Host "##vso[task.setVariable variable=currentDate]$currentDate"
+  displayName: Set currentDate variable
+
+- template: /ci/generate-branch-name.yml@self
+- template: /ci/get-AzDo-pat.yml@self
+
+- script: node $(Build.SourcesDirectory)/ci/courtesy-push/courtesy-push.js $(Build.SourcesDirectory)/_package/nuget-packages/unified_deps.xml
+  name: createCourtesyPushPR
+  displayName: Update unified deps and create branch
+  env:
+    TOKEN: $(AzDo_PAT)
+    BRANCH_NAME: $(branchName)
+    DRYRUN: $(isDryRun)
+    USERNAME: $(username)
+
