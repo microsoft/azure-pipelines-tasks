@@ -7,13 +7,17 @@
   "loc.input.help.nuGetServiceConnections": "Liste d'éléments séparés par des virgules correspondant à des noms de connexions de service NuGet pour les flux situés en dehors de cette organisation/collection. Pour les flux présents dans cette organisation/collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
   "loc.input.label.forceReinstallCredentialProvider": "Réinstaller le fournisseur d'informations d'identification même s'il est déjà installé",
   "loc.input.help.forceReinstallCredentialProvider": "Si le fournisseur d'informations d'identification est déjà installé dans le profil utilisateur, détermine s'il est remplacé par le fournisseur d'informations d'identification indiqué par la tâche. Cela peut entraîner une mise à niveau (ou éventuellement un passage à une version antérieure) du fournisseur d'informations d'identification.",
-  "loc.input.help.feedUrl": "Si cette option est définie, workloadIdentityServiceConnection est obligatoire. Toutes les autres entrées sont ignorées. Non compatible avec nuGetServiceConnections. L’URL du flux doit être au format d’index du service NuGet, par exemple https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
+  "loc.input.help.feedUrl": "Si cette option est définie, workloadIdentityServiceConnection est requis. Toutes les autres entrées sont ignorées. Non compatible avec nuGetServiceConnections. L’URL du flux doit être au format d’index du service NuGet, par exemple https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json/",
   "loc.input.label.feedUrl": "URL Azure Artifacts",
   "loc.input.help.workloadIdentityServiceConnection": "Si ce paramètre est défini, feedUrl est obligatoire. Toutes les autres entrées sont ignorées.",
   "loc.input.label.workloadIdentityServiceConnection": "Connexion aux services « Azure DevOps »",
   "loc.messages.Error_ServiceConnectionExists": "Une connexion de service existe déjà pour le point de terminaison",
-  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "FeedUrl et workloadIdentityServiceConnection doivent être définis ensemble.",
+  "loc.messages.Error_InvalidFeedUrl": "L’URL de flux fournie « %s » n’est pas une URL de flux Azure DevOps valide.",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "FeedUrl et azureDevOpsServiceConnection doivent être définis ensemble.",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "Vous ne pouvez pas spécifier à la fois les paramètres d’entrée nuGetServiceConnections et feedUrl.",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "Vous ne pouvez pas spécifier à la fois les paramètres d’entrée nuGetServiceConnections et azureDevOpsServiceConnection (workloadIdentityServiceConnection).",
   "loc.messages.Info_AddingFederatedFeedAuth": "Impossible d’obtenir les informations d’identification fédérées à partir de la connexion de service",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Ajout d’informations d’authentification à partir des %s de connexion de service pour les %s de flux",
-  "loc.messages.FailedToGetServiceConnectionAuth": "Authentification ajoutée pour le flux %s."
+  "loc.messages.FailedToGetServiceConnectionAuth": "Authentification ajoutée pour le flux %s.",
+  "loc.messages.Warn_IgnoringFeedUrl": "Ignorer feedUrl"
 }
