@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
           {
-            "url": "https://testmanagementstore.z13.web.core.windows.net/testmanagementcoverage/30139835/CoveragePublisher.zip",
+            "url": "https://testmanagementstore.z13.web.core.windows.net/testmanagementcoverage/30769467/CoveragePublisher.zip",
             "dest": "./"
           }
         ]
