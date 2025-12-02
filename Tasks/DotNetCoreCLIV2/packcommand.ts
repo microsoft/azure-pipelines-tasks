@@ -84,24 +84,10 @@ export async function run(): Promise<void> {
                  // Validate full SemVer 2.0 format
                 let semVerRegex = /^\d+\.\d+\.\d+(?:\.\d+)?(?:[-\w\.]+)?(?:\+[0-9A-Za-z\-\.]+)?$/;
                 if (!semVerRegex.test(semVerBuildNumber)) {
-                
-                tl.warning("Build number is not SemVer-compliant. Falling back to numeric version.");
-
-                let fallbackRegex = /\d+\.\d+\.\d+(?:\.\d+)?/;
-                let fallbackMatch = semVerBuildNumber.match(fallbackRegex);
-                if (!fallbackMatch) {
-                tl.warning("No numeric version found in build number. Using default version: 1.0.0");
-                version = "1.0.0"
+                  tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidSemVer"));
+                  return;
                 }
-                else
-                version = fallbackMatch[0];
-                
-               }
-               else{
-                tl.debug("here semver");
                 version = semVerBuildNumber;
-                
-                }
                 break;
 
         }
