@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "Posizione dell'API dati",
   "loc.input.help.data_api_location": "Percorso della directory dei file di origine API Dati in merito alla directory di lavoro",
   "loc.input.label.azure_access_token": "Token di accesso di Azure",
-  "loc.input.help.azure_access_token": "Token di accesso usato per autenticare e autorizzare la distribuzione",
+  "loc.input.help.azure_access_token": "Token di accesso usato per la distribuzione. Non è necessario se passato come variabile",
   "loc.input.label.default_hostname": "Nome host predefinito",
-  "loc.input.help.default_hostname": "Nome host predefinito dell'app"
+  "loc.input.help.default_hostname": "Nome host predefinito per la distribuzione. Non obbligatorio se passato come variabile di ambiente"
 }
