@@ -180,7 +180,8 @@ Try
         }
         else 
         {
-            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            $EnableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
+            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $EnableVerboseLogging
         }
     }
 }
