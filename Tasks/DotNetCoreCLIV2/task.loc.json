@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 266,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -419,7 +419,8 @@
         "off": "Off",
         "byPrereleaseNumber": "Use the date and time",
         "byEnvVar": "Use an environment variable",
-        "byBuildNumber": "Use the build number"
+        "byBuildNumber": "Use the build number",
+        "bySemVerBuildNumber": "Use full SemVer build number"
       }
     },
     {
