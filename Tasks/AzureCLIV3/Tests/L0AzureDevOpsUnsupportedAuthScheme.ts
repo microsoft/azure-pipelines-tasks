@@ -1,4 +1,4 @@
-/* import ma = require('azure-pipelines-task-lib/mock-answer');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -67,4 +67,3 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tmr.setAnswers(mockAnswers);
 
 tmr.run();
- */
