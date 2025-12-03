@@ -48,6 +48,7 @@ steps:
     $releaseBranch = "$(branchName)"
     $isDryRun = "$(isDryRun)"
     if (($(currentSprintWeek) -eq 3) -or ($isDryRun -eq 'true')) {
+      npm ci
       cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
       npm ci
       node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch --isDryRun $isDryRun
