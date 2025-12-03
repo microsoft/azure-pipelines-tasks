@@ -19,7 +19,7 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             
-             /*assert(tr.stdout.includes('az --version'), 'Should execute az --version command');
+            assert(tr.stdout.includes('az --version'), 'Should execute az --version command');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should install Azure DevOps extension');
             assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
             assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure Azure DevOps organization');
@@ -27,15 +27,14 @@ describe('AzureCLIV3 Suite', function () {
             
             assert(tr.stdout.indexOf('Azure DevOps CLI extension installed') >= 0, 'should install Azure DevOps extension');
             assert(tr.stdout.indexOf('organization configured') >= 0, 'should configure organization');
-            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project'); */
-            assert("0", "0");
+            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project'); 
             done();
         }).catch((err) => {
             done(err);
         });
     });
 
-    /* it('Should fail with unsupported authentication scheme for Azure DevOps', function (done) {
+    it('Should fail with unsupported authentication scheme for Azure DevOps', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0AzureDevOpsUnsupportedAuthScheme.js');
@@ -89,7 +88,7 @@ describe('AzureCLIV3 Suite', function () {
         }).catch((err) => {
             done(err);
         });
-    });*/
+    });
 
     it('Should skip extension installation when Azure DevOps extension is already installed', function (done) {
         this.timeout(timeout);
@@ -111,7 +110,7 @@ describe('AzureCLIV3 Suite', function () {
 
     // Additional tests for Azure DevOps service connection authentication flow
 
-    /*
+    
     it('Should handle OIDC token retrieval for Azure DevOps authentication', function (done) {
         this.timeout(timeout);
 
@@ -129,9 +128,9 @@ describe('AzureCLIV3 Suite', function () {
             done(err);
         });
     });
-    */
+    
 
-    /*it('Should fail when OIDC token retrieval fails', function (done) {
+    it('Should fail when OIDC token retrieval fails', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0AzureDevOpsOidcTokenFailure.js');
@@ -270,6 +269,6 @@ describe('AzureCLIV3 Suite', function () {
         }).catch((err) => {
             done(err);
         });
-    });*/
+    });
 });
  
