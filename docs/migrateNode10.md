@@ -1,3 +1,5 @@
+> **⚠️ DEPRECATION WARNING**: Node 10 is deprecated and on the end-of-life (EOL) path. This migration guide is provided for reference only. We strongly encourage migrating to **Node 20** or **Node 24** instead. Please refer to [migrateNode24.md](migrateNode24.md) for the latest migration guide.
+
 # Table of content
 - [Upgrading Tasks to Node 10](#upgrading-tasks-to-node-10)
   - [Common packages dependent on `azure-pipeline-task-lib`](#common-packages-dependent-on-azure-pipeline-task-lib)
