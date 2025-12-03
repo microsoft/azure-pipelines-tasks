@@ -4,6 +4,8 @@
   "description": "Use .Net Core",
   "main": "usedotnet.js",
   "scripts": {
+    "build": "node ../../make.js build --task UseDotNetV2",
+    "serverBuild": "node ../../make.js serverBuild --task UseDotNetV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,7 +32,7 @@
     "azure-pipelines-task-lib": "^5.2.1",
     "azure-pipelines-tasks-packaging-common": "^3.230.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.8",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "json5": "^2.2.3",
     "semver": "^7.6.3",
     "typed-rest-client": "^2.1.0"

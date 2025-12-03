@@ -3,8 +3,6 @@
   "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
   "loc.instanceNameFormat": "Maven Authenticate",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-  "loc.input.help.workloadIdentityServiceConnection": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, the input mavenServiceConnections will be ignored.",
   "loc.input.label.artifactsFeeds": "Feeds",
   "loc.input.label.mavenServiceConnections": "Credentials for repositories outside this organization/collection",
   "loc.input.help.mavenServiceConnections": "Credentials to use for external repositories located in the project's pom.xml.",

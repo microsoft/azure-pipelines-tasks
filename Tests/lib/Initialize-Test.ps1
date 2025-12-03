@@ -94,3 +94,5 @@ function Get-LocalizedString {
 
     ($Key -f $ArgumentList)
 }
+
+function global:Get-VstsPipelineFeature { return $false }

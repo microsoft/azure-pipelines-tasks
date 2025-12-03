@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Command Line Task",
   "main": "cmdline.js",
   "scripts": {
+    "build": "node ../../make.js build --task CmdLineV2",
+    "serverBuild": "node ../../make.js serverBuild --task CmdLineV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

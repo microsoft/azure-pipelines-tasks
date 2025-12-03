@@ -1,7 +1,9 @@
-import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
-import { Inputs } from '../operations/Constants';
+
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as sinon from 'sinon';
+
+import { Inputs } from '../operations/Constants';
 import { TestString } from './TestStrings';
 
 export class DeleteActionL0Tests {
@@ -9,7 +11,7 @@ export class DeleteActionL0Tests {
     public static startTest() {
         let tp = path.join(__dirname, '..', 'main.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
-        
+
         // Set the input
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
@@ -18,8 +20,8 @@ export class DeleteActionL0Tests {
 
         // Stub methods
         this.stub();
-        
-        // Run the main.js 
+
+        // Run the main.js
         tr.run();
 
         // Restore all stubs
@@ -31,11 +33,11 @@ export class DeleteActionL0Tests {
 
         var Utility = require('../operations/Utility');
         this.sandbox.stub(Utility.Utility, "getGithubEndPointToken").callsFake(function() { return { scheme: 'OAuth', parameters: { AccessToken: "**someToken**"}} });
-        
+
         var Action = require('../operations/Action');
         this.sandbox.stub(Action.Action.prototype, "deleteReleaseAction").callsFake(() => { console.log(TestString.deleteActionKeyWord) });
     }
-    
+
     public static sandbox;
 }
 

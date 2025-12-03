@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Download Secure File Task",
   "main": "predownloadsecurefile.js",
   "scripts": {
+    "build": "node ../../make.js build --task DownloadSecureFileV1",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadSecureFileV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,9 +22,12 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-securefiles-common": "^2.1.0"
+    "azure-pipelines-tasks-securefiles-common": "^2.263.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

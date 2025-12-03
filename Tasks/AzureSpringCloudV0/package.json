@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Azure Spring Cloud App Deployment",
   "main": "azurespringclouddeployment.ts",
   "scripts": {
+    "build": "node ../../make.js build --task AzureSpringCloudV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureSpringCloudV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +30,7 @@
     "@xmldom/xmldom": "^0.8.7",
     "JSONPath": "^0.11.2",
     "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
-    "azure-pipelines-tasks-webdeployment-common": "^4.242.0",
+    "azure-pipelines-tasks-webdeployment-common": "^4.265.0",
     "azure-pipelines-task-lib": "4.11.0",
     "moment": "^2.29.4",
     "nock": "^10.0.6",

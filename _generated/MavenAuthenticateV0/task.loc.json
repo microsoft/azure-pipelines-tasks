@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 262,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -92,8 +92,8 @@
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.247.1",
+    "Default": "0.262.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.247.2"
+    "wif_242": "0.262.1"
   }
 }

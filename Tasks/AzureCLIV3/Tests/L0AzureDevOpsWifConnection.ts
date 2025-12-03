@@ -100,3 +100,4 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
 });
 
 tmr.run();
+ 

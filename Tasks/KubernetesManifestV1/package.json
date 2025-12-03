@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node ../../make.js build --task KubernetesManifestV1",
+    "serverBuild": "node ../../make.js serverBuild --task KubernetesManifestV1"
+  },
   "dependencies": {
     "@types/del": "^2.2.0",
     "@types/glob": "^5.0.10",
@@ -8,11 +12,11 @@
     "@types/uuid": "^8.3.0",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.259.2",
-    "azure-pipelines-tasks-docker-common": "2.242.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
+    "azure-pipelines-tasks-docker-common": "2.265.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
-    "azure-pipelines-tool-lib": "^2.0.4",
+    "azure-pipelines-tasks-utility-common": "3.265.1",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "del": "2.2.0",
     "js-yaml": "3.13.1",
     "moment": "^2.29.4",

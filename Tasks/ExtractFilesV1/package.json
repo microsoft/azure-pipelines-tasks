@@ -3,6 +3,10 @@
   "version": "1.0.2",
   "description": "Extract Files Task",
   "main": "extractfilestask.js",
+  "scripts": {
+    "build": "node ../../make.js build --task ExtractFilesV1",
+    "serverBuild": "node ../../make.js serverBuild --task ExtractFilesV1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"

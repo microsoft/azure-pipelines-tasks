@@ -2,6 +2,10 @@
   "name": "Ant",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Ant",
+  "scripts": {
+    "build": "node ../../make.js build --task ANTV1",
+    "serverBuild": "node ../../make.js serverBuild --task ANTV1"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
@@ -9,12 +13,15 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "^4.15.0",
-    "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
-    "azure-pipelines-tasks-java-common": "2.198.1",
+    "azure-pipelines-task-lib": "^5.2.1",
+    "azure-pipelines-tasks-codecoverage-tools": "3.256.0",
+    "azure-pipelines-tasks-java-common": "2.264.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

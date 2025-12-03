@@ -4,6 +4,8 @@
   "description": "Build and deploy an Azure Static Web App",
   "main": "index.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureStaticWebAppV0",
+    "serverBuild": "node ../../make.js serverBuild --task AzureStaticWebAppV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

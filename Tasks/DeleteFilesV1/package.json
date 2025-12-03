@@ -4,6 +4,8 @@
   "description": "Azure Pipelines DeleteFiles Task",
   "main": "deletefiles.js",
   "scripts": {
+    "build": "node ../../make.js build --task DeleteFilesV1",
+    "serverBuild": "node ../../make.js serverBuild --task DeleteFilesV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

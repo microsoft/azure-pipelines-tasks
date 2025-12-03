@@ -4,6 +4,8 @@
   "description": "publish python package to the python package index",
   "main": "publisher.js",
   "scripts": {
+    "build": "node ../../make.js build --task PyPIPublisherV0",
+    "serverBuild": "node ../../make.js serverBuild --task PyPIPublisherV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Microsoft Corporation",

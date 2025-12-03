@@ -208,6 +208,17 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
+    it('build passes when zero match found with empty string', async () => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "build";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
     it('test throws warning when zero match found', async () => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
@@ -294,6 +305,20 @@ describe('DotNetCoreExe Suite', function () {
 
         assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
         assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('publish does not use logger when feature flag is disabled', async () => {
+        let tp = path.join(__dirname, 'publishWithFeatureFlagDisabled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.ran('dotnet publish web/project.csproj'), 'should have run dotnet publish');
+        // Verify that the logger argument is NOT present
+        assert(!tr.stdOutContained('-dl:CentralLogger'), 'should NOT have logger argument when feature flag is disabled');
+        assert(tr.stdOutContained('published without logger'), 'should have published without logger');
     });
 
 

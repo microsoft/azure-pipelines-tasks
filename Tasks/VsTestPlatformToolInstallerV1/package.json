@@ -4,6 +4,8 @@
   "description": "Visual Studio Test Platform Installer",
   "main": "vstestplatformtoolInstaller.js",
   "scripts": {
+    "build": "node ../../make.js build --task VsTestPlatformToolInstallerV1",
+    "serverBuild": "node ../../make.js serverBuild --task VsTestPlatformToolInstallerV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,10 +31,13 @@
     "@types/mocha": "^5.2.7",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "performance-now": "0.2.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

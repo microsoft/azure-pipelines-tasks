@@ -2,7 +2,8 @@
     "inputs": [
       {
         "name": "workloadIdentityServiceConnection",
-        "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+        "aliases": ["azureDevOpsServiceConnection"],
+        "label": "'Azure DevOps' Service Connection",
         "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, the input mavenServiceConnections will be ignored.",
         "type": "connectedService:workloadidentityuser",
         "required": false,

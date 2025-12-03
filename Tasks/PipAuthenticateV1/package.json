@@ -4,6 +4,8 @@
   "description": "Authenticate pip client.",
   "main": "pipAuthenticateMain.js",
   "scripts": {
+    "build": "node ../../make.js build --task PipAuthenticateV1",
+    "serverBuild": "node ../../make.js serverBuild --task PipAuthenticateV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +30,7 @@
     "@types/node": "^20.3.1",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-artifacts-common": "^2.243.0"
+    "azure-pipelines-tasks-artifacts-common": "^2.262.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

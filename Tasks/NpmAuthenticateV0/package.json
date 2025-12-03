@@ -4,6 +4,8 @@
   "description": "Azure Pipelines npm Authenticate Task",
   "main": "npmauth.js",
   "scripts": {
+    "build": "node ../../make.js build --task NpmAuthenticateV0",
+    "serverBuild": "node ../../make.js serverBuild --task NpmAuthenticateV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +21,7 @@
   "dependencies": {
     "azure-pipelines-task-lib": "^4.13.0",
     "azure-pipelines-tasks-packaging-common": "^3.245.0",
-    "azure-pipelines-tasks-artifacts-common": "^2.243.0",
+    "azure-pipelines-tasks-artifacts-common": "^2.262.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/uuid": "^8.3.0"

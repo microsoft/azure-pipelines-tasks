@@ -3,8 +3,6 @@
   "loc.helpMarkDown": "",
   "loc.description": "Authentication task for the conda client",
   "loc.instanceNameFormat": "Conda Authenticate",
-  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' Service Connection",
-  "loc.input.help.workloadIdentityServiceConnection": "If this is set, it will generate credentials using service connection instead of the build pipeline identity.",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.AddingAuthChannel": "Adding auth for the token %s",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s",

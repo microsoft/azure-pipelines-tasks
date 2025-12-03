@@ -8,11 +8,6 @@ This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azur
 - Workload Identity Federation support for Azure DevOps connections
 - Automatic organization and project configuration from pipeline context
 
-### What's new in Version 2.0
-- Supports running PowerShell and PowerShell Core script.
-- PowerShell Core script works with Xplat agents  (Windows, Linux or OSX), make sure the agent has PowerShell version 6 or more.
-- Powershell script works only with Windows agent, make sure the agent has PowerShell version 5 or below.
-
 ## Contact Information
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
@@ -33,10 +28,6 @@ If an agent is already running on the machine on which the Azure CLI is installe
 
 ## Parameters of the task
 The task is used to run Azure CLI commands on Cross platform agents running Windows, Linux or Mac . The mandatory fields are highlighted with a *.
-
-* **Azure Connection Type**\*: Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint. This parameter is shown only when the selected task version is 0.* as Azure CLI task v1.0 supports only Azure Resource Manager (ARM) subscriptions
-
-* **Azure Subscription**\*: Select the Azure Subscription where the Azure CLI commands have to be executed. If none exists, then click on the Manage link, to navigate to the Services tab in the Administrators panel. In the tab click on New Service Endpoint and select Azure Resource Manager from the dropdown.
 
 * **Connection Type**\*: Select the type of service connection to use. Choose 'Azure Resource Manager' for Azure Resource Manager service connections or 'Azure DevOps' for Azure DevOps service connections.
 
@@ -64,3 +55,16 @@ Syntax to access environment variables based on script type.\
 *Powershell script:* `$env:servicePrincipalId`\
 *Batch script:* `%servicePrincipalId%` \
 *Shell script:* `$servicePrincipalId`
+
+* **ErrorActionPreference**: Select this checkbox if you want the task to fail when any errors are written to the StandardError stream. If you leave it unchecked, standard errors will be ignored and only exit codes will be used to determine the status.
+
+* **Use global Azure CLI configuration**: If this is unchecked, the task will use its own separate Azure CLI configuration directory. This allows Azure CLI tasks to run in parallel during releases.
+ 
+* **Working Directory**: Current working directory where the script is run. If left blank, this input is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).
+ 
+* **LASTEXITCODE**: If this input is false, the line if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE } is appended to the end of your script. This will propagate the last exit code from an external command as the exit code of PowerShell. Otherwise, the line is not appended to the end of your script.
+ 
+* **az login output visibility**: If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output.
+ 
+* **Keep Azure CLI session active**: When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.
+ 

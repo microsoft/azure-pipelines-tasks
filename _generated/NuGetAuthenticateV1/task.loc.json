@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 247,
+    "Minor": 263,
     "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
@@ -54,14 +54,18 @@
   },
   "messages": {
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
+    "Error_InvalidFeedUrl": "ms-resource:loc.messages.Error_InvalidFeedUrl",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
+    "Error_NuGetWithFeedUrlNotSupported": "ms-resource:loc.messages.Error_NuGetWithFeedUrlNotSupported",
+    "Error_NuGetWithWIFNotSupported": "ms-resource:loc.messages.Error_NuGetWithWIFNotSupported",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
-    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth"
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.247.4",
+    "Default": "1.263.4",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.247.5"
+    "wif_242": "1.263.5"
   }
 }

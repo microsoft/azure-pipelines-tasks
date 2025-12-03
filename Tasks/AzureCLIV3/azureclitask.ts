@@ -214,7 +214,7 @@ export class azureclitask {
 
             // Clean up Azure DevOps CLI configuration if it was set
             if (connectionType === "azureDevOps") {
-                tl.execSync("az", `devops configure --defaults organization='' project=''`);
+                tl.execSync("az", `devops configure --defaults project='' organization=`);
             }
 
             if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
@@ -272,10 +272,18 @@ export class azureclitask {
     }
 
     private static isAzureDevOpsExtensionInstalled(): boolean {
+        tl.debug("Checking if Azure DevOps extension is installed...");
         try {
-            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops");
-            return result.code === 0;
+            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", { 
+                silent: true
+            });
+            if (result.code === 0) {
+                tl.debug("Azure DevOps extension is already installed, skipping installation.");
+                return true;
+            }
+            return false;
         } catch (error) {
+            tl.debug(`Azure DevOps extension not found: ${error}`);
             return false;
         }
     }
@@ -358,7 +366,7 @@ export class azureclitask {
             }            
         }
         else {
-            throw tl.loc('AuthSchemeNotSupported', authScheme);
+            throw tl.loc('AuthSchemeNotSupportedForAzureRM', authScheme);
         }
 
         this.isLoggedIn = true;
@@ -372,12 +380,15 @@ export class azureclitask {
         try {
             var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
             var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
-
+            
             if (authScheme.toLowerCase() == "workloadidentityfederation") {
                 // Install Azure DevOps extension if not already installed
-                const extensionInstalled = await this.isAzureDevOpsExtensionInstalled();
+                const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
                 if (!extensionInstalled) {
+                    console.log("Azure DevOps extension not found in working environment. Attempting installation.");
                     Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                } else {
+                    console.log("Azure DevOps extension is already installed, skipping installation.");
                 }
 
                 await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
@@ -393,7 +404,7 @@ export class azureclitask {
                 }
             }
             else {
-                throw tl.loc('AuthSchemeNotSupported', authScheme);
+                throw tl.loc('AuthSchemeNotSupportedForAzureDevOps', authScheme);
             }
         } catch (error) {
             const errorMessage = error?.message || error?.toString() || String(error);

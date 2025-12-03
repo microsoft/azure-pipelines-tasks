@@ -16,8 +16,8 @@ steps:
 
 - script: |
     cd azure-pipelines-tasks
-    npm install
-  displayName: npm install
+    npm ci
+  displayName: npm ci
 
 - task: DownloadBuildArtifacts@0
   inputs:
@@ -41,7 +41,7 @@ steps:
 
 - powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
-    npm install
+    npm ci
     node push-hotfix-branch.js "$(hotfixFolderPath)"
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange

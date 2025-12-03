@@ -3,6 +3,7 @@ import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resource';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const osTypeMap = new Map([
@@ -37,15 +38,26 @@ export class TaskParametersUtility {
         let appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.OSType = appDetails["osType"];
-        taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.indexOf("Linux") !=-1;
+        taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.toLowerCase().indexOf("linux") !=-1;
+
+        // Used for SiteContainers apps.
+        const siteContainersConfigInput = tl.getInput('siteContainersConfig');
+        if (siteContainersConfigInput) {
+            const raw = JSON.parse(siteContainersConfigInput);
+            taskParameters.SiteContainers =  raw.map(SiteContainer.fromJson);
+        } else {
+
+        // Used for docker single/multicontainer apps.
+            taskParameters.SiteContainers = null;
+            
+            let containerDetails = await this.getContainerKind(taskParameters);
+            taskParameters.ImageName = containerDetails["imageName"];
+            taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
+            taskParameters.MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
+        }
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-
-        let containerDetails = await this.getContainerKind(taskParameters);
-        taskParameters.ImageName = containerDetails["imageName"];
-        taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
-        taskParameters. MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
 
         return taskParameters;
     }
@@ -125,4 +137,5 @@ export interface TaskParameters {
     isLinuxContainerApp?: boolean;
     MulticontainerConfigFile?: string;
     isMultiContainer?: boolean;
+    SiteContainers?: SiteContainer[];
 }

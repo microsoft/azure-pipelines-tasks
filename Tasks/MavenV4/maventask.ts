@@ -245,7 +245,19 @@ async function execBuild() {
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }
-            mvnRun.arg(mavenGoals);
+
+            if (tl.getPipelineFeature('RemoveDuplicateMavenRun') && isCodeCoverageOpted && ccTool.toLowerCase() === "jacoco") {
+                const verifyOrLaterPhases = ['verify', 'install', 'deploy'];
+                const hasVerifyOrLater = mavenGoals.some(goal => verifyOrLaterPhases.includes(goal.toLowerCase()));
+ 
+                if (!hasVerifyOrLater) {
+                    mvnRun.arg('verify');
+                } else {
+                    mvnRun.arg(mavenGoals);
+                }
+            } else {
+                mvnRun.arg(mavenGoals);
+            }
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = applySonarQubeArgs(mvnRun);
@@ -451,27 +463,32 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
     if (isCodeCoverageOpted) {
         tl.debug("Collecting code coverage reports");
-
-        if (ccTool.toLowerCase() == "jacoco") {
-            var mvnReport = tl.tool(mvnExec);
-            mvnReport.arg('-f');
-            mvnReport.arg(mavenPOMFile);
-            mvnReport.line(mavenOptions);
-            mvnReport.arg("verify");
-            mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
-            mvnReport.exec().then(function (code) {
-                publishCCToTfs();
-                defer.resolve(true);
-            }).fail(function (err) {
-                sendCodeCoverageEmptyMsg();
-                defer.reject(err);
-            });
+        if (tl.getPipelineFeature('RemoveDuplicateMavenRun')) {
+            publishCCToTfs();
+            defer.resolve(true);
         }
         else {
-            if (ccTool.toLowerCase() == "cobertura") {
-                publishCCToTfs();
+            if (ccTool.toLowerCase() == "jacoco") {
+                var mvnReport = tl.tool(mvnExec);
+                mvnReport.arg('-f');
+                mvnReport.arg(mavenPOMFile);
+                mvnReport.line(mavenOptions);
+                mvnReport.arg("verify");
+                mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
+                mvnReport.exec().then(function (code) {
+                    publishCCToTfs();
+                    defer.resolve(true);
+                }).fail(function (err) {
+                    sendCodeCoverageEmptyMsg();
+                    defer.reject(err);
+                });
             }
-            defer.resolve(true);
+            else {
+                if (ccTool.toLowerCase() == "cobertura") {
+                    publishCCToTfs();
+                }
+                defer.resolve(true);
+            }
         }
     }
     else {

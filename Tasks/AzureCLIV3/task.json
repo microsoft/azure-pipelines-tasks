@@ -5,7 +5,7 @@
   "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
-  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV3/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
   "releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections.",
   "category": "Deploy",
   "visibility": [
@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 262,
+    "Minor": 267,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -239,7 +239,8 @@
     "FailedToLogout": "The following error occurred while logging out: %s",
     "LoginFailed": "Azure login failed",
     "MSILoginFailed": "Azure login failed using Managed Service Identity",
-    "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+    "AuthSchemeNotSupportedForAzureRM": "The authentication scheme '%s' is not supported for Azure Resource Manager connections. Please update your Azure Resource Manager service connection to use one of the supported schemes: Service Principal, Workload Identity Federation (WIF), or Managed Identity.",
+    "AuthSchemeNotSupportedForAzureDevOps": "The authentication scheme '%s' is not supported for Azure DevOps service connections. Please update your Azure DevOps service connection to use one of the supported schemes: Workload Identity Federation. ",
     "ErrorInSettingUpSubscription": "Error in setting up subscription",
     "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",

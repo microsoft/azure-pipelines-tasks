@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 251,
-    "Patch": 2
+    "Minor": 262,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -114,8 +114,8 @@
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.251.1",
+    "Default": "0.262.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.251.2"
+    "wif_242": "0.262.1"
   }
 }

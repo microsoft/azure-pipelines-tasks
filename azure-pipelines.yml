@@ -7,77 +7,31 @@ trigger:
 
 resources:
   repositories:
-  - repository: AzureDevOps
-    type: git
-    name: AzureDevOps/AzureDevOps
-
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
-parameters:
-- name: task_deployment
-  displayName: Choose deployment options
-  type: string
-  default: 'Deploy task of Sprint'
-  values:
-  - 'Deploy all Tasks'
-  - 'Deploy task of Sprint'
-  - 'Deploy Hotfix'
-- name: task_name
-  displayName: |
-    To 'Deploy Hotfix' provide task names (e.g. BashV3,AzureCLIV1,PowerShellV2) else leave to default
-  type: string
-  default: 'TaskNameVN'
-- name: enableCodeQL
-  displayName: Enable CodeQL for run
-  type: boolean
-  default: false
-- name: includeLocalPackagesBuildConfig
-  displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
-  type: boolean
-  default: false # note: keep in sync with ci\ci-test-tasks\canary-tests-v2.yml
-- name: skip_publish
-  displayName: skipPublish (Not for production use)
-  type: boolean
-  default: false
-- name: publishToDistributedTaskTest
-  displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
-  type: boolean
-  default: false  
-
 variables:
 - name: currentDate
   value: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
 - name: taskName
-  value: ${{ parameters.task_name }}
+  value: 'TaskNameVN'
 - name: taskNameIsSet
-  value: ${{ not(or(eq(parameters.task_deployment, 'Deploy all Tasks'), eq(parameters.task_deployment, 'Deploy task of Sprint'))) }}
+  value: false
 - name: runCodeQl
-  value: ${{ eq(parameters.enableCodeQL, true) }}
+  value: false
 - name: system.debug
   value: true
 - name: includeLocalPackagesBuildConfigParameter
-  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
-    value: '--includeLocalPackagesBuildConfig'
-  ${{ else }}:
-    value: ''
+  value: ''
 - name: IncludeLocalPackagesBuildConfigTest
-  ${{ if eq(parameters.includeLocalPackagesBuildConfig, true) }}:
-    value: '1'
-  ${{ else }}:
-    value: ''
-- name: tasksSkipPublish
-  ${{ if eq(parameters.skip_publish, true) }}:
-    value: 'true'
-  ${{ else }}:
-    value: 'false'
+  value: ''
 - name: DEPLOY_ALL_TASKSVAR
-  ${{ if eq(parameters.task_deployment,'Deploy all Tasks') }}:
-    value: 'true'
-  ${{ else }}:
-    value: 'false'
+  value: 'false'
+- name: isDryRun
+  value: 'false'
+  
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -89,6 +43,8 @@ extends:
     sdl:
       sbom:
         enabled: true
+      binskim:
+        preReleaseVersion: '4.3.1'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
@@ -131,92 +87,6 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
-
-      # Publish
-      - job: publish
-        displayName: Publish
-        timeoutInMinutes: 360
-        dependsOn:
-        - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish per task NuGet package artifact'
-            PathtoPublish: _package/nuget-packages
-            ArtifactName: IndividualNuGetPackages
-        steps:
-        - template: /ci/publish-steps.yml@self
-        
-      # Courtesy Push
-      - job: courtesy_push
-        displayName: Courtesy Push
-        timeoutInMinutes: 180
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        dependsOn:
-        - publish
-        condition: |
-          and(
-            succeeded(),
-            eq(variables['COURTESY_PUSH'], 'true'),
-            or(
-              eq(variables['build.reason'], 'Schedule'),
-              and(
-                eq(variables['build.reason'], 'Manual'),
-                eq(variables['FORCE_COURTESY_PUSH'], 'true')
-              )
-            )
-          )
-        templateContext:
-          outputs:
-          - output: nuget
-            packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
-            packageParentPath: '$(Build.SourcesDirectory)'
-            ${{ if eq(parameters.publishToDistributedTaskTest, true) }}:
-              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
-            ${{ else }}:
-              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
-            nuGetFeedType: internal
-            displayName: Push Nuget package
-            allowPackageConflicts: $(COURTESY_PUSH)
-        steps:
-        - checkout: AzureDevOps
-          fetchDepth: 1
-          persistCredentials: true
-        - checkout: self
-        - template: /ci/courtesy-push.yml@self
-
-      - job: build_all_tasks_for_deployments
-        displayName: Build all tasks for deployments (Windows)
-        dependsOn:
-        - courtesy_push
-        - build_all_windows
-        condition: succeeded()
-        timeoutInMinutes: 360
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        variables:
-          task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
-        templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish package artifact'
-            PathtoPublish: _package/tasks.zip
-            sbomBuildDropPath: $(Build.SourcesDirectory)/_package
-            ArtifactName: allTasks
-        steps:
-        - template: /ci/build-all-tasks.yml@self
-          parameters:
-            deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all Tasks') }}
 
       # All tasks on Linux
       - job: build_all_linux

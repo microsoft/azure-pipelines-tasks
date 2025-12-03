@@ -34,7 +34,7 @@ if (process.versions.node.startsWith('20')) {
 
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
-var uuidv4 = require('uuid/v4');
+var {v4: uuidv4} = require('uuid');
 
 const area: string = 'JenkinsDownloadArtifacts';
 

@@ -107,4 +107,12 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
 });
 
+tmr.registerMock('./src/Utility', {
+    Utility: {
+        throwIfError: () => {},
+        checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
 tmr.run();
+ 
