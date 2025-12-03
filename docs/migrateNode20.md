@@ -1,3 +1,5 @@
+> **ℹ️ Note**: While Node 20 is currently supported, we recommend migrating to **Node 24** for the latest features and long-term support. See [migrateNode24.md](migrateNode24.md) for the Node 24 migration guide.
+
 ## Table of content
 
 [Update `typescript`](#update-typescript)
@@ -128,10 +130,10 @@ If several handlers are specified in the `task.json` file, the highest one will 
 "minimumAgentVersion": "2.209.0"
 ```
 
-* [Agent version `3.232.1`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v3.232.1) is the first version that supports `Node20_1` handler. If you want to run the task using `Node20_1` handler for sure, set `minimumAgentVersion` to `3.232.1`.
+* [Agent version `4.248.0`](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v4.248.0) is the first version that supports `Node20_1` handler. If you want to run the task using at least `Node20_1` handler, set `minimumAgentVersion` to `4.248.0`.
 
 ```json
-"minimumAgentVersion": "3.232.1"
+"minimumAgentVersion": "4.248.0"
 ```
 
 ## Test the changes
