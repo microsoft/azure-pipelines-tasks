@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 263,
+    "Minor": 267,
     "Patch": 0
   },
   "satisfies": [
@@ -78,6 +78,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion"
+    },
+    {
+      "name": "checkForExistingVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkForExistingVersion",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkForExistingVersion",
+      "groupName": "advanced"
     },
     {
       "name": "includePreviewVersions",
