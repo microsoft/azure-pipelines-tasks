@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Hiermit werden Anmeldeinformationen für Azure Artifacts-Feeds und externe Maven-Repositorys angegeben.",
   "loc.instanceNameFormat": "Maven-Authentifizierung",
-  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Entra Workload ID-gesicherter Azure-DevOps Benutzer“",
+  "loc.input.label.workloadIdentityServiceConnection": "Dienstverbindung „Azure DevOps“",
   "loc.input.help.workloadIdentityServiceConnection": "Dies ist eine Dienstverbindung „Entra Workload ID-gesicherter Azure-DevOps Benutzer“ Wenn diese Option festgelegt ist, werden die eingegebenen mavenServiceConnections ignoriert.",
   "loc.input.label.artifactsFeeds": "Feeds",
   "loc.input.label.mavenServiceConnections": "Anmeldeinformationen für Repositorys außerhalb dieser Organisation/Sammlung",

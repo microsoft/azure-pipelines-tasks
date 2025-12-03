@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "Indica se la versione deve essere salvata come bozza (non pubblicata). Se è `false`, la versione verrà pubblicata.",
   "loc.input.label.isPreRelease": "Versione non definitiva",
   "loc.input.help.isPreRelease": "Indica se la versione deve essere contrassegnata come versione non definitiva.",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "Aggiungi log delle modifiche",
   "loc.input.help.addChangeLog": "Se è impostato su `true`, verrà generato un elenco di modifiche (commit e problemi) relativo alla versione corrente e all'ultima versione pubblicata e tale elenco verrà aggiunto alle note sulla versione.",
   "loc.input.label.changeLogCompareToRelease": "Confronta con",
