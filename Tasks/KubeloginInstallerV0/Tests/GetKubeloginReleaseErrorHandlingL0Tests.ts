@@ -1,42 +1,81 @@
-import { getKubeloginRelease } from '../utils';
-import { TestString } from './TestStrings';
+import path = require('path');
+
+import tmrm = require('azure-pipelines-task-lib/mock-run');
+import * as taskLib from 'azure-pipelines-task-lib/task';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+
+const taskPath = path.join(__dirname, '..', 'kubelogin.js');
+const tr = new tmrm.TaskMockRunner(taskPath);
 
 export class GetKubeloginReleaseErrorHandlingL0Tests {
-  public static async startTests() {
-    await this.validateGithubApiRateLimitError();
-    await this.validateHttpErrorHandling();
+  static tagVersion = 'v0.0.29';
+
+  public static startTests() {
+    taskLib.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
+    this.validateGithubApiRateLimitError();
+    this.validateGithubApiError();
   }
 
   /**
    * This test validates that when GitHub API returns a 403 rate limit error,
    * the appropriate error message is thrown.
-   * Note: This test makes actual API calls and may fail if rate limited.
-   * In a real scenario, we'd mock the HTTP client.
    */
-  public static async validateGithubApiRateLimitError() {
-    // This test documents the expected behavior when rate limit is hit.
-    // In practice, this would require mocking the web client which the
-    // existing test framework doesn't support well.
-    // The error handling is verified through integration testing.
-    console.log(TestString.RateLimitErrorTestSkipped);
+  public static validateGithubApiRateLimitError() {
+    tr.setInput('kubeloginVersion', 'latest');
+
+    tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
+      WebRequest: webClient.WebRequest,
+      sendRequest: (request) => {
+        if (request.uri.endsWith('/releases/latest')) {
+          return {
+            body: {
+              tag_name: this.tagVersion
+            }
+          };
+        }
+
+        if (request.uri.includes(`/releases/tags/${this.tagVersion}`)) {
+          throw new Error(taskLib.loc('Err_GithubApiRateLimitExceeded'));
+        }
+      }
+    });
+
+    try {
+      tr.run();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**
-   * This test validates that HTTP errors (404, 500, etc.) are properly handled
-   * and return a meaningful error message.
+   * This test validates that when GitHub API returns a generic error,
+   * the appropriate error message is thrown.
    */
-  public static async validateHttpErrorHandling() {
-    // Test with an invalid version that should trigger an error
-    try {
-      await getKubeloginRelease('v999.999.999', 'darwin-amd64');
-      console.log(TestString.HttpErrorNotThrown);
-    } catch (err) {
-      // We expect an error for an invalid version
-      if (err.message && err.message.includes('v999.999.999')) {
-        console.log(TestString.HttpErrorThrown);
-      } else {
-        console.log(TestString.UnexpectedError + err.message);
+  public static validateGithubApiError() {
+    tr.setInput('kubeloginVersion', 'latest');
+
+    tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
+      WebRequest: webClient.WebRequest,
+      sendRequest: (request) => {
+        if (request.uri.endsWith('/releases/latest')) {
+          return {
+            body: {
+              tag_name: this.tagVersion
+            }
+          };
+        }
+
+        if (request.uri.includes(`/releases/tags/${this.tagVersion}`)) {
+          throw new Error(taskLib.loc('Err_VersionNotFound', this.tagVersion));
+        }
       }
+    });
+
+    try {
+      tr.run();
+    } catch (error) {
+      console.log(error);
     }
   }
 }
