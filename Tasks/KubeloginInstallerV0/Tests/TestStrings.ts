@@ -25,4 +25,8 @@ export class TestString {
   public static readonly Err_ExtractionFailed = "Err_ExtractionFailed";
   public static readonly TaskSucceeded = 'task should have succeeded.';
   public static readonly TaskFailed = 'task should have failed.';
+  public static readonly RateLimitErrorTestSkipped = 'Rate limit error test skipped (requires mocking)';
+  public static readonly HttpErrorNotThrown = 'HTTP error was not thrown as expected';
+  public static readonly HttpErrorThrown = 'HTTP error was thrown correctly for invalid version';
+  public static readonly UnexpectedError = 'Unexpected error: ';
 }
