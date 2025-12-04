@@ -102,7 +102,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stderr": "Code attempted to configure project with unquoted project name! This should be skipped when SYSTEM_TEAMPROJECT is missing."
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },

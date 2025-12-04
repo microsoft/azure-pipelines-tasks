@@ -98,7 +98,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stderr": "Code attempted to configure organization when SYSTEM_COLLECTIONURI is missing! This should be skipped."
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },
