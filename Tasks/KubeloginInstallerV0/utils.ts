@@ -101,6 +101,15 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     addAuthorizationHeaderIfEnabled(request);
     const response = await webClient.sendRequest(request);
 
+    if (response['statusCode'] >= 400) {
+      if (response['statusCode'] === 403 && response['statusMessage'] === 'rate limit exceeded') {
+        throw new Error(taskLib.loc('Err_GithubApiRateLimitExceeded'));
+      }
+
+      taskLib.debug(response['statusMessage']);
+      throw Error(taskLib.loc('Err_VersionNotFound', origVersion));
+    }
+
     const releaseUrl: string =
       response.body['assets'].find(asset => {
         return asset.name.includes(releaseName);

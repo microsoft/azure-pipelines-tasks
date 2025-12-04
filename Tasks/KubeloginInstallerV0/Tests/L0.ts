@@ -41,6 +41,18 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
+  it('should handle HTTP errors correctly', (done: Mocha.Done) => {
+    const taskPath = path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+
+    tr.run();
+
+    assert(tr.stdOutContained(TestString.RateLimitErrorTestSkipped), 'should have printed: ' + TestString.RateLimitErrorTestSkipped);
+    assert(tr.stdOutContained(TestString.HttpErrorThrown), 'should have printed: ' + TestString.HttpErrorThrown);
+
+    done();
+  }).timeout(20000);
+
   it('should resolve a platform', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'ResolvePlatformL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
