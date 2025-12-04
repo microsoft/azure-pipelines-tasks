@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "Speicherort der Daten-API",
   "loc.input.help.data_api_location": "Verzeichnisspeicherort der Daten-API-Quelldateien relativ zum Arbeitsverzeichnis",
   "loc.input.label.azure_access_token": "Azure-Zugriffstoken",
-  "loc.input.help.azure_access_token": "Zugriffstoken zum Authentifizieren und Autorisieren der Bereitstellung",
+  "loc.input.help.azure_access_token": "Zugriffstoken, das für die Bereitstellung verwendet wird. Nicht erforderlich, wenn es als Variable übergeben wird",
   "loc.input.label.default_hostname": "Standardhostname",
-  "loc.input.help.default_hostname": "Standardhostname der App"
+  "loc.input.help.default_hostname": "Standard-Hostname für die Bereitstellung. Nicht erforderlich, wenn sie als Umgebungsvariable übergeben wird"
 }
