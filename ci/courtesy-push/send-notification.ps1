@@ -2,12 +2,14 @@
 # Body of message is compiled as Office 365 connector card
 # More details about cards - https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
 
-$wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/25317/Release-of-pipeline-tasks)"
+$wikiLink = "[Wiki](https://mseng.visualstudio.com/AzureDevOps/_wiki/wikis/AzureDevOps.wiki/49963/Task-Release-Process)"
 
 if ($env:PR_ID) {
     $pullRequestLink = "[PR $env:PR_ID]($env:PR_LINK)"
+    $pipelineLink = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&_a=summary"
+    $buildLink = "[Build $env:BUILD_BUILDID]($pipelineLink)"
     $title = "Courtesy Bump of Tasks PR created - ID $env:PR_ID"
-    $text = "Created Courtesy Bump of Tasks PR. Please review and approve/merge $pullRequestLink. Related article in $wikiLink."
+    $text = "Action required: Review and merge $pullRequestLink created by $buildLink. Refer to $wikiLink for the release process."
     $themeColor = "#FFFF00"
 }
 else {
