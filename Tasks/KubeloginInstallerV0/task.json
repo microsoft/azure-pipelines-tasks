@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 264,
+    "Minor": 267,
     "Patch": 0
   },
   "demands": [],
@@ -53,21 +53,23 @@
     }
   },
   "messages": {
-    "Info_VerifyKubeloginInstallation": "Verifying kubelogin installation...",
+    "Err_ExtractionFailed": "Failed to extract package with error %s",
+    "Err_GithubApiRateLimitExceeded": "GitHub API rate limit exceeded. To increase the rate limit, provide a GitHub connection via the gitHubConnection input and set the USE_AUTHORIZATION_FOR_API_CALL variable.",
+    "Err_LatestTagNotFound": "Could not retrieve the latest kubelogin version tag from GitHub",
+    "Err_NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+    "Err_VersionNotFound": "Kubelogin version %s was not found",
+    "Info_CachingTool": "Caching kubelog version: %s",
+    "Info_DownloadingFailed": "Failed to download kubelogin, exception %s",
+    "Info_KubeloginDownloading": "Downloading kubelogin",
+    "Info_KubeloginPlatform": "Kubelogin platform:    %s",
+    "Info_KubeloginRelease": "Kubelogin release:     %s",
+    "Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
+    "Info_KubeloginVersion": "Kubelogin version:     %s",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_ToolDownloaded": "Release successfully downloaded to %s",
     "Info_UsingToolPath": "Using tool path: %s",
     "Info_UsingVersion": "Using version: %s",
-    "Info_CachingTool": "Caching kubelog version: %s",
-    "Info_ToolDownloaded": "Release successfully downloaded to %s",
-    "Info_KubeloginRelease": "Kubelogin release:     %s",
-    "Info_KubeloginPlatform": "Kubelogin platform:    %s",
-    "Info_KubeloginVersion": "Kubelogin version:     %s",
-    "Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
-    "Info_DownloadingFailed": "Failed to download kubelogin, exception %s",
-    "Err_ExtractionFailed": "Failed to extract package with error %s",
-    "Err_VersionNotFound": "Kubelogin version %s was not found",
-    "Err_NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-    "SucceedMsg": "Kubelogin has been successfully installed",
-    "Info_KubeloginDownloading": "Downloading kubelogin"
+    "Info_VerifyKubeloginInstallation": "Verifying kubelogin installation...",
+    "SucceedMsg": "Kubelogin has been successfully installed"
   }
 }
