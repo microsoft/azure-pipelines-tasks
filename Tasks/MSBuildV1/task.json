@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 267,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "msbuild"
@@ -188,6 +188,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "msbuild.js",
       "argumentFormat": ""
     }
