@@ -94,6 +94,8 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/BicepDeployV0/  @azure/bicep-admins
+
 # DRI rotation: App Service (Web Apps)
 Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
