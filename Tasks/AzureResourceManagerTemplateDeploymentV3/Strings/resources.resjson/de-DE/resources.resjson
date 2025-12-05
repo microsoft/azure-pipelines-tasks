@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "Das Authentifizierungsschema „%s“ wird nicht unterstützt.",
   "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s",
   "loc.messages.BicepParamBuildFailed": "Fehler bei \"az bicep build-param\". Fehler: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI Version muss >= 2.47.0 sein, um die .bicepparam-Datei zu verwenden."
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI Version muss >= 2.47.0 sein, um die .bicepparam-Datei zu verwenden.",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "In der angegebenen Metadatendatei „%s“ fehlen die Metadaten des Parameters „%s“."
 }

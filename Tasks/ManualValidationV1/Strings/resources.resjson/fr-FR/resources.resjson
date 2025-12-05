@@ -12,5 +12,5 @@
   "loc.input.label.instructions": "Instructions",
   "loc.input.help.instructions": "Ces instructions sont montrées à l'utilisateur pour lui permettre de reprendre ou de rejeter la validation manuelle. En fonction de ces instructions, l'utilisateur prend une décision en connaissance de cause sur cette validation manuelle.",
   "loc.input.label.onTimeout": "Au délai d'expiration",
-  "loc.input.help.onTimeout": "Rejetez ou reprenez cette validation manuelle automatiquement après la fin du délai d'expiration spécifié ou après 30 jours, selon la valeur la plus proche."
+  "loc.input.help.onTimeout": "Rejetez ou reprenez cette validation manuelle automatiquement après la fin du délai d'expiration spécifié ou après 30 jours, selon la valeur la plus proche."
 }

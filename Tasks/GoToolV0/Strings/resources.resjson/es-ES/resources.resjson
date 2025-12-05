@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "Un valor personalizado para la variable de entorno GOPATH.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "Un valor personalizado para la variable de entorno GOBIN.",
+  "loc.input.label.goDownloadUrl": "Dirección URL de descarga de Go",
+  "loc.input.help.goDownloadUrl": "Dirección URL para descargar los archivos binarios de Go. Solo se admiten https://go.dev/dl (oficial) y https://aka.ms/golang/release/latest (Compilación de Microsoft). Si se omite, se usará la dirección URL oficial de descarga de Go (https://go.dev/dl). Este parámetro tiene prioridad sobre la variable de entorno GOTOOL_GODOWNLOADURL si se establecen ambos.",
   "loc.messages.FailedToDownload": "No se pudo descargar la versión de Go %s. Compruebe que la versión es válida y resuelva los otros problemas. Error: %s",
   "loc.messages.TempDirNotSet": "Se esperaba que la variable de entorno \"Agent.TempDirectory\" estuviera configurada."
 }

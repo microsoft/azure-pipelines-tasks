@@ -50,7 +50,6 @@
   "loc.input.help.checkstyleAnalysisEnabled": "既定の Sun チェックを使用して Checkstyle ツールを実行します。結果はビルド成果物としてアップロードされます。",
   "loc.input.label.findbugsAnalysisEnabled": "FindBugs の実行",
   "loc.input.help.findbugsAnalysisEnabled": "FindBugs 静的分析ツールを使用して、コード内のバグを検索します。結果はビルド成果物としてアップロードされます。Gradle 6.0 ではこのプラグインは削除されました。代わりに、spotbug プラグインを使用してください。[詳細情報] (https://docs.gradle.org/current/userguide/upgrading_version_5.html # the_findbugs_plugin_has_been_removed)",
-  "loc.input.label.pmdAnalysisEnabled": "PMD の実行",
   "loc.input.help.pmdAnalysisEnabled": "PMD Java スタティック分析ツールを使用して、コード内のバグを調べます。結果はビルド成果物としてアップロードされます。",
   "loc.input.label.spotBugsAnalysisEnabled": "Run SpotBugs",
   "loc.input.help.spotBugsAnalysisEnabled": "このオプションを有効にすると、spotBugs が実行されます。このプラグインは Gradle version 5.6 以降で動作します。[詳細情報] (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
