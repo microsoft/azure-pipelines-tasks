@@ -25,6 +25,4 @@ export class TestString {
   public static readonly Err_ExtractionFailed = "Err_ExtractionFailed";
   public static readonly TaskSucceeded = 'task should have succeeded.';
   public static readonly TaskFailed = 'task should have failed.';
-  public static readonly RateLimitErrorThrown = 'GitHub API rate limit exceeded. To increase the rate limit, provide a GitHub connection via the gitHubConnection input and set the USE_AUTHORIZATION_FOR_API_CALL variable.';
-  public static readonly HttpErrorThrown = 'Kubelogin version v0.0.29 was not found';
 }
