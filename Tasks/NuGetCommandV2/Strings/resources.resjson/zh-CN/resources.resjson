@@ -136,5 +136,7 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失败，提供了退出代码(%s)和错误(%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。"
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。",
+  "loc.messages.LIB_WhichNotFound_Linux": "找不到可执行文件: \"%s\"。请确认文件路径是否存在，或该文件是否位于 PATH 环境变量指定的目录中。另请检查文件模式以验证文件是否可执行。",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "任务失败，因为使用的是 Ubuntu 24.04 或更高版本且未安装 Mono。有关详细信息，请参阅 https://aka.ms/nuget-task-mono。"
 }

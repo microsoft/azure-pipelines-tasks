@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613747)、または [NuGet のドキュメントを参照](https://docs.microsoft.com/nuget/)",
   "loc.description": "NuGet パッケージを復元、パック、プッシュするか、NuGet コマンドを実行します。NuGet.org および Azure Artifacts や MyGet のような認証されたフィードがサポートされます。Nuget.exe を使用して .NET Framework アプリと連携します。.NET Core および .NET Standard アプリの場合は、.NET Core タスクをご使用ください。",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.group.displayName.restoreAuth": "フィードと認証",
@@ -136,5 +136,7 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "終了コード (%s) とエラー (%s) で、Nuget コマンドが失敗しました",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。"
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。",
+  "loc.messages.LIB_WhichNotFound_Linux": "実行可能ファイル '%s' が見つかりません。ファイル パスが存在すること、または PATH 環境変数で指定されたディレクトリ内にファイルがあることを確認してください。さらに、ファイルが実行可能であることをファイル モードで確認してください。",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Ubuntu 24.04 以降を使用していて mono をインストールしていないため、タスクが失敗しました。詳細については、https://aka.ms/nuget-task-mono を参照してください。"
 }
