@@ -55,6 +55,7 @@
   "messages": {
     "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
     "Err_GithubApiRateLimitExceeded": "ms-resource:loc.messages.Err_GithubApiRateLimitExceeded",
+    "Err_LatestTagNotFound": "ms-resource:loc.messages.Err_LatestTagNotFound",
     "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
     "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
     "Info_CachingTool": "ms-resource:loc.messages.Info_CachingTool",

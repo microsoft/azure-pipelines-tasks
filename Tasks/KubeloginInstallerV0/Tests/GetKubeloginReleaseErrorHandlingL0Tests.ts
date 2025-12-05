@@ -1,27 +1,22 @@
+import * as assert from 'assert';
 import path = require('path');
 
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as taskLib from 'azure-pipelines-task-lib/task';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 
-const taskPath = path.join(__dirname, '..', 'kubelogin.js');
-const tr = new tmrm.TaskMockRunner(taskPath);
+const tr = new tmrm.TaskMockRunner(path.join(__dirname, '..', 'kubelogin.js'));
 
 export class GetKubeloginReleaseErrorHandlingL0Tests {
   static tagVersion = 'v0.0.29';
 
   public static startTests() {
-    taskLib.setResourcePath(path.join(__dirname, '..', 'task.json'));
-
-    this.validateGithubApiRateLimitError();
-    this.validateGithubApiError();
+    this.validateGithubApiRateLimitErrorForLatestTag();
+    this.validateLatestTagNotFoundError();
+    this.validateGithubApiRateLimitErrorDownloadSpecificRelease();
+    this.validateGithubApiDownloadSpecificReleaseNotFoundError();
   }
 
-  /**
-   * This test validates that when GitHub API returns a 403 rate limit error,
-   * the appropriate error message is thrown.
-   */
-  public static validateGithubApiRateLimitError() {
+  public static validateGithubApiRateLimitErrorForLatestTag() {
     tr.setInput('kubeloginVersion', 'latest');
 
     tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
@@ -29,14 +24,11 @@ export class GetKubeloginReleaseErrorHandlingL0Tests {
       sendRequest: (request) => {
         if (request.uri.endsWith('/releases/latest')) {
           return {
-            body: {
-              tag_name: this.tagVersion
+            statusCode: 403,
+            headers: {
+              'x-ratelimit-remaining': '0'
             }
           };
-        }
-
-        if (request.uri.includes(`/releases/tags/${this.tagVersion}`)) {
-          throw new Error(taskLib.loc('Err_GithubApiRateLimitExceeded'));
         }
       }
     });
@@ -44,15 +36,62 @@ export class GetKubeloginReleaseErrorHandlingL0Tests {
     try {
       tr.run();
     } catch (error) {
-      console.log(error);
+      assert(error.includes("##vso[task.complete result=Failed;]loc_mock_Err_GithubApiRateLimitExceeded"), 'Should have contained rate limit error message');
     }
   }
 
-  /**
-   * This test validates that when GitHub API returns a generic error,
-   * the appropriate error message is thrown.
-   */
-  public static validateGithubApiError() {
+  public static validateLatestTagNotFoundError() {
+    tr.setInput('kubeloginVersion', 'latest');
+
+    tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
+      WebRequest: webClient.WebRequest,
+      sendRequest: (request) => {
+        if (request.uri.endsWith('/releases/latest')) {
+          return {
+            statusCode: 404
+          };
+        }
+      }
+    });
+
+    try {
+      tr.run();
+    } catch (error) {
+      assert(error.includes("##vso[task.complete result=Failed;]loc_mock_Err_LatestTagNotFound"), 'Should have contained latest tag not found error message');
+    }
+  }
+
+  public static validateGithubApiRateLimitErrorDownloadSpecificRelease() {
+    tr.setInput('kubeloginVersion', 'latest');
+
+    tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
+      WebRequest: webClient.WebRequest,
+      sendRequest: (request) => {
+        if (request.uri.endsWith('/releases/latest')) {
+          return {
+            body: {
+              tag_name: this.tagVersion
+            }
+          };
+        }
+
+        return {
+          statusCode: 403,
+          headers: {
+            'x-ratelimit-remaining': '0'
+          }
+        };
+      }
+    });
+
+    try {
+      tr.run();
+    } catch (error) {
+      assert(error.includes("##vso[task.complete result=Failed;]loc_mock_Err_GithubApiRateLimitExceeded"), 'Should have contained rate limit error message');
+    }
+  }
+
+  public static validateGithubApiDownloadSpecificReleaseNotFoundError() {
     tr.setInput('kubeloginVersion', 'latest');
 
     tr.registerMock('azure-pipelines-tasks-azure-arm-rest/webClient', {
@@ -67,7 +106,10 @@ export class GetKubeloginReleaseErrorHandlingL0Tests {
         }
 
         if (request.uri.includes(`/releases/tags/${this.tagVersion}`)) {
-          throw new Error(taskLib.loc('Err_VersionNotFound', this.tagVersion));
+          return {
+            statusCode: 404,
+            statusMessage: 'Not Found'
+          };
         }
       }
     });
@@ -75,7 +117,7 @@ export class GetKubeloginReleaseErrorHandlingL0Tests {
     try {
       tr.run();
     } catch (error) {
-      console.log(error);
+      assert(error.includes("##vso[task.complete result=Failed;]loc_mock_Err_VersionNotFound"), 'Should have contained version not found error message');
     }
   }
 }

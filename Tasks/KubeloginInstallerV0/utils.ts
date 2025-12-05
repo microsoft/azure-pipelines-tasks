@@ -68,6 +68,16 @@ export async function getLatestVersionTag(): Promise<string> {
 
   addAuthorizationHeaderIfEnabled(request);
   const response = await webClient.sendRequest(request);
+
+  if (response.statusCode >= 400) {
+    if ((response.statusCode === 403 || response.statusCode === 429) && response.headers['x-ratelimit-remaining'] <= 0) {
+      throw new Error(taskLib.loc('Err_GithubApiRateLimitExceeded'));
+    }
+
+    taskLib.debug(response.statusMessage);
+    throw Error(taskLib.loc('Err_LatestTagNotFound'));
+  }
+
   return response.body['tag_name'];
 }
 
@@ -101,12 +111,11 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     addAuthorizationHeaderIfEnabled(request);
     const response = await webClient.sendRequest(request);
 
-    if (response['statusCode'] >= 400) {
-      if (response['statusCode'] === 403 && response['statusMessage'] === 'rate limit exceeded') {
+    if (response.statusCode >= 400) {
+      if ((response.statusCode === 403 || response.statusCode === 429) && response.headers['x-ratelimit-remaining'] <= 0) {
         throw new Error(taskLib.loc('Err_GithubApiRateLimitExceeded'));
       }
-
-      taskLib.debug(response['statusMessage']);
+      taskLib.debug(response.statusMessage);
       throw Error(taskLib.loc('Err_VersionNotFound', origVersion));
     }
 
