@@ -1,0 +1,168 @@
+{
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
+  "friendlyName": "Universal packages",
+  "description": "Download or publish Universal Packages",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages)",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 267,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Universal $(command)",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "Command",
+      "defaultValue": "download",
+      "helpMarkDown": "The Universal Package command to run.",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "options": {
+        "download": "Download",
+        "publish": "Publish"
+      }
+    },
+    {
+      "name": "adoServiceConnection",
+      "type": "string",
+      "label": "Azure DevOps Service Connection",
+      "required": false,
+      "helpMarkDown": "Optional. The name of the Azure DevOps Service Connection to use. If not set, build identity is used."
+    },
+    {
+      "name": "organization",
+      "type": "string",
+      "label": "Organization",
+      "required": true,
+      "helpMarkDown": "The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg)."
+    },
+    {
+      "name": "feed",
+      "type": "string",
+      "label": "Feed",
+      "required": true,
+      "helpMarkDown": "The feed name. For project-scoped feeds, use 'project/feed' format."
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "Package name",
+      "required": true,
+      "helpMarkDown": "The name of the Universal Package. Package names must be lower case and can only use letters, numbers, and dashes(-)."
+    },
+    {
+      "name": "packageVersion",
+      "type": "string",
+      "label": "Package version",
+      "required": true,
+      "helpMarkDown": "The version of the package. For downloads, this can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2."
+    },
+    {
+      "name": "directory",
+      "type": "filePath",
+      "label": "Directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "For downloads: folder path where the package's contents will be downloaded. For publish: path to the directory containing files to publish.",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "packageDescription",
+      "type": "string",
+      "label": "Description",
+      "defaultValue": "",
+      "helpMarkDown": "Description of the contents of this package and/or the changes made in this version of the package.",
+      "required": "false",
+      "visibleRule": "command = publish"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "Verbosity",
+      "defaultValue": "None",
+      "helpMarkDown": "Specifies the amount of detail displayed in the output.",
+      "required": "false",
+      "options": {
+        "None": "None",
+        "Trace": "Trace",
+        "Debug": "Debug",
+        "Information": "Information",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      }
+    }
+  ],
+
+  "execution": {
+    "Node10": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Debug_AcquiringConnectionData": "Acquiring connection data for packaging service discovery",
+    "Debug_ArtifactToolPath": "Artifact tool path: %s",
+    "Debug_ConnectionDataAcquired": "Successfully acquired connection data for packaging service",
+    "Debug_ConnectionDataFailed": "Failed to acquire connection data, will use fallback service URI",
+    "Debug_DownloadOperation": "Download operation - Package: %s@%s, Target: %s",
+    "Debug_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+    "Debug_GettingArtifactTool": "Getting artifact tool",
+    "Debug_NoProvenanceSession": "No provenance session available, using original feed ID",
+    "Debug_OrgScopedFeed": "Organization-scoped feed detected - Feed: %s",
+    "Debug_ParsedFeedInfo": "Parsed feed info - Service URI: %s, Feed: %s",
+    "Debug_ProjectScopedFeed": "Project-scoped feed detected - Project: %s, Feed: %s",
+    "Debug_PublishOperation": "Publish operation - Package: %s@%s, Source: %s",
+    "Debug_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
+    "Debug_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+    "Debug_SettingUpAuth": "Setting up authentication",
+    "Debug_TelemetryInitFailed": "Unable to log Universal Packages task init telemetry. Err:( %s )",
+    "Debug_TelemetryResultFailed": "Unable to log telemetry result. Err:( %s )",
+    "Debug_UsingArtifactToolDownload": "Using artifact tool to download the package",
+    "Debug_UsingArtifactToolPublish": "Using artifact tool to publish the package",
+    "Debug_UsingBuildServiceCreds": "Using build service credentials for authentication",
+    "Debug_UsingFallbackUri": "Using fallback service URI for packaging operations",
+    "Debug_UsingOptimizedEndpoint": "Using optimized packaging service endpoint from service discovery",
+    "Debug_UsingPackagingLocation": "Using packaging location: %s",
+    "Debug_UsingProvenanceSession": "Using provenance session ID: %s",
+    "Debug_UsingWifAuth": "Using WIF authentication with service connection: %s",
+    "Debug_WifTokenObtained": "Successfully obtained WIF token for authentication",
+    "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
+    "Error_CommandNotRecognized": "The command %s was not recognized.",
+    "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
+    "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
+    "Error_PackagesFailedToDownload": "Packages failed to download",
+    "Error_PackagesFailedToPublish": "Packages failed to publish",
+    "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+    "Error_UnexpectedErrorArtifactToolPublish": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
+    "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
+    "Success_PackagesDownloaded": "Package were downloaded successfully",
+    "Success_PackagesPublished": "Packages were published successfully",
+    "Warning_BuildIdentityFeedHint": "Check feed '%s' permissions: %s",
+    "Warning_BuildIdentityOperationHint": "Operation failed using identity '%s' (%s).",
+    "Warning_WifAuthFailed": "WIF authentication failed for service connection %s, falling back to build service token: %s",
+    "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection %s, falling back to build service token"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 267,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "download",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "options": {
+        "download": "Download",
+        "publish": "Publish"
+      }
+    },
+    {
+      "name": "adoServiceConnection",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.adoServiceConnection",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection"
+    },
+    {
+      "name": "organization",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.organization",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.organization"
+    },
+    {
+      "name": "feed",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feed",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feed"
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "packageVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageVersion",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageVersion"
+    },
+    {
+      "name": "directory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.directory",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "packageDescription",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageDescription",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageDescription",
+      "required": "false",
+      "visibleRule": "command = publish"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": "false",
+      "options": {
+        "None": "None",
+        "Trace": "Trace",
+        "Debug": "Debug",
+        "Information": "Information",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Debug_AcquiringConnectionData": "ms-resource:loc.messages.Debug_AcquiringConnectionData",
+    "Debug_ArtifactToolPath": "ms-resource:loc.messages.Debug_ArtifactToolPath",
+    "Debug_ConnectionDataAcquired": "ms-resource:loc.messages.Debug_ConnectionDataAcquired",
+    "Debug_ConnectionDataFailed": "ms-resource:loc.messages.Debug_ConnectionDataFailed",
+    "Debug_DownloadOperation": "ms-resource:loc.messages.Debug_DownloadOperation",
+    "Debug_Downloading": "ms-resource:loc.messages.Debug_Downloading",
+    "Debug_GettingArtifactTool": "ms-resource:loc.messages.Debug_GettingArtifactTool",
+    "Debug_NoProvenanceSession": "ms-resource:loc.messages.Debug_NoProvenanceSession",
+    "Debug_OrgScopedFeed": "ms-resource:loc.messages.Debug_OrgScopedFeed",
+    "Debug_ParsedFeedInfo": "ms-resource:loc.messages.Debug_ParsedFeedInfo",
+    "Debug_ProjectScopedFeed": "ms-resource:loc.messages.Debug_ProjectScopedFeed",
+    "Debug_PublishOperation": "ms-resource:loc.messages.Debug_PublishOperation",
+    "Debug_Publishing": "ms-resource:loc.messages.Debug_Publishing",
+    "Debug_RetrievingArtifactToolUri": "ms-resource:loc.messages.Debug_RetrievingArtifactToolUri",
+    "Debug_SettingUpAuth": "ms-resource:loc.messages.Debug_SettingUpAuth",
+    "Debug_TelemetryInitFailed": "ms-resource:loc.messages.Debug_TelemetryInitFailed",
+    "Debug_TelemetryResultFailed": "ms-resource:loc.messages.Debug_TelemetryResultFailed",
+    "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
+    "Debug_UsingArtifactToolPublish": "ms-resource:loc.messages.Debug_UsingArtifactToolPublish",
+    "Debug_UsingBuildServiceCreds": "ms-resource:loc.messages.Debug_UsingBuildServiceCreds",
+    "Debug_UsingFallbackUri": "ms-resource:loc.messages.Debug_UsingFallbackUri",
+    "Debug_UsingOptimizedEndpoint": "ms-resource:loc.messages.Debug_UsingOptimizedEndpoint",
+    "Debug_UsingPackagingLocation": "ms-resource:loc.messages.Debug_UsingPackagingLocation",
+    "Debug_UsingProvenanceSession": "ms-resource:loc.messages.Debug_UsingProvenanceSession",
+    "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
+    "Debug_WifTokenObtained": "ms-resource:loc.messages.Debug_WifTokenObtained",
+    "Error_AuthenticationFailed": "ms-resource:loc.messages.Error_AuthenticationFailed",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
+    "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
+    "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
+    "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",
+    "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Error_UnexpectedErrorArtifactToolPublish": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolPublish",
+    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
+    "Success_PackagesDownloaded": "ms-resource:loc.messages.Success_PackagesDownloaded",
+    "Success_PackagesPublished": "ms-resource:loc.messages.Success_PackagesPublished",
+    "Warning_BuildIdentityFeedHint": "ms-resource:loc.messages.Warning_BuildIdentityFeedHint",
+    "Warning_BuildIdentityOperationHint": "ms-resource:loc.messages.Warning_BuildIdentityOperationHint",
+    "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
+    "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
+  }
+}
