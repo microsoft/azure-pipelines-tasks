@@ -176,8 +176,7 @@ function performNpmAudit(taskPath) {
     try {
         const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
             stdio: 'pipe',
-            encoding: 'utf8',
-            shell: true
+            encoding: 'utf8'
         });
 
         if (auditResult.status) {
@@ -341,7 +340,8 @@ var run = function (cl, inheritStreams, noHeader, throwOnError) {
     }
 
     var options = {
-        stdio: inheritStreams ? 'inherit' : 'pipe'
+        stdio: inheritStreams ? 'inherit' : 'pipe',
+        shell: true
     };
     var rc = 0;
     var output;
