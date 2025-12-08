@@ -59,6 +59,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az extension add -n azure-devops -y": {
             "code": 0,
             "stdout": "Azure DevOps CLI extension installed"
+        },
+        "az devops configure --defaults project='' organization=": {
+            "code": 0,
+            "stdout": "configuration cleared"
         }
     },
     "exists": {
