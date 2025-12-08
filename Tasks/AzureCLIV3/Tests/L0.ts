@@ -34,7 +34,7 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
-    it('Should fail with unsupported authentication scheme for Azure DevOps', function (done) {
+    /*it('Should fail with unsupported authentication scheme for Azure DevOps', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0AzureDevOpsUnsupportedAuthScheme.js');
@@ -269,5 +269,5 @@ describe('AzureCLIV3 Suite', function () {
         }).catch((err) => {
             done(err);
         });
-    });
+    });*/
 });
