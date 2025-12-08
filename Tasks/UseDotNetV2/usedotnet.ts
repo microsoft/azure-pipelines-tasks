@@ -1,7 +1,7 @@
 "use strict";
 import * as path from 'path';
 
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";

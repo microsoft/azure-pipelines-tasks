@@ -2,7 +2,7 @@
 import * as path from 'path';
 import * as semver from 'semver';
 
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 import * as toolLib from 'azure-pipelines-tool-lib';
 
 import { VersionInfo } from "./models"

@@ -1,8 +1,8 @@
 "use strict";
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
-var mockery = require('azure-pipelines-task-lib/lib-mocker');
+var mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
 
 mockery.enable({
     useCleanCache: true,
@@ -20,7 +20,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
-mockery.registerMock('azure-pipelines-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
     osType: function () { return process.env["__ostype__"]; },
     which: function (tool: string, check: boolean) {
         if (tool == 'powershell') {

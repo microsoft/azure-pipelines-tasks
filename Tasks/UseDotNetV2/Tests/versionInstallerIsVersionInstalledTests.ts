@@ -1,8 +1,8 @@
 "use strict";
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 import * as path from 'path';
 import { Constants } from "../versionutilities";
-let mockery = require('azure-pipelines-task-lib/lib-mocker');
+let mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
 
 const version = "2.1.1";
 const installationPath: string = "installationPath"
@@ -27,7 +27,7 @@ let sdkFolderExists = true;
 let sdkFileExists = true;
 let runtimeFolderExists = true;
 let runtimeFileExists = true;
-mockery.registerMock('azure-pipelines-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
     exist: function (elementPath: string) {
         if (elementPath == path.join(installationPath, Constants.relativeSdkPath, version)) {
             return sdkFolderExists;

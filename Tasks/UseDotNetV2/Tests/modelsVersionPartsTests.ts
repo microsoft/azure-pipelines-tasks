@@ -1,6 +1,6 @@
 'use strict';
 import { VersionParts } from "../models";
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 
 if (process.env["__invalid_versionparts__"] == "true") {
     let throwCount: number = 0;

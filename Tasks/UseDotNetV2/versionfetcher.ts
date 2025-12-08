@@ -3,8 +3,8 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as trm from 'azure-pipelines-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as trm from 'azure-pipelines-task-lib-nr-test/toolrunner';
 
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");

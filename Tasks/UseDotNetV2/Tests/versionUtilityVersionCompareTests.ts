@@ -1,6 +1,6 @@
 'use strict';
 import * as versionutilities from "../versionutilities";
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 
 if (process.env["__non_explicit__"] == "true") {
     let throwCount: number = 0;

@@ -1,6 +1,6 @@
 'use strict';
 import { VersionInfo } from "../models";
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib-nr-test/task';
 
 if (process.env["__sdk_runtime__"] == "true") {
     let versionInfo = new VersionInfo(JSON.parse(`{"version":"2.1.1", "files": []}`), "sdk");
