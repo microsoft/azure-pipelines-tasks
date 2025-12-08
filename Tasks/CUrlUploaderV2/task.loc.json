@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 246,
-    "Patch": 1
+    "Minor": 267,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -118,6 +118,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "curluploader.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "curluploader.js",
       "argumentFormat": ""
     }
