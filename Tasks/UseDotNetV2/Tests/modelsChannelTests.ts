@@ -1,6 +1,6 @@
 'use strict';
 import { Channel } from "../models";
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 if (process.env["__invalid_channelobject__"] == "true") {
     let throwCount: number = 0;

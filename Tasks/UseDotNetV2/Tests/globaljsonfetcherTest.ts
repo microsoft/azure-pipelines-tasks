@@ -1,11 +1,11 @@
 "use strict";
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { GlobalJson } from "../globaljsonfetcher";
 import { Buffer } from "buffer";
 import { VersionInfo } from '../models';
 import { Promise } from 'q';
 import fs = require('fs');
-var mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 
 const workingDir: string = "work/";
 const validRootGlobalJson = workingDir + "global.json";
@@ -25,7 +25,7 @@ mockery.enable({
     warnOnUnregistered: false
 });
 
-mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     findMatch: function (path: string, searchPattern: string): string[] {
         if (searchPattern != "**/global.json") {
             return [];

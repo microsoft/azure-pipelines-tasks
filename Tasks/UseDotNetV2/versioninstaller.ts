@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from "fs";
 import * as url from "url";
 
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";

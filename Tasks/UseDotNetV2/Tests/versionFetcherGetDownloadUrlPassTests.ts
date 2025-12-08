@@ -1,8 +1,8 @@
 "use strict";
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
-var mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 var osType = "win";
 
 mockery.enable({
@@ -21,7 +21,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
-mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     osType: function () { return osType; },
     which: function (tool: string, check: boolean) {
         if (tool == 'powershell') {

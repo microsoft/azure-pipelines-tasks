@@ -1,6 +1,6 @@
 "use strict";
 import * as fileSystem from "fs";
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as JSON5 from 'json5';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInfo } from "./models";

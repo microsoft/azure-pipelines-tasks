@@ -1,12 +1,12 @@
 "use strict";
 import * as os from 'os';
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
 import { setFlagsFromString } from 'v8';
 import fs = require('fs');
 
-let mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
+let mockery = require('azure-pipelines-task-lib/lib-mocker');
 let osType = "win";
 
 //setup mocks
@@ -35,7 +35,7 @@ mockery.registerMock('fs', {
     }
 });
 
-mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     getHttpProxyConfiguration: function () { return ""; },
     getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (resourcePath) { return; },

@@ -1,13 +1,13 @@
 "use strict";
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
-var mockery = require('azure-pipelines-task-lib-nr-test/lib-mocker');
+import * as tl from 'azure-pipelines-task-lib/task';
+var mockery = require('azure-pipelines-task-lib/lib-mocker');
 mockery.enable({
     useCleanCache: true,
     warnOnReplace: false,
     warnOnUnregistered: false
 });
 
-mockery.registerMock('azure-pipelines-task-lib-nr-test/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (path: string) { tl.debug(tl.loc("inexist")); return false; },
     mkdirP: function (path: string) {
         tl.debug(tl.loc("inmkdirp"))

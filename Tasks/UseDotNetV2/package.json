@@ -1,6 +1,6 @@
 {
   "name": "usedotnet",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Use .Net Core",
   "main": "usedotnet.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "@types/mocha": "^5.2.6",
     "@types/node": "^20.3.1",
     "@types/semver": "6.0.0",
-    "azure-pipelines-task-lib-nr-test": "npm:azure-pipelines-task-lib-nr-test@5.2.3",
+    "azure-pipelines-task-lib": "npm:azure-pipelines-task-lib-nr-test@5.2.3",
     "azure-pipelines-tasks-packaging-common": "^3.230.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-pipelines-tool-lib": "^2.0.10",

@@ -2,7 +2,7 @@
 import * as semver from "semver";
 import * as url from "url";
 
-import * as tl from 'azure-pipelines-task-lib-nr-test/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as utils from "./versionutilities";
 

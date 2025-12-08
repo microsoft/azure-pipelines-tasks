@@ -1,8 +1,8 @@
 import * as assert from 'assert';
-import * as mocktest from 'azure-pipelines-task-lib-nr-test/mock-test';
+import * as mocktest from 'azure-pipelines-task-lib/mock-test';
 import * as os from 'os';
 import * as path from 'path';
-import mockrun = require('azure-pipelines-task-lib-nr-test/mock-run');
+import mockrun = require('azure-pipelines-task-lib/mock-run');
 
 describe('CopyFiles L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

@@ -1,6 +1,6 @@
 {
   "name": "vsts-copyfiles-task",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Azure Pipelines Copy Files Task",
   "main": "copyfiles.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "@types/node": "^20.11.0",
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib-nr-test": "npm:azure-pipelines-task-lib-nr-test@5.2.3"
+    "azure-pipelines-task-lib": "npm:azure-pipelines-task-lib-nr-test@5.2.3"
   },
   "devDependencies": {
     "typescript": "5.1.6"

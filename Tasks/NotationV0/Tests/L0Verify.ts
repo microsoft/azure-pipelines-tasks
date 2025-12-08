@@ -1,4 +1,4 @@
-import * as tmrm from 'azure-pipelines-task-lib-nr-test/mock-run';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 import os = require('os');
 

@@ -1,6 +1,6 @@
 import fs = require('fs');
-import mockanswer = require('azure-pipelines-task-lib-nr-test/mock-answer');
-import mockrun = require('azure-pipelines-task-lib-nr-test/mock-run');
+import mockanswer = require('azure-pipelines-task-lib/mock-answer');
+import mockrun = require('azure-pipelines-task-lib/mock-run');
 import os = require('os');
 import path = require('path');
 
