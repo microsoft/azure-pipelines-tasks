@@ -58,6 +58,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
+        },
         "az extension show --name azure-devops": {
             "code": 1,
             "stdout": "Extension 'azure-devops' is not installed."
@@ -102,7 +106,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stderr": "Code attempted to configure organization when SYSTEM_COLLECTIONURI is missing! This should be skipped."
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },

@@ -53,6 +53,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
+        },
         "az extension show --name azure-devops": {
             "code": 1,
             "stdout": "Extension not found"

@@ -58,6 +58,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "azure-cli 2.50.0"
         },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
+        },
         "az extension show --name azure-devops": {
             "code": 1,
             "stdout": "Extension 'azure-devops' is not installed."
@@ -106,7 +110,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stderr": "Code attempted to configure project with unquoted project name! This should be skipped when SYSTEM_TEAMPROJECT is missing."
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },

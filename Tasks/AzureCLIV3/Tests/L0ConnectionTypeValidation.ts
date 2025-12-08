@@ -39,6 +39,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az --version": {
             "code": 0,
             "stdout": "azure-cli 2.50.0"
+        },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
         }
     },
     "exists": {
