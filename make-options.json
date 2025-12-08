@@ -250,7 +250,8 @@
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
         "MavenAuthenticateV0",
-        "TwineAuthenticateV1"
+        "TwineAuthenticateV1",
+        "GradleAuthenticateV0"
     ],
     "LocalPackages": [
         "AndroidSigningV2",
