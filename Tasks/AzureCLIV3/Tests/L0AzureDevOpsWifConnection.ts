@@ -56,7 +56,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "az --version": {
             "code": 0,
-            "stdout": "azure-cli 2.50.0"
+            "stdout": "azure-cli 2.80.0"
         },
         "az extension add -n azure-devops -y": {
             "code": 0,
