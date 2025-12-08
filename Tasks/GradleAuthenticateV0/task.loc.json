@@ -1,0 +1,94 @@
+{
+  "id": "A7E1B7E5-4B8D-4F2C-9A1E-3C5D7F9B2E4A",
+  "name": "GradleAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/gradle-authenticate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "artifactsFeeds",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactsFeeds",
+      "defaultValue": "",
+      "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+      "properties": {
+        "EditableOptions": "true",
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "name": "gradleServiceConnections",
+      "label": "ms-resource:loc.input.label.gradleServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.gradleServiceConnections",
+      "type": "connectedService:externalmavenrepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactsFeeds",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "gradleauth.js"
+    },
+    "Node16": {
+      "target": "gradleauth.js"
+    },
+    "Node20_1": {
+      "target": "gradleauth.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
+    "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
+    "Warning_TokenNotGenerated": "ms-resource:loc.messages.Warning_TokenNotGenerated",
+    "Info_GeneratingExternalRepositories": "ms-resource:loc.messages.Info_GeneratingExternalRepositories",
+    "Info_GeneratingInternalFeeds": "ms-resource:loc.messages.Info_GeneratingInternalFeeds",
+    "Info_GradleUserHomeFolderDoesntExist": "ms-resource:loc.messages.Info_GradleUserHomeFolderDoesntExist",
+    "Info_GradlePropertiesRead": "ms-resource:loc.messages.Info_GradlePropertiesRead",
+    "Info_CreatingGradleProperties": "ms-resource:loc.messages.Info_CreatingGradleProperties",
+    "Info_WritingToGradleProperties": "ms-resource:loc.messages.Info_WritingToGradleProperties",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
+    "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
+    "Error_FailedCleanupGradle": "ms-resource:loc.messages.Error_FailedCleanupGradle",
+    "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
+  }
+}
