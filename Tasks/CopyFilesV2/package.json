@@ -1,6 +1,6 @@
 {
   "name": "vsts-copyfiles-task",
-  "version": "1.0.2",
+  "version": "1.267.0",
   "description": "Azure Pipelines Copy Files Task",
   "main": "copyfiles.js",
   "scripts": {

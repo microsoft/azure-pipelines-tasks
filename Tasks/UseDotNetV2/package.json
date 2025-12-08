@@ -1,6 +1,6 @@
 {
   "name": "usedotnet",
-  "version": "2.0.2",
+  "version": "2.267.0",
   "description": "Use .Net Core",
   "main": "usedotnet.js",
   "scripts": {
