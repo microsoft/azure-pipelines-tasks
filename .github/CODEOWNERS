@@ -475,4 +475,4 @@ Tasks/XamarinTestCloudV1/      @microsoft/azure-pipelines-tasks-and-agent @tarun
 
 Tasks/XcodeV5/ @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/MavenAuthenticateV0/     @microsoft/azure-artifacts-packages
+Tasks/GradleAuthenticateV0/     @microsoft/azure-artifacts-packages
