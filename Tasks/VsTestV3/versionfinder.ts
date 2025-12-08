@@ -91,7 +91,13 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
         // latest
         tl.debug('Searching for latest Visual Studio');
         
-        let vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        let vstestconsolePath = getVSTestConsolePath('18.0', '19.0');
+        if (vstestconsolePath) {
+            testConfig.vsTestVersion = "18.0";
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+
+        vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
         if (vstestconsolePath) {
             testConfig.vsTestVersion = "17.0";
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
@@ -116,6 +122,14 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     }
 
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
+
+    if (vsVersion === 18.0) {                                                       //Visual Studio 2026
+        const vstestconsolePath = getVSTestConsolePath('18.0', '19.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
 
     if (vsVersion === 17.0) {                                                       //Visual Studio 2022
         const vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
