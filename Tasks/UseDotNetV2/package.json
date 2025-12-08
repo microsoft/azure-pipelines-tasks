@@ -39,5 +39,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "azure-pipelines-task-lib": "npm:azure-pipelines-task-lib-nr-test@5.2.3"
   }
 }
