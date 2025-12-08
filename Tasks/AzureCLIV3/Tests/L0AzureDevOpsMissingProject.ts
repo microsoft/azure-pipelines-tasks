@@ -33,6 +33,10 @@ process.env['ENDPOINT_URL_TestAzureDevOpsConnection'] = 'https://dev.azure.com/t
 
 process.env['SYSTEM_COLLECTIONURI'] = 'https://dev.azure.com/testorg/';
 // process.env['SYSTEM_TEAMPROJECT'] = 'TestProject';
+process.env['SYSTEM_JOBID'] = 'test-job-id';
+process.env['SYSTEM_PLANID'] = 'test-plan-id';
+process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
+process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
 process.env['AGENT_WORKFOLDER'] = 'C:\\ado';
 
@@ -102,7 +106,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stderr": "Code attempted to configure project with unquoted project name! This should be skipped when SYSTEM_TEAMPROJECT is missing."
         },
-        "az devops configure --defaults organization='' project=''": {
+        "az devops configure --defaults project='' organization=": {
             "code": 0,
             "stdout": "configuration cleared"
         },
