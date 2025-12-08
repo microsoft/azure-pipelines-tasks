@@ -62,6 +62,11 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "bash": true
     },
     "execSync": {
+        // Support both version commands - CI uses 'az version', local may use 'az --version'
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
+        },
         "az --version": {
             "code": 0,
             "stdout": "azure-cli                         2.50.0\ncore                              2.50.0\ntelemetry                          1.0.8"
@@ -80,6 +85,11 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exec": {
+        // Support both version commands - CI uses 'az version', local may use 'az --version'
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
+        },
         "az --version": {
             "code": 0,
             "stdout": "azure-cli                         2.50.0\ncore                              2.50.0\ntelemetry                          1.0.8"

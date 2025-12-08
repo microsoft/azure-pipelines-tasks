@@ -12,7 +12,7 @@ describe('AzureCLIV3 Suite', function () {
     });
 
     // Simple test case to verify basic Azure CLI version check works
-    it('Should execute az --version and complete basic Azure RM authentication', function (done) {
+    it('Should execute az version check and complete basic Azure RM authentication', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0SimpleAzVersionCheck.js');
@@ -29,7 +29,8 @@ describe('AzureCLIV3 Suite', function () {
             console.log(tr.stdout);
             console.log('=== DEBUG L0.ts: End stdout ===');
             
-            assert(tr.stdout.includes('az --version'), 'Should execute az --version command');
+            // Check for either 'az version' (new) or 'az --version' (old) command
+            assert(tr.stdout.includes('az version') || tr.stdout.includes('az --version'), 'Should execute az version command');
             assert(tr.succeeded, 'Task should have succeeded');
             done();
         }).catch((err) => {
