@@ -1,0 +1,78 @@
+name: Branch Cleanup Announcement
+description: Template for announcing branch cleanup policy and upcoming deletions
+title: "[ANNOUNCEMENT] Monthly Branch Cleanup Policy - Branches older than 24 months will be deleted"
+labels: ["announcement", "policy", "maintenance"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 🧹 Monthly Branch Cleanup Policy Announcement
+        
+        ## Overview
+        
+        To keep the `microsoft/azure-pipelines-tasks` repository clean, secure, and maintainable, we are implementing a **monthly branch cleanup policy** effective immediately.
+        
+        ## Policy Details
+        
+        - **Cleanup Schedule**: Monthly (first week of each month)
+        - **Retention Period**: 24 months from last commit
+        - **Protected Branches**: The following branches will NEVER be deleted:
+          - `master`
+          - `release*` (all release branches)
+          - `Localize*` (localization branches)
+          - `Localization*` (localization branches)
+        
+        ## Upcoming Cleanup
+        
+        Based on our analysis (see [logs](https://github.com/microsoft/azure-pipelines-tasks/actions/runs/17490765291/job/49679840435#logs)), we have identified **approximately 1,436 branches** that are older than 24 months and will be cleaned up in the next maintenance cycle.
+        
+        ## Why This Policy?
+        
+        1. **Repository Health**: Reduces repository size and improves performance
+        2. **Security**: Removes old branches that may contain outdated dependencies or security vulnerabilities
+        3. **Maintainability**: Makes branch management easier for contributors and maintainers
+        4. **Best Practices**: Aligns with industry standards for repository hygiene
+        
+        ## What You Need to Do
+        
+        ### If you have branches you want to preserve:
+        1. **Review your branches**: Check if any of your old branches contain important work
+        2. **Create PRs**: If the work is still relevant, create pull requests to merge into appropriate target branches
+        3. **Tag important commits**: Use Git tags to preserve important milestones before branches are deleted
+        4. **Local copies**: Ensure you have local copies of any work you want to keep
+        
+        ### Timeline
+        - **Announcement**: Now
+        - **Grace Period**: 30 days from this announcement
+        - **First Cleanup**: [Date to be announced]
+        - **Ongoing**: First week of every month thereafter
+        
+        ## Exclusion Requests
+        
+        If you believe a specific branch should be excluded from cleanup (beyond the protected patterns above):
+        1. Reply to this issue with the branch name and justification
+        2. We will review and potentially add it to the protected list
+        3. Requests must be made within the 30-day grace period
+        
+        ## Automation
+        
+        This cleanup will be automated using GitHub Actions. You can:
+        - View the cleanup workflow: [Branch Cleanup Workflow](https://github.com/microsoft/azure-pipelines-tasks/blob/master/.github/workflows/branch-cleanup.yml)
+        - See preview runs: [Actions tab](https://github.com/microsoft/azure-pipelines-tasks/actions)
+        
+        ## Questions or Concerns?
+        
+        Please reply to this issue with any questions or concerns about this policy.
+        
+        ---
+        
+        **This is part of our ongoing efforts to maintain a healthy, secure, and efficient codebase. Thank you for your cooperation!**
+        
+  - type: checkboxes
+    id: acknowledgment
+    attributes:
+      label: Acknowledgment
+      description: Please confirm you have read and understood this announcement
+      options:
+        - label: I have read and understood the monthly branch cleanup policy
+          required: false
