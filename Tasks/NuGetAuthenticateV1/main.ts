@@ -1,4 +1,5 @@
 import * as path from 'path';
+
 import * as tl from 'azure-pipelines-task-lib/task';
 #if WIF
 import { configureEntraCredProvider } from "azure-pipelines-tasks-artifacts-common/credentialProviderUtils";
