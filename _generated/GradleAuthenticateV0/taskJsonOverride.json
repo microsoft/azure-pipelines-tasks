@@ -1,0 +1,36 @@
+{
+    "inputs": [
+      {
+        "name": "workloadIdentityServiceConnection",
+        "aliases": ["azureDevOpsServiceConnection"],
+        "label": "'Azure DevOps' Service Connection",
+        "helpMarkDown": "This is an Entra Workload ID-backed Azure DevOps user Service Connection. If this is set, the input gradleServiceConnections will be ignored.",
+        "type": "connectedService:workloadidentityuser",
+        "required": false,
+        "properties": {
+          "EditableOptions": "False",
+          "MultiSelectFlatList": "False"
+        }
+      },
+      {
+        "name": "artifactsFeeds",
+        "type": "pickList",
+        "label": "Feeds",
+        "defaultValue": "",
+        "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+        "properties": {
+          "EditableOptions": "true",
+          "MultiSelectFlatList": "true"
+        }
+      },
+      {
+        "name": "gradleServiceConnections",
+        "label": "Credentials for repositories outside this organization/collection",
+        "helpMarkDown": "Credentials to use for external repositories located in the project's build.gradle.",
+        "type": "connectedService:externalmavenrepository",
+        "properties": {
+          "MultiSelectFlatList": "true"
+        }
+      }
+    ]
+}
