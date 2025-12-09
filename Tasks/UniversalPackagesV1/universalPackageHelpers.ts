@@ -50,7 +50,7 @@ export function getUniversalPackageInputs(): UniversalPackageInputs {
 }
 
 export function parseFeedInfo(organization: string, feed: string): FeedInfo {
-    const serviceUri = `https://dev.azure.com/${organization}`;
+    const serviceUri = `https://dev.azure.com/${encodeURIComponent(organization)}`;
     tl.debug(tl.loc('Debug_ParsedFeedInfo', serviceUri, feed));
     
     let feedName: string;
@@ -128,11 +128,11 @@ export function handleTaskError(err: any, errorMessage: string, feedInfo?: FeedI
 }
 
 function constructFeedPermissionsUrl(feedInfo: FeedInfo): string {
-    const baseUrl = `https://dev.azure.com/${feedInfo.organizationName}`;
+    const baseUrl = `https://dev.azure.com/${encodeURIComponent(feedInfo.organizationName)}`;
     if (feedInfo.projectName) {
-        return `${baseUrl}/${feedInfo.projectName}/_artifacts/feed/${feedInfo.feedName}/settings/permissions`;
+        return `${baseUrl}/${encodeURIComponent(feedInfo.projectName)}/_artifacts/feed/${encodeURIComponent(feedInfo.feedName)}/settings/permissions`;
     } else {
-        return `${baseUrl}/_artifacts/feed/${feedInfo.feedName}/settings/permissions`;
+        return `${baseUrl}/_artifacts/feed/${encodeURIComponent(feedInfo.feedName)}/settings/permissions`;
     }
 }
 
