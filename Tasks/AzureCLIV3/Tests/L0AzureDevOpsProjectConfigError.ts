@@ -13,7 +13,7 @@ tmr.setInput('inlineScript', 'echo "test"');
 tmr.setInput('failOnStandardError', 'false');
 tmr.setInput('visibleAzLogin', 'false');
 tmr.setInput('useGlobalConfig', 'false');
-tmr.setInput('cwd', 'C:\\test');
+tmr.setInput('cwd', __dirname);
 
 process.env['ENDPOINT_AUTH_TestAzureDevOpsConnection'] = JSON.stringify({
     scheme: 'WorkloadIdentityFederation',
@@ -32,7 +32,7 @@ process.env['SYSTEM_JOBID'] = 'job-123';
 process.env['SYSTEM_PLANID'] = 'plan-456';
 process.env['SYSTEM_TEAMPROJECTID'] = 'project-789';
 process.env['SYSTEM_HOSTTYPE'] = 'build';
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
+process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -51,6 +51,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az --version": {
             "code": 0,
             "stdout": "azure-cli 2.50.0"
+        },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
         },
         "az extension show --name azure-devops": {
             "code": 1,
@@ -87,9 +91,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exists": {
-        "bash": true,
-        "C:\\ado\\temp": true,
-        "C:\\ado": true
+        "bash": true
     }
 };
 
@@ -115,29 +117,57 @@ tmr.setVariableName('FailedToSetAzureDevOpsProject', 'loc_mock_FailedToSetAzureD
 
 tmr.registerMock('./src/Utility', {
     Utility: {
-        throwIfError: (result: any, message: string) => {
+        checkIfAzurePythonSdkIsInstalled: function() {
+            return true;
+        },
+        throwIfError: function(result: any, errormsg?: string) {
             if (result && result.code !== 0) {
-                throw new Error(message);
+                throw new Error(errormsg || 'Command failed');
             }
         },
-        checkIfAzurePythonSdkIsInstalled: () => true
+        getScriptPath: function(scriptLocation: string, fileExtensions: string[]) {
+            return Promise.resolve(path.join(__dirname, 'test-script.sh'));
+        },
+        getPowerShellScriptPath: function(scriptLocation: string, fileExtensions: string[], scriptArguments: string) {
+            return Promise.resolve(path.join(__dirname, 'test-script.ps1'));
+        },
+        createFile: function(filePath: string, data: string, options?: any) {
+            return Promise.resolve();
+        },
+        deleteFile: function(filePath: string) {
+            return Promise.resolve();
+        }
     }
 });
 
+// Mock the ScriptType module
 tmr.registerMock('./src/ScriptType', {
     ScriptTypeFactory: {
-        getScriptType: () => ({
-            getTool: () => Promise.resolve({
-                on: (event: string, callback: Function) => {
-                    // Mock event handler
+        getScriptType: function() {
+            return {
+                getTool: function() {
+                    return Promise.resolve({
+                        on: function(event: string, callback: Function) {
+                            // No-op for event handlers
+                        },
+                        line: function(args: string) {
+                            // No-op for argument line
+                        },
+                        arg: function(args: string) {
+                            // No-op for arguments
+                            return this;
+                        },
+                        exec: function(options?: any) {
+                            console.log('Mock script execution completed');
+                            return Promise.resolve(0);
+                        }
+                    });
                 },
-                exec: (options: any) => {
-                    console.log('Mock script execution successful');
-                    return Promise.resolve(0);
+                cleanUp: function() {
+                    return Promise.resolve();
                 }
-            }),
-            cleanUp: () => Promise.resolve()
-        })
+            };
+        }
     }
 });
 

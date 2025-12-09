@@ -13,7 +13,7 @@ tmr.setInput('inlineScript', 'echo "test"');
 tmr.setInput('failOnStandardError', 'false');
 tmr.setInput('visibleAzLogin', 'false');
 tmr.setInput('useGlobalConfig', 'false');
-tmr.setInput('cwd', 'C:\\test');
+tmr.setInput('cwd', __dirname);
 
 process.env['ENDPOINT_AUTH_TestAzureDevOpsConnection'] = JSON.stringify({
     scheme: 'WorkloadIdentityFederation',
@@ -32,7 +32,7 @@ process.env['SYSTEM_JOBID'] = 'test-job-id';
 process.env['SYSTEM_PLANID'] = 'test-plan-id';
 process.env['SYSTEM_TEAMPROJECTID'] = 'test-project-id';
 process.env['SYSTEM_HOSTTYPE'] = 'build';
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\ado\\temp';
+process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
@@ -51,6 +51,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az --version": {
             "code": 0,
             "stdout": "azure-cli 2.50.0"
+        },
+        "az version": {
+            "code": 0,
+            "stdout": "{\"azure-cli\": \"2.50.0\", \"azure-cli-core\": \"2.50.0\"}"
         },
         "az extension show --name azure-devops": {
             "code": 1,
@@ -82,8 +86,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exists": {
-        "bash": true,
-        "C:\\ado\\temp": true
+        "bash": true
     }
 };
 
@@ -102,6 +105,25 @@ tmr.registerMock('azure-devops-node-api', {
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
+});
+
+tmr.registerMock('./src/Utility', {
+    Utility: {
+        throwIfError: () => {},
+        checkIfAzurePythonSdkIsInstalled: () => true
+    }
+});
+
+tmr.registerMock('./src/ScriptType', {
+    ScriptTypeFactory: {
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
+    }
 });
 
 tmr.run();
