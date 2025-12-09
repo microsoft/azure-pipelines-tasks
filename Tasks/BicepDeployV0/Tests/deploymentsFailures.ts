@@ -4,7 +4,7 @@ const rewiremock = require('rewiremock/node');
 import * as path from 'path';
 import * as crypto from 'crypto';
 import tmrm = require("azure-pipelines-task-lib/mock-run");
-import { environmentData, createMockRestError, createValidationFailureError } from './utils';
+import { environmentData, createMockRestError, createValidationFailureError, setupMockAzureEndpoint } from './utils';
 
 // Mock deploymentValidate to throw validation error
 const mockDeploymentValidate = async () => {
@@ -24,6 +24,10 @@ rewiremock('@azure/bicep-deploy-common/deployments')
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+// Setup mock Azure service connection
+setupMockAzureEndpoint('AzureRM');
+
+tr.setInput('ConnectedServiceName', 'AzureRM');
 tr.setInput('type', 'deployment');
 tr.setInput('operation', 'validate');
 tr.setInput('name', 'test-validate');

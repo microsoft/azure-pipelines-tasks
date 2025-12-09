@@ -83,5 +83,6 @@
   "loc.messages.DiagnosticsReturned": "Diagnostics returned by the API",
   "loc.messages.BicepVersionInstalled": "Installed Bicep version %s to %s",
   "loc.messages.TaskConfig": "Task config: %s",
-  "loc.messages.OperationSucceeded": "Operation completed successfully"
+  "loc.messages.OperationSucceeded": "Operation completed successfully",
+  "loc.messages.UnsupportedAuthScheme": "Unsupported authentication scheme: %s. Only ServicePrincipal authentication is supported."
 }

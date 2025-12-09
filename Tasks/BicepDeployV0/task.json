@@ -3,6 +3,7 @@
   "name": "BicepDeploy",
   "friendlyName": "Bicep Deploy",
   "description": "Deploy and Manage Azure Resources using Bicep Files",
+  "preview": true,
   "helpMarkDown": "[Learn more about this task](https://aka.ms/bicepdeploytaskreadme)",
   "category": "Deploy",
   "visibility": ["Build", "Release"],
@@ -386,7 +387,8 @@
     "DiagnosticsReturned": "Diagnostics returned by the API",
     "BicepVersionInstalled": "Installed Bicep version %s to %s",
     "TaskConfig": "Task config: %s",
-    "OperationSucceeded": "Operation completed successfully"
+    "OperationSucceeded": "Operation completed successfully",
+    "UnsupportedAuthScheme": "Unsupported authentication scheme: %s. Only ServicePrincipal authentication is supported."
   },
   "execution": {
     "Node16": {

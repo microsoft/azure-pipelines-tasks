@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 
 import * as path from 'path';
 import tmrm = require("azure-pipelines-task-lib/mock-run");
-import { environmentData } from './utils';
+import { environmentData, setupMockAzureEndpoint } from './utils';
 
 // Mock stackValidate to return successful validation
 const mockStackValidate = async () => {
@@ -41,6 +41,10 @@ rewiremock('@azure/bicep-deploy-common/stacks')
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+// Setup mock Azure service connection
+setupMockAzureEndpoint('AzureRM');
+
+tr.setInput('ConnectedServiceName', 'AzureRM');
 tr.setInput('type', 'deploymentStack');
 tr.setInput('operation', 'validate');
 tr.setInput('name', 'test-validate');

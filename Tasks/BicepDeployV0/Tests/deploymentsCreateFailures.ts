@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 
 import * as path from 'path';
 import tmrm = require("azure-pipelines-task-lib/mock-run");
-import { environmentData, createMockRestError } from './utils';
+import { environmentData, createMockRestError, setupMockAzureEndpoint } from './utils';
 
 // Mock deploymentCreate to throw deployment error
 const mockDeploymentCreate = async () => {
@@ -33,6 +33,10 @@ rewiremock('@azure/bicep-deploy-common/deployments')
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+// Setup mock Azure service connection
+setupMockAzureEndpoint('AzureRM');
+
+tr.setInput('ConnectedServiceName', 'AzureRM');
 tr.setInput('type', 'deployment');
 tr.setInput('operation', 'create');
 tr.setInput('name', 'test-create');

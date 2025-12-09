@@ -3,6 +3,7 @@
   "name": "BicepDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "preview": true,
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -389,7 +390,8 @@
     "DiagnosticsReturned": "ms-resource:loc.messages.DiagnosticsReturned",
     "BicepVersionInstalled": "ms-resource:loc.messages.BicepVersionInstalled",
     "TaskConfig": "ms-resource:loc.messages.TaskConfig",
-    "OperationSucceeded": "ms-resource:loc.messages.OperationSucceeded"
+    "OperationSucceeded": "ms-resource:loc.messages.OperationSucceeded",
+    "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme"
   },
   "execution": {
     "Node16": {
