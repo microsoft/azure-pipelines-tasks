@@ -9,6 +9,24 @@ import { TaskLogger, errorMessageConfig, loggingMessageConfig } from './logging'
 
 export async function run() {
     try {
+        // Setup environment variables for Azure SDK authentication.
+        // The @azure/bicep-deploy-common library uses ChainedTokenCredential which tries:
+        // 1. EnvironmentCredential (reads AZURE_* env vars)
+        // 2. AzureCliCredential (falls back to Azure CLI if installed)
+        // 3. AzurePowerShellCredential (falls back to Azure PowerShell if installed)
+        const connectedServiceName = tl.getInput('ConnectedServiceName', true);
+        const authScheme = tl.getEndpointAuthorizationScheme(connectedServiceName, true);
+
+        if (authScheme.toLowerCase() === 'serviceprincipal') {
+            // Traditional service principal with client secret
+            process.env.AZURE_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
+            process.env.AZURE_CLIENT_SECRET = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
+            process.env.AZURE_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
+            tl.debug('Using ServicePrincipal authentication with client secret');
+        } else {
+            throw new Error(tl.loc('UnsupportedAuthScheme', authScheme));
+        }
+
         const inputReader = new TaskInputReader();
         const inputParameterNames = new TaskInputParameterNames();
         const logger = new TaskLogger();
