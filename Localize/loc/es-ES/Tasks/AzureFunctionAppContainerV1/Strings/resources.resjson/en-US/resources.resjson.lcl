@@ -103,7 +103,7 @@
         <Str Cat="Text">
           <Val><![CDATA[A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre de dominio de nivel superior único global para su espacio de nombres o Registro específico.<br/> Nota: El nombre de imagen completo tiene el formato: "<b><Registro o espacio de nombres></b>/<repositorio>:<etiqueta>". Por ejemplo, "<b>miRegistro.azurecr.io</b>/nginx:última".]]></Val>
+            <Val><![CDATA[Un nombre de dominio de primer nivel único globalmente para el registro o espacio de nombres específico.<br/> Nota: el nombre completo de la imagen tendrá el formato: '<b>'<registro o espacio de nombres'></b>/'<repositorio'>:'<etiqueta'>'. Por ejemplo, "<b>miRegistro.azurecr.io</b>/nginx:última".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

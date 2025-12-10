@@ -346,7 +346,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[將為 `*.config file` 上 `*.Release.config` 及 `*.<環境名稱>.config` 執行的組態轉換。<br/>將會在變數替代前執行組態轉換。<br/>只有在 Windows 平台上才支援 XML 轉換。]]></Val>
+            <Val><![CDATA[將為 `*.config file` 上的 `*.Release.config` 和 `*.<EnvironmentName>.config` 執行設定轉換。<br/>會在變數替代前執行設定轉換。<br/>只有 Windows 平台支援 XML 轉換。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -751,7 +751,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to detect DJANGO_SETTINGS_MODULE 'settings.py' file path. Ensure that the 'settings.py' file exists or provide the correct path in Web.config parameter input in the following format '-DJANGO_SETTINGS_MODULE <folder_name>.settings']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[偵測不到 DJANGO_SETTINGS_MODULE 'settings.py' 檔案路徑。請確定 'settings.py' 檔案存在，或依下列格式在 Web.config 參數輸入中提供正確的路徑: '-DJANGO_SETTINGS_MODULE <資料夾名稱>.settings']]></Val>
+            <Val><![CDATA[偵測不到 DJANGO_SETTINGS_MODULE 'settings.py' 檔案路徑。請確定 'settings.py' 檔案存在，或依下列格式在 Web.config 參數輸入中提供正確的路徑: '-DJANGO_SETTINGS_MODULE <folder_name>.settings']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

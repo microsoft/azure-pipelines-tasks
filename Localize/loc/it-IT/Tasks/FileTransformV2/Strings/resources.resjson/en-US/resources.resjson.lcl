@@ -97,7 +97,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Specificare un elenco di regole dei file di trasformazione delimitate da caratteri di nuova riga usando la sintassi seguente: <br/>-transform <percorsoFileTrasformazione>  -xml <percorsoFileConfigurazioneOrigine>]]></Val>
+            <Val><![CDATA[Specificare un elenco delimitato da caratteri di nuova riga di regole dei file di trasformazione usando la sintassi seguente: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -196,7 +196,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Set the **priority** to a positive integer to resolve deployment conflicts: when targeted by multiple deployments a device will use the one with highest priority or (in case of two deployments with the same priority) latest creation time.]A; Check more information for [Azure IoT Edge deployment]5D;(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[将**优先级**设置为正整数以解决部署冲突: 当作为多个部署的目标时，设备将使用具有最高优先级或(如果两个部署具有相同优先级)最新创建时间的部署。]A; 查看有关 [Azure IoT Edge 部署]5D;的详细信息(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)]]></Val>
+            <Val><![CDATA[将“优先级”设置为正整数以解决部署冲突: 当作为多个部署的目标时，设备将使用具有最高优先级或(如果两个部署具有相同优先级)最新创建时间的部署****。]A; 查看有关 [Azure IoT Edge 部署]5D;(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)的详细信息]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -205,7 +205,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Input the **target condition** of devices you would like to deploy. Do not use double quote. Example: **tags.building=9 and tags.environment='test'**.]A; Check more information for [Azure IoT Edge deployment]5D;(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[输入要部署的设备的**目标条件**。不要使用双引号。示例: **tags.building=9 and tags.environment='test'**。]A; 查看有关 [Azure IoT Edge 部署]5D;的详细信息(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)]]></Val>
+            <Val><![CDATA[输入要部署的设备的目标条件****。不要使用双引号。示例: **tags.building=9 and tags.environment='test'**。]A; 查看有关 [Azure IoT Edge 部署]5D;(https://docs.microsoft.com/azure/iot-edge/how-to-deploy-monitor#monitor-a-deployment)的详细信息]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

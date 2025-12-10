@@ -148,7 +148,7 @@
         <Str Cat="Text">
           <Val><![CDATA[A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre de dominio de nivel superior único global para su espacio de nombres o Registro específico.<br/> Nota: El nombre de imagen completo tiene el formato: "<b><Registro o espacio de nombres></b>/<repositorio>:<etiqueta>". Por ejemplo, "<b>miRegistro.azurecr.io</b>/nginx:última".]]></Val>
+            <Val><![CDATA[Un nombre de dominio de primer nivel único globalmente para el registro o espacio de nombres específico.<br/> Nota: el nombre completo de la imagen tendrá el formato: '<b>'<registro o espacio de nombres'></b>/'<repositorio'>:'<etiqueta'>'. Por ejemplo, "<b>miRegistro.azurecr.io</b>/nginx:última".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -157,7 +157,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nombre del repositorio en el que se almacenan las imágenes del contenedor.<br/> Nota: Un nombre de imagen completo tiene el formato: "<Registro o espacio de nombres>/<b><repositorio></b>:<etiqueta>". Por ejemplo, "miRegistro.azurecr.io/<b>nginx</b>:última".]]></Val>
+            <Val><![CDATA[Nombre del repositorio donde se almacenan las imágenes de contenedor.<br/> Nota: el nombre completo de la imagen tendrá el formato: '`<registro o espacio de nombres`>/<b>`<repositorio`></b>:`<etiqueta`>'. Por ejemplo, "miRegistro.azurecr.io/<b>nginx</b>:última".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -346,7 +346,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Las transformaciones de configuración se ejecutarán para "*.Release.config" y "*.<NombreDeEntorno>.config" en el "archivo *.config".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables.<br/>Las transformaciones XML solo se admiten para la plataforma Windows.]]></Val>
+            <Val><![CDATA[Las transformaciones de configuración se ejecutarán para "*. Release.config" y "*.<EnvironmentName>.config" en el archivo "*.config".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables. <br/>Las transformaciones XML solo se admiten para la plataforma Windows.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
