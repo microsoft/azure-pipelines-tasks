@@ -58,6 +58,7 @@ export class azureclitask {
 
                 if (azVersionResult.code !== 0 || azVersionResult.stderr || !azVersionResult.stdout || azVersionResult.stdout.trim() === '') {
                     tl.debug("az version failed or returned empty output, falling back to 'az --version'");
+                    azVersionResult = tl.execSync("az", "--version");
                 }    
             } 
             else {
