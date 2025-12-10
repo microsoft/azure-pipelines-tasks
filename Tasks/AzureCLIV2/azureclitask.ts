@@ -56,10 +56,9 @@ export class azureclitask {
             if (versionCommand) {
                 azVersionResult = tl.execSync("az", "version");
 
-                if (azVersionResult.code !== 0 || azVersionResult.stderr) {
-                    tl.debug("az version failed, falling back to 'az --version'");
-                    azVersionResult = tl.execSync("az", "--version");
-                }
+                if (azVersionResult.code !== 0 || azVersionResult.stderr || !azVersionResult.stdout || azVersionResult.stdout.trim() === '') {
+                    tl.debug("az version failed or returned empty output, falling back to 'az --version'");
+                }    
             } 
             else {
                 // Default case: always run with "--version"
@@ -67,6 +66,7 @@ export class azureclitask {
             }
 
             Utility.throwIfError(azVersionResult);
+            tl.debug(`---------------------print the value of azversion result--------------------: ${azVersionResult.stdout}`);
             this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
             await validateAzModuleVersion("azure-Cli", azVersionResult.stdout, "Azure-Cli", minorVersionTolerance)
 
@@ -226,6 +226,7 @@ export class azureclitask {
             }
 
             if (!versionMatch || versionMatch.length < 2) {
+                tl.debug(`---------------------print the value of version match--------------------: ${versionMatch}`);
                 tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
                 return false;
             }
