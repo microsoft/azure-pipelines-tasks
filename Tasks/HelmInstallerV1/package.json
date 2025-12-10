@@ -9,7 +9,7 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.17.0",
-    "azure-pipelines-tasks-kubernetes-common": "2.266.0",
+    "azure-pipelines-tasks-kubernetes-common": "2.267.0",
     "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
