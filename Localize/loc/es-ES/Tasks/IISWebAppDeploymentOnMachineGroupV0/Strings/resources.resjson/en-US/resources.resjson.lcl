@@ -139,7 +139,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Las transformaciones de configuración se ejecutarán para "*.Release.config" y "*.<NombreDeEntorno>.config" en el "archivo *.config".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables.<br/>Las transformaciones XML solo se admiten para la plataforma Windows.]]></Val>
+            <Val><![CDATA[Las transformaciones de configuración se ejecutarán para "*. Release.config" y "*.<EnvironmentName>.config" en el archivo "*.config".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables. <br/>Las transformaciones XML solo se admiten para la plataforma Windows.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

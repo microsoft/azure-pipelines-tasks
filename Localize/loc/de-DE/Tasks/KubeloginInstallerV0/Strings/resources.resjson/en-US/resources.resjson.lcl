@@ -91,6 +91,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Err_GithubApiRateLimitExceeded" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[GitHub API rate limit exceeded. To increase the rate limit, provide a GitHub connection via the gitHubConnection input and set the USE_AUTHORIZATION_FOR_API_CALL variable.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die GitHub-API-Quotengrenze wurde überschritten. Um die Quotengrenze zu erhöhen, stellen Sie eine GitHub-Verbindung über die gitHubConnection-Eingabe bereit, und legen Sie die Variable USE_AUTHORIZATION_FOR_API_CALL fest.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Err_LatestTagNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not retrieve the latest kubelogin version tag from GitHub]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Das aktuelle Kubelogin-Versionstag konnte nicht von GitHub abgerufen werden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Err_NotAValidSemverVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.]]></Val>

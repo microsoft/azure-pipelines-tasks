@@ -58,7 +58,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link]5D;(https://github.com/isaacs/minimatch#dot) for more info]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ドットで始まるファイル (.git、.dockerfile) を削除します。明示的に指定されていない場合は、これらのファイルを省略します (例: '/. * ')。詳細については、この [リンク]5D; を参照してください (https://github.com/isaacs/minimatch#dot)]]></Val>
+            <Val><![CDATA[ドットで始まるファイル (.git、.dockerfile) を削除します。明示的に指定されていない場合は、これらのファイルを省略します (例: '/. * ')。詳細については、この [リンク]5D;(https://github.com/isaacs/minimatch#dot) を参照してください]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

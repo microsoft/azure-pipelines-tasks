@@ -265,7 +265,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'X' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[バージョン [X.Y.Z]5D; の 'X' (http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[バージョン [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html) の 'X']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -274,7 +274,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'Y' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[バージョン [X.Y.Z]5D; の 'Y' (http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[バージョン [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html) の 'Y']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -283,7 +283,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'Z' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[バージョン [X.Y.Z]5D; の 'Z' (http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[バージョン [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html) の 'Z']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

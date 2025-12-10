@@ -94,7 +94,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Specify custom folder name you want to deploy to. <br/>If the field is empty, package is deployed to <appname>.azurewebsites.net/<warpackagename><br/> If ROOT is entered, package is deployed to <appname>.azurewebsited.net <br/>else it is deployed to <appname>.azurewebsited.net/<customWarName>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Consente di specificare il nome della cartella personalizzata in cui eseguire la distribuzione. <br/>Se il campo è vuoto, il pacchetto viene distribuito in <nome_app>.azurewebsites.net/<nome_pacchetto_war><br/> Se si immette ROOT, il pacchetto viene distribuito in <nome_app>.azurewebsited.net<br/>In caso contrario, viene distribuito in <nome_app>.azurewebsited.net/<nome_war_personalizzato>]]></Val>
+            <Val><![CDATA[Consente di specificare il nome della cartella personalizzata in cui eseguire la distribuzione. <br/>Se il campo è vuoto, il pacchetto viene distribuito in <appname>.azurewebsites.net/<warpackagename><br/> Se si immette ROOT, il pacchetto viene distribuito in <appname>.azurewebsited.net <br/>In caso contrario, viene distribuito in <appname>.azurewebsited.net/<customWarName>]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

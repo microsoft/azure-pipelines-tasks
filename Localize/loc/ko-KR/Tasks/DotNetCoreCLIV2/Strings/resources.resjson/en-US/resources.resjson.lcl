@@ -325,7 +325,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'X' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[버전 [X.Y.Z]5D;의 'X'(http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[버전 [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)의 'X']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -334,7 +334,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'Y' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[버전 [X.Y.Z]5D;의 'Y'(http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[버전 [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)의 'Y']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -343,7 +343,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The 'Z' in version [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[버전 [X.Y.Z]5D;의 'Z'(http://semver.org/spec/v1.0.0.html)]]></Val>
+            <Val><![CDATA[버전 [X.Y.Z]5D;(http://semver.org/spec/v1.0.0.html)의 'Z']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
