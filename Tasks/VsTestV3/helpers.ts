@@ -171,6 +171,7 @@ export class Helper {
             case 15: return '2017';
             case 16: return '2019';
             case 17: return '2022';
+            case 18: return '2026';
             default: return 'selected';
         }
     }
