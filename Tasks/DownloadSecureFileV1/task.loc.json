@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 263,
-    "Patch": 0
+    "Minor": 267,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -65,6 +65,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "predownloadsecurefile.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "predownloadsecurefile.js",
       "argumentFormat": ""
     }
