@@ -103,7 +103,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables]5D;(https://go.microsoft.com/fwlink/?linkid=875288) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[以 "<parameterName>=<parameterValue>"<b></b> 的形式指定作业参数(每行一个)<p>若要将参数设置为空值(用于替代默认值)，可以不使用参数值。例如，指定 "<parameterName>="<b></b><p>支持使用变量。例如，若要将 "commitId"<b></b> 参数值设置为生成的 Git commit ID，请使用: "commitId=$(Build.SourceVersion)"<b></b>。请参阅 [有关变量的文档]5D;(https://go.microsoft.com/fwlink/?linkid=875288)了解更多详细信息。<p>支持的 Jenkins 参数类型包括: <ul>"Boolean"<li></li>、"Choice"<li></li>、"Password"<li></li>、"String"<li></li></ul>]]></Val>
+            <Val><![CDATA[以 <b>`<parameterName>=<parameterValue>`</b> 的形式指定作业参数(每行一个)<p>若要将参数设置为空值(用于替代默认值)，可以不使用参数值。<p>例如，指定 <b>`<parameterName>=`</b>。例如，若要将 <b>`commitId`</b> 参数值设置为生成的 Git 提交 ID，请使用: <b>`commitId=$(Build.SourceVersion)`</b>。请参阅[有关变量的文档]5D;(https://go.microsoft.com/fwlink/?linkid=875288)了解更多详细信息。<p>支持的 Jenkins 参数类型包括: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
