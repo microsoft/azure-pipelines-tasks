@@ -47,28 +47,25 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
-    // TODO: This test fails in CI because SYSTEM_COLLECTIONURI may be inherited from the pipeline environment
-     // TODO: This test fails in CI because SYSTEM_COLLECTIONURI may be inherited from the pipeline environment
-       it('Should skip organization configuration when SYSTEM_COLLECTIONURI is missing', function (done) {
-           this.timeout(timeout);
+    it('Should skip organization configuration when SYSTEM_COLLECTIONURI is missing', function (done) {
+        this.timeout(timeout);
 
-           let tp = path.join(__dirname, 'L0AzureDevOpsMissingOrganization.js');
-           let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let tp = path.join(__dirname, 'L0AzureDevOpsMissingOrganization.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-           tr.runAsync().then(() => {
-               assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
-               assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
-               assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project');
-               assert(!tr.stdout.includes('az devops configure --defaults organization="https://dev.azure.com/testorg/"'), 'Should NOT configure Azure DevOps organization');
-               assert(!tr.stdout.includes('az devops configure --defaults organization="undefined"'), 'Should NOT attempt organization config with undefined');
-               assert(!tr.stdout.includes('az devops configure --defaults organization="null"'), 'Should NOT attempt organization config with null');
-               assert(!tr.stdout.includes('az devops configure --defaults organization=""'), 'Should NOT attempt organization config with empty string');
-               done();
-           }).catch((err) => {
+        tr.runAsync().then(() => {
+            assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
+            assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
+            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project');
+            assert(!tr.stdout.includes('az devops configure --defaults organization="https://dev.azure.com/testorg/"'), 'Should NOT configure Azure DevOps organization');
+            assert(!tr.stdout.includes('az devops configure --defaults organization="undefined"'), 'Should NOT attempt organization config with undefined');
+            assert(!tr.stdout.includes('az devops configure --defaults organization="null"'), 'Should NOT attempt organization config with null');
+            assert(!tr.stdout.includes('az devops configure --defaults organization=""'), 'Should NOT attempt organization config with empty string');
+            done();
+        }).catch((err) => {
             done(err);
         });
     });
-        
 
     it('Should skip project configuration when SYSTEM_TEAMPROJECT is missing', function (done) {
         this.timeout(timeout);
