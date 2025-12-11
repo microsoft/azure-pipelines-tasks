@@ -178,13 +178,13 @@ function getGithubEndPointToken(): string {
 
   switch (githubEndpointObject.scheme) {
     case 'PersonalAccessToken':
-      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken;
       break;
     case 'OAuth':
-      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken;
       break;
     case 'Token':
-      githubEndpointToken = githubEndpointObject.parameters.accessToken;
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken;
       break;
     default:
       throw new GitHubEndpointSchemeError(
