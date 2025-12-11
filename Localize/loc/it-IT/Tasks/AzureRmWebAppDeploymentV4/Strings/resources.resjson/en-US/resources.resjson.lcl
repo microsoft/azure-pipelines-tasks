@@ -751,7 +751,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to detect DJANGO_SETTINGS_MODULE 'settings.py' file path. Ensure that the 'settings.py' file exists or provide the correct path in Web.config parameter input in the following format '-DJANGO_SETTINGS_MODULE <folder_name>.settings']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Il percorso del file 'settings.py' di DJANGO_SETTINGS_MODULE non è stato rilevato. Assicurarsi che il file 'settings.py' sia esistente oppure specificare il percorso corretto nel campo di input del parametro di Web.config nel formato seguente: '-DJANGO_SETTINGS_MODULE <nome_cartella>.settings']]></Val>
+            <Val><![CDATA[Non è possibile rilevare il percorso del file 'settings.py' di DJANGO_SETTINGS_MODULE. Assicurarsi che esista il file 'settings.py' oppure specificare il percorso corretto nel campo di input del parametro di Web.config nel formato seguente: '-DJANGO_SETTINGS_MODULE <nome_cartella>.settings']]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
