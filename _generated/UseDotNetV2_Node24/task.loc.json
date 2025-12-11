@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 267,
-    "Patch": 4
+    "Patch": 5
   },
   "satisfies": [
     "DotNetCore"
@@ -218,5 +218,9 @@
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.267.4",
+    "Node24_4": "2.267.5"
   }
 }
