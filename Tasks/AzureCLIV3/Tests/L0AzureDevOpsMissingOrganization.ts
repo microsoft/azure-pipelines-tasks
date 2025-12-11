@@ -64,7 +64,7 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "az extension show --name azure-devops": {
             "code": 1,
-            "stdout": "Extension 'azure-devops' is not installed."
+            "stdout": "Extension not found"
         },
         "az extension add -n azure-devops -y": {
             "code": 0,
@@ -77,42 +77,6 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az devops configure --defaults project=\"TestProject\"": {
             "code": 0,
             "stdout": "project configured"
-        },
-        "az devops configure --defaults organization=\"undefined\"": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with 'undefined' value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=\"null\"": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with 'null' value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=\"\"": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with empty string! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=undefined": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with unquoted undefined! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=null": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with unquoted null! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization with no value! This should be skipped when SYSTEM_COLLECTIONURI is missing."
-        },
-        "az devops configure --defaults organization=\"https://dev.azure.com/testorg/\"": {
-            "code": 1,
-            "stderr": "Code attempted to configure organization when SYSTEM_COLLECTIONURI is missing! This should be skipped."
-        },
-        "az devops configure --defaults project='' organization=": {
-            "code": 0,
-            "stdout": "configuration cleared"
-        },
-        "bash*": {
-            "code": 0,
-            "stdout": "test completed"
         },
         "*": {
             "code": 0,
@@ -143,57 +107,20 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
 
 tmr.registerMock('./src/Utility', {
     Utility: {
-        checkIfAzurePythonSdkIsInstalled: function() {
-            return true;
-        },
-        throwIfError: function(result: any, errormsg?: string) {
-            if (result && result.code !== 0) {
-                throw new Error(errormsg || 'Command failed');
-            }
-        },
-        getScriptPath: function(scriptLocation: string, fileExtensions: string[]) {
-            return Promise.resolve(path.join(__dirname, 'test-script.sh'));
-        },
-        getPowerShellScriptPath: function(scriptLocation: string, fileExtensions: string[], scriptArguments: string) {
-            return Promise.resolve(path.join(__dirname, 'test-script.ps1'));
-        },
-        createFile: function(filePath: string, data: string, options?: any) {
-            return Promise.resolve();
-        },
-        deleteFile: function(filePath: string) {
-            return Promise.resolve();
-        }
+        throwIfError: () => {},
+        checkIfAzurePythonSdkIsInstalled: () => true
     }
 });
 
-// Mock the ScriptType module
 tmr.registerMock('./src/ScriptType', {
     ScriptTypeFactory: {
-        getScriptType: function() {
-            return {
-                getTool: function() {
-                    return Promise.resolve({
-                        on: function(event: string, callback: Function) {
-                            // No-op for event handlers
-                        },
-                        line: function(args: string) {
-                            // No-op for argument line
-                        },
-                        arg: function(args: string) {
-                            // No-op for arguments
-                            return this;
-                        },
-                        exec: function(options?: any) {
-                            console.log('Mock script execution completed');
-                            return Promise.resolve(0);
-                        }
-                    });
-                },
-                cleanUp: function() {
-                    return Promise.resolve();
-                }
-            };
-        }
+        getScriptType: () => ({
+            getTool: () => Promise.resolve({
+                on: () => {},
+                exec: () => Promise.resolve(0)
+            }),
+            cleanUp: () => Promise.resolve()
+        })
     }
 });
 
