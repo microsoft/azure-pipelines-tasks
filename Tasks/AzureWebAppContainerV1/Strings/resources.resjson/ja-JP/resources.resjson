@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "構文 -key value の後に続く Web App アプリケーションの設定を編集します。スペースが含まれる値は二重引用符で囲む必要があります。<br /> <b>例</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "構成設定",
   "loc.input.help.configurationStrings": "構文 -key value の後に続く Web App 構成の設定を編集します。スペースが含まれる値は、二重引用符で囲む必要があります。<br />例: -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "サイト コンテナーの構成",
+  "loc.input.help.siteContainersConfig": "SiteContainers 展開用の siteContainers-config JSON を指定します。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "無効な App Service パッケージまたはフォルダー パスが指定されました: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Azure App Service のサービス接続の詳細を取得しました: '%s'",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "エラー: そのような配置方法はありません",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Webapp '%s' への配置が失敗しました。1 つのコンテナーにつき有効なイメージ名を 1 つだけ指定してください。複数コンテナーの場合は、Docker-Compose ファイルの指定は必須であり、イメージ名の指定はオプションです。Docker-Compose ファイルのタグを置き換える必要がある場合にイメージ名を指定します。",
   "loc.messages.SingleContainerDeployment": "イメージの詳細のみが指定されたため、Web アプリ '%s' への単一コンテナー デプロイ。",
   "loc.messages.MultiContainerDeploymentWithTransformation": "イメージ名と Docker-Compose ファイルの両方が指定されたため、Docker-Compose ファイルの変換を使用した Webapp '%s' への複数コンテナー配置",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Docker-Compose ファイルのみが指定されたため、Docker-Compose ファイルの変換を使用しない Webapp '%s' への複数コンテナー配置。"
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Docker-Compose ファイルのみが指定されたため、Docker-Compose ファイルの変換を使用しない Webapp '%s' への複数コンテナー配置。",
+  "loc.messages.StartedUpdatingSiteContainers": "サイト コンテナーの更新を開始しました。",
+  "loc.messages.UpdatingSiteContainer": "SiteContainer を更新しています: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "サイト コンテナーの更新が完了しました。"
 }
