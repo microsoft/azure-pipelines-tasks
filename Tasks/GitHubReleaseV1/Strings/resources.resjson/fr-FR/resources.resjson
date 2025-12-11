@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "Indiquez si la mise en production doit être enregistrée en tant que brouillon (non publiée). Si la valeur est 'false', la mise en production est publiée.",
   "loc.input.label.isPreRelease": "Préversion",
   "loc.input.help.isPreRelease": "Indiquez si la mise en production doit être marquée en tant que préversion.",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "Ajouter un journal des modifications",
   "loc.input.help.addChangeLog": "Si la valeur est 'true', la liste des changements (validations et problèmes) survenus entre cette mise en production et la dernière mise en production publiée est générée et ajoutée aux notes de publication.",
   "loc.input.label.changeLogCompareToRelease": "Comparer à",
