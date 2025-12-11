@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "JDK 版本",
   "loc.input.help.versionSpec": "指定要在路径上提供的 JDK 版本的数字。使用整数版本，例如 10",
   "loc.input.label.jdkArchitectureOption": "JDK 体系结构",
-  "loc.input.help.jdkArchitectureOption": "JDK 的体系结构(x86、x64)。",
+  "loc.input.help.jdkArchitectureOption": "JDK 的体系结构(x86、x64、arm64)。",
   "loc.input.label.jdkSourceOption": "JDK 源",
   "loc.input.help.jdkSourceOption": "压缩 JDK 的源。",
   "loc.input.label.jdkFile": "JDK 文件",
