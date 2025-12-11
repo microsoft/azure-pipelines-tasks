@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Kubelogin $(kubeloginVersion) 설치",
   "loc.input.label.kubeloginVersion": "kubelogin 버전",
   "loc.input.help.kubeloginVersion": "사용할 kubelogin 버전",
+  "loc.input.label.gitHubConnection": "GitHub 연결",
+  "loc.input.help.gitHubConnection": "GitHub API에 대한 익명 요청 제한이 [Azure/kubelogin](https://github.com/azure/kubelogin) 설치에 영향을 미치지 않도록 GitHub 연결이 필요합니다. 이 항목을 비워 두면 요청 제한에 도달했을 때 실패가 발생할 수 있습니다. 이 연결은 어떤 권한도 필요하지 않습니다.",
   "loc.messages.Info_VerifyKubeloginInstallation": "kubelogin 설치 확인 중...",
   "loc.messages.Info_ResolvedToolFromCache": "도구 캐시 %s에서 확인됨",
   "loc.messages.Info_UsingToolPath": "도구 경로 %s 사용",
