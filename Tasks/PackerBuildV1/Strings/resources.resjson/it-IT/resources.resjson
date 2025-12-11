@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "Consente di specificare il percorso relativo dello script di PowerShell (per Windows) o della shell (per Linux) che distribuisce il pacchetto. Questo script deve essere incluso nel percorso del pacchetto selezionato in precedenza. Supporta i criteri di corrispondenza minima. Percorso di esempio: distribuzione/**/script/windows/distribuzione.ps1",
   "loc.input.label.deployScriptArguments": "Argomenti dello script di distribuzione",
   "loc.input.help.deployScriptArguments": "Consente di specificare gli argomenti da passare allo script di distribuzione.",
+  "loc.input.label.canDeleteTempFolder": "Elimina la cartella temporanea",
+  "loc.input.help.canDeleteTempFolder": "Questa opzione consente di eliminare la cartella temporanea",
   "loc.input.label.additionalBuilderParameters": "Parametri aggiuntivi del compilatore",
   "loc.input.help.additionalBuilderParameters": "In modalità modello Packer generato automaticamente l'attività crea un modello Packer con un compilatore di Azure. Questo compilatore viene usato per generare un'immagine del computer. È possibile aggiungere le chiavi nel compilatore di Azure per personalizzare il modello Packer generato. Ad esempio, impostare ssh_tty=true nel caso si usi un'immagine di base di CentOS ed è necessario avere un tty per eseguire sudo.<br/>Per visualizzare/modificare i parametri aggiuntivi in una griglia, fare clic su \"…\" accanto alla casella di testo.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "Ignora pulizia dei file temporanei durante il deprovisioning",
