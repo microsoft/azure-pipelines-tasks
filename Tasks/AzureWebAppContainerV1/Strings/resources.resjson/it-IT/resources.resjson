@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "Consente di modificare le impostazioni applicazione dell'app Web successive al valore -key della sintassi. Il valore che contiene spazi deve essere racchiuso tra virgolette.<br /> <b>Esempio</b>: -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Ora solare fuso orientale\"",
   "loc.input.label.configurationStrings": "Impostazioni di configurazione",
   "loc.input.help.configurationStrings": "Consente di modificare le impostazioni di configurazione dell'app Web successive al valore -key della sintassi. Il valore che contiene spazi deve essere racchiuso tra virgolette.<br /> Esempio: -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.siteContainersConfig": "Configurazione contenitori sito",
+  "loc.input.help.siteContainersConfig": "Fornire il file JSON siteContainers-config per le distribuzioni di SiteContainers.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Il percorso specificato per il pacchetto o la cartella del servizio app non è valido: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "I dettagli della connessione al servizio per il servizio app di Azure sono stati recuperati: '%s'",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Errore: non esiste alcun metodo di distribuzione di questo tipo",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "La distribuzione nell'app Web '%s' non è riuscita. Per scenari con contenitore singolo specificare solo un nome di immagine valido. Per scenari con più contenitori è necessario specificare un file Docker Compose e, facoltativamente, i nomi delle immagini. Specificare i nomi delle immagini se è necessario sostituire i tag nel file Docker Compose.",
   "loc.messages.SingleContainerDeployment": "Distribuzione con contenitore singolo nell'app Web '%s' perché sono stati specificati solo i dettagli dell'immagine.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Distribuzione con più contenitori nell'app Web '%s' con trasformazione del file Docker Compose perché sono stati specificati sia il nome dell'immagine che il file Docker Compose",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Distribuzione con più contenitori nell'app Web '%s' senza trasformazione del file Docker Compose perché è stato specificato solo il file Docker Compose."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Distribuzione con più contenitori nell'app Web '%s' senza trasformazione del file Docker Compose perché è stato specificato solo il file Docker Compose.",
+  "loc.messages.StartedUpdatingSiteContainers": "L'aggiornamento dei contenitori sito è stato avviato.",
+  "loc.messages.UpdatingSiteContainer": "L'aggiornamento di SiteContainer: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "L'aggiornamento dei contenitori sito è stato completato."
 }

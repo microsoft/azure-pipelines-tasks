@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "指出是否應將版本儲存為草稿 (未發佈)。如果是 'false'，將會發佈版本。",
   "loc.input.label.isPreRelease": "發行前版本",
   "loc.input.help.isPreRelease": "指出是否應將版本標記為發行前版本。",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "新增變更記錄",
   "loc.input.help.addChangeLog": "如果設定為 'true'，將會產生此版本和上次所發佈版本間變更 (認可和問題) 的清單，並附加到版本資訊。",
   "loc.input.label.changeLogCompareToRelease": "比較對象",
