@@ -245,7 +245,8 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
 
             ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
 
-        } else if ((vsTestVersion !== '17.0') 
+        } else if ((vsTestVersion !== '18.0')
+                && (vsTestVersion !== '17.0') 
                 && (vsTestVersion !== '16.0') 
                 && (vsTestVersion !== '15.0') 
                 && (vsTestVersion !== '14.0') 
@@ -533,11 +534,15 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 
     if (vsTestVersion.toLowerCase() === 'latest') {
         tl.debug('Searching for latest Visual Studio.');
-        let vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        let vstestconsolePath = getVSTestConsolePath('18.0', '19.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
         }
-         vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
         }
@@ -555,7 +560,15 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 
     const vsVersion: number = parseFloat(vsTestVersion);
 
-    if (vsVersion === 17.0) {
+    if (vsVersion === 18.0) {                                                       //Visual Studio 2026
+        const vstestconsolePath = getVSTestConsolePath('18.0', '19.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
+    if (vsVersion === 17.0) {                                                       //Visual Studio 2022
         const vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
