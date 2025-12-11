@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Gradle Authenticate",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/gradle-authenticate)",
+  "loc.description": "Provides credentials for Azure Artifacts feeds and external Gradle/Maven repositories",
+  "loc.instanceNameFormat": "Gradle Authenticate",
+  "loc.input.label.artifactsFeeds": "Feeds",
+  "loc.input.label.gradleServiceConnections": "Credentials for repositories outside this organization/collection",
+  "loc.input.help.gradleServiceConnections": "Credentials to use for external repositories located in the project's build.gradle.",
+  "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the gradle.properties file.",
+  "loc.messages.Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+  "loc.messages.Warning_TokenNotGenerated": "Unable to use a federated token",
+  "loc.messages.Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+  "loc.messages.Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+  "loc.messages.Info_GradleUserHomeFolderDoesntExist": ".gradle folder not found at location %s, creating new folder.",
+  "loc.messages.Info_GradlePropertiesRead": "Adding authentication to gradle.properties file %s.",
+  "loc.messages.Info_CreatingGradleProperties": "Creating new gradle.properties at path %s.",
+  "loc.messages.Info_WritingToGradleProperties": "Writing new gradle.properties with added authentication.",
+  "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from federated service connection %s for feed %s",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
+  "loc.messages.Error_InvalidServiceConnection": "The service connection for %s is invalid.",
+  "loc.messages.Error_FailedCleanupGradle": "Failed to delete credentials from the gradle.properties file: %s",
+  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+}
