@@ -34,6 +34,8 @@ Tasks/AzureCLIV1/      @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureCLIV2/     @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/AzureCLIV3/     @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team  @manolerazvan 
 
 Tasks/AzureCloudPowerShellDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
