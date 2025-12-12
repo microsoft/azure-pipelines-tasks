@@ -6,7 +6,7 @@
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV3/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
-  "releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections.",
+  "releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections. \n- Added 'Allow no Azure subscriptions' option to support identities with no subscription access.",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -206,6 +206,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "Allow no Azure subscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If true, the task will not attempt to set a subscription context and will allow logins where the identity has access to no subscriptions. You can also supply an all-zero SubscriptionID (00000000-0000-0000-0000-000000000000) in the service connection to implicitly skip setting the subscription context.",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "[Experimental] Keep Azure CLI session active",
@@ -256,6 +265,7 @@
     "FailedToInstallAzureDevOpsCLI": "Failed to install Azure DevOps CLI extension",
     "FailedToLoginAzureDevOpsCLI": "Failed to login to Azure DevOps CLI",
     "FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
-    "FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project"
+    "FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project",
+    "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
   }
 }

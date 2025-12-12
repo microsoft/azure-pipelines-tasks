@@ -206,6 +206,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowNoSubscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowNoSubscriptions",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.keepAzSessionActive",
@@ -256,6 +265,7 @@
     "FailedToInstallAzureDevOpsCLI": "ms-resource:loc.messages.FailedToInstallAzureDevOpsCLI",
     "FailedToLoginAzureDevOpsCLI": "ms-resource:loc.messages.FailedToLoginAzureDevOpsCLI",
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
-    "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject"
+    "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
+    "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
   }
 }

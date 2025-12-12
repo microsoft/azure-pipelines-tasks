@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV3/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
   "loc.description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
-  "loc.releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections.",
+  "loc.releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections. \n- Added 'Allow no Azure subscriptions' option to support identities with no subscription access.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectionType": "Connection Type",
   "loc.input.help.connectionType": "Type of service connection to use",
@@ -35,6 +35,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
   "loc.input.label.visibleAzLogin": "az login output visibility",
   "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
+  "loc.input.label.allowNoSubscriptions": "Allow no Azure subscriptions",
+  "loc.input.help.allowNoSubscriptions": "If true, the task will not attempt to set a subscription context and will allow logins where the identity has access to no subscriptions. You can also supply an all-zero SubscriptionID (00000000-0000-0000-0000-000000000000) in the service connection to implicitly skip setting the subscription context.",
   "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
   "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
   "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
@@ -63,5 +65,6 @@
   "loc.messages.FailedToInstallAzureDevOpsCLI": "Failed to install Azure DevOps CLI extension",
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Failed to login to Azure DevOps CLI",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
-  "loc.messages.FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project"
+  "loc.messages.FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project",
+  "loc.messages.SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
 }
