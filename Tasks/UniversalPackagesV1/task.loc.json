@@ -1,6 +1,7 @@
 {
-  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
-  "name": "UniversalPackages",
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "UniversalPackagesTest",
+  "_comment": "Original id: e0b79640-8625-11e8-91be-db2878ff888a, Original name: UniversalPackages",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -10,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 267,
-    "Patch": 0
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -36,7 +37,7 @@
     },
     {
       "name": "adoServiceConnection",
-      "type": "string",
+      "type": "connectedService:workloadidentityuser",
       "label": "ms-resource:loc.input.label.adoServiceConnection",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection"
@@ -45,7 +46,7 @@
       "name": "organization",
       "type": "string",
       "label": "ms-resource:loc.input.label.organization",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.organization"
     },
     {
@@ -122,12 +123,10 @@
     }
   },
   "messages": {
-    "Debug_AcquiringConnectionData": "ms-resource:loc.messages.Debug_AcquiringConnectionData",
     "Debug_ArtifactToolPath": "ms-resource:loc.messages.Debug_ArtifactToolPath",
-    "Debug_ConnectionDataAcquired": "ms-resource:loc.messages.Debug_ConnectionDataAcquired",
-    "Debug_ConnectionDataFailed": "ms-resource:loc.messages.Debug_ConnectionDataFailed",
     "Debug_DownloadOperation": "ms-resource:loc.messages.Debug_DownloadOperation",
     "Debug_Downloading": "ms-resource:loc.messages.Debug_Downloading",
+    "Debug_FeedValidationSuccess": "ms-resource:loc.messages.Debug_FeedValidationSuccess",
     "Debug_GettingArtifactTool": "ms-resource:loc.messages.Debug_GettingArtifactTool",
     "Debug_NoProvenanceSession": "ms-resource:loc.messages.Debug_NoProvenanceSession",
     "Debug_OrgScopedFeed": "ms-resource:loc.messages.Debug_OrgScopedFeed",
@@ -142,16 +141,18 @@
     "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
     "Debug_UsingArtifactToolPublish": "ms-resource:loc.messages.Debug_UsingArtifactToolPublish",
     "Debug_UsingBuildServiceCreds": "ms-resource:loc.messages.Debug_UsingBuildServiceCreds",
-    "Debug_UsingFallbackUri": "ms-resource:loc.messages.Debug_UsingFallbackUri",
-    "Debug_UsingOptimizedEndpoint": "ms-resource:loc.messages.Debug_UsingOptimizedEndpoint",
-    "Debug_UsingPackagingLocation": "ms-resource:loc.messages.Debug_UsingPackagingLocation",
     "Debug_UsingProvenanceSession": "ms-resource:loc.messages.Debug_UsingProvenanceSession",
+    "Debug_UsingServiceUri": "ms-resource:loc.messages.Debug_UsingServiceUri",
     "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
+    "Debug_ValidatedServiceUri": "ms-resource:loc.messages.Debug_ValidatedServiceUri",
+    "Debug_ValidatingOrganization": "ms-resource:loc.messages.Debug_ValidatingOrganization",
     "Debug_WifTokenObtained": "ms-resource:loc.messages.Debug_WifTokenObtained",
     "Error_AuthenticationFailed": "ms-resource:loc.messages.Error_AuthenticationFailed",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
+    "Error_FailedToValidateFeed": "ms-resource:loc.messages.Error_FailedToValidateFeed",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
+    "Error_OrganizationRequired": "ms-resource:loc.messages.Error_OrganizationRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
     "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
@@ -161,6 +162,7 @@
     "Success_PackagesPublished": "ms-resource:loc.messages.Success_PackagesPublished",
     "Warning_BuildIdentityFeedHint": "ms-resource:loc.messages.Warning_BuildIdentityFeedHint",
     "Warning_BuildIdentityOperationHint": "ms-resource:loc.messages.Warning_BuildIdentityOperationHint",
+    "Warning_FailedToGetProvenanceSession": "ms-resource:loc.messages.Warning_FailedToGetProvenanceSession",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   }
