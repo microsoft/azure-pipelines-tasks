@@ -1,58 +1,147 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getSystemAccessToken, getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-import { getConnectionDataForProtocol } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
-import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
-import { ConnectionData } from "azure-devops-node-api/interfaces/LocationsInterfaces";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
-import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
-import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import { getFeedUriFromBaseServiceUri } from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { UniversalPackageContext } from "./UniversalPackageContext";
 
-export interface UniversalPackageInputs {
-    organization: string;
-    feed: string;
-    packageName: string;
-    packageVersion: string;
-    adoServiceConnection: string | undefined;
-    directory: string;
+// Re-export for use by download/publish modules
+export { artifactToolRunner };
+
+export async function trySetAuth(context: UniversalPackageContext): Promise<boolean> {
+    try {
+        const toolRunnerOptions = artifactToolRunner.getOptions();
+        let accessToken: string | undefined;
+
+        if (context.adoServiceConnection) {
+            tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
+            try {
+                accessToken = await getFederatedWorkloadIdentityCredentials(context.adoServiceConnection);
+                if (accessToken) {
+                    tl.debug(tl.loc('Debug_WifTokenObtained'));
+                } else {
+                    tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
+                }
+            } catch (err) {
+                tl.warning(tl.loc('Warning_WifAuthFailed', context.adoServiceConnection, err));
+            }
+        }
+
+        accessToken ??= getSystemAccessToken();
+
+        if (!accessToken) {
+            throw new Error(tl.loc('Error_NoAuthToken'));
+        }
+
+        tl.debug(tl.loc('Debug_UsingBuildServiceCreds'));
+
+        // Get serviceUri based on whether we're using a service connection
+        let serviceUri: string;
+        if (context.adoServiceConnection) {
+            // Using service connection: organization must be specified for cross-org scenario
+            if (!context.organization) {
+                throw new Error(tl.loc('Error_OrganizationRequired'));
+            }
+            serviceUri = `https://dev.azure.com/${encodeURIComponent(context.organization)}`;
+        } else {
+            // Using pipeline identity: get serviceUri from SYSTEMVSSCONNECTION
+            serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+        }
+
+        tl.debug(tl.loc('Debug_UsingServiceUri', serviceUri));
+
+        toolRunnerOptions.env.UNIVERSAL_AUTH_TOKEN = accessToken;
+
+        context.accessToken = accessToken;
+        context.serviceUri = serviceUri;
+        context.toolRunnerOptions = toolRunnerOptions;
+        return true;
+    } catch (error) {
+        handleTaskError(error, tl.loc('Error_AuthenticationFailed'));
+        return false;
+    }
 }
 
-export enum OperationType {
-    Download = "download",
-    Publish = "publish"
+export async function trySetFeed(context: UniversalPackageContext): Promise<boolean> {
+    try {
+        tl.debug(tl.loc('Debug_ParsedFeedInfo', context.serviceUri, context.projectAndFeed));
+
+        const { feedName, projectName } = parseFeedInput(context.projectAndFeed);
+
+        // Validate organization, token, and feed access
+        tl.debug(tl.loc('Debug_ValidatingOrganization', context.serviceUri));
+        
+        const packagingUrl = await getFeedUriFromBaseServiceUri(context.serviceUri, context.accessToken);
+        
+        // Validate feed exists and token has access by calling the Feeds API
+        await validateFeedAccess(packagingUrl, feedName, projectName, context.accessToken);
+
+        tl.debug(tl.loc('Debug_ValidatedServiceUri', context.serviceUri));
+
+        context.feedName = feedName;
+        context.projectName = projectName;
+        return true;
+    } catch (error) {
+        handleTaskError(error, tl.loc('Error_FailedToValidateFeed', context.serviceUri, context.projectAndFeed));
+        return false;
+    }
 }
 
-export interface FeedInfo {
-    feedName: string;
-    projectName: string | null;
-    organizationName: string;
-    serviceUri: string;
-}
-
-export interface AuthenticationInfo {
-    accessToken: string;
-    toolRunnerOptions: IExecOptions;
-}
-
-export function getUniversalPackageInputs(): UniversalPackageInputs {
-    return {
-        organization: tl.getInput("organization", true),
-        feed: tl.getInput("feed", true),
-        packageName: tl.getInput("packageName", true),
-        packageVersion: tl.getInput("packageVersion", true),
-        adoServiceConnection: tl.getInput("adoServiceConnection", false),
-        directory: tl.getInput("directory", true)
-    };
-}
-
-export function parseFeedInfo(organization: string, feed: string): FeedInfo {
-    const serviceUri = `https://dev.azure.com/${encodeURIComponent(organization)}`;
-    tl.debug(tl.loc('Debug_ParsedFeedInfo', serviceUri, feed));
+async function validateFeedAccess(packagingUrl: string, feedId: string, projectId: string | null, accessToken: string): Promise<void> {
+    const webApi = getWebApiWithProxy(packagingUrl, accessToken);
     
+    // Use the Package API to validate feed exists and token has access
+    // These values come from ArtifactToolUtilities.ts in packaging-common
+    const ApiVersion = "3.0-preview.1";
+    const PackagingAreaName = "Packaging";
+    const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
+    
+    let routeValues: any = { feedId: feedId };
+    if (projectId) {
+        routeValues.project = projectId;
+    }
+    
+    // This will throw if the feed doesn't exist or token doesn't have access
+    const data = await webApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues);
+    tl.debug(tl.loc('Debug_FeedValidationSuccess', data.requestUrl));
+}
+
+export async function tryDownloadArtifactTool(context: UniversalPackageContext): Promise<boolean> {
+    tl.debug(tl.loc('Debug_GettingArtifactTool'));
+    
+    try {
+        const localAccessToken = getSystemAccessToken();
+        const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+        const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(
+            serviceUri,
+            localAccessToken);
+
+        tl.debug(tl.loc("Debug_RetrievingArtifactToolUri", blobUri));
+
+        const artifactToolPath = await retryOnException(
+            () => artifactToolUtilities.getArtifactToolFromService(
+                blobUri,
+                localAccessToken,
+                "artifacttool"), 3, 1000);
+
+        tl.debug(tl.loc("Debug_ArtifactToolPath", artifactToolPath));
+        
+        context.artifactToolPath = artifactToolPath;
+        return true;
+    } catch (error) {
+        const errorMessage = tl.loc("Error_FailedToGetArtifactTool", error.message);
+        handleTaskError(error, errorMessage);
+        return false;
+    } finally {
+        logUniversalStartupTelemetry(context.artifactToolPath);
+    }
+}
+
+function parseFeedInput(feed: string): { feedName: string; projectName: string | null } {
     let feedName: string;
     let projectName: string = null;
     
@@ -68,47 +157,11 @@ export function parseFeedInfo(organization: string, feed: string): FeedInfo {
 
     return {
         feedName,
-        projectName,
-        organizationName: organization,
-        serviceUri
+        projectName
     };
 }
 
-export async function setupAuthentication(adoServiceConnection: string | undefined): Promise<AuthenticationInfo> {
-    let accessToken: string | undefined;
-    const toolRunnerOptions = artifactToolRunner.getOptions();
-    
-    if (adoServiceConnection) {
-        tl.debug(tl.loc('Debug_UsingWifAuth', adoServiceConnection));
-        try {
-            accessToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
-            if (accessToken) {
-                tl.debug(tl.loc('Debug_WifTokenObtained'));
-            } else {
-                tl.warning(tl.loc('Warning_WifAuthNoToken', adoServiceConnection));
-            }
-        } catch (err) {
-            tl.warning(tl.loc('Warning_WifAuthFailed', adoServiceConnection, err));
-        }
-    }
-    
-    accessToken ??= getSystemAccessToken();
-    
-    if (!accessToken) {
-        throw new Error(tl.loc('Error_NoAuthToken'));
-    }
-    
-    tl.debug(tl.loc('Debug_UsingBuildServiceCreds'));
-    
-    toolRunnerOptions.env.UNIVERSAL_AUTH_TOKEN = accessToken;
-
-    return {
-        accessToken,
-        toolRunnerOptions
-    };
-}
-
-export function handleTaskError(err: any, errorMessage: string, feedInfo?: FeedInfo): void {
+export function handleTaskError(err: any, errorMessage: string, context?: UniversalPackageContext): void {
     tl.error(err);
 
     const buildIdentityDisplayName = tl.getVariable('Build.RequestedFor') || 
@@ -119,77 +172,34 @@ export function handleTaskError(err: any, errorMessage: string, feedInfo?: FeedI
     
     tl.warning(tl.loc("Warning_BuildIdentityOperationHint", buildIdentityDisplayName, buildIdentityAccount));
     
-    if (feedInfo) {
-        const feedUrl = constructFeedPermissionsUrl(feedInfo);
-        tl.warning(tl.loc("Warning_BuildIdentityFeedHint", feedInfo.feedName, feedUrl));
+    if (context && context.organization && context.feedName) {
+        const feedUrl = constructFeedPermissionsUrl(context.organization, context.projectName, context.feedName);
+        tl.warning(tl.loc("Warning_BuildIdentityFeedHint", context.feedName, feedUrl));
     }
 
     tl.setResult(tl.TaskResult.Failed, errorMessage);
 }
 
-function constructFeedPermissionsUrl(feedInfo: FeedInfo): string {
-    const baseUrl = `https://dev.azure.com/${encodeURIComponent(feedInfo.organizationName)}`;
-    if (feedInfo.projectName) {
-        return `${baseUrl}/${encodeURIComponent(feedInfo.projectName)}/_artifacts/feed/${encodeURIComponent(feedInfo.feedName)}/settings/permissions`;
+function constructFeedPermissionsUrl(organizationName: string, projectName: string | null | undefined, feedName: string): string {
+    const baseUrl = `https://dev.azure.com/${encodeURIComponent(organizationName)}`;
+    if (projectName) {
+        return `${baseUrl}/${encodeURIComponent(projectName)}/_artifacts/feed/${encodeURIComponent(feedName)}/settings/permissions`;
     } else {
-        return `${baseUrl}/_artifacts/feed/${encodeURIComponent(feedInfo.feedName)}/settings/permissions`;
+        return `${baseUrl}/_artifacts/feed/${encodeURIComponent(feedName)}/settings/permissions`;
     }
 }
 
-export async function downloadArtifactTool(): Promise<string> {
-    const localAccessToken = getSystemAccessToken();
-    const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(
-        serviceUri,
-        localAccessToken);
-
-    tl.debug(tl.loc("Debug_RetrievingArtifactToolUri", blobUri));
-
-    const artifactToolPath = await retryOnException(
-        () => artifactToolUtilities.getArtifactToolFromService(
-            blobUri,
-            localAccessToken,
-            "artifacttool"), 3, 1000);
-
-    tl.debug(tl.loc("Debug_ArtifactToolPath", artifactToolPath));
-    return artifactToolPath;
-}
-
-export async function getPackagingLocation(fallbackServiceUri: string): Promise<string> {
-    let packagingLocation: string | undefined;
-    let connectionData: ConnectionData | undefined;
-    
+export function validateServerType(): boolean {
     try {
-        tl.debug(tl.loc('Debug_AcquiringConnectionData'));
-        connectionData = await getConnectionDataForProtocol(ProtocolType.NuGet);
-        tl.debug(tl.loc('Debug_ConnectionDataAcquired'));
+        const serverType = tl.getVariable("System.ServerType");
+        if (!serverType || serverType.toLowerCase() !== "hosted") {
+            throw new Error(tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
+        }
+        return true;
     } catch (error) {
-        tl.debug(tl.loc('Debug_ConnectionDataFailed'));
-        logError(error);
+        handleTaskError(error, tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
+        return false;
     }
-    
-    packagingLocation ??= getDefaultAccessPoint(connectionData) || fallbackServiceUri;
-    tl.debug(tl.loc('Debug_UsingPackagingLocation', packagingLocation));
-    
-    if (packagingLocation !== fallbackServiceUri) {
-        tl.debug(tl.loc('Debug_UsingOptimizedEndpoint'));
-    } else {
-        tl.debug(tl.loc('Debug_UsingFallbackUri'));
-    }
-    
-    return packagingLocation;
-}
-
-function getDefaultAccessPoint(connectionData: ConnectionData | undefined): string | undefined {
-    if (!connectionData?.locationServiceData?.accessMappings || !connectionData.locationServiceData.defaultAccessMappingMoniker) {
-        return undefined;
-    }
-
-    const defaultMapping = connectionData.locationServiceData.accessMappings.find((mapping: any) =>
-        mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
-    );
-
-    return defaultMapping?.accessPoint;
 }
 
 export function logUniversalStartupTelemetry(artifactToolPath: string): void {
@@ -218,5 +228,3 @@ export function logCommandResult(area: string, feature: string, resultCode: numb
         tl.debug(tl.loc('Debug_TelemetryResultFailed', err));
     }
 }
-
-export { artifactToolRunner };

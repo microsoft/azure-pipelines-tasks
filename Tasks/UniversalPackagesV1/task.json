@@ -1,6 +1,7 @@
 {
-  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
-  "name": "UniversalPackages",
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "UniversalPackagesTest",
+  "_comment": "Original id: e0b79640-8625-11e8-91be-db2878ff888a, Original name: UniversalPackages",
   "friendlyName": "Universal packages",
   "description": "Download or publish Universal Packages",
   "author": "Microsoft Corporation",
@@ -10,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 267,
-    "Patch": 0
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -36,7 +37,7 @@
     },
     {
       "name": "adoServiceConnection",
-      "type": "string",
+      "type": "connectedService:workloadidentityuser",
       "label": "Azure DevOps Service Connection",
       "required": false,
       "helpMarkDown": "Optional. The name of the Azure DevOps Service Connection to use. If not set, build identity is used."
@@ -45,8 +46,8 @@
       "name": "organization",
       "type": "string",
       "label": "Organization",
-      "required": true,
-      "helpMarkDown": "The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg)."
+      "required": false,
+      "helpMarkDown": "The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg). Required when using a service connection for cross-organization access. When not specified, uses the current pipeline's organization."
     },
     {
       "name": "feed",
@@ -123,12 +124,10 @@
     }
   },
   "messages": {
-    "Debug_AcquiringConnectionData": "Acquiring connection data for packaging service discovery",
     "Debug_ArtifactToolPath": "Artifact tool path: %s",
-    "Debug_ConnectionDataAcquired": "Successfully acquired connection data for packaging service",
-    "Debug_ConnectionDataFailed": "Failed to acquire connection data, will use fallback service URI",
     "Debug_DownloadOperation": "Download operation - Package: %s@%s, Target: %s",
     "Debug_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+    "Debug_FeedValidationSuccess": "Feed validation successful: %s",
     "Debug_GettingArtifactTool": "Getting artifact tool",
     "Debug_NoProvenanceSession": "No provenance session available, using original feed ID",
     "Debug_OrgScopedFeed": "Organization-scoped feed detected - Feed: %s",
@@ -143,16 +142,18 @@
     "Debug_UsingArtifactToolDownload": "Using artifact tool to download the package",
     "Debug_UsingArtifactToolPublish": "Using artifact tool to publish the package",
     "Debug_UsingBuildServiceCreds": "Using build service credentials for authentication",
-    "Debug_UsingFallbackUri": "Using fallback service URI for packaging operations",
-    "Debug_UsingOptimizedEndpoint": "Using optimized packaging service endpoint from service discovery",
-    "Debug_UsingPackagingLocation": "Using packaging location: %s",
     "Debug_UsingProvenanceSession": "Using provenance session ID: %s",
+    "Debug_UsingServiceUri": "Using service URI: %s",
     "Debug_UsingWifAuth": "Using WIF authentication with service connection: %s",
+    "Debug_ValidatedServiceUri": "Validated service URI: %s",
+    "Debug_ValidatingOrganization": "Validating organization and feed access: %s",
     "Debug_WifTokenObtained": "Successfully obtained WIF token for authentication",
     "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
+    "Error_FailedToValidateFeed": "Failed to validate service URI '%s' and feed '%s'. Verify the service exists, the feed exists, and the authentication token has permission to access it.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
+    "Error_OrganizationRequired": "Organization is required when using a service connection for cross-organization access.",
     "Error_PackagesFailedToDownload": "Packages failed to download",
     "Error_PackagesFailedToPublish": "Packages failed to publish",
     "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
@@ -162,6 +163,7 @@
     "Success_PackagesPublished": "Packages were published successfully",
     "Warning_BuildIdentityFeedHint": "Check feed '%s' permissions: %s",
     "Warning_BuildIdentityOperationHint": "Operation failed using identity '%s' (%s).",
+    "Warning_FailedToGetProvenanceSession": "Failed to get provenance session for publishing: %s. Continuing with direct feed publish.",
     "Warning_WifAuthFailed": "WIF authentication failed for service connection %s, falling back to build service token: %s",
     "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection %s, falling back to build service token"
   }

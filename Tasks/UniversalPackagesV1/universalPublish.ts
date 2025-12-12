@@ -1,77 +1,66 @@
 import * as tl from "azure-pipelines-task-lib";
-import { IExecOptions, IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
-import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
+import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
 
-export async function run(artifactToolPath: string, authInfo: helpers.AuthenticationInfo): Promise<void> {
-    // Get and validate inputs
-    const inputs = helpers.getUniversalPackageInputs();
-    const feedInfo = helpers.parseFeedInfo(inputs.organization, inputs.feed);
+export async function run(context: UniversalPackageContext): Promise<void> {
+    tl.debug(tl.loc('Debug_PublishOperation', context.packageName, context.packageVersion, context.directory));
     
+    // Get provenance session ID (use feedName as fallback)
+    const feedId = await tryGetProvenanceSessionId(context);
+
+    // Publish the package
     try {
-        tl.debug(tl.loc('Debug_PublishOperation', inputs.packageName, inputs.packageVersion, inputs.directory));
-        
-        // Initialize feedId with feedName (may be overridden by sessionId for provenance)
-        let feedId = feedInfo.feedName;
-        let sessionId: string;
-
-        // Set up provenance session
-        const packagingLocation = await helpers.getPackagingLocation(feedInfo.serviceUri);
-        
-        const pkgConn = getWebApiWithProxy(packagingLocation, authInfo.accessToken);
-        sessionId = await ProvenanceHelper.GetSessionId(
-            feedId,
-            feedInfo.projectName,
-            "upack", /* must match protocol name on the server */
-            pkgConn.serverUrl,
-            [pkgConn.authHandler],
-            pkgConn.options);
-
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
-
-        // Override feedId with sessionId for provenance if available
-        if (sessionId != null) {
-            tl.debug(tl.loc('Debug_UsingProvenanceSession', sessionId));
-            feedId = sessionId;
-        } else {
-            tl.debug(tl.loc('Debug_NoProvenanceSession'));
-        }
-
-        const publishOptions = {
-            artifactToolPath,
-            projectId: feedInfo.projectName,
-            feedId,
-            accountUrl: feedInfo.serviceUri,
-            packageName: inputs.packageName,
-            packageVersion: inputs.packageVersion,
-        } as helpers.artifactToolRunner.IArtifactToolOptions;
-
-        publishPackageUsingArtifactTool(inputs.directory, publishOptions, authInfo.toolRunnerOptions);
-
+        publishPackageUsingArtifactTool(context, feedId);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished"));
     } catch (err) {
-        helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), feedInfo);
+        helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), context);
     }
 }
 
-function publishPackageUsingArtifactTool(
-    publishDir: string,
-    options: helpers.artifactToolRunner.IArtifactToolOptions,
-    execOptions: IExecOptions) {
+async function tryGetProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
+    try {
+        // Create WebApi connection for provenance
+        const webApi = getWebApiWithProxy(context.serviceUri, context.accessToken);
+        
+        const sessionId = await ProvenanceHelper.GetSessionId(
+            context.feedName,
+            context.projectName,
+            "upack", /* must match protocol name on the server */
+            webApi.serverUrl,
+            [webApi.authHandler],
+            webApi.options);
+
+        if (sessionId != null) {
+            tl.debug(tl.loc('Debug_UsingProvenanceSession', sessionId));
+            return sessionId;
+        } else {
+            tl.debug(tl.loc('Debug_NoProvenanceSession'));
+            return context.feedName;
+        }
+    } catch (err) {
+        tl.warning(tl.loc('Warning_FailedToGetProvenanceSession', err.message || err));
+        return context.feedName;
+    }
+}
+
+function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedId: string) {
     const command = new Array<string>();
     command.push(
         "universal", "publish",
-        "--feed", options.feedId,
-        "--service", options.accountUrl,
-        "--package-name", options.packageName,
-        "--package-version", options.packageVersion,
-        "--path", publishDir,
+        "--feed", feedId,
+        "--service", context.serviceUri,
+        "--package-name", context.packageName,
+        "--package-version", context.packageVersion,
+        "--path", context.directory,
         "--patvar", "UNIVERSAL_AUTH_TOKEN",
         "--verbosity", tl.getInput("verbosity"));
 
-    if (options.projectId) {
-        command.push("--project", options.projectId);
+    if (context.projectName) {
+        command.push("--project", context.projectName);
     }
 
     const packageDescription = tl.getInput("packageDescription");
@@ -79,11 +68,11 @@ function publishPackageUsingArtifactTool(
         command.push("--description", packageDescription);
     }
 
-    tl.debug(tl.loc("Debug_Publishing", options.packageName, options.packageVersion, options.feedId, options.projectId));
+    tl.debug(tl.loc("Debug_Publishing", context.packageName, context.packageVersion, feedId, context.projectName));
     const execResult: IExecSyncResult = helpers.artifactToolRunner.runArtifactTool(
-        options.artifactToolPath,
+        context.artifactToolPath,
         command,
-        execOptions);
+        context.toolRunnerOptions);
 
     if (execResult.code === 0) {
         return;
