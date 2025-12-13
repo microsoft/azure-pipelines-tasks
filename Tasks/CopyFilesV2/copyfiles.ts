@@ -2,6 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import { RetryOptions, RetryHelper } from './retrylogichelper'; 
+import fastGlob from 'fast-glob';
 
 /**
  * Shows timestamp change operation results
@@ -105,12 +106,43 @@ async function main(): Promise<void> {
     // normalize the source folder path. this is important for later in order to accurately
     // determine the relative path of each found file (substring using sourceFolder.length).
     sourceFolder = path.normalize(sourceFolder);
-    let allPaths: string[] = tl.find(sourceFolder, findOptions);
-    let sourceFolderPattern = sourceFolder.replace('[', '[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
-    let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
-    let matchedFiles: string[] = filterOutDirectories(matchedPaths);
+    // Normalize patterns: if patterns were given as absolute rooted under sourceFolder, make them relative.
+    const globPatterns = contents.map(p => {
+        let pattern = p.trim();
+        if (!pattern) return pattern;
+        // If absolute and starts with sourceFolder, strip the prefix
+        if (path.isAbsolute(pattern) && pattern.startsWith(sourceFolder)) {
+            pattern = pattern.substring(sourceFolder.length).replace(/^[/\\]/, '');
+        }
+        // fast-glob handles forward slashes best
+        return pattern.split(path.sep).join('/');
+    }).filter(p => !!p);
 
-    // copy the files to the target folder
+    // If no patterns, default to all files
+    if (globPatterns.length === 0) {
+        globPatterns.push('**/*');
+    }
+
+    tl.debug(`Using fast-glob with patterns: ${globPatterns.join(', ')}`);
+
+    const fgOptions: fastGlob.Options = {
+        cwd: sourceFolder,
+        dot: true,
+        onlyFiles: true,
+        followSymbolicLinks: findOptions.followSymbolicLinks,
+        unique: true,
+        suppressErrors: true,
+        markDirectories: false,
+    };
+
+    let matchedFiles: string[] = [];
+    try {
+        const relFiles: string[] = await fastGlob(globPatterns, fgOptions);
+        matchedFiles = relFiles.map(r => path.join(sourceFolder, r));
+    } catch (e) {
+        tl.setResult(tl.TaskResult.Failed, `fast-glob failed: ${e}`);
+        return;
+    }
     console.log(tl.loc('FoundNFiles', matchedFiles.length));
 
     if (matchedFiles.length > 0) {
