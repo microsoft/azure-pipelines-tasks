@@ -310,9 +310,9 @@ describe('DotNetCoreExe Suite', function () {
     it('publish does not use logger when feature flag is disabled', async () => {
         let tp = path.join(__dirname, 'publishWithFeatureFlagDisabled.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         await tr.runAsync();
-        
+
         assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.ran('dotnet publish web/project.csproj'), 'should have run dotnet publish');
@@ -493,6 +493,22 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj'), 'it should have run dotnet test');
         assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
         assert(!tr.stdOutContained('vso[results.publish'), 'it shouldnt contain publish command');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('test command finds non-root global.json file based on working directory', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        console.log(tr.stdout);
+
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test --project c:\\agent\\home\\directory\\sources\\src\\temp.csproj'), 'it should have run dotnet test in MTP mode');
+        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+        assert(tr.stdOutContained('global.json found at c:\\agent\\home\\directory\\sources\\src\\global.json. Test runner is: \'Microsoft.Testing.Platform\''), 'it should have used MTP runner from global.json');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
