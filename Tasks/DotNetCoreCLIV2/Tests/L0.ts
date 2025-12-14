@@ -502,9 +502,6 @@ describe('DotNetCoreExe Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         await tr.runAsync();
-
-        console.log(tr.stdout);
-
         assert(tr.invokedToolCount === 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test --project c:\\agent\\home\\directory\\sources\\src\\temp.csproj'), 'it should have run dotnet test in MTP mode');
         assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
