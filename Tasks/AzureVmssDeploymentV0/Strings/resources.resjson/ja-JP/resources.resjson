@@ -24,7 +24,7 @@
   "loc.input.help.customScript": "Custom Script VM extension を使用して実行されるスクリプトです。このスクリプトは、ディレクトリ内の他のスクリプトを呼び出すことができます。このスクリプトは、以下の引数を渡して呼び出されます。<br/>コマンドを実行するためにこのスクリプトをこれらの引数と併せて使用できます。例:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) では、Web アプリケーションの web.config 内の接続文字列が更新されます。<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey では、サービス プリンシパル キーを含む暗号化されたファイルが作成されます。",
   "loc.input.label.customScriptArguments": "引数",
   "loc.input.help.customScriptArguments": "カスタム スクリプトは、引数を渡して呼び出されます。ビルドまたはリリースの変数を使用できます。これにより、シークレットを使いやすくなります。",
-  "loc.input.label.customScriptsStorageAccount": "カスタム スクリプトをアップロードする Azure Storage アカウント",
+  "loc.input.label.customScriptsStorageAccount": "カスタム スクリプトをアップロードする Azure ストレージ アカウント",
   "loc.input.help.customScriptsStorageAccount": "カスタム スクリプト拡張機能は、VM スケール セットの各仮想マシンで提供されたスクリプトをダウンロードして実行します。これらのスクリプトは、ここで指定されたストレージ アカウントで格納されます。既存の ARM ストレージ アカウントを指定します。",
   "loc.input.label.skipArchivingCustomScripts": "カスタム スクリプトのアーカイブをスキップする",
   "loc.input.help.skipArchivingCustomScripts": "既定では、このタスクは、カスタム スクリプトが入ったディレクトリの圧縮アーカイブを作成します。これにより、Azure Storage へのアップロード時のパフォーマンスと信頼性が向上します。選択しない場合は、アーカイブは実行されず、すべてのファイルが個別にアップロードされます。",

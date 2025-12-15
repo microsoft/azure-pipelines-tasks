@@ -15,7 +15,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 253,
+        "Minor": 267,
         "Patch": 0
     },
     "inputs": [
@@ -41,7 +41,7 @@
             "label": "Allow approvers to approve their own run",
             "required": false,
             "defaultValue": "true",
-            "helpMarkDown": "If this is true, approver will be able to approve their own run"            
+            "helpMarkDown": "If this is true, approver will be able to approve their own run"
         },
         {
             "name": "instructions",
