@@ -383,7 +383,7 @@ export class azureclitask {
                 }
                 return idToken;
             } else {
-                tl.debug("Using bound idToken from service endpoint.");
+                tl.debug("Late-bound idToken not found in endpoint data, falling back to OIDC API.");
                  try {
                     emitTelemetry("AzureCLIV2", "LateBoundIdToken", {
                         "connectedService": connectedService,

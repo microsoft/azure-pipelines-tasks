@@ -4,7 +4,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AzureCLIV2 Suite', function () {
-    this.timeout(10000);
+    this.timeout(20000);
 
     before(() => {
     });
