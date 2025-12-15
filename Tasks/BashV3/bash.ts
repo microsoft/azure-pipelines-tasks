@@ -228,7 +228,7 @@ async function run() {
         tl.setResult(result, null, true);
     }
     catch (err: any) {
-        tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
+        tl.setResult(tl.TaskResult.Failed, err.message || 'run() errored out', true);
     }
 }
 

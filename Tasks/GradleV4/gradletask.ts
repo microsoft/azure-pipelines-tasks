@@ -81,7 +81,7 @@ async function run() {
             codeAnalysisResult.analysisError = err;
 
             console.error(err);
-            tl.debug('taskRunner fail');
+            tl.debug('taskRunner errored out');
         }
 
         tl.debug('Processing code analysis results');

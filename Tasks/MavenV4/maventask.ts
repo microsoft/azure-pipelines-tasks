@@ -59,7 +59,7 @@ var mvnExec: string = '';
 
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
-    tl.debug('Using Maven path from user input');
+    tl.debug('Using Maven path from user input provided');
     var mavenPath = tl.getPathInput('mavenPath', true, true);
     mvnExec = path.join(mavenPath, 'bin', 'mvn');
 
