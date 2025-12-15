@@ -221,7 +221,7 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   // Enable debug mode for triggered pipelines
   const debugMode = process.env.CANARY_TEST_DEBUG_MODE;
   const buildParameters: Record<string, string> = {
-    CANARY_TEST_TASKNAME: pipeline.name!,
+    CANARY_TEST_TASKNAME: pipeline.name,
     CANARY_TEST_BRANCH: branch,
     CANARY_TEST_CONFIG: config,
     CANARY_TEST_NODE_VERSION: nodeVersion
