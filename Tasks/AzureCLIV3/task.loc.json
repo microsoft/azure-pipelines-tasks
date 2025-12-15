@@ -18,7 +18,7 @@
   ],
   "demands": [],
   "version": {
-    "Major": 2,
+    "Major": 3,
     "Minor": 267,
     "Patch": 0
   },
@@ -34,6 +34,18 @@
   ],
   "inputs": [
     {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "azureRM",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType",
+      "options": {
+        "azureRM": "Azure Resource Manager",
+        "azureDevOps": "Azure DevOps"
+      }
+    },
+    {
       "name": "connectedServiceNameARM",
       "aliases": [
         "azureSubscription"
@@ -42,6 +54,18 @@
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "visibleRule": "connectionType = azureRM",
+      "properties": {
+        "EndpointFilterRule": ""
+      }
+    },
+    {
+      "name": "azureDevOpsServiceConnection",
+      "type": "connectedService:WorkloadIdentityUser",
+      "label": "ms-resource:loc.input.label.azureDevOpsServiceConnection",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.azureDevOpsServiceConnection",
+      "visibleRule": "connectionType = azureDevOps",
       "properties": {
         "EndpointFilterRule": ""
       }
@@ -182,6 +206,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowNoSubscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowNoSubscriptions",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.keepAzSessionActive",
@@ -215,7 +248,8 @@
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
-    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "AuthSchemeNotSupportedForAzureRM": "ms-resource:loc.messages.AuthSchemeNotSupportedForAzureRM",
+    "AuthSchemeNotSupportedForAzureDevOps": "ms-resource:loc.messages.AuthSchemeNotSupportedForAzureDevOps",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
@@ -227,6 +261,11 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "FailedToInstallAzureDevOpsCLI": "ms-resource:loc.messages.FailedToInstallAzureDevOpsCLI",
+    "FailedToLoginAzureDevOpsCLI": "ms-resource:loc.messages.FailedToLoginAzureDevOpsCLI",
+    "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
+    "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
+    "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
   }
 }
