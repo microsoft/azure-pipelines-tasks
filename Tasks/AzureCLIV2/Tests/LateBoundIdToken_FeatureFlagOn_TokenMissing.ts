@@ -15,6 +15,7 @@ tmr.setInput('visibleAzLogin', 'true');
 
 // Environment variables for Feature Flag
 process.env['DISTRIBUTEDTASK_TASKS_EnableLateBoundIdToken'] = 'true';
+process.env['AZURE_PIPELINES_TASK_FEATURE_UseAzVersion'] = 'false';
 
 // Mock Endpoint (Missing idToken)
 process.env['ENDPOINT_URL_AzureRM'] = 'https://management.azure.com/';
