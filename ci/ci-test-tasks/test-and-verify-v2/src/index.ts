@@ -3,7 +3,7 @@ import { BuildDefinitionReference, Build } from 'azure-devops-node-api/interface
 import { api } from './api';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
-import { getBuildConfigs } from './helpers';
+import { getBuildConfigs, getNodeVersionForTask } from './helpers';
 
 interface BuildResult { result: string; message: string }
 
@@ -159,7 +159,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     if (allowParrallelRun) {
       for (const config of configs) {
         console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
-        const pipelineBuild = await startTestPipeline(pipeline, config);
+        const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
 
         if (pipelineBuild === null) {
           console.log(`Pipeline "${pipeline.name}" is not valid.`);
@@ -170,7 +170,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
       }
     } else {
       const firstConfig = configs.shift();
-      const pipelineBuild = await startTestPipeline(pipeline, firstConfig);
+      const pipelineBuild = await startTestPipeline(pipeline, taskName, firstConfig);
 
       if (pipelineBuild === null) {
         console.log(`Pipeline "${pipeline.name}" is not valid.`);
@@ -185,7 +185,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 
         for (const config of configs) {
           console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
-          const pipelineBuild = await startTestPipeline(pipeline, config);
+          const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
           if (pipelineBuild !== null) {
             result = await completeBuild(taskName, pipelineBuild);
             buildResults.push(result);
@@ -198,21 +198,43 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     return runningBuilds;
 }
 
-async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build | null> {
+async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = ''): Promise<Build | null> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
-  const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
-  if (!branch || !nodeVersion) {
-    throw new Error('Cannot run test pipeline. Environment variables BUILD_SOURCEVERSION or CANARY_TEST_NODE_VERSION are not defined');
+  const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
+  if (!branch) {
+    throw new Error('Cannot run test pipeline. Environment variable BUILD_SOURCEVERSION is not defined');
+  }
+
+  // Get task-specific Node version, fallback to environment variable
+  let nodeVersion = envNodeVersion;
+  const taskNodeVersion = getNodeVersionForTask(taskName);
+  if (taskNodeVersion !== null) {
+    nodeVersion = taskNodeVersion.toString();
+    console.log(`Using Node version ${nodeVersion} for task ${taskName}`);
+  } else if (envNodeVersion) {
+    console.log(`Using Node version ${nodeVersion} from environment variable for task ${taskName}`);
+  } else {
+    throw new Error(`Cannot determine Node version for task ${taskName}. Neither task.json nor CANARY_TEST_NODE_VERSION environment variable provided.`);
+  }
+
+  // Enable debug mode for triggered pipelines
+  const debugMode = process.env.CANARY_TEST_DEBUG_MODE;
+  const buildParameters: Record<string, string> = {
+    CANARY_TEST_TASKNAME: pipeline.name,
+    CANARY_TEST_BRANCH: branch,
+    CANARY_TEST_CONFIG: config,
+    CANARY_TEST_NODE_VERSION: nodeVersion
+  };
+
+  // Add system.debug parameter (default enabled unless explicitly disabled)
+  if (debugMode !== 'false') {
+    buildParameters['system.debug'] = 'true';
+    console.log(`Debug mode enabled for pipeline ${pipeline.name}`);
   }
 
   try {
-    return await api.queueBuild(pipeline.id!, {
-      CANARY_TEST_TASKNAME: pipeline.name,
-      CANARY_TEST_BRANCH: branch,
-      CANARY_TEST_CONFIG: config,
-      CANARY_TEST_NODE_VERSION: nodeVersion
-    });
+    return await api.queueBuild(pipeline.id!, buildParameters);
   } catch (err: any) {
     if (err.message === 'Could not queue the build because there were validation errors or warnings.') {
       return null;
