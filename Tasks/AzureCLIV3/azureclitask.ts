@@ -5,7 +5,6 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
-import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
@@ -28,6 +27,7 @@ export class azureclitask {
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
+        var connectionType: string = "";
 
         if(tl.getBoolFeatureFlag('AZP_AZURECLIV2_SETUP_PROXY_ENV')) {
             const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
@@ -39,7 +39,7 @@ export class azureclitask {
         }
 
         try{
-            var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
+            var scriptType: ScriptType = ScriptTypeFactory.getScriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
             if (tl.getInput("scriptLocation", true).toLowerCase() === "scriptPath" && !tl.filePathSupplied("cwd")) {
@@ -73,11 +73,25 @@ export class azureclitask {
 
             // set az cli config dir
             this.setConfigDirectory();
-            this.setAzureCloudBasedOnServiceEndpoint();
-            var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-            const authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
             
-            await this.loginAzureRM(connectedService);
+            connectionType = tl.getInput("connectionType", false) || "azureRM";
+            var connectedService: string;
+            var authorizationScheme: string;
+
+            if (connectionType === "azureRM") {
+                this.setAzureCloudBasedOnServiceEndpoint();
+                connectedService = tl.getInput("connectedServiceNameARM", true);
+                authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+
+                await this.loginAzureRM(connectedService);
+            } else if (connectionType === "azureDevOps") {
+                connectedService = tl.getInput("azureDevOpsServiceConnection", true);
+                authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+
+                await this.setupAzureDevOpsCLI(connectedService);
+            } else {
+                throw new Error(`Unsupported connection type: ${connectionType}`);
+            }
 
             var keepAzSessionActive: boolean = tl.getBoolInput('keepAzSessionActive', false);
             var stopRefreshingSession: () => void = () => {};
@@ -198,6 +212,11 @@ export class azureclitask {
                 this.logoutAzure();
             }
 
+            // Clean up Azure DevOps CLI configuration if it was set
+            if (connectionType === "azureDevOps") {
+                tl.execSync("az", `devops configure --defaults project='' organization=`);
+            }
+
             if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
             {
                 process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
@@ -252,32 +271,56 @@ export class azureclitask {
         }
     }
 
+    private static isAzureDevOpsExtensionInstalled(): boolean {
+        tl.debug("Checking if Azure DevOps extension is installed...");
+        try {
+            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", { 
+                silent: true
+            });
+            if (result.code === 0) {
+                tl.debug("Azure DevOps extension is already installed, skipping installation.");
+                return true;
+            }
+            return false;
+        } catch (error) {
+            tl.debug(`Azure DevOps extension not found: ${error}`);
+            return false;
+        }
+    }
+
+    private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
+        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+        const federatedToken = await this.getIdToken(connectedService);
+        tl.setSecret(federatedToken);
+        let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+        if (!visibleAzLogin) {
+            args += ` --output none`;
+        }
+
+        //login using OpenID Connect federation
+        Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+
+        this.servicePrincipalId = servicePrincipalId;
+        this.federatedToken = federatedToken;
+        this.tenantId = tenantId;
+
+        process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+        process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
+        process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
+    }
+
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-        var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);        
+        var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
+        const allowNoSubscriptions: boolean = tl.getBoolInput("allowNoSubscriptions", false);
+        const EMPTY_GUID: string = "00000000-0000-0000-0000-000000000000"; 
 
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
-            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-
-            const federatedToken = await this.getIdToken(connectedService);
-            tl.setSecret(federatedToken);
-            let args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-            if(!visibleAzLogin ){
-                args += ` --output none`;
-            }
-            //login using OpenID Connect federation
-            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-
-            this.servicePrincipalId = servicePrincipalId;
-            this.federatedToken = federatedToken;
-            this.tenantId = tenantId;
-
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
-            process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
-            process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
+            await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
@@ -325,13 +368,53 @@ export class azureclitask {
             }            
         }
         else {
-            throw tl.loc('AuthSchemeNotSupported', authScheme);
+            throw tl.loc('AuthSchemeNotSupportedForAzureRM', authScheme);
         }
 
         this.isLoggedIn = true;
-        if (!!subscriptionID) {
+        const shouldSkipSubscription: boolean = allowNoSubscriptions || (subscriptionID && subscriptionID.toLowerCase() === EMPTY_GUID);
+        if (shouldSkipSubscription) {
+            tl.debug("allowNoSubscriptions enabled or empty GUID supplied; skipping 'az account set' step.");
+            console.log(tl.loc('SkippingSubscriptionContext'));
+        } else if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+        }
+    }
+
+    private static async setupAzureDevOpsCLI(connectedService: string): Promise<void> {
+        try {
+            var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
+            var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
+            
+            if (authScheme.toLowerCase() == "workloadidentityfederation") {
+                // Install Azure DevOps extension if not already installed
+                const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
+                if (!extensionInstalled) {
+                    console.log("Azure DevOps extension not found in working environment. Attempting installation.");
+                    Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                } else {
+                    console.log("Azure DevOps extension is already installed, skipping installation.");
+                }
+
+                await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
+
+                const organization = tl.getVariable('System.CollectionUri');
+                const project = tl.getVariable('System.TeamProject');
+
+                if (organization) {
+                    Utility.throwIfError(tl.execSync("az", `devops configure --defaults organization="${organization}"`), tl.loc("FailedToSetAzureDevOpsOrganization"));
+                }
+                if (project) {
+                    Utility.throwIfError(tl.execSync("az", `devops configure --defaults project="${project}"`), tl.loc("FailedToSetAzureDevOpsProject"));
+                }
+            }
+            else {
+                throw tl.loc('AuthSchemeNotSupportedForAzureDevOps', authScheme);
+            }
+        } catch (error) {
+            const errorMessage = error?.message || error?.toString() || String(error);
+            throw new Error(`Failed to setup Azure DevOps CLI: ${errorMessage}`);
         }
     }
 
@@ -369,32 +452,6 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
-        if (tl.getPipelineFeature('EnableLateBoundIdToken')) {
-            const idToken = tl.getEndpointAuthorizationParameter(connectedService, "idToken", true);
-            if (idToken) {
-                tl.debug("Using bound idToken from service endpoint.");
-                try {
-                    emitTelemetry("AzureCLIV2", "LateBoundIdToken", {
-                        "connectedService": connectedService,
-                        "idTokenPresent": "true"
-                    });
-                } catch (err) {
-                    tl.debug(`Unable to emit telemetry: ${err}`);
-                }
-                return idToken;
-            } else {
-                tl.debug("Late-bound idToken not found in endpoint data, falling back to OIDC API.");
-                 try {
-                    emitTelemetry("AzureCLIV2", "LateBoundIdToken", {
-                        "connectedService": connectedService,
-                        "idTokenPresent": "false"
-                    });
-                } catch (err) {
-                    tl.debug(`Unable to emit telemetry: ${err}`);
-                }
-            }
-        }
-
         // since node19 default node's GlobalAgent has timeout 5sec
         // keepAlive is set to true to avoid creating default node's GlobalAgent
         const webApiOptions = {

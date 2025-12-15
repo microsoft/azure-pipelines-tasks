@@ -5,8 +5,8 @@
   "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
-  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
-  "releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below.",
+  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV3/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+  "releaseNotes": "What's new in Version 3.0:\n- Support for dual connection types: Azure Resource Manager and Azure DevOps service connections. \n- Azure DevOps CLI integration with automatic extension installation and configuration. \n- Workload Identity Federation support for Azure DevOps connections. \n- Added 'Allow no Azure subscriptions' option to support identities with no subscription access.",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -18,7 +18,7 @@
   ],
   "demands": [],
   "version": {
-    "Major": 2,
+    "Major": 3,
     "Minor": 267,
     "Patch": 0
   },
@@ -34,6 +34,18 @@
   ],
   "inputs": [
     {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "Connection Type",
+      "defaultValue": "azureRM",
+      "required": true,
+      "helpMarkDown": "Type of service connection to use",
+      "options": {
+        "azureRM": "Azure Resource Manager",
+        "azureDevOps": "Azure DevOps"
+      }
+    },
+    {
       "name": "connectedServiceNameARM",
       "aliases": [
         "azureSubscription"
@@ -42,6 +54,18 @@
       "label": "Azure Resource Manager connection",
       "required": true,
       "helpMarkDown": "Select an Azure Resource Manager service connection for the deployment",
+      "visibleRule": "connectionType = azureRM",
+      "properties": {
+        "EndpointFilterRule": ""
+      }
+    },
+    {
+      "name": "azureDevOpsServiceConnection",
+      "type": "connectedService:WorkloadIdentityUser",
+      "label": "Azure DevOps Service Connection",
+      "required": true,
+      "helpMarkDown": "Select an Azure DevOps service connection",
+      "visibleRule": "connectionType = azureDevOps",
       "properties": {
         "EndpointFilterRule": ""
       }
@@ -182,6 +206,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "allowNoSubscriptions",
+      "type": "boolean",
+      "label": "Allow no Azure subscriptions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If true, the task will not attempt to set a subscription context and will allow logins where the identity has access to no subscriptions. You can also supply an all-zero SubscriptionID (00000000-0000-0000-0000-000000000000) in the service connection to implicitly skip setting the subscription context.",
+      "groupName": "advanced"
+    },
+    {
       "name": "keepAzSessionActive",
       "type": "boolean",
       "label": "[Experimental] Keep Azure CLI session active",
@@ -215,7 +248,8 @@
     "FailedToLogout": "The following error occurred while logging out: %s",
     "LoginFailed": "Azure login failed",
     "MSILoginFailed": "Azure login failed using Managed Service Identity",
-    "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+    "AuthSchemeNotSupportedForAzureRM": "The authentication scheme '%s' is not supported for Azure Resource Manager connections. Please update your Azure Resource Manager service connection to use one of the supported schemes: Service Principal, Workload Identity Federation (WIF), or Managed Identity.",
+    "AuthSchemeNotSupportedForAzureDevOps": "The authentication scheme '%s' is not supported for Azure DevOps service connections. Please update your Azure DevOps service connection to use one of the supported schemes: Workload Identity Federation. ",
     "ErrorInSettingUpSubscription": "Error in setting up subscription",
     "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",
@@ -227,6 +261,11 @@
     "ProxyConfig": "az tool is configured to use %s as proxy server",
     "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
     "RefreshingAzSession": "Attempting to refresh az-cli session...",
-    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
+    "FailedToInstallAzureDevOpsCLI": "Failed to install Azure DevOps CLI extension",
+    "FailedToLoginAzureDevOpsCLI": "Failed to login to Azure DevOps CLI",
+    "FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
+    "FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project",
+    "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
   }
 }
