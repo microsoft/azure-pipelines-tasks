@@ -93,6 +93,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az": true
     },
     "exec": {
+        "az version": {
+            "code": 0,
+            "stdout": "azure-cli 2.66.0"
+        },
         "az --version": {
             "code": 0,
             "stdout": "azure-cli 2.66.0"
