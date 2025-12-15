@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+
+<!-- 
+	REVISION HISTORY:
+-->
+
+<_locDefinition>
+
+	<!-- Windows Azure Tools: VSTemplate -->
+	<_locDefault _loc="locNone"/>
+	<_locTag _loc="locData">Name</_locTag>
+	<_locTag _loc="locData">Description</_locTag>
+  <_locTag _loc="locData">ManifestComment</_locTag>
+  
+
+</_locDefinition>

@@ -136,5 +136,7 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\".",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg ist derzeit für diese Aufgabe aktiviert. Um diese Warnung zu beheben, bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Die ausführbare Datei „%s“ konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Dateipfad existiert oder ob sich die Datei in einem Verzeichnis befindet, das in der PATH-Umgebungsvariable angegeben ist. Prüfen Sie außerdem die Dateiberechtigungen, um sicherzustellen, dass die Datei ausführbar ist.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Die Aufgabe ist fehlgeschlagen, weil Ubuntu 24.04 oder höher ohne Mono verwendet wird. Weitere Informationen finden Sie unter https://aka.ms/nuget-task-mono."
 }
