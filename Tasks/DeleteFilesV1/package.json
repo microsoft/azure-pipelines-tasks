@@ -21,7 +21,8 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.11.0",
-    "azure-pipelines-task-lib": "^4.16.0"
+    "azure-pipelines-task-lib": "^4.16.0",
+    "fast-glob": "^3.3.2"
   },
   "devDependencies": {
     "typescript": "5.1.6"
