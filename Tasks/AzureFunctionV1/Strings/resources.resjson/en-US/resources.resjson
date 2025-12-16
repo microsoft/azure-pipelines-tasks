@@ -7,7 +7,7 @@
   "loc.input.label.function": "Azure function URL",
   "loc.input.help.function": "URL of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "Function key",
-  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
+  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "Method",
   "loc.input.help.method": "Select the HTTP method with which the function should be invoked.",
   "loc.input.label.headers": "Headers",
