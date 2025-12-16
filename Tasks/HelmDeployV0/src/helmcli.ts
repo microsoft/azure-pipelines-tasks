@@ -51,17 +51,32 @@ export default class helmcli extends basecommand {
     public getHelmVersion(): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg('version');
-        command.line('--client');
         command.line('--short');
 
-        return this.execCommandSync(command);
+        const result = this.execCommandSync(command);
+        const raw = (result.stdout || '').trim();
+        const lines = raw.split(/\r?\n/);
+        const clientLine = lines.find(l => /^Client:/i.test(l)) ?? lines[0] ?? '';
+        const clientOnly = clientLine.replace(/^Client:\s*/i, '').trim();
+
+        let output = clientOnly;
+        if (clientOnly.startsWith('v2')) {
+            output = clientOnly ? `Client: ${clientOnly}` : clientLine;
+        }
+
+        return Object.assign({}, result, { stdout: output });
     }
 
-    public isHelmV3(): boolean {
+    public isHelmV3orGreater(): boolean {
         if (!this.helmVersion)
             this.helmVersion = this.getHelmVersion().stdout;
-        if (this.helmVersion.startsWith("v3"))
-            return true;
+        tl.debug(`Helm client version: ${this.helmVersion}`);
+
+        const versionMatch = this.helmVersion.match(/v(\d+)\./);
+        if (versionMatch) {
+            const majorVersion = parseInt(versionMatch[1], 10);
+            return majorVersion >= 3;
+        }
         return false;
     }
 
