@@ -24,9 +24,10 @@ export function buildCommandString(params: {
     feed: string;
     projectName?: string;
     description?: string;
+    serviceUrl?: string;
 }): string {
-    const { command, feed, projectName, description } = params;
-    let commandString = `${UniversalMockHelper.getArtifactToolPath()} universal ${command} --feed ${feed} --service ${TEST_CONSTANTS.SERVICE_URL} --package-name ${TEST_CONSTANTS.PACKAGE_NAME} --package-version ${TEST_CONSTANTS.PACKAGE_VERSION} --path ${TEST_CONSTANTS.DOWNLOAD_PATH} --patvar UNIVERSAL_AUTH_TOKEN --verbosity verbose`;
+    const { command, feed, projectName, description, serviceUrl = TEST_CONSTANTS.SERVICE_URL } = params;
+    let commandString = `${UniversalMockHelper.getArtifactToolPath()} universal ${command} --feed ${feed} --service ${serviceUrl} --package-name ${TEST_CONSTANTS.PACKAGE_NAME} --package-version ${TEST_CONSTANTS.PACKAGE_VERSION} --path ${TEST_CONSTANTS.DOWNLOAD_PATH} --patvar UNIVERSAL_AUTH_TOKEN --verbosity verbose`;
     
     if (projectName) {
         commandString += ` --project ${projectName}`;

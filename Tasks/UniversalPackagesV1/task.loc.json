@@ -11,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 267,
-    "Patch": 3
+    "Patch": 25
   },
   "runsOn": [
     "Agent",
@@ -132,10 +132,13 @@
     "Debug_OrgScopedFeed": "ms-resource:loc.messages.Debug_OrgScopedFeed",
     "Debug_ParsedFeedInfo": "ms-resource:loc.messages.Debug_ParsedFeedInfo",
     "Debug_ProjectScopedFeed": "ms-resource:loc.messages.Debug_ProjectScopedFeed",
+    "Debug_ProvenanceApiUrl": "ms-resource:loc.messages.Debug_ProvenanceApiUrl",
+    "Debug_ProvenanceDisabled": "ms-resource:loc.messages.Debug_ProvenanceDisabled",
+    "Debug_ProvenanceResponseStatus": "ms-resource:loc.messages.Debug_ProvenanceResponseStatus",
     "Debug_PublishOperation": "ms-resource:loc.messages.Debug_PublishOperation",
     "Debug_Publishing": "ms-resource:loc.messages.Debug_Publishing",
     "Debug_RetrievingArtifactToolUri": "ms-resource:loc.messages.Debug_RetrievingArtifactToolUri",
-    "Debug_SettingUpAuth": "ms-resource:loc.messages.Debug_SettingUpAuth",
+    "Debug_ResolvedPackagingUrl": "ms-resource:loc.messages.Debug_ResolvedPackagingUrl",
     "Debug_TelemetryInitFailed": "ms-resource:loc.messages.Debug_TelemetryInitFailed",
     "Debug_TelemetryResultFailed": "ms-resource:loc.messages.Debug_TelemetryResultFailed",
     "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
@@ -162,7 +165,7 @@
     "Success_PackagesPublished": "ms-resource:loc.messages.Success_PackagesPublished",
     "Warning_BuildIdentityFeedHint": "ms-resource:loc.messages.Warning_BuildIdentityFeedHint",
     "Warning_BuildIdentityOperationHint": "ms-resource:loc.messages.Warning_BuildIdentityOperationHint",
-    "Warning_FailedToGetProvenanceSession": "ms-resource:loc.messages.Warning_FailedToGetProvenanceSession",
+    "Warning_ProvenanceSessionFailed": "ms-resource:loc.messages.Warning_ProvenanceSessionFailed",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   }

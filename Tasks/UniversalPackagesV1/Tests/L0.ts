@@ -141,6 +141,8 @@ describe('UniversalPackages Suite', function () {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
                 'INPUT_FEED': TEST_CONSTANTS.FEED_NAME,
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
             });
@@ -177,6 +179,8 @@ describe('UniversalPackages Suite', function () {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
                 'INPUT_FEED': TEST_CONSTANTS.PROJECT_SCOPED_FEED_NAME,
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
             });
@@ -198,6 +202,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download', // download and publish use the same path for auth
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'success',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
@@ -216,6 +221,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'throws',
                 'SYSTEM_TOKEN_AVAILABLE': 'true',
@@ -235,6 +241,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'true',
@@ -248,6 +255,46 @@ describe('UniversalPackages Suite', function () {
                 expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
             });
         });
+
+        it('uses pipeline identity when no service connection is specified', async function() {
+            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+            });
+        });
+
+        it('uses cross-org service URL when organization is specified with service connection', async function() {
+            const crossOrgCommandString = buildCommandString({ 
+                command: 'download', 
+                feed: TEST_CONSTANTS.FEED_NAME,
+                serviceUrl: TEST_CONSTANTS.CROSS_ORG_SERVICE_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_ORGANIZATION': 'other-org',
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'MOCK_SERVICE_URL': TEST_CONSTANTS.CROSS_ORG_SERVICE_URL,
+                'EXPECTED_COMMAND_STRING': crossOrgCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString: crossOrgCommandString,
+                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+            });
+        });
     });
 
     describe('Error Handling', function() {
@@ -258,6 +305,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'false',
@@ -272,6 +320,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
+                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'false',
@@ -279,6 +328,19 @@ describe('UniversalPackages Suite', function () {
             });
             
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('fails when organization is not specified with service connection', async function() {
+            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_OrganizationRequired'));
         });
 
         it('fails when running against on-premises server', async function() {

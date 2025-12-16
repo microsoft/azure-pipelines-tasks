@@ -10,7 +10,7 @@ export interface MockConfig {
     inputs: {
         command: string;
         directory: string;
-        organization: string;
+        organization?: string;
         feed: string;
         packageName: string;
         packageVersion: string;
@@ -25,6 +25,8 @@ export interface MockConfig {
     wifAuthBehavior?: string;
     systemTokenAvailable: boolean;
     providesSessionId?: string;
+    serviceUrl: string;
+    feedValidationBehavior?: string;
 }
 
 export class UniversalMockHelper {
@@ -55,6 +57,8 @@ export class UniversalMockHelper {
         clientMock.registerClientToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
         this.registerConnectionDataUtilsMock();
+        this.registerLocationUtilitiesMock();
+        this.registerRetryUtilitiesMock();
         this.registerAuthenticationMocks();
         
         // Only register provenance mock if test explicitly sets providesSessionId
@@ -114,16 +118,103 @@ export class UniversalMockHelper {
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', connectionDataMock);
     }
 
+    private registerLocationUtilitiesMock() {
+        const locationUtilitiesMock = {
+            getFeedUriFromBaseServiceUri: async (serviceUri: string, accessToken: string) => {
+                // Return the packaging API URL based on the service URI
+                return `${serviceUri}/_apis/packaging`;
+            }
+        };
+        
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', locationUtilitiesMock);
+    }
+
+    private registerRetryUtilitiesMock() {
+        const retryUtilitiesMock = {
+            retryOnException: async <T>(operation: () => Promise<T>, maxRetries: number, delayMs: number): Promise<T> => {
+                // For tests, just execute once without retries
+                return await operation();
+            }
+        };
+        
+        this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/retryUtils', retryUtilitiesMock);
+    }
+
     private registerProvenanceHelperMock() {
         const sessionId = this.provenanceSessionId;
         
         const provenanceMock = {
             ProvenanceHelper: {
-                GetSessionId: async () => sessionId
+                CreateSessionRequest: (feedId: string) => ({
+                    feed: feedId,
+                    source: "InternalBuild",
+                    data: {
+                        "Build.BuildId": "12345"
+                    }
+                })
             }
         };
         
         this.tmr.registerMock('azure-pipelines-tasks-packaging-common/provenance', provenanceMock);
+        
+        // Mock the REST client for provenance API calls
+        const restClientMock = {
+            RestClient: class MockRestClient {
+                constructor(userAgent: string, baseUrl?: string, handlers?: any[], options?: any) {}
+                
+                async create<T>(resource: string, body: any, options?: any): Promise<{result: T, statusCode: number}> {
+                    if (sessionId) {
+                        return { result: { sessionId: sessionId } as T, statusCode: 200 };
+                    }
+                    // Return null result if session creation failed
+                    return { result: null as T, statusCode: 404 };
+                }
+            }
+        };
+        
+        this.tmr.registerMock('typed-rest-client/RestClient', restClientMock);
+        
+        // Mock ClientApiBase infrastructure for ProvenanceApi
+        const clientApiBasesMock = {
+            ClientApiBase: class MockClientApiBase {
+                public baseUrl: string;
+                public rest: any;
+                public vsoClient: any;
+                
+                constructor(baseUrl: string, handlers: any[], userAgent: string, options?: any) {
+                    this.baseUrl = baseUrl;
+                    this.rest = new restClientMock.RestClient(userAgent, baseUrl, handlers, options);
+                    this.vsoClient = {
+                        getVersioningData: async (apiVersion: string, area: string, locationId: string, routeValues?: any) => {
+                            // Mock successful versioning data response
+                            const protocol = routeValues?.protocol || 'upack';
+                            const project = routeValues?.project;
+                            const projectSegment = project ? `/${project}` : '';
+                            return {
+                                apiVersion: apiVersion,
+                                requestUrl: `${baseUrl}${projectSegment}/_apis/Provenance/${protocol}/CreateSession?api-version=${apiVersion}`
+                            };
+                        }
+                    };
+                }
+                
+                createRequestOptions(contentType: string, apiVersion: string): any {
+                    return {
+                        acceptHeader: contentType,
+                        additionalHeaders: {
+                            'Content-Type': contentType,
+                            'X-TFS-FedAuthRedirect': 'Suppress'
+                        }
+                    };
+                }
+                
+                formatResponse(data: any, responseTypeMetadata: any, isCollection: boolean): any {
+                    return data;
+                }
+            }
+        };
+        
+        this.tmr.registerMock('azure-devops-node-api/ClientApiBases', clientApiBasesMock);
     }
 
     private registerAuthenticationMocks() {
@@ -142,7 +233,8 @@ export class UniversalMockHelper {
             }
         };
         
-        // Mock getSystemAccessToken
+        // Mock getSystemAccessToken and getWebApiWithProxy for feed validation and provenance
+        const provenanceSessionId = this.provenanceSessionId;
         const webapiMock = {
             getSystemAccessToken: () => {
                 if (this.config.systemTokenAvailable) {
@@ -151,10 +243,57 @@ export class UniversalMockHelper {
                 return undefined;
             },
             getWebApiWithProxy: (serviceUri: string, accessToken: string) => {
+                if (this.config.feedValidationBehavior === 'fail') {
+                    return {
+                        serverUrl: serviceUri,
+                        authHandler: {},
+                        options: {},
+                        vsoClient: {
+                            getVersioningData: async () => {
+                                throw new Error('Feed validation failed: 401 Unauthorized');
+                            }
+                        },
+                        getLocationsApi: async () => ({
+                            getResourceArea: async (areaId: string) => {
+                                throw new Error('Feed validation failed: 401 Unauthorized');
+                            }
+                        })
+                    };
+                }
                 return {
                     serverUrl: serviceUri,
                     authHandler: {},
-                    options: {}
+                    options: {},
+                    rest: {
+                        create: async <T>(resource: string, body: any, options?: any): Promise<{result: T, statusCode: number}> => {
+                            if (provenanceSessionId) {
+                                return { result: { sessionId: provenanceSessionId } as T, statusCode: 200 };
+                            }
+                            return { result: null as T, statusCode: 404 };
+                        }
+                    },
+                    vsoClient: {
+                        getVersioningData: async (apiVersion?: string, area?: string, locationId?: string, routeValues?: any) => {
+                            // For provenance API calls
+                            if (area === 'Provenance') {
+                                const protocol = routeValues?.protocol || 'upack';
+                                const project = routeValues?.project;
+                                const projectSegment = project ? `/${project}` : '';
+                                return {
+                                    apiVersion: apiVersion,
+                                    requestUrl: `${serviceUri}${projectSegment}/_apis/Provenance/${protocol}/CreateSession?api-version=${apiVersion}`
+                                };
+                            }
+                            // Default for feed validation
+                            return { requestUrl: `${serviceUri}/_apis/packaging/feeds` };
+                        }
+                    },
+                    getLocationsApi: async () => ({
+                        getResourceArea: async (areaId: string) => {
+                            // Mock the UPack area ID returning a packaging service URL
+                            return { locationUrl: `${serviceUri}/_apis/packaging` };
+                        }
+                    })
                 };
             }
         };

@@ -5,7 +5,9 @@ export const TEST_CONSTANTS = {
     PACKAGE_NAME: 'TestPackage',
     PACKAGE_VERSION: '1.0.0',
     DOWNLOAD_PATH: 'c:\\temp',
+    ORGANIZATION_NAME: 'example',
     SERVICE_URL: 'https://dev.azure.com/example',
+    CROSS_ORG_SERVICE_URL: 'https://dev.azure.com/other-org',
     ARTIFACT_TOOL_PATH: 'c:\\mock\\location\\ArtifactTool.exe',
     
     // Test output messages
