@@ -16,7 +16,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
             "--package-version", context.packageVersion,
             "--path", context.directory,
             "--patvar", "UNIVERSAL_AUTH_TOKEN",
-            "--verbosity", tl.getInput("verbosity"));
+            "--verbosity", context.verbosity);
 
         if (context.projectName) {
             command.push("--project", context.projectName);
