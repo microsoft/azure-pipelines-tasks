@@ -30,10 +30,13 @@
   "loc.messages.Debug_OrgScopedFeed": "Organization-scoped feed detected - Feed: %s",
   "loc.messages.Debug_ParsedFeedInfo": "Parsed feed info - Service URI: %s, Feed: %s",
   "loc.messages.Debug_ProjectScopedFeed": "Project-scoped feed detected - Project: %s, Feed: %s",
+  "loc.messages.Debug_ProvenanceApiUrl": "Creating provenance session at: %s",
+  "loc.messages.Debug_ProvenanceDisabled": "Provenance disabled by Packaging.SavePublishMetadata variable",
+  "loc.messages.Debug_ProvenanceResponseStatus": "Provenance API response status: %s",
   "loc.messages.Debug_PublishOperation": "Publish operation - Package: %s@%s, Source: %s",
   "loc.messages.Debug_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Debug_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
-  "loc.messages.Debug_SettingUpAuth": "Setting up authentication",
+  "loc.messages.Debug_ResolvedPackagingUrl": "Resolved packaging service URL: %s",
   "loc.messages.Debug_TelemetryInitFailed": "Unable to log Universal Packages task init telemetry. Err:( %s )",
   "loc.messages.Debug_TelemetryResultFailed": "Unable to log telemetry result. Err:( %s )",
   "loc.messages.Debug_UsingArtifactToolDownload": "Using artifact tool to download the package",
@@ -60,7 +63,7 @@
   "loc.messages.Success_PackagesPublished": "Packages were published successfully",
   "loc.messages.Warning_BuildIdentityFeedHint": "Check feed '%s' permissions: %s",
   "loc.messages.Warning_BuildIdentityOperationHint": "Operation failed using identity '%s' (%s).",
-  "loc.messages.Warning_FailedToGetProvenanceSession": "Failed to get provenance session for publishing: %s. Continuing with direct feed publish.",
+  "loc.messages.Warning_ProvenanceSessionFailed": "Provenance session creation failed: %s",
   "loc.messages.Warning_WifAuthFailed": "WIF authentication failed for service connection %s, falling back to build service token: %s",
   "loc.messages.Warning_WifAuthNoToken": "WIF authentication returned no token for service connection %s, falling back to build service token"
 }

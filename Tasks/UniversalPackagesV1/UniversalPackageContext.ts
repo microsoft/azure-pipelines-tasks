@@ -14,6 +14,8 @@ export class UniversalPackageContext {
     packageVersion: string;
     adoServiceConnection?: string;
     directory: string;
+    verbosity: string;
+    packageDescription?: string;
     command: OperationType;
 
     // Auth properties
@@ -35,6 +37,8 @@ export class UniversalPackageContext {
         this.packageVersion = tl.getInput("packageVersion", true);
         this.adoServiceConnection = tl.getInput("adoServiceConnection", false);
         this.directory = tl.getInput("directory", true);
+        this.verbosity = tl.getInput("verbosity", true);
+        this.packageDescription = tl.getInput("packageDescription", false);
         this.command = tl.getInput("command", true) as OperationType;
     }
 }
