@@ -1,7 +1,6 @@
 {
-  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "name": "UniversalPackagesTest",
-  "_comment": "Original id: e0b79640-8625-11e8-91be-db2878ff888a, Original name: UniversalPackages",
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
   "friendlyName": "Universal packages",
   "description": "Download or publish Universal Packages",
   "author": "Microsoft Corporation",
@@ -10,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 267,
-    "Patch": 25
+    "Minor": 268,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
