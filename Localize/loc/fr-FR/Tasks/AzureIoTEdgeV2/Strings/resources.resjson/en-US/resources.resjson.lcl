@@ -412,7 +412,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Azure SDK not found]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Kit Azure SDK introuvable]]></Val>
+            <Val><![CDATA[SDK Azure introuvable]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

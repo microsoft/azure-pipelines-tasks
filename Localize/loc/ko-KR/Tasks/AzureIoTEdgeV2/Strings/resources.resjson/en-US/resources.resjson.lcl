@@ -412,7 +412,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Azure SDK not found]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure SDK를 찾을 수 없습니다.]]></Val>
+            <Val><![CDATA[Azure SDK를 찾을 수 없음]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
