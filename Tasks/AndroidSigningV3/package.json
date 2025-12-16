@@ -22,7 +22,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.15.0",
-    "azure-pipelines-tasks-securefiles-common": "2.262.0"
+    "azure-pipelines-tasks-securefiles-common": "2.263.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

@@ -36,10 +36,6 @@ parameters:
   displayName: skipPublish (Not for production use)
   type: boolean
   default: false
-- name: publishToDistributedTaskTest
-  displayName: Publish to test feed (DistributedTasks-test), for infrastucture testing
-  type: boolean
-  default: false  
 - name: dryRun
   displayName: Dry Run (no push, no PR, no feed publish)
   type: boolean
@@ -85,6 +81,8 @@ variables:
     value: 'true'
   ${{ else }}:
     value: 'false'
+- name: tasksBuildArtifact
+  value: 'allTasks'
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -94,6 +92,8 @@ extends:
     featureFlags:
       autoBaseline: false
     sdl:
+      binskim:
+        preReleaseVersion: '4.3.1'
       sbom:
         enabled: true
       baseline:
@@ -132,7 +132,7 @@ extends:
                   ne(variables['numTasks'], 0)
                 )
               PathtoPublish: _package/tasks.zip
-              ArtifactName: package
+              ArtifactName: $(tasksBuildArtifact)
               sbomBuildDropPath: $(Build.SourcesDirectory)/_package
         steps:
         - template: /ci/build-all-steps.yml@self
@@ -140,54 +140,36 @@ extends:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
 
-      # Publish
-      - job: publish
-        displayName: Publish Nuget Artifacts
-        timeoutInMinutes: 360
-        dependsOn:
-        - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables['tasksSkipPublish'], 'false'))
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish per task NuGet package artifact'
-            PathtoPublish: _package/nuget-packages
-            ArtifactName: IndividualNuGetPackages
-        steps:
-        - template: /ci/publish-steps.yml@self
-        
       # Courtesy Push
       - job: courtesy_push
         displayName: Courtesy Push
-        timeoutInMinutes: 180
+        timeoutInMinutes: 540
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
           os: windows
         dependsOn:
-        - publish
+        - build_all_windows
         condition: |
           and(
             succeeded(),
             eq(variables['COURTESY_PUSH'], 'true'),
-            or(
-              eq(variables['build.reason'], 'Schedule'),
-              and(
-                eq(variables['build.reason'], 'Manual'),
-                eq(variables['FORCE_COURTESY_PUSH'], 'true')
-              )
-            )
+            eq(variables['build.reason'], 'Manual'),
+            eq(variables['FORCE_COURTESY_PUSH'], 'true')
           )
         templateContext:
+          outputParentDirectory: $(Build.SourcesDirectory)/_package
           outputs:
+          - output: buildArtifacts
+            displayName: 'Publish per task NuGet package artifact'
+            PathtoPublish: $(Build.SourcesDirectory)/_package/nuget-packages
+            ArtifactName: IndividualNuGetPackages
+            condition: succeeded()
           - output: nuget
-            packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
+            packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
             packageParentPath: '$(Build.SourcesDirectory)'
-            ${{ if or(eq(parameters.dryRun, true),eq(parameters.publishToDistributedTaskTest, true)) }}:
+            condition: and(succeeded(), eq(variables['tasksSkipPublish'], 'false'))
+            ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'
             ${{ else }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
@@ -195,32 +177,28 @@ extends:
             displayName: Push Nuget package
             allowPackageConflicts: $(COURTESY_PUSH)
         steps:
-        - checkout: self
-        - template: /ci/courtesy-push.yml@self
-
-      - job: build_all_tasks_for_deployments
-        displayName: Build all tasks for deployments (Windows)
-        dependsOn:
-        - courtesy_push
-        - build_all_windows
-        condition: succeeded()
-        timeoutInMinutes: 360
+        - template: /ci/courtesy-push-steps.yml@self
+      
+      # GitHub Release
+      - job: github_release
+        displayName: Create GitHub Release
+        timeoutInMinutes: 60
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
           os: windows
+        dependsOn:
+        - courtesy_push
         variables:
-          task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
+          courtesy_push_pr_id: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_ID']]
+          courtesy_push_pr_link: $[dependencies.courtesy_push.outputs['createCourtesyPushPR.PR_LINK']]
+        condition: |
+          and(
+            succeeded(),
+            eq(variables['build.reason'], 'Manual'),
+            eq(variables['tasksSkipPublish'], 'false')
+          )
         templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish package artifact'
-            PathtoPublish: _package/tasks.zip
-            sbomBuildDropPath: $(Build.SourcesDirectory)/_package
-            ArtifactName: allTasks
+          outputs: []
         steps:
-        - template: /ci/build-all-tasks.yml@self
-          parameters:
-            deploy_all_tasks: ${{ eq(parameters.task_deployment, 'Deploy all Tasks') }}
-            useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
-      
+        - template: /ci/github-release.yml@self

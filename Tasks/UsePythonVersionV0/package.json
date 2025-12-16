@@ -29,7 +29,7 @@
     "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "3.265.1",
     "azure-pipelines-tool-lib": "^2.0.10",
     "semver": "^7.5.4",
     "typed-rest-client": "^1.8.6"

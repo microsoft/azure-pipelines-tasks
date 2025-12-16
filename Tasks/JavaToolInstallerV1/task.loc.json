@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 263,
+    "Minor": 266,
     "Patch": 0
   },
   "satisfies": [
@@ -45,7 +45,8 @@
       "label": "ms-resource:loc.input.label.jdkArchitectureOption",
       "options": {
         "x64": "X64",
-        "x86": "X86"
+        "x86": "X86",
+        "arm64": "arm64"
       },
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"
