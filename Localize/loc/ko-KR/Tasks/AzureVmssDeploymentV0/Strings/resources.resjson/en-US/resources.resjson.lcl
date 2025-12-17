@@ -214,7 +214,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Azure storage account where custom scripts will be uploaded]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[사용자 지정 스크립트가 업로드되는 Azure Storage 계정]]></Val>
+            <Val><![CDATA[사용자 지정 스크립트가 업로드되는 Azure 스토리지 계정]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -556,7 +556,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Failed to get azure storage account with name %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이름이 %s인 Azure Storage 계정을 가져오지 못했습니다.]]></Val>
+            <Val><![CDATA[이름이 %s인 Azure 스토리지 계정을 가져오지 못했습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
