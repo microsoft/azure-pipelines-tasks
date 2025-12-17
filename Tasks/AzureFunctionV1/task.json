@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 220,
+        "Minor": 267,
         "Patch": 0
     },
     "instanceNameFormat": "Azure Function: $(function)",
@@ -43,7 +43,7 @@
             "label": "Function key",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
+            "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
         },
         {
             "name": "method",
