@@ -8,6 +8,7 @@ import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/web
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -452,6 +453,32 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
+        if (tl.getPipelineFeature('EnableLateBoundIdToken')) {
+            const idToken = tl.getEndpointAuthorizationParameter(connectedService, "idToken", true);
+            if (idToken) {
+                tl.debug("Using bound idToken from service endpoint.");
+                try {
+                    emitTelemetry("AzureCLIV3", "LateBoundIdToken", {
+                        "connectedService": connectedService,
+                        "idTokenPresent": "true"
+                    });
+                } catch (err) {
+                    tl.debug(`Unable to emit telemetry: ${err}`);
+                }
+                return idToken;
+            } else {
+                tl.debug("Late-bound idToken not found in endpoint data, falling back to OIDC API.");
+                try {
+                    emitTelemetry("AzureCLIV3", "LateBoundIdToken", {
+                        "connectedService": connectedService,
+                        "idTokenPresent": "false"
+                    });
+                } catch (err) {
+                    tl.debug(`Unable to emit telemetry: ${err}`);
+                }
+            }
+        }
+
         // since node19 default node's GlobalAgent has timeout 5sec
         // keepAlive is set to true to avoid creating default node's GlobalAgent
         const webApiOptions = {
