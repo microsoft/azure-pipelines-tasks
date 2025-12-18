@@ -180,6 +180,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
+        let cleanupExitCode = 0;
         try {
             const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
                 .arg('-NoLogo')
@@ -197,10 +198,16 @@ async function run() {
                     outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
                     ignoreReturnCode: true
                 };
-            await powershell.exec(options);
+            cleanupExitCode = await powershell.exec(options);
+            tl.debug(`Cleanup exit code: ${cleanupExitCode}`);
         }
         catch (err) {
             tl.debug("Az-clearContext not completed due to an error");
+            tl.setResult(tl.TaskResult.Failed, `Cleanup failed with error message: ${err.message}`);
+        }
+
+        if (cleanupExitCode !== 0) {
+            tl.setResult(tl.TaskResult.Failed, `Cleanup failed with exit code: ${cleanupExitCode}`);
         }
     }
 }

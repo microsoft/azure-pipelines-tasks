@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 267,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -112,6 +112,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "publishbuildartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }

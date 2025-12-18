@@ -2,6 +2,7 @@ import path = require('path');
 import * as assert from 'assert';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+
 import { TestString } from './TestStrings';
 
 describe('TestUtils', function () {
@@ -38,6 +39,11 @@ describe('TestUtils', function () {
     assert(tr.stdOutContained(TestString.CheckSumValidlatest), 'should have printed: ' + TestString.CheckSumValidlatest);
     assert(tr.stdOutContained(TestString.NotFound123_1323), 'should have printed: ' + TestString.NotFound123_1323);
 
+    done();
+  }).timeout(20000);
+
+  it('should handle HTTP errors correctly', (done: Mocha.Done) => {
+    new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js')).run();
     done();
   }).timeout(20000);
 

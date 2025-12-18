@@ -24,7 +24,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -389,12 +389,16 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-const node20Version = '20.17.0';
+const node20Version = '20.19.4';
 exports.node20Version = node20Version;
+
+const node24Version = '24.10.0';
+exports.node24Version = node24Version;
 
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: node20Version
+        20: node20Version,
+        24: node24Version
     };
 
     if (!nodeVersion) {
@@ -1872,18 +1876,23 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, configs, bumpBaseTask) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     var tasks = taskList.join('|')
     ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
-    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" `
 
     const args = [
         "--task",
         `"${tasks}"`
     ];
+
+    if (configs) {
+        args.push("--configs");
+        args.push(`"${configs}"`);
+    }
 
     if (sprintNumber) {
         args.push("--current-sprint");
@@ -1896,6 +1905,9 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
         writeUpdateArg += " --write-updates";
     }
 
+    if(bumpBaseTask) {
+        writeUpdateArg += " --bump-base-task";
+    }
     if(includeLocalPackagesBuildConfig)
     {
         writeUpdateArg += " --include-local-packages-build-config";

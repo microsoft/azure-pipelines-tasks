@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 263,
+    "Minor": 267,
     "Patch": 0
   },
   "demands": [
@@ -45,6 +45,7 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Latest",
+        "18.0": "Visual Studio 2026",
         "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",

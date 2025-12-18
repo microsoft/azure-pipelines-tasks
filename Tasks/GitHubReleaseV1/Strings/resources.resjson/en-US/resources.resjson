@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "Indicate whether the release should be saved as a draft (unpublished). If `false`, the release will be published.",
   "loc.input.label.isPreRelease": "Pre-release",
   "loc.input.help.isPreRelease": "Indicate whether the release should be marked as a pre-release.",
+  "loc.input.label.makeLatest": "Make Latest",
+  "loc.input.help.makeLatest": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
   "loc.input.label.addChangeLog": "Add changelog",
   "loc.input.help.addChangeLog": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes.",
   "loc.input.label.changeLogCompareToRelease": "Compare to",
