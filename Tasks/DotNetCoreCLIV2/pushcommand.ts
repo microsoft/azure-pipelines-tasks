@@ -77,7 +77,7 @@ export async function run(): Promise<void> {
         const testPrefixes = tl.getVariable('DotNetCoreCLITask.ExtraUrlPrefixesForTesting');
         if (testPrefixes) {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(';'));
-            tl.debug(`all URL prefixes: ${urlPrefixes}`);
+            tl.debug(`full URL prefixes: ${urlPrefixes}`);
         }
 
         // Setting up auth info

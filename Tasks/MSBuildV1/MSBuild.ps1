@@ -44,6 +44,7 @@ try {
     $solutionFiles = Get-SolutionFiles -Solution $solution
 
     # Format the MSBuild args.
+    # Format the MSBuild args.
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration -MaximumCpuCount:$maximumCpuCount
 
     # Resolve the MSBuild location.
