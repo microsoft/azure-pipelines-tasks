@@ -137,13 +137,13 @@ export async function tryDownloadArtifactTool(context: UniversalPackageContext):
         handleTaskError(error, errorMessage);
         return false;
     } finally {
-        logUniversalStartupTelemetry(context.artifactToolPath);
+        logArtifactToolTelemetry(context);
     }
 }
 
 function parseFeedInput(feed: string): { feedName: string; projectName: string | null } {
     let feedName: string;
-    let projectName: string = null;
+    let projectName: string | null = null;
     
     if (feed.includes('/')) {
         const feedParts = feed.split('/');
@@ -202,20 +202,21 @@ export function validateServerType(): boolean {
     }
 }
 
-export function logUniversalStartupTelemetry(artifactToolPath: string): void {
+export function logArtifactToolTelemetry(context: UniversalPackageContext): void {
     try {
-        let universalPackagesTelemetry = {
-            "command": tl.getInput("command"),
-            "organization": tl.getInput("organization"),
-            "feed": tl.getInput("feed"),
-            "packageName": tl.getInput("packageName"),
-            "adoServiceConnection": tl.getInput("adoServiceConnection"),
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            "verbosity": tl.getInput("verbosity"),
-            "artifactToolPath": artifactToolPath,
+        let artifactToolTelemetry = {
+            "command": context.command,
+            "organization": context.organization,
+            "feed": context.projectAndFeed,
+            "packageName": context.packageName,
+            "packageVersion": context.packageVersion,
+            "adoServiceConnection": context.adoServiceConnection,
+            "verbosity": context.verbosity,
+            "artifactToolPath": context.artifactToolPath,
+            "pipelineCollectionUri": context.pipelineCollectionUri,
         };
 
-        telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", universalPackagesTelemetry);
+        telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", artifactToolTelemetry);
     } catch (err) {
         tl.debug(tl.loc('Debug_TelemetryInitFailed', err));
     }

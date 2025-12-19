@@ -5,7 +5,7 @@ import { UniversalMockHelper, MockConfig } from './UniversalMockHelper';
 import { TEST_CONSTANTS } from './TestConstants';
 import * as TestHelpers from './TestHelpers';
 
-let taskPath = path.join(__dirname, '..', 'universalmain.js');
+let taskPath = path.join(__dirname, '..', 'universalMain.js');
 let tmr: TaskMockRunner = new TaskMockRunner(taskPath);
 
 // All configuration from environment variables

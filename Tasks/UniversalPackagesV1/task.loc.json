@@ -119,6 +119,10 @@
     "Node20_1": {
       "target": "universalMain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
