@@ -35,6 +35,7 @@ export function getDefaultEnvVars(): { [key: string]: string } {
         'ENDPOINT_URL_SYSTEMVSSCONNECTION': 'https://dev.azure.com/example',
         'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
         'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': 'https://dev.azure.com/example',
-        'SYSTEM_SERVERTYPE': 'hosted'
+        'SYSTEM_SERVERTYPE': 'hosted',
+        'SYSTEM_DEBUG': 'false'
     };
 }

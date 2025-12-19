@@ -1,7 +1,7 @@
 {
   "id": "e0b79640-8625-11e8-91be-db2878ff888a",
   "name": "UniversalPackages",
-  "friendlyName": "Universal packages",
+  "friendlyName": "Universal Packages",
   "description": "Download or publish Universal Packages",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
@@ -60,7 +60,7 @@
       "type": "string",
       "label": "Package name",
       "required": true,
-      "helpMarkDown": "The name of the Universal Package. Package names must be lower case and can only use letters, numbers, and dashes(-)."
+      "helpMarkDown": "The name of the Universal Package. Package names must be lower case and can only use letters, numbers, and dashes (-)."
     },
     {
       "name": "packageVersion",
@@ -120,6 +120,10 @@
     "Node20_1": {
       "target": "universalMain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -156,13 +160,13 @@
     "Error_FailedToValidateFeed": "Failed to validate service URI '%s' and feed '%s'. Verify the service exists, the feed exists, and the authentication token has permission to access it.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
     "Error_OrganizationRequired": "Organization is required when using a service connection for cross-organization access.",
-    "Error_PackagesFailedToDownload": "Packages failed to download",
-    "Error_PackagesFailedToPublish": "Packages failed to publish",
+    "Error_PackagesFailedToDownload": "Package failed to download",
+    "Error_PackagesFailedToPublish": "Package failed to publish",
     "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
     "Error_UnexpectedErrorArtifactToolPublish": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
     "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
-    "Success_PackagesDownloaded": "Package were downloaded successfully",
-    "Success_PackagesPublished": "Packages were published successfully",
+    "Success_PackagesDownloaded": "Package was downloaded successfully",
+    "Success_PackagesPublished": "Package was published successfully",
     "Warning_BuildIdentityFeedHint": "Check feed '%s' permissions: %s",
     "Warning_BuildIdentityOperationHint": "Operation failed using identity '%s' (%s).",
     "Warning_ProvenanceSessionFailed": "Provenance session creation failed: %s",

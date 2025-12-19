@@ -30,6 +30,9 @@ export class UniversalPackageContext {
     // Tool properties
     artifactToolPath?: string;
 
+    // Pipeline properties
+    pipelineCollectionUri?: string;
+
     constructor() {
         this.organization = tl.getInput("organization", false);
         this.projectAndFeed = tl.getInput("feed", true);
@@ -37,8 +40,9 @@ export class UniversalPackageContext {
         this.packageVersion = tl.getInput("packageVersion", true);
         this.adoServiceConnection = tl.getInput("adoServiceConnection", false);
         this.directory = tl.getInput("directory", true);
-        this.verbosity = tl.getInput("verbosity", true);
+        this.verbosity = tl.getVariable("System.Debug") === "true" ? "Debug" : tl.getInput("verbosity", true);
         this.packageDescription = tl.getInput("packageDescription", false);
         this.command = tl.getInput("command", true) as OperationType;
+        this.pipelineCollectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
     }
 }

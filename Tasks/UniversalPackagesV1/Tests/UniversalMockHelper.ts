@@ -60,6 +60,7 @@ export class UniversalMockHelper {
         this.registerLocationUtilitiesMock();
         this.registerRetryUtilitiesMock();
         this.registerAuthenticationMocks();
+        this.registerTelemetryMock();
         
         // Only register provenance mock if test explicitly sets providesSessionId
         if (config.providesSessionId !== undefined) {
@@ -138,6 +139,19 @@ export class UniversalMockHelper {
         };
         
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/retryUtils', retryUtilitiesMock);
+    }
+
+    private registerTelemetryMock() {
+        const telemetryMock = {
+            emitTelemetry: (area: string, feature: string, taskSpecificTelemetry: any) => {
+                // Mock telemetry emission - do nothing in tests
+            },
+            logResult: (area: string, feature: string, resultCode: number) => {
+                // Mock telemetry result logging - do nothing in tests
+            }
+        };
+        
+        this.tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', telemetryMock);
     }
 
     private registerProvenanceHelperMock() {
