@@ -4,6 +4,8 @@
   "description": "Azure App Service Settings",
   "main": "azurewebappsettings.js",
   "scripts": {
+    "build": "node ../../make.js build --task AzureAppServiceSettingsV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureAppServiceSettingsV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +26,7 @@
     "agent-base": "^6.0.2",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.259.2",
+    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
     "moment": "^2.29.4",
     "q": "1.4.1",
     "xml2js": "^0.6.2"

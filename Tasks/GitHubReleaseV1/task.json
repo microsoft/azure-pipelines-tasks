@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 259,
+    "Minor": 266,
     "Patch": 0
   },
   "demands": [],
@@ -186,6 +186,20 @@
       "required": false,
       "visibleRule": "action = create || action = edit",
       "helpMarkDown": "Indicate whether the release should be marked as a pre-release."
+    },
+    {
+      "name": "makeLatest",
+      "type": "pickList",
+      "label": "Make Latest",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Specify whether to designate this release as the 'latest' release for the repository. Set to 'false' to prevent marking this release as latest, or 'legacy' to use GitHub's legacy latest-release determination based on creation date and semantic versioning.",
+      "options": {
+        "true": "true",
+        "false": "false",
+        "legacy": "legacy"
+      }
     },
     {
       "name": "addChangeLog",

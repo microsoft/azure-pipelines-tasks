@@ -3,6 +3,10 @@
   "version": "2.208.0",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Maven",
+  "scripts": {
+    "build": "node ../../make.js build --task MavenV4",
+    "serverBuild": "node ../../make.js serverBuild --task MavenV4"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
@@ -14,7 +18,7 @@
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-codeanalysis-common": "^2.242.0",
     "azure-pipelines-tasks-codecoverage-tools": "^3.245.1",
-    "azure-pipelines-tasks-java-common": "2.198.1",
+    "azure-pipelines-tasks-java-common": "2.264.0",
     "azure-pipelines-tasks-packaging-common": "^3.230.0",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
@@ -27,5 +31,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^3.0.4"
   }
 }

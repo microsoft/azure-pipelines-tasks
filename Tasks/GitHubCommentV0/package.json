@@ -2,6 +2,10 @@
   "name": "github.release",
   "version": "0.0.0",
   "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task GitHubCommentV0",
+    "serverBuild": "node ../../make.js serverBuild --task GitHubCommentV0"
+  },
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
@@ -11,5 +15,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

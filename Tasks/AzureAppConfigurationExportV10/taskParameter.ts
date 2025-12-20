@@ -35,7 +35,7 @@ export class TaskParameters {
 
         taskParameters.selectionMode = selectionMode == Default ? SelectionMode.Default : SelectionMode.Snapshot;
         try {
-            taskParameters.configStoreUrl = tl.getInput("AppConfigurationEndpoint", true);
+            taskParameters.configStoreUrl = this.trimTrailingSlash(tl.getInput("AppConfigurationEndpoint", true));
             taskParameters.keyFilter = tl.getInput("KeyFilter", taskParameters.selectionMode == SelectionMode.Default);
             taskParameters.snapshotName = tl.getInput("SnapshotName", taskParameters.selectionMode == SelectionMode.Snapshot);
         }
@@ -74,5 +74,12 @@ export class TaskParameters {
         taskParameters.credential = new ConnectedServiceCredential(taskParameters.endpoint, taskParameters.configStoreUrl);
 
         return taskParameters;
+    }
+
+    private static trimTrailingSlash(endpoint: string): string {
+        if (endpoint.endsWith("/")) {
+            return endpoint.slice(0,-1);
+        }
+        return endpoint;
     }
 }

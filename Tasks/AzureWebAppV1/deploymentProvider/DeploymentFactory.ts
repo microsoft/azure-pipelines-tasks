@@ -7,6 +7,7 @@ import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
+import { AzureWebAppSiteContainersDeploymentProvider } from './AzureWebAppSiteContainersDeploymentProvider';
 
 export class DeploymentFactory {
 
@@ -19,7 +20,13 @@ export class DeploymentFactory {
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.isLinuxApp) {
             tl.debug("Deployment started for linux app service");
-            return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
+
+            if (this._taskParams.SiteContainers && this._taskParams.SiteContainers.length > 0) {
+                tl.debug("Site Containers deployment detected, using AzureWebAppSiteContainersDeploymentProvider.");
+                return new AzureWebAppSiteContainersDeploymentProvider(this._taskParams);
+            } else {
+                return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
+            }
         } else {
             tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()

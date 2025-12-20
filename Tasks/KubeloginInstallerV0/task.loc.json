@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 259,
-    "Patch": 2
+    "Minor": 267,
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -53,21 +53,23 @@
     }
   },
   "messages": {
-    "Info_VerifyKubeloginInstallation": "ms-resource:loc.messages.Info_VerifyKubeloginInstallation",
+    "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
+    "Err_GithubApiRateLimitExceeded": "ms-resource:loc.messages.Err_GithubApiRateLimitExceeded",
+    "Err_LatestTagNotFound": "ms-resource:loc.messages.Err_LatestTagNotFound",
+    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
+    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
+    "Info_CachingTool": "ms-resource:loc.messages.Info_CachingTool",
+    "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
+    "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading",
+    "Info_KubeloginPlatform": "ms-resource:loc.messages.Info_KubeloginPlatform",
+    "Info_KubeloginRelease": "ms-resource:loc.messages.Info_KubeloginRelease",
+    "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
+    "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_ToolDownloaded": "ms-resource:loc.messages.Info_ToolDownloaded",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
-    "Info_CachingTool": "ms-resource:loc.messages.Info_CachingTool",
-    "Info_ToolDownloaded": "ms-resource:loc.messages.Info_ToolDownloaded",
-    "Info_KubeloginRelease": "ms-resource:loc.messages.Info_KubeloginRelease",
-    "Info_KubeloginPlatform": "ms-resource:loc.messages.Info_KubeloginPlatform",
-    "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
-    "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
-    "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
-    "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
-    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
-    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
-    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
-    "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
+    "Info_VerifyKubeloginInstallation": "ms-resource:loc.messages.Info_VerifyKubeloginInstallation",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }

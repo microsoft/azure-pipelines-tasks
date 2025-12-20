@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 259,
+    "Minor": 267,
     "Patch": 1
   },
   "satisfies": [
@@ -80,6 +80,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion"
     },
     {
+      "name": "checkForExistingVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkForExistingVersion",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkForExistingVersion",
+      "groupName": "advanced"
+    },
+    {
       "name": "includePreviewVersions",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includePreviewVersions",
@@ -124,6 +133,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "usedotnet.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "usedotnet.js",
       "argumentFormat": ""
     }

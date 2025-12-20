@@ -5,6 +5,7 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Utility } from "./src/Utility";
 import { ScriptType, ScriptTypeFactory } from "./src/ScriptType";
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
@@ -49,9 +50,23 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            const versionCommand = tl.getPipelineFeature('UseAzVersion') ? "version" : "--version"
             const minorVersionTolerance = 5
-            const azVersionResult: IExecSyncResult = tl.execSync("az", versionCommand);
+            let azVersionResult;
+            const versionCommand = tl.getPipelineFeature('UseAzVersion');
+
+            if (versionCommand) {
+                azVersionResult = tl.execSync("az", "version");
+
+                if (azVersionResult.code !== 0 || azVersionResult.stderr) {
+                    tl.debug("az version failed, falling back to 'az --version'");
+                    azVersionResult = tl.execSync("az", "--version");
+                }
+            } 
+            else {
+                // Default case: always run with "--version"
+                azVersionResult = tl.execSync("az", "--version");
+            }
+
             Utility.throwIfError(azVersionResult);
             this.isSupportCertificateParameter = this.isAzVersionGreaterOrEqual(azVersionResult.stdout, "2.66.0");
             await validateAzModuleVersion("azure-Cli", azVersionResult.stdout, "Azure-Cli", minorVersionTolerance)
@@ -354,6 +369,32 @@ export class azureclitask {
     }
 
     private static async getIdToken(connectedService: string) : Promise<string> {
+        if (tl.getPipelineFeature('EnableLateBoundIdToken')) {
+            const idToken = tl.getEndpointAuthorizationParameter(connectedService, "idToken", true);
+            if (idToken) {
+                tl.debug("Using bound idToken from service endpoint.");
+                try {
+                    emitTelemetry("AzureCLIV2", "LateBoundIdToken", {
+                        "connectedService": connectedService,
+                        "idTokenPresent": "true"
+                    });
+                } catch (err) {
+                    tl.debug(`Unable to emit telemetry: ${err}`);
+                }
+                return idToken;
+            } else {
+                tl.debug("Late-bound idToken not found in endpoint data, falling back to OIDC API.");
+                 try {
+                    emitTelemetry("AzureCLIV2", "LateBoundIdToken", {
+                        "connectedService": connectedService,
+                        "idTokenPresent": "false"
+                    });
+                } catch (err) {
+                    tl.debug(`Unable to emit telemetry: ${err}`);
+                }
+            }
+        }
+
         // since node19 default node's GlobalAgent has timeout 5sec
         // keepAlive is set to true to avoid creating default node's GlobalAgent
         const webApiOptions = {

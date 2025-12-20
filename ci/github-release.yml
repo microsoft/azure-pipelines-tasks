@@ -1,0 +1,72 @@
+steps:
+- checkout: self
+  clean: true
+
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.x
+
+- powershell: ./ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
+
+- template: /ci/generate-branch-name.yml@self
+  parameters:
+    prefix: releases
+
+- powershell: |
+    $releaseBranch = "$(branchName)"
+
+    # add config entry to avoid errors while pulling
+    git config --global user.email "$(username)@microsoft.com"
+    git config --global user.name "$(username)"
+
+    Write-Host 'Enabling verbose git tracing..'
+    git config --global http.verbose true
+    $env:GIT_TRACE = 1
+    $env:GIT_CURL_VERBOSE = 1
+
+    # Pull commits from remote and push branch to git
+    git checkout -b $releaseBranch
+    Write-Host "Trying to pull the remote branch.."
+    git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    if (-not $?) {
+      Write-Host "Failed to pull the remote branch. This is expected if the remote branch doesn't exist."
+    }
+    Write-Host "Trying to push to the remote branch.."
+    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['isDryRun'], 'false'),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  displayName: Push release branch
+
+- powershell: |
+    $releaseBranch = "$(branchName)"
+    $isDryRun = "$(isDryRun)"
+    if (($(currentSprintWeek) -eq 3) -or ($isDryRun -eq 'true')) {
+      npm ci
+      cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
+      npm ci
+      node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch --isDryRun $isDryRun
+    } else {
+      echo "Skipping since release notes generating on week 3"
+    }
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  continueOnError: true
+  displayName: Create Release
+
+- powershell: $(Build.SourcesDirectory)/ci/courtesy-push/send-notification.ps1
+  displayName: Send MS Teams notification
+  env:
+    PR_ID: $(courtesy_push_pr_id)
+    PR_LINK: $(courtesy_push_pr_link)
+    TEAMS_WEBHOOK: $(MSTeamsUri)

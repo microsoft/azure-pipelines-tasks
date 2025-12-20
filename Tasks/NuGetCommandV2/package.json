@@ -4,6 +4,8 @@
   "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
   "main": "nugetcommandmain.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetCommandV2",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetCommandV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +21,7 @@
   "dependencies": {
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "4.17.0",
-    "azure-pipelines-tasks-packaging-common": "3.253.0",
+    "azure-pipelines-tasks-packaging-common": "3.266.0",
     "azure-pipelines-tasks-utility-common": "3.258.0",
     "xmlreader": "^0.2.3"
   },
