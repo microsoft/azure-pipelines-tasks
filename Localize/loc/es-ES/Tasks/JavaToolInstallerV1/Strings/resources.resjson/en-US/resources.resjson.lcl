@@ -584,7 +584,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Failed to get azure storage account with name %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[No se ha podido obtener la cuenta de Azure Storage con el nombre %s.]]></Val>
+            <Val><![CDATA[No se pudo obtener la cuenta de almacenamiento de Azure con el nombre %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

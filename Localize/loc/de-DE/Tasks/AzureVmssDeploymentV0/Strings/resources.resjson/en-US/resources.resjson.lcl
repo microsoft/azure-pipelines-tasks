@@ -214,7 +214,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Azure storage account where custom scripts will be uploaded]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Storage-Konto, in das die benutzerdefinierten Skripts hochgeladen werden]]></Val>
+            <Val><![CDATA[Azure-Speicherkonto, in das die angepassten Skripts hochgeladen werden]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
