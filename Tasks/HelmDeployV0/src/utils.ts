@@ -74,7 +74,7 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
         helmCli.addArgument('--namespace '.concat(namespace));
 
     const execResult = helmCli.execHelmCommand(true);
-    yaml.safeLoadAll(execResult.stdout, (doc) => {
+    yaml.loadAll(execResult.stdout, (doc) => {
         manifests.push(doc);
     });
 
