@@ -54,17 +54,13 @@ export default class helmcli extends basecommand {
         command.line('--short');
 
         const result = this.execCommandSync(command);
-        const raw = (result.stdout || '').trim();
-        const lines = raw.split(/\r?\n/);
-        const clientLine = lines.find(l => /^Client:/i.test(l)) ?? lines[0] ?? '';
-        const clientOnly = clientLine.replace(/^Client:\s*/i, '').trim();
+        const clientVersionRegex = /(?:client:\s*)?(v?\d+(?:\.\d+)+)/i;
+        const output = result.stdout.trim();
+        const match = output.match(clientVersionRegex);
+        const clientVersion = match ? match[1] : null;
+        console.log(clientVersion);
 
-        let output = clientOnly;
-        if (clientOnly.startsWith('v2')) {
-            output = clientOnly ? `Client: ${clientOnly}` : clientLine;
-        }
-
-        return Object.assign({}, result, { stdout: output });
+        return { stdout: clientVersion || '', stderr: result.stderr, code: result.code, error: result.error };
     }
 
     public isHelmV3orGreater(): boolean {
@@ -72,12 +68,10 @@ export default class helmcli extends basecommand {
             this.helmVersion = this.getHelmVersion().stdout;
         tl.debug(`Helm client version: ${this.helmVersion}`);
 
-        const versionMatch = this.helmVersion.match(/v(\d+)\./);
-        if (versionMatch) {
-            const majorVersion = parseInt(versionMatch[1], 10);
-            return majorVersion >= 3;
-        }
-        return false;
+        const versionString = this.helmVersion.replace('v', '');
+        const majorVersion = parseInt(versionString.split('.')[0], 10);
+
+        return !isNaN(majorVersion) && majorVersion >= 3;
     }
 
     public execHelmCommand(silent?: boolean): tr.IExecSyncResult {
