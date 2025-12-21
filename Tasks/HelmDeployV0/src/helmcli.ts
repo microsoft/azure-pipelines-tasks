@@ -58,7 +58,6 @@ export default class helmcli extends basecommand {
         const output = result.stdout.trim();
         const match = output.match(clientVersionRegex);
         const clientVersion = match ? match[1] : null;
-        console.log(clientVersion);
 
         return { stdout: clientVersion || '', stderr: result.stderr, code: result.code, error: result.error };
     }
