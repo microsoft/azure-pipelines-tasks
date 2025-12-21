@@ -214,21 +214,19 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
                 const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
                 const clusterInfo = kubectlCli.getClusterInfo().stdout;
 
-                manifests.forEach(manifest => {
+                const promises = manifests.map(async (manifest) => {
                     //Check if the manifest object contains a deployment entity
                     if (manifest.kind && isDeploymentEntity(manifest.kind)) {
                         try {
-                            pushDeploymentDataToEvidenceStore(allPods, clusterInfo, manifest, manifestUrls).then((result) => {
-                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                            }, (error) => {
-                                tl.warning("publishToImageMetadataStore failed with error: " + error);
-                            });
+                            const result = await pushDeploymentDataToEvidenceStore(allPods, clusterInfo, manifest, manifestUrls);
+                            tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                         }
                         catch (e) {
                             tl.warning("publishToImageMetadataStore failed with error: " + e);
                         }
                     }
                 });
+                await Promise.all(promises);
             }
         }
         catch (e) {
