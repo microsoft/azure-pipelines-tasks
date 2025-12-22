@@ -63,7 +63,7 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
-  it('should run successfully when installing Kublogin', function () {
+  it('should run successfully when installing Kublogin', async () => {
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
@@ -72,7 +72,7 @@ describe('TestUtils', function () {
     assert(tr.succeeded, TestString.TaskSucceeded);
   }).timeout(20000);
 
-  it('should fail when downloading kubelogin fails', function () {
+  it('should fail when downloading kubelogin fails', async () => {
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0TestsDownloadFails.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
