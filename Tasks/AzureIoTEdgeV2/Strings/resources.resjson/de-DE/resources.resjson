@@ -64,7 +64,7 @@
   "loc.messages.InvalidContainerRegistry": "Fehler beim Abrufen des Authentifizierungstokens für die Containerregistrierung. Überprüfen Sie die Einstellung für die Containerregistrierung in der Buildaufgabe. Der Benutzername für die Containerregistrierung lautet \"%s\".",
   "loc.messages.DeploymentFileNotFound": "Die Bereitstellungsdatei wurde nicht gefunden. Stellen Sie sicher, dass der Pfad der Bereitstellungsdatei ordnungsgemäß in der Aufgabe festgelegt ist.",
   "loc.messages.ValidDeploymentFileNotFound": "Es wurde keine gültige Bereitstellungsdatei gefunden. Stellen Sie sicher, dass der Pfad der Bereitstellungsdatei ordnungsgemäß in der Aufgabe festgelegt ist.",
-  "loc.messages.AzureSdkNotFound": "Azure SDK nicht gefunden.",
+  "loc.messages.AzureSdkNotFound": "Azure-SDK nicht gefunden",
   "loc.messages.RootPathNotExist": "Der Stammpfad \"%s\" ist nicht vorhanden.",
   "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION ist auf TRUE festgelegt, die Überprüfung des Modulimages wird übersprungen.",
   "loc.messages.InvalidRegistryCredentialWarning": "Fehler bei der Anmeldung von \"%s\" mit den angegebenen Anmeldeinformationen. %s",
