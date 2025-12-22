@@ -1,5 +1,5 @@
 # Determine current sprint.
-$currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept" = "application/json" } | ConvertFrom-Json)
+$currentSprint = (Invoke-WebRequest https://whatsprintis.it -UseBasicParsing -Headers @{"Accept"="application/json"}).Content
 
 $sprint = $currentSprint.sprint
 $week = $currentSprint.week
