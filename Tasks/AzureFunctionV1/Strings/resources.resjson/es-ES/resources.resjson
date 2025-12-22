@@ -7,7 +7,7 @@
   "loc.input.label.function": "Dirección URL de la función de Azure",
   "loc.input.help.function": "Dirección URL de la función de Azure que debe invocarse. Ejemplo:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "Tecla de función",
-  "loc.input.help.key": "Tecla de función o host para tener acceso a esta función. Para proteger la clave, defina una variable secreta y úsela aquí. Ejemplo:- $(myFunctionKey) donde myFunctionKey es una variable de canalización secreta con un valor de la clave secreta, como \" ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw ==\"",
+  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "Método",
   "loc.input.help.method": "Seleccione el método HTTP con el que debe invocarse la función.",
   "loc.input.label.headers": "Encabezados",
