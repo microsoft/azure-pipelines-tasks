@@ -6,11 +6,11 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestString } from './TestStrings';
 
 describe('TestUtils', function () {
-  it('should unzip a release', (done: Mocha.Done) => {
+  it('should unzip a release', async (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'UnzipL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.stdOutContained(TestString.PathExists), "should have printed: " + TestString.PathExists);
     assert(tr.stdOutContained(TestString.PathNotExists), "should have printed: " + TestString.PathNotExists);
@@ -19,11 +19,11 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
-  it('should get a release', (done: Mocha.Done) => {
+  it('should get a release', async (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'GetKubeloginReleaseL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.stdOutContained(TestString.Found0_0_29), 'should have printed: ' + TestString.Found0_0_29);
     assert(tr.stdOutContained(TestString.PlatformCorrect0_0_29), 'should have printed: ' + TestString.PlatformCorrect0_0_29);
@@ -42,16 +42,16 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
-  it('should handle HTTP errors correctly', (done: Mocha.Done) => {
+  it('should handle HTTP errors correctly', async (done: Mocha.Done) => {
     new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js')).run();
     done();
   }).timeout(20000);
 
-  it('should resolve a platform', (done: Mocha.Done) => {
+  it('should resolve a platform', async (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'ResolvePlatformL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.stdOutContained(TestString.darwinamd64), 'should have printed: ' + TestString.darwinamd64);
     assert(tr.stdOutContained(TestString.darwinarm64), 'should have printed: ' + TestString.darwinarm64);
@@ -67,7 +67,7 @@ describe('TestUtils', function () {
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.succeeded, TestString.TaskSucceeded);
   }).timeout(20000);
@@ -76,7 +76,7 @@ describe('TestUtils', function () {
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0TestsDownloadFails.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
-    tr.run();
+    await tr.runAsync();
 
     assert(tr.failed, TestString.TaskFailed);
     assert(tr.stdOutContained(TestString.loc_mock_Info_DownloadingFailed), 'should have printed: ' + TestString.loc_mock_Info_DownloadingFailed);
