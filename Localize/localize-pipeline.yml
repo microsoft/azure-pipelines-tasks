@@ -27,7 +27,7 @@ stages:
       displayName: 'npm install'
       
     - powershell: |
-        $sprintInfo = Invoke-RestMethod https://whatsprintis.it -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
+        $sprintInfo = Invoke-RestMethod https://whatsprintis.it -Headers @{"Accept"= "application/json"}
         if (($env:PR_CREATION_ENABLED -eq 'True') -and (($sprintInfo.week -eq 3) -or ($env:BUILD_REASON -eq 'Manual')))
         {
           Write-Host "shouldCreatePR was set to true"
