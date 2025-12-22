@@ -50,7 +50,7 @@ extends:
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
       sourceAnalysisPool:
         name: 1ES-ABTT-Shared-Pool
-        image: abtt-windows-2022
+        image: abtt-windows-2025
         os: windows
       sourceRepositoriesToScan: 
         exclude: 
@@ -68,7 +68,7 @@ extends:
         timeoutInMinutes: 1440 # AntiMalware takes 3 hours to scan tasks.zip
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
+          image: abtt-windows-2025
           os: windows
         templateContext:
           outputs:
@@ -109,7 +109,7 @@ extends:
         timeoutInMinutes: 360
         pool:
           name: Azure Pipelines
-          image: macos-15
+          image: macos-14
           os: macOS
         steps:
         - template: /ci/build-all-steps.yml@self
