@@ -29,10 +29,10 @@
     "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
-    "azp-tasks-az-blobstorage-provider": "^3.262.0",
+    "azp-tasks-az-blobstorage-provider": "C:\\azure-pipelines-tasks-common-packages\\common-npm-packages\\az-blobstorage-provider\\_build\\azp-tasks-az-blobstorage-provider-3.262.0.tgz",
     "azure-pipelines-task-lib": "^5.2.2",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.263.1",
-    "azure-pipelines-tasks-utility-common": "3.265.1",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.267.0",
+    "azure-pipelines-tasks-utility-common": "3.267.0",
     "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
