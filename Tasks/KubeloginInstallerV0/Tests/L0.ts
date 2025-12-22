@@ -43,7 +43,7 @@ describe('TestUtils', function () {
   }).timeout(20000);
 
   it('should handle HTTP errors correctly', async (done: Mocha.Done) => {
-    new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js')).run();
+    await new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js')).runAsync();
     done();
   }).timeout(20000);
 
