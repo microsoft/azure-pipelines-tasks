@@ -101,7 +101,7 @@ extends:
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
       sourceAnalysisPool:
         name: 1ES-ABTT-Shared-Pool
-        image: abtt-windows-2022
+        image: abtt-windows-2025
         os: windows
       sourceRepositoriesToScan: 
         exclude: 
@@ -119,7 +119,7 @@ extends:
         timeoutInMinutes: 1440 # AntiMalware takes 3 hours to scan tasks.zip
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
+          image: abtt-windows-2025
           os: windows
         templateContext:
           outputs:
@@ -146,7 +146,7 @@ extends:
         timeoutInMinutes: 540
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
+          image: abtt-windows-2025
           os: windows
         dependsOn:
         - build_all_windows
@@ -185,7 +185,7 @@ extends:
         timeoutInMinutes: 60
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
+          image: abtt-windows-2025
           os: windows
         dependsOn:
         - courtesy_push
