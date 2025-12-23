@@ -1,10 +1,23 @@
 {
   "loc.friendlyName": "Autenticación de NuGet",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Configure las herramientas de NuGet para autenticar con Azure Artifacts y otros repositorios de NuGet. Requiere NuGet >= 4.8.5385, dotnet >= 2.1.400 o MSBuild >= 15.8.166.59604",
+  "loc.description": "Configure las herramientas de NuGet para autenticar con Azure Artifacts y otros repositorios de NuGet. Requiere NuGet >= 4.8.5385, dotnet >= 6 o MSBuild >= 15.8.166.59604",
   "loc.instanceNameFormat": "Autenticación de NuGet",
   "loc.input.label.nuGetServiceConnections": "Credenciales de conexión de servicio para fuentes fuera de esta organización",
   "loc.input.help.nuGetServiceConnections": "Lista separada por comas de nombres de conexión de servicio NuGet para fuentes que se encuentran fuera de esta organización o colección. Déjela en blanco para las fuentes de esta organización o colección; las credenciales de la compilación se usan de forma automática.",
   "loc.input.label.forceReinstallCredentialProvider": "Reinstalar el proveedor de credenciales, aunque ya esté instalado",
-  "loc.input.help.forceReinstallCredentialProvider": "Si el proveedor de credenciales ya está instalado en el perfil de usuario, determina si se sobrescribe con el proveedor de credenciales proporcionado por la tarea. Esto puede actualizar (o posiblemente cambiar a una versión anterior) el proveedor de credenciales."
+  "loc.input.help.forceReinstallCredentialProvider": "Si el proveedor de credenciales ya está instalado en el perfil de usuario, determina si se sobrescribe con el proveedor de credenciales proporcionado por la tarea. Esto puede actualizar (o posiblemente cambiar a una versión anterior) el proveedor de credenciales.",
+  "loc.input.help.feedUrl": "Si se establece, se requiere azureDevOpsServiceConnection. Se omiten todas las demás entradas. No compatible con nuGetServiceConnections. La URL fuente debe estar en el formato del índice del servicio NuGet, por ejemplo, https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere feedUrl. Se omiten todas las demás entradas.",
+  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
+  "loc.messages.Error_ServiceConnectionExists": "Ya existe una conexión de servicio para el punto de conexión",
+  "loc.messages.Error_InvalidFeedUrl": "La URL de fuente proporcionada \"%s\" no es una URL de fuente válida de Azure DevOps.",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "Tanto feedUrl como azureDevOpsServiceConnection deben configurarse juntos.",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "No se pueden especificar los parámetros de entrada nuGetServiceConnections y feedUrl.",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "No se pueden especificar los parámetros de entrada nuGetServiceConnections y azureDevOpsServiceConnection(workloadIdentityServiceConnection) al mismo tiempo.",
+  "loc.messages.Info_AddingFederatedFeedAuth": "No se pueden obtener las credenciales federadas de la conexión de servicio",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Agregando información de autenticación de la conexión de servicio %s para la fuente %s",
+  "loc.messages.FailedToGetServiceConnectionAuth": "Se agregó correctamente la autenticación para la fuente %s.",
+  "loc.messages.Warn_IgnoringFeedUrl": "Omitiendo feedUrl"
 }

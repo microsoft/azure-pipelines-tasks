@@ -7,7 +7,7 @@
   "loc.input.label.function": "Azure 関数 URL",
   "loc.input.help.function": "呼び出すことが必要な Azure 関数の URL。例:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "ファンクション キー",
-  "loc.input.help.key": "この関数にアクセスするための関数またはホスト キーです。キーを安全に保護するには、秘密の変数を定義してここで使用します。例: $(myFunctionKey)、ここで myFunctionKey は `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==` などの秘密キーの値を持つ秘密パイプライン変数です。",
+  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "メソッド",
   "loc.input.help.method": "関数を呼び出すときに使う HTTP メソッドを選択します。",
   "loc.input.label.headers": "ヘッダー",

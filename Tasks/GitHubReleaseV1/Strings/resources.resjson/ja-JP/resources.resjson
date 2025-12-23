@@ -34,6 +34,8 @@
   "loc.input.help.isDraft": "リリースを下書き (未公開) として保存する必要があるかどうかを示します。[false] の場合、リリースは公開されます。",
   "loc.input.label.isPreRelease": "プレリリース",
   "loc.input.help.isPreRelease": "リリースをプレリリースとしてマークする必要があるかどうかを示します。",
+  "loc.input.label.makeLatest": "最新にする",
+  "loc.input.help.makeLatest": "このリリースをリポジトリの \"最新\" リリースとして指定するかどうかを設定します。最新リリースとしてマークしない場合は 'false' に設定し、作成日とセマンティック バージョニングに基づく GitHub のレガシの最新リリース判定を使用する場合は 'legacy' に設定します。",
   "loc.input.label.addChangeLog": "変更ログの追加",
   "loc.input.help.addChangeLog": "[true] に設定されている場合、これと公開された最新リリースの間の変更 (コミットと公開) の一覧が生成され、リリース ノートに追加されます。",
   "loc.input.label.changeLogCompareToRelease": "比較対象",
