@@ -8,7 +8,7 @@ const path = require('path');
 describe('Azure Key Vault', function () {
     this.timeout(30000);
 
-    it("Successfully download all secrets", async (done) => {
+    it("Successfully download all secrets", async () => {
         let tp = path.join(__dirname, "downloadAllSecrets.js");
         let tr = new ttm.MockTestRunner(tp);
 
@@ -33,11 +33,9 @@ describe('Azure Key Vault', function () {
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value") > 0, "##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value");
 
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;isOutput=false;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
-
-        done();
     });
 
-    it("Successfully download selected secrets", async (done) => {
+    it("Successfully download selected secrets", async () => {
         let tp = path.join(__dirname, "downloadSelectedSecrets.js");
         let tr = new ttm.MockTestRunner(tp);
 
@@ -61,11 +59,9 @@ describe('Azure Key Vault', function () {
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value") > 0, "##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value");
 
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;isOutput=false;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
-
-        done();
     });
 
-    it("Task fails if key vault name is not specified", async (done) => {
+    it("Task fails if key vault name is not specified", async () => {
         let tp = path.join(__dirname, "downloadSecretsWithoutKeyVault.js");
         let tr = new ttm.MockTestRunner(tp);
 
@@ -73,11 +69,9 @@ describe('Azure Key Vault', function () {
 
         assert(tr.failed, "Should have failed");
         assert(tr.stdout.indexOf("Error: Input required: KeyVaultName") > 0, "Error: Input required: KeyVaultName");
-
-        done();
     });
 
-    it("Task fails if secret filter is not specified", async (done) => {
+    it("Task fails if secret filter is not specified", async () => {
         let tp = path.join(__dirname, "downloadSecretsWithoutSecrets.js");
         let tr = new ttm.MockTestRunner(tp);
 
@@ -85,7 +79,5 @@ describe('Azure Key Vault', function () {
 
         assert(tr.failed, "Should have failed");
         assert(tr.stdout.indexOf("Error: Input required: SecretsFilter") > 0, "Error: Input required: SecretsFilter");
-
-        done();
     });
 });
