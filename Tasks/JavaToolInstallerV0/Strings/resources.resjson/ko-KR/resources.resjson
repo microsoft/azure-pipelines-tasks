@@ -30,7 +30,7 @@
   "loc.input.help.createExtractDirectory": "기본적으로 작업은 JDK를 추출하기 위해 이 JAVA_HOME_8_X64_OpenJDK_zip과 유사한 디렉터리를 작성합니다. 이 옵션을 사용하면 이 폴더 생성을 비활성화할 수 있습니다. 이 경우 JDK는 jdkDestinationDirectory의 루트에 있습니다.",
   "loc.messages.DownloadFromAzureBlobStorage": "Azure Blob Storage에서 아티팩트를 다운로드하는 중입니다. 컨네이너 이름: %s",
   "loc.messages.SuccessFullyFetchedItemList": "항목 목록을 가져왔습니다.",
-  "loc.messages.StorageAccountDoesNotExist": "이름이 %s인 Azure Storage 계정을 가져오지 못했습니다.",
+  "loc.messages.StorageAccountDoesNotExist": "이름이 %s인 Azure 스토리지 계정을 가져오지 못했습니다.",
   "loc.messages.RequestedUrlTooLong": "요청된 URL이 너무 깁니다. 일반적으로 구독에 많은 리소스 그룹이 있을 때 발생합니다. azureResourceGroupName 입력을 설정해 보세요.",
   "loc.messages.UnzipExtractFile": "파일 압축을 푸는 중: %s",
   "loc.messages.SevenZipExtractFile": "파일 압축을 푸는 중: %s",

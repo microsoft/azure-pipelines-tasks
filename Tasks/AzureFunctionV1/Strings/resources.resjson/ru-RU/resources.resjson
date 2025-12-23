@@ -7,7 +7,7 @@
   "loc.input.label.function": "URL-адрес функции Azure",
   "loc.input.help.function": "URL-адрес функции Azure, которую необходимо вызвать. Пример: https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "Функциональная клавиша",
-  "loc.input.help.key": "Ключ функции или узла для доступа к этой функции. Чтобы защитить ключ, определите секретную переменную и используйте ее здесь. Пример: - $(myFunctionKey), где myFunctionKey — секретная переменная конвейера со значением секретного ключа, например \"ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==\"",
+  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "Метод",
   "loc.input.help.method": "Выберите метод HTTP, с помощью которого должна вызываться функция.",
   "loc.input.label.headers": "Заголовки",

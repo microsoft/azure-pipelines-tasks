@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 
+	xmlns:mstns    ="http://schemas.microsoft.com/locstudio/2004/6/lcx"
+	targetNamespace="http://schemas.microsoft.com/locstudio/2004/6/lcx"
+	xmlns:lcx      ="http://schemas.microsoft.com/locstudio/2004/6/lcx" 
+	xmlns:xs       ="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="qualified">
+	<xs:annotation>
+		<xs:documentation>Schema for Microsoft Localization Tools. Copyright (c) 2006 Microsoft Corporation. All rights reserved.</xs:documentation>
+	</xs:annotation>
+	<xs:element name="LCX" type="lcx:LCXRoot">
+	</xs:element>
+	<xs:complexType name="LCXRoot">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Settings" type="lcx:SettingsOverrides" minOccurs="0"/>
+			<xs:element name="Props" type="lcx:PropertyBag" minOccurs="0"/>
+			<xs:element name="OwnedComments" type="lcx:OwnedComments" minOccurs="0" />
+			<xs:element name="Item" type="lcx:LocItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="SchemaVersion" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="PsrId" type="xs:string" form="unqualified" use="optional"/>
+		<xs:attribute name="Desc" type="xs:string" form="unqualified" use="optional"/>
+		<xs:attribute name="SrcCul" type="xs:string" form="unqualified" use="optional" />
+		<xs:attribute name="TgtCul" type="xs:string" form="unqualified" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="SettingsOverrides">
+		<xs:sequence>
+			<xs:element name="Category" type="lcx:SettingsCategory" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="RefFile" type="xs:string" form="unqualified" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="SettingsCategory">
+		<xs:sequence>
+			<xs:element name="Group" type="lcx:SettingsGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SettingsGroup">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Bool" type="lcx:NamedBool" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Int" type="lcx:NamedInt" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Enum" type="lcx:NamedString" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Str" type="lcx:NamedString" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="StrList" type="lcx:NamedStringList" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="PickList" type="lcx:NamedPickList" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedBool">
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Val" type="xs:boolean" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedInt">
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Val" type="xs:int" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedString">
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Val" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedXmlString">
+		<xs:sequence>
+			<xs:any namespace="##any" minOccurs="1" maxOccurs="1" processContents="skip"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedStringList">
+		<xs:sequence>
+			<xs:element name="Item" type="lcx:ListItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="NamedPickList">
+		<xs:sequence>
+			<xs:element name="Item" type="lcx:ListItem" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Val" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ListItem">
+		<xs:attribute name="Order" type="xs:integer" form="unqualified" use="required"/>
+		<xs:attribute name="Val" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="LocItem">
+		<xs:sequence>
+			<xs:element name="Str" type="lcx:SourceString" minOccurs="0"/>
+			<xs:element name="Bin" type="lcx:SourceBinary" minOccurs="0"/>
+			<xs:element name="Disp" type="lcx:DisplayInfo" minOccurs="0"/>
+			<xs:element name="Cmts" type="lcx:Comments" minOccurs="0"/>
+			<xs:element name="Props" type="lcx:PropertyBag" minOccurs="0"/>
+			<xs:element name="PsrProps" type="lcx:PropertyBag" minOccurs="0"/>
+			<xs:element name="Item" type="lcx:LocItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ItemType" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="ItemId" type="xs:string" form="unqualified" use="required"/>
+		<xs:attribute name="Seq" type="xs:int" form="unqualified" use="optional" default="0"/>
+		<xs:attribute name="Mnemonic" type="xs:string" form="unqualified" use="optional"/>
+		<xs:attribute name="PsrId" type="xs:string" form="unqualified" use="optional" default="0"/>
+		<xs:attribute name="SrcFileName" type="xs:string" form="unqualified" use="optional"/>
+		<xs:attribute name="SrcFileLnNum" type="xs:int" form="unqualified" use="optional" default="0"/>
+		<xs:attribute name="InstFlg" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+		<xs:attribute name="Leaf" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="DisplayInfo">
+		<xs:attribute name="Order" type="xs:int" form="unqualified" use="optional" default="0"/>
+		<xs:attribute name="LocTbl" type="xs:boolean" form="unqualified" use="optional" default="true"/>
+		<xs:attribute name="Expand" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+		<xs:attribute name="Disp" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+		<xs:attribute name="Edtr" type="lcx:VisualEditor" form="unqualified" use="optional" default="None"/>
+		<xs:attribute name="Icon" type="lcx:IconType" form="unqualified" use="optional" default="None"/>
+		<xs:attribute name="Path" type="xs:string" form="unqualified" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="OwnedComments">
+		<xs:choice>
+			<xs:element name="Cmt" type="lcx:OwnedComment" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="OwnedComment">
+		<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Comments">
+		<xs:choice>
+			<xs:element name="Cmt" type="lcx:Comment" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Comment">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="Name" type="xs:string" form="unqualified" use="required"/>
+				<xs:attribute name="Enabled" type="xs:boolean" form="unqualified" use="optional" default="true"/>
+				<xs:attribute name="Src" type="xs:string" form="unqualified" use="optional" default=""/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PropertyBag">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Bool" type="lcx:NamedBool" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Int" type="lcx:NamedInt" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Str" type="lcx:NamedString" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="XStr" type="lcx:NamedXmlString" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="CDataHolder">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:attributeGroup name="StringAttributes">
+		<xs:attribute name="HKVal" form="unqualified" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:length value="1" fixed="true"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="HKPos" type="xs:int" form="unqualified" use="optional" default="-1"/>
+		<xs:attribute name="Cat" type="xs:string" form="unqualified" use="optional" default="None"/>
+		<xs:attribute name="CP" type="lcx:CodepageType" form="unqualified" use="optional" default="Unicode"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="StatusAttributes">
+		<xs:attribute name="Stat" type="lcx:LocStatus" form="unqualified" use="optional" default="NotLoc"/>
+		<xs:attribute name="Orig" type="lcx:TransOrigin" form="unqualified" use="optional" default="N/A"/>
+		<xs:attribute name="Lock" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+		<xs:attribute name="Appr" type="lcx:ApprovalStatus" form="unqualified" use="optional" default="NotReady"/>
+		<xs:attribute name="AutoAppr" type="lcx:AutoApproved" form="unqualified" use="optional" default="No"/>
+	</xs:attributeGroup>
+	<xs:complexType name="StringData">
+		<xs:sequence>
+			<xs:element name="Val" type="lcx:CDataHolder" minOccurs="0"/>
+			<xs:element name="Props" type="lcx:PropertyBag" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="lcx:StringAttributes"/>
+	</xs:complexType>
+	<xs:complexType name="SourceString">
+		<xs:complexContent>
+			<xs:extension base="lcx:StringData">
+				<xs:sequence>
+					<xs:element name="Tgt" type="lcx:TargetString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Prev" type="lcx:StringData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Ref" type="lcx:ReferenceString" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="UsrLk" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+				<xs:attribute name="DevLk" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TargetString">
+		<!-- Target String is a source string but with status info -->
+		<xs:complexContent>
+			<xs:extension base="lcx:StringData">
+				<xs:attributeGroup ref="lcx:StatusAttributes" />
+				<xs:attribute name="Confidence" type="xs:int" form="unqualified" use="optional" default="0"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReferenceString">
+		<!-- Reference string is a target string but with language info -->
+		<xs:complexContent>
+			<xs:extension base="lcx:TargetString">
+				<xs:attribute name="Cul" type="xs:string" form="unqualified" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BinaryData">
+		<xs:sequence>
+			<xs:element name="Val" type="lcx:CDataHolder" minOccurs="0"/>
+			<xs:element name="Props" type="lcx:PropertyBag" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="BinId" type="xs:int" form="unqualified" use="optional" default="0"/>
+	</xs:complexType>
+	<xs:complexType name="SourceBinary">
+		<xs:complexContent>
+			<xs:extension base="lcx:BinaryData">
+				<xs:sequence>
+					<xs:element name="Tgt" type="lcx:TargetBinary" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Prev" type="lcx:BinaryData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Ref" type="lcx:ReferenceBinary" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="UsrLk" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+				<xs:attribute name="DevLk" type="xs:boolean" form="unqualified" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TargetBinary">
+		<!-- Target Binary is a BinaryData but with status information -->
+		<xs:complexContent>
+			<xs:extension base="lcx:BinaryData">
+				<xs:attributeGroup ref="lcx:StatusAttributes" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReferenceBinary">
+		<xs:complexContent>
+			<xs:extension base="lcx:TargetBinary">
+				<xs:attribute name="Cul" type="xs:string" form="unqualified" use="required"/>
+				<!-- Reference binary is a target target but with language info -->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="CodepageType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="Ansi"/>
+			<xs:enumeration value="DOS"/>
+			<xs:enumeration value="Mac"/>
+			<xs:enumeration value="Unicode"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VisualEditor">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="AppStudio"/>
+			<xs:enumeration value="SubRes"/>
+			<xs:enumeration value="External"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IconType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Proj"/>
+			<xs:enumeration value="Dir"/>
+			<xs:enumeration value="File"/>
+			<xs:enumeration value="Expand"/>
+			<xs:enumeration value="Bmp"/>
+			<xs:enumeration value="Dlg"/>
+			<xs:enumeration value="Ico"/>
+			<xs:enumeration value="Ver"/>
+			<xs:enumeration value="Str"/>
+			<xs:enumeration value="Accel"/>
+			<xs:enumeration value="Cur"/>
+			<xs:enumeration value="Menu"/>
+			<xs:enumeration value="Cust"/>
+			<xs:enumeration value="Ref"/>
+			<xs:enumeration value="RRIProject"/>
+			<xs:enumeration value="RRIFile"/>
+			<xs:enumeration value="RRIFileParsed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LocStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NotLoc"/>
+			<xs:enumeration value="Update"/>
+			<xs:enumeration value="Loc"/>
+			<xs:enumeration value="N/A"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ApprovalStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Approved"/>
+			<xs:enumeration value="PreApproved"/>
+			<xs:enumeration value="NotReady"/>
+			<xs:enumeration value="Failed"/>
+			<xs:enumeration value="ForResearch"/>
+			<xs:enumeration value="N/A"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AutoApproved">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="No"/>
+			<xs:enumeration value="Partial"/>
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="N/A"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TransOrigin">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="New"/>
+			<xs:enumeration value="Upload"/>
+			<xs:enumeration value="Auto"/>
+			<xs:enumeration value="Copied"/>
+			<xs:enumeration value="PrevVer"/>
+			<xs:enumeration value="N/A"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
