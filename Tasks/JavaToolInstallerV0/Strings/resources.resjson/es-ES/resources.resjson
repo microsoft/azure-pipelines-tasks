@@ -30,7 +30,7 @@
   "loc.input.help.createExtractDirectory": "De forma predeterminada, la tarea está creando un directorio similar a este JAVA_HOME_8_X64_OpenJDK_zip para extraer JDK. Esta opción permite deshabilitar la creación de esta carpeta. Si se deshabilita, el JDK se ubicará en la raíz de jdkDestinationDirectory",
   "loc.messages.DownloadFromAzureBlobStorage": "Descargando artefactos de Azure Blob Storage. Nombre del contenedor: %s",
   "loc.messages.SuccessFullyFetchedItemList": "La lista de elementos se recuperó correctamente.",
-  "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de Azure Storage con el nombre %s.",
+  "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de almacenamiento de Azure con el nombre %s.",
   "loc.messages.RequestedUrlTooLong": "La dirección URL solicitada es demasiado larga. Esto suele ocurrir cuando hay muchos grupos de recursos en la suscripción. Intente establecer la entrada azureResourceGroupName.",
   "loc.messages.UnzipExtractFile": "Extrayendo archivo: %s",
   "loc.messages.SevenZipExtractFile": "Extrayendo archivo: %s",

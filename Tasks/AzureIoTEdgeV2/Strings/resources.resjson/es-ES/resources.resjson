@@ -64,7 +64,7 @@
   "loc.messages.InvalidContainerRegistry": "No se pudo capturar el token de autenticación del registro de contenedor. Compruebe la configuración del registro del contenedor en la tarea de compilación. El nombre de usuario del registro de contenedor es %s",
   "loc.messages.DeploymentFileNotFound": "No se encuentra el archivo de implementación. Asegúrese de que la ruta de acceso de dicho archivo se ha establecido correctamente en la tarea.",
   "loc.messages.ValidDeploymentFileNotFound": "No se encuentra un archivo de implementación válido. Asegúrese de que la ruta de acceso del archivo de implementación se ha establecido correctamente en la tarea.",
-  "loc.messages.AzureSdkNotFound": "No se ha encontrado ninguna instancia de Azure SDK.",
+  "loc.messages.AzureSdkNotFound": "No se ha encontrado ninguna instancia del SDK de Azure.",
   "loc.messages.RootPathNotExist": "La ruta de acceso raíz %s no existe.",
   "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION se ha establecido en true; se omite la validación de la imagen del módulo.",
   "loc.messages.InvalidRegistryCredentialWarning": "No se pudo iniciar sesión en %s con las credenciales proporcionadas. %s",

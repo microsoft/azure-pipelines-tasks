@@ -7,7 +7,7 @@
   "loc.input.label.function": "Azure 函式 URL",
   "loc.input.help.function": "需要叫用的 Azure 函式 Url。範例:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "功能鍵",
-  "loc.input.help.key": "要用以存取此函式的函式或主機金鑰。為了維護金鑰的安全，請定義祕密變數並在此使用。範例: - $(myFunctionKey)，其中 myFunctionKey 是具有祕密金鑰值的祕密管線變數，像是 `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
+  "loc.input.help.key": "Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the \"Control options\" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "請選取 HTTP 方法和應叫用的函式。",
   "loc.input.label.headers": "標頭",
