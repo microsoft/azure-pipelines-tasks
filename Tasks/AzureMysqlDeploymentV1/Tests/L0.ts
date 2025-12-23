@@ -35,7 +35,7 @@ describe('AzureMySqlDeployment Suite', function() {
         const tr = new ttm.MockTestRunner(path.join(__dirname, 'MysqlClientTests.js'));
         await tr.runAsync();
 
-        assert(tr.stdOutContained('MysqlClientL0Tests.get should has passed.'), 'Should have printed: MysqlClientL0Tests.get should has passed.');
+        assert(tr.stdOutContained('MysqlClientL0Tests.getFirewallConfiguration should has passed.'), 'Should have printed: MysqlClientL0Tests.getFirewallConfiguration should has passed.');
         assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should has passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should has passed.');
     });
 });

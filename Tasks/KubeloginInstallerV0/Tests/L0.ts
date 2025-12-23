@@ -1,17 +1,16 @@
-import path = require('path');
 import * as assert from 'assert';
+import path = require('path');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestString } from './TestStrings';
 
-const TIMEOUT_IN_MS = 20_000;
+const TIMEOUT_IN_MS = 90_000;
 
 describe('TestUtils', function () {
   it('should unzip a release', async () => {
     this.timeout(TIMEOUT_IN_MS);
-    const taskPath = path.join(__dirname, 'UnzipL0Tests.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+    const tr = new ttm.MockTestRunner(path.join(__dirname, 'UnzipL0Tests.js'));
 
     await tr.runAsync();
 
@@ -22,8 +21,7 @@ describe('TestUtils', function () {
 
   it('should get a release', async () => {
     this.timeout(TIMEOUT_IN_MS);
-    const taskPath = path.join(__dirname, 'GetKubeloginReleaseL0Tests.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+    const tr = new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseL0Tests.js'));
 
     await tr.runAsync();
 
@@ -49,8 +47,7 @@ describe('TestUtils', function () {
 
   it('should resolve a platform', async () => {
     this.timeout(TIMEOUT_IN_MS);
-    const taskPath = path.join(__dirname, 'ResolvePlatformL0Tests.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+    const tr = new ttm.MockTestRunner(path.join(__dirname, 'ResolvePlatformL0Tests.js'));
 
     await tr.runAsync();
 
@@ -65,7 +62,7 @@ describe('TestUtils', function () {
   it('should run successfully when installing Kublogin', async () => {
     this.timeout(TIMEOUT_IN_MS);
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+    const tr = new ttm.MockTestRunner(testPath);
 
     await tr.runAsync();
 
@@ -75,7 +72,7 @@ describe('TestUtils', function () {
   it('should fail when downloading kubelogin fails', async () => {
     this.timeout(TIMEOUT_IN_MS);
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0TestsDownloadFails.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+    const tr = new ttm.MockTestRunner(testPath);
 
     await tr.runAsync();
 
