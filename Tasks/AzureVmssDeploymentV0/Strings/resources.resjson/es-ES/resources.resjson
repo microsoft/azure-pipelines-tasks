@@ -59,7 +59,7 @@
   "loc.messages.UploadingCustomScriptsBlobs": "Cargando scripts personalizados de %s en Azure Blobs.",
   "loc.messages.UploadingToStorageBlobsFailed": "No se pudieron cargar scripts personalizados en Azure Blob Storage. Error: %s.",
   "loc.messages.DestinationBlobContainer": "Los archivos se cargarán en la dirección URL de contenedor: %s.",
-  "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de Azure Storage con el nombre %s.",
+  "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de almacenamiento de Azure con el nombre %s.",
   "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "La dirección URL de recursos de Active Directory no puede estar vacía.",
   "loc.messages.StorageAccountCannotBeNull": "storage accountName no puede ser NULL o no estar definido, y debe ser de tipo cadena.",
   "loc.messages.ArtifactItemsTruncationWarning": "Es posible que la descarga se limite a 5000 elementos, por lo que quizá no se han descargado todos los elementos del artefacto.",
