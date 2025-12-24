@@ -40,7 +40,7 @@ export class Action {
                 console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
             }
             catch (error) {
-                console.log(tl.loc("CreateReleaseFailed"));
+                console.log(tl.loc("CreateReleaseFailed", error.message));
 
                 try {
                     // If upload asets fail, then delete the release
