@@ -26,14 +26,14 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "^4.16.0",
+    "azure-pipelines-task-lib": "^5.2.2",
     "azure-pipelines-tasks-utility-common": "3.258.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "typed-rest-client": "1.8.4"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }
