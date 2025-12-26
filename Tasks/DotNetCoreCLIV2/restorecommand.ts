@@ -11,6 +11,9 @@ import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/Com
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 import { RequestOptions } from 'azure-pipelines-tasks-packaging-common/universal/RequestUtilities';
+import * as fs from 'fs';
+import * as xml2js from 'xml2js';
+
 
 export async function run(): Promise<void> {
     console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
@@ -143,6 +146,8 @@ export async function run(): Promise<void> {
         // Setting creds in the temp NuGet.config if needed
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
+        await syncPackageSourceMappingKeysXml2js(nuGetConfigPath, nuGetConfigHelper.tempNugetConfigPath);
+
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
 
         nuGetConfigHelper.backupExistingRootNuGetFiles();
@@ -206,3 +211,112 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
     return dotnet.exec({ cwd: path.dirname(projectFile), env: envWithProxy } as IExecOptions);
 }
+
+async function syncPackageSourceMappingKeysXml2js(
+  originalConfigPath: string | undefined,
+  tempConfigPath: string
+): Promise<void> {
+  try {
+    if (!tempConfigPath || !fs.existsSync(tempConfigPath)) {
+      tl.debug(`[PSM-Sync] Temp config not found: ${tempConfigPath}; skipping.`);
+      return;
+    }
+
+    // Parse TEMP (post-prefix) config
+    const tempXmlText = fs.readFileSync(tempConfigPath, 'utf8');
+    const parser = new xml2js.Parser({ explicitArray: true, preserveChildrenOrder: true });
+    const tempDoc: any = await parser.parseStringPromise(tempXmlText);
+
+    // Build URL→Key maps for TEMP and ORIGINAL (if provided)
+    const tempUrlToKey = extractUrlToKeyMap(tempDoc);
+    if (!originalConfigPath || !fs.existsSync(originalConfigPath)) {
+      tl.debug('[PSM-Sync] Original config not provided/found; skipping.');
+      return;
+    }
+    const origXmlText = fs.readFileSync(originalConfigPath, 'utf8');
+    const origDoc: any = await parser.parseStringPromise(origXmlText);
+    const origUrlToKey = extractUrlToKeyMap(origDoc);
+
+    // Compute origKey → tempKey mapping via exact URL match
+    const origKeyToTempKey = new Map<string, string>();
+    for (const [url, origKey] of origUrlToKey.entries()) {
+      const tempKey = tempUrlToKey.get(url);
+      if (tempKey && tempKey !== origKey) {
+        origKeyToTempKey.set(origKey, tempKey); // e.g., canarytest → feed-canarytest
+      }
+    }
+    if (origKeyToTempKey.size === 0) {
+      tl.debug('[PSM-Sync] No orig→temp key differences computed; skipping rewrite.');
+      return;
+    }
+
+    // Rewrite keys under <packageSourceMapping> in TEMP doc
+    const cfg = tempDoc?.configuration;
+    const psmArr = cfg?.packageSourceMapping;
+    if (!Array.isArray(psmArr) || psmArr.length === 0) {
+      tl.debug('[PSM-Sync] No <packageSourceMapping> section; skipping.');
+      return;
+    }
+    const psmNode = psmArr[0];
+    const psmSources = psmNode?.packageSource;
+    if (!Array.isArray(psmSources) || psmSources.length === 0) {
+      tl.debug('[PSM-Sync] No <packageSource> children under mapping; skipping.');
+      return;
+    }
+
+    let changed = false;
+    for (const src of psmSources) {
+      const attrs = src?.$;
+      const originalKey = attrs?.key?.trim();
+      if (!originalKey) continue;
+
+      const newKey = origKeyToTempKey.get(originalKey);
+      if (newKey) {
+        tl.debug(`[PSM-Sync] Rewriting mapping key '${originalKey}' → '${newKey}'`);
+        attrs.key = newKey;
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      const builder = new xml2js.Builder({ xmldec: { version: '1.0', encoding: 'utf-8' } });
+      const outXml = builder.buildObject(tempDoc);
+      fs.writeFileSync(tempConfigPath, outXml, 'utf8');
+      tl.debug('[PSM-Sync] Synchronized <packageSourceMapping> keys in temp NuGet.config.');
+    } else {
+      tl.debug('[PSM-Sync] Mapping keys already consistent; no changes written.');
+    }
+  } catch (e: any) {
+    tl.warning(`[PSM-Sync] Synchronization skipped due to error: ${e?.message ?? String(e)}`);
+  }
+}
+
+function extractUrlToKeyMap(doc: any): Map<string, string> {
+  const result = new Map<string, string>();
+  const cfg = doc?.configuration;
+  const psArr = cfg?.packageSources;
+  if (!Array.isArray(psArr) || psArr.length === 0) return result;
+
+  const psNode = psArr[0];
+  const adds = psNode?.add;
+  if (!Array.isArray(adds)) return result;
+
+  for (const add of adds) {
+    const a = add?.$;
+    const key = a?.key;
+    const value = a?.value;
+    if (typeof key === 'string' && typeof value === 'string') {
+      result.set(normalizeUrl(value), key.trim());
+    }
+  }
+  return result;
+}
+
+function normalizeUrl(u: string): string {
+  return (u ?? '')
+    .trim()
+    .replace(/\s+/g, '')         // collapse/strip spaces
+    .replace(/\/+$/g, '')        // strip trailing slashes
+    .toLowerCase();
+}
+
