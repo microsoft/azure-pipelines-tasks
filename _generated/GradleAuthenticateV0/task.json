@@ -1,0 +1,99 @@
+{
+  "id": "A7E1B7E5-4B8D-4F2C-9A1E-3C5D7F9B2E4A",
+  "name": "GradleAuthenticate",
+  "friendlyName": "Gradle Authenticate",
+  "description": "Provides credentials for Azure Artifacts feeds and external Gradle/Maven repositories",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/gradle-authenticate",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/gradle-authenticate)",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Gradle Authenticate",
+  "inputs": [
+    {
+      "name": "artifactsFeeds",
+      "type": "pickList",
+      "label": "Feeds",
+      "defaultValue": "",
+      "helpMarkdown": "Select one or multiple feeds to authenticate. If workloadIdentityServiceConnection is used, these can be internal or cross-org feed names, otherwise these should just be internal feed names.",
+      "properties": {
+        "EditableOptions": "true",
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "name": "gradleServiceConnections",
+      "label": "Credentials for repositories outside this organization/collection",
+      "helpMarkDown": "Credentials to use for external repositories located in the project's build.gradle.",
+      "type": "connectedService:externalmavenrepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactsFeeds",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "gradleauth.js"
+    },
+    "Node16": {
+      "target": "gradleauth.js"
+    },
+    "Node20_1": {
+      "target": "gradleauth.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the gradle.properties file.",
+    "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+    "Warning_TokenNotGenerated": "Unable to use a federated token",
+    "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+    "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+    "Info_GradleUserHomeFolderDoesntExist": ".gradle folder not found at location %s, creating new folder.",
+    "Info_GradlePropertiesRead": "Adding authentication to gradle.properties file %s.",
+    "Info_CreatingGradleProperties": "Creating new gradle.properties at path %s.",
+    "Info_WritingToGradleProperties": "Writing new gradle.properties with added authentication.",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from federated service connection %s for feed %s",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
+    "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
+    "Error_FailedCleanupGradle": "Failed to delete credentials from the gradle.properties file: %s",
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.1.0",
+    "LocalPackages": "0.249.4",
+    "wif_242": "0.267.0"
+  }
+}
