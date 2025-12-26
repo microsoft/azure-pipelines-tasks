@@ -14,7 +14,7 @@
     "azure-pipelines-tasks-docker-common": "^2.265.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
     "azure-pipelines-tasks-securefiles-common": "^2.263.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "^3.267.0",
     "del": "2.2.0",
     "moment": "^2.29.4"
   },
@@ -22,6 +22,10 @@
     "typescript": "5.1.6"
   },
   "overrides": {
-    "form-data": "^4.0.4"
+    "form-data": "^4.0.4",
+    "js-yaml": "^4.1.0",
+    "@azure/identity": "^4.5.0",
+    "azure-pipelines-task-lib": "^4.13.0",
+    "mockery": "^2.1.0"
   }
 }

@@ -245,7 +245,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-const helmVersionCommand = "helm version --client --short";
+const helmVersionCommand = "helm version --short";
 if (process.env[shared.isHelmV3]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
