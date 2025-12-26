@@ -1,7 +1,8 @@
 {
     "rm": [
         {
-            "items": [                
+            "items": [
+                "node_modules/azp-tasks-az-blobstorage-provider/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest-v2/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
                 "node_modules/artifact-engine/node_modules/azure-pipelines-task-lib",
