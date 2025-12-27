@@ -74,10 +74,13 @@
       </Item>
       <Item ItemId=";loc.input.help.key" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the "Control options" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[要用以存取此函式的函式或主機金鑰。為了維護金鑰的安全，請定義祕密變數並在此使用。範例: - $(myFunctionKey)，其中 myFunctionKey 是具有祕密金鑰值的祕密管線變數，像是 `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+            <Val><![CDATA[用於存取此功能的函式金鑰或主機金鑰。若要保護金鑰安全，請建立變數群組、新增祕密變數，然後在這裡使用它。請務必在 [控制選項]5D; 區段連結該變數群組。範例: $(myFunctionKey)，其中 myFunctionKey 是包含金鑰的祕密變數，例如 `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

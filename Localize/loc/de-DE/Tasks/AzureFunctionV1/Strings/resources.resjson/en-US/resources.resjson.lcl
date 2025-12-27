@@ -74,10 +74,13 @@
       </Item>
       <Item ItemId=";loc.input.help.key" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the "Control options" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Funktions- oder Hostschlüssel, über den auf diese Funktion zugegriffen werden kann. Um den Schlüssel abzusichern, definieren Sie eine geheime Variable, und verwenden Sie sie hier. Beispiel: $(myFunctionKey). MyFunctionKey ist dabei eine geheime Pipelinevariable mit dem Wert des geheimen Schlüssels. Beispiel: ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==]]></Val>
+            <Val><![CDATA[Funktion oder Hostschlüssel, mit dem auf diese Funktion zugegriffen werden soll. Um den Schlüssel zu schützen, erstellen Sie eine Variablengruppe, fügen Sie eine geheime Variable hinzu, und verwenden Sie sie hier. Stellen Sie sicher, dass die Variablengruppe im Abschnitt „Steuerungsoptionen“ verknüpft ist. Beispiel: $(myFunctionKey), wobei myFunctionKey die geheime Variable ist, die den Schlüssel enthält, z. B. „ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvAturdOmYw==“]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

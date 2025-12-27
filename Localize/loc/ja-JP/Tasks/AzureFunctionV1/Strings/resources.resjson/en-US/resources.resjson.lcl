@@ -74,10 +74,13 @@
       </Item>
       <Item ItemId=";loc.input.help.key" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the "Control options" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[この関数にアクセスするための関数またはホスト キーです。キーを安全に保護するには、秘密の変数を定義してここで使用します。例: $(myFunctionKey)、ここで myFunctionKey は `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==` などの秘密キーの値を持つ秘密パイプライン変数です。]]></Val>
+            <Val><![CDATA[この関数にアクセスするための関数またはホスト キー。キーをセキュリティで保護するには、変数グループを作成し、シークレット変数を追加して、ここで使用します。[コントロール オプション]5D; セクションの変数グループを必ずリンクしてください。例: $(myFunctionKey)。myFunctionKey はキーを含むシークレット変数です (例: `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
