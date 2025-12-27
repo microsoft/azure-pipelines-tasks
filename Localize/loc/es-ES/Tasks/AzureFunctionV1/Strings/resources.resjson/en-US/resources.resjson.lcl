@@ -74,10 +74,13 @@
       </Item>
       <Item ItemId=";loc.input.help.key" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, create a variable group, add a secret variable, and use it here. Make sure to link the variable group in the "Control options" section. Example: $(myFunctionKey), where myFunctionKey is the secret variable containing the key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Tecla de función o host para tener acceso a esta función. Para proteger la clave, defina una variable secreta y úsela aquí. Ejemplo:- $(myFunctionKey) donde myFunctionKey es una variable de canalización secreta con un valor de la clave secreta, como " ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw =="]]></Val>
+            <Val><![CDATA[Función o clave de host con la que se va a acceder a esta función. Para proteger la clave, cree un grupo de variables, agregue una variable secreta y úsela aquí. Asegúrese de vincular el grupo de variables en la sección "Opciones de control". Ejemplo: $(myFunctionKey), donde myFunctionKey es la variable secreta que contiene la clave, como "ZxPXnIEODXLXlYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
