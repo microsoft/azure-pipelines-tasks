@@ -198,6 +198,14 @@ export function getNodeVersionForTask(taskName: string, buildConfig?: string): n
     if (buildConfig) {
         const configNodeVersion = getNodeVersionFromTaskJson(taskName, buildConfig);
         if (configNodeVersion !== null) {
+            // If this is a TEST_NODE_VERSION config, verify the version exists in task.json
+            if (TEST_NODE_VERSION !== null && configNodeVersion === TEST_NODE_VERSION) {
+                const supportedVersions = getNodeVersionsFromTaskJson(taskName, buildConfig);
+                if (!supportedVersions.includes(TEST_NODE_VERSION)) {
+                    console.log(`Skipping TEST_NODE_VERSION ${TEST_NODE_VERSION} for ${buildConfig} - handler not found in task.json`);
+                    return null;
+                }
+            }
             console.log(`Using Node version ${configNodeVersion} for task ${buildConfig}`);
             return configNodeVersion;
         }
@@ -206,6 +214,14 @@ export function getNodeVersionForTask(taskName: string, buildConfig?: string): n
     // For base task, get the highest Node version from task.json
     const baseNodeVersion = getNodeVersionFromTaskJson(taskName);
     if (baseNodeVersion !== null) {
+        // If this is a TEST_NODE_VERSION config, verify the version exists in task.json
+        if (TEST_NODE_VERSION !== null && baseNodeVersion === TEST_NODE_VERSION) {
+            const supportedVersions = getNodeVersionsFromTaskJson(taskName);
+            if (!supportedVersions.includes(TEST_NODE_VERSION)) {
+                console.log(`Skipping TEST_NODE_VERSION ${TEST_NODE_VERSION} for ${taskName} - handler not found in task.json`);
+                return null;
+            }
+        }
         console.log(`Using Node version ${baseNodeVersion} for task ${taskName}`);
         return baseNodeVersion;
     }

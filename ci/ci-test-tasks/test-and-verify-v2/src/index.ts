@@ -208,10 +208,10 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
 
   // Get task-specific Node version, fallback to environment variable
   let nodeVersion = envNodeVersion;
-  const taskNodeVersion = getNodeVersionForTask(taskName);
+  const taskNodeVersion = getNodeVersionForTask(taskName, config);
   if (taskNodeVersion !== null) {
     nodeVersion = taskNodeVersion.toString();
-    console.log(`Using Node version ${nodeVersion} for task ${taskName}`);
+    console.log(`Using Node version ${nodeVersion} for task ${taskName} with config ${config || 'base'}`);
   } else if (envNodeVersion) {
     console.log(`Using Node version ${nodeVersion} from environment variable for task ${taskName}`);
   } else {
