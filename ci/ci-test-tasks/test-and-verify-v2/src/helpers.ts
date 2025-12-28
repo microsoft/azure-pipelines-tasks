@@ -3,14 +3,14 @@ import path from 'path';
 
 const RepoRoot = path.join(__dirname, '..', '..', '..', '..');
 
-// Get hardcoded Node version from environment variable
+// Get test Node version from environment variable (e.g., "20" or "24")
 const TEST_NODE_VERSION = process.env.TEST_NODE_VERSION ? parseInt(process.env.TEST_NODE_VERSION) : null;
 
 export function getBuildConfigs(task: string): string[] {
     const generatedTasksPath = path.join(RepoRoot, '_generated');
 
     console.log(`checking buildconfig for ${task}`);
-    console.log(`Hardcoded test Node version from TEST_NODE_VERSION: ${TEST_NODE_VERSION || 'not set'}`);
+    console.log(`Test Node version from TEST_NODE_VERSION: ${TEST_NODE_VERSION || 'not set'}`);
     
     try {
         const items = fs.readdirSync(generatedTasksPath);
@@ -52,26 +52,30 @@ export function getBuildConfigs(task: string): string[] {
         // Build final test configuration list
         const finalTestConfigs: string[] = [];
 
-        // Add hardcoded Node version variant if specified and different from latest
+        // Add test Node version variant if specified and different from latest
         if (TEST_NODE_VERSION !== null) {
             if (latestNodeVersion === null || TEST_NODE_VERSION !== latestNodeVersion) {
-                // Find variant matching hardcoded version
-                const testcodedVariant = tasksToTest.find(t => {
+                // Find variant matching test node version
+                const testnodeVariant = tasksToTest.find(t => {
                     const nodeVersion = getNodeVersionFromTaskJson(task, t);
                     return nodeVersion === TEST_NODE_VERSION;
                 });
 
-                if (testcodedVariant) {
-                    finalTestConfigs.push(testcodedVariant);
-                    console.log(`Adding hardcoded Node ${TEST_NODE_VERSION} variant: ${testcodedVariant}`);
-                } else if (baseTaskNodeVersion === TEST_NODE_VERSION) {
-                    finalTestConfigs.push(task);
-                    console.log(`Adding base task for hardcoded Node ${TEST_NODE_VERSION}`);
+                if (testnodeVariant) {
+                    finalTestConfigs.push(testnodeVariant);
+                    console.log(`Adding test Node ${TEST_NODE_VERSION} variant: ${testnodeVariant}`);
                 } else {
-                    console.log(`Warning: No variant found for hardcoded Node ${TEST_NODE_VERSION}`);
+                    // Check if base task supports the test Node version
+                    const baseTaskSupportedVersions = getNodeVersionsFromTaskJson(task);
+                    if (baseTaskSupportedVersions.includes(TEST_NODE_VERSION)) {
+                        finalTestConfigs.push(task);
+                        console.log(`Adding base task for test Node ${TEST_NODE_VERSION} (base task supports multiple Node versions: [${baseTaskSupportedVersions.join(', ')}])`);
+                    } else {
+                        console.log(`Warning: No variant found for test Node ${TEST_NODE_VERSION}`);
+                    }
                 }
             } else {
-                console.log(`Hardcoded Node ${TEST_NODE_VERSION} matches latest Node version, will only test once`);
+                console.log(`Test Node ${TEST_NODE_VERSION} matches latest Node version, will only test once`);
             }
         }
 
@@ -97,6 +101,47 @@ export function getBuildConfigs(task: string): string[] {
     } catch (error) {
         console.error(`Error reading subdirectories: ${error}`);
         return [task];
+    }
+}
+
+function getNodeVersionsFromTaskJson(taskName: string, buildConfig?: string): number[] {
+    let taskJsonPath: string;
+    
+    if (buildConfig) {
+        // Check _generated folder first for build configs
+        taskJsonPath = path.join(RepoRoot, '_generated', buildConfig, 'task.json');
+        if (!fs.existsSync(taskJsonPath)) {
+            // Fall back to base task folder
+            taskJsonPath = path.join(RepoRoot, 'Tasks', taskName, 'task.json');
+        }
+    } else {
+        taskJsonPath = path.join(RepoRoot, 'Tasks', taskName, 'task.json');
+    }
+
+    try {
+        const taskJson = JSON.parse(fs.readFileSync(taskJsonPath, 'utf8'));
+        const execution = taskJson.execution || {};
+        
+        // Extract all Node versions from execution handlers
+        const nodeVersions: number[] = [];
+        
+        for (const handler in execution) {
+            if (handler.startsWith('Node')) {
+                // Extract number from handler name (e.g., Node10 -> 10, Node20_1 -> 20, Node24 -> 24)
+                const match = handler.match(/Node(\d+)/);
+                if (match) {
+                    const version = parseInt(match[1]);
+                    if (!nodeVersions.includes(version)) {
+                        nodeVersions.push(version);
+                    }
+                }
+            }
+        }
+        
+        return nodeVersions.sort((a, b) => a - b);
+    } catch (error) {
+        console.error(`Error reading task.json for ${taskName}: ${error}`);
+        return [];
     }
 }
 
@@ -146,18 +191,25 @@ function getNodeVersionFromTaskJson(taskName: string, buildConfig?: string): num
     }
 }
 
-export function getNodeVersionForTask(taskName: string): number | null {
-    // Get all build configs for this task
-    const buildConfigs = getBuildConfigs(taskName);
+export function getNodeVersionForTask(taskName: string, buildConfig?: string): number | null {
+    // Determine which Node version to install on the agent for this specific test configuration
     
-    // Try to find Node version from any of the build configs
-    for (const buildConfig of buildConfigs) {
-        const nodeVersion = getNodeVersionFromTaskJson(taskName, buildConfig);
-        if (nodeVersion !== null) {
-            return nodeVersion;
+    // If buildConfig is provided, get the highest Node version from that specific config
+    if (buildConfig) {
+        const configNodeVersion = getNodeVersionFromTaskJson(taskName, buildConfig);
+        if (configNodeVersion !== null) {
+            console.log(`Using Node version ${configNodeVersion} for task ${buildConfig}`);
+            return configNodeVersion;
         }
     }
     
-    // If no build configs have Node version, try base task
-    return getNodeVersionFromTaskJson(taskName);
+    // For base task, get the highest Node version from task.json
+    const baseNodeVersion = getNodeVersionFromTaskJson(taskName);
+    if (baseNodeVersion !== null) {
+        console.log(`Using Node version ${baseNodeVersion} for task ${taskName}`);
+        return baseNodeVersion;
+    }
+
+    return null;
 }
+
