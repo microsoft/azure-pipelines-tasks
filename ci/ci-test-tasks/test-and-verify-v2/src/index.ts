@@ -218,12 +218,15 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
     throw new Error(`Cannot determine Node version for task ${taskName}. Neither task.json nor CANARY_TEST_NODE_VERSION environment variable provided.`);
   }
 
+  // Strip @Node marker from config for CANARY_TEST_CONFIG parameter (for in-place updates)
+  const cleanConfig = config.replace(/@Node\d+$/, '');
+
   // Enable debug mode for triggered pipelines
   const debugMode = process.env.CANARY_TEST_DEBUG_MODE;
   const buildParameters: Record<string, string> = {
     CANARY_TEST_TASKNAME: pipeline.name || taskName,
     CANARY_TEST_BRANCH: branch,
-    CANARY_TEST_CONFIG: config,
+    CANARY_TEST_CONFIG: cleanConfig,
     CANARY_TEST_NODE_VERSION: nodeVersion || ''
   };
 
