@@ -3,14 +3,6 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # Note: keep in sync with /azure-pipelines.yml
-- name: USE_node20
-  displayName: 'Feature Flag: USE_node20'
-  type: string
-  default: ''
-- name: usenode24withtaskhandler
-  displayName: 'Feature Flag: usenode24withtaskhandler'
-  type: string
-  default: ''
 
 variables:
 - name: includeLocalPackagesBuildConfigParameter
@@ -72,6 +64,3 @@ jobs:
       node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true
-    env:
-      USE_node20: ${{ parameters.USE_node20 }}
-      usenode24withtaskhandler: ${{ parameters.usenode24withtaskhandler }}
