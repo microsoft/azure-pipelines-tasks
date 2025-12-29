@@ -43,14 +43,19 @@ class API {
         return await api.getBuild(this.projectName, buildId);
     }
 
-    public async queueBuild(definitionId: number, parameters = {}, tags: string[] = []) {
+    public async queueBuild(definitionId: number, parameters = {}) {
         const api = await this.getBuildApi();
 
         return await api.queueBuild({
             definition: { id: definitionId },
-            parameters: JSON.stringify(parameters),
-            tags: tags.length > 0 ? tags : undefined
+            parameters: JSON.stringify(parameters)
         }, this.projectName);
+    }
+
+    public async addBuildTags(buildId: number, tags: string[]) {
+        const api = await this.getBuildApi();
+
+        return await api.addBuildTags(tags, this.projectName, buildId);
     }
 
     public async updateBuild(buildId: number) {
