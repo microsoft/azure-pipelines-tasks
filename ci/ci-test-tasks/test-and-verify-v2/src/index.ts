@@ -158,7 +158,8 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     // TODO possibly refactor
     if (allowParrallelRun) {
       for (const config of configs) {
-        console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+        const nodeVersion = getNodeVersionForTask(taskName, config);
+        console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
         const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
 
         if (pipelineBuild === null) {
@@ -166,10 +167,11 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
           return INVALID;
         }
 
-        runningBuilds.push(completeBuild(taskName, pipelineBuild));
+        runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
       }
     } else {
       const firstConfig = configs.shift();
+      const nodeVersion = getNodeVersionForTask(taskName, firstConfig);
       const pipelineBuild = await startTestPipeline(pipeline, taskName, firstConfig);
 
       if (pipelineBuild === null) {
@@ -179,15 +181,16 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 
       runningBuilds.push(new Promise<BuildResult[]>(async resolve => {
         const buildResults = new Array<BuildResult>();
-        console.log(`Running tests for "${taskName}" task with config "${firstConfig}" for pipeline "${pipeline.name}"`);
-        let result = await completeBuild(taskName, pipelineBuild);
+        console.log(`Running tests for "${taskName}" task with config "${firstConfig}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
+        let result = await completeBuild(taskName, pipelineBuild, firstConfig, nodeVersion);
         buildResults.push(result);
 
         for (const config of configs) {
-          console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+          const nodeVersion = getNodeVersionForTask(taskName, config);
+          console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
           const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
           if (pipelineBuild !== null) {
-            result = await completeBuild(taskName, pipelineBuild);
+            result = await completeBuild(taskName, pipelineBuild, config, nodeVersion);
             buildResults.push(result);
           }
         }
@@ -199,42 +202,62 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 }
 
 async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = ''): Promise<Build | null> {
-  console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
+  
   if (!branch) {
-    throw new Error('Cannot run test pipeline. Environment variable BUILD_SOURCEVERSION is not defined');
+    throw new Error('BUILD_SOURCEVERSION environment variable is required');
   }
 
   // Get task-specific Node version, fallback to environment variable
-  let nodeVersion = envNodeVersion;
-  const taskNodeVersion = getNodeVersionForTask(taskName);
-  if (taskNodeVersion !== null) {
-    nodeVersion = taskNodeVersion.toString();
-    console.log(`Using Node version ${nodeVersion} for task ${taskName}`);
-  } else if (envNodeVersion) {
-    console.log(`Using Node version ${nodeVersion} from environment variable for task ${taskName}`);
-  } else {
-    throw new Error(`Cannot determine Node version for task ${taskName}. Neither task.json nor CANARY_TEST_NODE_VERSION environment variable provided.`);
+  const taskNodeVersion = getNodeVersionForTask(taskName, config);
+  const nodeVersion = taskNodeVersion?.toString() || envNodeVersion;
+  
+  if (!nodeVersion) {
+    throw new Error(`Cannot determine Node version for task ${taskName}`);
   }
 
-  // Enable debug mode for triggered pipelines
-  const debugMode = process.env.CANARY_TEST_DEBUG_MODE;
   const buildParameters: Record<string, string> = {
     CANARY_TEST_TASKNAME: pipeline.name || taskName,
     CANARY_TEST_BRANCH: branch,
-    CANARY_TEST_CONFIG: config,
-    CANARY_TEST_NODE_VERSION: nodeVersion || ''
+    CANARY_TEST_CONFIG: config.replace(/@Node\d+$/, ''),
+    CANARY_TEST_NODE_VERSION: nodeVersion
   };
 
-  // Add system.debug parameter (default enabled unless explicitly disabled)
-  if (debugMode !== 'false') {
+  // Set agent knobs based on Node version
+  const nodeVersionNum = parseInt(nodeVersion, 10);
+  if (nodeVersionNum === 20) {
+    buildParameters['AGENT_USE_NODE20_1'] = 'true';
+    buildParameters['AGENT_USE_NODE24_WITH_HANDLER_DATA'] = 'false';
+    console.log(`Agent knob AGENT_USE_NODE20_1 set to: true`);
+    console.log(`Agent knob AGENT_USE_NODE24_WITH_HANDLER_DATA set to: false`);
+  } else if (nodeVersionNum === 24) {
+    buildParameters['DistributedTask.Agent.UseNode20_1'] = 'false';
+    buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'true';
+  }
+
+  // Enable debug mode by default
+  if (process.env.CANARY_TEST_DEBUG_MODE !== 'false') {
     buildParameters['system.debug'] = 'true';
-    console.log(`Debug mode enabled for pipeline ${pipeline.name}`);
   }
 
   try {
-    return await api.queueBuild(pipeline.id!, buildParameters);
+    const build = await api.queueBuild(pipeline.id!, buildParameters);
+    
+    if (build && build.id) {
+      // Add tags for better pipeline identification
+      const tags: string[] = [
+        `Node${nodeVersionNum}`,
+        config ? `Config:${config.replace(/@Node\d+$/, '')}` : 'BaseTask'
+      ];
+      
+      try {
+        await api.addBuildTags(build.id, tags);
+      } catch (tagErr) {
+        console.warn(`Failed to add tags to build ${build.id}: ${tagErr}`);
+      }
+    }
+    
+    return build;
   } catch (err: any) {
     if (err.message === 'Could not queue the build because there were validation errors or warnings.') {
       return null;
@@ -253,12 +276,16 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
 function completeBuild(
   pipelineName: string,
   pipelineBuild: Build,
+  buildConfig?: string,
+  nodeVersion?: number | null,
 ): Promise<BuildResult> {
   const maxRetries = 3;
   const buildTimeoutInSeconds = 300 * 60;
   const intervalInSeconds = 20;
 
-  const stringifiedBuild = `build (id: [ ${pipelineBuild.id} ], url: [ ${pipelineBuild._links.web.href} ], pipeline: [ ${pipelineName} ])`;
+  const nodeInfo = nodeVersion ? ` on Node ${nodeVersion}` : '';
+  const configInfo = buildConfig ? ` with config "${buildConfig}"` : '';
+  const stringifiedBuild = `build (id: [ ${pipelineBuild.id} ], url: [ ${pipelineBuild._links.web.href} ], pipeline: [ ${pipelineName}${configInfo}${nodeInfo} ])`;
 
   let retryCount = 0;
   let intervalAmount = 0;
