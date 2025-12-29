@@ -240,8 +240,14 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
     buildParameters['system.debug'] = 'true';
   }
 
+  // Create tags for better pipeline identification
+  const tags: string[] = [
+    `Node${nodeVersionNum}`,
+    config ? `Config:${config.replace(/@Node\d+$/, '')}` : 'BaseTask'
+  ];
+
   try {
-    return await api.queueBuild(pipeline.id!, buildParameters);
+    return await api.queueBuild(pipeline.id!, buildParameters, tags);
   } catch (err: any) {
     if (err.message === 'Could not queue the build because there were validation errors or warnings.') {
       return null;
