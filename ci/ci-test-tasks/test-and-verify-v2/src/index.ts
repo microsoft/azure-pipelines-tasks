@@ -158,7 +158,8 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     // TODO possibly refactor
     if (allowParrallelRun) {
       for (const config of configs) {
-        console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+        const nodeVersion = getNodeVersionForTask(taskName, config);
+        console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
         const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
 
         if (pipelineBuild === null) {
@@ -166,10 +167,11 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
           return INVALID;
         }
 
-        runningBuilds.push(completeBuild(taskName, pipelineBuild));
+        runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
       }
     } else {
       const firstConfig = configs.shift();
+      const nodeVersion = getNodeVersionForTask(taskName, firstConfig);
       const pipelineBuild = await startTestPipeline(pipeline, taskName, firstConfig);
 
       if (pipelineBuild === null) {
@@ -179,15 +181,16 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 
       runningBuilds.push(new Promise<BuildResult[]>(async resolve => {
         const buildResults = new Array<BuildResult>();
-        console.log(`Running tests for "${taskName}" task with config "${firstConfig}" for pipeline "${pipeline.name}"`);
-        let result = await completeBuild(taskName, pipelineBuild);
+        console.log(`Running tests for "${taskName}" task with config "${firstConfig}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
+        let result = await completeBuild(taskName, pipelineBuild, firstConfig, nodeVersion);
         buildResults.push(result);
 
         for (const config of configs) {
-          console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+          const nodeVersion = getNodeVersionForTask(taskName, config);
+          console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
           const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
           if (pipelineBuild !== null) {
-            result = await completeBuild(taskName, pipelineBuild);
+            result = await completeBuild(taskName, pipelineBuild, config, nodeVersion);
             buildResults.push(result);
           }
         }
@@ -201,7 +204,13 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = ''): Promise<Build | null> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
-  const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
+  const { 
+    BUILD_SOURCEVERSION: branch, 
+    CANARY_TEST_NODE_VERSION: envNodeVersion,
+    AGENT_USE_NODE20: useNode20,
+    AGENT_USE_NODE24_WITH_HANDLER_DATA: useNode24WithTaskHandler
+  } = process.env;
+  
   if (!branch) {
     throw new Error('Cannot run test pipeline. Environment variable BUILD_SOURCEVERSION is not defined');
   }
@@ -230,6 +239,27 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
     CANARY_TEST_NODE_VERSION: nodeVersion || ''
   };
 
+  // Set feature flags based on Node version (or use explicitly provided values)
+  const nodeVersionNum = parseInt(nodeVersion || '0', 10);
+  
+  // USE_node20 FF: Enable for Node 20, or use explicitly provided value
+  if (useNode20 !== undefined) {
+    buildParameters['USE_node20'] = useNode20;
+    console.log(`Feature flag USE_node20 explicitly set to: ${useNode20}`);
+  } else if (nodeVersionNum === 20) {
+    buildParameters['USE_node20'] = 'true';
+    console.log(`Feature flag USE_node20 automatically set to: true (Node 20 detected)`);
+  }
+
+  // usenode24withtaskhandler FF: Enable for Node 24, or use explicitly provided value
+  if (useNode24WithTaskHandler !== undefined) {
+    buildParameters['usenode24withtaskhandler'] = useNode24WithTaskHandler;
+    console.log(`Feature flag usenode24withtaskhandler explicitly set to: ${useNode24WithTaskHandler}`);
+  } else if (nodeVersionNum === 24) {
+    buildParameters['usenode24withtaskhandler'] = 'false';
+    console.log(`Feature flag usenode24withtaskhandler automatically set to: true (Node 24 detected)`);
+  }
+
   // Add system.debug parameter (default enabled unless explicitly disabled)
   if (debugMode !== 'false') {
     buildParameters['system.debug'] = 'true';
@@ -256,12 +286,16 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
 function completeBuild(
   pipelineName: string,
   pipelineBuild: Build,
+  buildConfig?: string,
+  nodeVersion?: number | null,
 ): Promise<BuildResult> {
   const maxRetries = 3;
   const buildTimeoutInSeconds = 300 * 60;
   const intervalInSeconds = 20;
 
-  const stringifiedBuild = `build (id: [ ${pipelineBuild.id} ], url: [ ${pipelineBuild._links.web.href} ], pipeline: [ ${pipelineName} ])`;
+  const nodeInfo = nodeVersion ? ` on Node ${nodeVersion}` : '';
+  const configInfo = buildConfig ? ` with config "${buildConfig}"` : '';
+  const stringifiedBuild = `build (id: [ ${pipelineBuild.id} ], url: [ ${pipelineBuild._links.web.href} ], pipeline: [ ${pipelineName}${configInfo}${nodeInfo} ])`;
 
   let retryCount = 0;
   let intervalAmount = 0;
