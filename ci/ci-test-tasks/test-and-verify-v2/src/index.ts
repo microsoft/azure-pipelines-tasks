@@ -228,6 +228,8 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   if (nodeVersionNum === 20) {
     buildParameters['DistributedTask.Agent.UseNode20_1'] = 'true';
     buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'false';
+    console.log(`Agent knob DistributedTask.Agent.UseNode20_1 set to: true`);
+    console.log(`Agent knob DistributedTask.Agent.UseNode24WithHandlerData set to: false`);
   } else if (nodeVersionNum === 24) {
     buildParameters['DistributedTask.Agent.UseNode20_1'] = 'false';
     buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'true';
