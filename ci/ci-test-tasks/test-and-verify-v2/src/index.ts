@@ -226,10 +226,10 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   // Set agent knobs based on Node version
   const nodeVersionNum = parseInt(nodeVersion, 10);
   if (nodeVersionNum === 20) {
-    buildParameters['DistributedTask.Agent.UseNode20_1'] = 'true';
-    buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'false';
-    console.log(`Agent knob DistributedTask.Agent.UseNode20_1 set to: true`);
-    console.log(`Agent knob DistributedTask.Agent.UseNode24WithHandlerData set to: false`);
+    buildParameters['AGENT_USE_NODE20_1'] = 'true';
+    buildParameters['AGENT_USE_NODE24_WITH_HANDLER_DATA'] = 'false';
+    console.log(`Agent knob AGENT_USE_NODE20_1 set to: true`);
+    console.log(`Agent knob AGENT_USE_NODE24_WITH_HANDLER_DATA set to: false`);
   } else if (nodeVersionNum === 24) {
     buildParameters['DistributedTask.Agent.UseNode20_1'] = 'false';
     buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'true';
