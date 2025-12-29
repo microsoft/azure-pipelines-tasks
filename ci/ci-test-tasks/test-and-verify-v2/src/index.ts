@@ -202,68 +202,40 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 }
 
 async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = ''): Promise<Build | null> {
-  console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-
-  const { 
-    BUILD_SOURCEVERSION: branch, 
-    CANARY_TEST_NODE_VERSION: envNodeVersion,
-    AGENT_USE_NODE20: useNode20,
-    AGENT_USE_NODE24_WITH_HANDLER_DATA: useNode24WithTaskHandler
-  } = process.env;
+  const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
   
   if (!branch) {
-    throw new Error('Cannot run test pipeline. Environment variable BUILD_SOURCEVERSION is not defined');
+    throw new Error('BUILD_SOURCEVERSION environment variable is required');
   }
 
   // Get task-specific Node version, fallback to environment variable
-  let nodeVersion = envNodeVersion;
   const taskNodeVersion = getNodeVersionForTask(taskName, config);
-  if (taskNodeVersion !== null) {
-    nodeVersion = taskNodeVersion.toString();
-    console.log(`Using Node version ${nodeVersion} for task ${taskName} with config ${config || 'base'}`);
-  } else if (envNodeVersion) {
-    console.log(`Using Node version ${nodeVersion} from environment variable for task ${taskName}`);
-  } else {
-    throw new Error(`Cannot determine Node version for task ${taskName}. Neither task.json nor CANARY_TEST_NODE_VERSION environment variable provided.`);
+  const nodeVersion = taskNodeVersion?.toString() || envNodeVersion;
+  
+  if (!nodeVersion) {
+    throw new Error(`Cannot determine Node version for task ${taskName}`);
   }
 
-  // Strip @Node marker from config for CANARY_TEST_CONFIG parameter (for in-place updates)
-  const cleanConfig = config.replace(/@Node\d+$/, '');
-
-  // Enable debug mode for triggered pipelines
-  const debugMode = process.env.CANARY_TEST_DEBUG_MODE;
   const buildParameters: Record<string, string> = {
     CANARY_TEST_TASKNAME: pipeline.name || taskName,
     CANARY_TEST_BRANCH: branch,
-    CANARY_TEST_CONFIG: cleanConfig,
-    CANARY_TEST_NODE_VERSION: nodeVersion || ''
+    CANARY_TEST_CONFIG: config.replace(/@Node\d+$/, ''),
+    CANARY_TEST_NODE_VERSION: nodeVersion
   };
 
-  // Set feature flags based on Node version (or use explicitly provided values)
-  const nodeVersionNum = parseInt(nodeVersion || '0', 10);
-  
-  // USE_node20 FF: Enable for Node 20, or use explicitly provided value
-  if (useNode20 !== undefined) {
-    buildParameters['USE_node20'] = useNode20;
-    console.log(`Feature flag USE_node20 explicitly set to: ${useNode20}`);
-  } else if (nodeVersionNum === 20) {
-    buildParameters['USE_node20'] = 'true';
-    console.log(`Feature flag USE_node20 automatically set to: true (Node 20 detected)`);
-  }
-
-  // usenode24withtaskhandler FF: Enable for Node 24, or use explicitly provided value
-  if (useNode24WithTaskHandler !== undefined) {
-    buildParameters['usenode24withtaskhandler'] = useNode24WithTaskHandler;
-    console.log(`Feature flag usenode24withtaskhandler explicitly set to: ${useNode24WithTaskHandler}`);
+  // Set agent knobs based on Node version
+  const nodeVersionNum = parseInt(nodeVersion, 10);
+  if (nodeVersionNum === 20) {
+    buildParameters['DistributedTask.Agent.UseNode20_1'] = 'true';
+    buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'false';
   } else if (nodeVersionNum === 24) {
-    buildParameters['usenode24withtaskhandler'] = 'false';
-    console.log(`Feature flag usenode24withtaskhandler automatically set to: true (Node 24 detected)`);
+    buildParameters['DistributedTask.Agent.UseNode20_1'] = 'false';
+    buildParameters['DistributedTask.Agent.UseNode24WithHandlerData'] = 'true';
   }
 
-  // Add system.debug parameter (default enabled unless explicitly disabled)
-  if (debugMode !== 'false') {
+  // Enable debug mode by default
+  if (process.env.CANARY_TEST_DEBUG_MODE !== 'false') {
     buildParameters['system.debug'] = 'true';
-    console.log(`Debug mode enabled for pipeline ${pipeline.name}`);
   }
 
   try {
