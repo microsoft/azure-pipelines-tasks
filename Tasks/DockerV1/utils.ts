@@ -122,6 +122,8 @@ export function writeTaskOutput(commandName: string, output: string): string {
     // BuildKit (default since Docker 23.0) outputs to stderr, not stdout
     if (bytesWritten === 0 && !isBuildKitExpected()) {
         tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
+    } else if (bytesWritten === 0) {
+        tl.debug(`Empty output file (${taskOutputPath}) is expected when using BuildKit`);
     }
     
     return taskOutputPath;
