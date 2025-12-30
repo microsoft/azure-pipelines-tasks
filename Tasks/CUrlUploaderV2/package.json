@@ -22,7 +22,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "^5.2.2"
+    "azure-pipelines-task-lib": "^5.2.4"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
