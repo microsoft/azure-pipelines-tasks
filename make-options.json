@@ -15,6 +15,7 @@
         "AzureAppServiceSettingsV1",
         "AzureCLIV1",
         "AzureCLIV2",
+        "AzureCLIV3",
         "AzureCloudPowerShellDeploymentV1",
         "AzureCloudPowerShellDeploymentV2",
         "AzureContainerAppsV0",
