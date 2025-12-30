@@ -70,7 +70,7 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
-    if (!helmCli.isHelmV3()) {
+    if (!helmCli.isHelmV3orGreater()) {
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
@@ -214,21 +214,19 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
                 const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
                 const clusterInfo = kubectlCli.getClusterInfo().stdout;
 
-                manifests.forEach(manifest => {
+                const promises = manifests.map(async (manifest) => {
                     //Check if the manifest object contains a deployment entity
                     if (manifest.kind && isDeploymentEntity(manifest.kind)) {
                         try {
-                            pushDeploymentDataToEvidenceStore(allPods, clusterInfo, manifest, manifestUrls).then((result) => {
-                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                            }, (error) => {
-                                tl.warning("publishToImageMetadataStore failed with error: " + error);
-                            });
+                            const result = await pushDeploymentDataToEvidenceStore(allPods, clusterInfo, manifest, manifestUrls);
+                            tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                         }
                         catch (e) {
                             tl.warning("publishToImageMetadataStore failed with error: " + e);
                         }
                     }
                 });
+                await Promise.all(promises);
             }
         }
         catch (e) {
