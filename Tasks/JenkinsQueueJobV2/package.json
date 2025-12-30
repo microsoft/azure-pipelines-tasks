@@ -21,7 +21,7 @@
     "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
     "@types/shelljs": "^0.3.0",
-    "azure-pipelines-task-lib": "^5.2.2",
+    "azure-pipelines-task-lib": "^5.2.4",
     "request": "^2.88.2"
   },
   "devDependencies": {
