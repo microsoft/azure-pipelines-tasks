@@ -242,6 +242,19 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        // Clean up broken symlinks in .bin directory
+        var binPath = path.join(taskPath, "node_modules", ".bin");
+        if (test('-d', binPath)) {
+            // Remove TypeScript-related symlinks
+            var tscBinPath = path.join(binPath, "tsc");
+            var tsserverBinPath = path.join(binPath, "tsserver");
+            if (test('-f', tscBinPath) || test('-L', tscBinPath)) {
+                rm('-f', tscBinPath);
+            }
+            if (test('-f', tsserverBinPath) || test('-L', tsserverBinPath)) {
+                rm('-f', tsserverBinPath);
+            }
+        }
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     }

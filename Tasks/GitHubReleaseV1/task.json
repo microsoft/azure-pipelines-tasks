@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 266,
+    "Minor": 268,
     "Patch": 0
   },
   "demands": [],
@@ -286,6 +286,7 @@
     "GetTagsError": "An unexpected error occurred while fetching tags.",
     "GetReleasesError": "An unexpected error occurred while fetching releases.",
     "CreateReleaseError": "An unexpected error occurred while creating the release.",
+    "CreateReleaseFailed": "Failed to create the release due to: %s",
     "EditReleaseError": "An unexpected error occurred while editing the release.",
     "DeleteReleaseError": "An unexpected error occurred while deleting the release.",
     "CreatingRelease": "Creating a release for tag: %s",
