@@ -13,16 +13,16 @@ var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-
 
 describe('AzureRmWebAppDeployment Suite', function() {
     
-    this.timeout(60000);
-
-     before((done) => {
+ this.timeout(60000);
+ 
+      before((done) => {
         if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
             tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
         }
         done();
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests();
-    KuduServiceTests.KuduServiceTests();
+    ApplicationInsightsTests.ApplicationInsightsTests(7000);
+    AppServiceTests.AzureAppServiceMockTests(5000);
+    KuduServiceTests.KuduServiceTests(5000);
 });
