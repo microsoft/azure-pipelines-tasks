@@ -50,7 +50,7 @@ namespace BuildConfigGen
             {
                 ["typescript"] = "^5.7.2",
                 ["azure-pipelines-task-lib"] = "^5.2.4",
-                ["azure-devops-node-api"] = "^15.1.2",
+                ["azure-devops-node-api"] = "^15.1.3",
                 ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
             };
 
