@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 249,
+    "Minor": 268,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -62,6 +62,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "publisher.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "publisher.js",
       "argumentFormat": ""
     }
