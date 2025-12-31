@@ -1,5 +1,6 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as qs from 'querystring';
+import * as url from 'url';
 
 interface ICurlProxy {
     variable: string,
@@ -11,7 +12,7 @@ function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy | null {
     if (proxyCfg) {
         if (proxyCfg.proxyUrl) {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
-            const parsedUrl = new URL(proxyCfg.proxyUrl);
+            const parsedUrl = url.parse(proxyCfg.proxyUrl);
             const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
 
             let proxyUrl = new URL(proxyCfg.proxyUrl);
