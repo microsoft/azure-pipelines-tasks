@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<!-- To Do: uncomment following line to set elements as none-localizable by default -->
+	<!-- <_locDefault _loc="locNone"/> -->
+	<!-- To Do: uncomment following line to set all attributes to localizable by default -->
+	<!-- <_locDefaultAttr _loc="locData"/> -->
+
+	<!-- To Do: uncomment following line to set tag test to none-localizable 
+		and its attributes size and type to localizable -->
+	<!-- To Do: uncomment following line to set tag bold to fully-localizable  -->
+	<!-- <_locTag _loc="locFull">bold</_locTag> -->
+	
+	<!-- Parser settings for .profile VSTS TeamArch files -->
+	<!-- Making tags 'property', 'profile', 'stereotype', 'enumerationLiteral' -->
+	<!-- non-localizable and their attribute 'displayName' localizable -->
+
+	<_locTag _loc="locNone" _locIDAttr="name" _locAttrData="displayName">property</_locTag>	
+	<_locTag _loc="locNone" _locIDAttr="name" _locAttrData="displayName">stereotype</_locTag>	
+	<_locTag _loc="locNone" _locIDAttr="name" _locAttrData="displayName">enumerationLiteral</_locTag>	
+	<_locTag _loc="locNone" _locIDAttr="name" _locAttrData="displayName">profile</_locTag>	
+
+</_locDefinition>
+
