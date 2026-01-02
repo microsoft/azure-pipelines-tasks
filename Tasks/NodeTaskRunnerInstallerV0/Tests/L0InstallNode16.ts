@@ -56,7 +56,9 @@ tmr.registerMock('fs', {
         return { isDirectory: () => false } as any; 
     },
     copyFileSync: function () { },
-    readFileSync: fs.readFileSync,
+    readFileSync: function(filePath: string, encoding: string) {
+        return JSON.stringify([]);
+    },
     constants: fs.constants
 });
 
