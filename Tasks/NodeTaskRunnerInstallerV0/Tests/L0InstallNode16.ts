@@ -1,3 +1,5 @@
+process.env.AGENT_HOMEDIRECTORY = '/fake/agent/home';
+
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import fs = require('fs');
@@ -15,56 +17,24 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 tmr.setAnswers(a);
-
-// Create task-lib mock
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-
+tlClone.retry = function (func: Function, args: any[], retryOptions: any): any {
+    return func.apply(this, args);   
+}
 tlClone.getVariable = function (variable: string) {
     if (variable.toLowerCase() === 'agent.homedirectory') {
         return '/fake/agent/home';
     }
+    if (variable.toLowerCase() === 'agent.tempdirectory') {
+        return '/fake/agent/temp';
+    }
     return null;
 };
-
-tlClone.assertAgent = function (variable: string) {
-    return;
+tlClone.rmRF = function(path) {
+    console.log('Removing ' + path);
 };
-
-tlClone.loc = function (key: string, ...args: any[]) {
-    return key;
-};
-
-tlClone.setResourcePath = function (path: string) {
-    return;
-};
-
-tlClone.rmRF = function (path: string) {
-    return;
-};
-
-tlClone.mkdirP = function (path: string) {
-    return;
-};
-
-tlClone.retry = async function (fn: () => Promise<any>) {
-    return await fn();
-};
-
-tlClone.debug = function (message: string) {
-    console.log('##vso[task.debug]' + message);
-};
-
-tlClone.cp = function (source: string, dest: string, options?: string) {
-    return;
-};
-
-tlClone.warning = function (message: string) {
-    console.log('##vso[task.warning]' + message);
-};
-
-tmr.registerMock('azure-pipelines-task-lib/task', tlClone);
-
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 // Mock os module
 tmr.registerMock('os', {
     platform: () => os.platform(),
