@@ -50,6 +50,7 @@
   "loc.messages.GetTagsError": "Si è verificato un errore imprevisto durante il recupero dei tag.",
   "loc.messages.GetReleasesError": "Si è verificato un errore imprevisto durante il recupero delle versioni.",
   "loc.messages.CreateReleaseError": "Si è verificato un errore imprevisto durante la creazione della versione.",
+  "loc.messages.CreateReleaseFailed": "Failed to create the release due to: %s",
   "loc.messages.EditReleaseError": "Si è verificato un errore imprevisto durante la modifica della versione.",
   "loc.messages.DeleteReleaseError": "Si è verificato un errore imprevisto durante l'eliminazione della versione.",
   "loc.messages.CreatingRelease": "Creazione di una versione per il tag: %s",
