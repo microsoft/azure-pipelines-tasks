@@ -50,6 +50,7 @@
   "loc.messages.GetTagsError": "Une erreur inattendue s'est produite durant la récupération (fetch) des étiquettes.",
   "loc.messages.GetReleasesError": "Une erreur inattendue s'est produite durant la récupération (fetch) des mises en production.",
   "loc.messages.CreateReleaseError": "Une erreur inattendue s'est produite durant la création de la mise en production.",
+  "loc.messages.CreateReleaseFailed": "Failed to create the release due to: %s",
   "loc.messages.EditReleaseError": "Une erreur inattendue s'est produite durant la modification de la mise en production.",
   "loc.messages.DeleteReleaseError": "Une erreur inattendue s'est produite durant la suppression de la mise en production.",
   "loc.messages.CreatingRelease": "Création d'une mise en production pour l'étiquette : %s",
