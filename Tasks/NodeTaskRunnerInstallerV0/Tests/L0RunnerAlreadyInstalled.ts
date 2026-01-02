@@ -36,6 +36,38 @@ tlClone.assertAgent = function (variable: string) {
     return;
 };
 
+tlClone.loc = function (key: string, ...args: any[]) {
+    return key;
+};
+
+tlClone.setResourcePath = function (path: string) {
+    return;
+};
+
+tlClone.rmRF = function (path: string) {
+    return;
+};
+
+tlClone.mkdirP = function (path: string) {
+    return;
+};
+
+tlClone.retry = async function (fn: () => Promise<any>) {
+    return await fn();
+};
+
+tlClone.debug = function (message: string) {
+    console.log('##vso[task.debug]' + message);
+};
+
+tlClone.cp = function (source: string, dest: string, options?: string) {
+    return;
+};
+
+tlClone.warning = function (message: string) {
+    console.log('##vso[task.warning]' + message);
+};
+
 tmr.registerMock('azure-pipelines-task-lib/task', tlClone);
 
 // Mock os module
