@@ -7,6 +7,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'index.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tmr.setInput('runnerVersion', '10');
+
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
         "2.144.0": true
@@ -17,13 +19,6 @@ tmr.setAnswers(a);
 // Create task-lib mock
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-
-tlClone.getInputRequired = function (inputName: string) {
-    if (inputName === 'runnerVersion') {
-        return '10';
-    }
-    return tl.getInputRequired(inputName);
-};
 
 tlClone.getVariable = function (variable: string) {
     if (variable.toLowerCase() === 'agent.homedirectory') {
