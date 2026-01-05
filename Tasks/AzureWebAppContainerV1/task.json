@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -344,7 +344,7 @@
     "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
     "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
     "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified.",
-    "StartedUpdatingSiteContainers": "Started updating Site Containers.", 
+    "StartedUpdatingSiteContainers": "Started updating Site Containers.",
     "UpdatingSiteContainer": "Updating SiteContainer: %s",
     "CompletedUpdatingSiteContainers": "Completed updating Site Containers."
   }
