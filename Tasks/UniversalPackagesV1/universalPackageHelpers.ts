@@ -1,13 +1,13 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import { getSystemAccessToken, getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
-import { getFeedUriFromBaseServiceUri } from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";
+import { validateFeedPermissions } from "./feedSecurity";
 
 // Re-export for use by download/publish modules
 export { artifactToolRunner };
@@ -68,46 +68,19 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
 
 export async function trySetFeed(context: UniversalPackageContext): Promise<boolean> {
     try {
-        tl.debug(tl.loc('Debug_ParsedFeedInfo', context.serviceUri, context.projectAndFeed));
+        // Validate feed permissions
+        await validateFeedPermissions(context);
 
+        // Parse and store feed information only after successful validation
         const { feedName, projectName } = parseFeedInput(context.projectAndFeed);
-
-        // Validate organization, token, and feed access
-        tl.debug(tl.loc('Debug_ValidatingOrganization', context.serviceUri));
-        
-        const packagingUrl = await getFeedUriFromBaseServiceUri(context.serviceUri, context.accessToken);
-        
-        // Validate feed exists and token has access by calling the Feeds API
-        await validateFeedAccess(packagingUrl, feedName, projectName, context.accessToken);
-
-        tl.debug(tl.loc('Debug_ValidatedServiceUri', context.serviceUri));
-
         context.feedName = feedName;
         context.projectName = projectName;
+
         return true;
     } catch (error) {
         handleTaskError(error, tl.loc('Error_FailedToValidateFeed', context.serviceUri, context.projectAndFeed));
         return false;
     }
-}
-
-async function validateFeedAccess(packagingUrl: string, feedId: string, projectId: string | null, accessToken: string): Promise<void> {
-    const webApi = getWebApiWithProxy(packagingUrl, accessToken);
-    
-    // Use the Package API to validate feed exists and token has access
-    // These values come from ArtifactToolUtilities.ts in packaging-common
-    const ApiVersion = "3.0-preview.1";
-    const PackagingAreaName = "Packaging";
-    const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
-    
-    let routeValues: any = { feedId: feedId };
-    if (projectId) {
-        routeValues.project = projectId;
-    }
-    
-    // This will throw if the feed doesn't exist or token doesn't have access
-    const data = await webApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, routeValues);
-    tl.debug(tl.loc('Debug_FeedValidationSuccess', data.requestUrl));
 }
 
 export async function tryDownloadArtifactTool(context: UniversalPackageContext): Promise<boolean> {

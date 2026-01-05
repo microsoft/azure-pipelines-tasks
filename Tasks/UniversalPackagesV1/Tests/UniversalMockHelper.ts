@@ -27,6 +27,7 @@ export interface MockConfig {
     providesSessionId?: string;
     serviceUrl: string;
     feedValidationBehavior?: string;
+    permissionsValidationBehavior?: string;
 }
 
 export class UniversalMockHelper {
@@ -284,6 +285,34 @@ export class UniversalMockHelper {
                                 return { result: { sessionId: provenanceSessionId } as T, statusCode: 200 };
                             }
                             return { result: null as T, statusCode: 404 };
+                        },
+                        get: async <T>(url: string, options?: any): Promise<{result: T, statusCode: number}> => {
+                            // Mock permissions API response
+                            if (url.includes('/_apis/permissions/')) {
+                                const behavior = this.config.permissionsValidationBehavior || 'success';
+                                
+                                if (behavior === 'insufficient-permissions') {
+                                    return { 
+                                        result: { count: 1, value: [false] } as T, 
+                                        statusCode: 200 
+                                    };
+                                } else if (behavior === 'unexpected-response') {
+                                    return { 
+                                        result: { count: 0, value: [] } as T, 
+                                        statusCode: 200 
+                                    };
+                                } else if (behavior === 'api-error') {
+                                    throw new Error('Permissions API error: 500 Internal Server Error');
+                                } else {
+                                    // success - user has permissions
+                                    return { 
+                                        result: { count: 1, value: [true] } as T, 
+                                        statusCode: 200 
+                                    };
+                                }
+                            }
+                            // Default response for other GET calls
+                            return { result: {} as T, statusCode: 200 };
                         }
                     },
                     vsoClient: {
