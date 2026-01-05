@@ -6,7 +6,7 @@
 
 [Update `@types/node`](#update-typesnode)
 
-[Update `task-lib` and `tool-lib`](#update-task-lib-and-tool-lib)
+[Update `task-lib`, `tool-lib`, and `node-api`](#update-task-lib-tool-lib-and-node-api)
 
 [Add `Node24` handler](#add-node24_1-handler)
 
@@ -38,13 +38,25 @@ Update `@types/node` to the `^24.10.0` version in `dependencies` in the `package
 
 If the task does not use built-in Node.JS modules (such as `fs` or `path`) directly, remove `@types/node` from the task dependencies.
 
-## Update `task-lib` and `tool-lib`
+## Update `task-lib`, `tool-lib`, and `node-api`
 
-Update `azure-pipelines-task-lib` to `^5.2.2` and `azure-pipelines-tool-lib` to `^2.0.10` in `package.json` dependencies, if a task has these packages.
+Update the following packages in `package.json` dependencies, if a task has these packages:
 
-`task-lib` package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. This happens if `task-lib` in subdependencies of the task (e.g. in some common npm packages used by the task) has a different version than in dependencies of the task itself. Same for `tool-lib`.
+- `azure-pipelines-task-lib` to `^5.2.4`
+- `azure-pipelines-tool-lib` to `^2.0.10`
+- `azure-devops-node-api` to `^15.1.3`
 
-If the task uses `task-lib`, `tool-lib`, and some common npm packages that use `task-lib` and `tool-lib` as well, make sure `task-lib` and `tool-lib` have the same version in common npm packages as in the task itself.
+```json
+"dependencies": {
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tool-lib": "^2.0.10",
+    "azure-devops-node-api": "^15.1.3"
+}
+```
+
+`task-lib` package uses some shared (e.g. global object) resources to operate so it may cause unexpected errors in cases when more than one version of the package is installed for a task. This happens if `task-lib` in subdependencies of the task (e.g. in some common npm packages used by the task) has a different version than in dependencies of the task itself. Same for `tool-lib` and `node-api`.
+
+If the task uses `task-lib`, `tool-lib`, `node-api`, and some common npm packages that use these packages as well, make sure they have the same version in common npm packages as in the task itself.
 As a possible solution you also can remove these package versions via the `make.json` file, for example:
 
 ```json
@@ -53,7 +65,8 @@ As a possible solution you also can remove these package versions via the `make.
         {
             "items": [
                 "node_modules/any-common-npm-package/node_modules/azure-pipelines-task-lib",
-                "node_modules/any-common-npm-package/node_modules/azure-pipelines-tool-lib"
+                "node_modules/any-common-npm-package/node_modules/azure-pipelines-tool-lib",
+                "node_modules/any-common-npm-package/node_modules/azure-devops-node-api"
             ],
             "options": "-Rf"
         }

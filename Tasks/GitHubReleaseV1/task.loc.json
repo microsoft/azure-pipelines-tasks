@@ -286,6 +286,7 @@
     "GetTagsError": "ms-resource:loc.messages.GetTagsError",
     "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
     "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
+    "CreateReleaseFailed": "ms-resource:loc.messages.CreateReleaseFailed",
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
     "DeleteReleaseError": "ms-resource:loc.messages.DeleteReleaseError",
     "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",

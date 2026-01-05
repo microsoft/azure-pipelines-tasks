@@ -154,6 +154,10 @@
     "Node20_1": {
       "target": "ssh.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "ssh.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

@@ -128,6 +128,7 @@
         "DOTNETCORE|8.0": ".NET 8.0",
         "DOTNETCORE|7.0": ".NET 7.0",
         "DOTNETCORE|6.0": ".NET 6.0",
+        "NODE|24-lts": "Node 24 LTS",
         "NODE|22-lts": "Node 22 LTS",
         "NODE|20-lts": "Node 20 LTS",
         "NODE|18-lts": "Node 18 LTS",
