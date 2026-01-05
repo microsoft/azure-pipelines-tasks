@@ -7,7 +7,7 @@
   "loc.input.label.versionSpec": "JDK-Version",
   "loc.input.help.versionSpec": "Eine Zahl, die die JDK-Version angibt, die im Pfad verfügbar gemacht werden soll. Verwenden Sie eine ganzzahlige Versionsnummer, z. B. 10.",
   "loc.input.label.jdkArchitectureOption": "JDK-Architektur",
-  "loc.input.help.jdkArchitectureOption": "Die Architektur (x86, x64) des JDK.",
+  "loc.input.help.jdkArchitectureOption": "Die JDK-Architektur (x86, x64, arm64).",
   "loc.input.label.jdkSourceOption": "JDK-Quelle",
   "loc.input.help.jdkSourceOption": "Quelle für das komprimierte JDK.",
   "loc.input.label.jdkFile": "JDK-Datei",
