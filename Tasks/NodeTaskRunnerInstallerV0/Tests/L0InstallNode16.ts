@@ -35,34 +35,31 @@ tlClone.rmRF = function(path) {
     console.log('Removing ' + path);
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
-// Mock os module
 tmr.registerMock('os', {
     platform: () => os.platform(),
     arch: () => 'x64'
 });
-
-// Mock fs module
 tmr.registerMock('fs', {
     existsSync: function (pathToCheck: string): boolean {
-        // Simulate runner not installed yet
-        return false;
+        return true;
     },
     mkdirSync: function () { },
     writeFileSync: function () { },
-    readdirSync: function (): string[] { 
-        return []; 
+    readdirSync: function (pathToCheck: string): string[] {
+        if (pathToCheck === '/fake/agent/temp') {
+            return ['node-v20.0.0-linux-x64'];
+        }
+        return [];
     },
-    statSync: function () { 
-        return { isDirectory: () => false } as any; 
+    statSync: function () {
+        return { isDirectory: () => true } as any;
     },
     copyFileSync: function () { },
-    readFileSync: function(filePath: string, encoding: string) {
+    readFileSync: function (filePath: string, encoding: string) {
         return JSON.stringify([]);
     },
     constants: fs.constants
 });
-
-// Mock tool-lib
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     cleanVersion: function (version: string) {
         return '16.20.2';
@@ -71,7 +68,6 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         if (toolName !== 'node16') {
             throw new Error('Searching for wrong tool');
         }
-        // Not found in cache
         return '';
     },
     downloadTool: function (url: string) {

@@ -35,45 +35,37 @@ tlClone.rmRF = function(path) {
     console.log('Removing ' + path);
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
-// Mock os module
 tmr.registerMock('os', {
     platform: () => os.platform(),
     arch: () => 'x64'
 });
-
-// Mock fs module - runner already installed
 tmr.registerMock('fs', {
     existsSync: function (pathToCheck: string): boolean {
-        // Simulate runner already installed at externals/node10/bin/node
-        if (pathToCheck.includes('node10') && pathToCheck.includes('bin')) {
-            return true;
-        }
-        return false;
+        return true;
     },
     mkdirSync: function () { },
     writeFileSync: function () { },
-    readdirSync: function (): string[] { 
-        return []; 
+    readdirSync: function (pathToCheck: string): string[] {
+        if (pathToCheck === '/fake/agent/temp') {
+            return ['node-v20.0.0-linux-x64'];
+        }
+        return [];
     },
-    statSync: function () { 
-        return { isDirectory: () => false } as any; 
+    statSync: function () {
+        return { isDirectory: () => true } as any;
     },
     copyFileSync: function () { },
-    readFileSync: function(filePath: string, encoding: string) {
+    readFileSync: function (filePath: string, encoding: string) {
         return JSON.stringify([]);
     },
     constants: fs.constants
 });
-
-// Mock tool-lib
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
     cleanVersion: function (version: string) {
         return '10.24.1';
     },
     findLocalTool: function (toolName: string, versionSpec: string, arch?: string) {
-        // Should not be called if runner already installed
         return '';
     }
 });
-
 tmr.run();
