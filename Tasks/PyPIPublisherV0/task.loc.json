@@ -11,6 +11,8 @@
     "Build",
     "Release"
   ],
+  "deprecated": true,
+  "deprecationMessage": "The PyPI Publisher task has been deprecated. You can now publish PyPI packages using Twine authentication and custom scripts.",
   "demands": [],
   "version": {
     "Major": 0,

@@ -16,6 +16,8 @@
     "Minor": 263,
     "Patch": 0
   },
+  "deprecated": true,
+  "deprecationMessage": "This task has been deprecated. Use conda commands directly in the bash task or batch script task as an alternative.",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
