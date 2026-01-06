@@ -155,14 +155,18 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
         let packageUrl = packagingLocation.DefaultPackagingUri;
         tl.debug('collectionUrl=' + collectionUrl);
         tl.debug('packageUrl=' + packageUrl);
-        let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
-        let collectionPathName = url.parse(collectionUrl).pathname;
+        const collectionUrlParsed = new URL(collectionUrl);
+        let collectionName: string = collectionUrlParsed.hostname.toLowerCase();
+        const collectionPathName = collectionUrlParsed.pathname;
+        
         if(collectionPathName && collectionPathName.length > 1) {
             collectionName = collectionName + collectionPathName.toLowerCase();
             tl.debug('collectionName=' + collectionName);
         }
+        
         if (packageUrl) {
-            url.parse(packageUrl).hostname.toLowerCase();
+            const packageUrlParsed = new URL(packageUrl);
+            packageUrlParsed.hostname.toLowerCase();
         } else {
             packageUrl = collectionName;
         }
