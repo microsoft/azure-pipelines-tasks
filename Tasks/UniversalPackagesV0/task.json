@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 260,
+    "Minor": 269,
     "Patch": 0
   },
   "runsOn": [
@@ -417,6 +417,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "universalmain.js",
       "argumentFormat": ""
     }
