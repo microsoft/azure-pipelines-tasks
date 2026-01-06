@@ -50,7 +50,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     //Version check for Helm, as --name flag with install is no longer supported in Helm 3
-    if (helmCli.isHelmV3()) {
+    if (helmCli.isHelmV3orGreater()) {
         if (releaseName) {
             helmCli.addArgument(releaseName);
         }
