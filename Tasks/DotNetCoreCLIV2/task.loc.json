@@ -543,6 +543,10 @@
     "Node20_1": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
