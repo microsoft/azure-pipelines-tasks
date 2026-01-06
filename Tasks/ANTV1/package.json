@@ -12,14 +12,14 @@
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "^5.2.1",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-codecoverage-tools": "3.256.0",
     "azure-pipelines-tasks-java-common": "2.264.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   },
   "overrides": {
     "form-data": "^4.0.4"
