@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 266,
+    "Minor": 268,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -313,6 +313,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }
