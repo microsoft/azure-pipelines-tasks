@@ -17,7 +17,7 @@
     "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-codeanalysis-common": "^2.242.0",
     "azure-pipelines-tasks-java-common": "^2.264.0",
-    "azure-pipelines-tasks-utility-common": "3.265.1"
+    "azure-pipelines-tasks-utility-common": "3.267.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
