@@ -49,7 +49,7 @@ tmr.registerMock('fs', {
     writeFileSync: function () { },
     readdirSync: function (pathToCheck: string): string[] {
         if (pathToCheck === '/fake/agent/temp') {
-            return ['node-v20.0.0-linux-x64'];
+            return ['node-v6.0.0-linux-x64'];
         }
         return [];
     },
