@@ -14,8 +14,8 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 266,
-    "Patch": 0
+    "Minor": 268,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -286,6 +286,7 @@
     "GetTagsError": "ms-resource:loc.messages.GetTagsError",
     "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
     "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
+    "CreateReleaseFailed": "ms-resource:loc.messages.CreateReleaseFailed",
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
     "DeleteReleaseError": "ms-resource:loc.messages.DeleteReleaseError",
     "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",

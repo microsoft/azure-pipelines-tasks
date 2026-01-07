@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 266,
-    "Patch": 0
+    "Minor": 268,
+    "Patch": 1
   },
   "releaseNotes": "The Code Coverage option is deprecated. Refer to the [PublishCodeCoverageResultsV2 Task] (https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines) to get code coverage results.",
   "demands": [],
@@ -313,6 +313,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }

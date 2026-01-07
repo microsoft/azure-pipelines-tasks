@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 266,
-    "Patch": 0
+    "Minor": 268,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
@@ -387,6 +387,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "gradletask.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "gradletask.js",
       "argumentFormat": ""
     }

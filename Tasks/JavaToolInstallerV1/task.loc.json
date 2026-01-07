@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 266,
+    "Minor": 268,
     "Patch": 0
   },
   "satisfies": [
@@ -171,6 +171,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "javatoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
     }
