@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as utility from "azure-pipelines-tasks-packaging-common/PackUtilities";
 
 import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import * as semver from "semver";
 
 export async function run(): Promise<void> {
 
@@ -80,13 +81,10 @@ export async function run(): Promise<void> {
 
                 let semVerBuildNumber: string = tl.getVariable("BUILD_BUILDNUMBER");
                 tl.debug(`Build number: ${semVerBuildNumber}`);
-
-                 // Validate full SemVer 2.0 format
-                let semVerRegex = /^\d+\.\d+\.\d+(?:\.\d+)?(?:[-\w\.]+)?(?:\+[0-9A-Za-z\-\.]+)?$/;
-                if (!semVerRegex.test(semVerBuildNumber)) {
+                if (!semver.valid(semVerBuildNumber)) {
                   tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidSemVer"));
                   return;
-                }
+                }  
                 version = semVerBuildNumber;
                 break;
 
