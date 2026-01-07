@@ -217,7 +217,7 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   }
 
   const buildParameters: Record<string, string> = {
-    CANARY_TEST_TASKNAME: pipeline.name || taskName,
+    CANARY_TEST_TASKNAME: taskName || pipeline.name!,
     CANARY_TEST_BRANCH: branch,
     CANARY_TEST_CONFIG: config.replace(/@Node\d+$/, ''),
     CANARY_TEST_NODE_VERSION: nodeVersion

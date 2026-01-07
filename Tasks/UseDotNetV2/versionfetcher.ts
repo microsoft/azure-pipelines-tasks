@@ -92,7 +92,8 @@ export class DotNetCoreVersionFetcher {
         let downloadPackageInfoObject: VersionFilesData = null;
         this.machineOsSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.getFiles().find((downloadPackageInfo: VersionFilesData) => {
-                if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
+                if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase() &&  (versionInfo.getPackageType() === "sdk" || (versionInfo.getPackageType() === "runtime" &&
+                 downloadPackageInfo.name.startsWith("dotnet-runtime")) )) {
 
                     if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
