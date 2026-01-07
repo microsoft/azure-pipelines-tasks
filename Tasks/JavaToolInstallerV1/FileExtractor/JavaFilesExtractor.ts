@@ -245,7 +245,7 @@ export class JavaFilesExtractor {
         }
 
         const jdkFile = path.normalize(repoRoot);
-        let stats: taskLib.FsStats;
+        let stats: fs.Stats;
         try {
             stats = taskLib.stats(jdkFile);
         } catch (error) {
