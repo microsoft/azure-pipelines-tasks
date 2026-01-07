@@ -25,7 +25,7 @@
     "azure-devops-node-api": "^15.1.3",
     "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-packaging-common": "3.246.2",
-    "azure-pipelines-tasks-utility-common": "3.265.1",
+    "azure-pipelines-tasks-utility-common": "3.267.0",
     "json5": "^2.2.3",
     "uuid": "3.2.1"
   },
