@@ -34,7 +34,7 @@ function sanitizeVersionString(inputVersion: string) : string{
 }
 
 const funcToolName = 'func';
-const stableFuncToolsVersion = '2.7.1585';
+const stableFuncToolsVersion = '4.6.0';
 
 async function getLatestFuncToolsVersion(): Promise<string> {
     const funcToolsLatestReleaseUrl = 'https://api.github.com/repos/Azure/azure-functions-core-tools/releases/latest';
@@ -103,7 +103,7 @@ function getDownloadUrl(version: string) {
 
         case 'Windows_NT':
         default:
-            return util.format(downloadUrlFormat, version, 'win-x86', version);
+            return util.format(downloadUrlFormat, version, 'win-x64', version);
 
     }
 }
