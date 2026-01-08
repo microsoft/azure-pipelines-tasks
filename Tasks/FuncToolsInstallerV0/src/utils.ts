@@ -94,16 +94,34 @@ function getExecutableExtension(): string {
 
 function getDownloadUrl(version: string) {
     let downloadUrlFormat = 'https://github.com/Azure/azure-functions-core-tools/releases/download/%s/Azure.Functions.Cli.%s.%s.zip';
-    switch (os.type()) {
+    const platform = getPlatformIdentifier();
+    return util.format(downloadUrlFormat, version, platform, version);
+}
+
+function getPlatformIdentifier(): string {
+    const osType = os.type();
+    const arch = os.arch();
+    
+    switch (osType) {
         case 'Linux':
-            return util.format(downloadUrlFormat, version, 'linux-x64', version);
+            // Support for ARM64 added in 4.3.0
+            return arch === 'arm64' ? 'linux-arm64' : 'linux-x64';
 
         case 'Darwin':
-            return util.format(downloadUrlFormat, version, 'osx-x64', version);
+            // Apple Silicon (M1/M2/M3) support
+            return arch === 'arm64' ? 'osx-arm64' : 'osx-x64';
 
         case 'Windows_NT':
-        default:
-            return util.format(downloadUrlFormat, version, 'win-x64', version);
+            // Windows ARM64 support added in recent versions
+            if (arch === 'arm64') {
+                return 'win-arm64';
+            }
+            // Default to x64 for modern systems, fallback to x86 for 32-bit
+            return arch === 'x64' ? 'win-x64' : 'win-x86';
 
+        default:
+            // Fallback to x64 for unknown platforms
+            tl.warning(`Unknown platform: ${osType}. Defaulting to linux-x64.`);
+            return 'linux-x64';
     }
 }
