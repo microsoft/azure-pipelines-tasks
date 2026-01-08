@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -228,6 +228,7 @@
         "EditableOptions": "True"
       },
       "options": {
+        "DOTNETCORE|10.0": ".NET 10.0",
         "DOTNETCORE|9.0": ".NET 9.0",
         "DOTNETCORE|8.0": ".NET 8.0",
         "DOTNETCORE|7.0": ".NET 7.0",
