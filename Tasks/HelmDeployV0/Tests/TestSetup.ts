@@ -245,7 +245,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-const helmVersionCommand = "helm version --client --short";
+const helmVersionCommand = "helm version --short --client";
 if (process.env[shared.isHelmV3]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
@@ -321,6 +321,9 @@ a.exec[helmChartRemoveCommand] = {
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
+// Control the UseHelmVersionV3orHigher pipeline feature by setting the environment variable
+// Set to false to use the legacy version command path with "--client --short" flags
+process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'false';
 
 // Create mocks for required modules
 import * as fs from 'fs';
