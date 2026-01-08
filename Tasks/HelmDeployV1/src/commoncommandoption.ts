@@ -8,7 +8,12 @@ export function addArguments(helmCli: helmcli) : void {
     var debugMode = tl.getVariable('system.debug');
 
     if(tillernamespace) {
-        helmCli.addArgument("--tiller-namespace ".concat(tillernamespace));
+        // --tiller-namespace flag only exists in Helm v2, not in v3+
+        if (!helmCli.isHelmV3orHigher()) {
+            helmCli.addArgument("--tiller-namespace ".concat(tillernamespace));
+        } else {
+            tl.warning("The 'tillernamespace' parameter is ignored in Helm v3 and higher as Tiller has been removed.");
+        }
     }
 
     if(debugMode === 'true') {
