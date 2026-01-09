@@ -1,6 +1,5 @@
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
-import * as mtt from 'azure-pipelines-task-lib/mock-toolrunner';
 import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 import * as artMock from 'azure-pipelines-tasks-packaging-common/Tests/ArtifactToolMockHelper';
 import * as clientMock from 'azure-pipelines-tasks-packaging-common/Tests/ClientToolMockHelper';
@@ -26,14 +25,11 @@ export interface MockConfig {
     systemTokenAvailable: boolean;
     providesSessionId?: string;
     serviceUrl: string;
-    feedValidationBehavior?: string;
-    permissionsValidationBehavior?: string;
 }
 
 export class UniversalMockHelper {
     private static ArtifactToolCmd: string = 'c:\\mock\\location\\ArtifactTool.exe';
     private provenanceSessionId: string | null = null;
-    public usedToken: string | undefined;
 
     public answers: TaskLibAnswers = {
         exec: {},
@@ -52,8 +48,12 @@ export class UniversalMockHelper {
         }
         // If providesSessionId is undefined, don't mock provenance (provenanceSessionId stays null)
         
+        // Register mocks for task-lib functions
+        // Set endpoint authorization environment variables
+        this.setupEndpointAuth();
+        
         artMock.registerArtifactToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
-        this.registerArtifactToolRunnerMockWithTokenCapture();
+        artMock.registerArtifactToolRunnerMock(tmr);
         clientMock.registerClientToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
         clientMock.registerClientToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
@@ -74,31 +74,24 @@ export class UniversalMockHelper {
         this.tmr.setAnswers(this.answers);
     }
 
-    private registerArtifactToolRunnerMockWithTokenCapture() {
-        // Register our extended mock directly
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner', {
-            getOptions: function() {
-                return {
-                    cwd: process.cwd(),
-                    env: Object.assign({}, process.env),
-                    silent: false,
-                    failOnStdErr: false,
-                    ignoreReturnCode: false,
-                    windowsVerbatimArguments: false
-                }
-            },
-            runArtifactTool: (artifactToolPath: string, command: string[], execOptions: any) => {
-                // Extension: Capture the token for test verification
-                if (execOptions?.env?.UNIVERSAL_AUTH_TOKEN) {
-                    this.usedToken = execOptions.env.UNIVERSAL_AUTH_TOKEN;
-                }
-                
-                // Run the tool (same implementation as base mock)
-                const tr = new mtt.ToolRunner(artifactToolPath);
-                tr.arg(command);
-                return tr.execSync(execOptions);
-            }
-        });
+    private setupEndpointAuth() {
+        // Set SYSTEMVSSCONNECTION auth if system token is available
+        if (this.config.systemTokenAvailable) {
+            process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = JSON.stringify({
+                parameters: {
+                    AccessToken: TEST_CONSTANTS.SYSTEM_TOKEN
+                },
+                scheme: 'OAuth'
+            });
+        }
+        
+        // Set service connection auth if provided
+        if (this.config.inputs.adoServiceConnection) {
+            process.env[`ENDPOINT_AUTH_${this.config.inputs.adoServiceConnection}`] = JSON.stringify({
+                parameters: {},
+                scheme: 'WorkloadIdentityFederation'
+            });
+        }
     }
 
     private registerConnectionDataUtilsMock() {
@@ -248,7 +241,7 @@ export class UniversalMockHelper {
             }
         };
         
-        // Mock getSystemAccessToken and getWebApiWithProxy for feed validation and provenance
+        // Mock getSystemAccessToken and getWebApiWithProxy for provenance
         const provenanceSessionId = this.provenanceSessionId;
         const webapiMock = {
             getSystemAccessToken: () => {
@@ -258,23 +251,6 @@ export class UniversalMockHelper {
                 return undefined;
             },
             getWebApiWithProxy: (serviceUri: string, accessToken: string) => {
-                if (this.config.feedValidationBehavior === 'fail') {
-                    return {
-                        serverUrl: serviceUri,
-                        authHandler: {},
-                        options: {},
-                        vsoClient: {
-                            getVersioningData: async () => {
-                                throw new Error('Feed validation failed: 401 Unauthorized');
-                            }
-                        },
-                        getLocationsApi: async () => ({
-                            getResourceArea: async (areaId: string) => {
-                                throw new Error('Feed validation failed: 401 Unauthorized');
-                            }
-                        })
-                    };
-                }
                 return {
                     serverUrl: serviceUri,
                     authHandler: {},
@@ -287,31 +263,7 @@ export class UniversalMockHelper {
                             return { result: null as T, statusCode: 404 };
                         },
                         get: async <T>(url: string, options?: any): Promise<{result: T, statusCode: number}> => {
-                            // Mock permissions API response
-                            if (url.includes('/_apis/permissions/')) {
-                                const behavior = this.config.permissionsValidationBehavior || 'success';
-                                
-                                if (behavior === 'insufficient-permissions') {
-                                    return { 
-                                        result: { count: 1, value: [false] } as T, 
-                                        statusCode: 200 
-                                    };
-                                } else if (behavior === 'unexpected-response') {
-                                    return { 
-                                        result: { count: 0, value: [] } as T, 
-                                        statusCode: 200 
-                                    };
-                                } else if (behavior === 'api-error') {
-                                    throw new Error('Permissions API error: 500 Internal Server Error');
-                                } else {
-                                    // success - user has permissions
-                                    return { 
-                                        result: { count: 1, value: [true] } as T, 
-                                        statusCode: 200 
-                                    };
-                                }
-                            }
-                            // Default response for other GET calls
+                            // Default response for GET calls
                             return { result: {} as T, statusCode: 200 };
                         }
                     },

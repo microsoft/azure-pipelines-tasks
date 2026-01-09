@@ -1,16 +1,25 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import { UniversalPackageContext } from "./UniversalPackageContext";
-import { validateFeedPermissions } from "./feedSecurity";
+import { getFeedDiagnostics } from "./feedSecurity";
 
 // Re-export for use by download/publish modules
 export { artifactToolRunner };
+
+// Get system access token using the main task-lib version to avoid version mismatch issues
+function getSystemAccessToken(): string {
+    const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+    if (auth && auth.parameters) {
+        return auth.parameters['AccessToken'];
+    }
+    return null;
+}
 
 export async function trySetAuth(context: UniversalPackageContext): Promise<boolean> {
     try {
@@ -20,11 +29,17 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
         if (context.adoServiceConnection) {
             tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
             try {
-                accessToken = await getFederatedWorkloadIdentityCredentials(context.adoServiceConnection);
-                if (accessToken) {
-                    tl.debug(tl.loc('Debug_WifTokenObtained'));
+                // Verify service connection exists before attempting WIF auth
+                const serviceConnectionAuth = tl.getEndpointAuthorization(context.adoServiceConnection, false);
+                if (!serviceConnectionAuth) {
+                    tl.warning(tl.loc('Warning_ServiceConnectionNotFound', context.adoServiceConnection));
                 } else {
-                    tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
+                    accessToken = await getFederatedWorkloadIdentityCredentials(context.adoServiceConnection);
+                    if (accessToken) {
+                        tl.debug(tl.loc('Debug_WifTokenObtained'));
+                    } else {
+                        tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
+                    }
                 }
             } catch (err) {
                 tl.warning(tl.loc('Warning_WifAuthFailed', context.adoServiceConnection, err));
@@ -58,29 +73,37 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
 
         context.accessToken = accessToken;
         context.serviceUri = serviceUri;
+        
+        // This converts https://dev.azure.com/{org} to https://feeds.dev.azure.com/{org}
+        context.feedServiceUri = serviceUri.replace('://dev.azure.com/', '://feeds.dev.azure.com/');
+        
         context.toolRunnerOptions = toolRunnerOptions;
         return true;
     } catch (error) {
-        handleTaskError(error, tl.loc('Error_AuthenticationFailed'));
+        await handleTaskError(error, tl.loc('Error_AuthenticationFailed'));
         return false;
     }
 }
 
-export async function trySetFeed(context: UniversalPackageContext): Promise<boolean> {
-    try {
-        // Validate feed permissions
-        await validateFeedPermissions(context);
+export function setFeed(context: UniversalPackageContext): void {
+    tl.debug(tl.loc('Debug_ParsedFeedInfo', context.serviceUri, context.projectAndFeed));
 
-        // Parse and store feed information only after successful validation
-        const { feedName, projectName } = parseFeedInput(context.projectAndFeed);
-        context.feedName = feedName;
-        context.projectName = projectName;
-
-        return true;
-    } catch (error) {
-        handleTaskError(error, tl.loc('Error_FailedToValidateFeed', context.serviceUri, context.projectAndFeed));
-        return false;
+    // Parse feed input to extract project and feed names
+    let feedName: string;
+    let projectName: string | null = null;
+    
+    if (context.projectAndFeed.includes('/')) {
+        const feedParts = context.projectAndFeed.split('/');
+        projectName = feedParts[0];
+        feedName = feedParts[1];
+        tl.debug(tl.loc('Debug_ProjectScopedFeed', projectName, feedName));
+    } else {
+        feedName = context.projectAndFeed;
+        tl.debug(tl.loc('Debug_OrgScopedFeed', feedName));
     }
+
+    context.feedName = feedName;
+    context.projectName = projectName;
 }
 
 export async function tryDownloadArtifactTool(context: UniversalPackageContext): Promise<boolean> {
@@ -107,34 +130,16 @@ export async function tryDownloadArtifactTool(context: UniversalPackageContext):
         return true;
     } catch (error) {
         const errorMessage = tl.loc("Error_FailedToGetArtifactTool", error.message);
-        handleTaskError(error, errorMessage);
+        await handleTaskError(error, errorMessage);
         return false;
     } finally {
         logArtifactToolTelemetry(context);
     }
 }
 
-function parseFeedInput(feed: string): { feedName: string; projectName: string | null } {
-    let feedName: string;
-    let projectName: string | null = null;
-    
-    if (feed.includes('/')) {
-        const feedParts = feed.split('/');
-        projectName = feedParts[0];
-        feedName = feedParts[1];
-        tl.debug(tl.loc('Debug_ProjectScopedFeed', projectName, feedName));
-    } else {
-        feedName = feed;
-        tl.debug(tl.loc('Debug_OrgScopedFeed', feedName));
-    }
 
-    return {
-        feedName,
-        projectName
-    };
-}
 
-export function handleTaskError(err: any, errorMessage: string, context?: UniversalPackageContext): void {
+export async function handleTaskError(err: any, errorMessage: string, context?: UniversalPackageContext): Promise<void> {
     tl.error(err);
 
     const buildIdentityDisplayName = tl.getVariable('Build.RequestedFor') || 
@@ -145,9 +150,18 @@ export function handleTaskError(err: any, errorMessage: string, context?: Univer
     
     tl.warning(tl.loc("Warning_BuildIdentityOperationHint", buildIdentityDisplayName, buildIdentityAccount));
     
-    if (context && context.organization && context.feedName) {
-        const feedUrl = constructFeedPermissionsUrl(context.organization, context.projectName, context.feedName);
-        tl.warning(tl.loc("Warning_BuildIdentityFeedHint", context.feedName, feedUrl));
+    // Get feed diagnostics to provide helpful error information
+    if (context && context.feedName && context.feedServiceUri && context.accessToken) {
+        const diagnostics = await getFeedDiagnostics(context);
+        if (diagnostics) {
+            tl.warning(diagnostics);
+        }
+        
+        // Provide link to feed permissions page
+        if (context.organization) {
+            const feedUrl = constructFeedPermissionsUrl(context.organization, context.projectName, context.feedName);
+            tl.warning(tl.loc("Warning_BuildIdentityFeedHint", context.feedName, feedUrl));
+        }
     }
 
     tl.setResult(tl.TaskResult.Failed, errorMessage);
@@ -162,7 +176,7 @@ function constructFeedPermissionsUrl(organizationName: string, projectName: stri
     }
 }
 
-export function validateServerType(): boolean {
+export async function validateServerType(): Promise<boolean> {
     try {
         const serverType = tl.getVariable("System.ServerType");
         if (!serverType || serverType.toLowerCase() !== "hosted") {
@@ -170,7 +184,7 @@ export function validateServerType(): boolean {
         }
         return true;
     } catch (error) {
-        handleTaskError(error, tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
+        await handleTaskError(error, tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
         return false;
     }
 }

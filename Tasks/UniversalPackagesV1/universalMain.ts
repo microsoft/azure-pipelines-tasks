@@ -9,7 +9,7 @@ async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
 
     // Validate server type
-    if (!helpers.validateServerType()) return;
+    if (!(await helpers.validateServerType())) return;
 
     // Create context and get inputs
     const context = new UniversalPackageContext();
@@ -17,8 +17,8 @@ async function main(): Promise<void> {
     // Set up authentication
     if (!(await helpers.trySetAuth(context))) return;
 
-    // Validate feed and organization
-    if (!(await helpers.trySetFeed(context))) return;
+    // Parse feed input
+    helpers.setFeed(context);
 
     // Download artifact tool
     if (!(await helpers.tryDownloadArtifactTool(context))) return;

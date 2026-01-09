@@ -26,6 +26,7 @@ export class UniversalPackageContext {
     feedName?: string;
     projectName?: string | null;
     serviceUri?: string;
+    feedServiceUri?: string;
 
     // Tool properties
     artifactToolPath?: string;
