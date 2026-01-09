@@ -51,7 +51,7 @@ export async function runTestWithEnv(testRunnerFile: string, envVars: { [key: st
         // Run the test - UniversalMockTestRunner automatically parses task.setvariable commands
         let tp = path.join(__dirname, testRunnerFile);
         let tr = new UniversalMockTestRunner(tp);
-        await tr.runAsync();
+        await tr.runAsync(20); // Force Node 20 for tests (task lib doesn't support Node 24 yet)
         
         return tr;
     } finally {

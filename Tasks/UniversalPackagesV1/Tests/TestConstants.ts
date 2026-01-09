@@ -31,7 +31,6 @@ export function getDefaultEnvVars(): { [key: string]: string } {
         'AGENT_HOMEDIRECTORY': 'c:\\agent\\home\\directory',
         'AGENT_VERSION': '2.999.0',
         'BUILD_SOURCESDIRECTORY': 'c:\\agent\\home\\directory\\sources',
-        'ENDPOINT_AUTH_SYSTEMVSSCONNECTION': '{"parameters":{"AccessToken":"token"},"scheme":"OAuth"}',
         'ENDPOINT_URL_SYSTEMVSSCONNECTION': 'https://dev.azure.com/example',
         'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
         'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': 'https://dev.azure.com/example',

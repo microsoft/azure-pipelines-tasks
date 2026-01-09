@@ -24,8 +24,7 @@ const config: MockConfig = {
     wifAuthBehavior: process.env['WIF_AUTH_BEHAVIOR'],
     systemTokenAvailable: process.env['SYSTEM_TOKEN_AVAILABLE'] !== 'false',
     providesSessionId: process.env['PROVENANCE_PROVIDES_SESSION_ID'],
-    serviceUrl: process.env['MOCK_SERVICE_URL'] || TEST_CONSTANTS.SERVICE_URL,
-    permissionsValidationBehavior: process.env['PERMISSIONS_VALIDATION_BEHAVIOR']
+    serviceUrl: process.env['MOCK_SERVICE_URL'] || TEST_CONSTANTS.SERVICE_URL
 } as MockConfig;
 
 // Override ENDPOINT_URL_SYSTEMVSSCONNECTION if test specified a different service URL
@@ -72,9 +71,3 @@ for (const [key, value] of Object.entries(config.inputs)) {
 const mockHelper = new UniversalMockHelper(tmr, config);
 
 tmr.run();
-
-// Output the captured token using standard Azure Pipelines convention
-// This allows tests to verify which token (WIF or system) was actually used
-if (mockHelper.usedToken) {
-    console.log(`##vso[task.setvariable variable=CAPTURED_AUTH_TOKEN;isOutput=false;issecret=false;]${mockHelper.usedToken}`);
-}

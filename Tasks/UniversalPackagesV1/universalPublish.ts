@@ -22,7 +22,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
         publishPackageUsingArtifactTool(context, feedId);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished"));
     } catch (err) {
-        helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), context);
+        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), context);
     }
 }
 

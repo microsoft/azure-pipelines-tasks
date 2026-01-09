@@ -34,8 +34,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesDownloaded"));
     } catch (err) {
-        helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToDownload'), context);
+        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToDownload'), context);
     }
 }
-
 
