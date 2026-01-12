@@ -29,7 +29,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
        done();
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests(10000);
+    ApplicationInsightsTests.ApplicationInsightsTests(20000);
     AppServiceTests.AzureAppServiceMockTests(5000);
     KuduServiceTests.KuduServiceTests(5000);
     ResourcesTests.ResourcesTests(5000); 
