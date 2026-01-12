@@ -17,7 +17,7 @@ describe("HelmDeployV0 Suite", function () {
         delete process.env[shared.TestEnvVars.valueFile];
         delete process.env[shared.TestEnvVars.overrideValues];
         delete process.env[shared.TestEnvVars.updatedependency];
-        delete process.env[shared.isHelmV3];
+        delete process.env[shared.isHelmV3orHigher];
         delete process.env[shared.TestEnvVars.releaseName];
         delete process.env[shared.TestEnvVars.waitForExecution];
         delete process.env[shared.TestEnvVars.arguments];
@@ -42,7 +42,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
         process.env[shared.TestEnvVars.failOnStderr] = "true";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("changed mode of file") != -1, "Mode of kubeconfig file should have been changed to 600");
@@ -63,7 +63,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
         process.env[shared.TestEnvVars.failOnStderr] = "true";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "false";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("changed mode of file") != -1, "Mode of kubeconfig file should have been changed to 600");
@@ -102,7 +102,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
@@ -120,7 +120,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.chartName] = shared.testChartName;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
@@ -139,7 +139,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.version] = "abcd";
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
@@ -158,7 +158,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.chartName] = shared.testChartName;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
@@ -176,7 +176,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf(`Release "${shared.testReleaseName}" has been upgraded`) != -1, "Release should have been upgraded");
@@ -202,7 +202,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
         process.env[shared.TestEnvVars.command] = shared.Commands.init;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("Common actions for Helm:") != -1, "Available commands information should have been received");
@@ -218,7 +218,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.chartPath] = shared.testChartPath;
         process.env[shared.TestEnvVars.destination] = shared.testDestinationPath;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
@@ -237,7 +237,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
         process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
 
         await tr.runAsync();
         assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
