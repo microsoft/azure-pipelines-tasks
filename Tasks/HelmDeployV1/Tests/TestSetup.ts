@@ -116,7 +116,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     if (process.env[shared.TestEnvVars.updatedependency])
         helmInstallCommand = helmInstallCommand.concat(" --dep-up");
 
-    if (process.env[shared.isHelmV3] === "true") {
+    if (process.env[shared.isHelmV3orHigher] === "true") {
         if (process.env[shared.TestEnvVars.releaseName])
             helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.releaseName]}`);
         else
@@ -209,7 +209,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
     if (process.env[shared.TestEnvVars.arguments])
         helmInitCommand = helmInitCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
 
-    if (process.env[shared.isHelmV3] === "true") {
+    if (process.env[shared.isHelmV3orHigher] === "true") {
         a.exec[helmInitCommand] = {
             "code": 1,
             "stdout": "The Kubernetes package manager\n\nCommon actions for Helm:\n\n- helm search:    search for charts\n- helm pull:      download a chart to your local directory to view\n- helm install:   upload the chart to Kubernetes\n- helm list:      list releases of charts\n"
@@ -229,8 +229,8 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
 
     if (process.env[shared.TestEnvVars.save]) {
-        if (process.env[shared.isHelmV37])
-            helmPackageCommand = helmPackageCommand.concat(" --save");
+        if (!process.env[shared.isHelmV3orHigher] && !process.env[shared.isHelmV37])
+            helmPackageCommand = helmPackageCommand.concat(" --save ");
     }
 
     if (process.env[shared.TestEnvVars.version])
@@ -250,13 +250,14 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-const helmVersionCommand = "helm version --short --client";
+const helmVersionCommand = "helm version --client --short";
+
 if (process.env[shared.isHelmV37]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
         "stdout": "v3.7.0+ge29ce2a"
     };
-} else if (process.env[shared.isHelmV3]) {
+} else if (process.env[shared.isHelmV3orHigher]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"
@@ -325,9 +326,18 @@ a.exec[helmPushCommand] = {
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
-// Control the UseHelmVersionV3orHigher pipeline feature by setting the environment variable
-// Set to false to use the legacy version command path with "--short --client" flags
-process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'false';
+// Mock azure-pipelines-task-lib/task to control getPipelineFeature
+import * as tl from 'azure-pipelines-task-lib/task';
+const tlClone = Object.assign({}, tl);
+tlClone.getPipelineFeature = function(feature: string) {
+    // Return false for UseHelmVersionV3orHigher to use the legacy version command
+    // This ensures tests use the expected code path with "--short --client" flags
+    if (feature === 'UseHelmVersionV3orHigher') {
+        return false;
+    }
+    return false;
+};
+tr.registerMock('azure-pipelines-task-lib/task', tlClone);
 
 // Create mocks for required modules
 import * as fs from 'fs';
