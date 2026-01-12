@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -419,7 +419,8 @@
         "off": "Off",
         "byPrereleaseNumber": "Use the date and time",
         "byEnvVar": "Use an environment variable",
-        "byBuildNumber": "Use the build number"
+        "byBuildNumber": "Use the build number",
+        "bySemVerBuildNumber": "Use full SemVer build number"
       }
     },
     {
@@ -606,6 +607,7 @@
     "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
-    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth",
+    "Error_InvalidSemVer": "ms-resource:loc.messages.Error_InvalidSemVer"
   }
 }

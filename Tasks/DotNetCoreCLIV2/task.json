@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -419,7 +419,8 @@
         "off": "Off",
         "byPrereleaseNumber": "Use the date and time",
         "byEnvVar": "Use an environment variable",
-        "byBuildNumber": "Use the build number"
+        "byBuildNumber": "Use the build number",
+        "bySemVerBuildNumber": "Use full SemVer build number"
       }
     },
     {
@@ -606,6 +607,7 @@
     "DeprecatedDotnet2_2_And_3_0": "Info: .NET Core SDK/runtime 2.2 and 3.0 are now End of Life(EOL) and have been removed from all hosted agents. If you're using these SDK/runtimes on hosted agents, kindly upgrade to newer versions which are not EOL, or else use UseDotNet task to install the required version.",
     "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-    "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+    "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.",
+    "Error_InvalidSemVer": "Build number is not a valid SemVer 2.0 string."
   }
 }
