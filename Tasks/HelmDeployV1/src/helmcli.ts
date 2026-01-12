@@ -51,32 +51,25 @@ export default class helmcli extends basecommand {
     public getHelmVersion(): tr.IExecSyncResult {
 
         const useHelmVersionV3orHigher = tl.getPipelineFeature('UseHelmVersionV3orHigher');
-
         var command = this.createCommand();
         command.arg('version');
-        command.line('--short');
-
-        if (useHelmVersionV3orHigher) {
-            const result = this.execCommandSync(command);
-            const clientVersionRegex = /(?:client:\s*)?(v?\d+(?:\.\d+)+)/i;
-            const output = result.stdout.trim();
-            const match = output.match(clientVersionRegex);
-            const clientVersion = match ? match[1] : null;
-
-            return { stdout: clientVersion || '', stderr: result.stderr, code: result.code, error: result.error };
+        if (!useHelmVersionV3orHigher) {
+            command.line('--client');
         }
-
-        command.line('--client');
-
+        command.line('--short');
         return this.execCommandSync(command);
     }
 
     public isHelmV3orHigher(): boolean {
-        if (!this.helmVersion)
+        if (!this.helmVersion) {
             this.helmVersion = this.getHelmVersion().stdout;
-        tl.debug(`Helm client version: ${this.helmVersion}`);
-
-        const versionString = this.helmVersion.replace('v', '');
+        }
+        const clientVersionRegex = /(?:client:\s*)?(v?\d+(?:\.\d+)+)/i;
+        const match = this.helmVersion.match(clientVersionRegex);
+        if (!match || !match[1]) {
+            return false;
+        }
+        const versionString = match[1].replace('v', '');
         const majorVersion = parseInt(versionString.split('.')[0], 10);
 
         return !isNaN(majorVersion) && majorVersion >= 3;
@@ -87,7 +80,7 @@ export default class helmcli extends basecommand {
             this.helmVersion = this.getHelmVersion().stdout;
         tl.debug("Helm version is " + this.helmVersion);
         // Parse the version string
-        const version = this.helmVersion.match(/^v(\d+)\.(\d+)\.(\d+)/);
+        const version = this.helmVersion.match(/^v?(\d+)\.(\d+)\.(\d+)/);
         if (version) {
             const major = parseInt(version[1]);
             const minor = parseInt(version[2]);
