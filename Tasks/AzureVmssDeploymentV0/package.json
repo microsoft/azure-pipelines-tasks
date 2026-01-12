@@ -13,7 +13,7 @@
     "artifact-engine": "^1.5.5",
     "azp-tasks-az-blobstorage-provider": "^3.262.0",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.263.1",
+    "azure-pipelines-tasks-azure-arm-rest": "3.267.1",
     "azure-pipelines-tasks-utility-common": "3.267.0",
     "moment": "^2.29.4"
   },
