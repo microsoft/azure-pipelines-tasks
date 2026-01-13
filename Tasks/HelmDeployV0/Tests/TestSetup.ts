@@ -245,16 +245,33 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-const helmVersionCommand = "helm version --client --short";
+// Mock BOTH helm version commands - the task will choose which one based on feature flag
+const helmVersionCommandLegacy = "helm version --client --short";
+const helmVersionCommandNew = "helm version --short";
 
+// Legacy command (when feature flag is false or not set)
 if (process.env[shared.isHelmV3orHigher]) {
-    a.exec[helmVersionCommand] = {
+    a.exec[helmVersionCommandLegacy] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"
     };
 }
 else {
-    a.exec[helmVersionCommand] = {
+    a.exec[helmVersionCommandLegacy] = {
+        "code": 0,
+        "stdout": "Client: v2.16.7+g5f2584f"
+    };
+}
+
+// New command (when feature flag is true) - same output, different command
+if (process.env[shared.isHelmV3orHigher]) {
+    a.exec[helmVersionCommandNew] = {
+        "code": 0,
+        "stdout": "v3.2.1+ge29ce2a"
+    };
+}
+else {
+    a.exec[helmVersionCommandNew] = {
         "code": 0,
         "stdout": "Client: v2.16.7+g5f2584f"
     };
@@ -322,18 +339,9 @@ a.exec[helmChartRemoveCommand] = {
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
-// Mock azure-pipelines-task-lib/task to control getPipelineFeature
-import * as tl from 'azure-pipelines-task-lib/task';
-const tlClone = Object.assign({}, tl);
-tlClone.getPipelineFeature = function(feature: string) {
-    // Return false for UseHelmVersionV3orHigher to use the legacy version command
-    // This ensures tests use the expected code path with "--client --short" flags
-    if (feature === 'UseHelmVersionV3orHigher') {
-        return false;
-    }
-    return false;
-};
-tr.registerMock('azure-pipelines-task-lib/task', tlClone);
+// NOTE: Feature flag is now controlled by the test file (L0.ts), not here
+// Each test can set process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] to 'true' or 'false'
+// This allows testing both scenarios with the same setup file
 
 // Create mocks for required modules
 import * as fs from 'fs';
