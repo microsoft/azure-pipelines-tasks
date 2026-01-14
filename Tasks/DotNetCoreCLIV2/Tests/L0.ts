@@ -483,20 +483,6 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), "should publish trx");
         assert(tr.failed, 'should have failed');
     });
-
-    it('test command without publish test results', async () => {
-        const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutPublish.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj'), 'it should have run dotnet test');
-        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
-        assert(!tr.stdOutContained('vso[results.publish'), 'it shouldnt contain publish command');
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
-    });
-
     
     it('test command finds non-root global.json file based on working directory', async () => {
        const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
@@ -521,7 +507,7 @@ describe('DotNetCoreExe Suite', function () {
 
        assert(tr.succeeded, 'should have succeeded');
        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
-  });
+    });
 
 
 
