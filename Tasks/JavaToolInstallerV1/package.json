@@ -26,17 +26,17 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
     "azp-tasks-az-blobstorage-provider": "^3.262.0",
-    "azure-pipelines-task-lib": "^4.16.0",
+    "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-azure-arm-rest": "^3.263.1",
     "azure-pipelines-tasks-utility-common": "3.265.1",
     "azure-pipelines-tool-lib": "^2.0.10",
     "path-to-regexp": "^1.7.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }
