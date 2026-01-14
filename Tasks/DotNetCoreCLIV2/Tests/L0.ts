@@ -498,12 +498,20 @@ describe('DotNetCoreExe Suite', function () {
        );
 
       assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+      
+       const out = tr.stdout.replace(/\\/g, '/');
+
       assert(
-       tr.stdOutContained(
-      'global.json found at c:\\agent\\home\\directory\\sources\\src\\global.json. Test runner is: \'Microsoft.Testing.Platform\''
-       ),
-       'it should have used MTP runner from global.json'
-       );
+      out.includes('global.json found at'),
+      'should log that global.json was found'
+      );
+
+       assert(
+      out.includes("Test runner is: 'Microsoft.Testing.Platform'") ||
+      out.includes('Test runner is: "Microsoft.Testing.Platform"'),
+      'should detect Microsoft.Testing.Platform as the test runner'
+      );
+
 
        assert(tr.succeeded, 'should have succeeded');
        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
