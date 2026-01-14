@@ -1,0 +1,172 @@
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily
+  branches:
+    include:
+    - master
+  always: true
+
+trigger: none
+pr: none
+
+variables:
+  # Override or set these variables in the canarytest org as needed
+  - name: CANARY_ORG
+    value: canarytest
+  # Centralized list of Microsoft-hosted agent images (use these variables in the matrix)
+  - name: agent_ubuntu_18_04
+    value: ubuntu-18.04
+  - name: agent_ubuntu_20_04
+    value: ubuntu-20.04
+  - name: agent_ubuntu_22_04
+    value: ubuntu-22.04
+  - name: agent_ubuntu_latest
+    value: ubuntu-latest
+  - name: agent_windows_2019
+    value: windows-2019
+  - name: agent_windows_2022
+    value: windows-2022
+  - name: agent_windows_2025
+    value: windows-2025
+  - name: agent_windows_latest
+    value: windows-latest
+  - name: agent_macos_11
+    value: macos-11
+  - name: agent_macos_12
+    value: macos-12
+
+jobs:
+- job: set_tasks
+  displayName: Set tasks to test
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - bash: |
+      npm i minimist
+    displayName: npm i minimist
+
+  - bash: |
+      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --canary)
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]${tasks}"
+    displayName: Set tasks to test
+    name: set
+
+- job: node_matrix_tests
+  displayName: Node Compatibility Matrix Tests
+  dependsOn: set_tasks
+  timeoutInMinutes: 360
+  variables:
+  - name: tasks
+    value: $[dependencies.set_tasks.outputs['set.tasks']]
+  strategy:
+    matrix:
+      ubuntu1804_node10:
+        vmImage: $(agent_ubuntu_18_04)
+        nodeVersion: '10.x'
+      ubuntu1804_node16:
+        vmImage: $(agent_ubuntu_18_04)
+        nodeVersion: '16.x'
+      ubuntu1804_node20:
+        vmImage: $(agent_ubuntu_18_04)
+        nodeVersion: '20.x'
+      ubuntu2004_node10:
+        vmImage: $(agent_ubuntu_20_04)
+        nodeVersion: '10.x'
+      ubuntu2004_node16:
+        vmImage: $(agent_ubuntu_20_04)
+        nodeVersion: '16.x'
+      ubuntu2004_node20:
+        vmImage: $(agent_ubuntu_20_04)
+        nodeVersion: '20.x'
+      ubuntu2204_node10:
+        vmImage: $(agent_ubuntu_22_04)
+        nodeVersion: '10.x'
+      ubuntu2204_node16:
+        vmImage: $(agent_ubuntu_22_04)
+        nodeVersion: '16.x'
+      ubuntu2204_node20:
+        vmImage: $(agent_ubuntu_22_04)
+        nodeVersion: '20.x'
+      ubuntu_latest_node10:
+        vmImage: $(agent_ubuntu_latest)
+        nodeVersion: '10.x'
+      ubuntu_latest_node16:
+        vmImage: $(agent_ubuntu_latest)
+        nodeVersion: '16.x'
+      ubuntu_latest_node20:
+        vmImage: $(agent_ubuntu_latest)
+        nodeVersion: '20.x'
+      macos11_node10:
+        vmImage: $(agent_macos_11)
+        nodeVersion: '10.x'
+      macos11_node16:
+        vmImage: $(agent_macos_11)
+        nodeVersion: '16.x'
+      macos11_node20:
+        vmImage: $(agent_macos_11)
+        nodeVersion: '20.x'
+      macos12_node10:
+        vmImage: $(agent_macos_12)
+        nodeVersion: '10.x'
+      macos12_node16:
+        vmImage: $(agent_macos_12)
+        nodeVersion: '16.x'
+      macos12_node20:
+        vmImage: $(agent_macos_12)
+        nodeVersion: '20.x'
+      windows2019_node10:
+        vmImage: $(agent_windows_2019)
+        nodeVersion: '10.x'
+      windows2019_node16:
+        vmImage: $(agent_windows_2019)
+        nodeVersion: '16.x'
+      windows2019_node20:
+        vmImage: $(agent_windows_2019)
+        nodeVersion: '20.x'
+      windows2022_node10:
+        vmImage: $(agent_windows_2022)
+        nodeVersion: '10.x'
+      windows2022_node16:
+        vmImage: $(agent_windows_2022)
+        nodeVersion: '16.x'
+      windows2022_node20:
+        vmImage: $(agent_windows_2022)
+        nodeVersion: '20.x'
+      windows2025_node10:
+        vmImage: $(agent_windows_2025)
+        nodeVersion: '10.x'
+      windows2025_node16:
+        vmImage: $(agent_windows_2025)
+        nodeVersion: '16.x'
+      windows2025_node20:
+        vmImage: $(agent_windows_2025)
+        nodeVersion: '20.x'
+      windows_latest_node10:
+        vmImage: $(agent_windows_latest)
+        nodeVersion: '10.x'
+      windows_latest_node16:
+        vmImage: $(agent_windows_latest)
+        nodeVersion: '16.x'
+      windows_latest_node20:
+        vmImage: $(agent_windows_latest)
+        nodeVersion: '20.x'
+  pool:
+    vmImage: $(vmImage)
+  steps:
+  - task: NodeTool@0
+    displayName: Use Node $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm ci
+      npm run build
+    displayName: 'Build test pipelines runner'
+
+  - bash: |
+      echo "Agent: $(vmImage) - Node: $(nodeVersion)"
+      echo "Tasks to test: $(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+    displayName: Run test pipelines and verify results
+    failOnStderr: true
