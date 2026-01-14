@@ -1,24 +1,32 @@
 {
-    "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
-    "name": "AzureFunctionApp",
-    "friendlyName": "Azure Functions",
-    "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
-    "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 208,
-        "Patch": 1
+  "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
+  "name": "AzureFunctionApp",
+  "friendlyName": "Azure Functions",
+  "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
+  "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 267,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "AdditionalDeploymentOptions",
+      "displayName": "Additional Deployment Options",
+      "isExpanded": false,
+      "visibleRule": "appType != functionAppLinux && appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

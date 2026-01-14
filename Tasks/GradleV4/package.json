@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "^4.16.0",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-codeanalysis-common": "^2.242.0",
     "azure-pipelines-tasks-java-common": "^2.264.0",
-    "azure-pipelines-tasks-utility-common": "3.265.1"
+    "azure-pipelines-tasks-utility-common": "3.267.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }

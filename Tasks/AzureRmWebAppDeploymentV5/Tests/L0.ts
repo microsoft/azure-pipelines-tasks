@@ -29,10 +29,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
        done();
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests();
-    KuduServiceTests.KuduServiceTests();
-    ResourcesTests.ResourcesTests(); 
+    ApplicationInsightsTests.ApplicationInsightsTests(20000);
+    AppServiceTests.AzureAppServiceMockTests(5000);
+    KuduServiceTests.KuduServiceTests(5000);
+    ResourcesTests.ResourcesTests(5000); 
 
     it('AzureRmWebAppDeploymentV5 DeploymentFactoryTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'DeploymentFactoryTests.js');

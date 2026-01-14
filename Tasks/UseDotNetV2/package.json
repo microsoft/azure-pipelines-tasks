@@ -27,17 +27,17 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.6",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/semver": "6.0.0",
-    "azure-pipelines-task-lib": "^5.2.1",
+    "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-packaging-common": "^3.230.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-utility-common": "3.267.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "json5": "^2.2.3",
     "semver": "^7.6.3",
     "typed-rest-client": "^2.1.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }

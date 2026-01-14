@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 255,
+    "Minor": 268,
     "Patch": 0
   },
   "demands": [],
@@ -74,6 +74,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "deletefiles.js",
       "argumentFormat": ""
     }
