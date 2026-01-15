@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 269,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -389,6 +389,10 @@
       "target": "container.js"
     },
     "Node20_1": {
+      "target": "container.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "container.js",
       "argumentFormat": ""
     }
