@@ -21,14 +21,14 @@ describe("Download single file package suite", function() {
         tl.rmRF(tempDir);
     });
 
-    it("downloads nuget file as nupkg and extracts it", (done: MochaDone) => {
+    it("downloads nuget file as nupkg and extracts it", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetPackage.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(tempDir, "singlePackageName.nupkg");
@@ -42,18 +42,17 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
     
-    it("downloads nuget file as nupkg and fails while extracting it", (done: MochaDone) => {
+    it("downloads nuget file as nupkg and fails while extracting it", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetPackage_BadZip.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(tempDir, "badNupkgPackageName.nupkg");
@@ -67,18 +66,17 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.failed, "task should have failed");
 
-        done();
     });
 
 
-    it("resolves package id, then downloads and extracts nuget package.", (done: MochaDone) => {
+    it("resolves package id, then downloads and extracts nuget package.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetPackageNameResolves.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(tempDir, "singlePackageName.nupkg");
@@ -92,17 +90,16 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("downloads nuget file from project scoped feed as nupkg and extracts it", (done: MochaDone) => {
+    it("downloads nuget file from project scoped feed as nupkg and extracts it", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetProjectScopedPackage.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(tempDir, "singlePackageName.nupkg");
@@ -116,17 +113,16 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("downloads nuget file as nupkg and does not extract it", (done: MochaDone) => {
+    it("downloads nuget file as nupkg and does not extract it", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetPackage_noextract.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 0, "no files should be in temp folder.");
 
@@ -138,17 +134,16 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("downloads npm file as tgz and extracts it", (done: MochaDone) => {
+    it("downloads npm file as tgz and extracts it", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNpmPackage.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(tempDir, "singlePackageName.tgz");
@@ -162,22 +157,20 @@ describe("Download single file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("tries to download npm package, but gets download error", (done: MochaDone) => {
+    it("tries to download npm package, but gets download error", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNpmPackageDownloadError.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.failed, "task should have failed");
 
-        done();
     });
 });
 
@@ -192,14 +185,14 @@ describe("Download multi file package suite", function() {
         tl.rmRF(rootDir);
     });
 
-    it("only downloads jar and pom files from the maven archive and doesn't extract them", (done: Mocha.Done) => {
+    it("only downloads jar and pom files from the maven archive and doesn't extract them", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadMultiFilePackage.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         let outputJarPath: string = path.join(destinationDir, "packageName.jar");
         let outputPomPath: string = path.join(destinationDir, "packageName.pom");
@@ -213,6 +206,5 @@ describe("Download multi file package suite", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 });

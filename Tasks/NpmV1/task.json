@@ -181,6 +181,10 @@
     "Node20_1": {
       "target": "npm.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npm.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
