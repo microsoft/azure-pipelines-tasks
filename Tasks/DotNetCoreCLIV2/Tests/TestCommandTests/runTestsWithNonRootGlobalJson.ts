@@ -23,11 +23,26 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'dotnet': 'c:\\path\\dotnet.exe'
     },
     'exec': {
-    'c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
-      'code': 0,
-      'stdout': 'dotnet output',
-      'stderr': ''
-    }
+  // unquoted (linux/mac)
+     'c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
+     code: 0,
+     stdout: 'dotnet output',
+     stderr: ''
+    },
+
+     // quoted exe + quoted project (windows)
+    '"c:\\path\\dotnet.exe" test "c:\\agent\\home\\directory\\sources\\src\\temp.csproj"': {
+     code: 0,
+     stdout: 'dotnet output',
+     stderr: ''
+    },
+
+     // quoted exe only (another common windows form)
+     '"c:\\path\\dotnet.exe" test c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
+     code: 0,
+     stdout: 'dotnet output',
+     stderr: ''
+     }
     },
     'exist': {
         'D:\\src\\github\\vsts-tasks\\Tests\\Nuget': true,
