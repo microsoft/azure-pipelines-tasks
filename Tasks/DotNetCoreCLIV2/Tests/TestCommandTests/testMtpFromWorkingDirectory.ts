@@ -4,24 +4,27 @@ const tmrm = require('azure-pipelines-task-lib/mock-run');
 const taskPath = path.join(__dirname, '../../../dotnetcoreexe.js');
 const tr = new tmrm.TaskMockRunner(taskPath);
 
+// --- Fake repo root ---
+const repoRoot = path.join(__dirname, 'repo');
+
 // --- Inputs ---
 tr.setInput('command', 'test');
-tr.setInput('projects', 'test.csproj');
-tr.setInput('workingDirectory', 'src/tests');
+tr.setInput('projects', '**/*.csproj');          // ✅ allow glob to match
+tr.setInput('workingDirectory', 'src/tests');   // ✅ matches FS
 
 // --- Environment ---
-process.env['BUILD_SOURCESDIRECTORY'] = path.join(__dirname, 'repo');
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'];
+process.env['BUILD_SOURCESDIRECTORY'] = repoRoot;
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = repoRoot;
 
 // --- Mock filesystem ---
 tr.registerMockFs({
-    [process.env['BUILD_SOURCESDIRECTORY']]: {
+    [repoRoot]: {
         src: {
             tests: {
                 'global.json': JSON.stringify({
                     test: { runner: 'Microsoft.Testing.Platform' }
                 }),
-                'test.csproj': ''
+                'test.csproj': '<Project></Project>' // ✅ REQUIRED
             }
         }
     }
