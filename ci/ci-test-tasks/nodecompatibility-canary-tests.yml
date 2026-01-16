@@ -67,122 +67,122 @@ jobs:
   strategy:
     matrix:
       ubuntu2404_node10:
-        vmImage: variables.agent_ubuntu_24_04
+        vmImage: ${{ agent_ubuntu_24_04 }}
         nodeVersion: '10.x'
       ubuntu2404_node16:
-        vmImage: variables.agent_ubuntu_24_04
+        vmImage: ${{ agent_ubuntu_24_04 }}
         nodeVersion: '16.x'
       ubuntu2404_node20:
-        vmImage: variables.agent_ubuntu_24_04
+        vmImage: ${{ agent_ubuntu_24_04 }}
         nodeVersion: '20.x'
-      ubuntu2204_node10:
-        vmImage: variables.agent_ubuntu_22_04
-        nodeVersion: '10.x'
-      ubuntu2204_node16:
-        vmImage: variables.agent_ubuntu_22_04
-        nodeVersion: '16.x'
-      ubuntu2204_node20:
-        vmImage: variables.agent_ubuntu_22_04
-        nodeVersion: '20.x'
-      ubuntu_latest_node10:
-        vmImage: variables.agent_ubuntu_latest
-        nodeVersion: '10.x'
-      ubuntu_latest_node16:
-        vmImage: variables.agent_ubuntu_latest
-        nodeVersion: '16.x'
-      ubuntu_latest_node20:
-        vmImage: variables.agent_ubuntu_latest
-        nodeVersion: '20.x'
-      windows2019_node10:
-        vmImage: variables.agent_windows_2019
-        nodeVersion: '10.x'
-      windows2019_node16:
-        vmImage: variables.agent_windows_2019
-        nodeVersion: '16.x'
-      windows2019_node20:
-        vmImage: variables.agent_windows_2019
-        nodeVersion: '20.x'
-      windows2022_node10:
-        vmImage: variables.agent_windows_2022
-        nodeVersion: '10.x'
-      windows2022_node16:
-        vmImage: variables.agent_windows_2022
-        nodeVersion: '16.x'
-      windows2022_node20:
-        vmImage: variables.agent_windows_2022
-        nodeVersion: '20.x'
-      windows2025_node10:
-        vmImage: variables.agent_windows_2025
-        nodeVersion: '10.x'
-      windows2025_node16:
-        vmImage: variables.agent_windows_2025
-        nodeVersion: '16.x'
-      windows2025_node20:
-        vmImage: variables.agent_windows_2025
-        nodeVersion: '20.x'
-      windows_latest_node10:
-        vmImage: variables.agent_windows_latest
-        nodeVersion: '10.x'
-      windows_latest_node16:
-        vmImage: variables.agent_windows_latest
-        nodeVersion: '16.x'
-      windows_latest_node20:
-        vmImage: variables.agent_windows_latest
-        nodeVersion: '20.x'
-      macos13_node10:
-        vmImage: variables.agent_macos_13
-        nodeVersion: '10.x'
-      macos13_node16:
-        vmImage: variables.agent_macos_13
-        nodeVersion: '16.x'
-      macos13_node20:
-        vmImage: variables.agent_macos_13
-        nodeVersion: '20.x'
-      macos14_node10:
-        vmImage: variables.agent_macos_14
-        nodeVersion: '10.x'
-      macos14_node16:
-        vmImage: variables.agent_macos_14
-        nodeVersion: '16.x'
-      macos14_node20:
-        vmImage: variables.agent_macos_14
-        nodeVersion: '20.x'
-      macos14_arm64_node10:
-        vmImage: variables.agent_macos_14_arm64
-        nodeVersion: '10.x'
-      macos14_arm64_node16:
-        vmImage: variables.agent_macos_14_arm64
-        nodeVersion: '16.x'
-      macos14_arm64_node20:
-        vmImage: variables.agent_macos_14_arm64
-        nodeVersion: '20.x'
-      macos15_node10:
-        vmImage: variables.agent_macos_15
-        nodeVersion: '10.x'
-      macos15_node16: 
-        vmImage: $(agent_macos_15)
-        nodeVersion: '16.x'
-      macos15_node20:
-        vmImage: $(agent_macos_15)
-        nodeVersion: '20.x'
-      macos15_arm64_node10:
-        vmImage: $(agent_macos_15_arm64)
-        nodeVersion: '10.x'
-      macos15_arm64_node16:
-        vmImage: $(agent_macos_15_arm64)
-        nodeVersion: '16.x'
-      macos15_arm64_node20:
-        vmImage: $(agent_macos_15_arm64)
-        nodeVersion: '20.x'
-      macos_latest_node10:
-        vmImage: $(agent_macos_latest)
-        nodeVersion: '10.x'
-      macos_latest_node16:
-        vmImage: $(agent_macos_latest)
-        nodeVersion: '16.x'
-      macos_latest_node20:
-        vmImage: $(agent_macos_latest)
-        nodeVersion: '20.x'
+      # ubuntu2204_node10:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '10.x'
+      # ubuntu2204_node16:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '16.x'
+      # ubuntu2204_node20:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '20.x'
+      # ubuntu_latest_node10:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '10.x'
+      # ubuntu_latest_node16:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '16.x'
+      # ubuntu_latest_node20:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '20.x'
+      # windows2019_node10:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '10.x'
+      # windows2019_node16:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '16.x'
+      # windows2019_node20:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '20.x'
+      # windows2022_node10:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '10.x'
+      # windows2022_node16:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '16.x'
+      # windows2022_node20:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '20.x'
+      # windows2025_node10:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '10.x'
+      # windows2025_node16:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '16.x'
+      # windows2025_node20:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '20.x'
+      # windows_latest_node10:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '10.x'
+      # windows_latest_node16:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '16.x'
+      # windows_latest_node20:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '20.x'
+      # macos13_node10:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '10.x'
+      # macos13_node16:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '16.x'
+      # macos13_node20:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '20.x'
+      # macos14_node10:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '10.x'
+      # macos14_node16:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '16.x'
+      # macos14_node20:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '20.x'
+      # macos14_arm64_node10:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '10.x'
+      # macos14_arm64_node16:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '16.x'
+      # macos14_arm64_node20:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '20.x'
+      # macos15_node10:
+      #   vmImage: variables.agent_macos_15
+      #   nodeVersion: '10.x'
+      # macos15_node16: 
+      #   vmImage: $(agent_macos_15)
+      #   nodeVersion: '16.x'
+      # macos15_node20:
+      #   vmImage: $(agent_macos_15)
+      #   nodeVersion: '20.x'
+      # macos15_arm64_node10:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '10.x'
+      # macos15_arm64_node16:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '16.x'
+      # macos15_arm64_node20:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '20.x'
+      # macos_latest_node10:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '10.x'
+      # macos_latest_node16:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '16.x'
+      # macos_latest_node20:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '20.x'
   pool:
     vmImage: $(vmImage)
   steps:
