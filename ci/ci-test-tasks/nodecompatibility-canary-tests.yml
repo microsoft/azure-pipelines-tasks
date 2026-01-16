@@ -50,9 +50,8 @@ jobs:
   - bash: |
       npm i minimist
     displayName: npm i minimist
-
   - bash: |
-      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --canary)
+      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --exclude "$(TASKS_TO_EXCLUDE)")
       echo "##vso[task.setvariable variable=tasks;isoutput=true]${tasks}"
     displayName: Set tasks to test
     name: set
@@ -188,16 +187,16 @@ jobs:
   pool:
     vmImage: $(vmImage)
   steps:
-  - task: UseNode@1
+  - task: NodeTool@0
     displayName: Use Node $(nodeVersion)
     inputs:
       versionSpec: $(nodeVersion)
 
-  # - script: |
-  #     cd ./ci/ci-test-tasks/test-and-verify-v2
-  #     npm i
-  #     npm run build
-  #   displayName: 'Build test pipelines runner'
+  - script: |
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i
+      npm run build
+    displayName: 'Build test pipelines runner'
 
   - bash: |
       echo "Agent: $(vmImage) - Node: $(nodeVersion)"
