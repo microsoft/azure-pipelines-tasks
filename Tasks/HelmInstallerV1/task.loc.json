@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 267,
-    "Patch": 0
+    "Minor": 269,
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -40,6 +40,10 @@
       "target": "src//helmtoolinstaller.js"
     },
     "Node20_1": {
+      "target": "src//helmtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//helmtoolinstaller.js",
       "argumentFormat": ""
     }
