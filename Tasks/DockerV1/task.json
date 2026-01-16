@@ -391,6 +391,10 @@
     "Node20_1": {
       "target": "container.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "container.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
