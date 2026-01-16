@@ -67,13 +67,13 @@ jobs:
   strategy:
     matrix:
       ubuntu2404_node10:
-        vmImage: ${{ agent_ubuntu_24_04 }}
+        vmImage: $'{{ agent_ubuntu_24_04 }}'
         nodeVersion: '10.x'
       ubuntu2404_node16:
-        vmImage: ${{ agent_ubuntu_24_04 }}
+        vmImage: $'{{ agent_ubuntu_24_04 }}'
         nodeVersion: '16.x'
       ubuntu2404_node20:
-        vmImage: ${{ agent_ubuntu_24_04 }}
+        vmImage: $'{{ agent_ubuntu_24_04 }}'
         nodeVersion: '20.x'
       # ubuntu2204_node10:
       #   vmImage: variables.agent_ubuntu_22_04
