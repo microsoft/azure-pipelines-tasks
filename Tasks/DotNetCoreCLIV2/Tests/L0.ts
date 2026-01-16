@@ -483,41 +483,19 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), "should publish trx");
         assert(tr.failed, 'should have failed');
     });
-    
-    it('test command finds non-root global.json file based on working directory', async () => {
-       const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
-       const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-      await tr.runAsync();
+    it('test command without publish test results', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutPublish.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-      assert.strictEqual(tr.invokedToolCount, 1, 'should have run dotnet once');
-      assert(
-       tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\sources\\src\\temp.csproj') ||
-       tr.ran('c:\\path\\dotnet.exe test --project c:\\agent\\home\\directory\\sources\\src\\temp.csproj'),
-       'it should have run dotnet test in MTP mode'
-       );
-
-      assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
-      
-       const out = tr.stdout.replace(/\\/g, '/');
-
-      assert(
-      out.includes('global.json found at'),
-      'should log that global.json was found'
-      );
-
-       assert(
-      out.includes("Test runner is: 'Microsoft.Testing.Platform'") ||
-      out.includes('Test runner is: "Microsoft.Testing.Platform"'),
-      'should detect Microsoft.Testing.Platform as the test runner'
-      );
-
-
-       assert(tr.succeeded, 'should have succeeded');
-       assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+        await tr.runAsync();
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+        assert(!tr.stdOutContained('vso[results.publish'), 'it shouldnt contain publish command');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
-
-
 
     it('custom command fails when no project match found', async () => {
         process.env["__command__"] = "custom";
@@ -581,4 +559,38 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
     });
+
+    it('test command finds global.json in working directory and runs in MTP mode', async () => {
+    process.env['__command__'] = 'test';
+    process.env['workingDirectory'] = 'src/tests';
+
+    const tp = path.join(__dirname, './TestCommandTests/testMtpFromWorkingDirectory.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.invokedToolCount === 1, 'should run dotnet once');
+    assert(!tr.stdOutContained('--logger trx'), 'should not use VSTest logger');
+    assert(tr.stdOutContained('Microsoft.Testing.Platform'), 'should use MTP');
+
+    assert(tr.succeeded);
+   });
+
+   it('test command ignores global.json outside repo root', async () => {
+    process.env['__command__'] = 'test';
+    process.env['workingDirectory'] = 'src';
+
+    const tp = path.join(__dirname, './TestCommandTests/testGlobalJsonOutsideRepoIgnored.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.invokedToolCount === 1);
+    assert(tr.stdOutContained('--logger trx'), 'should fall back to VSTest');
+    assert(!tr.stdOutContained('Microsoft.Testing.Platform'));
+
+    assert(tr.succeeded);
+    });
+
+
 });
