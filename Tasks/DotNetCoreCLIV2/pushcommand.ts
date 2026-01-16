@@ -80,6 +80,9 @@ export async function run(): Promise<void> {
             tl.debug(`all URL prefixes: ${urlPrefixes}`);
         }
 
+        // Read arguments so users can specify extra arguments like --skip-duplicate
+        let dotnetArguments: string = tl.getInput('arguments', false) || '';
+
         // Setting up auth info
         let accessToken;
         const isInternalFeed: boolean = nugetFeedType === 'internal';
@@ -164,14 +167,13 @@ export async function run(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         try {
             for (const packageFile of filesList) {
-                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
+                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, dotnetArguments, configFile, tempNuGetConfigDirectory);
             }
         } finally {
             credCleanup();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesPublishedSuccessfully'));
-
     } catch (err) {
         tl.error(err);
 
@@ -183,7 +185,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, configFile: string, workingDirectory: string): Q.Promise<number> {
+function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, dotnetArguments: string, configFile: string, workingDirectory: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
 
     dotnet.arg('nuget');
@@ -196,6 +198,8 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
 
     dotnet.arg('--api-key');
     dotnet.arg(apiKey);
+
+    dotnet.line(dotnetArguments);
 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
