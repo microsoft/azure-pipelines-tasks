@@ -65,7 +65,7 @@ async function getGo(version: string, baseUrl?: string): Promise<string> {
         tl.debug("Go tool is available under " + toolPath);
     }
 
-    setGoEnvironmentVariables(toolPath);
+    setGoEnvironmentVariables(toolPath, resolved.filenameVersion);
     const binPath = path.join(toolPath, 'bin');
     toolLib.prependPath(binPath);
     return resolved.filenameVersion;
@@ -126,8 +126,18 @@ function getDownloadUrl(filename: string, baseUrl?: string): string {
     return `${base.replace(/\/+$/, '')}/${filename}`;
 }
 
-function setGoEnvironmentVariables(goRoot: string): void {
-    tl.setVariable('GOROOT', goRoot);
+function setGoEnvironmentVariables(goRoot: string, version: string): void {
+    // Only set GOROOT for Go < 1.9; modern versions auto-detect it.
+    // Setting it explicitly breaks custom builds (e.g., Go tip). See: #20796
+    const parsed = parseGoVersion(version);
+    
+    if (parsed.major < 1 || (parsed.major === 1 && parsed.minor < 9)) {
+        tl.debug('Setting GOROOT for Go version < 1.9');
+        tl.setVariable('GOROOT', goRoot);
+    } else {
+        tl.debug('Skipping GOROOT for modern Go version (>= 1.9)');
+    }
+    
     const goPath = tl.getInput("goPath", false);
     const goBin = tl.getInput("goBin", false);
     if (goPath) {
