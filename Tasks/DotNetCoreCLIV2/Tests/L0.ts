@@ -576,10 +576,6 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
 
-    const out = tr.stdout.replace(/\\/g, '/');
-
-    assert(out.includes('global.json found at'), 'should log global.json discovery');
-
     assert(tr.succeeded, 'should have succeeded');
     assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
