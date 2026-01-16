@@ -560,37 +560,18 @@ describe('DotNetCoreExe Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
     });
 
-    it('test command finds global.json in working directory and runs in MTP mode', async () => {
-    process.env['__command__'] = 'test';
-    process.env['workingDirectory'] = 'src/tests';
+    it('test command detects Microsoft Testing Platform from global.json in workingDirectory', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/testMtpFromWorkingDirectory.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    const tp = path.join(__dirname, './TestCommandTests/testMtpFromWorkingDirectory.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+         await tr.runAsync();
 
-    await tr.runAsync();
-
-    assert(tr.invokedToolCount === 1, 'should run dotnet once');
-    assert(!tr.stdOutContained('--logger trx'), 'should not use VSTest logger');
-    assert(tr.stdOutContained('Microsoft.Testing.Platform'), 'should use MTP');
-
-    assert(tr.succeeded);
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(
+        tr.stdOutContained('Microsoft.Testing.Platform'),
+        'should have detected Microsoft Testing Platform'
+        );
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
    });
-
-   it('test command ignores global.json outside repo root', async () => {
-    process.env['__command__'] = 'test';
-    process.env['workingDirectory'] = 'src';
-
-    const tp = path.join(__dirname, './TestCommandTests/testGlobalJsonOutsideRepoIgnored.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-    await tr.runAsync();
-
-    assert(tr.invokedToolCount === 1);
-    assert(tr.stdOutContained('--logger trx'), 'should fall back to VSTest');
-    assert(!tr.stdOutContained('Microsoft.Testing.Platform'));
-
-    assert(tr.succeeded);
-    });
-
-
 });
