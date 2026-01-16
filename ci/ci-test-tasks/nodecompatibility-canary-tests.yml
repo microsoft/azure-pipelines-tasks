@@ -184,7 +184,7 @@ jobs:
         vmImage: $(agent_macos_latest)
         nodeVersion: '20.x'
   pool:
-    vmImage: ${{ matrix.vmImage }}
+    vmImage: $(vmImage)
   steps:
   - task: UseNode@1
     displayName: Use Node $(nodeVersion)
