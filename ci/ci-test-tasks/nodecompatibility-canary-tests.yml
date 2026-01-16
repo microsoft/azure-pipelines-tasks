@@ -14,10 +14,8 @@ variables:
   - name: CANARY_ORG
     value: canarytest
   # Centralized list of Microsoft-hosted agent images (use these variables in the matrix)
-  - name: agent_ubuntu_18_04
-    value: ubuntu-18.04
-  - name: agent_ubuntu_20_04
-    value: ubuntu-20.04
+  - name: agent_ubuntu_24_04
+    value: ubuntu-24.04
   - name: agent_ubuntu_22_04
     value: ubuntu-22.04
   - name: agent_ubuntu_latest
@@ -30,10 +28,18 @@ variables:
     value: windows-2025
   - name: agent_windows_latest
     value: windows-latest
-  - name: agent_macos_11
-    value: macos-11
-  - name: agent_macos_12
-    value: macos-12
+  - name: agent_macos_13
+    value: macos-13
+  - name: agent_macos_14
+    value: macos-14
+  - name: agent_macos_15
+    value: macos-15
+  - name: agent_macos_14_arm64
+    value: macos-14-arm64
+  - name: agent_macos_15_arm64
+    value: macos-15-arm64
+  - name: agent_macos_latest
+    value: macos-latest
 
 jobs:
 - job: set_tasks
@@ -60,23 +66,14 @@ jobs:
     value: $[dependencies.set_tasks.outputs['set.tasks']]
   strategy:
     matrix:
-      ubuntu1804_node10:
-        vmImage: $(agent_ubuntu_18_04)
+      ubuntu2404_node10:
+        vmImage: $(agent_ubuntu_24_04)
         nodeVersion: '10.x'
-      ubuntu1804_node16:
-        vmImage: $(agent_ubuntu_18_04)
+      ubuntu2404_node16:
+        vmImage: $(agent_ubuntu_24_04)
         nodeVersion: '16.x'
-      ubuntu1804_node20:
-        vmImage: $(agent_ubuntu_18_04)
-        nodeVersion: '20.x'
-      ubuntu2004_node10:
-        vmImage: $(agent_ubuntu_20_04)
-        nodeVersion: '10.x'
-      ubuntu2004_node16:
-        vmImage: $(agent_ubuntu_20_04)
-        nodeVersion: '16.x'
-      ubuntu2004_node20:
-        vmImage: $(agent_ubuntu_20_04)
+      ubuntu2404_node20:
+        vmImage: $(agent_ubuntu_24_04)
         nodeVersion: '20.x'
       ubuntu2204_node10:
         vmImage: $(agent_ubuntu_22_04)
@@ -95,24 +92,6 @@ jobs:
         nodeVersion: '16.x'
       ubuntu_latest_node20:
         vmImage: $(agent_ubuntu_latest)
-        nodeVersion: '20.x'
-      macos11_node10:
-        vmImage: $(agent_macos_11)
-        nodeVersion: '10.x'
-      macos11_node16:
-        vmImage: $(agent_macos_11)
-        nodeVersion: '16.x'
-      macos11_node20:
-        vmImage: $(agent_macos_11)
-        nodeVersion: '20.x'
-      macos12_node10:
-        vmImage: $(agent_macos_12)
-        nodeVersion: '10.x'
-      macos12_node16:
-        vmImage: $(agent_macos_12)
-        nodeVersion: '16.x'
-      macos12_node20:
-        vmImage: $(agent_macos_12)
         nodeVersion: '20.x'
       windows2019_node10:
         vmImage: $(agent_windows_2019)
@@ -149,6 +128,60 @@ jobs:
         nodeVersion: '16.x'
       windows_latest_node20:
         vmImage: $(agent_windows_latest)
+        nodeVersion: '20.x'
+      macos13_node10:
+        vmImage: $(agent_macos_13)
+        nodeVersion: '10.x'
+      macos13_node16:
+        vmImage: $(agent_macos_13)
+        nodeVersion: '16.x'
+      macos13_node20:
+        vmImage: $(agent_macos_13)
+        nodeVersion: '20.x'
+      macos14_node10:
+        vmImage: $(agent_macos_14)
+        nodeVersion: '10.x'
+      macos14_node16:
+        vmImage: $(agent_macos_14)
+        nodeVersion: '16.x'
+      macos14_node20:
+        vmImage: $(agent_macos_14)
+        nodeVersion: '20.x'
+      macos14_arm64_node10:
+        vmImage: $(agent_macos_14_arm64)
+        nodeVersion: '10.x'
+      macos14_arm64_node16:
+        vmImage: $(agent_macos_14_arm64)
+        nodeVersion: '16.x'
+      macos14_arm64_node20:
+        vmImage: $(agent_macos_14_arm64)
+        nodeVersion: '20.x'
+      macos15_node10:
+        vmImage: $(agent_macos_15)
+        nodeVersion: '10.x'
+      macos15_node16: 
+        vmImage: $(agent_macos_15)
+        nodeVersion: '16.x'
+      macos15_node20:
+        vmImage: $(agent_macos_15)
+        nodeVersion: '20.x'
+      macos15_arm64_node10:
+        vmImage: $(agent_macos_15_arm64)
+        nodeVersion: '10.x'
+      macos15_arm64_node16:
+        vmImage: $(agent_macos_15_arm64)
+        nodeVersion: '16.x'
+      macos15_arm64_node20:
+        vmImage: $(agent_macos_15_arm64)
+        nodeVersion: '20.x'
+      macos_latest_node10:
+        vmImage: $(agent_macos_latest)
+        nodeVersion: '10.x'
+      macos_latest_node16:
+        vmImage: $(agent_macos_latest)
+        nodeVersion: '16.x'
+      macos_latest_node20:
+        vmImage: $(agent_macos_latest)
         nodeVersion: '20.x'
   pool:
     vmImage: $(vmImage)
