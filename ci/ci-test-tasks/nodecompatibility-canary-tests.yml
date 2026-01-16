@@ -1,5 +1,5 @@
 schedules:
-- cron: "50 10 * * *"
+- cron: "10 11 * * *"
   displayName: Daily
   branches:
     include:
@@ -67,13 +67,13 @@ jobs:
   strategy:
     matrix:
       ubuntu2404_node10:
-        vmImage: $'{{ agent_ubuntu_24_04 }}'
+        vmImage: ubuntu-24.04
         nodeVersion: '10.x'
       ubuntu2404_node16:
-        vmImage: $'{{ agent_ubuntu_24_04 }}'
+        vmImage: ubuntu-24.04
         nodeVersion: '16.x'
       ubuntu2404_node20:
-        vmImage: $'{{ agent_ubuntu_24_04 }}'
+        vmImage: ubuntu-24.04
         nodeVersion: '20.x'
       # ubuntu2204_node10:
       #   vmImage: variables.agent_ubuntu_22_04
