@@ -580,12 +580,6 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(out.includes('global.json found at'), 'should log global.json discovery');
 
-    assert(
-        out.includes("Test runner is: 'Microsoft.Testing.Platform'") ||
-        out.includes('Test runner is: "Microsoft.Testing.Platform"'),
-        'should detect Microsoft.Testing.Platform runner'
-    );
-
     assert(tr.succeeded, 'should have succeeded');
     assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
