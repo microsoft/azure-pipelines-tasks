@@ -14,8 +14,8 @@ variables:
   - name: CANARY_ORG
     value: canarytest
   # Centralized list of Microsoft-hosted agent images (use these variables in the matrix)
-  - name: agent_ubuntu_24_04
-    value: ubuntu-24.04
+  # - name: agent_ubuntu_24_04
+  #   value: ubuntu-24.04
   - name: agent_ubuntu_22_04
     value: ubuntu-22.04
   - name: agent_ubuntu_latest
@@ -64,16 +64,18 @@ jobs:
   variables:
   - name: tasks
     value: $[dependencies.set_tasks.outputs['set.tasks']]
+  - name: agent_ubuntu_24_04
+    value: ubuntu-24.04
   strategy:
     matrix:
       ubuntu2404_node10:
-        vmImage: ubuntu-24.04
+        vmImage: ${{variables.agent_ubuntu_24_04}}
         nodeVersion: '10.x'
       ubuntu2404_node16:
-        vmImage: ubuntu-24.04
+        vmImage: ${{variables.agent_ubuntu_24_04}}
         nodeVersion: '16.x'
       ubuntu2404_node20:
-        vmImage: ubuntu-24.04
+        vmImage: ${{variables.agent_ubuntu_24_04}}
         nodeVersion: '20.x'
       # ubuntu2204_node10:
       #   vmImage: variables.agent_ubuntu_22_04
@@ -193,7 +195,7 @@ jobs:
 
   - script: |
       cd ./ci/ci-test-tasks/test-and-verify-v2
-      npm ci
+      npm i
       npm run build
     displayName: 'Build test pipelines runner'
 
