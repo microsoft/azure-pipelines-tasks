@@ -10,13 +10,33 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/c.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/c.zip",
                 "dest": "./ArtifactsCredProvider/"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/n6.zip",
-                "dest": "./ArtifactsCredProviderNet6/"
-            }
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/n8.zip",
+                "dest": "./ArtifactsCredProviderNet8/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/win-x64.zip",
+                "dest": "./ArtifactsCredProviderWinX64/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/osx-x64.zip",
+                "dest": "./ArtifactsCredProviderOsxX64/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/osx-arm64.zip",
+                "dest": "./ArtifactsCredProviderOsxArm64/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/linux-x64.tar.gz",
+                "dest": "./ArtifactsCredProviderLinuxX64/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/linux-arm64.tar.gz",
+                "dest": "./ArtifactsCredProviderLinuxArm64/"
+            }            
         ]
     }
 }
