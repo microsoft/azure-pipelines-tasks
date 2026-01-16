@@ -193,11 +193,11 @@ jobs:
     inputs:
       versionSpec: $(nodeVersion)
 
-  - script: |
-      cd ./ci/ci-test-tasks/test-and-verify-v2
-      npm i
-      npm run build
-    displayName: 'Build test pipelines runner'
+  # - script: |
+  #     cd ./ci/ci-test-tasks/test-and-verify-v2
+  #     npm i
+  #     npm run build
+  #   displayName: 'Build test pipelines runner'
 
   - bash: |
       echo "Agent: $(vmImage) - Node: $(nodeVersion)"
