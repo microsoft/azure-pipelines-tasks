@@ -146,23 +146,104 @@ export class dotNetExe {
         }
     }
 
+    /*
+    private findGlobalJsonFile(): string | null {
+        // Start searching from workingDirectory, fall back to repo root if not set
+        const repoRoot = path.resolve(tl.getVariable('build.sourcesDirectory') || tl.getVariable('system.defaultWorkingDirectory') || '');
+        let searchDir = this.workingDirectory || repoRoot;
+        searchDir = path.resolve(searchDir);
+
+        tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+
+        while (searchDir.startsWith(repoRoot)) {
+            const globalJsonPath = path.join(searchDir, "global.json");
+            tl.debug(`Checking for global.json at: ${globalJsonPath}`);
+
+            if (tl.exist(globalJsonPath)) {
+                tl.debug(`Found global.json at: ${globalJsonPath}`);
+                return globalJsonPath;
+            }
+
+            // Move to parent directory, stop if at filesystem root
+            const parentDir = path.dirname(searchDir);
+            if (parentDir === searchDir) {
+                break;
+            }
+
+            searchDir = parentDir;
+        }
+
+        return null;
+    }
+    */
+
+
+    
+    private findGlobalJsonFile(): string | null {
+    // Use canonical variable casing; fall back order: Build.SourcesDirectory → System.DefaultWorkingDirectory → process.cwd()
+    const repoRoot =
+        path.resolve(
+            tl.getVariable('Build.SourcesDirectory') ||
+            tl.getVariable('System.DefaultWorkingDirectory') ||
+            process.cwd()
+        );
+
+    // Prefer task input; if empty, start at current process CWD
+    const inputWd = tl.getInput('workingDirectory', false) || process.cwd();
+    let searchDir = path.resolve(inputWd);
+
+    tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+
+    // Walk ancestors up to repoRoot (inclusive), then stop
+    while (true) {
+        const candidate = path.join(searchDir, 'global.json');
+        tl.debug(`Checking for global.json at: ${candidate}`);
+
+        if (tl.exist(candidate)) {
+            tl.debug(`Found global.json at: ${candidate}`);
+            return candidate;
+        }
+
+        const parentDir = path.dirname(searchDir);
+        if (parentDir === searchDir) {
+            // reached filesystem root
+            break;
+        }
+
+        // Stop if we've climbed above repo root
+        const rel = path.relative(repoRoot, parentDir);
+        if (rel.startsWith('..') || path.isAbsolute(rel) && rel === '') {
+            // parentDir is outside repoRoot
+            break;
+        }
+
+        searchDir = parentDir;
+    }
+
+    return null;
+     }
+
+
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("global.json")) {
+        const globalJsonPath = this.findGlobalJsonFile();
+
+        if (!globalJsonPath) {
             tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let globalJsonContents = fs.readFileSync("global.json", 'utf8');
+        let globalJsonContents = fs.readFileSync(globalJsonPath, 'utf8');
         if (!globalJsonContents.length) {
+            tl.debug("global.json is empty. Test run is VSTest");
             return false;
         }
 
         try {
             const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
-            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {
-            tl.warning(`Error occurred reading global.json: ${error}`);
+            tl.warning(`Error occurred reading global.json at ${globalJsonPath} ${error}`);
             return false;
         }
     }

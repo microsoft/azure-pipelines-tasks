@@ -559,4 +559,31 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
     });
+
+    it('test command finds non-root global.json file based on working directory', async () => {
+      const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
+      const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      // dotnet should be invoked exactly once
+      assert.strictEqual(tr.invokedToolCount, 1, 'should have run dotnet once');
+
+      // OS-agnostic command verification
+      const ranDotnetTest =
+        tr.ran('dotnet test') ||
+        tr.ran('dotnet.exe test') ||
+        tr.ran('dotnet test src/temp.csproj') ||
+        tr.ran('dotnet.exe test src/temp.csproj') ||
+        tr.ran('dotnet test c:\\agent\\home\\directory\\sources\\src\\temp.csproj') ||
+        tr.ran('dotnet.exe test c:\\agent\\home\\directory\\sources\\src\\temp.csproj') ||
+        tr.ran('"dotnet.exe" test') ||
+        tr.ran('"dotnet.exe" test "c:\\agent\\home\\directory\\sources\\src\\temp.csproj"');
+
+      assert(ranDotnetTest, 'should have run dotnet test in MTP mode');
+
+      assert(tr.succeeded, 'should have succeeded');
+      assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
 });
