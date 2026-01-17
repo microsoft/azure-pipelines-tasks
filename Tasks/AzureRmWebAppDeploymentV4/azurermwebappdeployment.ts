@@ -1,17 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import dns = require('dns');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 import * as Endpoint from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 
 async function main() {
-    // Set the default result order to ipv4first to avoid issues with slow IPv6 connections
-    if (dns.setDefaultResultOrder) {
-        dns.setDefaultResultOrder('ipv4first');
-        tl.debug("Set default DNS lookup order to ipv4 first");
-    }
-
     let isDeploymentSuccess: boolean = true;
 
     try {
