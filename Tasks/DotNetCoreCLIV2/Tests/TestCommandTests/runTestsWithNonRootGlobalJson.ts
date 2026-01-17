@@ -3,94 +3,100 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
+// ------------------------------------------------------------
+// OS-agnostic paths
+// ------------------------------------------------------------
+const repoRoot = path.join('agent', 'home', 'directory', 'sources');
+const projectPath = path.join(repoRoot, 'src', 'temp.csproj');
+const globalJsonPath = path.join(repoRoot, 'src', 'global.json');
+const dotnetPath = path.join('path', 'dotnet.exe');
+
+// ------------------------------------------------------------
+// Task runner setup
+// ------------------------------------------------------------
 const taskPath = path.join(__dirname, '../..', 'dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
+
 tmr.setInput('command', 'test');
-tmr.setInput('projects', 'src\\temp.csproj');
+tmr.setInput('projects', 'src/temp.csproj');
 tmr.setInput('publishTestResults', 'false');
 tmr.setInput('workingDirectory', 'src');
 
+// ------------------------------------------------------------
+// Mock answers
+// ------------------------------------------------------------
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'osType': {},
-    'checkPath': {
-        'c:\\agent\\home\\directory\\sources\\src\\temp.csproj': true,
-        'c:\\path\\dotnet.exe': true
-    },
-    'which': {
-        'dotnet': 'c:\\path\\dotnet.exe'
-    },
-    'exec': {
-  // unquoted (linux/mac)
-     'c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
-     code: 0,
-     stdout: 'dotnet output',
-     stderr: ''
+    osType: {},
+
+    checkPath: {
+        [projectPath]: true,
+        [dotnetPath]: true
     },
 
-     // quoted exe + quoted project (windows)
-    '"c:\\path\\dotnet.exe" test "c:\\agent\\home\\directory\\sources\\src\\temp.csproj"': {
-     code: 0,
-     stdout: 'dotnet output',
-     stderr: ''
+    which: {
+        dotnet: dotnetPath
     },
 
-     // quoted exe only (another common windows form)
-     '"c:\\path\\dotnet.exe" test c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
-     code: 0,
-     stdout: 'dotnet output',
-     stderr: ''
-     }
-    },
-    'exist': {
-        'D:\\src\\github\\vsts-tasks\\Tests\\Nuget': true,
-        'c:\\agent\\home\\directory\\sources\\src\\global.json': true
-    },
-    'stats': {
-        'c:\\agent\\home\\directory\\sources\\src\\temp.csproj': {
-            'isFile': true
+    exec: {
+        // Linux / macOS
+        [`${dotnetPath} test ${projectPath}`]: {
+            code: 0,
+            stdout: 'dotnet output',
+            stderr: ''
+        },
+
+        // Windows (quoted)
+        [`"${dotnetPath}" test "${projectPath}"`]: {
+            code: 0,
+            stdout: 'dotnet output',
+            stderr: ''
         }
     },
-    'findMatch': {
-        'src\\temp.csproj': ['c:\\agent\\home\\directory\\sources\\src\\temp.csproj']
+
+    exist: {
+        [globalJsonPath]: true
+    },
+
+    stats: {
+        [projectPath]: {
+            isFile: true
+        }
+    },
+
+    findMatch: {
+        'src/temp.csproj': [projectPath]
     }
 };
+
 nmh.setAnswers(a);
-nmh.registerNugetUtilityMock(['c:\\agent\\home\\directory\\sources\\src\\temp.csproj']);
+
+// ------------------------------------------------------------
+// Standard mocks
+// ------------------------------------------------------------
+nmh.registerNugetUtilityMock([projectPath]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
 
-// Create mock for fs module
-let fs = require('fs');
-let fsClone = Object.assign({}, fs);
-fsClone.readFileSync = function(filePath, options) {
-    switch (filePath) {
-        case 'c:\\agent\\home\\directory\\sources\\src\\global.json':
-            return '{"test":{"runner":"Microsoft.Testing.Platform"}}';
+// ------------------------------------------------------------
+// fs mock (global.json)
+// ------------------------------------------------------------
+const fs = require('fs');
+const fsClone = { ...fs };
 
-        default:
-            return fs.readFileSync(filePath, options);
+fsClone.readFileSync = function (filePath: string, options: any) {
+    if (filePath === globalJsonPath) {
+        return '{"test":{"runner":"Microsoft.Testing.Platform"}}';
     }
+    return fs.readFileSync(filePath, options);
 };
+
 tmr.registerMock('fs', fsClone);
 
-// Create mock for path module
-let pathClone = Object.assign({}, path);
-pathClone.resolve = function(...paths: string[]): string {
-  if (paths.length === 1) {
-    let p = paths[0];
-    if (p.startsWith('c:') || p.startsWith('/')) {
-      return p;
-    }
-
-    return 'c:\\agent\\home\\directory\\sources\\' + p;
-  }
-
-  return path.resolve(...paths);
-};
-tmr.registerMock('path', pathClone);
-
+// ------------------------------------------------------------
+// Run
+// ------------------------------------------------------------
 tmr.run();
