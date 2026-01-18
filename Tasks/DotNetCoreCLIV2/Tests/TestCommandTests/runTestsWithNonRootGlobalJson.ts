@@ -6,10 +6,11 @@ import util = require('../DotnetMockHelper');
 // ------------------------------------------------------------
 // Paths
 // ------------------------------------------------------------
-const repoRoot = 'c:\\agent\\home\\directory\\sources';
+const repoRoot = path.join('agent', 'home', 'directory', 'sources');
+const dotnetPath = path.join('path', 'dotnet');
 const projectPath = path.join(repoRoot, 'src', 'temp.csproj');
 const globalJsonPath = path.join(repoRoot, 'src', 'global.json');
-const dotnetPath = 'c:\\path\\dotnet.exe';
+
 
 // ------------------------------------------------------------
 // Task runner setup
@@ -21,7 +22,7 @@ const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 nmh.setNugetVersionInputDefault();
 
 tmr.setInput('command', 'test');
-tmr.setInput('projects', 'src\\temp.csproj');
+tmr.setInput('projects', path.join('src', 'temp.csproj'));
 tmr.setInput('publishTestResults', 'false');
 tmr.setInput('workingDirectory', 'src');
 
@@ -29,6 +30,7 @@ tmr.setInput('workingDirectory', 'src');
 // Mock answers
 // ------------------------------------------------------------
 const a: ma.TaskLibAnswers = {
+    osType: {}, 
     checkPath: {
         [projectPath]: true,
         [dotnetPath]: true
@@ -55,8 +57,8 @@ const a: ma.TaskLibAnswers = {
         [projectPath]: { isFile: true }
     },
     findMatch: {
-        'src\\temp.csproj': [projectPath]
-    }
+    [path.join('src', 'temp.csproj')]: [projectPath]
+   }
 };
 
 nmh.setAnswers(a);

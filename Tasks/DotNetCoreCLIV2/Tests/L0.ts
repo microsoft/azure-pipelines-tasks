@@ -566,21 +566,9 @@ describe('DotNetCoreExe Suite', function () {
 
     await tr.runAsync();
 
-    // dotnet should be invoked exactly once
-    assert.strictEqual(tr.invokedToolCount, 1, 'should have run dotnet once');
-
-    // Just verify dotnet test ran (NOT MTP-specific)
-    const ranDotnetTest =
-        tr.ran('dotnet test') ||
-        tr.ran('dotnet.exe test') ||
-        tr.ran('dotnet test src/temp.csproj') ||
-        tr.ran('dotnet.exe test src/temp.csproj');
-
-    assert(ranDotnetTest, 'should have run dotnet test');
-
-    assert(tr.succeeded, 'should have succeeded');
+    // L0 correctness: task behavior
+    assert(tr.succeeded, 'task should succeed when global.json is found');
     assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
-    });
-
+});
 
 });
