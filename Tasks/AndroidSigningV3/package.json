@@ -30,7 +30,7 @@
   "overrides": {
     "form-data": "^4.0.4",
     "brace-expansion": "^1.1.12",
-    "qs": "^6.14.0",
+    "qs": "^6.14.1",
     "azure-pipelines-tasks-securefiles-common": {
       "azure-pipelines-task-lib": "^5.2.4"
     }
