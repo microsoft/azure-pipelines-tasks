@@ -111,7 +111,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     if (process.env[shared.TestEnvVars.updatedependency])
         helmInstallCommand = helmInstallCommand.concat(" --dep-up");
 
-    if (process.env[shared.isHelmV3] === "true") {
+    if (process.env[shared.isHelmV3orHigher] === "true") {
         if (process.env[shared.TestEnvVars.releaseName])
             helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.releaseName]}`);
         else
@@ -204,7 +204,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
     if (process.env[shared.TestEnvVars.arguments])
         helmInitCommand = helmInitCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
 
-    if (process.env[shared.isHelmV3] === "true") {
+    if (process.env[shared.isHelmV3orHigher] === "true") {
         a.exec[helmInitCommand] = {
             "code": 1,
             "stdout": "The Kubernetes package manager\n\nCommon actions for Helm:\n\n- helm search:    search for charts\n- helm pull:      download a chart to your local directory to view\n- helm install:   upload the chart to Kubernetes\n- helm list:      list releases of charts\n"
@@ -224,7 +224,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
 
     if (process.env[shared.TestEnvVars.save]) {
-        if (process.env[shared.isHelmV3])
+        if (process.env[shared.isHelmV3orHigher])
             helmPackageCommand = helmPackageCommand.concat(" --save");
     }
 
@@ -245,15 +245,33 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-const helmVersionCommand = "helm version --client --short";
-if (process.env[shared.isHelmV3]) {
-    a.exec[helmVersionCommand] = {
+// Mock BOTH helm version commands - the task will choose which one based on feature flag
+const helmVersionCommandLegacy = "helm version --client --short";
+const helmVersionCommandNew = "helm version --short";
+
+// Legacy command (when feature flag is false or not set)
+if (process.env[shared.isHelmV3orHigher]) {
+    a.exec[helmVersionCommandLegacy] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"
     };
 }
 else {
-    a.exec[helmVersionCommand] = {
+    a.exec[helmVersionCommandLegacy] = {
+        "code": 0,
+        "stdout": "Client: v2.16.7+g5f2584f"
+    };
+}
+
+// New command (when feature flag is true) - same output, different command
+if (process.env[shared.isHelmV3orHigher]) {
+    a.exec[helmVersionCommandNew] = {
+        "code": 0,
+        "stdout": "v3.2.1+ge29ce2a"
+    };
+}
+else {
+    a.exec[helmVersionCommandNew] = {
         "code": 0,
         "stdout": "Client: v2.16.7+g5f2584f"
     };
@@ -321,6 +339,9 @@ a.exec[helmChartRemoveCommand] = {
 tr.setAnswers(<any>a);
 tr.registerMock("azure-pipelines-task-lib/toolrunner", require("azure-pipelines-task-lib/mock-toolrunner"));
 
+// NOTE: Feature flag is now controlled by the test file (L0.ts), not here
+// Each test can set process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] to 'true' or 'false'
+// This allows testing both scenarios with the same setup file
 
 // Create mocks for required modules
 import * as fs from 'fs';
