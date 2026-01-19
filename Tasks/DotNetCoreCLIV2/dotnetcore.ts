@@ -145,39 +145,6 @@ export class dotNetExe {
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
-
-    /*
-    private findGlobalJsonFile(): string | null {
-        // Start searching from workingDirectory, fall back to repo root if not set
-        const repoRoot = path.resolve(tl.getVariable('build.sourcesDirectory') || tl.getVariable('system.defaultWorkingDirectory') || '');
-        let searchDir = this.workingDirectory || repoRoot;
-        searchDir = path.resolve(searchDir);
-
-        tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
-
-        while (searchDir.startsWith(repoRoot)) {
-            const globalJsonPath = path.join(searchDir, "global.json");
-            tl.debug(`Checking for global.json at: ${globalJsonPath}`);
-
-            if (tl.exist(globalJsonPath)) {
-                tl.debug(`Found global.json at: ${globalJsonPath}`);
-                return globalJsonPath;
-            }
-
-            // Move to parent directory, stop if at filesystem root
-            const parentDir = path.dirname(searchDir);
-            if (parentDir === searchDir) {
-                break;
-            }
-
-            searchDir = parentDir;
-        }
-
-        return null;
-    }
-    */
-
-
     
     private findGlobalJsonFile(): string | null {
     // Use canonical variable casing; fall back order: Build.SourcesDirectory → System.DefaultWorkingDirectory → process.cwd()
@@ -281,23 +248,17 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP && projectFile.length > 0) {
-                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
-                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
-                    dotnet.arg("--project");
-                }
-                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
-                    dotnet.arg("--solution");
-                }
-                else {
-                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
-                    failedProjects.push(projectFile);
-                    continue;
-                }
-            }
+// Pass project ONLY ONCE as positional argument
+          if (projectFile) {
+          dotnet.arg(projectFile);
+       }
 
-            dotnet.arg(projectFile);
-            dotnet.line(this.arguments);
+// Add test arguments (logger, results dir, MTP, etc.)
+         dotnet.line(this.arguments);
+
+
+            //dotnet.arg(projectFile);
+          //  dotnet.line(this.arguments);
             try {
                 const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
