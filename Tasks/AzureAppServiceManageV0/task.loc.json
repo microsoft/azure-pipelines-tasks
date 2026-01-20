@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 268,
-    "Patch": 1
+    "Minor": 269,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -293,6 +293,10 @@
       "target": "azureappservicemanage.js"
     },
     "Node20_1": {
+      "target": "azureappservicemanage.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "azureappservicemanage.js",
       "argumentFormat": ""
     }
