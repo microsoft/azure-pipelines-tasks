@@ -10,7 +10,7 @@ var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-re
 
 describe('Azure App Service Manage Suite', function() {
 
-    this.timeout(70000);
+    this.timeout(60000);
 
     before((done) => {
         try {
