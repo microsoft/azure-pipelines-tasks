@@ -173,7 +173,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
           const getNodeVersionsFromTaskJsons = getNodeVersionsFromTaskJson(taskName, config);
           for (const nodeVersion of getNodeVersionsFromTaskJsons) {
             console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
-            const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
+            const pipelineBuild = await startTestPipeline(pipeline, taskName, config, nodeVersion);
 
             if (pipelineBuild === null) {
               console.log(`Pipeline "${pipeline.name}" is not valid.`);
@@ -216,7 +216,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     return runningBuilds;
 }
 
-async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = ''): Promise<Build | null> {
+async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = '', _nodeVersion?: number | null): Promise<Build | null> {
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
   
   if (!branch) {
@@ -224,9 +224,11 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   }
 
   // Get task-specific Node version, fallback to environment variable
-  const taskNodeVersion = getNodeVersionForTask(taskName, config);
+  const taskNodeVersion = api.isNodeCompatible ? _nodeVersion : getNodeVersionForTask(taskName, config);
   const nodeVersion = taskNodeVersion?.toString() || envNodeVersion;
-  
+
+  console.log(`startTestPipeline() - Using Node version: ${nodeVersion} for task: ${taskName}`);
+
   if (!nodeVersion) {
     throw new Error(`Cannot determine Node version for task ${taskName}`);
   }
