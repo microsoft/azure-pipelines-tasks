@@ -242,23 +242,13 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP && projectFile.length > 0) {
-                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
-                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
-                    dotnet.arg("--project");
-                }
-                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
-                    dotnet.arg("--solution");
-                }
-                else {
-                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
-                    failedProjects.push(projectFile);
-                    continue;
-                }
+            if (projectFile) {
+             dotnet.arg(projectFile);
             }
 
-            dotnet.arg(projectFile);
             dotnet.line(this.arguments);
+
+            
             try {
                 const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
