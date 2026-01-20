@@ -3,7 +3,7 @@ import { BuildDefinitionReference, Build } from 'azure-devops-node-api/interface
 import { api } from './api';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
-import { getBuildConfigs, getNodeVersionForTask } from './helpers';
+import { getBuildConfigs, getNodeVersionForTask, getNodeVersionsFromTaskJson } from './helpers';
 
 interface BuildResult { result: string; message: string }
 
@@ -74,8 +74,8 @@ async function main() {
       for (const pipeline of matchingPipelines) {
         console.log(`\n--- Starting pipeline execution: ${task} on ${pipeline.name} ---`);
         
-        const runResult = await runTaskPipelines(task, pipeline);
-
+        const  runResult = await runTaskPipelines(task, pipeline);
+        
         if (runResult === DISABLED) {
           disabledPipelines.push(`${task} (${pipeline.name})`);
         } else if (runResult === INVALID) {
@@ -158,16 +158,31 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     // TODO possibly refactor
     if (allowParrallelRun) {
       for (const config of configs) {
-        const nodeVersion = getNodeVersionForTask(taskName, config);
-        console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
-        const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
+        if (!api.isNodeCompatible) {
+          const nodeVersion = getNodeVersionForTask(taskName, config);
+          console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
+          const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
 
-        if (pipelineBuild === null) {
-          console.log(`Pipeline "${pipeline.name}" is not valid.`);
-          return INVALID;
+          if (pipelineBuild === null) {
+            console.log(`Pipeline "${pipeline.name}" is not valid.`);
+            return INVALID;
+          }
+
+          runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
+        } else {
+          const getNodeVersionsFromTaskJsons = getNodeVersionsFromTaskJson(taskName, config);
+          for (const nodeVersion of getNodeVersionsFromTaskJsons) {
+            console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
+            const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
+
+            if (pipelineBuild === null) {
+              console.log(`Pipeline "${pipeline.name}" is not valid.`);
+              return INVALID;
+            }
+
+            runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
+          }
         }
-
-        runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
       }
     } else {
       const firstConfig = configs.shift();
