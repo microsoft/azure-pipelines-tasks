@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "新增至 PATH",
   "loc.input.help.addToPath": "是否要在 PATH 環境變數前加上擷取的 Python 版本，以便後續工作或指令碼使用而不需要使用輸出變數。",
   "loc.input.label.architecture": "架構",
-  "loc.input.help.architecture": "Python 解譯器的目標架構 (x86, x64)。",
+  "loc.input.help.architecture": "Python 解譯器的目標架構 (x86, x64, arm64)。",
   "loc.messages.ListAvailableVersions": "%s 中的版本:",
   "loc.messages.PlatformNotRecognized": "無法辨識平台",
   "loc.messages.PrependPath": "在 PATH 環境變數前面加上目錄: %s",

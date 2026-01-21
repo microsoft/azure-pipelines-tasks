@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "PATH에 추가",
   "loc.input.help.addToPath": "검색된 Python 버전을 PATH 환경 변수 앞에 추가하여 출력 변수를 사용하지 않고 후속 작업 또는 스크립트에서 사용할 수 있도록 할지 여부입니다.",
   "loc.input.label.architecture": "아키텍처",
-  "loc.input.help.architecture": "Python 인터프리터의 대상 아키텍처(x86, x64)입니다.",
+  "loc.input.help.architecture": "Python 인터프리터의 대상 아키텍처(x86, x64, arm64)입니다.",
   "loc.messages.ListAvailableVersions": "%s의 버전:",
   "loc.messages.PlatformNotRecognized": "플랫폼을 인식할 수 없습니다.",
   "loc.messages.PrependPath": "PATH 환경 변수 앞에 %s 디렉터리 추가 중",

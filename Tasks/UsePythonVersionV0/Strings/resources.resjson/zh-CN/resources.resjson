@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "添加到 PATH(路径)",
   "loc.input.help.addToPath": "是否在 PATH 环境变量前面追加检索到的 Python 版本，使其在后续任务或脚本中可用，而无需使用输出变量。",
   "loc.input.label.architecture": "体系结构",
-  "loc.input.help.architecture": "Python 解释器的目标体系结构(x86、x64)。",
+  "loc.input.help.architecture": "Python 解释器的目标体系结构(x86、x64, arm64)。",
   "loc.messages.ListAvailableVersions": "%s 中的版本:",
   "loc.messages.PlatformNotRecognized": "无法识别的平台",
   "loc.messages.PrependPath": "在 PATH 环境变量前面添加目录: %s",
