@@ -223,6 +223,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = '', _nodeVersion?: number | null): Promise<Build | null> {
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
   const checkNodeCompatibility = process.argv[6] === 'isNodeCompatible';
+  console.log("value of checkNodeCompatibility is "+checkNodeCompatibility);
   
   if (!branch) {
     throw new Error('BUILD_SOURCEVERSION environment variable is required');
