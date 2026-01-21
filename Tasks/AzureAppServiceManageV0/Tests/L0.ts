@@ -28,9 +28,9 @@ describe('Azure App Service Manage Suite', function() {
     after(function () {
     });
     
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests(5000);
-    KuduServiceTests.KuduServiceTests(3000);
-    AppInsightsWebTests.ApplicationInsightsTests();
-    ResourcesTests.ResourcesTests();
+    ApplicationInsightsTests.ApplicationInsightsTests(10000);
+    AppServiceTests.AzureAppServiceMockTests(10000);
+    KuduServiceTests.KuduServiceTests(10000);
+    AppInsightsWebTests.ApplicationInsightsTests(10000);
+    ResourcesTests.ResourcesTests(10000);
 });
