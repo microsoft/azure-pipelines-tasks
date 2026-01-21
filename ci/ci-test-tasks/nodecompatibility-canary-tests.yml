@@ -65,8 +65,8 @@ jobs:
     value: $[dependencies.set_tasks.outputs['set.tasks']]
   - name: agent_ubuntu_24_04
     value: ubuntu-24.04
-  - name: isNodeCompatible
-    value: true
+  # - name: isNodeCompatible
+  #   value: true
   strategy:
     matrix:
       # ubuntu2404_node10:
@@ -203,6 +203,6 @@ jobs:
   - bash: |
       echo "Agent: $(vmImage) - Node: $(nodeVersion)"
       echo "Tasks to test: $(tasks)"
-      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks) $(isNodeCompatible)
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks) isNodeCompatible
     displayName: Run test pipelines and verify results
     failOnStderr: true

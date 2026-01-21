@@ -139,6 +139,8 @@ async function main() {
 async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionReference): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
   let allowParrallelRun = true;
   const checkNodeCompatibility = process.argv[6] === 'isNodeCompatible';
+  console.log("value of checkNodeCompatibility is "+checkNodeCompatibility);
+
     if (pipeline.queueStatus === 2) { // disabled
       console.log(`Pipeline "${pipeline.name}" is disabled.`);
       return DISABLED;
@@ -224,7 +226,7 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: s
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
   const checkNodeCompatibility = process.argv[6] === 'isNodeCompatible';
   console.log("value of checkNodeCompatibility is "+checkNodeCompatibility);
-  
+
   if (!branch) {
     throw new Error('BUILD_SOURCEVERSION environment variable is required');
   }
