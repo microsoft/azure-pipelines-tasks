@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 268,
+    "Minor": 269,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -27,6 +27,10 @@
       "target": "publishmetadata.js"
     },
     "Node20_1": {
+      "target": "publishmetadata.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "publishmetadata.js",
       "argumentFormat": ""
     }
