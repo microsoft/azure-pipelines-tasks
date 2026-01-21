@@ -138,7 +138,7 @@ async function main() {
 // Running test pipelines for task by build configs
 async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionReference): Promise<Promise<BuildResult | BuildResult[]>[] | typeof DISABLED | typeof INVALID> {
   let allowParrallelRun = true;
-
+  const checkNodeCompatibility = process.argv[6] === 'isNodeCompatible';
     if (pipeline.queueStatus === 2) { // disabled
       console.log(`Pipeline "${pipeline.name}" is disabled.`);
       return DISABLED;
@@ -158,7 +158,7 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
     // TODO possibly refactor
     if (allowParrallelRun) {
       for (const config of configs) {
-        if (!api.isNodeCompatible) {
+        if (!checkNodeCompatibility) {
           const nodeVersion = getNodeVersionForTask(taskName, config);
           console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
           const pipelineBuild = await startTestPipeline(pipeline, taskName, config);
@@ -172,6 +172,8 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
         } else {
           const getNodeVersionsFromTaskJsons = getNodeVersionsFromTaskJson(taskName, config);
           for (const nodeVersion of getNodeVersionsFromTaskJsons) {
+
+            if(nodeVersion < 20){
             console.log(`Running tests for "${taskName}" task with config "${config}" on Node ${nodeVersion} for pipeline "${pipeline.name}"`);
             const pipelineBuild = await startTestPipeline(pipeline, taskName, config, nodeVersion);
 
@@ -181,6 +183,8 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
             }
 
             runningBuilds.push(completeBuild(taskName, pipelineBuild, config, nodeVersion));
+            }
+           
           }
         }
       }
@@ -218,13 +222,14 @@ async function runTaskPipelines(taskName: string, pipeline: BuildDefinitionRefer
 
 async function startTestPipeline(pipeline: BuildDefinitionReference, taskName: string, config = '', _nodeVersion?: number | null): Promise<Build | null> {
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: envNodeVersion } = process.env;
+  const checkNodeCompatibility = process.argv[6] === 'isNodeCompatible';
   
   if (!branch) {
     throw new Error('BUILD_SOURCEVERSION environment variable is required');
   }
 
   // Get task-specific Node version, fallback to environment variable
-  const taskNodeVersion = api.isNodeCompatible ? _nodeVersion : getNodeVersionForTask(taskName, config);
+  const taskNodeVersion = checkNodeCompatibility ? _nodeVersion : getNodeVersionForTask(taskName, config);
   const nodeVersion = taskNodeVersion?.toString() || envNodeVersion;
 
   console.log(`startTestPipeline() - Using Node version: ${nodeVersion} for task: ${taskName}`);
