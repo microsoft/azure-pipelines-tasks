@@ -1,8 +1,0 @@
-{
-  "name": "vsts-androidsigning-task",
-  "dependencies": {},
-  "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160921192128",
-    "q": "registry:dt/q#0.0.0+20160613154756"
-  }
-}
