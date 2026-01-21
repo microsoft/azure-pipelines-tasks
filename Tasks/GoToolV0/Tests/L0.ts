@@ -86,7 +86,8 @@ describe('GoToolV0 Suite', function() {
         let tr: MockTestRunner = new MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.succeeded, 'Should have succeeded');
-        assert(tr.stdOutContained('##vso[task.setvariable variable=GOROOT'), 'Should set GOROOT');
+        // GOROOT should NOT be set for modern Go versions (1.21.3 >= 1.9)
+        assert(tr.stdOutContained('Skipping GOROOT for modern Go version'), 'Should skip GOROOT for modern version');
         assert(tr.stdOutContained('##vso[task.setvariable variable=GOPATH'), 'Should set GOPATH');
         assert(tr.stdOutContained('##vso[task.setvariable variable=GOBIN'), 'Should set GOBIN');
     });
@@ -223,5 +224,33 @@ describe('GoToolV0 Suite', function() {
         await tr.runAsync();
         assert(tr.failed, 'Should have failed');
         assert(tr.stdOutContained('Invalid download URL'), 'Should reject unsupported URL from environment variable');
+    });
+
+    // GOROOT behavior tests (issue #20796)
+    it('Should NOT set GOROOT for modern Go versions (>= 1.9)', async () => {
+        let tp = path.join(__dirname, 'L0GorootModernVersion.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('Skipping GOROOT for modern Go version'), 'Should skip GOROOT for Go >= 1.9');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=GOROOT'), 'Should NOT set GOROOT for modern versions');
+    });
+
+    it('Should set GOROOT for legacy Go versions (< 1.9)', async () => {
+        let tp = path.join(__dirname, 'L0GorootLegacyVersion.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('Setting GOROOT for Go version < 1.9'), 'Should set GOROOT for Go < 1.9');
+        assert(tr.stdOutContained('##vso[task.setvariable variable=GOROOT'), 'Should set GOROOT for legacy versions');
+    });
+
+    it('Should NOT set GOROOT for Go 1.9.0 (boundary version)', async () => {
+        let tp = path.join(__dirname, 'L0GorootBoundaryVersion.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.succeeded, 'Should have succeeded');
+        assert(tr.stdOutContained('Skipping GOROOT for modern Go version'), 'Should skip GOROOT for Go 1.9.0');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=GOROOT'), 'Should NOT set GOROOT for Go 1.9.0');
     });
 });
