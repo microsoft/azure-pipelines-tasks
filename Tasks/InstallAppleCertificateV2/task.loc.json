@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 263,
+    "Minor": 269,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -147,6 +147,10 @@
     "Node20_1": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -159,6 +163,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }
