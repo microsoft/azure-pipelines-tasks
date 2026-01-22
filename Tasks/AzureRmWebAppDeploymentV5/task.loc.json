@@ -569,6 +569,10 @@
     "Node20_1": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
