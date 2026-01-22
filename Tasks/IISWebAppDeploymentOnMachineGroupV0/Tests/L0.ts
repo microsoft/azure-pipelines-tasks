@@ -15,6 +15,28 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function () {
     after(function () {
     });
 
+    it('should have Node24 execution handler', () => {
+        const taskJsonPath = path.join(__dirname, '..', 'task.json');
+        const taskJson = JSON.parse(fs.readFileSync(taskJsonPath, 'utf8'));
+        
+        assert(taskJson.execution, 'task.json should have an execution section');
+        assert(taskJson.execution.Node24, 'task.json should have a Node24 execution handler');
+        assert(taskJson.execution.Node24.target, 'Node24 handler should have a target');
+        assert.strictEqual(taskJson.execution.Node24.target, 'deployiiswebapp.js', 'Node24 handler target should be deployiiswebapp.js');
+    });
+
+    it('should have all required Node execution handlers', () => {
+        const taskJsonPath = path.join(__dirname, '..', 'task.json');
+        const taskJson = JSON.parse(fs.readFileSync(taskJsonPath, 'utf8'));
+        
+        const requiredHandlers = ['Node10', 'Node16', 'Node20_1', 'Node24'];
+        const executionHandlers = Object.keys(taskJson.execution || {});
+        
+        for (const handler of requiredHandlers) {
+            assert(executionHandlers.includes(handler), `task.json should have ${handler} execution handler`);
+        }
+    });
+
     if (!tl.osType().match(/^Win/)) {
         return;
     }
