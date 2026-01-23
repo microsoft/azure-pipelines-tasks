@@ -10,9 +10,12 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('dockerVersion', '99.99.99-ce');
 tr.setInput('releaseType', 'stable');
 
-// Set environment variables
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\temp';
-process.env['AGENT_TOOLSDIRECTORY'] = 'C:\\temp\\tools';
+// Determine platform-specific values
+const isWindows = os.type().match(/^Win/);
+
+// Set environment variables based on platform
+process.env['AGENT_TEMPDIRECTORY'] = isWindows ? 'C:\\temp' : '/tmp';
+process.env['AGENT_TOOLSDIRECTORY'] = isWindows ? 'C:\\temp\\tools' : '/tmp/tools';
 
 // Mock answers - empty/minimal to simulate failure
 const answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

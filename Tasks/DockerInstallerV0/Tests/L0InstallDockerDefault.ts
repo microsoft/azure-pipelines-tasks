@@ -10,12 +10,13 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('dockerVersion', '17.09.0-ce');
 tr.setInput('releaseType', 'stable');
 
-// Set environment variables
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\temp';
-process.env['AGENT_TOOLSDIRECTORY'] = 'C:\\temp\\tools';
-
 // Determine platform-specific values
 const isWindows = os.type().match(/^Win/);
+
+// Set environment variables based on platform
+process.env['AGENT_TEMPDIRECTORY'] = isWindows ? 'C:\\temp' : '/tmp';
+process.env['AGENT_TOOLSDIRECTORY'] = isWindows ? 'C:\\temp\\tools' : '/tmp/tools';
+
 const dockerExecutable = isWindows ? 'docker.exe' : 'docker';
 const cachedToolPath = isWindows ? 'C:\\temp\\tools\\docker-stable\\17.9.0-ce\\x64' : '/tmp/tools/docker-stable/17.9.0-ce/x64';
 const dockerPath = isWindows ? `${cachedToolPath}\\${dockerExecutable}` : `${cachedToolPath}/${dockerExecutable}`;
