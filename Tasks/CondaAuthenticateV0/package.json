@@ -29,7 +29,7 @@
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-artifacts-common": "^2.243.0"
+    "azure-pipelines-tasks-artifacts-common": "^2.262.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
