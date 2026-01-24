@@ -52,7 +52,7 @@
       "label": "Script Type",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Type of script: PowerShell/PowerShell Core/Bat/Shell script. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows).",
+      "helpMarkDown": "Type of script: PowerShell/PowerShell Core/Batch/Shell script. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows).",
       "options": {
         "ps": "PowerShell",
         "pscore": "PowerShell Core",
