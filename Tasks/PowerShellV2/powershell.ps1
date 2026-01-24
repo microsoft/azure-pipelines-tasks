@@ -135,15 +135,21 @@ try {
         $contents);
     if ($input_showWarnings) {
         $joinedContents = '
-            $warnings = New-Object System.Collections.ObjectModel.ObservableCollection[System.Management.Automation.WarningRecord];
-            Register-ObjectEvent -InputObject $warnings -EventName CollectionChanged -Action {
-                if($Event.SourceEventArgs.Action -like "Add"){
-                    $Event.SourceEventArgs.NewItems | ForEach-Object {
-                        Write-Host "##vso[task.logissue type=warning;]$_";
+            # Capture warnings that PowerShell actually processes (respects WarningAction)
+            $originalContents = {' + $joinedContents + '}
+            $warnings = @()
+            $null = & {
+                # Execute the script and capture warning stream (stream 3)
+                & $originalContents 3>&1 | ForEach-Object {
+                    if ($_ -is [System.Management.Automation.WarningRecord]) {
+                        $warnings += $_
+                        Write-Host "##vso[task.logissue type=warning;]$_"
+                    } else {
+                        # Pass through other streams normally
+                        $_
                     }
                 }
-            };
-            Invoke-Command {' + $joinedContents + '} -WarningVariable +warnings';
+            }';
     }
 
     # Write the script to disk.
