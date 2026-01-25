@@ -186,6 +186,9 @@ function getGithubEndPointToken(): string {
     case 'Token':
       githubEndpointToken = githubEndpointObject.parameters.AccessToken;
       break;
+    case 'InstallationToken':
+      githubEndpointToken = githubEndpointObject.parameters.AccessToken;
+      break;
     default:
       throw new GitHubEndpointSchemeError(
         taskLib.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme)
