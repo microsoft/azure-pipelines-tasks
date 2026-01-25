@@ -1,5 +1,5 @@
 schedules:
-- cron: "0 0 * * *"
+- cron: "35 9 * * *"
   displayName: Daily
   branches:
     include:
