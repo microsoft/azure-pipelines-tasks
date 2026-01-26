@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<!-- To Do: uncomment following line to set elements as none-localizable by default -->
+	<!-- <_locDefault _loc="locNone"/> -->
+	<!-- To Do: uncomment following line to set all attributes to localizable by default -->
+	<!-- <_locDefaultAttr _loc="locData"/> -->
+
+	<!-- To Do: uncomment following line to set tag test to none-localizable 
+		and its attributes size and type to localizable -->
+	<_locTag _loc="locNone" _locAttrData="titleBar">view</_locTag>
+	<_locTag _loc="locNone" _locAttrData="toolTip,Comment">button</_locTag>
+	<_locTag _loc="locNone">xsl:attribute name="Name"</_locTag>
+
+	<!-- For SmartDeviceTestRun.TestRunConfig  -->
+	<_locTag _loc="locNone" _locAttrData="name">TestRunConfiguration</_locTag>
+
+	<!-- For WXL  -->
+	<_locTag _loc="locData" _locIDAttr="Id">String</_locTag>
+
+</_locDefinition>
+
