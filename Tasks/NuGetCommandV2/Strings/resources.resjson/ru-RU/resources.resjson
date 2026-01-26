@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Путь к файлу решения, файлу packages.config или файлу project.json, в котором указаны пакеты, которые следует восстановить.",
   "loc.input.label.selectOrConfig": "Используемые веб-каналы",
   "loc.input.help.selectOrConfig": "Здесь можно выбрать веб-канал из Azure Artifacts или NuGet.org либо сохранить файл nuget.config в репозитории исходного кода и указать здесь путь к нему.",
-  "loc.input.label.feedRestore": "Использовать пакеты из этого веб-канала Azure Artifacts или TFS",
+  "loc.input.label.feedRestore": "Использовать пакеты из этого веб-канала Azure Artifacts или TFS. Выберите в раскрывающемся списке или введите [имя проекта/]имя канала.",
   "loc.input.help.feedRestore": "Включите выбранный веб-канал в создаваемый файл NuGet.config. Для выбора веб-канала должен быть установлен и лицензирован компонент Azure Artifacts.",
   "loc.input.label.includeNuGetOrg": "Использовать пакеты с сайта NuGet.org",
   "loc.input.help.includeNuGetOrg": "Включить NuGet.org в созданный файл NuGet.config.",
@@ -135,5 +135,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Версия NuGet.exe обновляется с %s до %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, отмените выбор параметра \"Проверить наличие последней версии\" в параметрах задачи.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Сбой команды NuGet. Код выхода: %s, ошибка: %s",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg сейчас включен для этой задачи. Чтобы устранить это предупреждение, измените задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Не удалось восстановить пакеты. Отредактируете задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Не удалось восстановить пакеты. Отредактируете задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Подключение к службе не использует поддерживаемый метод проверки подлинности. Используйте сервисное соединение с проверкой подлинности на основе токена личного доступа.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Не удалось найти исполняемый файл: \"%s\". Убедитесь, что путь к файлу существует или файл находится в одном из каталогов, указанных в переменной окружения PATH. Также проверьте режим файла, чтобы убедиться, что файл является исполняемым.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Задача не выполнена, поскольку вы используете Ubuntu 24.04 или более позднюю версию без установленного mono. Дополнительные сведения см. по адресу https://aka.ms/nuget-task-mono."
 }
