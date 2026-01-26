@@ -4,6 +4,7 @@ export const TEST_CONSTANTS = {
     PROJECT_NAME: 'TestProject',
     PACKAGE_NAME: 'TestPackage',
     PACKAGE_VERSION: '1.0.0',
+    HIGHEST_PACKAGE_VERSION: '1.2.3',
     DOWNLOAD_PATH: 'c:\\temp',
     ORGANIZATION_NAME: 'example',
     SERVICE_URL: 'https://dev.azure.com/example',
@@ -27,6 +28,7 @@ export const TEST_CONSTANTS = {
 // Default environment variables for all tests
 export function getDefaultEnvVars(): { [key: string]: string } {
     return {
+        'INPUT_PACKAGEVERSION': TEST_CONSTANTS.PACKAGE_VERSION,
         'INPUT_VERBOSITY': 'verbose',
         'AGENT_HOMEDIRECTORY': 'c:\\agent\\home\\directory',
         'AGENT_VERSION': '2.999.0',
@@ -35,6 +37,7 @@ export function getDefaultEnvVars(): { [key: string]: string } {
         'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
         'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': 'https://dev.azure.com/example',
         'SYSTEM_SERVERTYPE': 'hosted',
-        'SYSTEM_DEBUG': 'false'
+        'SYSTEM_DEBUG': 'false',
+        'MOCK_HIGHEST_PACKAGE_VERSION': TEST_CONSTANTS.HIGHEST_PACKAGE_VERSION
     };
 }

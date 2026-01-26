@@ -14,6 +14,9 @@ async function main(): Promise<void> {
     // Create context and get inputs
     const context = new UniversalPackageContext();
 
+    // Validate version inputs
+    if (!helpers.validateVersionInputs(context)) return;
+
     // Set up authentication
     if (!(await helpers.trySetAuth(context))) return;
 

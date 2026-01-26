@@ -16,7 +16,8 @@ const config: MockConfig = {
         organization: process.env['INPUT_ORGANIZATION'],
         feed: process.env['INPUT_FEED'] || TEST_CONSTANTS.FEED_NAME,
         packageName: TEST_CONSTANTS.PACKAGE_NAME,
-        packageVersion: TEST_CONSTANTS.PACKAGE_VERSION,
+        packageVersion: process.env['INPUT_PACKAGEVERSION'],
+        versionIncrement: process.env['INPUT_VERSIONINCREMENT'],
         verbosity: process.env['INPUT_VERBOSITY'] || 'verbose',
         packageDescription: process.env['INPUT_PACKAGE_DESCRIPTION'],
         adoServiceConnection: process.env['INPUT_ADOSERVICECONNECTION']
@@ -24,7 +25,9 @@ const config: MockConfig = {
     wifAuthBehavior: process.env['WIF_AUTH_BEHAVIOR'],
     systemTokenAvailable: process.env['SYSTEM_TOKEN_AVAILABLE'] !== 'false',
     providesSessionId: process.env['PROVENANCE_PROVIDES_SESSION_ID'],
-    serviceUrl: process.env['MOCK_SERVICE_URL'] || TEST_CONSTANTS.SERVICE_URL
+    serviceUrl: process.env['MOCK_SERVICE_URL'] || TEST_CONSTANTS.SERVICE_URL,
+    highestPackageVersion: process.env['MOCK_HIGHEST_PACKAGE_VERSION'],
+    expectedIncrementedVersion: process.env['MOCK_EXPECTED_VERSION']
 } as MockConfig;
 
 // Override ENDPOINT_URL_SYSTEMVSSCONNECTION if test specified a different service URL
@@ -51,13 +54,20 @@ const effectiveFeed = (config.inputs.command === 'publish' && providesSessionId 
     ? TEST_CONSTANTS.PROVENANCE_SESSION_ID
     : config.feedName;
 
+// Determine expected package version
+// Use explicit expected version if provided, otherwise use packageVersion input or default
+const expectedPackageVersion = process.env['MOCK_EXPECTED_VERSION'] 
+    || config.inputs.packageVersion 
+    || TEST_CONSTANTS.PACKAGE_VERSION;
+
 // Build command string
 config.commandString = TestHelpers.buildCommandString({
     command: config.inputs.command,
     feed: effectiveFeed,
     projectName: config.projectId,
     description: config.inputs.packageDescription,
-    serviceUrl: config.serviceUrl
+    serviceUrl: config.serviceUrl,
+    packageVersion: expectedPackageVersion
 });
 
 // Set task inputs

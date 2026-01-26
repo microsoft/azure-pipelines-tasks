@@ -1,12 +1,11 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
-import { UniversalPackageContext } from "./UniversalPackageContext";
+import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
 import { getFeedDiagnostics } from "./feedSecurity";
 
 // Re-export for use by download/publish modules
@@ -176,6 +175,28 @@ function constructFeedPermissionsUrl(organizationName: string, projectName: stri
     }
 }
 
+export function validateVersionInputs(context: UniversalPackageContext): boolean {
+    if (context.command === OperationType.Download) {
+        // Download requires packageVersion
+        if (!context.packageVersion) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_PackageVersionRequired"));
+            return false;
+        }
+    } else if (context.command === OperationType.Publish) {
+        // Publish requires exactly one of packageVersion or versionIncrement
+        if (context.packageVersion && context.versionIncrement) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_VersionInputsMutuallyExclusive"));
+            return false;
+        }
+
+        if (!context.packageVersion && !context.versionIncrement) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_VersionInputRequired"));
+            return false;
+        }
+    }
+    return true;
+}
+
 export async function validateServerType(): Promise<boolean> {
     try {
         const serverType = tl.getVariable("System.ServerType");
@@ -197,6 +218,7 @@ export function logArtifactToolTelemetry(context: UniversalPackageContext): void
             "feed": context.projectAndFeed,
             "packageName": context.packageName,
             "packageVersion": context.packageVersion,
+            "versionIncrement": context.versionIncrement,
             "adoServiceConnection": context.adoServiceConnection,
             "verbosity": context.verbosity,
             "artifactToolPath": context.artifactToolPath,

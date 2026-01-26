@@ -3,37 +3,71 @@ import { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { ProvenanceHelper, SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
 import * as restClient from 'typed-rest-client/RestClient';
 
 export async function run(context: UniversalPackageContext): Promise<void> {
-    tl.debug(tl.loc('Debug_PublishOperation', context.packageName, context.packageVersion, context.directory));
-    
-    // Get provenance session ID if using service connection, otherwise use feedName
-    // Build Service provides metadata automatically; service connections require provenance
-    const feedId = context.adoServiceConnection
-        ? await tryGetProvenanceSessionId(context)
-        : context.feedName;
-
-    // Publish the package
     try {
+        // Resolve packageVersion if using versionIncrement
+        let packageVersion = context.packageVersion;
+        if (context.versionIncrement) {
+            packageVersion = await resolveVersionIncrement(context);
+        }
+
+        tl.debug(tl.loc('Debug_PublishOperation', context.packageName, packageVersion, context.directory));
+        
+        // Get provenance session ID if using service connection, otherwise use feedName
+        // Build Service provides metadata automatically; service connections require provenance
+        const feedId = context.adoServiceConnection
+            ? await tryGetProvenanceSessionId(context)
+            : context.feedName;
+
+        // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
-        publishPackageUsingArtifactTool(context, feedId);
+        publishPackageUsingArtifactTool(context, feedId, packageVersion);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished"));
     } catch (err) {
         await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), context);
     }
 }
 
-function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedId: string) {
+async function resolveVersionIncrement(context: UniversalPackageContext): Promise<string> {
+    tl.debug(tl.loc('Debug_ResolvingVersionIncrement', context.versionIncrement));
+
+    // Query the feed for the highest existing version
+    const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
+        context.serviceUri,
+        context.accessToken,
+        context.projectName,
+        context.feedName,
+        context.packageName
+    );
+
+    tl.debug(tl.loc('Debug_HighestPackageVersion', highestVersion));
+
+    // Increment the version based on the increment type
+    const newVersion = artifactToolUtilities.getVersionUtility(context.versionIncrement, highestVersion);
+    
+    if (!newVersion) {
+        throw new Error(tl.loc('Error_InvalidVersionIncrement', context.versionIncrement));
+    }
+
+    tl.debug(tl.loc('Debug_CalculatedVersion', newVersion));
+    console.log(tl.loc('Info_UsingIncrementedVersion', newVersion, context.versionIncrement, highestVersion));
+
+    return newVersion;
+}
+
+function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedId: string, packageVersion: string) {
     const command = new Array<string>();
     command.push(
         "universal", "publish",
         "--feed", feedId,
         "--service", context.serviceUri,
         "--package-name", context.packageName,
-        "--package-version", context.packageVersion,
+        "--package-version", packageVersion,
         "--path", context.directory,
         "--patvar", "UNIVERSAL_AUTH_TOKEN",
         "--verbosity", context.verbosity);
@@ -46,7 +80,7 @@ function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedI
         command.push("--description", context.packageDescription);
     }
 
-    tl.debug(tl.loc("Debug_Publishing", context.packageName, context.packageVersion, feedId, context.projectName));
+    tl.debug(tl.loc("Debug_Publishing", context.packageName, packageVersion, feedId, context.projectName));
     const execResult: IExecSyncResult = helpers.artifactToolRunner.runArtifactTool(
         context.artifactToolPath,
         command,
