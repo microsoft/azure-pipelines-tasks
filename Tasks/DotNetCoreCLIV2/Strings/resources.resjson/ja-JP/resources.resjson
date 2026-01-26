@@ -143,5 +143,6 @@
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "情報: .NET Core SDK またはランタイム 2.2 および 3.0 の有効期間は終了しており (EOL)、ホストされているすべてのエージェントから削除されました。ホストされているエージェントでこれらの SDK またはランタイムを使用している場合は EOL を迎えていない新しいバージョンにアップグレードし、それ以外の場合は UseDotNet タスクを使用して必要なバージョンをインストールしてください。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。"
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。",
+  "loc.messages.Error_InvalidSemVer": "ビルド番号は有効な SemVer 2.0 文字列ではありません。"
 }
