@@ -11,7 +11,8 @@ export class UniversalPackageContext {
     organization?: string;
     projectAndFeed: string;
     packageName: string;
-    packageVersion: string;
+    packageVersion?: string;
+    versionIncrement?: string;
     adoServiceConnection?: string;
     directory: string;
     verbosity: string;
@@ -38,7 +39,8 @@ export class UniversalPackageContext {
         this.organization = tl.getInput("organization", false);
         this.projectAndFeed = tl.getInput("feed", true);
         this.packageName = tl.getInput("packageName", true);
-        this.packageVersion = tl.getInput("packageVersion", true);
+        this.packageVersion = tl.getInput("packageVersion", false);
+        this.versionIncrement = tl.getInput("versionIncrement", false);
         this.adoServiceConnection = tl.getInput("adoServiceConnection", false);
         this.directory = tl.getInput("directory", true);
         this.verbosity = tl.getVariable("System.Debug") === "true" ? "Debug" : tl.getInput("verbosity", true);

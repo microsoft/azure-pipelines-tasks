@@ -12,7 +12,8 @@ export interface MockConfig {
         organization?: string;
         feed: string;
         packageName: string;
-        packageVersion: string;
+        packageVersion?: string;
+        versionIncrement?: string;
         verbosity: string;
         packageDescription?: string;
         adoServiceConnection?: string;
@@ -25,6 +26,8 @@ export interface MockConfig {
     systemTokenAvailable: boolean;
     providesSessionId?: string;
     serviceUrl: string;
+    highestPackageVersion?: string;
+    expectedIncrementedVersion?: string;
 }
 
 export class UniversalMockHelper {
@@ -52,7 +55,7 @@ export class UniversalMockHelper {
         // Set endpoint authorization environment variables
         this.setupEndpointAuth();
         
-        artMock.registerArtifactToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
+        this.registerArtifactToolUtilitiesMock();
         artMock.registerArtifactToolRunnerMock(tmr);
         clientMock.registerClientToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
         clientMock.registerClientToolRunnerMock(tmr);
@@ -146,6 +149,30 @@ export class UniversalMockHelper {
         };
         
         this.tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', telemetryMock);
+    }
+
+    private registerArtifactToolUtilitiesMock() {
+        const highestVersion = this.config.highestPackageVersion;
+        const incrementedVersion = this.config.expectedIncrementedVersion;
+        
+        const artifactToolUtilitiesMock = {
+            getArtifactToolFromService: function(serviceUri: string, accessToken: string, toolName: string) {
+                return UniversalMockHelper.ArtifactToolCmd;
+            },
+            getPackageNameFromId: function(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageId: string) {
+                return packageId;
+            },
+            getHighestPackageVersionFromFeed: async function(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageName: string): Promise<string> {
+                // Return null if no highest version configured (simulates new package)
+                return highestVersion || null;
+            },
+            getVersionUtility: function(versionRadio: string, highestVer: string): string {
+                // Return the test-configured expected version
+                return incrementedVersion || null;
+            }
+        };
+        
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities', artifactToolUtilitiesMock);
     }
 
     private registerProvenanceHelperMock() {

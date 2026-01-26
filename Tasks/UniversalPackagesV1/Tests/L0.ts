@@ -353,4 +353,132 @@ describe('UniversalPackages Suite', function () {
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_UniversalPackagesNotSupportedOnPrem'));
         });
     });
+
+    describe('Version Input Validation', function() {
+        this.timeout(10000);
+
+        it('fails download when packageVersion is not specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_PACKAGEVERSION': ''  // Empty string means not provided
+            });
+            
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_PackageVersionRequired'));
+        });
+
+        it('fails publish when neither packageVersion nor versionIncrement is specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': ''  // Empty string means not provided
+            });
+            
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_VersionInputRequired'));
+        });
+
+        it('fails publish when both packageVersion and versionIncrement are specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': TEST_CONSTANTS.PACKAGE_VERSION,
+                'INPUT_VERSIONINCREMENT': 'patch'
+            });
+            
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_VersionInputsMutuallyExclusive'));
+        });
+    });
+
+    describe('Version Increment', function() {
+        this.timeout(10000);
+
+        it('increments patch version when versionIncrement is patch', async function() {
+            const expectedCommandString = buildCommandString({ 
+                command: 'publish', 
+                feed: TEST_CONSTANTS.FEED_NAME,
+                packageVersion: '1.2.4'  // 1.2.3 + patch = 1.2.4
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': '',
+                'INPUT_VERSIONINCREMENT': 'patch',
+                'MOCK_EXPECTED_VERSION': '1.2.4'
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished')
+            });
+        });
+
+        it('increments minor version when versionIncrement is minor', async function() {
+            const expectedCommandString = buildCommandString({ 
+                command: 'publish', 
+                feed: TEST_CONSTANTS.FEED_NAME,
+                packageVersion: '1.3.0'  // 1.2.3 + minor = 1.3.0
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': '',
+                'INPUT_VERSIONINCREMENT': 'minor',
+                'MOCK_EXPECTED_VERSION': '1.3.0'
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished')
+            });
+        });
+
+        it('increments major version when versionIncrement is major', async function() {
+            const expectedCommandString = buildCommandString({ 
+                command: 'publish', 
+                feed: TEST_CONSTANTS.FEED_NAME,
+                packageVersion: '2.0.0'  // 1.2.3 + major = 2.0.0
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': '',
+                'INPUT_VERSIONINCREMENT': 'major',
+                'MOCK_EXPECTED_VERSION': '2.0.0'
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished')
+            });
+        });
+
+        it('starts at 0.0.1 when package does not exist and versionIncrement is patch', async function() {
+            const expectedCommandString = buildCommandString({ 
+                command: 'publish', 
+                feed: TEST_CONSTANTS.FEED_NAME,
+                packageVersion: '0.0.1'  // null + patch = 0.0.1
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_PACKAGEVERSION': '',
+                'INPUT_VERSIONINCREMENT': 'patch',
+                'MOCK_HIGHEST_PACKAGE_VERSION': '0.0.0',  // Simulates new package
+                'MOCK_EXPECTED_VERSION': '0.0.1'
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished')
+            });
+        });
+    });
 });
