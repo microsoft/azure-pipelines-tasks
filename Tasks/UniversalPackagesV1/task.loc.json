@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 270,
     "Patch": 0
   },
   "runsOn": [
@@ -166,10 +166,12 @@
     "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
     "Debug_UsingArtifactToolPublish": "ms-resource:loc.messages.Debug_UsingArtifactToolPublish",
     "Debug_UsingBuildServiceCreds": "ms-resource:loc.messages.Debug_UsingBuildServiceCreds",
+    "Debug_UsingWifCreds": "ms-resource:loc.messages.Debug_UsingWifCreds",
     "Debug_UsingProvenanceSession": "ms-resource:loc.messages.Debug_UsingProvenanceSession",
     "Debug_UsingServiceUri": "ms-resource:loc.messages.Debug_UsingServiceUri",
     "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
     "Debug_WifTokenObtained": "ms-resource:loc.messages.Debug_WifTokenObtained",
+    "Debug_DiscoveredTenant": "ms-resource:loc.messages.Debug_DiscoveredTenant",
     "Error_AuthenticationFailed": "ms-resource:loc.messages.Error_AuthenticationFailed",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
