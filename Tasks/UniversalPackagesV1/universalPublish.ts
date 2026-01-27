@@ -37,8 +37,10 @@ async function resolveVersionIncrement(context: UniversalPackageContext): Promis
     tl.debug(tl.loc('Debug_ResolvingVersionIncrement', context.versionIncrement));
 
     // Query the feed for the highest existing version
+    // Must use feedServiceUri (https://feeds.dev.azure.com) not serviceUri (https://dev.azure.com)
+    // because the Packaging API is hosted on the feeds subdomain
     const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
-        context.serviceUri,
+        context.feedServiceUri,
         context.accessToken,
         context.projectName,
         context.feedName,

@@ -20,10 +20,38 @@ function getSystemAccessToken(): string {
     return null;
 }
 
+// Discover the tenant ID for the target feed by making a HEAD request
+// The X-VSS-ResourceTenant header is only returned on HEAD requests, not GET
+async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
+    try {
+        const response = await fetch(feedUrl, { method: 'HEAD' });
+        return response?.headers?.get('X-VSS-ResourceTenant') ?? undefined;
+    } catch (error) {
+        tl.debug(`Failed to get feed tenant ID: ${error}`);
+        return undefined;
+    }
+}
+
 export async function trySetAuth(context: UniversalPackageContext): Promise<boolean> {
     try {
         const toolRunnerOptions = artifactToolRunner.getOptions();
         let accessToken: string | undefined;
+
+        // Get serviceUri based on whether we're using a service connection
+        // This must happen early because feedServiceUri is needed for cross-tenant auth
+        if (context.adoServiceConnection) {
+            // Using service connection: organization must be specified for cross-org scenario
+            if (!context.organization) {
+                throw new Error(tl.loc('Error_OrganizationRequired'));
+            }
+            context.serviceUri = `https://dev.azure.com/${encodeURIComponent(context.organization)}`;
+        } else {
+            // Using pipeline identity: get serviceUri from SYSTEMVSSCONNECTION
+            context.serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+        }
+        
+        // This converts https://dev.azure.com/{org} to https://feeds.dev.azure.com/{org}
+        context.feedServiceUri = context.serviceUri.replace('://dev.azure.com/', '://feeds.dev.azure.com/');
 
         if (context.adoServiceConnection) {
             tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
@@ -33,7 +61,11 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
                 if (!serviceConnectionAuth) {
                     tl.warning(tl.loc('Warning_ServiceConnectionNotFound', context.adoServiceConnection));
                 } else {
-                    accessToken = await getFederatedWorkloadIdentityCredentials(context.adoServiceConnection);
+                    // Discover the target tenant for cross-tenant scenarios
+                    const feedTenant = await getFeedTenantId(context.feedServiceUri);
+                    tl.debug(tl.loc('Debug_DiscoveredTenant', feedTenant || 'none'));
+
+                    accessToken = await getFederatedWorkloadIdentityCredentials(context.adoServiceConnection, feedTenant);
                     if (accessToken) {
                         tl.debug(tl.loc('Debug_WifTokenObtained'));
                     } else {
@@ -45,36 +77,20 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
             }
         }
 
+        // Fall back to system access token if WIF didn't provide one
+        const usingWifToken = !!accessToken;
         accessToken ??= getSystemAccessToken();
 
         if (!accessToken) {
             throw new Error(tl.loc('Error_NoAuthToken'));
         }
 
-        tl.debug(tl.loc('Debug_UsingBuildServiceCreds'));
-
-        // Get serviceUri based on whether we're using a service connection
-        let serviceUri: string;
-        if (context.adoServiceConnection) {
-            // Using service connection: organization must be specified for cross-org scenario
-            if (!context.organization) {
-                throw new Error(tl.loc('Error_OrganizationRequired'));
-            }
-            serviceUri = `https://dev.azure.com/${encodeURIComponent(context.organization)}`;
-        } else {
-            // Using pipeline identity: get serviceUri from SYSTEMVSSCONNECTION
-            serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        }
-
-        tl.debug(tl.loc('Debug_UsingServiceUri', serviceUri));
+        tl.debug(tl.loc(usingWifToken ? 'Debug_UsingWifCreds' : 'Debug_UsingBuildServiceCreds'));
+        tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
 
         toolRunnerOptions.env.UNIVERSAL_AUTH_TOKEN = accessToken;
 
         context.accessToken = accessToken;
-        context.serviceUri = serviceUri;
-        
-        // This converts https://dev.azure.com/{org} to https://feeds.dev.azure.com/{org}
-        context.feedServiceUri = serviceUri.replace('://dev.azure.com/', '://feeds.dev.azure.com/');
         
         context.toolRunnerOptions = toolRunnerOptions;
         return true;

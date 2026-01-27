@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 270,
     "Patch": 0
   },
   "runsOn": [
@@ -167,10 +167,12 @@
     "Debug_UsingArtifactToolDownload": "Using artifact tool to download the package",
     "Debug_UsingArtifactToolPublish": "Using artifact tool to publish the package",
     "Debug_UsingBuildServiceCreds": "Using build service credentials for authentication",
+    "Debug_UsingWifCreds": "Using WIF service connection credentials for authentication",
     "Debug_UsingProvenanceSession": "Using provenance session ID: %s",
     "Debug_UsingServiceUri": "Using service URI: %s",
     "Debug_UsingWifAuth": "Using WIF authentication with service connection: %s",
     "Debug_WifTokenObtained": "Successfully obtained WIF token for authentication",
+    "Debug_DiscoveredTenant": "Discovered target tenant: %s",
     "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
