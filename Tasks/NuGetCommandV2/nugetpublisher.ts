@@ -263,7 +263,7 @@ export async function run(nuGetPath: string): Promise<void> {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
 
     } catch (err) {
-        tl.error(err instanceof Error ? err.message : String(err));
+        tl.error(err);
 
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
@@ -316,9 +316,9 @@ async function publishPackageNuGet(
             tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
             return 0;
         } else {
-            throw new Error(tl.loc("Error_NugetFailedWithCodeAndErr",
+            throw tl.loc("Error_NugetFailedWithCodeAndErr",
                 execResult,
-                stdErrText.trim()));
+                stdErrText.trim());
         }
     }
     
@@ -357,9 +357,9 @@ async function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNu
     }
 
     telemetry.logResult("Packaging", "NuGetCommand", execResult);
-    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
+    throw tl.loc("Error_UnexpectedErrorVstsNuGetPush",
         execResult,
-        stdErrText.trim()));
+        stdErrText.trim());
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {

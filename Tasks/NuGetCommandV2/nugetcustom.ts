@@ -86,7 +86,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         await runNuGet(executionOptions);
     } catch (err) {
-        tl.error(err instanceof Error ? err.message : String(err));
+        tl.error(err);
 
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
@@ -114,9 +114,9 @@ async function runNuGet(executionOptions: NuGetExecutionOptions): Promise<number
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);
-        throw new Error(tl.loc("Error_NugetFailedWithCodeAndErr",
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult,
-            stdErrText.trim()));
+            stdErrText.trim());
     }
 
     return execResult;
