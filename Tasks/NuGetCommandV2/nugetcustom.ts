@@ -86,7 +86,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         await runNuGet(executionOptions);
     } catch (err) {
-        tl.error(err);
+        tl.error(err instanceof Error ? err.message : String(err));
 
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));

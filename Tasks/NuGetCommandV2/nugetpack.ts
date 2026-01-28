@@ -153,7 +153,7 @@ export async function run(nuGetPath: string): Promise<void> {
             await pack(file, packOptions);
         }
     } catch (err) {
-        tl.error(err);
+        tl.error(err instanceof Error ? err.message : String(err));
         tl.setResult(tl.TaskResult.Failed, tl.loc("Error_PackageFailure"));
     }
 }
