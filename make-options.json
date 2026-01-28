@@ -243,14 +243,16 @@
     "Node24_9": [],
     "Node24_10": [],
     "Node24_overwrite": [],
-    "wif_242": [
-        "PipAuthenticateV1",
-        "CargoAuthenticateV0",
+    "wif_242_Node24" : [
         "NpmAuthenticateV0",
+        "PipAuthenticateV1",
+        "TwineAuthenticateV1"
+    ],
+    "wif_242": [
+        "CargoAuthenticateV0",
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
-        "MavenAuthenticateV0",
-        "TwineAuthenticateV1"
+        "MavenAuthenticateV0"
     ],
     "LocalPackages": [
         "AndroidSigningV2",
