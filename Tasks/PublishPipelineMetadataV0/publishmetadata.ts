@@ -105,21 +105,28 @@ async function run() {
         }
 
         const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/attestationdetails?api-version=5.2-preview.1";
-        metadataObjects.forEach((requestPayload: any) => {
-            const requestObject: AttestationRequestPayload = constructMetadataRequestBody(requestPayload);
-            sendRequestToImageStore(JSON.stringify(requestObject), requestUrl).then((result) => {
+        const sendRequests = metadataObjects.map(async (requestPayload: any) => {
+            const requestObject = constructMetadataRequestBody(requestPayload);
+            if (!requestObject) {
+                return;
+            }
+
+            try {
+                const result = await sendRequestToImageStore(JSON.stringify(requestObject), requestUrl);
                 tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
-                if (result.statusCode < 200 && result.statusCode >= 300) {
+                if (result.statusCode < 200 || result.statusCode >= 300) {
                     tl.debug("publishToImageMetadataStore failed with error: " + result.statusMessage);
+                    tl.setResult(tl.TaskResult.Failed, `Failed to publish metadata. Status code: ${result.statusCode}, Message: ${result.statusMessage}`);
                 }
-            }, (error) => {
-                tl.debug("publishToImageMetadataStore failed with error: " + error + "for request payload: " + requestObject);
-            });
+            } catch (error) {
+                tl.debug("publishToImageMetadataStore failed with error: " + error + "for request payload: " + JSON.stringify(requestObject));
+            }
         });
 
+        await Promise.all(sendRequests);
+
         tl.setResult(tl.TaskResult.Succeeded, "Successfully pushed metadata to evidence store");
-    }
-    catch (error) {
+    } catch (error) {
         tl.warning("publish metadata task encountered error: " + error);
         tl.setResult(tl.TaskResult.Succeeded, error);
     }
