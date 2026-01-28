@@ -357,9 +357,9 @@ async function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNu
     }
 
     telemetry.logResult("Packaging", "NuGetCommand", execResult);
-    throw tl.loc("Error_UnexpectedErrorVstsNuGetPush",
+    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
         execResult,
-        stdErrText.trim());
+        stdErrText.trim()));
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {
