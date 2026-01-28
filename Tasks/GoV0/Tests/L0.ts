@@ -29,65 +29,53 @@ describe('GoToolInstaller', function () {
     after(function () {
     });
 
-    it("go get should succeed", (done) => {
+    it("go get should succeed", async () => {
         let tp = path.join(__dirname, "GoGetSuccess.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go get") > -1, "should print the command to run");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.succeeded, "Should have succeeded");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go get") > -1, "should print the command to run");
     });
 
-    it("go get should fail", (done) => {
+    it("go get should fail", async () => {
         let tp = path.join(__dirname, "GoGetFail.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.failed, "Should have failed");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go get") > -1, "should print the command to run");
-            assert(tr.stdout.indexOf("go get failure message") > -1, "should print the failure message");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.failed, "Should have failed");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go get") > -1, "should print the command to run");
+        assert(tr.stdout.indexOf("go get failure message") > -1, "should print the failure message");
     });
-    it("go build should succeed with arguments", (done) => {
+    it("go build should succeed with arguments", async () => {
         let tp = path.join(__dirname, "GoBuildSuccess.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go build -o outDir") > -1, "should print the command to run");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.succeeded, "Should have succeeded");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go build -o outDir") > -1, "should print the command to run");
     });
 
-    it("go build should fail with argument", (done) => {
+    it("go build should fail with argument", async () => {
         let tp = path.join(__dirname, "GoBuildFail.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.failed, "Should have failed");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go build -o outDir") > -1, "should print the command to run");
-            assert(tr.stdout.indexOf("go build failure message") > -1, "should print the failure message");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.failed, "Should have failed");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go build -o outDir") > -1, "should print the command to run");
+        assert(tr.stdout.indexOf("go build failure message") > -1, "should print the failure message");
     });
-    it("go custom command should succeed", (done) => {
+    it("go custom command should succeed", async () => {
         let tp = path.join(__dirname, "GoCustomVersionSuccess.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go version") > -1, "should print the command to run");
-            assert(tr.stdout.indexOf("current version of go is 1.9.3") > -1, "should print the command to run");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.succeeded, "Should have succeeded");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go version") > -1, "should print the command to run");
+        assert(tr.stdout.indexOf("current version of go is 1.9.3") > -1, "should print the command to run");
     });
 
-    it("go custom command should fail", (done) => {
+    it("go custom command should fail", async () => {
         let tp = path.join(__dirname, "GoCustomVersionFail.js");
         let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        runValidations(() => {
-            assert(tr.failed, "Should have failed");
-            assert(tr.stdout.indexOf("[command]C:\\somedir\\go version") > -1, "should print the command to run");
-            assert(tr.stdout.indexOf("go version failure message") > -1, "should print the failure message");
-        }, tr, done);
+        await tr.runAsync();
+        assert(tr.failed, "Should have failed");
+        assert(tr.stdout.indexOf("[command]C:\\somedir\\go version") > -1, "should print the command to run");
+        assert(tr.stdout.indexOf("go version failure message") > -1, "should print the failure message");
     });
 });
