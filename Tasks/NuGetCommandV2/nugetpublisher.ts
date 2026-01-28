@@ -316,9 +316,9 @@ async function publishPackageNuGet(
             tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
             return 0;
         } else {
-            throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            throw new Error(tl.loc("Error_NugetFailedWithCodeAndErr",
                 execResult,
-                stdErrText.trim());
+                stdErrText.trim()));
         }
     }
     

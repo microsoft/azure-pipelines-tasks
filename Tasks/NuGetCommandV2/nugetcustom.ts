@@ -114,9 +114,9 @@ async function runNuGet(executionOptions: NuGetExecutionOptions): Promise<number
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);
-        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+        throw new Error(tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult,
-            stdErrText.trim());
+            stdErrText.trim()));
     }
 
     return execResult;
