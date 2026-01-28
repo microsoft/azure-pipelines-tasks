@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 262,
+    "Minor": 270,
     "Patch": 1
   },
   "runsOn": [
@@ -68,6 +68,10 @@
     "Node20_1": {
       "target": "npmauth.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -80,6 +84,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
@@ -114,8 +122,7 @@
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.262.0",
-    "LocalPackages": "0.249.4",
-    "wif_242": "0.262.1"
+    "Default": "0.270.0",
+    "wif_242": "0.270.1"
   }
 }
