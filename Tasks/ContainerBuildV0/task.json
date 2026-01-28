@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 269,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -72,6 +72,10 @@
       "target": "src//buildcontainer.js"
     },
     "Node20_1": {
+      "target": "src//buildcontainer.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//buildcontainer.js",
       "argumentFormat": ""
     }
