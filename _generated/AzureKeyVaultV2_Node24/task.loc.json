@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 269,
-    "Patch": 1
+    "Minor": 270,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -144,5 +144,9 @@
     "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.269.1",
+    "Node24_1": "2.270.0"
   }
 }
