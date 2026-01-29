@@ -1,0 +1,72 @@
+# Azure CLI
+
+## Overview
+This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview) commands on Cross platform agents running Windows, Linux or Mac.
+
+### What's new in Version 3.0
+- Azure DevOps service connections support with automatic CLI extension installation
+- Workload Identity Federation support for Azure DevOps connections
+- Automatic organization and project configuration from pipeline context
+- Supports authentication without selecting any Azure subscription, useful for tenant/directory level commands
+
+## Contact Information
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+
+## Pre-requisites for the task
+The following pre-requisites need to be setup in the target machine(s) for the task to work properly.
+
+#### **Azure Subscription**
+- This refers to the Azure Resource Manager (ARM) service connection you select in the task (its internal input name is `connectedServiceNameARM` or `azureSubscription`). To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the settings section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+- If your service connection intentionally has no access subscriptions, enable the task input **Allow no Azure subscriptions** (or configure the service connection with an empty GUID as the Subscription ID: `00000000-0000-0000-0000-000000000000`) so the task skips setting a subscription context and supports tenant/directory‑level commands.
+- For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
+- For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+
+#### **Azure DevOps Service Connection**
+For Azure DevOps CLI operations, you can use Azure DevOps service connections with Workload Identity Federation authentication. This allows secure access to Azure DevOps resources. The task will automatically install and configure the Azure DevOps CLI extension when using this connection type.
+
+#### **Azure CLI**
+The task needs the Azure CLI version to be installed on the automation agent, and the details are available [here](https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/).
+If an agent is already running on the machine on which the Azure CLI is installed, ensure to restart the agent to ensure all the relevant environment variables are updated.
+
+## Parameters of the task
+The task is used to run Azure CLI commands on Cross platform agents running Windows, Linux or Mac . The mandatory fields are highlighted with a *.
+
+* **Connection Type**\*: Select the type of service connection to use. Choose 'Azure Resource Manager' for Azure Resource Manager service connections or 'Azure DevOps' for Azure DevOps service connections.
+
+* **Azure Resource Manager Connection**\*: Select the Azure Resource Manager service connection. This field is visible when Connection Type is set to 'Azure Resource Manager'.
+
+* **Azure DevOps Service Connection**\*: Select an Azure DevOps service connection. This field is visible when Connection Type is set to 'Azure DevOps'.
+
+* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows) 
+
+* **Script Location**\*: Select the mode of providing the script. Task supports two modes: one as a Script Path to a linked artifact and another as an inline script, default selection being the "Script Path"
+
+* **Script Path**\*: When using Windows based agent, specify the path to the .bat , .cmd , .ps1 script whereas when using Linux based agent, specify the path to the .sh , .ps1 script you want to run. The path must be a fully qualified path or a valid path relative to the default working directory. Note: You must also specify the respective script type in above field.
+
+* **Inline Script**\*: Specify the script inline here. When using Windows based agent use batch or PowerShell or PowerShell Core scripting whereas use shell or PowerShell Core scripting when using Linux based agents. Note: You must also specify the respective script type in above field.
+
+* **Script Arguments**: Specify arguments to pass to the script.
+
+* **Working folder**: Specify the working directory in which you want to run the script. If you leave it empty, the working directory is the folder where the script is located.
+
+* **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
+
+* **Access service principal details in script**: Select this check box if you want to add service principal id , service principal key and tenantId of the Azure endpoint to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script. This is honored only when the Azure endpoint has Service Principal authentication scheme. \
+\
+Syntax to access environment variables based on script type.\
+*Powershell script:* `$env:servicePrincipalId`\
+*Batch script:* `%servicePrincipalId%` \
+*Shell script:* `$servicePrincipalId`
+
+* **ErrorActionPreference**: Select this checkbox if you want the task to fail when any errors are written to the StandardError stream. If you leave it unchecked, standard errors will be ignored and only exit codes will be used to determine the status.
+
+* **Use global Azure CLI configuration**: If this is unchecked, the task will use its own separate Azure CLI configuration directory. This allows Azure CLI tasks to run in parallel during releases.
+ 
+* **Working Directory**: Current working directory where the script is run. If left blank, this input is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).
+ 
+* **LASTEXITCODE**: If this input is false, the line if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE } is appended to the end of your script. This will propagate the last exit code from an external command as the exit code of PowerShell. Otherwise, the line is not appended to the end of your script.
+ 
+* **az login output visibility**: If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output.
+ 
+* **Keep Azure CLI session active**: When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.
+ 
