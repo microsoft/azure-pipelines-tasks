@@ -52,7 +52,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
                 this.taskParams.SlotName, this.taskParams.WebAppKind);
             this.appServiceUtility = new AzureAppServiceUtility(this.appService);
             this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
-            this.kuduService = await this.appServiceUtility.getKuduService();
+            const warmUpInstance = await this.getWarmupInstanceId();
+            this.kuduService = await this.appServiceUtility.getKuduService(warmUpInstance);
             this.slotName = this.appService.getSlot();
         }
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
@@ -95,5 +96,20 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
             await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
         }
+    }
+
+    // Get the warmup instance id.
+    private async getWarmupInstanceId(): Promise<string | undefined> {
+        try {
+            const instances = await this.appServiceUtility.getAppserviceInstances();
+                if (instances?.value?.length > 0) {
+                // Sort by name and pick the first one.
+                const sortedInstances = instances.value.sort((a, b) => a.name.localeCompare(b.name));
+                return sortedInstances[0].name;
+            }
+        } catch (error) {
+            tl.debug(`Failed to get app service instances - ${error}`);
+        }
+        return undefined;
     }
 }
