@@ -246,13 +246,14 @@
     "wif_242_Node24" : [
         "CargoAuthenticateV0",
         "CondaAuthenticateV0",
-        "NpmAuthenticateV0",
         "NuGetAuthenticateV1",
-        "MavenAuthenticateV0",
+        "MavenAuthenticateV0"
+    ],
+    "wif_242": [
+        "NpmAuthenticateV0",
         "PipAuthenticateV1",
         "TwineAuthenticateV1"
     ],
-    "wif_242": [],
     "LocalPackages": [
         "AndroidSigningV2",
         "AndroidSigningV3",
