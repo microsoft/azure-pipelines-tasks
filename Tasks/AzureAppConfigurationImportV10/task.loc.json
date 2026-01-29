@@ -10,7 +10,7 @@
   "version": {
     "Major": 10,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "minimumAgentVersion": "2.144.0",
@@ -239,6 +239,18 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "EnableRiskAnalysis",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.EnableRiskAnalysis",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "Options",
+      "helpMarkDown": "ms-resource:loc.input.help.EnableRiskAnalysis",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "groups": [
@@ -300,6 +312,19 @@
     "AuthenticationError": "ms-resource:loc.messages.AuthenticationError",
     "AuthenticationErrorRestError": "ms-resource:loc.messages.AuthenticationErrorRestError",
     "RestError": "ms-resource:loc.messages.RestError",
-    "UnexpectedError": "ms-resource:loc.messages.UnexpectedError"
+    "UnexpectedError": "ms-resource:loc.messages.UnexpectedError",
+    "RiskAnalysisEnabled": "ms-resource:loc.messages.RiskAnalysisEnabled",
+    "InstallingCopilotCLI": "ms-resource:loc.messages.InstallingCopilotCLI",
+    "CopilotCLIInstalled": "ms-resource:loc.messages.CopilotCLIInstalled",
+    "AnalyzingConfigurationChanges": "ms-resource:loc.messages.AnalyzingConfigurationChanges",
+    "RiskAnalysisCompleted": "ms-resource:loc.messages.RiskAnalysisCompleted",
+    "RiskAnalysisReportSaved": "ms-resource:loc.messages.RiskAnalysisReportSaved",
+    "HighRiskDetectedFailing": "ms-resource:loc.messages.HighRiskDetectedFailing",
+    "HighRiskDetectedWarning": "ms-resource:loc.messages.HighRiskDetectedWarning",
+    "MediumRiskDetectedWarning": "ms-resource:loc.messages.MediumRiskDetectedWarning",
+    "RiskAnalysisSummary": "ms-resource:loc.messages.RiskAnalysisSummary",
+    "NoChangesDetected": "ms-resource:loc.messages.NoChangesDetected",
+    "MissingGitHubToken": "ms-resource:loc.messages.MissingGitHubToken",
+    "RiskAnalysisFailed": "ms-resource:loc.messages.RiskAnalysisFailed"
   }
 }

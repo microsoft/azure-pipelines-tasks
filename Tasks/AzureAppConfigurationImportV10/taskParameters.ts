@@ -26,6 +26,7 @@ export class TaskParameters {
     public importMode: ImportMode;
     public credential: ConnectedServiceCredential;
     public endpoint: AzureEndpoint;
+    public enableRiskAnalysis: boolean;
 
     public static async initialize(): Promise<TaskParameters> {
         const IgnoreMatch: string = "Ignore-Match";
@@ -113,6 +114,8 @@ export class TaskParameters {
                 throw new ParseError(tl.loc("InvalidTypeInTags"));
             }
         }
+
+        taskParameters.enableRiskAnalysis = tl.getBoolInput("EnableRiskAnalysis", false);
 
         return taskParameters;
     }

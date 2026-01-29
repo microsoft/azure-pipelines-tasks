@@ -10,7 +10,7 @@
     "version": {
         "Major": 10,
         "Minor": 268,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Azure App Configuration",
     "minimumAgentVersion": "2.144.0",
@@ -239,6 +239,18 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "EnableRiskAnalysis",
+            "type": "boolean",
+            "label": "Enable risk analysis",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "Options",
+            "helpMarkDown": "When enabled, uses GitHub Copilot to analyze configuration changes and generate a risk assessment report.",
+            "properties": {
+                "EditableOptions": "True"
+            }
         }
     ],
     "groups": [
@@ -300,6 +312,19 @@
         "AuthenticationError": "Error response: %s\n Status code: %s \nError message: %s",
         "AuthenticationErrorRestError": "`\nStatus code: %s \nUrl: %s \nError message: %s \nWWW-Authenticate: %s \nClientRequestId: %s",
         "RestError": "A HTTP error occurred \nName: %s \nCode: %s \nStatus code: %s \nUrl: %s \nError message: %s \nClientRequestId: %s",
-        "UnexpectedError": "An unexpected error occurred. %s."
+        "UnexpectedError": "An unexpected error occurred. %s.",
+        "RiskAnalysisEnabled": "Risk Analysis: Enabled",
+        "InstallingCopilotCLI": "Installing GitHub Copilot CLI...",
+        "CopilotCLIInstalled": "GitHub Copilot CLI installed successfully.",
+        "AnalyzingConfigurationChanges": "Analyzing configuration changes with GitHub Copilot...",
+        "RiskAnalysisCompleted": "Risk analysis completed. Overall Risk Level: %s",
+        "RiskAnalysisReportSaved": "Risk analysis report saved to: %s",
+        "HighRiskDetectedFailing": "High risk detected in configuration changes. Failing task as per enforcement mode.",
+        "HighRiskDetectedWarning": "WARNING: High risk detected in configuration changes.",
+        "MediumRiskDetectedWarning": "WARNING: Medium risk detected in configuration changes.",
+        "RiskAnalysisSummary": "=== Risk Analysis Summary ===",
+        "NoChangesDetected": "No configuration changes detected. Skipping risk analysis.",
+        "MissingGitHubToken": "GitHub Copilot authentication token is required when risk analysis is enabled.",
+        "RiskAnalysisFailed": "Risk analysis failed: %s"
     }
 }

@@ -6,13 +6,15 @@ import {
     ConfigurationProfile,
     ImportResult,
     ImportMode, 
-    ArgumentError } from "@azure/app-configuration-importer";
+    ArgumentError, 
+    ConfigurationChanges} from "@azure/app-configuration-importer";
 import { FileConfigurationSettingsSource, FileConfigurationSyncOptions } from "@azure/app-configuration-importer-file-source";
 import { AppConfigurationClient } from '@azure/app-configuration';
 import { Utils } from "./utils";
 import { FileContentProfileConstants, FileFormat} from "./constants";
 import { RestError } from "@azure/core-rest-pipeline";
 import { AppConfigurationError, getErrorMessage } from "./errors";
+import { RiskAnalysis } from "./riskAnalysis";
 
 export class TaskController {
     private static readonly maxTimeout = 2147483; //When delay is larger than 2147483647 or less than 1, the delay will be set to 1 https://nodejs.org/api/timers.html#settimeoutcallback-delay-args
@@ -93,14 +95,61 @@ export class TaskController {
             successCount = progressResults.successCount;
         };
 
+        // Get configuration diff for risk analysis if enabled
+        if (this._taskParameters.enableRiskAnalysis) {
+            try {
+                console.log(tl.loc("RiskAnalysisEnabled"));
+                
+                // Get configuration diff
+                const configurationChanges: ConfigurationChanges = await appConfigurationImporterClient.GetConfigurationChanges(
+                    new FileConfigurationSettingsSource(fileConfigOptions),
+                    this._taskParameters.strict,
+                    this._taskParameters.importMode
+                );
+                
+                // Run risk analysis
+                const output: string = await RiskAnalysis.runRiskAnalysis(configurationChanges);
+                
+                console.log(output);
+                // Try to extract overall risk level
+                let riskLevel: 'Low' | 'Medium' | 'High' | 'Unknown' = 'Unknown';
+                
+                try {
+                    const jsonMatch = output.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const result = JSON.parse(jsonMatch[0]);
+                        riskLevel = result.overallRiskLevel || 'Unknown';
+                    }
+                } catch (parseError) {
+                    tl.warning(`Failed to parse risk analysis output: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+                }
+                
+                console.log(tl.loc("RiskAnalysisCompleted", riskLevel));
+                
+                // Handle risk level
+                if (riskLevel === 'High') {
+                    throw new Error('High risk detected in configuration changes. Aborting import.');
+                } else if (riskLevel === 'Medium' || riskLevel === 'Low') {
+                    tl.warning(`${riskLevel} risk detected in configuration changes.`);
+                    tl.setResult(tl.TaskResult.SucceededWithIssues, `Import completed with ${riskLevel} risk.` , true);
+                }
+                
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                tl.warning(`Risk analysis encountered an error: ${errorMessage}`);
+                tl.setResult(tl.TaskResult.Failed, `Import failed risk analysis failed: ${errorMessage}`, true);
+            }
+        }
+
         try {
             await appConfigurationImporterClient.Import(
                 new FileConfigurationSettingsSource(fileConfigOptions),
-                TaskController.maxTimeout, //setting timeout to max value possible, align with ADO https://learn.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=classic#timeouts
-                this._taskParameters.strict,
-                progressCallBack,
-                this._taskParameters.importMode,
-                this._taskParameters.dryRun);
+                {
+                timeout: TaskController.maxTimeout, //setting timeout to max value possible, align with ADO https://learn.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=classic#timeouts
+                strict: this._taskParameters.strict,
+                progressCallback: progressCallBack,
+                importMode: this._taskParameters.importMode
+            });
         }
         catch (error) {
             if (error instanceof RestError) {

@@ -38,6 +38,8 @@
   "loc.input.help.DryRun": "When dry run is enabled, this task will not perform any updates to App Configuration. Instead, any updates that would have been performed in a normal run will be printed to the console for review",
   "loc.input.label.ImportMode": "Import Mode",
   "loc.input.help.ImportMode": "Determines the behavior when importing key-values. The default value, 'All' will import all key-values in the input file to App Configuration. 'Ignore-Match' will only import settings that have no matching key-value in App Configuration.",
+  "loc.input.label.EnableRiskAnalysis": "Enable risk analysis",
+  "loc.input.help.EnableRiskAnalysis": "When enabled, uses GitHub Copilot to analyze configuration changes and generate a risk assessment report.",
   "loc.messages.SupportedOptionsForFileContentProfile": "Supported options for FileContentProfile are '%s' and '%s', please provide a valid option.",
   "loc.messages.UnsupportedOptionsForKVSetProfile": "Options 'Separator', 'Label', 'Content type', 'Prefix', 'Tags' and 'Depth' are not supported when using %s.",
   "loc.messages.OnlySupportedImportModeOptions": "Only options supported for Import Mode are '%s' and '%s'.",
@@ -62,5 +64,18 @@
   "loc.messages.AuthenticationError": "Error response: %s\n Status code: %s \nError message: %s",
   "loc.messages.AuthenticationErrorRestError": "`\nStatus code: %s \nUrl: %s \nError message: %s \nWWW-Authenticate: %s \nClientRequestId: %s",
   "loc.messages.RestError": "A HTTP error occurred \nName: %s \nCode: %s \nStatus code: %s \nUrl: %s \nError message: %s \nClientRequestId: %s",
-  "loc.messages.UnexpectedError": "An unexpected error occurred. %s."
+  "loc.messages.UnexpectedError": "An unexpected error occurred. %s.",
+  "loc.messages.RiskAnalysisEnabled": "Risk Analysis: Enabled",
+  "loc.messages.InstallingCopilotCLI": "Installing GitHub Copilot CLI...",
+  "loc.messages.CopilotCLIInstalled": "GitHub Copilot CLI installed successfully.",
+  "loc.messages.AnalyzingConfigurationChanges": "Analyzing configuration changes with GitHub Copilot...",
+  "loc.messages.RiskAnalysisCompleted": "Risk analysis completed. Overall Risk Level: %s",
+  "loc.messages.RiskAnalysisReportSaved": "Risk analysis report saved to: %s",
+  "loc.messages.HighRiskDetectedFailing": "High risk detected in configuration changes. Failing task as per enforcement mode.",
+  "loc.messages.HighRiskDetectedWarning": "WARNING: High risk detected in configuration changes.",
+  "loc.messages.MediumRiskDetectedWarning": "WARNING: Medium risk detected in configuration changes.",
+  "loc.messages.RiskAnalysisSummary": "=== Risk Analysis Summary ===",
+  "loc.messages.NoChangesDetected": "No configuration changes detected. Skipping risk analysis.",
+  "loc.messages.MissingGitHubToken": "GitHub Copilot authentication token is required when risk analysis is enabled.",
+  "loc.messages.RiskAnalysisFailed": "Risk analysis failed: %s"
 }

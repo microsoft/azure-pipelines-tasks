@@ -16,8 +16,8 @@
     "license": "MIT",
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "@azure/app-configuration": "1.5.0",
-        "@azure/app-configuration-importer-file-source": "1.1.2-preview",
+        "@azure/app-configuration": "^1.9.0",
+        "@azure/app-configuration-importer-file-source": "2.0.0-preview",
         "@azure/identity": "^3.1.2",
         "@types/mocha": "^5.2.7",
         "@types/node": "^20.3.1",
