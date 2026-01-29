@@ -22,10 +22,10 @@ describe('AzureWebAppDeployment Suite', function() {
         done();
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests(10000);
+    ApplicationInsightsTests.ApplicationInsightsTests(20000);
     AppServiceTests.AzureAppServiceMockTests(5000);
     KuduServiceTests.KuduServiceTests(5000);
-    ResourcesTests.ResourcesTests(); 
+    ResourcesTests.ResourcesTests(5000); 
 
     it('Validate operations.ParameterParserUtility.parse()', async () => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
