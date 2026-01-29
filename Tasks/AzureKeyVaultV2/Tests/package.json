@@ -1,0 +1,19 @@
+{
+    "name": "azurekeyvault-tests",
+    "version": "2.0.0",
+    "description": "Azure Pipelines Azure Key Vault V2 Task Tests",
+    "main": "L0.js",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "devDependencies": {
+        "@types/mocha": "^5.2.0"
+    }
+}
