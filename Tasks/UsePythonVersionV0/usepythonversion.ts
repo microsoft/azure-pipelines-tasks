@@ -132,12 +132,17 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
         const x64Versions = tool.findLocalToolVersions('Python', 'x64')
             .map(s => `${s} (x64)`)
             .join(os.EOL);
+        
+        const arm64Versions = tool.findLocalToolVersions('Python', 'arm64')
+            .map(s => `${s} (arm64)`)
+            .join(os.EOL);
 
         throw new Error([
             task.loc('VersionNotFound', parameters.versionSpec, parameters.architecture),
             task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
             x86Versions,
             x64Versions,
+            arm64Versions,
             task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
             task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
         ].join(os.EOL));

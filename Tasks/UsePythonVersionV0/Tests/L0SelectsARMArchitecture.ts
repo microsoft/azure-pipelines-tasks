@@ -7,9 +7,9 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('versionSpec', '3.x');
+taskRunner.setInput('versionSpec', '3.14.x');
 taskRunner.setInput('addToPath', 'false');
-taskRunner.setInput('architecture', 'x86');
+taskRunner.setInput('architecture', 'arm64');
 
 // Mock azure-pipelines-tool-lib
 const findLocalTool = sinon.stub();
