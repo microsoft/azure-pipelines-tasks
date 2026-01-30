@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 262,
-    "Patch": 3
+    "Minor": 269,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -106,6 +106,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "main.js",
       "argumentFormat": ""
     }
