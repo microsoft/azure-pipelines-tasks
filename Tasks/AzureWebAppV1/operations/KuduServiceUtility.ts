@@ -196,12 +196,12 @@ export class KuduServiceUtility {
      */
     public async warmUp(): Promise<void> {
         try {
-            console.log(tl.loc('warming up Kudu Service'));
+            tl.debug('warming up Kudu Service');
             await this._appServiceKuduService.warmup();
-            console.log(tl.loc('warmed up Kudu Service'));
+            tl.debug('warmed up Kudu Service');
         }
         catch(error) {
-            console.log(tl.loc('Failed to warm-up Kudu: ' + error.toString()));
+            tl.debug('Failed to warm-up Kudu: ' + error.toString());
         }
     }
 

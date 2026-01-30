@@ -52,7 +52,14 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
                 this.taskParams.SlotName, this.taskParams.WebAppKind);
             this.appServiceUtility = new AzureAppServiceUtility(this.appService);
             this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
+            
             const warmUpInstance = await this.getWarmupInstanceId();
+            if (warmUpInstance) {
+                tl.debug(`Using instance ${warmUpInstance} for warmup.`);
+            } else {
+                tl.debug('No specific instance for warmup, using default endpoint.');
+            }
+            
             this.kuduService = await this.appServiceUtility.getKuduService(warmUpInstance);
             this.slotName = this.appService.getSlot();
         }
