@@ -146,23 +146,65 @@ export class dotNetExe {
         }
     }
 
+    private findGlobalJsonFile(): string | null {
+    const repoRoot =
+        path.resolve(
+            tl.getVariable('Build.SourcesDirectory') ||
+            tl.getVariable('System.DefaultWorkingDirectory') ||
+            process.cwd()
+        );
+
+    const inputWd = tl.getInput('workingDirectory', false) || process.cwd();
+    let searchDir = path.resolve(inputWd);
+
+    tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+
+    while (true) {
+        const candidate = path.join(searchDir, 'global.json');
+        tl.debug(`Checking for global.json at: ${candidate}`);
+
+        if (tl.exist(candidate)) {
+            tl.debug(`Found global.json at: ${candidate}`);
+            return candidate;
+        }
+
+        const parentDir = path.dirname(searchDir);
+        if (parentDir === searchDir) {
+            break;
+        }
+
+        const rel = path.relative(repoRoot, parentDir);
+        if (rel.startsWith('..') || path.isAbsolute(rel) && rel === '') {
+            break;
+        }
+
+        searchDir = parentDir;
+    }
+
+    return null;
+    }
+
+
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("global.json")) {
+        const globalJsonPath = this.findGlobalJsonFile();
+
+        if (!globalJsonPath) {
             tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let globalJsonContents = fs.readFileSync("global.json", 'utf8');
+        let globalJsonContents = fs.readFileSync(globalJsonPath, 'utf8');
         if (!globalJsonContents.length) {
+            tl.debug("global.json is empty. Test run is VSTest");
             return false;
         }
 
         try {
             const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
-            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {
-            tl.warning(`Error occurred reading global.json: ${error}`);
+            tl.warning(`Error occurred reading global.json at ${globalJsonPath} ${error}`);
             return false;
         }
     }
@@ -200,23 +242,13 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP && projectFile.length > 0) {
-                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
-                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
-                    dotnet.arg("--project");
-                }
-                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
-                    dotnet.arg("--solution");
-                }
-                else {
-                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
-                    failedProjects.push(projectFile);
-                    continue;
-                }
+            if (projectFile) {
+             dotnet.arg(projectFile);
             }
 
-            dotnet.arg(projectFile);
             dotnet.line(this.arguments);
+
+            
             try {
                 const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
