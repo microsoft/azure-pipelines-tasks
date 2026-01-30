@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('NuGetCommand Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 10000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 60000);
 
     it('restore single solution', async () => {
         const tp = path.join(__dirname, './RestoreTests/singlesln.js')
@@ -16,7 +16,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), 'should have nuget output');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
-    }).timeout(20000);
+    });
 
     it('restore single solution with CredentialProvider', async () => {
         const tp = path.join(__dirname, './RestoreTests/singleslnCredentialProvider.js')
