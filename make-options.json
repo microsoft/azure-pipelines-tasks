@@ -244,13 +244,15 @@
     "Node24_9": [],
     "Node24_10": [],
     "Node24_overwrite": [],
-    "wif_242": [
-        "PipAuthenticateV1",
+    "wif_242_Node24" : [
         "CargoAuthenticateV0",
-        "NpmAuthenticateV0",
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
-        "MavenAuthenticateV0",
+        "MavenAuthenticateV0"
+    ],
+    "wif_242": [
+        "NpmAuthenticateV0",
+        "PipAuthenticateV1",
         "TwineAuthenticateV1"
     ],
     "LocalPackages": [
