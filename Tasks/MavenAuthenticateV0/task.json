@@ -59,6 +59,10 @@
     "Node20_1": {
       "target": "mavenauth.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -71,6 +75,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }

@@ -28,6 +28,10 @@
     "Node20_1": {
       "target": "condaauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
