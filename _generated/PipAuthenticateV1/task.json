@@ -88,6 +88,10 @@
     "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

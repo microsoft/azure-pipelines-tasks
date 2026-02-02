@@ -46,6 +46,10 @@
     "Node20_1": {
       "target": "npmauth.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -59,6 +63,10 @@
     },
     "Node20_1": {
       "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npmauth.js",
       "argumentFormat": ""
     }
   },
