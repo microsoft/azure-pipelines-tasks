@@ -483,6 +483,10 @@
     "Node20_1": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
