@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 269,
+    "Minor": 270,
     "Patch": 2
   },
   "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
@@ -133,6 +133,7 @@
         "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
         "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
         "DOTNET-ISOLATED|9.0": "DOTNET-ISOLATED|9.0",
+        "DOTNET-ISOLATED|10.0": "DOTNET-ISOLATED|10.0",
         "JAVA|8": "JAVA|8",
         "JAVA|11": "JAVA|11",
         "JAVA|17": "JAVA|17",
