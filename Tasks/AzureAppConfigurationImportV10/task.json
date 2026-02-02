@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 268,
-        "Patch": 1
+        "Minor": 270,
+        "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
     "minimumAgentVersion": "2.144.0",
