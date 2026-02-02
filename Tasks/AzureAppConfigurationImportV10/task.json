@@ -10,7 +10,7 @@
     "version": {
         "Major": 10,
         "Minor": 268,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Azure App Configuration",
     "minimumAgentVersion": "2.144.0",

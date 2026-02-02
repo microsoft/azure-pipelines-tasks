@@ -5,7 +5,8 @@ import {
     ConfigurationFormat, 
     ConfigurationProfile,
     ImportResult,
-    ImportMode, 
+    ImportMode,
+    ConfigurationChanges, 
     ArgumentError } from "@azure/app-configuration-importer";
 import { FileConfigurationSettingsSource, FileConfigurationSyncOptions } from "@azure/app-configuration-importer-file-source";
 import { AppConfigurationClient } from '@azure/app-configuration';
@@ -88,19 +89,32 @@ export class TaskController {
             tags: this._taskParameters.tags
         };
 
-        // eslint-disable-next-line @typescript-eslint/typedef
-        const progressCallBack = (progressResults: ImportResult) => {
-            successCount = progressResults.successCount;
-        };
-
         try {
-            await appConfigurationImporterClient.Import(
-                new FileConfigurationSettingsSource(fileConfigOptions),
-                TaskController.maxTimeout, //setting timeout to max value possible, align with ADO https://learn.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=classic#timeouts
-                this._taskParameters.strict,
-                progressCallBack,
-                this._taskParameters.importMode,
-                this._taskParameters.dryRun);
+            const fileSource = new FileConfigurationSettingsSource(fileConfigOptions);
+
+            if (this._taskParameters.dryRun) {  
+                const configurationChanges: ConfigurationChanges = await appConfigurationImporterClient.GetConfigurationChanges(
+                    fileSource,
+                    this._taskParameters.strict,
+                    this._taskParameters.importMode
+                );
+
+                this.printConfigurationChangesToConsole(configurationChanges);
+            } else {
+                // eslint-disable-next-line @typescript-eslint/typedef
+                const progressCallBack = (progressResults: ImportResult) => {
+                    successCount = progressResults.successCount;
+                };
+
+                await appConfigurationImporterClient.Import(
+                    fileSource,
+                    {
+                        timeout: TaskController.maxTimeout, //setting timeout to max value possible, align with ADO https://learn.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=classic#timeouts
+                        strict: this._taskParameters.strict,
+                        progressCallback: progressCallBack,
+                        importMode: this._taskParameters.importMode
+                    });
+            }
         }
         catch (error) {
             if (error instanceof RestError) {
@@ -122,5 +136,33 @@ export class TaskController {
         }
         
         console.log(tl.loc("SuccessfullyUploadedConfigurations", successCount));
+    }
+
+    private printConfigurationChangesToConsole(changes: ConfigurationChanges): void {
+        const settingsToAdd = [
+            ...changes.ToAdd,
+            ...changes.ToModify,
+            ...changes.ToRefresh
+        ];
+
+        console.log("The following settings will be removed from App Configuration:");
+        for (const setting of changes.ToDelete) {
+            console.log(JSON.stringify({
+                key: setting.key, 
+                label: setting.label, 
+                contentType: setting.contentType, 
+                tags: setting.tags
+            }));
+        }
+
+        console.log("\nThe following settings will be written to App Configuration:");
+        for (const setting of settingsToAdd) {
+            console.log(JSON.stringify({
+                key: setting.key, 
+                label: setting.label, 
+                contentType: setting.contentType, 
+                tags: setting.tags
+            }));
+        }
     }
 }
