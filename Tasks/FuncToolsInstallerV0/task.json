@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 263,
+    "Minor": 269,
     "Patch": 0
   },
   "preview": true,
@@ -27,7 +27,7 @@
       "name": "version",
       "label": "Version",
       "type": "string",
-      "helpMarkDown": "Specify the version of Azure func tools to install. Ex:<br><br>2.7.1575<br>v2.7.1575<br>latest",
+      "helpMarkDown": "Specify the version of Azure func tools to install. Ex:<br><br>4.6.0<br>v4.6.0<br>latest",
       "defaultValue": "latest"
     }
   ],
@@ -50,7 +50,7 @@
     "FindingLatestFuncToolsVersion": "Finding latest func tools version...",
     "FuncDownloadFailed": "Failed to download func tools from location %s. Error %s.",
     "LatestFuncToolsVersion": "Latest version is %s",
-    "NotAValidSemverVersion": "Version not specified in correct format. Ex: 2.7.1575, v2.7.1575, latest",
+    "NotAValidSemverVersion": "Version not specified in correct format. Ex: 4.6.0, v4.6.0, latest",
     "SuccessfullyDownloaded": "Successfully downloaded func tools %s. Download path: %s.",
     "VerifyingFuncToolsInstallation": "Verifying func tools installation...",
     "VersionAlreadyInstalled": "Func tool version %s is already installed. Installation path: %s."
