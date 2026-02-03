@@ -143,6 +143,7 @@ describe('UniversalPackages Suite', function () {
                 'INPUT_FEED': TEST_CONSTANTS.FEED_NAME,
                 'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
             });
@@ -181,6 +182,7 @@ describe('UniversalPackages Suite', function () {
                 'INPUT_FEED': TEST_CONSTANTS.PROJECT_SCOPED_FEED_NAME,
                 'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
             });

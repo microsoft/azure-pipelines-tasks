@@ -22,7 +22,8 @@ export const TEST_CONSTANTS = {
     // Authentication
     WIF_TOKEN: 'wif-token-12345',
     SYSTEM_TOKEN: 'system-token-67890',
-    SERVICE_CONNECTION_NAME: 'TestServiceConnection'
+    SERVICE_CONNECTION_NAME: 'TestServiceConnection',
+    MOCK_TENANT_ID: '12345678-1234-1234-1234-123456789abc'
 };
 
 // Default environment variables for all tests

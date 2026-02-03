@@ -5,6 +5,25 @@ import { UniversalMockHelper, MockConfig } from './UniversalMockHelper';
 import { TEST_CONSTANTS } from './TestConstants';
 import * as TestHelpers from './TestHelpers';
 
+// Mock global fetch before anything else runs
+// This prevents real network calls in L0 tests
+const mockFetch = async (url: string, options?: any): Promise<any> => {
+    // Return a mock response with X-VSS-ResourceTenant header
+    return {
+        ok: true,
+        status: 200,
+        headers: {
+            get: (name: string) => {
+                if (name.toLowerCase() === 'x-vss-resourcetenant') {
+                    return TEST_CONSTANTS.MOCK_TENANT_ID;
+                }
+                return null;
+            }
+        }
+    };
+};
+(global as any).fetch = mockFetch;
+
 let taskPath = path.join(__dirname, '..', 'universalMain.js');
 let tmr: TaskMockRunner = new TaskMockRunner(taskPath);
 
