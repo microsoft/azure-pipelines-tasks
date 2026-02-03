@@ -26,17 +26,24 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'JAVA|11', 'java ' ],
     [ 'JAVA|17', 'java ' ],
     [ 'JAVA|21', 'java ' ],
+    [ 'JAVA|25', 'java ' ],
     [ 'NODE|8', 'node ' ],
     [ 'NODE|10', 'node ' ],
     [ 'NODE|12', 'node ' ],
     [ 'NODE|14', 'node ' ],
     [ 'NODE|16', 'node ' ],
+    [ 'NODE|18', 'node ' ],
+    [ 'NODE|20', 'node ' ],
+    [ 'NODE|22', 'node ' ],
+    [ 'NODE|24', 'node ' ],
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
     [ 'PYTHON|3.8', 'python '],
     [ 'PYTHON|3.9', 'python '],
     [ 'PYTHON|3.10', 'python '],
-    [ 'PYTHON|3.11', 'python ']
+    [ 'PYTHON|3.11', 'python '],
+    [ 'PYTHON|3.12', 'python '],
+    [ 'PYTHON|3.13', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
