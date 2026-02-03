@@ -20,7 +20,7 @@
     "@types/mocha": "^5.2.7"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^4.1.0",
+    "azure-pipelines-task-lib": "^5.2.4",
     "nock": "^13.2.6"
   }
 }

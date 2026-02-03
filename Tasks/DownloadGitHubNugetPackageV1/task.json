@@ -92,6 +92,10 @@
     "Node20_1": {
       "target": "dotnetrestore.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "dotnetrestore.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
