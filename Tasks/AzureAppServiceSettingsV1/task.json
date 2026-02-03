@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -155,6 +155,10 @@
       "target": "azurewebappsettings.js"
     },
     "Node20_1": {
+      "target": "azurewebappsettings.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "azurewebappsettings.js",
       "argumentFormat": ""
     }
