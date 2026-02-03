@@ -138,14 +138,19 @@
         "JAVA|11": "JAVA|11",
         "JAVA|17": "JAVA|17",
         "JAVA|21": "JAVA|21",
+        "JAVA|25": "JAVA|25",
         "NODE|14": "NODE|14",
         "NODE|16": "NODE|16",
         "NODE|18": "NODE|18",
         "NODE|20": "NODE|20",
+        "NODE|22": "NODE|22",
+        "NODE|24": "NODE|24",
         "PYTHON|3.8": "PYTHON|3.8",
         "PYTHON|3.9": "PYTHON|3.9",
         "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
+        "PYTHON|3.11": "PYTHON|3.11",
+        "PYTHON|3.12": "PYTHON|3.12",
+        "PYTHON|3.13": "PYTHON|3.13"
       },
       "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
       "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
