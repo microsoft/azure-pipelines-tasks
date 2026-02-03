@@ -121,10 +121,6 @@
     }
   ],
   "execution": {
-    "Node16": {
-      "target": "universalMain.js",
-      "argumentFormat": ""
-    },
     "Node20_1": {
       "target": "universalMain.js",
       "argumentFormat": ""
