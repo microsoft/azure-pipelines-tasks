@@ -157,6 +157,10 @@
     "Node20_1": {
       "target": "azurewebappsettings.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurewebappsettings.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
