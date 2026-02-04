@@ -9,7 +9,8 @@ export class TaskInputReader implements InputReader {
 
 export class TaskOutputSetter implements OutputSetter {
     setOutput(name: string, value: any): void {
-        tl.setVariable(name, value);
+        // The 4th parameter (isOutput=true) makes this variable available as $(taskName.outputName)
+        tl.setVariable(name, value, false, true);
     }
 
     setFailed(message: string): void {

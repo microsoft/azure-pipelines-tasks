@@ -44,15 +44,6 @@ describe("run error handling tests", function() {
 
     assertHasErrors(tr, ["This is an error!"], this.test!.title, 1);
   });
-
-  it("fails with unsupported authentication scheme", async function() {
-    let tp: string = path.join(__dirname, "runAuthError.js");
-    let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-    await tr.runAsync();
-
-    assertHasErrors(tr, ["UnsupportedAuthScheme", "ManagedServiceIdentity"], this.test!.title, 1);
-  });
 });
 
 describe("deployments tests", function() {

@@ -4,7 +4,7 @@ const rewiremock = require('rewiremock/node');
 import * as path from 'path';
 import * as crypto from 'crypto';
 import tmrm = require("azure-pipelines-task-lib/mock-run");
-import { environmentData, createMockRestError, setupMockAzureEndpoint } from './utils';
+import { environmentData, createMockRestError, setupMockAzureEndpoint, createMockAuthHelper } from './utils';
 
 // Mock stackCreate to throw deployment error
 const mockStackCreate = async () => {
@@ -39,6 +39,9 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Setup mock Azure service connection
 setupMockAzureEndpoint('AzureRM');
+
+// Mock auth helper to prevent actual Azure login
+tr.registerMock('./auth', createMockAuthHelper());
 
 tr.setInput('ConnectedServiceName', 'AzureRM');
 tr.setInput('type', 'deploymentStack');

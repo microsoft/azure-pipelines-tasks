@@ -10,7 +10,7 @@
   "loc.input.label.type": "Execution type",
   "loc.input.help.type": "Specifies the execution type, deployment or deploymentStack.",
   "loc.input.label.operation": "Operation",
-  "loc.input.help.operation": "Specifies the operation to perform.",
+  "loc.input.help.operation": "Specifies the operation to perform. Deployment supports: create, validate, whatIf. Deployment Stack supports: create, validate, delete.",
   "loc.input.label.scope": "Deployment scope",
   "loc.input.help.scope": "Specifies the scope at which resources are deployed.",
   "loc.input.label.name": "Deployment name",
@@ -84,5 +84,6 @@
   "loc.messages.BicepVersionInstalled": "Installed Bicep version %s to %s",
   "loc.messages.TaskConfig": "Task config: %s",
   "loc.messages.OperationSucceeded": "Operation completed successfully",
-  "loc.messages.UnsupportedAuthScheme": "Unsupported authentication scheme: %s. Only ServicePrincipal authentication is supported."
+  "loc.messages.FailedToLogout": "The following error occurred while logging out: %s",
+  "loc.messages.FilesIgnoredForDelete": "Template and parameter files are not required for delete operations and will be ignored."
 }

@@ -59,7 +59,7 @@
       "defaultValue": "create",
       "required": true,
       "groupName": "AzureDetails",
-      "helpMarkDown": "Specifies the operation to perform.",
+      "helpMarkDown": "Specifies the operation to perform. Deployment supports: create, validate, whatIf. Deployment Stack supports: create, validate, delete.",
       "options": {
         "create": "Create or update",
         "validate": "Validate",
@@ -388,7 +388,8 @@
     "BicepVersionInstalled": "Installed Bicep version %s to %s",
     "TaskConfig": "Task config: %s",
     "OperationSucceeded": "Operation completed successfully",
-    "UnsupportedAuthScheme": "Unsupported authentication scheme: %s. Only ServicePrincipal authentication is supported."
+    "FailedToLogout": "The following error occurred while logging out: %s",
+    "FilesIgnoredForDelete": "Template and parameter files are not required for delete operations and will be ignored."
   },
   "execution": {
     "Node16": {

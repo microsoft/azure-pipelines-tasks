@@ -391,7 +391,8 @@
     "BicepVersionInstalled": "ms-resource:loc.messages.BicepVersionInstalled",
     "TaskConfig": "ms-resource:loc.messages.TaskConfig",
     "OperationSucceeded": "ms-resource:loc.messages.OperationSucceeded",
-    "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme"
+    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
+    "FilesIgnoredForDelete": "ms-resource:loc.messages.FilesIgnoredForDelete"
   },
   "execution": {
     "Node16": {

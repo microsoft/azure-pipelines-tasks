@@ -1,4 +1,5 @@
-import tl = require('azure-pipelines-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as path from 'path';
 import { 
     parseConfig, 
     getTemplateAndParameters, 
@@ -6,26 +7,15 @@ import {
 } from '@azure/bicep-deploy-common';
 import { TaskInputParameterNames, TaskInputReader, TaskOutputSetter } from './taskIO';
 import { TaskLogger, errorMessageConfig, loggingMessageConfig } from './logging';
+import { AzureAuthenticationHelper } from './auth';
 
-export async function run() {
+export async function run(): Promise<void> {
+    const authHelper = new AzureAuthenticationHelper();
+
     try {
-        // Setup environment variables for Azure SDK authentication.
-        // The @azure/bicep-deploy-common library uses ChainedTokenCredential which tries:
-        // 1. EnvironmentCredential (reads AZURE_* env vars)
-        // 2. AzureCliCredential (falls back to Azure CLI if installed)
-        // 3. AzurePowerShellCredential (falls back to Azure PowerShell if installed)
-        const connectedServiceName = tl.getInput('ConnectedServiceName', true);
-        const authScheme = tl.getEndpointAuthorizationScheme(connectedServiceName, true);
+        const connectedService: string = tl.getInput('ConnectedServiceName', true);
 
-        if (authScheme.toLowerCase() === 'serviceprincipal') {
-            // Traditional service principal with client secret
-            process.env.AZURE_CLIENT_ID = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
-            process.env.AZURE_CLIENT_SECRET = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
-            process.env.AZURE_TENANT_ID = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
-            tl.debug('Using ServicePrincipal authentication with client secret');
-        } else {
-            throw new Error(tl.loc('UnsupportedAuthScheme', authScheme));
-        }
+        await authHelper.loginAzure(connectedService);
 
         const inputReader = new TaskInputReader();
         const inputParameterNames = new TaskInputParameterNames();
@@ -36,18 +26,27 @@ export async function run() {
         const config = parseConfig(inputReader, inputParameterNames);
         logger.logInfo(tl.loc('TaskConfig', JSON.stringify(config, null, 2)));
 
-        // Get template and parameters
-        const files = await getTemplateAndParameters(config, logger);
+        // Get template and parameters (skip for delete operations)
+        // TODO: Update to use new execute() signature once library is updated.
+        let files = {};
+        if (config.operation === 'delete') {
+            if (config.templateFile || config.parametersFile) {
+                logger.logWarning(tl.loc('FilesIgnoredForDelete'));
+            }
+        } else {
+            files = await getTemplateAndParameters(config, logger);
+        }
 
         // Execute the deployment or deployment stack operation
         await execute(config, files, logger, outputSetter, errorMessageConfig, loggingMessageConfig);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('OperationSucceeded'));
     } catch (err: any) {
         const errorMessage = err instanceof Error ? err.message : String(err);
-
-        // tl.error doesn't need to be called separately as setResult calls it internally.
         tl.setResult(tl.TaskResult.Failed, errorMessage);
+    } finally {
+        authHelper.logoutAzure();
     }
 }
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 run();

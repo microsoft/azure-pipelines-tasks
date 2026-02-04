@@ -48,3 +48,21 @@ export function createValidationFailureError(deploymentName: string = 'e2e-valid
     ]
   };
 }
+
+// Mock for AzureAuthenticationHelper - used with tmrm.registerMock
+export function createMockAuthHelper() {
+  return {
+    AzureAuthenticationHelper: function() {
+      return {
+        loginAzure: function() {
+          console.log('[MOCK] loginAzure called');
+          return Promise.resolve();
+        },
+        logoutAzure: function() {
+          console.log('[MOCK] logoutAzure called');
+          return;
+        }
+      };
+    }
+  };
+}

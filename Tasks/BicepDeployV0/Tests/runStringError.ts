@@ -2,13 +2,16 @@
 // Licensed under the MIT License.
 import * as path from "path";
 import * as tmrm from "azure-pipelines-task-lib/mock-run";
-import { environmentData, setupMockAzureEndpoint } from './utils';
+import { setupMockAzureEndpoint, createMockAuthHelper } from './utils';
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Setup mock Azure service connection
 setupMockAzureEndpoint('AzureRM');
+
+// Mock auth helper to prevent actual Azure login
+tr.registerMock('./auth', createMockAuthHelper());
 
 // Set minimal required inputs that parseConfig validates before getTemplateAndParameters is called
 tr.setInput('ConnectedServiceName', 'AzureRM');
