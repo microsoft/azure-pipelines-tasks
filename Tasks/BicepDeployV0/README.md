@@ -12,7 +12,7 @@ The task handles:
 - Deleting deployments and deployment stacks
 - Installing and managing Bicep CLI versions automatically
 
-## What's New in Version 1.0
+## Features
 
 - **Native Bicep Support**: Direct deployment from `.bicep` and `.bicepparam` files without requiring pre-compilation to ARM templates
 - **Deployment Stacks**: Full support for Azure Deployment Stacks with deny settings, unmanaged resource policies, and lifecycle management
@@ -54,11 +54,11 @@ The table below lists all task inputs. Required inputs are marked with **\***.
 
 | Input Name | Required | Description | Allowed Values |
 |------------|----------|-------------|----------------|
-| `executionType` | Yes | Deployment model to use | `Deployment` (standard ARM deployment)<br>`Deployment Stack` (with lifecycle management) |
-| `operation` | Yes | Action to perform | `Create or update`<br>`Validate`<br>`What-If (preview changes)` (Deployment only)<br>`Delete` |
-| `deploymentScope` | Yes | Scope for the deployment | `Resource Group`<br>`Subscription`<br>`Management Group`<br>`Tenant` |
-| `deploymentName` | No | Name for the deployment or stack. Auto-generated if not provided. | Any valid string |
-| `connectedServiceName` | Yes | Azure Resource Manager service connection | Service connection name |
+| `type` | Yes | Deployment model to use | `deployment` (standard ARM deployment)<br>`deploymentStack` (with lifecycle management) |
+| `operation` | Yes | Action to perform | `create`<br>`validate`<br>`whatIf` (Deployment only)<br>`delete` |
+| `scope` | Yes | Scope for the deployment | `resourceGroup`<br>`subscription`<br>`managementGroup`<br>`tenant` |
+| `name` | No | Name for the deployment or stack. Auto-generated if not provided. | Any valid string |
+| `azureResourceManagerConnection` | Yes | Azure Resource Manager service connection | Service connection name |
 | `subscriptionId` | Conditional | Target Azure subscription (required for Resource Group and Subscription scopes) | Subscription ID |
 | `resourceGroupName` | Conditional | Target resource group name (required for Resource Group scope) | Resource group name |
 | `location` | Conditional | Azure region for deployment metadata (required for Subscription, Management Group, and Tenant scopes) | Azure region name |
@@ -71,7 +71,7 @@ The table below lists all task inputs. Required inputs are marked with **\***.
 |------------|----------|-------------|----------------|
 | `templateFile` | No | Path to the Bicep template file | File path (`.bicep`) |
 | `parametersFile` | No | Path to the parameters file | File path (`.json` or `.bicepparam`) |
-| `overrideParameters` | No | Inline parameter values that override parameters file. Accepts JSON or YAML format. | JSON or YAML object |
+| `parameters` | No | Inline parameter values that override parameters file. Accepts JSON or YAML format. | JSON or YAML object |
 
 **Note**: Follow [Azure Naming Guidelines](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging) when specifying resource names in parameters:
 
@@ -84,14 +84,14 @@ The table below lists all task inputs. Required inputs are marked with **\***.
 
 ### Deployment Stack Parameters
 
-These inputs apply when `executionType` is set to `Deployment Stack`.
+These inputs apply when `type` is set to `deploymentStack`.
 
 | Input Name | Required | Description | Allowed Values |
 |------------|----------|-------------|----------------|
-| `actionOnUnmanage` | Yes (for stacks) | Action for resources not in template | `Detach` (default - keep resources but remove from stack)<br>`Delete` (delete unmanaged resources) |
+| `actionOnUnmanageResources` | Yes (for stacks) | Action for resources not in template | `detach` (default - keep resources but remove from stack)<br>`delete` (delete unmanaged resources) |
 | `actionOnUnmanageResourceGroups` | No | Action for unmanaged resource groups (Subscription/Management Group/Tenant scopes only) | `Detach`<br>`Delete` |
 | `actionOnUnmanageManagementGroups` | No | Action for unmanaged management groups (Tenant scope only) | `Detach`<br>`Delete` |
-| `denySettingsMode` | Yes (for stacks) | Protection level against unauthorized changes | `None` (default - no protection)<br>`DenyDelete` (prevent deletion)<br>`DenyWriteAndDelete` (prevent modification and deletion) |
+| `denySettingsMode` | Yes (for stacks) | Protection level against unauthorized changes | `none` (default - no protection)<br>`denyDelete` (prevent deletion)<br>`denyWriteAndDelete` (prevent modification and deletion) |
 | `denySettingsExcludedActions` | No | Comma-separated list of Azure RBAC actions excluded from deny settings | e.g., `Microsoft.Compute/virtualMachines/write` |
 | `denySettingsExcludedPrincipals` | No | Comma-separated list of Azure AD principal IDs excluded from deny settings | Azure AD principal GUIDs |
 | `denySettingsApplyToChildScopes` | No | Apply deny settings to child resource scopes | `true`<br>`false` |
@@ -101,7 +101,7 @@ These inputs apply when `executionType` is set to `Deployment Stack`.
 
 | Input Name | Required | Description | Allowed Values |
 |------------|----------|-------------|----------------|
-| `deploymentDescription` | No | Description text for the deployment or stack | Any string |
+| `description` | No | Description text for the deployment or stack | Any string |
 | `tags` | No | Tags as JSON or YAML object (Deployment Stack only) | JSON or YAML object |
 | `bicepVersion` | No | Specific Bicep CLI version to use. Uses latest stable version if empty. | Version string (e.g., `0.30.23`) |
 | `maskedOutputs` | No | Comma-separated list of output names to mask in logs for security | e.g., `connectionString,adminPassword` |
@@ -114,7 +114,7 @@ These inputs apply when `executionType` is set to `Deployment Stack`.
 ### Example 1: Basic Deployment
 
 ```yaml
-- task: BicepDeploy@1
+- task: BicepDeploy@0
   displayName: 'Deploy Bicep Template'
   inputs:
     azureResourceManagerConnection: 'Azure-Connection'
@@ -127,7 +127,7 @@ These inputs apply when `executionType` is set to `Deployment Stack`.
 ### Example 2: Deployment Stack
 
 ```yaml
-- task: BicepDeploy@1
+- task: BicepDeploy@0
   displayName: 'Deploy with Stack Protection'
   inputs:
     type: 'deploymentStack'
@@ -145,7 +145,7 @@ These inputs apply when `executionType` is set to `Deployment Stack`.
 ### Example 3: Subscription-Level Deployment
 
 ```yaml
-- task: BicepDeploy@1
+- task: BicepDeploy@0
   displayName: 'Deploy Subscription Resources'
   inputs:
     scope: 'subscription'
@@ -183,7 +183,7 @@ After the deployment completes successfully, all outputs are automatically conve
 ### Accessing Outputs in PowerShell
 
 ```yaml
-- task: BicepDeploy@1
+- task: BicepDeploy@0
   displayName: 'Deploy Infrastructure'
   inputs:
     azureResourceManagerConnection: 'Azure-Connection'
@@ -203,7 +203,7 @@ After the deployment completes successfully, all outputs are automatically conve
 ### Accessing Outputs in Bash
 
 ```yaml
-- task: BicepDeploy@1
+- task: BicepDeploy@0
   displayName: 'Deploy Infrastructure'
   inputs:
     azureResourceManagerConnection: 'Azure-Connection'
