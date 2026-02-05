@@ -235,6 +235,25 @@ export class azureclitask {
     private static tenantId: string = null;
     private static isSupportCertificateParameter: boolean = false;
 
+    private static formatExecError(err: any): string {
+        if (!err) return 'Unknown error';
+        
+        const code = err.code ?? err.exitCode;
+        const stderr = typeof err.stderr === 'string' ? err.stderr.trim() : '';
+        const stdout = typeof err.stdout === 'string' ? err.stdout.trim() : '';
+        
+        if (stderr || stdout || code !== undefined) {
+            const parts = [];
+            if (code !== undefined) parts.push(`code=${code}`);
+            if (stderr) parts.push(`stderr=${stderr}`);
+            if (stdout) parts.push(`stdout=${stdout}`);
+            return parts.join(' | ');
+        }
+        
+        if (err instanceof Error) return err.message;
+        return JSON.stringify(err, Object.getOwnPropertyNames(err));
+    }
+
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
             let versionMatch = [];
@@ -414,8 +433,7 @@ export class azureclitask {
                 throw tl.loc('AuthSchemeNotSupportedForAzureDevOps', authScheme);
             }
         } catch (error) {
-            const errorMessage = error?.message || error?.toString() || String(error);
-            throw new Error(`Failed to setup Azure DevOps CLI: ${errorMessage}`);
+            throw new Error(`Failed to setup Azure DevOps CLI: ${this.formatExecError(error)}`);
         }
     }
 
