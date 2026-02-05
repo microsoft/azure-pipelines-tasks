@@ -104,12 +104,22 @@ export class NugetMockHelper {
         this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
 
+    public registerLinuxUtilityMock() {
+        this.tmr.registerMock('./linuxutility', {
+            detectUnsupportedUbuntuVersion: function() {
+                return false;
+            }
+        });
+    }
+
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
         a.exist["c:\\from\\tool\\installer\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
+        // Mock Linux utility to prevent Ubuntu detection when running tests on Linux
+        this.registerLinuxUtilityMock();
     }
 
     private registerMockWithMultiplePaths(paths: string[], mock: any) {
