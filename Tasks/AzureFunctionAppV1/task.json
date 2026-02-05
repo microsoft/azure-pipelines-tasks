@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 269,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -242,6 +242,10 @@
       "target": "azurermwebappdeployment.js"
     },
     "Node20_1": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
     }
