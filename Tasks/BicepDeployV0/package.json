@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@azure/bicep-deploy-common": "^0.0.2-dev",
+    "@azure/bicep-deploy-common": "^0.0.3-dev",
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/q": "^1.5.8",

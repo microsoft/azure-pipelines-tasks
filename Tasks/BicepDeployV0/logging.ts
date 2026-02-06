@@ -19,6 +19,13 @@ export const loggingMessageConfig: LoggingMessageConfig = {
         tl.loc('BicepVersionInstalled', version, path),
     requestFailedCorrelation: (correlationId: string | null) => 
         tl.loc('RequestFailedCorrelation', correlationId),
+    filesIgnoredForDelete: tl.loc('FilesIgnoredForDelete'),
+    startingOperation: (type: string, operation: string, scope: string, scopedId: string, name: string) =>
+        tl.loc('StartingOperation', type, operation, scope, scopedId, name ? ` with name '${name}'` : ''),
+    usingTemplateFile: (templateFile: string) =>
+        tl.loc('UsingTemplateFile', templateFile),
+    usingParametersFile: (parametersFile: string) =>
+        tl.loc('UsingParametersFile', parametersFile),
 };
 
 export const errorMessageConfig: ErrorMessageConfig = {

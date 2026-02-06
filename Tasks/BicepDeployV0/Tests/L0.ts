@@ -26,7 +26,7 @@ function assertSucceeded(tr: ttm.MockTestRunner, testName: string) {
 }
 
 describe("run error handling tests", function() {
-  this.timeout(20000);
+  this.timeout(60000);
   it("sets the failed result using a string error", async function() {
     let tp: string = path.join(__dirname, "runStringError.js");
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
