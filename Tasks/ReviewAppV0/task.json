@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 269,
+    "Minor": 270,
     "Patch": 0
   },
   "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
@@ -55,6 +55,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "run.js",
       "argumentFormat": ""
     }
