@@ -30,7 +30,6 @@ export const TEST_CONSTANTS = {
 export function getDefaultEnvVars(): { [key: string]: string } {
     return {
         'INPUT_PACKAGEVERSION': TEST_CONSTANTS.PACKAGE_VERSION,
-        'INPUT_VERBOSITY': 'verbose',
         'AGENT_HOMEDIRECTORY': 'c:\\agent\\home\\directory',
         'AGENT_VERSION': '2.999.0',
         'BUILD_SOURCESDIRECTORY': 'c:\\agent\\home\\directory\\sources',

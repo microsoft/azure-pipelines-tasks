@@ -1,7 +1,7 @@
 {
   "id": "e0b79640-8625-11e8-91be-db2878ff888a",
   "name": "UniversalPackages",
-  "friendlyName": "Universal Packages",
+  "friendlyName": "Universal packages",
   "description": "Download or publish Universal Packages",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
@@ -16,7 +16,7 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "4.248.0",
   "instanceNameFormat": "Universal $(command)",
   "inputs": [
     {
@@ -101,23 +101,6 @@
       "helpMarkDown": "Optional. Description of the contents of this package and/or the changes made in this version of the package.",
       "required": "false",
       "visibleRule": "command = publish"
-    },
-    {
-      "name": "verbosity",
-      "type": "pickList",
-      "label": "Verbosity",
-      "defaultValue": "None",
-      "helpMarkDown": "Specifies the amount of detail displayed in the output.",
-      "required": "false",
-      "options": {
-        "None": "None",
-        "Trace": "Trace",
-        "Debug": "Debug",
-        "Information": "Information",
-        "Warning": "Warning",
-        "Error": "Error",
-        "Critical": "Critical"
-      }
     }
   ],
 
@@ -136,7 +119,6 @@
     "Debug_CallingFeedApi": "Calling Feed API: %s",
     "Debug_CallingPermissionsApi": "Calling Permissions API: %s",
     "Debug_CalculatedVersion": "Calculated next version: %s",
-    "Debug_DownloadOperation": "Download operation - Package: %s@%s, Target: %s",
     "Debug_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
     "Debug_FeedFound": "Feed found - ID: %s, Project ID: %s",
     "Debug_FeedIdentityToken": "Feed identity token: %s",
@@ -149,7 +131,6 @@
     "Debug_ProvenanceApiUrl": "Creating provenance session at: %s",
     "Debug_ProvenanceDisabled": "Provenance disabled by Packaging.SavePublishMetadata variable",
     "Debug_ProvenanceResponseStatus": "Provenance API response status: %s",
-    "Debug_PublishOperation": "Publish operation - Package: %s@%s, Source: %s",
     "Debug_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
     "Debug_ResolvingVersionIncrement": "Resolving version increment: %s",
     "Debug_ResolvedPackagingUrl": "Resolved packaging service URL: %s",
@@ -172,16 +153,22 @@
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
     "Error_OrganizationRequired": "Organization is required when using a service connection for cross-organization access.",
     "Error_PackageVersionRequired": "Package version is required for download operations.",
-    "Error_PackagesFailedToDownload": "Package failed to download",
-    "Error_PackagesFailedToPublish": "Package failed to publish",
+    "Error_PackagesFailedToDownload": "Failed to download package '%s' version '%s' from feed '%s'",
+    "Error_PackagesFailedToPublish": "Failed to publish package '%s' version '%s' to feed '%s'",
     "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
     "Error_UnexpectedErrorArtifactToolPublish": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
+    "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
     "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
     "Error_VersionInputRequired": "For publish operations, either 'packageVersion' or 'versionIncrement' must be specified.",
     "Error_VersionInputsMutuallyExclusive": "Cannot specify both 'packageVersion' and 'versionIncrement'. Please use only one.",
+    "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
     "Info_UsingIncrementedVersion": "Using incremented version %s (%s increment from %s)",
-    "Success_PackagesDownloaded": "Package was downloaded successfully",
-    "Success_PackagesPublished": "Package was published successfully",
+    "Info_DownloadingPackage": "Downloading package '%s' version '%s' to '%s'",
+    "Info_PublishingPackage": "Publishing package '%s' version '%s' from '%s'",
+    "Success_PackagesDownloaded": "Successfully downloaded package '%s' version '%s' from feed '%s'",
+    "Success_PackagesPublished": "Successfully published package '%s' version '%s' to feed '%s'",
     "Warning_BuildIdentityFeedHint": "Check feed '%s' permissions: %s",
     "Warning_BuildIdentityOperationHint": "Operation failed using identity '%s' (%s).",
     "Warning_DownloadRequiresReaderAccess": "Downloading packages requires %s access. Downloading upstream packages requires %s or higher access.",
@@ -194,6 +181,7 @@
     "Warning_ProvenanceSessionFailed": "Provenance session creation failed: %s",
     "Warning_PublishRequiresContributorAccess": "Publishing packages requires %s or higher access.",
     "Warning_ServiceConnectionNotFound": "Service connection '%s' not found or not accessible. Falling back to build service token.",
+    "Warning_SessionCreationFailed": "Could not create provenance session.",
     "Warning_UnableToDeterminePermissions": "Feed '%s' exists, but unable to determine permissions. %s",
     "Warning_UnableToDeterminePermissionsUnknown": "Feed '%s' exists, but unable to determine permissions.",
     "Warning_WifAuthFailed": "WIF authentication failed for service connection %s, falling back to build service token: %s",

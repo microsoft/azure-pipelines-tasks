@@ -15,9 +15,11 @@ export class UniversalPackageContext {
     versionIncrement?: string;
     adoServiceConnection?: string;
     directory: string;
-    verbosity: string;
     packageDescription?: string;
     command: OperationType;
+
+    // Computed properties
+    verbosity: string;
 
     // Auth properties
     accessToken?: string;
@@ -43,9 +45,11 @@ export class UniversalPackageContext {
         this.versionIncrement = tl.getInput("versionIncrement", false);
         this.adoServiceConnection = tl.getInput("adoServiceConnection", false);
         this.directory = tl.getInput("directory", true);
-        this.verbosity = tl.getVariable("System.Debug") === "true" ? "Debug" : tl.getInput("verbosity", true);
         this.packageDescription = tl.getInput("packageDescription", false);
         this.command = tl.getInput("command", true) as OperationType;
         this.pipelineCollectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
+
+        // Set verbosity based on System.Debug: Debug for verbose output, Information for normal output
+        this.verbosity = tl.getVariable("System.Debug") === "true" ? "Debug" : "Information";
     }
 }

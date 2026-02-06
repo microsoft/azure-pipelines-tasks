@@ -412,7 +412,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: tl.loc('Success_PackagesPublished')
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, '1.2.4', TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -434,7 +434,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: tl.loc('Success_PackagesPublished')
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, '1.3.0', TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -456,7 +456,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: tl.loc('Success_PackagesPublished')
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, '2.0.0', TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -479,7 +479,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: tl.loc('Success_PackagesPublished')
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, '0.0.1', TEST_CONSTANTS.FEED_NAME)
             });
         });
     });

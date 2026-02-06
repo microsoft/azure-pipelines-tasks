@@ -16,7 +16,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
             packageVersion = await resolveVersionIncrement(context);
         }
 
-        tl.debug(tl.loc('Debug_PublishOperation', context.packageName, packageVersion, context.directory));
+        helpers.logInfo('Info_PublishingPackage', context.packageName, packageVersion, context.directory);
         
         // Get provenance session ID if using service connection, otherwise use feedName
         // Build Service provides metadata automatically; service connections require provenance
@@ -27,9 +27,10 @@ export async function run(context: UniversalPackageContext): Promise<void> {
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
         publishPackageUsingArtifactTool(context, feedId, packageVersion);
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished"));
+        helpers.logInfo("Success_PackagesPublished", context.packageName, packageVersion, context.feedName);
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished", context.packageName, packageVersion, context.feedName));
     } catch (err) {
-        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish'), context);
+        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish', context.packageName, context.packageVersion || context.versionIncrement, context.feedName), context);
     }
 }
 
@@ -57,7 +58,7 @@ async function resolveVersionIncrement(context: UniversalPackageContext): Promis
     }
 
     tl.debug(tl.loc('Debug_CalculatedVersion', newVersion));
-    console.log(tl.loc('Info_UsingIncrementedVersion', newVersion, context.versionIncrement, highestVersion));
+    helpers.logInfo('Info_UsingIncrementedVersion', newVersion, context.versionIncrement, highestVersion);
 
     return newVersion;
 }

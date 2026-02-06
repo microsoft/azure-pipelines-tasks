@@ -14,7 +14,6 @@ export interface MockConfig {
         packageName: string;
         packageVersion?: string;
         versionIncrement?: string;
-        verbosity: string;
         packageDescription?: string;
         adoServiceConnection?: string;
     };

@@ -236,7 +236,6 @@ export function logArtifactToolTelemetry(context: UniversalPackageContext): void
             "packageVersion": context.packageVersion,
             "versionIncrement": context.versionIncrement,
             "adoServiceConnection": context.adoServiceConnection,
-            "verbosity": context.verbosity,
             "artifactToolPath": context.artifactToolPath,
             "pipelineCollectionUri": context.pipelineCollectionUri,
         };
@@ -253,4 +252,10 @@ export function logCommandResult(area: string, feature: string, resultCode: numb
     } catch (err) {
         tl.debug(tl.loc('Debug_TelemetryResultFailed', err));
     }
+}
+
+// Log an information-level message using a localized string
+// This provides always-visible output (unlike tl.debug which is suppressed unless System.Debug is set)
+export function logInfo(key: string, ...params: any[]): void {
+    console.log(tl.loc(key, ...params));
 }

@@ -37,7 +37,6 @@ const config: MockConfig = {
         packageName: TEST_CONSTANTS.PACKAGE_NAME,
         packageVersion: process.env['INPUT_PACKAGEVERSION'],
         versionIncrement: process.env['INPUT_VERSIONINCREMENT'],
-        verbosity: process.env['INPUT_VERBOSITY'] || 'verbose',
         packageDescription: process.env['INPUT_PACKAGE_DESCRIPTION'],
         adoServiceConnection: process.env['INPUT_ADOSERVICECONNECTION']
     },

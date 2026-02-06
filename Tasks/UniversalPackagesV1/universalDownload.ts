@@ -5,7 +5,7 @@ import * as helpers from "./universalPackageHelpers";
 
 export async function run(context: UniversalPackageContext): Promise<void> {
     try {
-        tl.debug(tl.loc('Debug_DownloadOperation', context.packageName, context.packageVersion, context.directory));
+        helpers.logInfo('Info_DownloadingPackage', context.packageName, context.packageVersion, context.directory);
         tl.debug(tl.loc("Debug_UsingArtifactToolDownload"));
 
         const command = new Array<string>();
@@ -32,9 +32,10 @@ export async function run(context: UniversalPackageContext): Promise<void> {
                 execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesDownloaded"));
+        helpers.logInfo("Success_PackagesDownloaded", context.packageName, context.packageVersion, context.feedName);
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesDownloaded", context.packageName, context.packageVersion, context.feedName));
     } catch (err) {
-        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToDownload'), context);
+        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToDownload', context.packageName, context.packageVersion, context.feedName), context);
     }
 }
 

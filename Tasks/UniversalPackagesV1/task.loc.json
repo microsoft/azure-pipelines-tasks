@@ -16,7 +16,7 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "4.248.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -101,23 +101,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.packageDescription",
       "required": "false",
       "visibleRule": "command = publish"
-    },
-    {
-      "name": "verbosity",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.verbosity",
-      "defaultValue": "None",
-      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
-      "required": "false",
-      "options": {
-        "None": "None",
-        "Trace": "Trace",
-        "Debug": "Debug",
-        "Information": "Information",
-        "Warning": "Warning",
-        "Error": "Error",
-        "Critical": "Critical"
-      }
     }
   ],
   "execution": {
@@ -135,7 +118,6 @@
     "Debug_CallingFeedApi": "ms-resource:loc.messages.Debug_CallingFeedApi",
     "Debug_CallingPermissionsApi": "ms-resource:loc.messages.Debug_CallingPermissionsApi",
     "Debug_CalculatedVersion": "ms-resource:loc.messages.Debug_CalculatedVersion",
-    "Debug_DownloadOperation": "ms-resource:loc.messages.Debug_DownloadOperation",
     "Debug_Downloading": "ms-resource:loc.messages.Debug_Downloading",
     "Debug_FeedFound": "ms-resource:loc.messages.Debug_FeedFound",
     "Debug_FeedIdentityToken": "ms-resource:loc.messages.Debug_FeedIdentityToken",
@@ -148,7 +130,6 @@
     "Debug_ProvenanceApiUrl": "ms-resource:loc.messages.Debug_ProvenanceApiUrl",
     "Debug_ProvenanceDisabled": "ms-resource:loc.messages.Debug_ProvenanceDisabled",
     "Debug_ProvenanceResponseStatus": "ms-resource:loc.messages.Debug_ProvenanceResponseStatus",
-    "Debug_PublishOperation": "ms-resource:loc.messages.Debug_PublishOperation",
     "Debug_Publishing": "ms-resource:loc.messages.Debug_Publishing",
     "Debug_ResolvingVersionIncrement": "ms-resource:loc.messages.Debug_ResolvingVersionIncrement",
     "Debug_ResolvedPackagingUrl": "ms-resource:loc.messages.Debug_ResolvedPackagingUrl",
@@ -175,10 +156,16 @@
     "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
     "Error_UnexpectedErrorArtifactToolPublish": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolPublish",
+    "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
     "Error_VersionInputRequired": "ms-resource:loc.messages.Error_VersionInputRequired",
     "Error_VersionInputsMutuallyExclusive": "ms-resource:loc.messages.Error_VersionInputsMutuallyExclusive",
+    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
     "Info_UsingIncrementedVersion": "ms-resource:loc.messages.Info_UsingIncrementedVersion",
+    "Info_DownloadingPackage": "ms-resource:loc.messages.Info_DownloadingPackage",
+    "Info_PublishingPackage": "ms-resource:loc.messages.Info_PublishingPackage",
     "Success_PackagesDownloaded": "ms-resource:loc.messages.Success_PackagesDownloaded",
     "Success_PackagesPublished": "ms-resource:loc.messages.Success_PackagesPublished",
     "Warning_BuildIdentityFeedHint": "ms-resource:loc.messages.Warning_BuildIdentityFeedHint",
@@ -193,6 +180,7 @@
     "Warning_ProvenanceSessionFailed": "ms-resource:loc.messages.Warning_ProvenanceSessionFailed",
     "Warning_PublishRequiresContributorAccess": "ms-resource:loc.messages.Warning_PublishRequiresContributorAccess",
     "Warning_ServiceConnectionNotFound": "ms-resource:loc.messages.Warning_ServiceConnectionNotFound",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UnableToDeterminePermissions": "ms-resource:loc.messages.Warning_UnableToDeterminePermissions",
     "Warning_UnableToDeterminePermissionsUnknown": "ms-resource:loc.messages.Warning_UnableToDeterminePermissionsUnknown",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
