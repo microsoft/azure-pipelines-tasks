@@ -4,6 +4,7 @@ import constants = require('../../Common/constants');
 
 export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
+    // Use -o addopts= to override pytest.ini's addopts (e.g., -v) to ensure consistent output format
     const discoveryArgs: string[] = ['--collect-only', '-q', '-o', 'addopts='];
     const discoveryResult = await runPytestCommand(discoveryArgs);
 
@@ -49,6 +50,7 @@ export async function executePythonTests(testsToBeExecuted: string[]):Promise<nu
     console.log(`Found ${testsToRun.length} tests to run`);
 
     // Construct arguments for running selected tests
+    // Use -o addopts= to override pytest.ini's addopts (e.g., -v) for consistent behavior
     const args: string[] = testsToRun.concat(['--junitxml=TEST-python-junit.xml', '-o', 'addopts=']);
 
     tl.debug("Executing python tests with args: " + args);
