@@ -40,7 +40,7 @@ export class PythonTestExecutor implements ITestExecutor {
         // Use -o addopts= to override pytest.ini's addopts (e.g., -v) to ensure consistent output format
         // Without this, verbose mode changes output from "test.py::name" to tree format "<Function name>"
         const args: string[] = ['--collect-only', '-q', '-o', 'addopts='];
-        let discoveryResult = { stdout: ''};;
+        let discoveryResult = { stdout: ''};
         this.toolRunner = tl.tool(this.toolRunnerPath);
         this.toolRunner.arg(args);
 
