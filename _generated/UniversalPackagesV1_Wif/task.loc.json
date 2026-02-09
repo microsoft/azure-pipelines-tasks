@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 270,
-    "Patch": 2
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -33,6 +33,29 @@
         "download": "Download",
         "publish": "Publish"
       }
+    },
+    {
+      "name": "adoServiceConnection",
+      "aliases": [
+        "workloadIdentityServiceConnection",
+        "azureDevOpsServiceConnection"
+      ],
+      "type": "connectedService:workloadidentityuser",
+      "label": "ms-resource:loc.input.label.adoServiceConnection",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "organization",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.organization",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.organization",
+      "visibleRule": "adoServiceConnection != ''"
     },
     {
       "name": "feed",
@@ -90,11 +113,11 @@
     }
   ],
   "execution": {
-    "Node20_1": {
+    "Node24": {
       "target": "universalMain.js",
       "argumentFormat": ""
     },
-    "Node24": {
+    "Node20_1": {
       "target": "universalMain.js",
       "argumentFormat": ""
     }
@@ -163,5 +186,10 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.270.2",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.270.3"
   }
 }

@@ -1,8 +1,6 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-#if WIF
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-#endif
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -28,7 +26,6 @@ function tryGetSystemAccessToken(context: UniversalPackageContext): boolean {
     return !!context.accessToken;
 }
 
-#if WIF
 // Discover the tenant ID for the target feed by making a HEAD request
 // The X-VSS-ResourceTenant header is only returned on HEAD requests, not GET
 async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
@@ -40,7 +37,6 @@ async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
         return undefined;
     }
 }
-#endif
 
 function setServiceUri(context: UniversalPackageContext): void {
     if (context.adoServiceConnection) {
@@ -56,7 +52,6 @@ function setServiceUri(context: UniversalPackageContext): void {
     tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
 }
 
-#if WIF
 async function tryGetWifToken(context: UniversalPackageContext): Promise<boolean> {
     tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
     
@@ -77,14 +72,11 @@ async function tryGetWifToken(context: UniversalPackageContext): Promise<boolean
         return false;
     }
 }
-#endif
 
 async function trySetAccessToken(context: UniversalPackageContext): Promise<boolean> {
-#if WIF
     if (context.adoServiceConnection) {
         return await tryGetWifToken(context);
     }
-#endif
     return tryGetSystemAccessToken(context);
 }
 

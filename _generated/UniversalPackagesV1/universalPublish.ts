@@ -20,13 +20,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
         
         // Get provenance session ID if using service connection, otherwise use feedName
         // Build Service provides metadata automatically; service connections require provenance
-#if WIF
-        const feedId = context.adoServiceConnection
-            ? await tryGetProvenanceSessionId(context)
-            : context.feedName;
-#else
         const feedId = context.feedName;
-#endif
 
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));

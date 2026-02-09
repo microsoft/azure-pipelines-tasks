@@ -135,7 +135,6 @@ describe('UniversalPackages Suite', function () {
     });
 
     describe('Provenance Session Handling', function() {
-#if WIF
         it('publishes package with provenance session ID', async function() {
             const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID });
             let tr = await runTestWithEnv('./testRunner.js', {
@@ -156,7 +155,6 @@ describe('UniversalPackages Suite', function () {
                 expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
             });
         });
-#endif
 
         it('publishes package when provenance session returns null', async function() {
             const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.FEED_NAME });
@@ -176,7 +174,6 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
-#if WIF
         it('publishes package with provenance session and project-scoped feed', async function() {
             const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID, projectName: TEST_CONSTANTS.PROJECT_NAME });
             let tr = await runTestWithEnv('./testRunner.js', {
@@ -197,13 +194,11 @@ describe('UniversalPackages Suite', function () {
                 expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
             });
         });
-#endif
     });
 
     describe('Authentication', function() {
         this.timeout(10000);
 
-#if WIF
         it('uses WIF token when service connection is specified and WIF succeeds', async function() {
             const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
             let tr = await runTestWithEnv('./testRunner.js', {
@@ -246,7 +241,6 @@ describe('UniversalPackages Suite', function () {
             });
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
         });
-#endif
 
         it('uses pipeline identity when no service connection is specified', async function() {
             const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
@@ -264,7 +258,6 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
-#if WIF
         it('uses cross-org service URL when organization is specified with service connection', async function() {
             const crossOrgCommandString = buildCommandString({ 
                 command: 'download', 
@@ -288,13 +281,11 @@ describe('UniversalPackages Suite', function () {
                 expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
             });
         });
-#endif
     });
 
     describe('Error Handling', function() {
         this.timeout(10000);
 
-#if WIF
         it('fails when no authentication token is available (download)', async function() {
             const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
             let tr = await runTestWithEnv('./testRunner.js', {
@@ -337,7 +328,6 @@ describe('UniversalPackages Suite', function () {
             
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_OrganizationRequired'));
         });
-#endif
 
         it('fails when running against on-premises server', async function() {
             let tr = await runTestWithEnv('./testRunner.js', {

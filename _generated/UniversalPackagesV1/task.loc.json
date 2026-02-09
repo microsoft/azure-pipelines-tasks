@@ -163,5 +163,10 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.270.2",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.270.3"
   }
 }
