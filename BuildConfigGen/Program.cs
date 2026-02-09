@@ -51,6 +51,12 @@ namespace BuildConfigGen
                 ["typescript"] = "^5.7.2",
                 ["azure-pipelines-task-lib"] = "^5.2.4",
                 ["azure-devops-node-api"] = "^15.1.3",
+                ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.270.0",
+                ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
+                ["azure-pipelines-tasks-packaging-common"] = "^3.270.0",
+                ["azure-pipelines-tasks-securefiles-common"] = "^2.270.0",
+                ["azure-pipelines-tasks-utility-common"] = "^3.270.0",
                 ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
             };
 
