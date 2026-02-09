@@ -161,8 +161,6 @@ async function tryGetProvenanceSessionId(context: UniversalPackageContext): Prom
 
 async function getUniversalPackagesUri(context: UniversalPackageContext): Promise<string> {
     const upackAreaId = 'd397749b-f115-4027-b6dd-77a65dd10d21';
-    const webApi = getWebApiWithProxy(context.serviceUri, context.accessToken);
-    const locationApi = await webApi.getLocationsApi();
-    const resourceArea = await retryOnException(() => locationApi.getResourceArea(upackAreaId), 3, 1000);
+    const resourceArea = await retryOnException(() => context.locationApi.getResourceArea(upackAreaId), 3, 1000);
     return resourceArea.locationUrl;
 }

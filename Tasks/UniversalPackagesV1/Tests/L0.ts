@@ -218,44 +218,28 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
-        it('falls back to system token when WIF throws error', async function() {
-            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+        it('fails when WIF throws error and service connection is specified', async function() {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
                 'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'throws',
-                'SYSTEM_TOKEN_AVAILABLE': 'true',
-                'EXPECTED_COMMAND_STRING': expectedCommandString
+                'SYSTEM_TOKEN_AVAILABLE': 'true'
             });
-            assertArtifactToolCommand({
-                tr,
-                command: 'download',
-                shouldSucceed: true,
-                expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
-            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
         });
 
-        it('falls back to system token when WIF returns null', async function() {
-            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+        it('fails when WIF returns null and service connection is specified', async function() {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
                 'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
-                'SYSTEM_TOKEN_AVAILABLE': 'true',
-                'EXPECTED_COMMAND_STRING': expectedCommandString
+                'SYSTEM_TOKEN_AVAILABLE': 'true'
             });
-            assertArtifactToolCommand({
-                tr,
-                command: 'download',
-                shouldSucceed: true,
-                expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
-            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
         });
 
         it('uses pipeline identity when no service connection is specified', async function() {

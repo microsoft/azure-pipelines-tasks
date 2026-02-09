@@ -1,5 +1,6 @@
 import * as tl from "azure-pipelines-task-lib";
 import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import { ILocationsApi } from "azure-devops-node-api/LocationsApi";
 
 export enum OperationType {
     Download = "download",
@@ -24,6 +25,11 @@ export class UniversalPackageContext {
     // Auth properties
     accessToken?: string;
     toolRunnerOptions?: IExecOptions;
+    authIdentityName?: string;
+    authIdentityId?: string;
+
+    // API clients
+    locationApi?: ILocationsApi;
 
     // Feed properties
     feedName?: string;
@@ -36,6 +42,7 @@ export class UniversalPackageContext {
 
     // Pipeline properties
     pipelineCollectionUri?: string;
+    buildServiceAccountId?: string;  // GUID of the build service account
 
     constructor() {
         this.organization = tl.getInput("organization", false);
@@ -48,6 +55,7 @@ export class UniversalPackageContext {
         this.packageDescription = tl.getInput("packageDescription", false);
         this.command = tl.getInput("command", true) as OperationType;
         this.pipelineCollectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
+        this.buildServiceAccountId = tl.getVariable("Build.BuildServiceAccountId");
 
         // Set verbosity based on System.Debug: Debug for verbose output, Information for normal output
         this.verbosity = tl.getVariable("System.Debug") === "true" ? "Debug" : "Information";

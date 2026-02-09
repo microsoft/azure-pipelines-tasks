@@ -313,7 +313,14 @@ export class UniversalMockHelper {
                         getResourceArea: async (areaId: string) => {
                             // Mock the UPack area ID returning a packaging service URL
                             return { locationUrl: `${serviceUri}/_apis/packaging` };
-                        }
+                        },
+                        getConnectionData: async () => ({
+                            authenticatedUser: {
+                                id: TEST_CONSTANTS.SYSTEM_TOKEN ? 'mock-build-service-id' : undefined,
+                                providerDisplayName: 'TestProject Build Service (TestOrg)',
+                                customDisplayName: null
+                            }
+                        })
                     })
                 };
             }
