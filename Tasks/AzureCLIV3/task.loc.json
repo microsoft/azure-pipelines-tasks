@@ -20,7 +20,7 @@
   "version": {
     "Major": 3,
     "Minor": 270,
-    "Patch": 2
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
