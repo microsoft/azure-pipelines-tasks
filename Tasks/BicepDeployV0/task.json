@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -46,7 +46,7 @@
       "defaultValue": "deployment",
       "required": true,
       "groupName": "AzureDetails",
-      "helpMarkDown": "Specifies the execution type, deployment or deploymentStack.",
+      "helpMarkDown": "Specifies the execution type: deployment or deploymentStack.",
       "options": {
         "deployment": "Deployment",
         "deploymentStack": "Deployment Stack"
@@ -367,7 +367,6 @@
     }
   ],
   "messages": {
-    "TaskConfig": "Task config: %s",
     "StartingOperation": "Starting %s %s at %s '%s' scope%s",
     "UsingTemplateFile": "Using template file: %s",
     "UsingParametersFile": "Using parameters file: %s",
@@ -399,6 +398,9 @@
       "target": "main.js"
     },
     "Node20_1": {
+      "target": "main.js"
+    },
+    "Node24": {
       "target": "main.js"
     }
   }

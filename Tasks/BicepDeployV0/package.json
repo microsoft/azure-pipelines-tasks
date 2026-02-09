@@ -20,8 +20,8 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/q": "^1.5.8",
-    "azure-pipelines-task-lib": "^5.2.2",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.251.0"
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.270.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

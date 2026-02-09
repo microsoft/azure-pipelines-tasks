@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -370,7 +370,6 @@
     }
   ],
   "messages": {
-    "TaskConfig": "ms-resource:loc.messages.TaskConfig",
     "StartingOperation": "ms-resource:loc.messages.StartingOperation",
     "UsingTemplateFile": "ms-resource:loc.messages.UsingTemplateFile",
     "UsingParametersFile": "ms-resource:loc.messages.UsingParametersFile",
@@ -402,6 +401,9 @@
       "target": "main.js"
     },
     "Node20_1": {
+      "target": "main.js"
+    },
+    "Node24": {
       "target": "main.js"
     }
   }

@@ -11,16 +11,16 @@ export async function run(): Promise<void> {
     try {
         const connectedService: string = tl.getInput('ConnectedServiceName', true);
 
-        await authHelper.loginAzure(connectedService);
-
         const inputReader = new TaskInputReader();
         const inputParameterNames = new TaskInputParameterNames();
         const logger = new TaskLogger();
         const outputSetter = new TaskOutputSetter();
 
-        // Parse configuration from task inputs
+        // Parse and validate configuration before Azure login (fail fast)
         const config = parseConfig(inputReader, inputParameterNames);
-        logger.logInfo(tl.loc('TaskConfig', JSON.stringify(config, null, 2)));
+
+        // Login to Azure after validation passes
+        await authHelper.loginAzure(connectedService);
 
         // Execute the deployment or deployment stack operation
         await execute(config, logger, outputSetter, errorMessageConfig, loggingMessageConfig);
