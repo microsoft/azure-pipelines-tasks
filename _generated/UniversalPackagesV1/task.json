@@ -89,6 +89,16 @@
       "visibleRule": "command = publish"
     }
   ],
+  "outputVariables": [
+    {
+      "name": "packageName",
+      "description": "The name of the published package. Only set when command is 'publish'."
+    },
+    {
+      "name": "packageVersion",
+      "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
+    }
+  ],
   "execution": {
     "Node20_1": {
       "target": "universalMain.js",
@@ -132,6 +142,7 @@
     "Debug_DiscoveredTenant": "Discovered target tenant: %s",
     "Debug_FailedToGetFeedTenantId": "Failed to get the tenant ID for feed: %s. Error: %s",
     "Debug_FailedToGetIdentityInfo": "Failed to get authenticated identity info: %s",
+    "Debug_SetOutputVariables": "Set output variables - packageName: %s, packageVersion: %s",
     "Debug_FeedServiceUri": "Feed service URI (from location API): %s",
     "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",

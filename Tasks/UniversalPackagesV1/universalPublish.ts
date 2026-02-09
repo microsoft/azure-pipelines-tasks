@@ -31,6 +31,10 @@ export async function run(context: UniversalPackageContext): Promise<void> {
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
         publishPackageUsingArtifactTool(context, feedId, packageVersion);
+        tl.setVariable('packageName', context.packageName, false, true);
+        tl.setVariable('packageVersion', packageVersion, false, true);
+        tl.debug(tl.loc('Debug_SetOutputVariables', context.packageName, packageVersion));
+
         helpers.logInfo("Success_PackagesPublished", context.packageName, packageVersion, context.feedName);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished", context.packageName, packageVersion, context.feedName));
     } catch (err) {

@@ -53,6 +53,7 @@
   "loc.messages.Debug_DiscoveredTenant": "Discovered target tenant: %s",
   "loc.messages.Debug_FailedToGetFeedTenantId": "Failed to get the tenant ID for feed: %s. Error: %s",
   "loc.messages.Debug_FailedToGetIdentityInfo": "Failed to get authenticated identity info: %s",
+  "loc.messages.Debug_SetOutputVariables": "Set output variables - packageName: %s, packageVersion: %s",
   "loc.messages.Debug_FeedServiceUri": "Feed service URI (from location API): %s",
   "loc.messages.Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized.",
