@@ -396,6 +396,9 @@
   "execution": {
     "Node24": {
       "target": "main.js"
+    },
+    "Node24": {
+      "target": "main.js"
     }
   }
 }
