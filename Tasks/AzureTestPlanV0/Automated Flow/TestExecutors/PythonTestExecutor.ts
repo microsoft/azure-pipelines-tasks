@@ -37,7 +37,7 @@ export class PythonTestExecutor implements ITestExecutor {
 
     async discoverTests(testsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult> {
         let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
-        const args: string[] = ['--collect-only', '-q'];
+        const args: string[] = ['--collect-only', '-q', '-o', 'addopts='];
         let discoveryResult = { stdout: ''};;
         this.toolRunner = tl.tool(this.toolRunnerPath);
         this.toolRunner.arg(args);
@@ -88,6 +88,7 @@ export class PythonTestExecutor implements ITestExecutor {
         tl.debug("Executing python pytest tests with args :" + testsToBeExecuted);
         this.toolRunner.arg(testsToBeExecuted);
         this.toolRunner.arg('--junitxml=TEST-python-junit.xml');
+        this.toolRunner.arg(['-o', 'addopts=']);
         
         try {
             operationResult.returnCode = await this.toolRunner.execAsync();

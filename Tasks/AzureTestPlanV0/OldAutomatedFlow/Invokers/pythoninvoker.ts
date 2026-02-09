@@ -4,7 +4,7 @@ import constants = require('../../Common/constants');
 
 export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
-    const discoveryArgs: string[] = ['--collect-only', '-q'];
+    const discoveryArgs: string[] = ['--collect-only', '-q', '-o', 'addopts='];
     const discoveryResult = await runPytestCommand(discoveryArgs);
 
     if (discoveryResult.status !== 0) {
@@ -49,7 +49,7 @@ export async function executePythonTests(testsToBeExecuted: string[]):Promise<nu
     console.log(`Found ${testsToRun.length} tests to run`);
 
     // Construct arguments for running selected tests
-    const args: string[] = testsToRun.concat(['--junitxml=TEST-python-junit.xml']);
+    const args: string[] = testsToRun.concat(['--junitxml=TEST-python-junit.xml', '-o', 'addopts=']);
 
     tl.debug("Executing python tests with args: " + args);
 
