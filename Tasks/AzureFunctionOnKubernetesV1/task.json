@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 270,
     "Patch": 0
   },
   "demands": [],
@@ -182,6 +182,10 @@
       "target": "src//run.js"
     },
     "Node20_1": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//run.js",
       "argumentFormat": ""
     }
