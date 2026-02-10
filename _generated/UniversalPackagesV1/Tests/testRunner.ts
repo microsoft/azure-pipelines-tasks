@@ -7,7 +7,7 @@ import * as TestHelpers from './TestHelpers';
 
 // Mock global fetch before anything else runs
 // This prevents real network calls in L0 tests
-const mockFetch = async (url: string, options?: any): Promise<any> => {
+const mockFetch = async (url: string, options?: RequestInit): Promise<Response> => {
     // Return a mock response with X-VSS-ResourceTenant header
     return {
         ok: true,
@@ -20,7 +20,7 @@ const mockFetch = async (url: string, options?: any): Promise<any> => {
                 return null;
             }
         }
-    };
+    } as Response;
 };
 (global as any).fetch = mockFetch;
 

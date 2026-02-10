@@ -1,10 +1,11 @@
 import * as tl from "azure-pipelines-task-lib";
-import { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import type { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 #if WIF
-import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { ProvenanceHelper, SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
-import * as restClient from 'typed-rest-client/RestClient';
+import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
+import type { SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
+import type * as restClient from 'typed-rest-client/RestClient';
 #endif
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";

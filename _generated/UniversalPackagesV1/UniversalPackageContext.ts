@@ -1,6 +1,6 @@
 import * as tl from "azure-pipelines-task-lib";
-import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
-import { ILocationsApi } from "azure-devops-node-api/LocationsApi";
+import type { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import type { ILocationsApi } from "azure-devops-node-api/LocationsApi";
 
 export enum OperationType {
     Download = "download",

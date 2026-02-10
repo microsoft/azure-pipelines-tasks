@@ -1,5 +1,5 @@
 import * as tl from "azure-pipelines-task-lib";
-import { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import type { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
 
