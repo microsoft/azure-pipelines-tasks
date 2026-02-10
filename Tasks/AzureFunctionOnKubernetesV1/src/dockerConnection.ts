@@ -34,11 +34,12 @@ export class DockerConnection {
     }
 
     private getHostName(registryUrl: string) {
+        let host;
         try {
-            const uri = new URL(registryUrl);
-            return uri.host;
+            host = new URL(registryUrl).host;
         } catch {
-            return registryUrl;
+            host = registryUrl;
         }
+        return host;
     }
 }
