@@ -1,12 +1,14 @@
 import * as tl from "azure-pipelines-task-lib";
 import { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+#if WIF
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { ProvenanceHelper, SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
+import * as restClient from 'typed-rest-client/RestClient';
+#endif
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
-import * as restClient from 'typed-rest-client/RestClient';
 
 export async function run(context: UniversalPackageContext): Promise<void> {
     try {
@@ -107,6 +109,7 @@ function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedI
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
+#if WIF
 async function tryGetProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
     // Break glass pipeline variable to disable provenance
     const saveMetadata = tl.getVariable("Packaging.SavePublishMetadata");
@@ -172,3 +175,4 @@ async function getUniversalPackagesUri(context: UniversalPackageContext): Promis
     const resourceArea = await retryOnException(() => context.locationApi.getResourceArea(upackAreaId), 3, 1000);
     return resourceArea.locationUrl;
 }
+#endif

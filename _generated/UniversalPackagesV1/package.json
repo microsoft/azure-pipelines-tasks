@@ -1,8 +1,8 @@
 {
   "name": "universalpackages",
-  "version": "1.267.0",
+  "version": "1.270.0",
   "description": "Download or publish universal packages.",
-  "main": "universalmain.js",
+  "main": "universalMain.js",
   "scripts": {
     "build": "node ../../make.js build --task UniversalPackagesV1",
     "serverBuild": "node ../../make.js serverBuild --task UniversalPackagesV1",

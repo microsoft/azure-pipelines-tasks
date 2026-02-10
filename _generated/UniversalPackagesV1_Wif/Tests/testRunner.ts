@@ -95,7 +95,7 @@ for (const [key, value] of Object.entries(config.inputs)) {
     }
 }
 
-// Create UniversalMockHelper with all configuration
-const mockHelper = new UniversalMockHelper(tmr, config);
+// Create UniversalMockHelper with all configuration (constructor registers mocks as side effects)
+new UniversalMockHelper(tmr, config);
 
 tmr.run();

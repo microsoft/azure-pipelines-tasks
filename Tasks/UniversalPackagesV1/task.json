@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 270,
-    "Patch": 2
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -89,7 +89,6 @@
       "visibleRule": "command = publish"
     }
   ],
-
   "outputVariables": [
     {
       "name": "packageName",
@@ -100,7 +99,6 @@
       "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
     }
   ],
-
   "execution": {
     "Node20_1": {
       "target": "universalMain.js",
@@ -113,9 +111,16 @@
   },
   "messages": {
     "Debug_ArtifactToolPath": "Artifact tool path: %s",
+    "Debug_AuthenticatedIdentity": "Authenticated identity: %s (ID: %s)",
     "Debug_CalculatedVersion": "Calculated next version: %s",
+    "Debug_CreatingLocationApi": "Creating location API client",
+    "Debug_DiscoveredTenant": "Discovered target tenant: %s",
     "Debug_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+    "Debug_FailedToGetFeedTenantId": "Failed to get the tenant ID for feed: %s. Error: %s",
+    "Debug_FailedToGetIdentityInfo": "Failed to get authenticated identity info: %s",
+    "Debug_FeedServiceUri": "Feed service URI (from location API): %s",
     "Debug_GettingArtifactTool": "Getting artifact tool",
+    "Debug_GettingConnectionData": "Fetching connection data to identify authenticated user",
     "Debug_HighestPackageVersion": "Highest existing version found: %s",
     "Debug_NoProvenanceSession": "No provenance session available, using original feed ID",
     "Debug_OrgScopedFeed": "Organization-scoped feed detected - Feed: %s",
@@ -125,27 +130,19 @@
     "Debug_ProvenanceDisabled": "Provenance disabled by Packaging.SavePublishMetadata variable",
     "Debug_ProvenanceResponseStatus": "Provenance API response status: %s",
     "Debug_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
-    "Debug_ResolvingVersionIncrement": "Resolving version increment: %s",
     "Debug_ResolvedPackagingUrl": "Resolved packaging service URL: %s",
+    "Debug_ResolvingVersionIncrement": "Resolving version increment: %s",
     "Debug_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
+    "Debug_SetOutputVariables": "Set output variables - packageName: %s, packageVersion: %s",
     "Debug_TelemetryInitFailed": "Unable to log Universal Packages task init telemetry. Err:( %s )",
     "Debug_TelemetryResultFailed": "Unable to log telemetry result. Err:( %s )",
     "Debug_UsingArtifactToolDownload": "Using artifact tool to download the package",
     "Debug_UsingArtifactToolPublish": "Using artifact tool to publish the package",
     "Debug_UsingBuildServiceCreds": "Using build service credentials for authentication",
-    "Debug_UsingWifCreds": "Using WIF service connection credentials for authentication",
     "Debug_UsingProvenanceSession": "Using provenance session ID: %s",
     "Debug_UsingServiceUri": "Using service URI: %s",
     "Debug_UsingWifAuth": "Using WIF authentication with service connection: %s",
-    "Debug_CreatingLocationApi": "Creating location API client",
-    "Debug_GettingConnectionData": "Fetching connection data to identify authenticated user",
-    "Debug_AuthenticatedIdentity": "Authenticated identity: %s (ID: %s)",
     "Debug_WifTokenObtained": "Successfully obtained WIF token for authentication",
-    "Debug_DiscoveredTenant": "Discovered target tenant: %s",
-    "Debug_FailedToGetFeedTenantId": "Failed to get the tenant ID for feed: %s. Error: %s",
-    "Debug_FailedToGetIdentityInfo": "Failed to get authenticated identity info: %s",
-    "Debug_SetOutputVariables": "Set output variables - packageName: %s, packageVersion: %s",
-    "Debug_FeedServiceUri": "Feed service URI (from location API): %s",
     "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
@@ -163,18 +160,17 @@
     "Error_VersionInputRequired": "For publish operations, either 'packageVersion' or 'versionIncrement' must be specified.",
     "Error_VersionInputsMutuallyExclusive": "Cannot specify both 'packageVersion' and 'versionIncrement'. Please use only one.",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
-    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-    "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
-    "Info_UsingIncrementedVersion": "Using incremented version %s (%s increment from %s)",
     "Info_DownloadingPackage": "Downloading package '%s' version '%s' to '%s'",
     "Info_PublishingPackage": "Publishing package '%s' version '%s' from '%s'",
+    "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_UsingIncrementedVersion": "Using incremented version %s (%s increment from %s)",
     "Success_PackagesDownloaded": "Successfully downloaded package '%s' version '%s' from feed '%s'",
     "Success_PackagesPublished": "Successfully published package '%s' version '%s' to feed '%s'",
     "Warning_BuildServiceIdentityHint": "Operation was attempted using the pipeline's build service identity: %s (%s). Ensure this identity has the required permissions on the feed.",
     "Warning_ProvenanceSessionFailed": "Provenance session creation failed: %s",
     "Warning_ServiceConnectionIdentityHint": "Operation was attempted using service connection '%s' with identity: %s (%s).",
-    "Warning_SessionCreationFailed": "Could not create provenance session.",
-    "Warning_WifAuthFailed": "WIF authentication failed for service connection %s, falling back to build service token: %s",
-    "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection %s, falling back to build service token"
+    "Warning_WifAuthFailed": "WIF authentication failed for service connection '%s': %s",
+    "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection '%s'"
   }
 }

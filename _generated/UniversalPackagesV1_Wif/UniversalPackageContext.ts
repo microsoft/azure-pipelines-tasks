@@ -42,7 +42,7 @@ export class UniversalPackageContext {
 
     // Pipeline properties
     pipelineCollectionUri?: string;
-    buildServiceAccountId?: string;  // GUID of the build service account
+    buildServiceAccountId?: string;
 
     constructor() {
         this.adoServiceConnection = tl.getInput("adoServiceConnection", false);

@@ -22,7 +22,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -39,7 +39,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -77,7 +77,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -94,7 +94,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -129,7 +129,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
     });
@@ -152,7 +152,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -170,7 +170,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -191,7 +191,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'publish',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
     });
@@ -214,7 +214,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -254,7 +254,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
 
@@ -278,7 +278,7 @@ describe('UniversalPackages Suite', function () {
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString: crossOrgCommandString,
-                expectedMessage: TEST_CONSTANTS.SUCCESS_OUTPUT
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
         });
     });

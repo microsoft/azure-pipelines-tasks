@@ -23,9 +23,6 @@ async function main(): Promise<void> {
     // Parse feed input
     helpers.setFeed(context);
 
-    // DEBUG: Test organization discovery APIs
-    //await helpers.debugOrganizationDiscovery(context);
-
     // Download artifact tool
     if (!(await helpers.tryDownloadArtifactTool(context))) return;
 

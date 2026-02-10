@@ -59,7 +59,6 @@ export class UniversalMockHelper {
         clientMock.registerClientToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
         clientMock.registerClientToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
-        this.registerConnectionDataUtilsMock();
         this.registerLocationUtilitiesMock();
         this.registerRetryUtilitiesMock();
         this.registerAuthenticationMocks();
@@ -94,25 +93,6 @@ export class UniversalMockHelper {
                 scheme: 'WorkloadIdentityFederation'
             });
         }
-    }
-
-    private registerConnectionDataUtilsMock() {
-        const connectionDataMock = {
-            getConnectionDataForProtocol: async () => {
-                return {
-                    locationServiceData: {
-                        serviceOwner: "00000000-0000-0000-0000-000000000000",
-                        defaultAccessMappingMoniker: "PublicAccessMapping",
-                        accessMappings: [{
-                            moniker: "PublicAccessMapping",
-                            accessPoint: TEST_CONSTANTS.SERVICE_URL
-                        }]
-                    }
-                };
-            }
-        };
-        
-        this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', connectionDataMock);
     }
 
     private registerLocationUtilitiesMock() {
