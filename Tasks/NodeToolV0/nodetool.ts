@@ -123,7 +123,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     switch (osPlat) {
         case "linux": dataFileName = "linux-" + installedArch; break;
         case "darwin": dataFileName = "osx-" + installedArch + '-tar'; break;
-        case "win32": dataFileName = "win-" + installedArch + '-exe'; break;
+        case "win32": dataFileName = "win-" + installedArch + '-7z'; break;
         default: throw new Error(taskLib.loc('UnexpectedOS', osPlat));
     }
 
