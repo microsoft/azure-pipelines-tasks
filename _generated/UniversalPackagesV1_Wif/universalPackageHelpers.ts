@@ -10,12 +10,7 @@ import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/u
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
 
-// Re-export for use by download/publish modules
 export { artifactToolRunner };
-
-// =============================================================================
-// Validation (called first by universalMain)
-// =============================================================================
 
 export async function validateServerType(): Promise<boolean> {
     try {
@@ -32,13 +27,11 @@ export async function validateServerType(): Promise<boolean> {
 
 export function validateVersionInputs(context: UniversalPackageContext): boolean {
     if (context.command === OperationType.Download) {
-        // Download requires packageVersion
         if (!context.packageVersion) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_PackageVersionRequired"));
             return false;
         }
     } else if (context.command === OperationType.Publish) {
-        // Publish requires exactly one of packageVersion or versionIncrement
         if (context.packageVersion && context.versionIncrement) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_VersionInputsMutuallyExclusive"));
             return false;
@@ -52,11 +45,6 @@ export function validateVersionInputs(context: UniversalPackageContext): boolean
     return true;
 }
 
-// =============================================================================
-// Authentication
-// =============================================================================
-
-// Get system access token from SYSTEMVSSCONNECTION endpoint
 function getSystemAccessToken(): string | undefined {
     const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
     return auth?.parameters?.['AccessToken'];
@@ -68,8 +56,7 @@ function tryGetSystemAccessToken(context: UniversalPackageContext): boolean {
     return !!context.accessToken;
 }
 
-// Discover the tenant ID for the target feed by making a HEAD request.
-// The X-VSS-ResourceTenant header is only returned on HEAD requests, not GET.
+// X-VSS-ResourceTenant is only returned on HEAD requests, not GET.
 async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
     try {
         const response = await fetch(feedUrl, { method: 'HEAD' });
@@ -108,18 +95,11 @@ async function trySetAccessToken(context: UniversalPackageContext): Promise<bool
     return tryGetSystemAccessToken(context);
 }
 
-// Resolve service URIs using the location API's resource areas endpoint.
-// The resource areas endpoint is publicly accessible and does not require authentication,
-// so we can resolve feedServiceUri before obtaining an access token.
+// The resource areas endpoint is publicly accessible, so we resolve feedServiceUri before auth.
 async function setServiceUris(context: UniversalPackageContext): Promise<void> {
-    if (context.adoServiceConnection) {
-        if (!context.organization) {
-            throw new Error(tl.loc('Error_OrganizationRequired'));
-        }
-        context.serviceUri = `https://dev.azure.com/${encodeURIComponent(context.organization)}`;
-    } else {
-        context.serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    }
+    context.serviceUri = context.adoServiceConnection && context.organization
+        ? `https://dev.azure.com/${encodeURIComponent(context.organization)}`
+        : tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
     tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
 
     try {
@@ -148,7 +128,6 @@ async function setIdentityInformation(context: UniversalPackageContext): Promise
         tl.debug(tl.loc('Debug_FailedToGetIdentityInfo', error));
     }
 
-    // Fallback for identity ID if ConnectionData didn't provide it
     context.authIdentityId ??= context.adoServiceConnection
         ? tl.getEndpointAuthorizationParameter(context.adoServiceConnection, 'serviceprincipalid', true)
         : context.buildServiceAccountId;
@@ -174,10 +153,6 @@ export async function trySetAuth(context: UniversalPackageContext): Promise<bool
     }
 }
 
-// =============================================================================
-// Feed resolution
-// =============================================================================
-
 export function setFeed(context: UniversalPackageContext): void {
     tl.debug(tl.loc('Debug_ParsedFeedInfo', context.serviceUri, context.projectAndFeed));
 
@@ -191,10 +166,6 @@ export function setFeed(context: UniversalPackageContext): void {
         tl.debug(tl.loc('Debug_OrgScopedFeed', context.feedName));
     }
 }
-
-// =============================================================================
-// Artifact tool
-// =============================================================================
 
 export async function tryDownloadArtifactTool(context: UniversalPackageContext): Promise<boolean> {
     tl.debug(tl.loc('Debug_GettingArtifactTool'));
@@ -226,10 +197,6 @@ export async function tryDownloadArtifactTool(context: UniversalPackageContext):
         logArtifactToolTelemetry(context);
     }
 }
-
-// =============================================================================
-// Error handling, telemetry, and logging
-// =============================================================================
 
 export async function handleTaskError(err: any, errorMessage: string, context?: UniversalPackageContext): Promise<void> {
     tl.error(err);
@@ -271,8 +238,6 @@ export function logCommandResult(area: string, feature: string, resultCode: numb
     }
 }
 
-// Log an information-level message using a localized string.
-// This provides always-visible output (unlike tl.debug which is suppressed unless System.Debug is set).
 export function logInfo(key: string, ...params: any[]): void {
     console.log(tl.loc(key, ...params));
 }

@@ -89,6 +89,16 @@
       "visibleRule": "command = publish"
     }
   ],
+  "outputVariables": [
+    {
+      "name": "packageName",
+      "description": "The name of the published package. Only set when command is 'publish'."
+    },
+    {
+      "name": "packageVersion",
+      "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
+    }
+  ],
   "execution": {
     "Node20_1": {
       "target": "universalMain.js",
@@ -121,9 +131,9 @@
     "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
     "Debug_UsingArtifactToolPublish": "ms-resource:loc.messages.Debug_UsingArtifactToolPublish",
     "Debug_UsingBuildServiceCreds": "ms-resource:loc.messages.Debug_UsingBuildServiceCreds",
-    "Debug_UsingWifCreds": "ms-resource:loc.messages.Debug_UsingWifCreds",
     "Debug_UsingProvenanceSession": "ms-resource:loc.messages.Debug_UsingProvenanceSession",
     "Debug_UsingServiceUri": "ms-resource:loc.messages.Debug_UsingServiceUri",
+    "Debug_SetOutputVariables": "ms-resource:loc.messages.Debug_SetOutputVariables",
     "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
     "Debug_CreatingLocationApi": "ms-resource:loc.messages.Debug_CreatingLocationApi",
     "Debug_GettingConnectionData": "ms-resource:loc.messages.Debug_GettingConnectionData",
@@ -139,7 +149,6 @@
     "Error_FailedToResolveFeedUri": "ms-resource:loc.messages.Error_FailedToResolveFeedUri",
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
-    "Error_OrganizationRequired": "ms-resource:loc.messages.Error_OrganizationRequired",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
     "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",
@@ -160,7 +169,6 @@
     "Warning_BuildServiceIdentityHint": "ms-resource:loc.messages.Warning_BuildServiceIdentityHint",
     "Warning_ProvenanceSessionFailed": "ms-resource:loc.messages.Warning_ProvenanceSessionFailed",
     "Warning_ServiceConnectionIdentityHint": "ms-resource:loc.messages.Warning_ServiceConnectionIdentityHint",
-    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   }

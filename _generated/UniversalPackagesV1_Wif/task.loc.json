@@ -172,7 +172,6 @@
     "Error_FailedToResolveFeedUri": "ms-resource:loc.messages.Error_FailedToResolveFeedUri",
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
-    "Error_OrganizationRequired": "ms-resource:loc.messages.Error_OrganizationRequired",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
     "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",

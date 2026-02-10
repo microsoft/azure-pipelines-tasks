@@ -265,6 +265,25 @@ describe('UniversalPackages Suite', function () {
         });
 
 #if WIF
+        it('uses pipeline organization when organization is not specified with service connection', async function() {
+            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+            });
+        });
+
         it('uses cross-org service URL when organization is specified with service connection', async function() {
             const crossOrgCommandString = buildCommandString({ 
                 command: 'download', 
@@ -325,18 +344,6 @@ describe('UniversalPackages Suite', function () {
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
         });
 
-        it('fails when organization is not specified with service connection', async function() {
-            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
-            let tr = await runTestWithEnv('./testRunner.js', {
-                ...getDefaultEnvVars(),
-                'INPUT_COMMAND': 'download',
-                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
-                'WIF_AUTH_BEHAVIOR': 'success',
-                'EXPECTED_COMMAND_STRING': expectedCommandString
-            });
-            
-            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_OrganizationRequired'));
-        });
 #endif
 
         it('fails when running against on-premises server', async function() {

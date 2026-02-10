@@ -103,14 +103,9 @@ async function trySetAccessToken(context: UniversalPackageContext): Promise<bool
 
 // The resource areas endpoint is publicly accessible, so we resolve feedServiceUri before auth.
 async function setServiceUris(context: UniversalPackageContext): Promise<void> {
-    if (context.adoServiceConnection) {
-        if (!context.organization) {
-            throw new Error(tl.loc('Error_OrganizationRequired'));
-        }
-        context.serviceUri = `https://dev.azure.com/${encodeURIComponent(context.organization)}`;
-    } else {
-        context.serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    }
+    context.serviceUri = context.adoServiceConnection && context.organization
+        ? `https://dev.azure.com/${encodeURIComponent(context.organization)}`
+        : tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
     tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
 
     try {

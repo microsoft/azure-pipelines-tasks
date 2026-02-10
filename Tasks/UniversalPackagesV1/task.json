@@ -149,7 +149,6 @@
     "Error_FailedToResolveFeedUri": "Failed to resolve feed service URI from %s: %s",
     "Error_InvalidVersionIncrement": "Invalid version increment value: %s. Expected 'major', 'minor', or 'patch'.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
-    "Error_OrganizationRequired": "Organization is required when using a service connection for cross-organization access.",
     "Error_PackageVersionRequired": "Package version is required for download operations.",
     "Error_PackagesFailedToDownload": "Failed to download package '%s' version '%s' from feed '%s'",
     "Error_PackagesFailedToPublish": "Failed to publish package '%s' version '%s' to feed '%s'",
