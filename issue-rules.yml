@@ -13,6 +13,9 @@ rules:
   contains: 'MavenAuthenticate'
   addLabels: ['Area: Artifacts']
 - valueFor: '**Enter Task Name**'
+  contains: 'GradleAuthenticate'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
   contains: 'Nuget'
   addLabels: ['Area: Artifacts']
 - valueFor: '**Enter Task Name**'

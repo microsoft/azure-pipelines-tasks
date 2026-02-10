@@ -111,6 +111,7 @@
         "GitHubReleaseV1",
         "GoV0",
         "GoToolV0",
+        "GradleAuthenticateV0",
         "GradleV2",
         "GradleV3",
         "GradleV4",
@@ -255,7 +256,8 @@
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
         "MavenAuthenticateV0",
-        "TwineAuthenticateV1"
+        "TwineAuthenticateV1",
+        "GradleAuthenticateV0"
     ],
     "LocalPackages": [
         "AndroidSigningV2",
@@ -353,6 +355,7 @@
         "Not compiling yet: GitHubReleaseV1",
         "GoToolV0",
         "GoV0",
+        "GradleAuthenticateV0",
         "GradleV2",
         "GradleV3",
         "GruntV0",
