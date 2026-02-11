@@ -250,8 +250,9 @@
     "Node24_9": [],
     "Node24_10": [],
     "Node24_overwrite": [
-        "AzurePowerShellV5",
-        "AzurePowerShellV4"
+        "AzurePowerShellV4",
+        "AzurePowerShellV5"
+        
     ],
     "wif_242": [
         "PipAuthenticateV1",
