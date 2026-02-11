@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 262,
+    "Minor": 270,
     "Patch": 1
   },
   "runsOn": [
@@ -73,6 +73,10 @@
     "Node20_1": {
       "target": "mavenauth.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -85,6 +89,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }
@@ -106,8 +114,8 @@
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.262.0",
+    "Default": "0.270.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.262.1"
+    "wif_242": "0.270.1"
   }
 }
