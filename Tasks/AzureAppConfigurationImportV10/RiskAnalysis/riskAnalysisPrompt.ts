@@ -1,3 +1,4 @@
+export const RISK_ANALYSIS_PROMPT_TEMPLATE = `
 You are a Configuration Risk Assessment Agent for Azure App Configuration.
 Users are running the Azure App Configuration Import Task in Azure DevOps to import configuration into their App Configuration store.
 Analyze the configuration diff produced during the import and return an objective risk report that helps reviewers understand the potential impact introduced by the changes.
@@ -41,5 +42,28 @@ OUTPUT JSON SCHEMA (MUST MATCH EXACTLY)
 {OUTPUT_SCHEMA}
 
 NOW ANALYZE THE FOLLOWING DIFF AND RETURN ONLY THE JSON OBJECT:
-
 {DIFF_JSON}
+`;
+
+export const OUTPUT_SCHEMA = `{
+  "rating": "Critical | High | Medium | Low",
+  "riskScore": "<highest riskScore across all results>",
+  "riskDistribution": {
+    "critical": "<number>",
+    "high": "<number>",
+    "medium": "<number>",
+    "low": "<number>"
+  },
+  "summary": "<2–3 sentences summarizing the primary drivers of risk>",
+  "results": [
+    {
+      "key": "<configuration key>",
+      "changeType": "Added | Modified | Deleted | Refreshed",
+      "riskScore": "<number>",
+      "summary": "<1–2 sentences explaining why this change is risky>",
+      "concerns": [
+        "<1 sentence describing a specific concern>"
+      ]
+    }
+  ]
+}`;
