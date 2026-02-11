@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 262,
+    "Minor": 270,
     "Patch": 0
   },
   "runsOn": [
@@ -82,6 +82,10 @@
     "Node20_1": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -115,6 +119,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }

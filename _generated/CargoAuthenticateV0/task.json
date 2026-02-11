@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 262,
+    "Minor": 270,
     "Patch": 0
   },
   "runsOn": [
@@ -47,6 +47,10 @@
     "Node20_1": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -65,8 +69,8 @@
     "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.262.0",
+    "Default": "0.270.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.262.1"
+    "wif_242": "0.270.1"
   }
 }
