@@ -236,7 +236,9 @@
     "Node24_1": [
         "AzureCLIV1",
         "AzureCLIV2",
-        "AzureCLIV3"
+        "AzureCLIV3",
+        "AzurePowerShellV5",
+        "AzurePowerShellV4"
     ],
     "Node24_2": [],
     "Node24_3": [],
@@ -247,7 +249,10 @@
     "Node24_8": [],
     "Node24_9": [],
     "Node24_10": [],
-    "Node24_overwrite": [],
+    "Node24_overwrite": [
+        "AzurePowerShellV5",
+        "AzurePowerShellV4"
+    ],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
