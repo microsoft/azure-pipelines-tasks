@@ -1,0 +1,22 @@
+{
+  "rating": "Critical | High | Medium | Low",
+  "riskScore": "<highest riskScore across all results>",
+  "riskDistribution": {
+    "critical": "<number>",
+    "high": "<number>",
+    "medium": "<number>",
+    "low": "<number>"
+  },
+  "summary": "<2–3 sentences summarizing the primary drivers of risk>",
+  "results": [
+    {
+      "key": "<configuration key>",
+      "changeType": "Added | Modified | Deleted | Refreshed",
+      "riskScore": "<number>",
+      "summary": "<1–2 sentences explaining why this change is risky>",
+      "concerns": [
+        "<1 sentence describing a specific concern>"
+      ]
+    }
+  ]
+}
