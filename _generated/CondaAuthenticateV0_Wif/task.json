@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
-    "Patch": 2
+    "Minor": 270,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -26,6 +26,10 @@
       "target": "condaauthenticatemain.js"
     },
     "Node20_1": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "condaauthenticatemain.js",
       "argumentFormat": ""
     }
@@ -54,8 +58,8 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.247.1",
+    "Default": "0.270.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.247.2"
+    "wif_242": "0.270.1"
   }
 }
