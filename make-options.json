@@ -240,7 +240,11 @@
     ],
     "Node24_2": [],
     "Node24_3": [],
-    "Node24_4": [],
+    "Node24_4": [
+        "AzureFileCopyV4",
+        "AzureFileCopyV5",
+        "AzureFileCopyV6"
+    ],
     "Node24_5": [],
     "Node24_6": [],
     "Node24_7": [],
