@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 270,
-    "Patch": 4
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -131,6 +131,7 @@
     "Debug_ProvenanceResponseStatus": "ms-resource:loc.messages.Debug_ProvenanceResponseStatus",
     "Debug_Publishing": "ms-resource:loc.messages.Debug_Publishing",
     "Debug_ResolvedPackagingUrl": "ms-resource:loc.messages.Debug_ResolvedPackagingUrl",
+    "Debug_ResolvingFeedServiceUri": "ms-resource:loc.messages.Debug_ResolvingFeedServiceUri",
     "Debug_ResolvingVersionIncrement": "ms-resource:loc.messages.Debug_ResolvingVersionIncrement",
     "Debug_RetrievingArtifactToolUri": "ms-resource:loc.messages.Debug_RetrievingArtifactToolUri",
     "Debug_SetOutputVariables": "ms-resource:loc.messages.Debug_SetOutputVariables",
@@ -147,6 +148,8 @@
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
     "Error_FailedToResolveFeedUri": "ms-resource:loc.messages.Error_FailedToResolveFeedUri",
+    "Error_FeedServiceUriNoLocationUrl": "ms-resource:loc.messages.Error_FeedServiceUriNoLocationUrl",
+    "Error_FeedServiceUriRequestFailed": "ms-resource:loc.messages.Error_FeedServiceUriRequestFailed",
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
@@ -173,7 +176,8 @@
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.4",
-    "wif_242": "1.270.5"
+    "Default": "1.270.0",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.270.1"
   }
 }

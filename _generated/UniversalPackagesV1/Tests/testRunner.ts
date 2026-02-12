@@ -7,20 +7,45 @@ import * as TestHelpers from './TestHelpers';
 
 // Mock global fetch before anything else runs
 // This prevents real network calls in L0 tests
+const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
 const mockFetch = async (url: string, options?: RequestInit): Promise<Response> => {
-    // Return a mock response with X-VSS-ResourceTenant header
-    return {
-        ok: true,
-        status: 200,
-        headers: {
-            get: (name: string) => {
-                if (name.toLowerCase() === 'x-vss-resourcetenant') {
-                    return TEST_CONSTANTS.MOCK_TENANT_ID;
+    const method = options?.method?.toUpperCase() || 'GET';
+
+    // Anonymous GET to resource areas API → returns feed service locationUrl
+    if (method === 'GET' && url.includes('/_apis/resourceAreas/')) {
+        const feedServiceUrl = url.includes('other-org')
+            ? TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
+            : TEST_CONSTANTS.FEED_SERVICE_URL;
+        return {
+            ok: true,
+            status: 200,
+            headers: { get: () => null },
+            json: async () => ({
+                id: FEED_RESOURCE_AREA_ID,
+                name: 'Feeds',
+                locationUrl: feedServiceUrl
+            })
+        } as unknown as Response;
+    }
+
+    // HEAD to feed service URI → returns X-VSS-ResourceTenant for WIF tenant discovery
+    if (method === 'HEAD') {
+        return {
+            ok: true,
+            status: 200,
+            headers: {
+                get: (name: string) => {
+                    if (name.toLowerCase() === 'x-vss-resourcetenant') {
+                        return TEST_CONSTANTS.MOCK_TENANT_ID;
+                    }
+                    return null;
                 }
-                return null;
             }
-        }
-    } as Response;
+        } as unknown as Response;
+    }
+
+    // Fallback for unexpected calls
+    return { ok: false, status: 404, headers: { get: () => null } } as unknown as Response;
 };
 (global as any).fetch = mockFetch;
 

@@ -19,11 +19,8 @@ export async function run(context: UniversalPackageContext): Promise<void> {
 
         helpers.logInfo('Info_PublishingPackage', context.packageName, packageVersion, context.directory);
         
-        // Get provenance session ID if using service connection, otherwise use feedName
-        // Build Service provides metadata automatically; service connections require provenance
-        const feedId = context.adoServiceConnection
-            ? await tryGetProvenanceSessionId(context)
-            : context.feedName;
+        // Get provenance session ID for publish traceability
+        const feedId = await getProvenanceSessionId(context);
 
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
@@ -104,7 +101,7 @@ function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedI
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
-async function tryGetProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
+async function getProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
     // Break glass pipeline variable to disable provenance
     const saveMetadata = tl.getVariable("Packaging.SavePublishMetadata");
     if (saveMetadata && saveMetadata.toLowerCase() === 'false') {

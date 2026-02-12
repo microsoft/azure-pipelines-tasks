@@ -1,12 +1,10 @@
 import * as tl from "azure-pipelines-task-lib";
 import type { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
-#if WIF
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
 import type { SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
 import type * as restClient from 'typed-rest-client/RestClient';
-#endif
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
@@ -21,15 +19,8 @@ export async function run(context: UniversalPackageContext): Promise<void> {
 
         helpers.logInfo('Info_PublishingPackage', context.packageName, packageVersion, context.directory);
         
-        // Get provenance session ID if using service connection, otherwise use feedName
-        // Build Service provides metadata automatically; service connections require provenance
-#if WIF
-        const feedId = context.adoServiceConnection
-            ? await tryGetProvenanceSessionId(context)
-            : context.feedName;
-#else
-        const feedId = context.feedName;
-#endif
+        // Get provenance session ID for publish traceability
+        const feedId = await getProvenanceSessionId(context);
 
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
@@ -110,8 +101,7 @@ function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedI
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
-#if WIF
-async function tryGetProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
+async function getProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
     // Break glass pipeline variable to disable provenance
     const saveMetadata = tl.getVariable("Packaging.SavePublishMetadata");
     if (saveMetadata && saveMetadata.toLowerCase() === 'false') {
@@ -176,4 +166,3 @@ async function getUniversalPackagesUri(context: UniversalPackageContext): Promis
     const resourceArea = await retryOnException(() => context.locationApi.getResourceArea(upackAreaId), 3, 1000);
     return resourceArea.locationUrl;
 }
-#endif

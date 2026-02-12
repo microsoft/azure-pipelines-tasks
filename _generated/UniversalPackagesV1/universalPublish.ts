@@ -1,5 +1,10 @@
 import * as tl from "azure-pipelines-task-lib";
 import type { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
+import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
+import type { SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
+import type * as restClient from 'typed-rest-client/RestClient';
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
@@ -14,9 +19,8 @@ export async function run(context: UniversalPackageContext): Promise<void> {
 
         helpers.logInfo('Info_PublishingPackage', context.packageName, packageVersion, context.directory);
         
-        // Get provenance session ID if using service connection, otherwise use feedName
-        // Build Service provides metadata automatically; service connections require provenance
-        const feedId = context.feedName;
+        // Get provenance session ID for publish traceability
+        const feedId = await getProvenanceSessionId(context);
 
         // Publish the package
         tl.debug(tl.loc("Debug_UsingArtifactToolPublish"));
@@ -97,3 +101,68 @@ function publishPackageUsingArtifactTool(context: UniversalPackageContext, feedI
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
+async function getProvenanceSessionId(context: UniversalPackageContext): Promise<string> {
+    // Break glass pipeline variable to disable provenance
+    const saveMetadata = tl.getVariable("Packaging.SavePublishMetadata");
+    if (saveMetadata && saveMetadata.toLowerCase() === 'false') {
+        tl.debug(tl.loc('Debug_ProvenanceDisabled'));
+        return context.feedName;
+    }
+
+    try {
+        // Get the Universal Packages service URL using UPack area ID
+        const packagingUrl = await getUniversalPackagesUri(context);
+        tl.debug(tl.loc('Debug_ResolvedPackagingUrl', packagingUrl));
+        
+        // Get versioning data for the provenance session API
+        const webApi = getWebApiWithProxy(packagingUrl, context.accessToken);
+        const routeValues: any = {
+            protocol: "upack",
+            project: context.projectName
+        };
+        
+        const verData = await webApi.vsoClient.getVersioningData(
+            "7.1-preview.1",
+            "Provenance",
+            "503B4E54-EBF4-4D04-8EEE-21C00823C2AC",
+            routeValues);
+        
+        tl.debug(tl.loc('Debug_ProvenanceApiUrl', verData.requestUrl));
+        
+        // Make REST call to create provenance session
+        const sessionRequest: SessionRequest = ProvenanceHelper.CreateSessionRequest(context.feedName);
+        
+        // Use the same request options pattern as ProvenanceApi in packaging-common
+        const requestOptions: restClient.IRequestOptions = {
+            acceptHeader: `application/json; api-version=${verData.apiVersion}`,
+            additionalHeaders: { 
+                'Content-Type': 'application/json'
+            }
+        };
+        
+        const response: restClient.IRestResponse<SessionResponse> = await webApi.rest.create<SessionResponse>(
+            verData.requestUrl,
+            sessionRequest,
+            requestOptions);
+        
+        tl.debug(tl.loc('Debug_ProvenanceResponseStatus', response.statusCode));
+        
+        const session = response.result;
+        if (session && session.sessionId) {
+            tl.debug(tl.loc('Debug_UsingProvenanceSession', session.sessionId));
+            return session.sessionId;
+        } else {
+            tl.debug(tl.loc('Debug_NoProvenanceSession'));
+            return context.feedName;
+        }
+    } catch (err) {
+        tl.warning(tl.loc('Warning_ProvenanceSessionFailed', err.message || err));
+        return context.feedName;
+    }
+}
+
+async function getUniversalPackagesUri(context: UniversalPackageContext): Promise<string> {
+    const upackAreaId = 'd397749b-f115-4027-b6dd-77a65dd10d21';
+    const resourceArea = await retryOnException(() => context.locationApi.getResourceArea(upackAreaId), 3, 1000);
+    return resourceArea.locationUrl;
+}

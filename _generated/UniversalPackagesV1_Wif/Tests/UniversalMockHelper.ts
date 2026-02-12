@@ -59,7 +59,6 @@ export class UniversalMockHelper {
         clientMock.registerClientToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
         clientMock.registerClientToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
-        this.registerLocationUtilitiesMock();
         this.registerRetryUtilitiesMock();
         this.registerAuthenticationMocks();
         this.registerTelemetryMock();
@@ -93,17 +92,6 @@ export class UniversalMockHelper {
                 scheme: 'WorkloadIdentityFederation'
             });
         }
-    }
-
-    private registerLocationUtilitiesMock() {
-        const locationUtilitiesMock = {
-            getFeedUriFromBaseServiceUri: async (serviceUri: string, accessToken: string) => {
-                // Return the packaging API URL based on the service URI
-                return `${serviceUri}/_apis/packaging`;
-            }
-        };
-        
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', locationUtilitiesMock);
     }
 
     private registerRetryUtilitiesMock() {

@@ -7,8 +7,10 @@ export const TEST_CONSTANTS = {
     HIGHEST_PACKAGE_VERSION: '1.2.3',
     DOWNLOAD_PATH: 'c:\\temp',
     ORGANIZATION_NAME: 'example',
-    SERVICE_URL: 'https://dev.azure.com/example',
-    CROSS_ORG_SERVICE_URL: 'https://dev.azure.com/other-org',
+    SERVICE_URL: 'https://dev.azure.com/example/',
+    FEED_SERVICE_URL: 'https://feeds.dev.azure.com/example/',
+    CROSS_ORG_SERVICE_URL: 'https://dev.azure.com/other-org/',
+    CROSS_ORG_FEED_SERVICE_URL: 'https://feeds.dev.azure.com/other-org/',
     ARTIFACT_TOOL_PATH: 'c:\\mock\\location\\ArtifactTool.exe',
     
     // Test output messages
@@ -33,9 +35,9 @@ export function getDefaultEnvVars(): { [key: string]: string } {
         'AGENT_HOMEDIRECTORY': 'c:\\agent\\home\\directory',
         'AGENT_VERSION': '2.999.0',
         'BUILD_SOURCESDIRECTORY': 'c:\\agent\\home\\directory\\sources',
-        'ENDPOINT_URL_SYSTEMVSSCONNECTION': 'https://dev.azure.com/example',
+        'ENDPOINT_URL_SYSTEMVSSCONNECTION': 'https://dev.azure.com/example/',
         'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
-        'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': 'https://dev.azure.com/example',
+        'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': 'https://dev.azure.com/example/',
         'SYSTEM_SERVERTYPE': 'hosted',
         'SYSTEM_DEBUG': 'false',
         'MOCK_HIGHEST_PACKAGE_VERSION': TEST_CONSTANTS.HIGHEST_PACKAGE_VERSION

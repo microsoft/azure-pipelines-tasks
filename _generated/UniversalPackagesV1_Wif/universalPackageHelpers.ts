@@ -4,7 +4,6 @@ import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-a
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { getFeedUriFromBaseServiceUri } from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
@@ -95,15 +94,35 @@ async function trySetAccessToken(context: UniversalPackageContext): Promise<bool
     return tryGetSystemAccessToken(context);
 }
 
-// The resource areas endpoint is publicly accessible, so we resolve feedServiceUri before auth.
-async function setServiceUris(context: UniversalPackageContext): Promise<void> {
+const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
+
+async function getAnonymousFeedServiceUri(serviceUri: string): Promise<string> {
+    const url = `${serviceUri}_apis/resourceAreas/${FEED_RESOURCE_AREA_ID}?api-version=5.0-preview.1`;
+    tl.debug(tl.loc('Debug_ResolvingFeedServiceUri', url));
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(tl.loc('Error_FeedServiceUriRequestFailed', response.status, response.statusText));
+    }
+
+    const data = await response.json() as { locationUrl?: string };
+    if (!data.locationUrl) {
+        throw new Error(tl.loc('Error_FeedServiceUriNoLocationUrl'));
+    }
+
+    return data.locationUrl;
+}
+
+function setServiceUri(context: UniversalPackageContext): void {
     context.serviceUri = context.adoServiceConnection && context.organization
-        ? `https://dev.azure.com/${encodeURIComponent(context.organization)}`
+        ? `https://dev.azure.com/${encodeURIComponent(context.organization)}/`
         : tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
     tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
+}
 
+async function setFeedServiceUri(context: UniversalPackageContext): Promise<void> {
     try {
-        context.feedServiceUri = await getFeedUriFromBaseServiceUri(context.serviceUri, "");
+        context.feedServiceUri = await getAnonymousFeedServiceUri(context.serviceUri);
         tl.debug(tl.loc('Debug_FeedServiceUri', context.feedServiceUri));
     } catch (error) {
         throw new Error(tl.loc('Error_FailedToResolveFeedUri', context.serviceUri, error.message || error));
@@ -135,7 +154,8 @@ async function setIdentityInformation(context: UniversalPackageContext): Promise
 
 export async function trySetAuth(context: UniversalPackageContext): Promise<boolean> {
     try {
-        await setServiceUris(context);
+        setServiceUri(context);
+        await setFeedServiceUri(context);
 
         if (!await trySetAccessToken(context)) {
             throw new Error(tl.loc('Error_NoAuthToken'));

@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 270,
-    "Patch": 4
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -131,6 +131,7 @@
     "Debug_ProvenanceResponseStatus": "Provenance API response status: %s",
     "Debug_Publishing": "Publishing package: %s, version: %s using feed id: %s, project: %s",
     "Debug_ResolvedPackagingUrl": "Resolved packaging service URL: %s",
+    "Debug_ResolvingFeedServiceUri": "Resolving feed service URI anonymously from %s",
     "Debug_ResolvingVersionIncrement": "Resolving version increment: %s",
     "Debug_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
     "Debug_SetOutputVariables": "Set output variables - packageName: %s, packageVersion: %s",
@@ -147,6 +148,8 @@
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
     "Error_FailedToResolveFeedUri": "Failed to resolve feed service URI from %s: %s",
+    "Error_FeedServiceUriNoLocationUrl": "Resource area response did not contain locationUrl",
+    "Error_FeedServiceUriRequestFailed": "Failed to resolve feed service URI: %s %s",
     "Error_InvalidVersionIncrement": "Invalid version increment value: %s. Expected 'major', 'minor', or 'patch'.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
     "Error_PackageVersionRequired": "Package version is required for download operations.",
