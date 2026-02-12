@@ -20,7 +20,7 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
         });
 
         it('external connection bypasses collection host validation for different Azure DevOps org', async () => {
-            // Arrange & Act - Critical test for the bug fix!
+            // Arrange & Act
             // Registry in 'externalorg' but collection is 'testorg'
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forExternalAuth('test-registry', 'ExternalConnection', {
