@@ -18,5 +18,8 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
     "undici-types": "^5.26.5"
+  },
+  "overrides": {
+    "uuid": "7.0.3"
   }
 }
