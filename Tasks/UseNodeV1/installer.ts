@@ -7,10 +7,11 @@ import * as os from 'os';
 import * as path from 'path';
 
 const osPlat: string = os.platform();
-// Don't use `os.arch()` to construct download URLs,
+// Don't use `os.machine()` to construct download URLs,
 // Node.js uses a different set of arch identifiers for those.
+// fallback on os.arch() if os.machine() is not available (it was added in Node 16.18.0)
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
+const osArch: string = (os.machine?.() || os.arch() === 'ia32' || force32bit) ? 'x86' : os.machine?.() || os.arch();
 
 //
 // Node versions interface
