@@ -20,7 +20,7 @@
   "version": {
     "Major": 3,
     "Minor": 270,
-    "Patch": 3
+    "Patch": 5
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -273,7 +273,7 @@
     "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
   },
   "_buildConfigMapping": {
-    "Default": "3.270.2",
-    "Node24_1": "3.270.3"
+    "Default": "3.270.4",
+    "Node24_1": "3.270.5"
   }
 }
