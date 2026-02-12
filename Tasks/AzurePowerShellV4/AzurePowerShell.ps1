@@ -92,7 +92,7 @@ try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    $encryptedToken = (New-Object System.Net.NetworkCredential('', $vstsAccessToken)).SecurePassword
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName `
         -azVersion $targetAzurePs -encryptedToken $encryptedToken -isPSCore $input_pwsh
     Write-Host "## Az module initialization Complete"
