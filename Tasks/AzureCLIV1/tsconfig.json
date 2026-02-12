@@ -2,6 +2,5 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs"
-    },
-    "exclude": ["Tests", "node_modules"]
+    }
 }
