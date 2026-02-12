@@ -78,7 +78,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         if ($endpointObject.authenticationType -ieq 'SPNKey') {
             $psCredential = New-Object System.Management.Automation.PSCredential(
                     $endpointObject.servicePrincipalClientID,
-                    (New-Object System.Net.NetworkCredential('', $endpointObject.servicePrincipalKey)).SecurePassword)
+                    (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
             Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
             $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
