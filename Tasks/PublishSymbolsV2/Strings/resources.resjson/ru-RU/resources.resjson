@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Не удалось найти хранилище символов lastid.txt в \"{0}\".",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "Не удалось определить рабочую область на основе исходной папки \"{0}\".",
   "loc.messages.UnableToIndexSources": "Не удалось проиндексировать источники.",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Библиотека dbghelp.dll уже загружена из непредвиденного пути. Ожидается — \"{0}\". Фактический — \"{0}\".",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Библиотека dbghelp.dll уже загружена из непредвиденного пути. Ожидается — \"{0}\". Фактический — \"{1}\".",
   "loc.messages.UnsupportedSourceProvider0": "Неподдерживаемый поставщик источника \"{0}\" для индексации источника.",
   "loc.messages.Win32Error0FromMethod1": "Произошла ошибка Win32 \"{0}\" из метода \"{1}\".",
   "loc.messages.NodeVersionSupport": "Начиная с 31.08.2024, Node v{0} больше не поддерживается. Обновите агент конвейера до последней версии для Node 16 или более поздней версии.",

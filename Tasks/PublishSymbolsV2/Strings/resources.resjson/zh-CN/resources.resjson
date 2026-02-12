@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "未在“{0}”中找到符号存储区 lastid.txt。",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "无法从源文件夹“{0}”中确定工作区。",
   "loc.messages.UnableToIndexSources": "无法为源编制索引。",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已从异常路径加载库 dbghelp.dll。应为“{0}”。实际为“{0}”。",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已从异常路径加载库 dbghelp.dll。应为“{0}”。实际为“{1}”。",
   "loc.messages.UnsupportedSourceProvider0": "不受源索引编制支持的源提供程序“{0}”。",
   "loc.messages.Win32Error0FromMethod1": "在方法“{1}”中遇到 Win32 错误“{0}”。",
   "loc.messages.NodeVersionSupport": "从 2024 年 8 月 31 日起不再支持 Node v{0}。请将管道代理升级到最新版本以使用 Node 16 或更高版本。",

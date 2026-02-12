@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Fichier lastid.txt du magasin de symboles introuvable sur '{0}'.",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "Impossible de déterminer l'espace de travail à partir du dossier source '{0}'.",
   "loc.messages.UnableToIndexSources": "Impossible d'indexer les sources.",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La bibliothèque dbghelp.dll est déjà chargée à partir d'un chemin inattendu. Le chemin attendu est '{0}'. Le chemin réel est '{0}'.",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La bibliothèque dbghelp.dll est déjà chargée à partir d'un chemin inattendu. Le chemin attendu est '{0}'. Le chemin réel est '{1}'.",
   "loc.messages.UnsupportedSourceProvider0": "Fournisseur de source '{0}' non pris en charge pour l'indexation des sources.",
   "loc.messages.Win32Error0FromMethod1": "Erreur Win32 '{0}' rencontrée dans la méthode '{1}'.",
   "loc.messages.NodeVersionSupport": "Le nœud v{0} n’est plus pris en charge à compter du 31/08/2024. Veuillez mettre à niveau l’agent de pipeline vers la dernière version pour le nœud 16 ou version ultérieure.",

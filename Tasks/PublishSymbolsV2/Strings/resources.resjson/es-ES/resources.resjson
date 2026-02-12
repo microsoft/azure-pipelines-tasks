@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "No se encontró el archivo lastid.txt del almacén de símbolos en '{0}'.",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "No se puede determinar el área de trabajo desde la carpeta de origen '{0}'.",
   "loc.messages.UnableToIndexSources": "No se pueden indexar los orígenes.",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La biblioteca dbghelp.dll ya está cargada desde una ruta inesperada. Se esperaba '{0}'. Real '{0}'.",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "La biblioteca dbghelp.dll ya está cargada desde una ruta inesperada. Se esperaba '{0}'. Real '{1}'.",
   "loc.messages.UnsupportedSourceProvider0": "Proveedor de origen no admitido '{0}' para la indexación de origen.",
   "loc.messages.Win32Error0FromMethod1": "Error de Win32 '{0}' del método '{1}'.",
   "loc.messages.NodeVersionSupport": "Node v{0} ya no se admite a partir del 31/08/2024. Actualice el agente de canalización a la última versión de Node 16 o posterior.",
