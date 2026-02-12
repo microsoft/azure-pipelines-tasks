@@ -11,7 +11,47 @@ const osPlat: string = os.platform();
 // Node.js uses a different set of arch identifiers for those.
 // fallback on os.arch() if os.machine() is not available (it was added in Node 16.18.0)
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-const osArch: string = (os.machine?.() || os.arch() === 'ia32' || force32bit) ? 'x86' : os.machine?.() || os.arch();
+function getArchitecture(): "arm64" | "ppc64" | "ppc64le" | "s390x" | "x64" | "x86" | "armv7l" {
+    if (force32bit) {
+        return 'x86';
+    }
+    // this API was only added on 16.18 and up.
+    if (os.machine) {
+        const machine: "arm"|"arm64"|"aarch64"|"mips"|"mips64"|"ppc64"|"ppc64le"|"s390x"|"i386"|"i686"|"x86_64" = os.machine();
+        switch (machine) {
+            case 'x86_64':
+                return 'x64';
+            case 'aarch64':
+                return 'arm64';
+            case 'i386':
+            case 'i686':
+                return 'x86';
+            case 'arm':
+                return 'armv7l';
+            case 'mips':
+            case 'mips64':
+                throw new Error(taskLib.loc('NodeVersionNotFound', machine));
+            default:
+                return machine;
+        }
+    }
+    const arch: "arm"|"arm64"|"ia32"|"loong64"|"mips"|"mipsel"|"ppc64"|"riscv64"|"s390x"|"x64" = os.arch();
+    switch (arch) {
+        case 'ia32':
+            return 'x86';
+        case 'arm':
+            return 'armv7l';
+        case 'loong64':
+        case 'mips':
+        case 'riscv64':
+        case 'mipsel':
+            throw new Error(taskLib.loc('NodeVersionNotFound', arch));
+        default:
+            return arch;
+    }
+}
+
+const osArch: string = getArchitecture();
 
 //
 // Node versions interface
@@ -219,7 +259,7 @@ async function acquireNodeFromFallbackLocation(version: string, retryCountOnDown
 
     let exeUrl: string;
     let libUrl: string;
-    console.log("Aquiring Node from callback called")
+    console.log("Acquiring Node from callback called")
     console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
     try {
         exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
