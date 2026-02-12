@@ -247,12 +247,7 @@
     "Node24_8": [],
     "Node24_9": [],
     "Node24_10": [],
-    "Node24_overwrite": [
-        "AzureRmWebAppDeploymentV4",
-        "AzureRmWebAppDeploymentV5",
-        "FileTransformV2",
-        "KubeloginInstallerV0"
-    ],
+    "Node24_overwrite": [],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
