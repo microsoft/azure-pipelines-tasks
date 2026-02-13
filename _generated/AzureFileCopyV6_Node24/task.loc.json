@@ -294,5 +294,9 @@
     "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError",
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
+  },
+  "_buildConfigMapping": {
+    "Default": "6.270.1",
+    "Node24_4": "6.270.2"
   }
 }
