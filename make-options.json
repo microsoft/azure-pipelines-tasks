@@ -236,7 +236,8 @@
     "Node24_1": [
         "AzureCLIV1",
         "AzureCLIV2",
-        "AzureCLIV3"
+        "AzureCLIV3",
+        "AzureKeyVaultV2"
     ],
     "Node24_2": [],
     "Node24_3": [],
