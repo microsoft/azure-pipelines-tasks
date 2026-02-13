@@ -103,8 +103,9 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertStdoutContains(tr, 'already-set-token', 
-                'Should keep the already-set token');
+            TestHelpers.assertStdoutContains(tr, 'loc_mock_ConnectionAlreadySet', 
+                'Should warn when registry already has credentials');
+            TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
         });
 
         it('logs when registry authentication is skipped due to existing credentials', async () => {
