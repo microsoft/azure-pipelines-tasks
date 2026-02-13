@@ -14,6 +14,7 @@ async function main(): Promise<void> {
             let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
             if (token)
             {
+                tl.setSecret(token);
                 tl.setVariable('ARTIFACTS_CONDA_TOKEN', token);
                 federatedFeedAuthSuccessCount++;
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", entraWifServiceConnectionName));
@@ -27,8 +28,8 @@ async function main(): Promise<void> {
 
         const localAccesstoken = tl.getVariable('System.AccessToken');
         tl.debug(tl.loc('AddingAuthChannel', 'ARTIFACTS_CONDA_TOKEN'));
-        tl.setVariable('ARTIFACTS_CONDA_TOKEN', localAccesstoken);
         tl.setSecret(localAccesstoken);
+        tl.setVariable('ARTIFACTS_CONDA_TOKEN', localAccesstoken);
     }
     catch (error) {
         tl.error(error);
