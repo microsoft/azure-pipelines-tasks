@@ -22,9 +22,8 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common": "^4.268.0",
-    "q": "1.4.1",
-    "azure-pipelines-task-lib": "^5.2.4"
+    "azure-pipelines-tasks-webdeployment-common": "4.260.0",
+    "q": "1.4.1"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
