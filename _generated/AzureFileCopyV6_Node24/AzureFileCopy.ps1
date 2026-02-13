@@ -1,4 +1,5 @@
 [CmdletBinding()]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification='Access token must be converted to SecureString for Az module initialization')]
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
