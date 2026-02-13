@@ -84,7 +84,7 @@
   "loc.messages.ValidationFailed": "Validation failed",
   "loc.messages.OperationFailed": "Operation failed",
   "loc.messages.RequestFailedCorrelation": "Request failed. CorrelationId: %s",
-  "loc.messages.InvalidChangeType": "Invalid ChangeType: %s",
+  "loc.messages.InvalidChangeType": "Invalid change type: %s",
   "loc.messages.UnknownPropertyChangeType": "Unknown property change type: %s.",
   "loc.messages.InvalidJsonValue": "Invalid JSON value: %s",
   "loc.messages.FailedToLogout": "The following error occurred while logging out: %s"

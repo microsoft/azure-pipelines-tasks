@@ -388,7 +388,7 @@
     "ValidationFailed": "Validation failed",
     "OperationFailed": "Operation failed",
     "RequestFailedCorrelation": "Request failed. CorrelationId: %s",
-    "InvalidChangeType": "Invalid ChangeType: %s",
+    "InvalidChangeType": "Invalid change type: %s",
     "UnknownPropertyChangeType": "Unknown property change type: %s.",
     "InvalidJsonValue": "Invalid JSON value: %s",
     "FailedToLogout": "The following error occurred while logging out: %s"
