@@ -1,4 +1,6 @@
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification='Password must be converted to SecureString for PSCredential in WinRM sessions')]
+param()
 
 $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
@@ -864,6 +866,7 @@ function Get-AzureVMResourcesProperties
 
 function Get-AzureVMsCredentials
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingUsernameAndPasswordParams', '', Justification='VM credentials are required for WinRM copy to Azure VMs')]
     param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
           [string][Parameter(Mandatory=$true)]$vmsAdminPassword)
 

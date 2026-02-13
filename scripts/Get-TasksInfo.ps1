@@ -34,9 +34,9 @@ foreach ($taskPath in (Get-ChildItem -Path $tasksDir)) {
         $taskJson = Get-Content (Join-Path $taskPath task.json) | ConvertFrom-Json -AsHashtable
 
         $owners = @()
-        $ownersLine = $codeowners
-        | Where-Object { $_ -like "*Tasks/$($taskDirName)*" }
-        | ForEach-Object { $_ -replace "Tasks/$($taskDirName)( |/)", '' }
+        $ownersLine = $codeowners |
+            Where-Object { $_ -like "*Tasks/$($taskDirName)*" } |
+            ForEach-Object { $_ -replace "Tasks/$($taskDirName)( |/)", '' }
         if ($null -ne $ownersLine) {
             $owners = ($ownersLine.Trim()) -split '\s+'
         }
