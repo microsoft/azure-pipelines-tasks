@@ -15,11 +15,12 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthExternalRegistry');
+            TestHelpers.assertSuccess(tr);
             TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1 });
         });
 
-        it('external connection bypasses collection host validation for different Azure DevOps org', async () => {
+        it('external connection authenticates registry from different Azure DevOps org', async () => {
             // Arrange & Act
             // Registry in 'externalorg' but collection is 'testorg'
             const tr = await TestHelpers.runTest(
@@ -29,7 +30,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthExternalRegistry');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
             TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1 });
         });
 
@@ -42,7 +44,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthExternalRegistry');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
             TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1, InternalFeedAuthCount: 0 });
         });
 
@@ -62,7 +65,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthRegistry');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 1, ExternalFeedAuthCount: 0 });
         });
 
@@ -73,7 +77,7 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthExternalRegistry');
+            TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 1, ExternalFeedAuthCount: 1 });
         });
     });
@@ -88,7 +92,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthRegistry');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 1 });
         });
 

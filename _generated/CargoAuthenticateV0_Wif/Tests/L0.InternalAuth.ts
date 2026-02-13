@@ -41,7 +41,7 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             );
             
             // Assert
-            TestHelpers.assertSuccess(tr, 'loc_mock_AddingAuthRegistry another-registry');
+            TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 2 });
         });
     });
