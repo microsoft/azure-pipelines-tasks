@@ -10,9 +10,9 @@ import { UniversalPackageContext } from "./UniversalPackageContext";
 import * as helpers from "./universalPackageHelpers";
 
 export async function run(context: UniversalPackageContext): Promise<void> {
+    let packageVersion = context.packageVersion;
     try {
         // Resolve packageVersion if using versionIncrement
-        let packageVersion = context.packageVersion;
         if (context.versionIncrement) {
             packageVersion = await resolveVersionIncrement(context);
         }
@@ -32,7 +32,7 @@ export async function run(context: UniversalPackageContext): Promise<void> {
         helpers.logInfo("Success_PackagesPublished", context.packageName, packageVersion, context.feedName);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Success_PackagesPublished", context.packageName, packageVersion, context.feedName));
     } catch (err) {
-        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish', context.packageName, context.packageVersion || context.versionIncrement, context.feedName), context);
+        await helpers.handleTaskError(err, tl.loc('Error_PackagesFailedToPublish', context.packageName, packageVersion || context.versionIncrement, context.feedName), context);
     }
 }
 
