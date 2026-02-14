@@ -1,14 +1,8 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as fs from 'fs';
 import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
-
-// Detect if this is a WIF-enabled build
-const mainJsPath = path.join(__dirname, '..', 'main.js');
-const hasWifSupport = fs.existsSync(mainJsPath) && 
-    fs.readFileSync(mainJsPath, 'utf8').includes('configureEntraCredProvider');
 
 describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', function () {
     this.timeout(10000);
@@ -16,7 +10,8 @@ describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', fun
     afterEach(() => TestHelpers.afterEach());
 
     describe('Input Combination Errors', function() {
-        (hasWifSupport ? it : it.skip)('fails when both nuGetServiceConnections and workloadIdentityServiceConnection are provided', async () => {
+#if WIF
+        it('fails when both nuGetServiceConnections and workloadIdentityServiceConnection are provided', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -33,7 +28,7 @@ describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', fun
                 'Should show error about conflicting inputs');
         });
 
-        (hasWifSupport ? it : it.skip)('warns when feedUrl is provided without workloadIdentityServiceConnection', async () => {
+        it('warns when feedUrl is provided without workloadIdentityServiceConnection', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -50,7 +45,7 @@ describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', fun
                 'Should warn about ignoring feedUrl');
         });
 
-        (hasWifSupport ? it : it.skip)('fails when feedUrl is invalid format', async () => {
+        it('fails when feedUrl is invalid format', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -66,6 +61,7 @@ describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', fun
             assert(tr.stdout.indexOf('Error_InvalidFeedUrl') > 0 || tr.errorIssues.length > 0,
                 'Should show invalid feed URL error');
         });
+#endif
 
         it('succeeds with empty nuGetServiceConnections', async () => {
             // Arrange

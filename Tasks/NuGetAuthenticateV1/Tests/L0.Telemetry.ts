@@ -1,14 +1,8 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as fs from 'fs';
 import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
-
-// Detect if this is a WIF-enabled build
-const mainJsPath = path.join(__dirname, '..', 'main.js');
-const hasWifSupport = fs.existsSync(mainJsPath) && 
-    fs.readFileSync(mainJsPath, 'utf8').includes('configureEntraCredProvider');
 
 describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
     this.timeout(10000);
@@ -87,7 +81,8 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track ForceReinstallCredentialProvider as false');
         });
 
-        (hasWifSupport ? it : it.skip)('tracks FederatedFeedAuthCount=1 when WIF succeeds', async () => {
+#if WIF
+        it('tracks FederatedFeedAuthCount=1 when WIF succeeds', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -102,6 +97,7 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                    tr.stdout.indexOf('"FederatedFeedAuthCount": 1') > 0,
                 'Should track FederatedFeedAuthCount as 1');
         });
+#endif
 
         it('tracks FederatedFeedAuthCount=0 when WIF not used', async () => {
             // Arrange
@@ -168,7 +164,8 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track isFeedUrlValid as true');
         });
 
-        (hasWifSupport ? it : it.skip)('tracks isFeedUrlValid=false when feedUrl is invalid', async () => {
+#if WIF
+        it('tracks isFeedUrlValid=false when feedUrl is invalid', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -185,6 +182,7 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                    tr.stdout.indexOf('"isFeedUrlValid": false') > 0,
                 'Should track isFeedUrlValid as false');
         });
+#endif
 
         it('tracks isEntraWifServiceConnectionNameIncluded=true when WIF connection provided', async () => {
             // Arrange

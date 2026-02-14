@@ -1,14 +1,8 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as fs from 'fs';
 import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
-
-// Detect if this is a WIF-enabled build
-const mainJsPath = path.join(__dirname, '..', 'main.js');
-const hasWifSupport = fs.existsSync(mainJsPath) && 
-    fs.readFileSync(mainJsPath, 'utf8').includes('configureEntraCredProvider');
 
 describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', function () {
     this.timeout(10000);
@@ -16,56 +10,6 @@ describe('NuGetAuthenticate L0 Suite - Input Validation and Error Handling', fun
     afterEach(() => TestHelpers.afterEach());
 
     describe('Input Combination Errors', function() {
-        (hasWifSupport ? it : it.skip)('fails when both nuGetServiceConnections and workloadIdentityServiceConnection are provided', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env[testConstants.TestEnvVars.nuGetServiceConnections] = 'TestServiceConnection1';
-            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
-            TestHelpers.setupExternalServiceConnections([testConstants.TestData.externalServiceConnection]);
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.failed, 'Task should fail when both nuGetServiceConnections and WIF connection are provided');
-            assert(tr.stdout.indexOf('Error_NuGetWithWIFNotSupported') > 0 || tr.errorIssues.length > 0,
-                'Should show error about conflicting inputs');
-        });
-
-        (hasWifSupport ? it : it.skip)('warns when feedUrl is provided without workloadIdentityServiceConnection', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env[testConstants.TestEnvVars.feedUrl] = testConstants.TestData.validFeedUrls.devAzure;
-            // Not setting workloadIdentityServiceConnection
-            TestHelpers.setupBasicAuth();
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.succeeded, 'Task should succeed but with warning');
-            assert(tr.stdout.indexOf('Warn_IgnoringFeedUrl') > 0 || tr.warningIssues.length > 0,
-                'Should warn about ignoring feedUrl');
-        });
-
-        (hasWifSupport ? it : it.skip)('fails when feedUrl is invalid format', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
-            process.env[testConstants.TestEnvVars.feedUrl] = testConstants.TestData.invalidFeedUrls.nugetOrg;
-            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.failed, 'Task should fail when feedUrl is invalid');
-            assert(tr.stdout.indexOf('Error_InvalidFeedUrl') > 0 || tr.errorIssues.length > 0,
-                'Should show invalid feed URL error');
-        });
 
         it('succeeds with empty nuGetServiceConnections', async () => {
             // Arrange

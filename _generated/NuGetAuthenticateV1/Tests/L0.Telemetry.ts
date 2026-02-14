@@ -1,14 +1,8 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as fs from 'fs';
 import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
-
-// Detect if this is a WIF-enabled build
-const mainJsPath = path.join(__dirname, '..', 'main.js');
-const hasWifSupport = fs.existsSync(mainJsPath) && 
-    fs.readFileSync(mainJsPath, 'utf8').includes('configureEntraCredProvider');
 
 describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
     this.timeout(10000);
@@ -87,21 +81,6 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track ForceReinstallCredentialProvider as false');
         });
 
-        (hasWifSupport ? it : it.skip)('tracks FederatedFeedAuthCount=1 when WIF succeeds', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            TestHelpers.setupWifAuth(testConstants.TestData.crossOrgFeedUrl);
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.succeeded, 'Task should succeed with WIF');
-            assert(tr.stdout.indexOf('"FederatedFeedAuthCount":1') > 0 ||
-                   tr.stdout.indexOf('"FederatedFeedAuthCount": 1') > 0,
-                'Should track FederatedFeedAuthCount as 1');
-        });
 
         it('tracks FederatedFeedAuthCount=0 when WIF not used', async () => {
             // Arrange
@@ -168,23 +147,6 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track isFeedUrlValid as true');
         });
 
-        (hasWifSupport ? it : it.skip)('tracks isFeedUrlValid=false when feedUrl is invalid', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
-            process.env[testConstants.TestEnvVars.feedUrl] = testConstants.TestData.invalidFeedUrls.nugetOrg;
-            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.failed, 'Task should fail with invalid feedUrl');
-            assert(tr.stdout.indexOf('"isFeedUrlValid":false') > 0 ||
-                   tr.stdout.indexOf('"isFeedUrlValid": false') > 0,
-                'Should track isFeedUrlValid as false');
-        });
 
         it('tracks isEntraWifServiceConnectionNameIncluded=true when WIF connection provided', async () => {
             // Arrange
