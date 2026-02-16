@@ -39,7 +39,7 @@ extends:
     settings:
       skipBuildTagsForGitHubPullRequests: true
     featureFlags:
-      autoBaseline: false
+      autoBaseline: true
     sdl:
       sbom:
         enabled: true
