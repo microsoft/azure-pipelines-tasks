@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 262,
+    "Minor": 270,
     "Patch": 0
   },
   "runsOn": [
@@ -88,6 +88,10 @@
     "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -106,8 +110,8 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.262.0",
+    "Default": "1.270.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.262.1"
+    "wif_242": "1.270.1"
   }
 }
