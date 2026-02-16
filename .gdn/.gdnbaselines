@@ -2330,50 +2330,6 @@
       ],
       "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x64.exe) lacks Control Flow Guard - not under our control",
       "createdDate": "2025-11-24 00:00:00Z"
-    },
-    "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035": {
-      "signature": "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035",
-      "alternativeSignatures": [
-        "dadcad8e4019a30928f9be6357e65633e9980908be5a5cec9d9d9859778be273"
-      ],
-      "memberOf": [
-        "default"
-      ],
-      "createdDate": "2026-02-12 00:00:00Z",
-      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzurePowerShellV4_Node24/AzurePowerShell.ps1) will be removed when merged into base task"
-    },
-    "8d119e847e28649bf268bdbf1a07335eaffb0e63e646a7d83dc94e412bfeb8c3": {
-      "signature": "8d119e847e28649bf268bdbf1a07335eaffb0e63e646a7d83dc94e412bfeb8c3",
-      "alternativeSignatures": [
-        "aeea204432044b85819bee17ee619a12b1649ee6a67888d814ec4f2e9e1cd824"
-      ],
-      "memberOf": [
-        "default"
-      ],
-      "createdDate": "2026-02-12 00:00:00Z",
-      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzurePowerShellV4_Node24/InitializeAz.ps1) will be removed when merged into base task"
-    },
-    "25f98e81eeaca90238d700a05d5fd853c6e44b82948dc94ea666a040bf39f56d": {
-      "signature": "25f98e81eeaca90238d700a05d5fd853c6e44b82948dc94ea666a040bf39f56d",
-      "alternativeSignatures": [
-        "a6ad42f55bb3fbeb729301456140ac525b019908da9ce7cded10cf96f7d152e6"
-      ],
-      "memberOf": [
-        "default"
-      ],
-      "createdDate": "2026-02-12 00:00:00Z",
-      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzurePowerShellV5_Node24/CoreAz.ps1) will be removed when merged into base task"
-    },
-    "7c07315e5833936c89c6f6fbb837629e331e50244780ac150aec1844738ff7ae": {
-      "signature": "7c07315e5833936c89c6f6fbb837629e331e50244780ac150aec1844738ff7ae",
-      "alternativeSignatures": [
-        "b8a5d523ec304274abcda4195ef33012e1359eb8c0a6e3a160e47db2201d5245"
-      ],
-      "memberOf": [
-        "default"
-      ],
-      "createdDate": "2026-02-12 00:00:00Z",
-      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzurePowerShellV5_Node24/InitializeAz.ps1) will be removed when merged into base task"
     }
   }
 }
