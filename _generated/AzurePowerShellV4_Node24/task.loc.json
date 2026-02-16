@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 270,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -202,6 +202,10 @@
     "Node20_1": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -213,5 +217,9 @@
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.270.1",
+    "Node24_1": "4.270.2"
   }
 }
