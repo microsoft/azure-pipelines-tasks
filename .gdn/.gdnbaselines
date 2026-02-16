@@ -2348,6 +2348,15 @@
       ],
       "createdDate": "2026-02-16 00:00:00Z",
       "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "1ea27afb295421c27911324180ebbb82a23d8131582f90167696b587c8023c6a": {
+      "signature": "1ea27afb295421c27911324180ebbb82a23d8131582f90167696b587c8023c6a",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-16 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/Utility.ps1) will be removed when merged into base task"
     }
   }
 }
