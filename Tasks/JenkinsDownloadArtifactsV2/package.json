@@ -13,13 +13,13 @@
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "agent-base": "^6.0.2",
     "artifact-engine": "^1.5.5",
-    "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.269.0",
+    "azure-pipelines-task-lib": "^5.2.6",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.270.0",
     "azp-tasks-az-blobstorage-provider": "^3.262.0",
     "decompress-zip": "0.3.3",
     "extract-zip": "2.0.1",
@@ -28,7 +28,7 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   },
   "overrides": {
     "form-data": "^4.0.4"
