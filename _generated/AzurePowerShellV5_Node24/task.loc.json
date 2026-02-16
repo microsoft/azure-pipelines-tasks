@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 270,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -211,5 +211,9 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
     "Az_LowerVersionWarning": "ms-resource:loc.messages.Az_LowerVersionWarning"
+  },
+  "_buildConfigMapping": {
+    "Default": "5.270.1",
+    "Node24_1": "5.270.2"
   }
 }
