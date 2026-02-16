@@ -2330,6 +2330,15 @@
       ],
       "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x64.exe) lacks Control Flow Guard - not under our control",
       "createdDate": "2025-11-24 00:00:00Z"
+    },
+    "1bf62a4eb439bba442f51790c122f3d035c5a5cd9264a4936a405bd80db5043e": {
+      "signature": "1bf62a4eb439bba442f51790c122f3d035c5a5cd9264a4936a405bd80db5043e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-16 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/AzureFileCopy.ps1) will be removed when merged into base task"
     }
   }
 }
