@@ -237,8 +237,6 @@
         "AzureCLIV1",
         "AzureCLIV2",
         "AzureCLIV3",
-        "AzureFileCopyV4",
-        "AzureFileCopyV5",
         "AzureFileCopyV6"
     ],
     "Node24_2": [],
