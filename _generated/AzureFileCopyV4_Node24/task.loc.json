@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 271,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -307,5 +307,9 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.271.0",
+    "Node24_1": "4.271.1"
   }
 }
