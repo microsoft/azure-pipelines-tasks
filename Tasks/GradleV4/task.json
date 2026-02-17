@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 268,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "The Code Coverage option is deprecated. Refer to the [PublishCodeCoverageResultsV2 Task] (https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines) to get code coverage results.",
   "demands": [],
@@ -172,7 +172,8 @@
       "options": {
         "x86": "x86",
         "x64": "x64",
-        "arm64": "arm64"
+        "arm64": "arm64",
+        "aarch64": "aarch64"
       }
     },
     {
