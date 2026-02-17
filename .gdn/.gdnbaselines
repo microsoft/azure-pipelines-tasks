@@ -2357,6 +2357,33 @@
       ],
       "createdDate": "2026-02-16 00:00:00Z",
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf": {
+      "signature": "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/AzureFileCopy.ps1) will be removed when merged into base task"
+    },
+    "5e52887d284b7742299ccc1c3f2471be92239938076dcbb3a24da00ae6fd44e7": {
+      "signature": "5e52887d284b7742299ccc1c3f2471be92239938076dcbb3a24da00ae6fd44e7",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac": {
+      "signature": "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/Utility.ps1) will be removed when merged into base task"
     }
   }
 }
