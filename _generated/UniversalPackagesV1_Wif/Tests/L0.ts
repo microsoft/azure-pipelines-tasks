@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib';
-import {runTestWithEnv, assertArtifactToolCommand, assertTaskFailedBeforeToolExecution, buildCommandString } from './TestHelpers';
-import { TEST_CONSTANTS, getDefaultEnvVars } from './TestConstants';
+import {runTestWithEnv, assertArtifactToolCommand, assertTaskFailedBeforeToolExecution, buildCommandString } from './testHelpers';
+import { TEST_CONSTANTS, getDefaultEnvVars } from './testConstants';
 
 // Set resource path to enable localization in tests
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));

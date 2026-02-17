@@ -2,8 +2,8 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 
 import { UniversalMockHelper, MockConfig } from './UniversalMockHelper';
-import { TEST_CONSTANTS } from './TestConstants';
-import * as TestHelpers from './TestHelpers';
+import { TEST_CONSTANTS } from './testConstants';
+import * as testHelpers from './testHelpers';
 
 // Mock global fetch before anything else runs
 // This prevents real network calls in L0 tests
@@ -104,7 +104,7 @@ const expectedPackageVersion = process.env['MOCK_EXPECTED_VERSION']
     || TEST_CONSTANTS.PACKAGE_VERSION;
 
 // Build command string
-config.commandString = TestHelpers.buildCommandString({
+config.commandString = testHelpers.buildCommandString({
     command: config.inputs.command,
     feed: effectiveFeed,
     projectName: config.projectId,

@@ -3,7 +3,7 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 import * as artMock from 'azure-pipelines-tasks-packaging-common/Tests/ArtifactToolMockHelper';
 import * as clientMock from 'azure-pipelines-tasks-packaging-common/Tests/ClientToolMockHelper';
-import { TEST_CONSTANTS } from './TestConstants';
+import { TEST_CONSTANTS } from './testConstants';
 
 export interface MockConfig {
     inputs: {

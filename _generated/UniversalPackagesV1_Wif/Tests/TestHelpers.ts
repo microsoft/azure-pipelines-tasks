@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as assert from 'assert';
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 import { UniversalMockHelper } from './UniversalMockHelper';
-import { TEST_CONSTANTS } from './TestConstants';
+import { TEST_CONSTANTS } from './testConstants';
 import { UniversalMockTestRunner } from './UniversalMockTestRunner';
 
 function assertResultMessage(tr: MockTestRunner, expectedMessage: string): void {
