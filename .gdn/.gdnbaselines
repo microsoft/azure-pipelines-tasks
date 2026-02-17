@@ -2384,6 +2384,42 @@
       ],
       "createdDate": "2026-02-17 00:00:00Z",
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "fd9a76dffcb5c7c8aea638a39b91a3c306e5b787c27b567889a3567656112cdb": {
+      "signature": "fd9a76dffcb5c7c8aea638a39b91a3c306e5b787c27b567889a3567656112cdb",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/AzureFileCopy.ps1 L84) will be removed when merged into base task"
+    },
+    "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401": {
+      "signature": "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/AzureFileCopy.ps1 L80) will be removed when merged into base task"
+    },
+    "adb4e8a5e6ce765af87893726bfa8cc44537f07da3c5b89166ce0eef59a5a8f0": {
+      "signature": "adb4e8a5e6ce765af87893726bfa8cc44537f07da3c5b89166ce0eef59a5a8f0",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4": {
+      "signature": "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/Utility.ps1) will be removed when merged into base task"
     }
   }
 }
