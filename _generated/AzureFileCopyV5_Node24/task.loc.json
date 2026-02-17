@@ -14,7 +14,7 @@
   "version": {
     "Major": 5,
     "Minor": 270,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -307,5 +307,9 @@
     "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError",
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
+  },
+  "_buildConfigMapping": {
+    "Default": "5.270.1",
+    "Node24_1": "5.270.2"
   }
 }
