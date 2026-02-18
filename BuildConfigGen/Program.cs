@@ -1233,7 +1233,7 @@ namespace BuildConfigGen
                 // Upgrade task-lib to npm version if specified, otherwise use local file path
                 if (!string.IsNullOrEmpty(effectiveTaskLibVersion))
                 {
-                    outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = effectiveTaskLibVersion;
+                    UpdateDependencyIfExists(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", effectiveTaskLibVersion);
                 }
                 else
                 {
