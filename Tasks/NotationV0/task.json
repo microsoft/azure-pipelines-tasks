@@ -10,7 +10,7 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 263,
+    "Minor": 270,
     "Patch": 0
   },
   "groups": [
@@ -234,6 +234,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "src/index.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src/index.js",
       "argumentFormat": ""
     }
