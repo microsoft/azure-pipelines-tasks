@@ -65,7 +65,13 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/credentialProviderUtils
             username: sc.username || undefined,
             password: sc.password || sc.token
         }));
-        process.env['VSS_NUGET_EXTERNAL_FEED_ENDPOINTS'] = JSON.stringify({ endpointCredentials });
+        const envVarValue = JSON.stringify({ endpointCredentials });
+        
+        // Output the VSO command so tests can detect it
+        console.log(`##vso[task.setvariable variable=VSS_NUGET_EXTERNAL_FEED_ENDPOINTS]${envVarValue}`);
+        
+        // Also set it in process.env for backward compatibility
+        process.env['VSS_NUGET_EXTERNAL_FEED_ENDPOINTS'] = envVarValue;
     },
     configureCredProviderForSameOrganizationFeeds: function(protocolType: any, serviceConnectionName: string) {
         console.log(`Mock: configureCredProviderForSameOrganizationFeeds called for ${protocolType} with connection ${serviceConnectionName}`);

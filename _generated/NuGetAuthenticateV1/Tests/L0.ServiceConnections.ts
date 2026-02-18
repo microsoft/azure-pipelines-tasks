@@ -24,6 +24,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'Mock: configureCredProvider called',
                 'Should call configureCredProvider with service connections');
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
 
         it('calls configureCredProvider with correct protocol type', async () => {
@@ -40,6 +41,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'configureCredProvider called for NuGet',
                 'Should call configureCredProvider with NuGet protocol type');
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
     });
 
@@ -63,6 +65,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'with 2 service connections',
                 'Should process both service connections');
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
 
         it('handles empty service connections array', async () => {
@@ -97,6 +100,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             TestHelpers.assertSuccess(tr);
             assert(testConstants.TestData.externalServiceConnection.authType === 'UsernamePassword',
                 'Should be UsernamePassword type');
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
 
         it('handles Token service connection', async () => {
@@ -113,6 +117,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             TestHelpers.assertSuccess(tr);
             assert(testConstants.TestData.tokenServiceConnection.authType === 'Token',
                 'Should be Token type');
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
     });
 

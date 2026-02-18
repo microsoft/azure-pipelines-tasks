@@ -140,6 +140,8 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             // Verify the mock was called (which sets the environment variable internally)
             TestHelpers.assertOutputContains(tr, 'Mock: configureCredProvider called',
                 'Should call configureCredProvider which sets VSS_NUGET_EXTERNAL_FEED_ENDPOINTS');
+            // Verify the environment variable was actually set
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedCredProviderEnvVar);
         });
     });
 });
