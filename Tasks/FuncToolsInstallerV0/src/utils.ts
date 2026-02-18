@@ -103,7 +103,7 @@ function getDownloadUrl(version: string) {
 
         case 'Windows_NT':
         default:
-            return util.format(downloadUrlFormat, version, 'win-x86', version);
+            return util.format(downloadUrlFormat, version, 'win-x64', version);
 
     }
 }
