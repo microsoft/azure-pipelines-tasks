@@ -14,7 +14,6 @@ async function main(): Promise<void> {
             let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
             if (token)
             {
-                tl.setSecret(token);
                 tl.setVariable('ARTIFACTS_CONDA_TOKEN', token);
                 federatedFeedAuthSuccessCount++;
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", entraWifServiceConnectionName));
@@ -28,22 +27,17 @@ async function main(): Promise<void> {
 
         const localAccesstoken = tl.getVariable('System.AccessToken');
         tl.debug(tl.loc('AddingAuthChannel', 'ARTIFACTS_CONDA_TOKEN'));
-        tl.setSecret(localAccesstoken);
         tl.setVariable('ARTIFACTS_CONDA_TOKEN', localAccesstoken);
+        tl.setSecret(localAccesstoken);
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        try {
-            emitTelemetry("Packaging", "CondaAuthenticateV0", {
-                "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
-            });
-        } catch (telemetryError) {
-            // Don't fail the task if telemetry fails
-            tl.debug(`Failed to emit telemetry: ${telemetryError}`);
-        }
+        emitTelemetry("Packaging", "CondaAuthenticateV0", {
+            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
+        });
     }
 }
 main();
