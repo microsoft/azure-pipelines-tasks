@@ -21,8 +21,8 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed with external service connection');
-            assert(tr.stdout.indexOf('Mock: configureCredProvider called') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'Mock: configureCredProvider called',
                 'Should call configureCredProvider with service connections');
         });
 
@@ -37,8 +37,8 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('configureCredProvider called for NuGet') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'configureCredProvider called for NuGet',
                 'Should call configureCredProvider with NuGet protocol type');
         });
     });
@@ -60,8 +60,8 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should handle multiple service connections');
-            assert(tr.stdout.indexOf('with 2 service connections') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'with 2 service connections',
                 'Should process both service connections');
         });
 
@@ -76,8 +76,8 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should handle empty service connections');
-            assert(tr.stdout.indexOf('with 0 service connections') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'with 0 service connections',
                 'Should handle empty array gracefully');
         });
     });
@@ -94,7 +94,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should handle UsernamePassword connection');
+            TestHelpers.assertSuccess(tr);
             assert(testConstants.TestData.externalServiceConnection.authType === 'UsernamePassword',
                 'Should be UsernamePassword type');
         });
@@ -110,7 +110,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should handle Token connection');
+            TestHelpers.assertSuccess(tr);
             assert(testConstants.TestData.tokenServiceConnection.authType === 'Token',
                 'Should be Token type');
         });
@@ -128,7 +128,7 @@ describe('NuGetAuthenticate L0 Suite - External Service Connections', function (
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
+            TestHelpers.assertSuccess(tr);
             // Note: Secret masking happens in artifacts-common, not the task itself
             // This test verifies successful execution with service connections
         });

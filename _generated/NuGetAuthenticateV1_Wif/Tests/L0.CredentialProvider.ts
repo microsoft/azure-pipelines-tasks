@@ -20,8 +20,8 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('Mock: installCredProviderToUserProfile called') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'Mock: installCredProviderToUserProfile called',
                 'Should call installCredProviderToUserProfile');
         });
 
@@ -36,8 +36,8 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('forceReinstall=true') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'forceReinstall=true',
                 'Should pass forceReinstall=true to installation function');
         });
 
@@ -52,8 +52,8 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('forceReinstall=false') > 0,
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'forceReinstall=false',
                 'Should pass forceReinstall=false to installation function');
         });
 
@@ -67,7 +67,7 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
+            TestHelpers.assertSuccess(tr);
             // V1 should pass isV0=false (or not pass the parameter since default is false)
             // This ensures .NET 6+ compatible credential provider is installed
             assert(tr.stdout.indexOf('isV0=false') > 0 || 
@@ -86,8 +86,8 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.failed, 'Task should fail when credential provider installation fails');
-            assert(tr.stdout.indexOf('Simulated credential provider installation failure') > 0 || tr.errorIssues.length > 0,
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Simulated credential provider installation failure',
                 'Should show credential provider installation error');
         });
     });
@@ -136,9 +136,9 @@ describe('NuGetAuthenticate L0 Suite - Credential Provider Installation', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
+            TestHelpers.assertSuccess(tr);
             // Verify the mock was called (which sets the environment variable internally)
-            assert(tr.stdout.indexOf('Mock: configureCredProvider called') > 0,
+            TestHelpers.assertOutputContains(tr, 'Mock: configureCredProvider called',
                 'Should call configureCredProvider which sets VSS_NUGET_EXTERNAL_FEED_ENDPOINTS');
         });
     });
