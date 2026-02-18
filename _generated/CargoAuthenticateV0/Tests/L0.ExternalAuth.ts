@@ -16,7 +16,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.externalServiceConnectionToken);
             TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1 });
         });
 
@@ -31,7 +32,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.externalServiceConnectionToken);
             TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1 });
         });
 
@@ -45,7 +47,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.externalServiceConnectionToken);
             TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 1, InternalFeedAuthCount: 0 });
         });
 
@@ -66,7 +69,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.defaultAccessToken);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 1, ExternalFeedAuthCount: 0 });
         });
 
@@ -93,7 +97,8 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN', true);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.defaultAccessToken);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 1 });
         });
 

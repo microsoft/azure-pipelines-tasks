@@ -16,7 +16,7 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, testConstants.TestData.expectedTokenVar);
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedTokenVar);
         });
 
         it('marks access token as secret', async () => {
@@ -29,7 +29,8 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvVarSet(tr, testConstants.TestData.expectedTokenVar, true);
+            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.expectedTokenVar);
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.secretToken);
         });
 
         it('handles multiple registries in same organization', async () => {

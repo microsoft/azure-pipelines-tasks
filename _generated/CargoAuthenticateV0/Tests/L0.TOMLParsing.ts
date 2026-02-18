@@ -21,9 +21,8 @@ describe('CargoAuthenticate L0 Suite - TOML Configuration Parsing', function () 
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should parse inline TOML format');
-            assert(tr.stdout.indexOf('CARGO_REGISTRIES_TEST_REGISTRY_TOKEN') > 0,
-                'Should set environment variable for registry');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
         });
 
         it('parses TOML with section registry format', async () => {

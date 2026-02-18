@@ -30,11 +30,9 @@ describe('CargoAuthenticate L0 Suite - Token Authentication (crates.io)', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed with Token connection for crates.io');
-            assert(tr.stdout.indexOf('CARGO_REGISTRY_TOKEN') > 0,
-                'Should set global CARGO_REGISTRY_TOKEN for crates.io');
-            assert(tr.stdout.indexOf('cargo:token') > 0,
-                'Should set CARGO_REGISTRY_CREDENTIAL_PROVIDER to cargo:token');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRY_TOKEN');
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRY_CREDENTIAL_PROVIDER', 'cargo:token');
         });
 
         it('marks Token connection credential as secret', async () => {
@@ -57,9 +55,8 @@ describe('CargoAuthenticate L0 Suite - Token Authentication (crates.io)', functi
             await tr.runAsync();
             
             // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('##vso[task.setsecret]') > 0,
-                'Should mark Token connection credential as secret');
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertMarkedAsSecret(tr, testConstants.TestData.cratesIoToken);
         });
     });
 

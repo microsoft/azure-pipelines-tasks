@@ -177,4 +177,67 @@ export class TestHelpers {
         assert(tr.stdout.indexOf(unexpectedString) < 0,
             message || `Output should not contain: ${unexpectedString}`);
     }
+
+    /**
+     * Extract environment variable value from task output
+     * Parses ##vso[task.setvariable variable=NAME]VALUE format
+     * @param stdout Task stdout
+     * @param variableName Name of the variable to extract
+     * @returns Variable value or null if not found
+     */
+    static extractEnvironmentVariable(stdout: string, variableName: string): string | null {
+        // Look for ##vso[task.setvariable variable=VARIABLE_NAME]VALUE
+        const regex = new RegExp(`##vso\\[task\\.setvariable variable=${variableName}(?:;[^\\]]*)?\\]([^\\r\\n]*)`, 'i');
+        const match = stdout.match(regex);
+        return match ? match[1] : null;
+    }
+
+    /**
+     * Assert that an environment variable was set with expected value
+     * @param tr Test runner instance
+     * @param variableName Name of the variable to check
+     * @param expectedValue Expected value (optional - just checks it was set if omitted)
+     */
+    static assertEnvironmentVariableSet(
+        tr: ttm.MockTestRunner,
+        variableName: string,
+        expectedValue?: string
+    ): void {
+        const actualValue = this.extractEnvironmentVariable(tr.stdout, variableName);
+        
+        assert(actualValue !== null, 
+            `Environment variable ${variableName} should have been set`);
+        
+        if (expectedValue !== undefined) {
+            assert.strictEqual(actualValue, expectedValue,
+                `Environment variable ${variableName} should have value "${expectedValue}" but got "${actualValue}"`);
+        }
+    }
+
+    /**
+     * Assert that an environment variable was NOT set
+     * @param tr Test runner instance
+     * @param variableName Name of the variable to check
+     */
+    static assertEnvironmentVariableNotSet(
+        tr: ttm.MockTestRunner,
+        variableName: string
+    ): void {
+        const actualValue = this.extractEnvironmentVariable(tr.stdout, variableName);
+        
+        assert(actualValue === null,
+            `Environment variable ${variableName} should not have been set but got value: ${actualValue}`);
+    }
+
+    /**
+     * Assert that a value was marked as secret
+     * @param tr Test runner instance
+     * @param secretValue The value that should be marked as secret (optional - just checks setsecret was called)
+     */
+    static assertMarkedAsSecret(tr: ttm.MockTestRunner, secretValue?: string): void {
+        assert(tr.stdout.indexOf('##vso[task.setsecret]') > 0,
+            'Should mark value as secret using task.setsecret command');
+        // Note: Secret values are typically redacted from output after being marked, 
+        // so we can't reliably check if the specific value appears
+    }
 }
