@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "ant"
@@ -248,7 +248,9 @@
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64",
+        "aarch64": "aarch64"
       }
     }
   ],
