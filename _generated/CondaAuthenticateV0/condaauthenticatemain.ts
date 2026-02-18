@@ -18,9 +18,14 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        emitTelemetry("Packaging", "CondaAuthenticateV0", {
-            "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
-        });
+        try {
+            emitTelemetry("Packaging", "CondaAuthenticateV0", {
+                "FederatedFeedAuthCount": federatedFeedAuthSuccessCount
+            });
+        } catch (telemetryError) {
+            // Don't fail the task if telemetry fails
+            tl.debug(`Failed to emit telemetry: ${telemetryError}`);
+        }
     }
 }
 main();
