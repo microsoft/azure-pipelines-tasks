@@ -6,7 +6,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import os = require('os');
 import Q = require('q');
 import request = require('request');
-import url = require('url');
 
 import { Job } from './job';
 import { JobQueue } from './jobqueue';
@@ -99,11 +98,11 @@ export function getPipelineReport(job: Job, taskOptions: TaskOptions): Q.Promise
 }
 
 export function getUrlAuthority(myUrl: string): string {
-    const parsed: url.Url = url.parse(myUrl);
+    const parsed = new URL(myUrl);
 
     let result: string = '';
-    if (parsed.auth) {
-        result += parsed.auth;
+    if (parsed.username) {
+        result += parsed.username + (parsed.password ? ':' + parsed.password : '');
     } else {
         if (parsed.protocol && parsed.host) {
             result = `${parsed.protocol}//${parsed.host}`;
