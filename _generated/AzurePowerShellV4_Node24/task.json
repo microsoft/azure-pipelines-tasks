@@ -16,9 +16,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 5,
+    "Major": 4,
     "Minor": 270,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -118,6 +118,14 @@
       "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
     },
     {
+      "name": "RestrictContextToCurrentTask",
+      "type": "boolean",
+      "label": "Restrict scope of context to current task",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent."
+    },
+    {
       "name": "TargetAzurePs",
       "aliases": [
         "azurePowerShellVersion"
@@ -194,6 +202,10 @@
     "Node20_1": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -204,8 +216,10 @@
     "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
     "JS_ExitCode": "PowerShell exited with code '%s'.",
     "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-    "PS_ExitCode": "PowerShell exited with code '{0}'.",
-    "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "4.270.1",
+    "Node24_1": "4.270.2"
   }
 }
