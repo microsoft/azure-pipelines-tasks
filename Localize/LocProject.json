@@ -904,6 +904,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\UniversalPackagesV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\UniversalPackagesV1\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\UseDotNetV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\UseDotNetV2\\Strings\\resources.resjson"
