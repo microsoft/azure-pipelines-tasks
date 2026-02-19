@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 268,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "instanceNameFormat": "Use Python $(versionSpec)",
@@ -74,13 +74,12 @@
       "label": "Architecture",
       "defaultValue": "x64",
       "required": true,
-      "helpMarkDown": "The target architecture (x86, x64, arm64, aarch64) of the Python interpreter.",
+      "helpMarkDown": "The target architecture (x86, x64, arm64) of the Python interpreter.",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
         "x64": "x64",
-        "arm64": "arm64",
-        "aarch64": "aarch64"
+        "arm64": "arm64"
       }
     }
   ],

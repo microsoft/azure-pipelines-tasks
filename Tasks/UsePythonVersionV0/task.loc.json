@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 268,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -79,8 +79,7 @@
       "options": {
         "x86": "x86",
         "x64": "x64",
-        "arm64": "arm64",
-        "aarch64": "aarch64"
+        "arm64": "arm64"
       }
     }
   ],
