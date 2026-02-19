@@ -439,7 +439,7 @@ export class Job {
                     thisJob.RetryConnection();
                 }
             } else {
-                thisJob.consoleLog(body); // redirect Jenkins console to task console
+                thisJob.consoleLog(thisJob.stripAnsiCodes(body)); // redirect Jenkins console to task console, strip ANSI codes
                 const xMoreData: string = httpResponse.headers['x-more-data'];
                 if (xMoreData && xMoreData == 'true') {
                     const offset: string = httpResponse.headers['x-text-size'];
@@ -482,6 +482,31 @@ export class Job {
             console.log(message);
         }
         this.jobConsole += message;
+    }
+
+    /**
+     * Strips ANSI escape codes and Jenkins pipeline annotations from console output.
+     * Newer Jenkins versions include these codes which appear as junk characters in ADO logs.
+     * @param text The raw console output from Jenkins
+     * @returns The sanitized text with ANSI codes removed
+     */
+    private stripAnsiCodes(text: string): string {
+        if (!text) {
+            return text;
+        }
+        return text
+            // Remove standard ANSI escape codes (colors, cursor movement, formatting)
+            // Matches: ESC[0m, ESC[32m, ESC[1;31m, etc.
+            .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
+            // Remove Jenkins Pipeline console notes [8mha:////...[0m
+            .replace(/\[8mha:[\s\S]*?\[0m/g, '')
+            // Remove standalone Jenkins Pipeline console notes (ha:////...base64...)
+            // These are metadata annotations that appear as junk in non-Jenkins consoles
+            .replace(/ha:\/\/\/\/[A-Za-z0-9+\/=]+/g, '')
+            // Remove literal \033[...m sequences (shown in command echo output)
+            .replace(/\\033\[[0-9;]*m/g, '')
+            // Remove orphaned bracket codes [0m, [32m, [1;31m, etc.
+            .replace(/\[[0-9;]*m/g, '');
     }
 
     private debug(message: string) {
