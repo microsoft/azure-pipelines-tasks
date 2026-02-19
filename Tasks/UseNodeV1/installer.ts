@@ -163,6 +163,7 @@ async function acquireNode(version: string, installedArch: string, retryCountOnD
 
     try {
         console.log("Aquiring Node called")
+        console.log("Aquiring Node called")
         console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
         downloadPath = await toolLib.downloadToolWithRetries(downloadUrl, null, null, null, retryCountOnDownloadFails, delayBetweenRetries);
     } catch (err) {
