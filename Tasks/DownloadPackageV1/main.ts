@@ -22,7 +22,7 @@ async function main(): Promise<void> {
     let version = tl.getInput("version");
     let downloadPath = tl.getInput("downloadPath");
     let filesPattern = tl.getInput("files");
-    let extractPackage = tl.getInput("extract") === "true" && (packageType === "npm" || packageType === "nuget");
+    let extractPackage = tl.getBoolInput("extract") && (packageType === "npm" || packageType === "nuget");
 
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
