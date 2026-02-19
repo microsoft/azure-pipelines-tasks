@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "Добавить в PATH",
   "loc.input.help.addToPath": "Следует ли добавлять извлеченную версию Python в начало переменной среды PATH, чтобы она была доступна в последующих задачах или скриптах без использования выходной переменной.",
   "loc.input.label.architecture": "Архитектура",
-  "loc.input.help.architecture": "Целевая архитектура интерпретатора Python (x86, x64).",
+  "loc.input.help.architecture": "Целевая архитектура интерпретатора Python (x86, x64, arm64).",
   "loc.messages.ListAvailableVersions": "Версии в %s:",
   "loc.messages.PlatformNotRecognized": "Платформа не распознана",
   "loc.messages.PrependPath": "Добавление в начало переменной среды PATH каталога: %s",
