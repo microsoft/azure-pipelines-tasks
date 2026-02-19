@@ -5,7 +5,7 @@ import { TestHelpers } from './TestHelpers';
 
 #if WIF
 describe('CondaAuthenticate L0 Suite - Workload Identity Federation', function () {
-    this.timeout(10000);
+    this.timeout(20000); // Increased for slower CI environments (especially macOS)
 
     beforeEach(() => {
         // Clear all test configuration environment variables

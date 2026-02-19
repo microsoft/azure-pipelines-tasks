@@ -4,7 +4,7 @@ import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 describe('CondaAuthenticate L0 Suite - Token Handling', function () {
-    this.timeout(10000);
+    this.timeout(20000); // Increased for slower CI environments (especially macOS)
 
     beforeEach(() => {
         // Clear all test configuration environment variables
