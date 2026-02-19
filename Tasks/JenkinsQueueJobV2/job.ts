@@ -500,6 +500,9 @@ export class Job {
             .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
             // Remove Jenkins Pipeline console notes [8mha:////...[0m
             .replace(/\[8mha:[\s\S]*?\[0m/g, '')
+            // Remove standalone Jenkins Pipeline console notes (ha:////...base64...)
+            // These are metadata annotations that appear as junk in non-Jenkins consoles
+            .replace(/ha:\/\/\/\/[A-Za-z0-9+\/=]+/g, '')
             // Remove literal \033[...m sequences (shown in command echo output)
             .replace(/\\033\[[0-9;]*m/g, '')
             // Remove orphaned bracket codes [0m, [32m, [1;31m, etc. (leftover after ESC byte stripped)
