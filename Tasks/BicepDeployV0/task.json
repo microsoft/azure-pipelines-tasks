@@ -394,12 +394,6 @@
     "FailedToLogout": "The following error occurred while logging out: %s"
   },
   "execution": {
-    "Node16": {
-      "target": "main.js"
-    },
-    "Node20_1": {
-      "target": "main.js"
-    },
     "Node24": {
       "target": "main.js"
     }

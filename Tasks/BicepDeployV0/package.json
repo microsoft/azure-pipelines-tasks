@@ -18,12 +18,12 @@
   "dependencies": {
     "@azure/bicep-deploy-common": "^0.0.3-dev",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "^1.5.8",
     "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-azure-arm-rest": "^3.270.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }

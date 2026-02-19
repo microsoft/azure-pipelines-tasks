@@ -397,12 +397,6 @@
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout"
   },
   "execution": {
-    "Node16": {
-      "target": "main.js"
-    },
-    "Node20_1": {
-      "target": "main.js"
-    },
     "Node24": {
       "target": "main.js"
     }
