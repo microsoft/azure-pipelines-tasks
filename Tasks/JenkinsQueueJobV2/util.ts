@@ -5,11 +5,35 @@ import stream = require('stream');
 import tl = require('azure-pipelines-task-lib/task');
 import os = require('os');
 import Q = require('q');
-import request = require('request');
+import * as httpm from 'typed-rest-client/HttpClient';
+import * as httpi from 'typed-rest-client/Interfaces';
+import * as httpHandlers from 'typed-rest-client/Handlers';
 
 import { Job } from './job';
 import { JobQueue } from './jobqueue';
 import { TaskOptions } from './jenkinsqueuejobtask';
+
+/**
+ * Creates an HTTP client with proper authentication and SSL settings for Jenkins API calls.
+ * @param taskOptions The task options containing credentials and SSL settings
+ * @returns Configured HttpClient instance
+ */
+export function createHttpClient(taskOptions: TaskOptions): httpm.HttpClient {
+    const handlers: httpHandlers.BasicCredentialHandler[] = [];
+    
+    if (taskOptions.username && taskOptions.password) {
+        handlers.push(new httpHandlers.BasicCredentialHandler(
+            taskOptions.username,
+            taskOptions.password
+        ));
+    }
+
+    const requestOptions: httpi.IRequestOptions = {
+        ignoreSslError: !taskOptions.strictSSL
+    };
+
+    return new httpm.HttpClient('JenkinsQueueJob', handlers, requestOptions);
+}
 
 export function getFullErrorMessage(httpResponse, message: string): string {
     const fullMessage: string = `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
@@ -69,29 +93,36 @@ export function addUrlSegment(baseUrl: string, segment: string): string {
     return resultUrl;
 }
 
-export function isPipelineJob(job: Job, taskOptions: TaskOptions): Q.Promise<boolean> {
+export function isPipelineJob(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<boolean> {
     const deferred: Q.Deferred<boolean> = Q.defer<boolean>();
     const wfapiUrl: string = `${job.TaskUrl}/wfapi`;
-    request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
-        if (response.statusCode === 200) {
+    
+    httpClient.get(wfapiUrl).then((response) => {
+        if (response.message.statusCode === 200) {
             deferred.resolve(true);
         } else {
             deferred.resolve(false);
         }
+    }).catch((err) => {
+        deferred.resolve(false);
     });
 
     return deferred.promise;
 }
 
-export function getPipelineReport(job: Job, taskOptions: TaskOptions): Q.Promise<any> {
+export function getPipelineReport(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<any> {
     const deferred: Q.Deferred<any> = Q.defer<any>();
     const wfapiUrl: string = `${job.TaskUrl}/${job.ExecutableNumber}/wfapi/describe`;
-    request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
-        if (response.statusCode === 200) {
+    
+    httpClient.get(wfapiUrl).then(async (response) => {
+        if (response.message.statusCode === 200) {
+            const body = await response.readBody();
             deferred.resolve(body);
         } else {
-            deferred.reject(err);
+            deferred.reject(new Error('Failed to get pipeline report'));
         }
+    }).catch((err) => {
+        deferred.reject(err);
     });
 
     return deferred.promise;
@@ -112,11 +143,11 @@ export function getUrlAuthority(myUrl: string): string {
     return result;
 }
 
-export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
+export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<Job> {
     const defer: Q.Deferred<Job> = Q.defer<Job>();
 
     const poll = async () => {
-        await createRootJob(queueUri, jobQueue, taskOptions).then((job: Job) => {
+        await createRootJob(queueUri, jobQueue, taskOptions, httpClient).then((job: Job) => {
             if (job != null) {
                 defer.resolve(job);
             } else {
@@ -133,23 +164,18 @@ export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOpti
     return defer.promise;
 }
 
-function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
+function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<Job> {
     const defer: Q.Deferred<Job> = Q.defer<Job>();
     tl.debug('createRootJob(): ' + queueUri);
 
-    request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
-        tl.debug('createRootJob().requestCallback()');
-        if (err) {
-            tl.debug(err);
-            if (err.code == 'ECONNRESET') {
-                defer.resolve(null);
-            } else {
-                const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
-                defer.reject(error);
-            }
-        } else if (httpResponse.statusCode !== 200) {
-            defer.reject(new HttpError(httpResponse, 'Job progress tracking failed to read job queue'));
+    httpClient.get(queueUri).then(async (response) => {
+        tl.debug('createRootJob() statusCode: ' + response.message.statusCode);
+        const statusCode = response.message.statusCode;
+        
+        if (statusCode !== 200) {
+            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job queue'));
         } else {
+            const body = await response.readBody();
             const parsedBody: any = JSON.parse(body);
             tl.debug(`parsedBody for: ${queueUri} : ${JSON.stringify(parsedBody)}`);
 
@@ -167,18 +193,26 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
                 }
             }
         }
-    }).auth(taskOptions.username, taskOptions.password, true);
+    }).catch((err) => {
+        tl.debug(err);
+        if (err.code == 'ECONNRESET') {
+            defer.resolve(null);
+        } else {
+            const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
+            defer.reject(error);
+        }
+    });
 
     return defer.promise;
 }
 
-export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
+export function pollSubmitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
 
     const poll = async () => {
-        await getCrumb(taskOptions).then(async (crumb: string) => {
+        await getCrumb(taskOptions, httpClient).then(async (crumb: string) => {
             if (crumb != null) {
-                await submitJob(taskOptions).then((queueUri: string) => {
+                await submitJob(taskOptions, httpClient).then((queueUri: string) => {
                     if (queueUri != null) {
                         defer.resolve(queueUri);
                     } else {
@@ -202,117 +236,115 @@ export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
     return defer.promise;
 }
 
-function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
+function submitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
     tl.debug('submitJob(): ' + JSON.stringify(taskOptions));
 
-    function addCrumb(json: any): any {
+    function addCrumb(): httpi.IHeaders {
+        const headers: httpi.IHeaders = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        };
         if (taskOptions.crumb && taskOptions.crumb != taskOptions.NO_CRUMB) {
-            json.headers = {};
             const splitIndex: number = taskOptions.crumb.indexOf(':');
             const crumbName: string = taskOptions.crumb.substr(0, splitIndex);
             const crumbValue: string = taskOptions.crumb.slice(splitIndex + 1);
-            json.headers[crumbName] = crumbValue;
+            headers[crumbName] = crumbValue;
         }
-        return json;
+        return headers;
     }
 
-    const teamBuildPostData: any = addCrumb(
-        {
-            url: taskOptions.teamJobQueueUrl,
-            form: {
-                json: JSON.stringify({
-                    'team-build': getTeamParameters(taskOptions),
-                    'parameter': parseJobParametersTeamBuild(taskOptions.jobParameters)
-                })
-            },
-            strictSSL: taskOptions.strictSSL
-        }
-    );
+    const teamBuildPostData = `json=${encodeURIComponent(JSON.stringify({
+        'team-build': getTeamParameters(taskOptions),
+        'parameter': parseJobParametersTeamBuild(taskOptions.jobParameters)
+    }))}`;
 
-    tl.debug('teamBuildPostData = ' + JSON.stringify(teamBuildPostData));
+    tl.debug('teamBuildPostData = ' + teamBuildPostData);
+    
     // first try team-build plugin endpoint, if that fails, then try the default endpoint
-    request.post(teamBuildPostData, function teamBuildRequestCallback(err, httpResponse, body) {
-        tl.debug('submitJob().teamBuildRequestCallback(teamBuildPostData)');
-        if (err) {
-            if (err.code == 'ECONNRESET') {
-                tl.debug(err);
-                defer.resolve(null);
-            } else {
-                defer.reject(err);
-            }
-        } else if (httpResponse.statusCode === 404) { // team-build plugin endpoint failed because it is not installed
+    httpClient.post(taskOptions.teamJobQueueUrl, teamBuildPostData, addCrumb()).then(async (response) => {
+        const statusCode = response.message.statusCode;
+        tl.debug('submitJob() team-build statusCode: ' + statusCode);
+        
+        if (statusCode === 404) { // team-build plugin endpoint failed because it is not installed
             console.log('Install the "Team Foundation Server Plug-in" for improved Jenkins integration\n' + taskOptions.teamPluginUrl);
             taskOptions.teamBuildPluginAvailable = false;
 
-            tl.debug('httpResponse: ' + JSON.stringify(httpResponse));
-            const jobQueuePostData: any = addCrumb(taskOptions.parameterizedJob ?
-                {
-                    url: taskOptions.jobQueueUrl,
-                    formData: parseJobParameters(taskOptions.jobParameters),
-                    strictSSL: taskOptions.strictSSL
-                } :
-                {
-                    url: taskOptions.jobQueueUrl,
-                    strictSSL: taskOptions.strictSSL
-                }
-            );
-            tl.debug('jobQueuePostData = ' + JSON.stringify(jobQueuePostData));
+            // Try the default endpoint
+            let jobQueuePostData = '';
+            if (taskOptions.parameterizedJob) {
+                const formData = parseJobParameters(taskOptions.jobParameters);
+                jobQueuePostData = Object.keys(formData).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(formData[key])}`).join('&');
+            }
 
-            request.post(jobQueuePostData, function jobQueueRequestCallback(err, httpResponse, body) {
-                tl.debug('submitJob().jobQueueRequestCallback(jobQueuePostData)');
-                if (err) {
-                    if (err.code == 'ECONNRESET') {
-                        tl.debug(err);
-                        defer.resolve(null);
-                    } else {
-                        defer.reject(err);
-                    }
-                } else if (httpResponse.statusCode !== 201) {
-                    defer.reject(new HttpError(httpResponse, 'Job creation failed.'));
+            tl.debug('jobQueuePostData = ' + jobQueuePostData);
+            httpClient.post(taskOptions.jobQueueUrl, jobQueuePostData, addCrumb()).then(async (response2) => {
+                const statusCode2 = response2.message.statusCode;
+                tl.debug('submitJob() job queue statusCode: ' + statusCode2);
+                
+                if (statusCode2 !== 201) {
+                    defer.reject(new HttpError({ statusCode: statusCode2, statusMessage: response2.message.statusMessage }, 'Job creation failed.'));
                 } else {
-                    const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
+                    const location = response2.message.headers['location'] as string;
+                    const queueUri: string = addUrlSegment(location, 'api/json');
                     defer.resolve(queueUri);
                 }
-            }).auth(taskOptions.username, taskOptions.password, true);
-        } else if (httpResponse.statusCode !== 201) {
-            defer.reject(new HttpError(httpResponse, 'Job creation failed.'));
+            }).catch((err) => {
+                if (err.code == 'ECONNRESET') {
+                    tl.debug(err);
+                    defer.resolve(null);
+                } else {
+                    defer.reject(err);
+                }
+            });
+        } else if (statusCode !== 201) {
+            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;
+            const body = await response.readBody();
             const jsonBody: any = JSON.parse(body);
             const queueUri: string = addUrlSegment(jsonBody.created, 'api/json');
             defer.resolve(queueUri);
         }
-    }).auth(taskOptions.username, taskOptions.password, true);
+    }).catch((err) => {
+        if (err.code == 'ECONNRESET') {
+            tl.debug(err);
+            defer.resolve(null);
+        } else {
+            defer.reject(err);
+        }
+    });
 
     return defer.promise;
 }
 
-function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
+function getCrumb(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
     const crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
 
-    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
-        if (err) {
-            if (err.code == 'ECONNRESET') {
-                tl.debug(err);
-                defer.resolve(null);
-            } else {
-                defer.reject(err);
-            }
-        } else if (httpResponse.statusCode === 404) {
+    httpClient.get(crumbRequestUrl).then(async (response) => {
+        const statusCode = response.message.statusCode;
+        
+        if (statusCode === 404) {
             tl.debug('crumb endpoint not found');
             taskOptions.crumb = taskOptions.NO_CRUMB;
             defer.resolve(taskOptions.NO_CRUMB);
-        } else if (httpResponse.statusCode !== 200) {
-            defer.reject(new HttpError(httpResponse, 'Crumb request failed.'));
+        } else if (statusCode !== 200) {
+            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Crumb request failed.'));
         } else {
+            const body = await response.readBody();
             taskOptions.crumb = body;
             tl.debug('crumb: ' + taskOptions.crumb);
             defer.resolve(taskOptions.crumb);
         }
-    }).auth(taskOptions.username, taskOptions.password, true);
+    }).catch((err) => {
+        if (err.code == 'ECONNRESET') {
+            tl.debug(err);
+            defer.resolve(null);
+        } else {
+            defer.reject(err);
+        }
+    });
 
     return defer.promise;
 }
