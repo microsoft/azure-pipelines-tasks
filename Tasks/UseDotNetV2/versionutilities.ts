@@ -66,15 +66,15 @@ export function getMatchingVersionFromList(versionInfoList: VersionInfo[], versi
 }
 
 export const validRollForwardPolicies: string[] = [
-	"patch",
-	"feature",
-	"minor",
-	"major",
-	"latestPatch",
-	"latestFeature",
-	"latestMinor",
-	"latestMajor",
-	"disable",
+    "patch",
+    "feature",
+    "minor",
+    "major",
+    "latestPatch",
+    "latestFeature",
+    "latestMinor",
+    "latestMajor",
+    "disable",
 ];
 
 /**
@@ -89,50 +89,50 @@ export const validRollForwardPolicies: string[] = [
  * @returns A version spec string for use with the version fetcher
  */
 export function applyRollForwardPolicy(
-	version: string,
-	rollForward: string,
+    version: string,
+    rollForward: string,
 ): string {
-	const parts = version.split(".");
-	if (parts.length < 3) {
-		return version;
-	}
+    const parts = version.split(".");
+    if (parts.length < 3) {
+        return version;
+    }
 
-	const major = parts[0];
-	const minor = parts[1];
-	const patch = parts[2].split(/-|\+/)[0]; // strip prerelease/build metadata
+    const major = parts[0];
+    const minor = parts[1];
+    const patch = parts[2].split(/-|\+/)[0]; // strip prerelease/build metadata
 
-	switch (rollForward) {
-		case "disable":
-			return version;
+    switch (rollForward) {
+        case "disable":
+            return version;
 
-		case "patch":
-		case "latestPatch": {
-			// Same feature band, latest patch. Feature band = hundreds digit of patch.
-			// e.g. 6.0.403 -> featureBand=4 -> range >=6.0.400 <6.0.500
-			const featureBand = Math.floor(Number.parseInt(patch) / 100) * 100;
-			return `>=${major}.${minor}.${featureBand} <${major}.${minor}.${featureBand + 100}`;
-		}
+        case "patch":
+        case "latestPatch": {
+            // Same feature band, latest patch. Feature band = hundreds digit of patch.
+            // e.g. 6.0.403 -> featureBand=4 -> range >=6.0.400 <6.0.500
+            const featureBand = Math.floor(Number.parseInt(patch) / 100) * 100;
+            return `>=${major}.${minor}.${featureBand} <${major}.${minor}.${featureBand + 100}`;
+        }
 
-		case "feature":
-		case "latestFeature":
-			// Any feature band within same major.minor
-			return `${major}.${minor}.x`;
+        case "feature":
+        case "latestFeature":
+            // Any feature band within same major.minor
+            return `${major}.${minor}.x`;
 
-		case "minor":
-		case "latestMinor":
-			// Any minor within same major
-			return `${major}.x`;
+        case "minor":
+        case "latestMinor":
+            // Any minor within same major
+            return `${major}.x`;
 
-		case "major":
-		case "latestMajor":
-			// Latest available across all majors >= specified
-			// We use major.x and let the fetcher find the latest channel
-			// The caller should search across channels >= this major
-			return `${major}.x`;
+        case "major":
+        case "latestMajor":
+            // TODO: major/latestMajor should search across channels >= this major,
+            // not just within the specified major. This requires fetcher changes to
+            // iterate multiple channels. For now, scoped to same major.
+            return `${major}.x`;
 
-		default:
-			return version;
-	}
+        default:
+            return version;
+    }
 }
 
 export const Constants = {

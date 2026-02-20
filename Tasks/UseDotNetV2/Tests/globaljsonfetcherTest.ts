@@ -123,17 +123,18 @@ mockery.registerMock('fs', {
 mockery.registerMock('./versionfetcher', {
     DotNetCoreVersionFetcher: function (explicitVersioning: boolean = false) {
         return {
-            getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+            getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean, matchingVersionSpec?: string): Promise<VersionInfo> {
+                const resultVersion = matchingVersionSpec || versionSpec;
                 return Promise<VersionInfo>((resolve, reject) => {
                     resolve(new VersionInfo({
-                        version: versionSpec,
+                        version: resultVersion,
                         files: [{
                             name: 'testfile.json',
                             hash: 'testhash',
                             url: 'testurl',
                             rid: 'testrid'
                         }],
-                        "runtime-version": versionSpec,
+                        "runtime-version": resultVersion,
                         "vs-version": vsVersionSpec
                     }, packageType));
                 });
@@ -144,47 +145,21 @@ mockery.registerMock('./versionfetcher', {
 });
 
 mockery.registerMock("./versionutilities", {
-	validRollForwardPolicies: [
-		"patch",
-		"feature",
-		"minor",
-		"major",
-		"latestPatch",
-		"latestFeature",
-		"latestMinor",
-		"latestMajor",
-		"disable",
-	],
-	applyRollForwardPolicy: function (
-		version: string,
-		rollForward: string,
-	): string {
-		const parts = version.split(".");
-		if (parts.length < 3) return version;
-		const major = parts[0];
-		const minor = parts[1];
-		const patch = parts[2].split(/\-|\+/)[0];
-		switch (rollForward) {
-			case "disable":
-				return version;
-			case "patch":
-			case "latestPatch": {
-				const featureBand = Math.floor(Number.parseInt(patch) / 100) * 100;
-				return `>=${major}.${minor}.${featureBand} <${major}.${minor}.${featureBand + 100}`;
-			}
-			case "feature":
-			case "latestFeature":
-				return `${major}.${minor}.x`;
-			case "minor":
-			case "latestMinor":
-				return `${major}.x`;
-			case "major":
-			case "latestMajor":
-				return `${major}.x`;
-			default:
-				return version;
-		}
-	},
+    validRollForwardPolicies: [
+        "patch", "feature", "minor", "major",
+        "latestPatch", "latestFeature", "latestMinor", "latestMajor", "disable",
+    ],
+    applyRollForwardPolicy: function (version: string, rollForward: string): string {
+        // Predetermined return values for known test inputs instead of reimplementing logic
+        if (version === rollForwardVersionNumber) { // "8.0.100"
+            switch (rollForward) {
+                case "latestFeature": return "8.0.x";
+                case "latestPatch": return ">=8.0.100 <8.0.200";
+                default: return version;
+            }
+        }
+        return version;
+    },
 });
 
 // start test
