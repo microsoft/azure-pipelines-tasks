@@ -28,23 +28,33 @@ export class globalJsonFetcher {
     public async GetVersions(): Promise<VersionInfo[]> {
         var versionInformation: VersionInfo[] = [] as VersionInfo[];
         var globalJsonVersions = this.getGlobalJsonVersions();
+        let explicitFetcher = new DotNetCoreVersionFetcher(true);
+        let nonExplicitFetcher = new DotNetCoreVersionFetcher(false);
         for (let index = 0; index < globalJsonVersions.length; index++) {
             const entry = globalJsonVersions[index];
             if (entry != null) {
-                let versionSpec = entry.version;
-                let useExplicitVersioning = true;
+                let channelSpec = entry.version;
+                let matchingSpec: string | undefined;
+                let versionFetcher = explicitFetcher;
 
                 if (entry.rollForward) {
                     const resolvedSpec = applyRollForwardPolicy(entry.version, entry.rollForward);
                     if (resolvedSpec !== entry.version) {
-                        versionSpec = resolvedSpec;
-                        useExplicitVersioning = false;
+                        versionFetcher = nonExplicitFetcher;
+                        // Range specs (e.g., ">=8.0.100 <8.0.200" from patch/latestPatch)
+                        // need a separate channel-compatible spec for VersionParts lookup
+                        if (resolvedSpec.includes(' ')) {
+                            const parts = entry.version.split('.');
+                            channelSpec = `${parts[0]}.${parts[1]}.x`;
+                            matchingSpec = resolvedSpec;
+                        } else {
+                            channelSpec = resolvedSpec;
+                        }
                     }
-                    console.log(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, versionSpec));
+                    tl.debug(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, matchingSpec || channelSpec));
                 }
 
-                let versionFetcher = new DotNetCoreVersionFetcher(useExplicitVersioning);
-                var versionInfo = await versionFetcher.getVersionInfo(versionSpec, null, "sdk", false);
+                var versionInfo = await versionFetcher.getVersionInfo(channelSpec, null, "sdk", false, matchingSpec);
                 versionInformation.push(versionInfo);
             }
         }
