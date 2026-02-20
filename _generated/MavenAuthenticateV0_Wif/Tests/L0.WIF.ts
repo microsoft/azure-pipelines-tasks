@@ -32,9 +32,10 @@ describe('MavenAuthenticate L0 - Workload Identity Federation (WIF)', function (
         await tr.runAsync();
 
         // Assert
+        // Check for success message (appears as loc_mock key in test output)
         TestHelpers.assertOutputContains(
             tr,
-            `Successfully added auth for feed ${TestConstants.feeds.feedName1} with federated credentials`
+            'Info_SuccessAddingFederatedFeedAuth'
         );
         TestHelpers.assertSuccess(tr);
     });
@@ -70,12 +71,12 @@ describe('MavenAuthenticate L0 - Workload Identity Federation (WIF)', function (
         await tr.runAsync();
 
         // Assert
-        // Check for warning (appears as loc_mock key in test output)
+        // Should warn about no endpoints and still succeed
         TestHelpers.assertOutputContains(
             tr,
             'Warning_NoEndpointsToAuth'
         );
-        TestHelpers.assertSuccess(tr, 'Task should succeed with warning');
+        TestHelpers.assertSuccess(tr);
     });
 
     it('should warn when WIF token cannot be generated', async () => {
