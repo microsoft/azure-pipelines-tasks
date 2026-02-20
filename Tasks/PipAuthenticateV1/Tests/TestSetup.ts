@@ -75,7 +75,7 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
         if (shouldThrowTelemetryError) {
             throw new Error('Simulated telemetry error');
         }
-        // Telemetry emitted successfully (silent in tests)
+        console.log(`Telemetry emitted: ${area}.${feature} with data: ${JSON.stringify(data)}`);
     }
 });
 
@@ -85,12 +85,14 @@ const wifShouldFail = process.env[testConstants.TestEnvVars.wifShouldFail] === '
 
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
     getFederatedWorkloadIdentityCredentials: async function(serviceConnectionName: string, tenantId?: string) {
+        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentials called with ${serviceConnectionName}`);
         if (wifShouldFail) {
             throw new Error('Simulated WIF authentication failure');
         }
         return wifToken;
     },
     getFeedTenantId: async function(feedUrl: string) {
+        console.log(`Mock WIF: getFeedTenantId called with ${feedUrl}`);
         return 'mock-tenant-id-12345';
     }
 });
