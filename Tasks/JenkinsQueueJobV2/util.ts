@@ -322,14 +322,6 @@ function getCrumb(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Pro
     const crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
 
-    // Validate URL format to maintain backward compatibility with request library behavior
-    try {
-        new URL(crumbRequestUrl);
-    } catch (e) {
-        defer.reject(new Error('Invalid URI "' + crumbRequestUrl + '"'));
-        return defer.promise;
-    }
-
     httpClient.get(crumbRequestUrl).then(async (response) => {
         const statusCode = response.message.statusCode;
         
