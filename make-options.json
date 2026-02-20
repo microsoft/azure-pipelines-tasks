@@ -241,6 +241,8 @@
         "AzureFileCopyV4",
         "AzureFileCopyV5",
         "AzureFileCopyV6"
+        "AzurePowerShellV4",
+        "AzurePowerShellV5"
     ],
     "Node24_2": [],
     "Node24_3": [],

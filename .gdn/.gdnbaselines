@@ -2361,6 +2361,11 @@
     "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf": {
       "signature": "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf",
       "alternativeSignatures": [],
+    "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035": {
+      "signature": "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035",
+      "alternativeSignatures": [
+        "dadcad8e4019a30928f9be6357e65633e9980908be5a5cec9d9d9859778be273"
+      ],
       "memberOf": [
         "default"
       ],
@@ -2379,6 +2384,13 @@
     "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac": {
       "signature": "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac",
       "alternativeSignatures": [],
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV4_Node24/AzurePowerShell.ps1"
+    },
+    "8d119e847e28649bf268bdbf1a07335eaffb0e63e646a7d83dc94e412bfeb8c3": {
+      "signature": "8d119e847e28649bf268bdbf1a07335eaffb0e63e646a7d83dc94e412bfeb8c3",
+      "alternativeSignatures": [
+        "aeea204432044b85819bee17ee619a12b1649ee6a67888d814ec4f2e9e1cd824"
+      ],
       "memberOf": [
         "default"
       ],
@@ -2397,6 +2409,13 @@
     "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401": {
       "signature": "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401",
       "alternativeSignatures": [],
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV4_Node24/InitializeAz.ps1"
+    },
+    "25f98e81eeaca90238d700a05d5fd853c6e44b82948dc94ea666a040bf39f56d": {
+      "signature": "25f98e81eeaca90238d700a05d5fd853c6e44b82948dc94ea666a040bf39f56d",
+      "alternativeSignatures": [
+        "a6ad42f55bb3fbeb729301456140ac525b019908da9ce7cded10cf96f7d152e6"
+      ],
       "memberOf": [
         "default"
       ],
@@ -2415,11 +2434,19 @@
     "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4": {
       "signature": "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4",
       "alternativeSignatures": [],
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV5_Node24/CoreAz.ps1"
+    },
+    "7c07315e5833936c89c6f6fbb837629e331e50244780ac150aec1844738ff7ae": {
+      "signature": "7c07315e5833936c89c6f6fbb837629e331e50244780ac150aec1844738ff7ae",
+      "alternativeSignatures": [
+        "b8a5d523ec304274abcda4195ef33012e1359eb8c0a6e3a160e47db2201d5245"
+      ],
       "memberOf": [
         "default"
       ],
       "createdDate": "2026-02-17 00:00:00Z",
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/Utility.ps1) will be removed when merged into base task"
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV5_Node24/InitializeAz.ps1"
     }
   }
 }
