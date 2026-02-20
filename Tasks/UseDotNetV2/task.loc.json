@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 268,
-    "Patch": 2
+    "Minor": 270,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -217,6 +217,8 @@
     "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
-    "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
+    "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore",
+    "ApplyingRollForwardPolicy": "ms-resource:loc.messages.ApplyingRollForwardPolicy",
+    "InvalidRollForwardPolicy": "ms-resource:loc.messages.InvalidRollForwardPolicy"
   }
 }
