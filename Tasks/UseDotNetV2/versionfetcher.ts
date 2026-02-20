@@ -54,33 +54,35 @@ export class DotNetCoreVersionFetcher {
         this.channels = [];
     }
 
-    public async getVersionInfo(versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+    public async getVersionInfo(versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean, matchingVersionSpec?: string): Promise<VersionInfo> {
         var requiredVersionInfo: VersionInfo = null;
         if (!this.channels || this.channels.length < 1) {
             await this.setReleasesIndex();
         }
 
+        let effectiveMatchingSpec = matchingVersionSpec || versionSpec;
+
         let channelInformation = this.getVersionChannel(versionSpec, includePreviewVersions);
         if (channelInformation) {
-            requiredVersionInfo = await this.getVersionFromChannel(channelInformation, versionSpec, vsVersionSpec, packageType, includePreviewVersions);
+            requiredVersionInfo = await this.getVersionFromChannel(channelInformation, effectiveMatchingSpec, vsVersionSpec, packageType, includePreviewVersions);
         }
 
         if (!!requiredVersionInfo) {
-            console.log(tl.loc("MatchingVersionForUserInputVersion", requiredVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
+            console.log(tl.loc("MatchingVersionForUserInputVersion", requiredVersionInfo.getVersion(), channelInformation.channelVersion, effectiveMatchingSpec))
         }
         else {
-            console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
+            console.log(tl.loc("MatchingVersionNotFound", packageType, effectiveMatchingSpec));
             if (!versionSpec.endsWith("x")) {
                 console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
-                requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, vsVersionSpec, packageType, includePreviewVersions);
+                requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, effectiveMatchingSpec, vsVersionSpec, packageType, includePreviewVersions);
             }
         }
 
         if (!requiredVersionInfo) {
-            throw tl.loc("VersionNotFound", packageType, versionSpec);
+            throw tl.loc("VersionNotFound", packageType, effectiveMatchingSpec);
         }
 
-        let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.getVersion()}"}`;
+        let dotNetSdkVersionTelemetry = `{"userVersion":"${effectiveMatchingSpec}", "resolvedVersion":"${requiredVersionInfo.getVersion()}"}`;
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=UseDotNetV2]" + dotNetSdkVersionTelemetry);
         return requiredVersionInfo;
     }
@@ -226,16 +228,16 @@ export class DotNetCoreVersionFetcher {
         }
     }
 
-    private async getVersionFromOtherChannels(version: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        let fallbackChannels = this.getChannelsForMajorVersion(version);
+    private async getVersionFromOtherChannels(channelLookupVersion: string, matchingVersion: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        let fallbackChannels = this.getChannelsForMajorVersion(channelLookupVersion);
         if (!fallbackChannels && fallbackChannels.length < 1) {
-            throw tl.loc("NoSuitableChannelWereFound", version);
+            throw tl.loc("NoSuitableChannelWereFound", channelLookupVersion);
         }
 
         var versionInfo: VersionInfo = null;
         for (var i = 0; i < fallbackChannels.length; i++) {
             console.log(tl.loc("LookingForVersionInChannel", (fallbackChannels[i]).channelVersion));
-            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], version, vsVersionSpec, packageType, includePreviewVersions);
+            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], matchingVersion, vsVersionSpec, packageType, includePreviewVersions);
 
             if (versionInfo) {
                 break;
