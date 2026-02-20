@@ -5,6 +5,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
+import * as httpm from 'typed-rest-client/HttpClient';
 
 import { Job } from './job';
 import { JobSearch } from './jobsearch';
@@ -15,13 +16,16 @@ import util = require('./util');
 
 export class JobQueue {
     public TaskOptions: TaskOptions;
+    public HttpClient: httpm.HttpClient;  // Shared HTTP client for all jobs
 
     public RootJob: Job;
     private allJobs: Job[] = [];
     private searches: JobSearch[] = [];
 
-    constructor(taskOptions: TaskOptions) {
+    constructor(taskOptions: TaskOptions, httpClient: httpm.HttpClient) {
         this.TaskOptions = taskOptions;
+        // Reuse the provided HTTP client for all requests
+        this.HttpClient = httpClient;
     }
 
     private intervalId: NodeJS.Timeout;
@@ -268,8 +272,8 @@ export class JobQueue {
             return jobContent;
         }
 
-        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void): void {
-            util.getPipelineReport(job, taskOptions)
+        function generatePipelineReport(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient, callback: (pipelineReport: string) => void): void {
+            util.getPipelineReport(job, taskOptions, httpClient)
                 .then((body) => {
                     if (body) {
                         const parsedBody: any = JSON.parse(body);
@@ -280,11 +284,11 @@ export class JobQueue {
                 });
         }
 
-        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void): void {
-            util.isPipelineJob(job, taskOptions)
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient, callback: (markdownContent: string) => void): void {
+            util.isPipelineJob(job, taskOptions, httpClient)
                 .then((isPipeline) => {
                     if (isPipeline) {
-                        generatePipelineReport(job, taskOptions, callback);
+                        generatePipelineReport(job, taskOptions, httpClient, callback);
                     } else {
                         callback(walkHierarchy(job, '', 0));
                     }
@@ -298,7 +302,7 @@ export class JobQueue {
         tl.debug('markdown location: ' + linkMarkdownFile);
         const tab: string = '  ';
         const paddingTab: number = 4;
-        generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, (markdownContents) => {
+        generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, thisQueue.HttpClient, (markdownContents) => {
             fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
                 tl.debug('writeFinalMarkdown().writeFile().callback()');
 
