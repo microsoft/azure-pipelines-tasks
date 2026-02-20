@@ -2331,6 +2331,36 @@
       "justification": "BinSkim BA2008: Third-party pnpm fastlist executables (fastlist-0.3.0-x64.exe) lacks Control Flow Guard - not under our control",
       "createdDate": "2025-11-24 00:00:00Z"
     },
+    "1bf62a4eb439bba442f51790c122f3d035c5a5cd9264a4936a405bd80db5043e": {
+      "signature": "1bf62a4eb439bba442f51790c122f3d035c5a5cd9264a4936a405bd80db5043e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-16 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/AzureFileCopy.ps1) will be removed when merged into base task"
+    },
+    "e3d06dd6101a5e1591a050011dd834246ddd5b779199e497493ee046098a67f5": {
+      "signature": "e3d06dd6101a5e1591a050011dd834246ddd5b779199e497493ee046098a67f5",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-16 00:00:00Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "1ea27afb295421c27911324180ebbb82a23d8131582f90167696b587c8023c6a": {
+      "signature": "1ea27afb295421c27911324180ebbb82a23d8131582f90167696b587c8023c6a",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-16 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV6_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf": {
+      "signature": "4141f484e1ff4d52ec27459792321d25f198f38f642606550b072b3ddce2adbf",
+      "alternativeSignatures": [],
     "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035": {
       "signature": "f9e381e6093ba74d1afd0da0dd2c2c8a6a3be4bff338f8785ce8c36994f46035",
       "alternativeSignatures": [
@@ -2340,6 +2370,20 @@
         "default"
       ],
       "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/AzureFileCopy.ps1) will be removed when merged into base task"
+    },
+    "5e52887d284b7742299ccc1c3f2471be92239938076dcbb3a24da00ae6fd44e7": {
+      "signature": "5e52887d284b7742299ccc1c3f2471be92239938076dcbb3a24da00ae6fd44e7",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac": {
+      "signature": "971577887a0c1a01b3ee87aaf07883f18679708a23a35047e9f4eb26adaa9dac",
+      "alternativeSignatures": [],
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV4_Node24/AzurePowerShell.ps1"
     },
     "8d119e847e28649bf268bdbf1a07335eaffb0e63e646a7d83dc94e412bfeb8c3": {
@@ -2351,6 +2395,20 @@
         "default"
       ],
       "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV5_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "fd9a76dffcb5c7c8aea638a39b91a3c306e5b787c27b567889a3567656112cdb": {
+      "signature": "fd9a76dffcb5c7c8aea638a39b91a3c306e5b787c27b567889a3567656112cdb",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/AzureFileCopy.ps1 L84) will be removed when merged into base task"
+    },
+    "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401": {
+      "signature": "949b44f58bb5c3156e052776e84966325bb810305d91dda757dbf42b02731401",
+      "alternativeSignatures": [],
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV4_Node24/InitializeAz.ps1"
     },
     "25f98e81eeaca90238d700a05d5fd853c6e44b82948dc94ea666a040bf39f56d": {
@@ -2362,6 +2420,20 @@
         "default"
       ],
       "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/AzureFileCopy.ps1 L80) will be removed when merged into base task"
+    },
+    "adb4e8a5e6ce765af87893726bfa8cc44537f07da3c5b89166ce0eef59a5a8f0": {
+      "signature": "adb4e8a5e6ce765af87893726bfa8cc44537f07da3c5b89166ce0eef59a5a8f0",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/Utility.ps1) will be removed when merged into base task"
+    },
+    "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4": {
+      "signature": "2a9039d66e87c996b8cafd1bc09426f15ec61a78e670c4a4d98edbbdc68b17c4",
+      "alternativeSignatures": [],
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV5_Node24/CoreAz.ps1"
     },
     "7c07315e5833936c89c6f6fbb837629e331e50244780ac150aec1844738ff7ae": {
@@ -2373,6 +2445,7 @@
         "default"
       ],
       "createdDate": "2026-02-17 00:00:00Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText - Temporary: Node24 _generated task (AzureFileCopyV4_Node24/Utility.ps1) will be removed when merged into base task"
       "justification": "PSAvoidUsingConvertToSecureStringWithPlainText in _generated/AzurePowerShellV5_Node24/InitializeAz.ps1"
     }
   }
