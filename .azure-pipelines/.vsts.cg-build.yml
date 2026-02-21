@@ -1,0 +1,53 @@
+# Build all tasks for Component Governance checks
+
+trigger: none
+
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+parameters:
+- name: build_mode
+  displayName: 'Choose build mode'
+  type: string
+  default: 'Build all tasks'
+  values:
+  - 'Build all tasks'
+  - 'Build specific tasks'
+- name: task_names
+  displayName: 'Task names to build (e.g. BashV3,AzureCLIV1,PowerShellV2) - only used when "Build specific tasks" is selected'
+  type: string
+  default: ''
+
+variables:
+- name: DEPLOY_ALL_TASKSVAR
+  ${{ if eq(parameters.build_mode, 'Build all tasks') }}:
+    value: 'true'
+  ${{ else }}:
+    value: 'false'
+- name: taskPattern
+  ${{ if eq(parameters.build_mode, 'Build specific tasks') }}:
+    value: ${{ parameters.task_names }}
+  ${{ else }}:
+    value: ''
+- name: includeLocalPackagesBuildConfigParameter
+  value: ''
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    stages:
+    - stage: main
+      jobs:
+      - job: build_all_tasks_for_cg_check
+        displayName: Build all tasks for CG check
+        pool:
+          name: 1ES-ABTT-Shared-Pool
+          image: abtt-windows-2022
+          os: windows
+        steps:
+        - template: /ci/ci-build-tasks/common-steps.yml@self
+
