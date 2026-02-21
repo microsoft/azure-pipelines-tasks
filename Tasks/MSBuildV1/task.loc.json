@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 268,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "msbuild"
@@ -75,7 +75,8 @@
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
         "x86": "MSBuild x86",
-        "x64": "MSBuild x64"
+        "x64": "MSBuild x64",
+        "arm64": "MSBuild arm64"
       }
     },
     {
