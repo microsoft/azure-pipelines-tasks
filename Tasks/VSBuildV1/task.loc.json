@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 267,
-    "Patch": 0
+    "Patch": 4
   },
   "demands": [
     "msbuild",
@@ -114,7 +114,8 @@
       "groupName": "advanced",
       "options": {
         "x86": "MSBuild x86",
-        "x64": "MSBuild x64"
+        "x64": "MSBuild x64",
+        "arm64": "MSBuild arm64"
       }
     },
     {
