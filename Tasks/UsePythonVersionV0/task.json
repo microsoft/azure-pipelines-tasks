@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 268,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [],
   "instanceNameFormat": "Use Python $(versionSpec)",
