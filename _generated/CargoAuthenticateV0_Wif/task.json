@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 270,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -91,8 +91,8 @@
     "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.270.0",
+    "Default": "0.270.2",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.270.1"
+    "wif_242": "0.270.3"
   }
 }
