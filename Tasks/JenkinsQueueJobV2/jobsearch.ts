@@ -21,7 +21,7 @@ export class JobSearch {
         this.taskUrl = taskUrl;
         this.identifier = identifier;
 
-        this.Initialize().fail((err) => {
+        this.Initialize().catch((err) => {
             throw err;
         });
     }
@@ -37,19 +37,19 @@ export class JobSearch {
     private working: boolean = false;
     private workDelay: number = 0;
 
-    public Initialize(): Q.Promise<void> {
-        const defer: Q.Deferred<void> = Q.defer<void>();
+    public async Initialize(): Promise<void> {
         const thisSearch: JobSearch = this;
         if (!thisSearch.Initialized) { //only initialize once
             const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
             tl.debug('getting job task URL:' + apiTaskUrl);
             
-            thisSearch.queue.HttpClient.get(apiTaskUrl).then(async (response) => {
+            try {
+                const response = await thisSearch.queue.HttpClient.get(apiTaskUrl);
                 if (!thisSearch.Initialized) { // only initialize once
                     const statusCode = response.message.statusCode;
                     
                     if (statusCode !== 200) {
-                        defer.reject(util.getFullErrorMessage({ statusCode, statusMessage: response.message.statusMessage }, 'Unable to retrieve job: ' + thisSearch.identifier));
+                        throw new Error(util.getFullErrorMessage({ statusCode, statusMessage: response.message.statusMessage }, 'Unable to retrieve job: ' + thisSearch.identifier));
                     } else {
                         const body = await response.readBody();
                         const parsedBody: any = JSON.parse(body);
@@ -61,24 +61,18 @@ export class JobSearch {
                         thisSearch.initialSearchBuildNumber = (thisSearch.ParsedTaskBody.lastBuild) ? thisSearch.ParsedTaskBody.lastBuild.number : 1;
                         thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber;
                         thisSearch.searchDirection = -1;  // start searching backwards
-                        defer.resolve(null);
                     }
-                } else {
-                    defer.resolve(null);
                 }
-            }).catch((err) => {
+            } catch (err) {
                 if (err.code == 'ECONNRESET') {
                     tl.debug(err);
                     // resolve but do not initialize -- a job will trigger this again
-                    defer.resolve(null);
+                    return;
                 } else {
-                    defer.reject(err);
+                    throw err;
                 }
-            });
-        } else { // already initialized
-            defer.resolve(null);
+            }
         }
-        return defer.promise;
     }
 
     public DoWork(): void {

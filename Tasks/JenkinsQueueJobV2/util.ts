@@ -110,53 +110,57 @@ export function isPipelineJob(job: Job, taskOptions: TaskOptions, httpClient: ht
     return deferred.promise;
 }
 
-export function getPipelineReport(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<any> {
-    const deferred: Q.Deferred<any> = Q.defer<any>();
+export async function getPipelineReport(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Promise<any> {
     const wfapiUrl: string = `${job.TaskUrl}/${job.ExecutableNumber}/wfapi/describe`;
     
-    httpClient.get(wfapiUrl).then(async (response) => {
+    try {
+        const response = await httpClient.get(wfapiUrl);
         if (response.message.statusCode === 200) {
             const body = await response.readBody();
-            deferred.resolve(body);
+            return body;
         } else {
-            deferred.reject(new Error('Failed to get pipeline report'));
+            throw new Error('Failed to get pipeline report');
         }
-    }).catch((err) => {
-        deferred.reject(err);
-    });
-
-    return deferred.promise;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export function getUrlAuthority(myUrl: string): string {
-    const parsed = new URL(myUrl);
+    try {
+        const parsed = new URL(myUrl);
 
-    let result: string = '';
-    if (parsed.username) {
-        result += parsed.username + (parsed.password ? ':' + parsed.password : '');
-    } else {
-        if (parsed.protocol && parsed.host) {
-            result = `${parsed.protocol}//${parsed.host}`;
+        let result: string = '';
+        if (parsed.username) {
+            result += parsed.username + (parsed.password ? ':' + parsed.password : '');
+        } else {
+            if (parsed.protocol && parsed.host) {
+                result = `${parsed.protocol}//${parsed.host}`;
+            }
         }
-    }
 
-    return result;
+        return result;
+    } catch (err) {
+        tl.debug(`Invalid URL: ${myUrl}, error: ${err.message}`);
+        return '';
+    }
 }
 
 export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<Job> {
     const defer: Q.Deferred<Job> = Q.defer<Job>();
 
     const poll = async () => {
-        await createRootJob(queueUri, jobQueue, taskOptions, httpClient).then((job: Job) => {
+        try {
+            const job = await createRootJob(queueUri, jobQueue, taskOptions, httpClient);
             if (job != null) {
                 defer.resolve(job);
             } else {
                 // no job yet, but no failure either, so keep trying
                 setTimeout(poll, taskOptions.pollIntervalMillis);
             }
-        }).fail((err: any) => {
+        } catch (err) {
             defer.reject(err);
-        });
+        }
     };
 
     poll();
@@ -164,16 +168,16 @@ export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOpti
     return defer.promise;
 }
 
-function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<Job> {
-    const defer: Q.Deferred<Job> = Q.defer<Job>();
+async function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions, httpClient: httpm.HttpClient): Promise<Job> {
     tl.debug('createRootJob(): ' + queueUri);
 
-    httpClient.get(queueUri).then(async (response) => {
+    try {
+        const response = await httpClient.get(queueUri);
         tl.debug('createRootJob() statusCode: ' + response.message.statusCode);
         const statusCode = response.message.statusCode;
         
         if (statusCode !== 200) {
-            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job queue'));
+            throw new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job queue');
         } else {
             const body = await response.readBody();
             const parsedBody: any = JSON.parse(body);
@@ -181,54 +185,56 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
 
             // canceled is spelled wrong in the body with 2 Ls (checking correct spelling also in case they fix it)
             if (parsedBody.cancelled || parsedBody.canceled) {
-                defer.reject('Jenkins job canceled.');
+                throw new Error('Jenkins job canceled.');
             } else {
                 const executable: any = parsedBody.executable;
                 if (!executable) {
                     // job has not actually been queued yet
-                    defer.resolve(null);
+                    return null;
                 } else {
                     const rootJob: Job = new Job(jobQueue, null, parsedBody.task.url, parsedBody.executable.url, parsedBody.executable.number, parsedBody.task.name);
-                    defer.resolve(rootJob);
+                    return rootJob;
                 }
             }
         }
-    }).catch((err) => {
+    } catch (err) {
         tl.debug(err);
         if (err.code == 'ECONNRESET') {
-            defer.resolve(null);
+            return null;
+        } else if (err instanceof HttpError) {
+            throw err;
         } else {
             const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
-            defer.reject(error);
+            throw error;
         }
-    });
-
-    return defer.promise;
+    }
 }
 
 export function pollSubmitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
 
     const poll = async () => {
-        await getCrumb(taskOptions, httpClient).then(async (crumb: string) => {
+        try {
+            const crumb = await getCrumb(taskOptions, httpClient);
             if (crumb != null) {
-                await submitJob(taskOptions, httpClient).then((queueUri: string) => {
+                try {
+                    const queueUri = await submitJob(taskOptions, httpClient);
                     if (queueUri != null) {
                         defer.resolve(queueUri);
                     } else {
                         // no queueUri yet, but no failure either, so keep trying
                         setTimeout(poll, taskOptions.pollIntervalMillis);
                     }
-                }).fail((err: any) => {
+                } catch (err) {
                     defer.reject(err);
-                });
+                }
             } else {
                 // no crumb yet, but no failure either, so keep trying
                 setTimeout(poll, taskOptions.pollIntervalMillis);
             }
-        }).fail((err: any) => {
+        } catch (err) {
             defer.reject(err);
-        });
+        }
     };
 
     poll();
@@ -236,8 +242,7 @@ export function pollSubmitJob(taskOptions: TaskOptions, httpClient: httpm.HttpCl
     return defer.promise;
 }
 
-function submitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
-    const defer: Q.Deferred<string> = Q.defer<string>();
+async function submitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Promise<string> {
     tl.debug('submitJob(): ' + JSON.stringify(taskOptions));
 
     function addCrumb(): httpi.IHeaders {
@@ -261,7 +266,8 @@ function submitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Pr
     tl.debug('teamBuildPostData = ' + teamBuildPostData);
     
     // first try team-build plugin endpoint, if that fails, then try the default endpoint
-    httpClient.post(taskOptions.teamJobQueueUrl, teamBuildPostData, addCrumb()).then(async (response) => {
+    try {
+        const response = await httpClient.post(taskOptions.teamJobQueueUrl, teamBuildPostData, addCrumb());
         const statusCode = response.message.statusCode;
         tl.debug('submitJob() team-build statusCode: ' + statusCode);
         
@@ -277,76 +283,73 @@ function submitJob(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Pr
             }
 
             tl.debug('jobQueuePostData = ' + jobQueuePostData);
-            httpClient.post(taskOptions.jobQueueUrl, jobQueuePostData, addCrumb()).then(async (response2) => {
+            try {
+                const response2 = await httpClient.post(taskOptions.jobQueueUrl, jobQueuePostData, addCrumb());
                 const statusCode2 = response2.message.statusCode;
                 tl.debug('submitJob() job queue statusCode: ' + statusCode2);
                 
                 if (statusCode2 !== 201) {
-                    defer.reject(new HttpError({ statusCode: statusCode2, statusMessage: response2.message.statusMessage }, 'Job creation failed.'));
+                    throw new HttpError({ statusCode: statusCode2, statusMessage: response2.message.statusMessage }, 'Job creation failed.');
                 } else {
                     const location = response2.message.headers['location'] as string;
                     const queueUri: string = addUrlSegment(location, 'api/json');
-                    defer.resolve(queueUri);
+                    return queueUri;
                 }
-            }).catch((err) => {
+            } catch (err) {
                 if (err.code == 'ECONNRESET') {
                     tl.debug(err);
-                    defer.resolve(null);
+                    return null;
                 } else {
-                    defer.reject(err);
+                    throw err;
                 }
-            });
+            }
         } else if (statusCode !== 201) {
-            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job creation failed.'));
+            throw new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Job creation failed.');
         } else {
             taskOptions.teamBuildPluginAvailable = true;
             const body = await response.readBody();
             const jsonBody: any = JSON.parse(body);
             const queueUri: string = addUrlSegment(jsonBody.created, 'api/json');
-            defer.resolve(queueUri);
+            return queueUri;
         }
-    }).catch((err) => {
+    } catch (err) {
         if (err.code == 'ECONNRESET') {
             tl.debug(err);
-            defer.resolve(null);
+            return null;
         } else {
-            defer.reject(err);
+            throw err;
         }
-    });
-
-    return defer.promise;
+    }
 }
 
-function getCrumb(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Q.Promise<string> {
-    const defer: Q.Deferred<string> = Q.defer<string>();
+async function getCrumb(taskOptions: TaskOptions, httpClient: httpm.HttpClient): Promise<string> {
     const crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
 
-    httpClient.get(crumbRequestUrl).then(async (response) => {
+    try {
+        const response = await httpClient.get(crumbRequestUrl);
         const statusCode = response.message.statusCode;
         
         if (statusCode === 404) {
             tl.debug('crumb endpoint not found');
             taskOptions.crumb = taskOptions.NO_CRUMB;
-            defer.resolve(taskOptions.NO_CRUMB);
+            return taskOptions.NO_CRUMB;
         } else if (statusCode !== 200) {
-            defer.reject(new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Crumb request failed.'));
+            throw new HttpError({ statusCode, statusMessage: response.message.statusMessage }, 'Crumb request failed.');
         } else {
             const body = await response.readBody();
             taskOptions.crumb = body;
             tl.debug('crumb: ' + taskOptions.crumb);
-            defer.resolve(taskOptions.crumb);
+            return taskOptions.crumb;
         }
-    }).catch((err) => {
+    } catch (err) {
         if (err.code == 'ECONNRESET') {
             tl.debug(err);
-            defer.resolve(null);
+            return null;
         } else {
-            defer.reject(err);
+            throw err;
         }
-    });
-
-    return defer.promise;
+    }
 }
 
 export class StringWritable extends stream.Writable {

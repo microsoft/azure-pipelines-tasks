@@ -53,7 +53,12 @@ export class Job {
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
         } else {
             // backup check in case job is running on a different server name than the endpoint
-            this.Identifier = new URL(this.TaskUrl).pathname.substring(1);
+            try {
+                this.Identifier = new URL(this.TaskUrl).pathname.substring(1);
+            } catch (err) {
+                tl.debug(`Invalid TaskUrl: ${this.TaskUrl}, error: ${err.message}`);
+                this.Identifier = this.TaskUrl; // fallback to using the full URL as identifier
+            }
             const jobStringIndex: number = this.Identifier.indexOf('job/');
             if (jobStringIndex > 0) {
                 // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl
@@ -282,7 +287,7 @@ export class Job {
                 //search not initialized, so try again
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             }
-        }).fail((err) => {
+        }).catch((err) => {
             throw err;
         });
     }
@@ -359,8 +364,15 @@ export class Job {
 
                     tl.debug('downloading results file: ' + fileName);
 
-                    const body = await response.readBody();
-                    fs.writeFileSync(fileName, body, 'binary');
+                    // Use stream piping for binary data to avoid corruption
+                    // readBody() returns a string which corrupts binary data when written to file
+                    const file: fs.WriteStream = fs.createWriteStream(fileName);
+                    await new Promise<void>((resolve, reject) => {
+                        response.message
+                            .pipe(file)
+                            .on('error', (err) => reject(err))
+                            .on('finish', () => resolve());
+                    });
 
                     tl.debug('successfully downloaded results to: ' + fileName);
                     try {
