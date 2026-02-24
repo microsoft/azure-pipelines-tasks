@@ -73,7 +73,7 @@ async function run(): Promise<void> {
     
                     settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
                     federatedFeedAuthSuccessCount++;
-                    tl.debug(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
+                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
                 }
 
                 tl.debug(tl.loc("Info_WritingToSettingsXml"));
