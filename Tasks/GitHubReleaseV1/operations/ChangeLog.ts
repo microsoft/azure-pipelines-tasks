@@ -193,6 +193,10 @@ export class ChangeLog {
                 let issuesList = issuesListResponse.body.data.repository;
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
+                    // Skip null entries (e.g. GitHub Discussions) 
+                    if (!issuesList[key]) {
+                        return;
+                    }
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
                     // See more functionality
                     if (index >= this._changeLogVisibleLimit) {
@@ -489,6 +493,10 @@ export class ChangeLog {
         });
         labelsIssuesDictionary[this._defaultGroup] = [];
         Object.keys(issuesList).forEach((issue: string) => {
+            // Skip null entries (e.g. GitHub Discussions)
+            if (!issuesList[issue]) {
+                return;
+            }
             let group: string = null;
             let currentLabelRank: number = Number.MAX_SAFE_INTEGER;
             let issueState = issuesList[issue].state;
