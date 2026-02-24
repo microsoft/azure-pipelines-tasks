@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 271,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -84,6 +84,10 @@
     "Node20_1": {
       "target": "runprejob.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "runprejob.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -95,6 +99,10 @@
       "target": "run.js"
     },
     "Node20_1": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "run.js",
       "argumentFormat": ""
     }
@@ -136,5 +144,9 @@
     "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.271.0",
+    "Node24_1": "2.271.1"
   }
 }
