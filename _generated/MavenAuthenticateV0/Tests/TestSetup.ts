@@ -36,17 +36,15 @@ export const TestEnvVars = {
 const taskPath = path.join(__dirname, '..', 'mavenauth.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Set user home directory for tests
-const userHomeDir = process.env.USERPROFILE || process.env.HOME || path.join(__dirname, 'testhome');
+// Set user home directory for tests - use a default test path
+const userHomeDir = path.join(__dirname, 'testhome');
 const m2DirPath = path.join(userHomeDir, '.m2');
 const settingsXmlPath = path.join(m2DirPath, 'settings.xml');
 
-// Ensure HOME/USERPROFILE environment variables are set for the task
-if (process.platform === 'win32') {
-    process.env.USERPROFILE = userHomeDir;
-} else {
-    process.env.HOME = userHomeDir;
-}
+// Ensure BOTH HOME and USERPROFILE environment variables are set for the task
+// The task checks tl.osType() which is mocked, so set both to be safe
+process.env.USERPROFILE = userHomeDir;
+process.env.HOME = userHomeDir;
 
 // Read configuration from environment variables
 const artifactsFeeds = process.env[TestEnvVars.artifactsFeeds] || '';
@@ -127,6 +125,130 @@ const mockServiceConnectionUtils = {
 };
 tr.registerMock('azure-pipelines-tasks-artifacts-common/serviceConnectionUtils', mockServiceConnectionUtils);
 
+// Mock telemetry
+tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
+    emitTelemetry: (area: string, feature: string, data: any) => {
+        // Silent mock for tests
+    }
+});
+
+// Mock mavenutils
+tr.registerMock('./mavenutils', {
+    getInternalFeedsServerElements: (input: string) => {
+        const feeds = artifactsFeeds.split(',').filter(f => f.trim());
+        return feeds.map(feed => ({
+            id: feed.trim(),
+            username: 'AzureDevOps',
+            password: systemAccessToken
+        }));
+    },
+    getExternalServiceEndpointsServerElements: (input: string) => {
+        return mockServiceConnectionUtils.getPackagingServiceConnections(input, ['REPOSITORYID'])
+            .map((conn: any) => ({
+                id: conn.additionalData['REPOSITORYID'],
+                username: conn.username || 'AzureDevOps',
+                password: conn.password || conn.token || '',
+                privateKey: conn.privateKey,
+                passphrase: conn.passphrase
+            }));
+    },
+    readXmlFileAsJson: async (filePath: string) => {
+        if (settingsXmlContent) {
+            const xml2js = require('xml2js');
+            const parser = new xml2js.Parser();
+            return parser.parseStringPromise(settingsXmlContent);
+        }
+        return { settings: {} };
+    },
+    jsonToXmlConverter: async (filePath: string, jsonContent: any) => {
+        // Mock - no-op for tests
+        return Promise.resolve();
+    },
+    addRepositoryEntryToSettingsJson: function(json: any, serverJson:any): any {
+        const tl = this.tl || require('azure-pipelines-task-lib/task');
+        const os = require('os');
+        
+        if (!json) {
+            json = {};
+        }
+        if (!json.settings || typeof json.settings === "string") {
+            json.settings = {};
+        }
+        if (!json.settings.$) {
+            json.settings.$ = {};
+            json.settings.$['xmlns'] = 'http://maven.apache.org/SETTINGS/1.0.0';
+            json.settings.$['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance';
+            json.settings.$['xsi:schemaLocation'] = 'http://maven.apache.org/SETTINGS/1.0.0' + os.EOL + 'https://maven.apache.org/xsd/settings-1.0.0.xsd';
+        }
+        if (!json.settings.servers) {
+            json.settings.servers = {};
+        }
+        
+        // addPropToJson logic inlined
+        let obj = json.settings.servers;
+        const propName = 'server';
+        const value = serverJson;
+        
+        if (!obj) {
+            obj = {};
+        }
+
+        // If the root 'obj' already contains a 'server' property set it as the root object.
+        if (obj instanceof Array) {
+            let propNode = obj.find(o => o[propName]);
+            if (propNode) {
+                obj = propNode;
+            }
+        }
+
+        // Checks if an array contains a key
+        let containsId = function(o) {
+            if (value && value.id) {
+                if (o.id instanceof Array) {
+                    return o.id.find((v) => {
+                        return v === value.id;
+                    });
+                } else {
+                    return value.id === o.id;
+                }
+            }
+            return false;
+        };
+
+        if (propName in obj) {
+            if (obj[propName] instanceof Array) {
+                let existing = obj[propName].find(containsId);
+                if (existing) {
+                    tl.warning(tl.loc('Warning_FeedEntryAlreadyExists', value.id));
+                    tl.debug('Entry: ' + value.id);
+                } else {
+                    obj[propName].push(value);
+                }
+            } else if (typeof obj[propName] !== 'object') {
+                obj[propName] = [obj[propName], value];
+            } else {
+                let prop = {};
+                prop[propName] = value;
+                obj[propName] = [obj[propName], value];
+            }
+        } else if (obj instanceof Array) {
+            let existing = obj.find(containsId);
+            if (existing) {
+                tl.warning(tl.loc('Warning_FeedEntryAlreadyExists', value.id));
+                tl.debug('Entry: ' + value.id);
+            } else {
+                let prop = {};
+                prop[propName] = value;
+                obj.push(prop);
+            }
+        } else {
+            obj[propName] = value;
+        }
+        
+        return json;
+    }
+});
+
 // Mock WIF credentials if needed
 if (workloadIdentityServiceConnection) {
     const mockWifModule = {
@@ -147,6 +269,8 @@ if (workloadIdentityServiceConnection) {
 const existAnswers: any = {};
 existAnswers[m2DirPath] = m2FolderExists;
 existAnswers[settingsXmlPath] = settingsXmlExists;
+const backupSettingsXmlPath = path.join(m2DirPath, '_settings.xml');
+existAnswers[backupSettingsXmlPath] = false; // Backup doesn't exist initially
 
 tr.setAnswers({
     osType: {
