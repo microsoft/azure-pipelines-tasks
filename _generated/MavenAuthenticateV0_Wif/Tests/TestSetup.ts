@@ -36,10 +36,17 @@ export const TestEnvVars = {
 const taskPath = path.join(__dirname, '..', 'mavenauth.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Get actual user home directory
-const userHomeDir = process.env.USERPROFILE || process.env.HOME || '';
+// Set user home directory for tests
+const userHomeDir = process.env.USERPROFILE || process.env.HOME || path.join(__dirname, 'testhome');
 const m2DirPath = path.join(userHomeDir, '.m2');
 const settingsXmlPath = path.join(m2DirPath, 'settings.xml');
+
+// Ensure HOME/USERPROFILE environment variables are set for the task
+if (process.platform === 'win32') {
+    process.env.USERPROFILE = userHomeDir;
+} else {
+    process.env.HOME = userHomeDir;
+}
 
 // Read configuration from environment variables
 const artifactsFeeds = process.env[TestEnvVars.artifactsFeeds] || '';
@@ -52,6 +59,11 @@ const m2FolderExists = process.env[TestEnvVars.m2FolderExists] !== 'false';
 const systemAccessToken = process.env[TestEnvVars.systemAccessToken] || TestConstants.systemToken;
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
+
+// Suppress debug output unless explicitly requested
+if (!process.env['SYSTEM_DEBUG']) {
+    delete process.env['SYSTEM_DEBUG'];
+}
 
 // Set task inputs
 tr.setInput('artifactsFeeds', artifactsFeeds);
