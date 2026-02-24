@@ -1,31 +1,31 @@
 {
-    "name": "vsts-azureappconfiguration-snapshot-task",
-    "version": "1.0.0",
-    "description": "The project is a Azure DevOps extension used to create a snapshot in App Configuration store",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
-    },
-    "main": "index.js",
-    "scripts": {
-        "build": "node ../../make.js build --task AzureAppConfigurationSnapshotV1",
-        "serverBuild": "node ../../make.js serverBuild --task AzureAppConfigurationSnapshotV1",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Microsoft Corporation",
-    "license": "MIT",
-    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-    "dependencies": {
-        "@azure/app-configuration": "^1.5.0",
-        "@azure/identity": "^3.1.2",
-        "@types/node": "^20.3.1",
-        "@types/mocha": "^5.2.7",
-        "agent-base": "^6.0.2",
-        "azure-pipelines-tasks-azure-arm-rest": "^3.267.1",
-        "azure-pipelines-task-lib": "^4.13.0",
-        "lodash": "^4.17.21"
-    },
-    "devDependencies": {
-        "typescript": "5.1.6"
-    }
+  "name": "vsts-azureappconfiguration-snapshot-task",
+  "version": "1.0.0",
+  "description": "The project is a Azure DevOps extension used to create a snapshot in App Configuration store",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureAppConfigurationSnapshotV1",
+    "serverBuild": "node ../../make.js serverBuild --task AzureAppConfigurationSnapshotV1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@azure/app-configuration": "^1.5.0",
+    "@azure/identity": "^3.1.2",
+    "@types/node": "^24.10.0",
+    "@types/mocha": "^5.2.7",
+    "agent-base": "^6.0.2",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.270.0",
+    "azure-pipelines-task-lib": "^5.2.4",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
 }

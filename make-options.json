@@ -250,7 +250,7 @@
     "Node24_8": [],
     "Node24_9": [],
     "Node24_10": [],
-    "Node24_overwrite": [],
+    "Node24_overwrite": ["AzureAppConfigurationSnapshotV1"],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
