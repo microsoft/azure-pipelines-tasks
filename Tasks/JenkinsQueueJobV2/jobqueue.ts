@@ -5,7 +5,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
-import * as httpm from 'typed-rest-client/HttpClient';
 
 import { Job } from './job';
 import { JobSearch } from './jobsearch';
@@ -16,16 +15,13 @@ import util = require('./util');
 
 export class JobQueue {
     public TaskOptions: TaskOptions;
-    public HttpClient: httpm.HttpClient;  // Shared HTTP client for all jobs
 
     public RootJob: Job;
     private allJobs: Job[] = [];
     private searches: JobSearch[] = [];
 
-    constructor(taskOptions: TaskOptions, httpClient: httpm.HttpClient) {
+    constructor(taskOptions: TaskOptions) {
         this.TaskOptions = taskOptions;
-        // Reuse the provided HTTP client for all requests
-        this.HttpClient = httpClient;
     }
 
     private intervalId: NodeJS.Timeout;
@@ -272,32 +268,23 @@ export class JobQueue {
             return jobContent;
         }
 
-        function generatePipelineReport(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient, callback: (pipelineReport: string) => void): void {
-            util.getPipelineReport(job, taskOptions, httpClient)
+        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void): void {
+            util.getPipelineReport(job, taskOptions)
                 .then((body) => {
                     if (body) {
-                        try {
-                            const parsedBody: any = JSON.parse(body);
-                            callback(createPipelineReport(job, taskOptions, parsedBody));
-                        } catch (parseError) {
-                            tl.debug(`Failed to parse pipeline report: ${parseError.message}`);
-                            callback(tl.loc('FailedToGenerateSummary'));
-                        }
+                        const parsedBody: any = JSON.parse(body);
+                        callback(createPipelineReport(job, taskOptions, parsedBody));
                     } else {
                         callback(tl.loc('FailedToGenerateSummary'));
                     }
-                })
-                .catch((err) => {
-                    tl.debug(`Failed to get pipeline report: ${err.message}`);
-                    callback(tl.loc('FailedToGenerateSummary'));
                 });
         }
 
-        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, httpClient: httpm.HttpClient, callback: (markdownContent: string) => void): void {
-            util.isPipelineJob(job, taskOptions, httpClient)
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void): void {
+            util.isPipelineJob(job, taskOptions)
                 .then((isPipeline) => {
                     if (isPipeline) {
-                        generatePipelineReport(job, taskOptions, httpClient, callback);
+                        generatePipelineReport(job, taskOptions, callback);
                     } else {
                         callback(walkHierarchy(job, '', 0));
                     }
@@ -311,7 +298,7 @@ export class JobQueue {
         tl.debug('markdown location: ' + linkMarkdownFile);
         const tab: string = '  ';
         const paddingTab: number = 4;
-        generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, thisQueue.HttpClient, (markdownContents) => {
+        generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, (markdownContents) => {
             fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
                 tl.debug('writeFinalMarkdown().writeFile().callback()');
 

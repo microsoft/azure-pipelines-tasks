@@ -90,8 +90,8 @@ describe('JenkinsQueueJob L0 Suite', function () {
         await tr.runAsync();
 
         runValidations(() => {
+            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.length > 0, 'should have written error to stderr');
         }, tr);
     });
 
@@ -102,8 +102,8 @@ describe('JenkinsQueueJob L0 Suite', function () {
         await tr.runAsync();
 
         runValidations(() => {
+            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.length > 0, 'should have written error to stderr');
         }, tr);
     });
 

@@ -3,6 +3,7 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
+import request = require('request');
 
 import { Job } from './job';
 import { JobQueue } from './jobqueue';
@@ -21,7 +22,7 @@ export class JobSearch {
         this.taskUrl = taskUrl;
         this.identifier = identifier;
 
-        this.Initialize().catch((err) => {
+        this.Initialize().fail((err) => {
             throw err;
         });
     }
@@ -37,21 +38,25 @@ export class JobSearch {
     private working: boolean = false;
     private workDelay: number = 0;
 
-    public async Initialize(): Promise<void> {
+    public Initialize(): Q.Promise<void> {
+        const defer: Q.Deferred<void> = Q.defer<void>();
         const thisSearch: JobSearch = this;
         if (!thisSearch.Initialized) { //only initialize once
             const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
             tl.debug('getting job task URL:' + apiTaskUrl);
-            
-            try {
-                const response = await thisSearch.queue.HttpClient.get(apiTaskUrl);
+            request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
                 if (!thisSearch.Initialized) { // only initialize once
-                    const statusCode = response.message.statusCode;
-                    
-                    if (statusCode !== 200) {
-                        throw new Error(util.getFullErrorMessage({ statusCode, statusMessage: response.message.statusMessage }, 'Unable to retrieve job: ' + thisSearch.identifier));
+                    if (err) {
+                        if (err.code == 'ECONNRESET') {
+                            tl.debug(err);
+                            // resolve but do not initialize -- a job will trigger this again
+                            defer.resolve(null);
+                        } else {
+                            defer.reject(err);
+                        }
+                    } else if (httpResponse.statusCode !== 200) {
+                        defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.identifier));
                     } else {
-                        const body = await response.readBody();
                         const parsedBody: any = JSON.parse(body);
                         tl.debug(`parsedBody for: ${apiTaskUrl} : ${JSON.stringify(parsedBody)}`);
                         thisSearch.Initialized = true;
@@ -61,18 +66,16 @@ export class JobSearch {
                         thisSearch.initialSearchBuildNumber = (thisSearch.ParsedTaskBody.lastBuild) ? thisSearch.ParsedTaskBody.lastBuild.number : 1;
                         thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber;
                         thisSearch.searchDirection = -1;  // start searching backwards
+                        defer.resolve(null);
                     }
-                }
-            } catch (err) {
-                if (err.code == 'ECONNRESET') {
-                    tl.debug(err);
-                    // resolve but do not initialize -- a job will trigger this again
-                    return;
                 } else {
-                    throw err;
+                    defer.resolve(null);
                 }
-            }
+            }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
+        } else { // already initialized
+            defer.resolve(null);
         }
+        return defer.promise;
     }
 
     public DoWork(): void {
@@ -220,7 +223,7 @@ export class JobSearch {
      * intial start point and searches forward until the job is found, or a 404 is reached and no more jobs
      * are queued.  At any point, the search also ends if the job is joined to another job.
      */
-    private async locateExecution(): Promise<void> {
+    private locateExecution() {
         const thisSearch: JobSearch = this;
 
         tl.debug('locateExecution()');
@@ -238,18 +241,17 @@ export class JobSearch {
         } else {
             const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions[causes[shortDescription,upstreamBuild,upstreamProject,upstreamUrl]],timestamp');
             tl.debug('pipeline, locating child execution URL:' + url);
-            
-            try {
-                const response = await thisSearch.queue.HttpClient.get(url);
-                const statusCode = response.message.statusCode;
-                const body = await response.readBody();
-
-                tl.debug('locateExecution() completed');
-                if (statusCode === 404) {
+            request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
+                tl.debug('locateExecution().requestCallback()');
+                if (err) {
+                    util.handleConnectionResetError(err); // something went bad
+                    thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
+                    return;
+                } else if (httpResponse.statusCode === 404) {
                     // try again in the future
                     thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
-                } else if (statusCode !== 200) {
-                    util.failReturnCode({ statusCode: statusCode }, 'Job pipeline tracking failed to read downstream project');
+                } else if (httpResponse.statusCode !== 200) {
+                    util.failReturnCode(httpResponse, 'Job pipeline tracking failed to read downstream project');
                 } else {
                     const parsedBody: any = JSON.parse(body);
                     tl.debug(`parsedBody for: ${url} : ${JSON.stringify(parsedBody)}`);
@@ -292,12 +294,9 @@ export class JobSearch {
                     } else {
                         thisSearch.nextSearchBuildNumber++;
                     }
-                    thisSearch.stopWork(0); // immediately poll again because there might be more jobs
+                    return thisSearch.stopWork(0); // immediately poll again because there might be more jobs
                 }
-            } catch (err) {
-                util.handleConnectionResetError(err); // something went bad
-                thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
-            }
+            }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         }
     }
 }

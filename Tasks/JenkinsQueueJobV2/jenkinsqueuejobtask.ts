@@ -7,7 +7,6 @@ import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
 import os = require('os');
-import * as httpm from 'typed-rest-client/HttpClient';
 import util = require('./util');
 
 import { Job } from './job';
@@ -118,12 +117,10 @@ async function doWork() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
         const taskOptions: TaskOptions = new TaskOptions();
-        // Create HTTP client once and reuse for all requests
-        const httpClient: httpm.HttpClient = util.createHttpClient(taskOptions);
-        const jobQueue: JobQueue = new JobQueue(taskOptions, httpClient);
-        const queueUri = await util.pollSubmitJob(taskOptions, httpClient);
+        const jobQueue: JobQueue = new JobQueue(taskOptions);
+        const queueUri = await util.pollSubmitJob(taskOptions);
         console.log(tl.loc('JenkinsJobQueued'));
-        const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions, httpClient);
+        const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
         jobQueue.Start();
         //store the job name in the output variable

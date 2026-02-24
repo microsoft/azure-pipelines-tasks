@@ -5,6 +5,8 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
+import url = require('url');
+import request = require('request');
 
 import { JobSearch } from './jobsearch';
 import { JobQueue } from './jobqueue';
@@ -53,16 +55,11 @@ export class Job {
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
         } else {
             // backup check in case job is running on a different server name than the endpoint
-            try {
-                this.Identifier = new URL(this.TaskUrl).pathname.substring(1);
-            } catch (err) {
-                tl.debug(`Invalid TaskUrl: ${this.TaskUrl}, error: ${err.message}`);
-                this.Identifier = this.TaskUrl; // fallback to using the full URL as identifier
-            }
+            this.Identifier = url.parse(this.TaskUrl).path.substr(1);
             const jobStringIndex: number = this.Identifier.indexOf('job/');
             if (jobStringIndex > 0) {
                 // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl
-                this.Identifier = this.Identifier.substring(jobStringIndex);
+                this.Identifier = this.Identifier.substr(jobStringIndex);
             }
         }
         this.queue.AddJob(this);
@@ -92,38 +89,33 @@ export class Job {
             return;
         } else {
             this.working = true;
-            setTimeout(async () => {
-                try {
-                    switch (this.State) {
-                        case (JobState.New): {
-                            this.initialize();
-                            break;
-                        }
-
-                        case (JobState.Streaming): {
-                            await this.streamConsole();
-                            break;
-                        }
-
-                        case (JobState.Downloading): {
-                            await this.downloadResults();
-                            break;
-                        }
-
-                        case (JobState.Finishing): {
-                            await this.finish();
-                            break;
-                        }
-
-                        default: {
-                            // usually do not get here, but this can happen if another callback caused this job to be joined
-                            this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
-                            break;
-                        }
+            setTimeout(() => {
+                switch (this.State) {
+                    case (JobState.New): {
+                        this.initialize();
+                        break;
                     }
-                } catch (err) {
-                    tl.error(`Error in DoWork: ${err}`);
-                    this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+
+                    case (JobState.Streaming): {
+                        this.streamConsole();
+                        break;
+                    }
+
+                    case (JobState.Downloading): {
+                        this.downloadResults();
+                        break;
+                    }
+
+                    case (JobState.Finishing): {
+                        this.finish();
+                        break;
+                    }
+
+                    default: {
+                        // usually do not get here, but this can happen if another callback caused this job to be joined
+                        this.stopWork(this.queue.TaskOptions.pollIntervalMillis, null);
+                        break;
+                    }
                 }
             }, this.workDelay);
         }
@@ -287,7 +279,7 @@ export class Job {
                 //search not initialized, so try again
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             }
-        }).catch((err) => {
+        }).fail((err) => {
             throw err;
         });
     }
@@ -297,7 +289,7 @@ export class Job {
      *
      * JobState = Finishing, transition to Downloading, Done, or Queued possible
      */
-    private async finish(): Promise<void> {
+    private finish(): void {
         const thisJob: Job = this;
         tl.debug('finish()');
         if (!thisJob.queue.TaskOptions.captureConsole) { // transition to Queued
@@ -305,17 +297,17 @@ export class Job {
         } else { // stay in Finishing, or eventually go to Done
             const resultUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'api/json?tree=result,timestamp');
             thisJob.debug('Tracking completion status of job: ' + resultUrl);
-            try {
-                const response = await thisJob.queue.HttpClient.get(resultUrl);
-                const statusCode = response.message.statusCode;
-                tl.debug('finish() statusCode: ' + statusCode);
-                
-                if (statusCode !== 200) {
-                    console.error(`Job was killed because of an response with unexpected status code from Jenkins - ${statusCode}`);
-                    Util.failReturnCode({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job result');
+            request.get({ url: resultUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
+                tl.debug('finish().requestCallback()');
+                if (err) {
+                    Util.handleConnectionResetError(err); // something went bad
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    return;
+                } else if (httpResponse.statusCode !== 200) {
+                    console.error(`Job was killed because of an response with unexpected status code from Jenkins - ${httpResponse.statusCode}`);
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
                     thisJob.stopWork(0, JobState.Killed);
                 } else {
-                    const body = await response.readBody();
                     const parsedBody: {result: string, timestamp: number} = JSON.parse(body);
                     thisJob.debug(`parsedBody for: ${resultUrl} : ${JSON.stringify(parsedBody)}`);
                     if (parsedBody.result) {
@@ -330,80 +322,82 @@ export class Job {
                         thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                     }
                 }
-            } catch (err) {
-                Util.handleConnectionResetError(err); // something went bad
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-            }
+            }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true);
         }
     }
 
-    private async downloadResults(): Promise<void> {
+    private downloadResults(): void {
         const thisJob: Job = this;
         const downloadUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'team-results/zip');
         tl.debug('downloadResults(), url:' + downloadUrl);
 
-        try {
-            const response = await thisJob.queue.HttpClient.get(downloadUrl);
-            const statusCode = response.message.statusCode;
-
-            tl.debug('downloadResults(), url:' + downloadUrl + ' , statusCode: ' + statusCode);
-
-            if (statusCode === 404) { // expected if there are no results
-                tl.debug('no results to download');
-                thisJob.stopWork(0, JobState.Done);
-            } else if (statusCode === 200) { // successfully found results
-                const destinationFolder: string = path.join(thisJob.queue.TaskOptions.saveResultsTo, thisJob.Name + '/');
-                const fileName: string = path.join(destinationFolder, 'team-results.zip');
-
-                try {
-                    // Create the destination folder if it doesn't exist
-                    if (!tl.exist(destinationFolder)) {
-                        tl.debug('creating results destination folder: ' + destinationFolder);
-                        tl.mkdirP(destinationFolder);
-                    }
-
-                    tl.debug('downloading results file: ' + fileName);
-
-                    // Use stream piping for binary data to avoid corruption
-                    // readBody() returns a string which corrupts binary data when written to file
-                    const file: fs.WriteStream = fs.createWriteStream(fileName);
-                    await new Promise<void>((resolve, reject) => {
-                        response.message
-                            .pipe(file)
-                            .on('error', (err) => reject(err))
-                            .on('finish', () => resolve());
-                    });
-
-                    tl.debug('successfully downloaded results to: ' + fileName);
-                    try {
-                        unzip(fileName, destinationFolder);
-                        thisJob.stopWork(0, JobState.Done);
-                    } catch (e) {
-                        tl.warning('unable to extract results file');
-                        tl.debug(e.message);
-                        process.stderr.write(e + os.EOL);
-                        thisJob.stopWork(0, JobState.Done);
-                    }
-                } catch (err) {
-                    // don't fail the job if the results can not be downloaded successfully
-                    tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
-                    tl.warning(err.message);
-                    process.stderr.write(err + os.EOL);
+        const downloadRequest = request.get({ url: downloadUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL })
+            .auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
+            .on('error', (err) => {
+                Util.handleConnectionResetError(err); // something went bad
+                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+            })
+            .on('response', (response) => {
+                tl.debug('downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage);
+                if (response.statusCode == 404) { // expected if there are no results
+                    tl.debug('no results to download');
                     thisJob.stopWork(0, JobState.Done);
+                } else if (response.statusCode == 200) { // successfully found results
+                    const destinationFolder: string = path.join(thisJob.queue.TaskOptions.saveResultsTo, thisJob.Name + '/');
+                    const fileName: string = path.join(destinationFolder, 'team-results.zip');
+
+                    try {
+                        // Create the destination folder if it doesn't exist
+                        if (!tl.exist(destinationFolder)) {
+                            tl.debug('creating results destination folder: ' + destinationFolder);
+                            tl.mkdirP(destinationFolder);
+                        }
+
+                        tl.debug('downloading results file: ' + fileName);
+
+                        const file: fs.WriteStream = fs.createWriteStream(fileName);
+                        downloadRequest.pipe(file)
+                            .on('error', (err) => { throw err; })
+                            .on('finish', function fileFinished() {
+                                tl.debug('successfully downloaded results to: ' + fileName);
+                                try {
+                                    unzip(fileName, destinationFolder);
+                                    thisJob.stopWork(0, JobState.Done);
+                                } catch (e) {
+                                    tl.warning('unable to extract results file');
+                                    tl.debug(e.message);
+                                    process.stderr.write(e + os.EOL);
+                                    thisJob.stopWork(0, JobState.Done);
+                                }
+                            });
+                    } catch (err) {
+                        // don't fail the job if the results can not be downloaded successfully
+                        tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
+                        tl.warning(err.message);
+                        process.stderr.write(err + os.EOL);
+                        thisJob.stopWork(0, JobState.Done);
+                    }
+                } else { // an unexepected error with results
+                    try {
+                        const warningMessage: string = (response.statusCode >= 500) ?
+                            'A Jenkins error occurred while retrieving results. Results could not be downloaded.' : // Jenkins server error
+                            'Jenkins results could not be downloaded.'; // Any other error
+                        tl.warning(warningMessage);
+                        const warningStream: any = new Util.StringWritable({ decodeStrings: false });
+                        downloadRequest.pipe(warningStream)
+                            .on('error', (err) => { throw err; })
+                            .on('finish', function finished() {
+                                tl.warning(warningStream);
+                                thisJob.stopWork(0, JobState.Done);
+                            });
+                    } catch (err) {
+                        // don't fail the job if the results can not be downloaded successfully
+                        tl.warning(err.message);
+                        process.stderr.write(err + os.EOL);
+                        thisJob.stopWork(0, JobState.Done);
+                    }
                 }
-            } else { // an unexpected error with results
-                const warningMessage: string = (statusCode >= 500) ?
-                    'A Jenkins error occurred while retrieving results. Results could not be downloaded.' : // Jenkins server error
-                    'Jenkins results could not be downloaded.'; // Any other error
-                tl.warning(warningMessage);
-                const body = await response.readBody();
-                tl.warning(body);
-                thisJob.stopWork(0, JobState.Done);
-            }
-        } catch (err) {
-            Util.handleConnectionResetError(err); // something went bad
-            thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-        }
+            });
     }
 
     /**
@@ -411,54 +405,59 @@ export class Job {
      *
      * JobState = Streaming, transition to Finishing possible.
      */
-    private async streamConsole(): Promise<void> {
+    private streamConsole(): void {
         const thisJob: Job = this;
         const fullUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, '/logText/progressiveText/?start=' + thisJob.jobConsoleOffset);
         thisJob.debug('Tracking progress of job URL: ' + fullUrl);
-        
-        try {
-            const response = await thisJob.queue.HttpClient.get(fullUrl);
-            const statusCode = response.message.statusCode;
-            tl.debug('streamConsole() statusCode: ' + statusCode);
-
-            if (statusCode === 404) {
+        request.get({ url: fullUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
+            tl.debug('streamConsole().requestCallback()');
+            if (err) {
+                if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
+                    Util.handleConnectionResetError(err); // something went bad
+                    thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
+                    return;
+                }
+                else {
+                    thisJob.RetryConnection();
+                }
+            } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-            } else if (statusCode === 401) {
-                Util.failReturnCode({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job progress');
-                thisJob.queue.TaskOptions.captureConsole = false;
-                thisJob.queue.TaskOptions.capturePipeline = false;
-                thisJob.queue.TaskOptions.shouldFail = true;
-                thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
-                thisJob.stopWork(0, JobState.Finishing);
-            } else if (statusCode !== 200) {
+            } else if (httpResponse.statusCode === 401) {
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                    thisJob.queue.TaskOptions.captureConsole = false;
+                    thisJob.queue.TaskOptions.capturePipeline = false;
+                    thisJob.queue.TaskOptions.shouldFail = true;
+                    thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
+                    thisJob.stopWork(0, JobState.Finishing);
+            } else if (httpResponse.statusCode !== 200) {
                 if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
-                    Util.failReturnCode({ statusCode, statusMessage: response.message.statusMessage }, 'Job progress tracking failed to read job progress');
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-                } else {
+                }
+                else {
                     thisJob.RetryConnection();
                 }
             } else {
-                const body = await response.readBody();
                 thisJob.consoleLog(thisJob.stripAnsiCodes(body)); // redirect Jenkins console to task console, strip ANSI codes
-                const xMoreData: string = response.message.headers['x-more-data'] as string;
+                const xMoreData: string = httpResponse.headers['x-more-data'];
                 if (xMoreData && xMoreData == 'true') {
-                    const offset: string = response.message.headers['x-text-size'] as string;
+                    const offset: string = httpResponse.headers['x-text-size'];
                     thisJob.jobConsoleOffset = Number.parseInt(offset);
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 } else { // no more console, move to Finishing
                     thisJob.stopWork(0, JobState.Finishing);
                 }
             }
-        } catch (err) {
+        }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
+        .on('error', (err) => {
             if (thisJob.retryNumber >= thisJob.queue.TaskOptions.retryCount) {
-                Util.handleConnectionResetError(err); // something went bad
-                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-            } else {
-                thisJob.consoleLog(err);
-                thisJob.RetryConnection();
+                throw err;
             }
-        }
+            else {
+                thisJob.consoleLog(err); 
+            }
+        });
     }
 
     public EnableConsole() {
