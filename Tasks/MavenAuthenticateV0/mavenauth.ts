@@ -59,6 +59,7 @@ async function run(): Promise<void> {
 
             if (feedIdNames.length === 0) {
                 tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+                return;
             }
             
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName));
@@ -75,7 +76,7 @@ async function run(): Promise<void> {
     
                     settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, wifServerElement);
                     federatedFeedAuthSuccessCount++;
-                    console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
+                    tl.debug(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedName));
                 }
 
                 tl.debug(tl.loc("Info_WritingToSettingsXml"));

@@ -71,7 +71,7 @@ describe('MavenAuthenticate L0 - Workload Identity Federation (WIF)', function (
         await tr.runAsync();
 
         // Assert
-        // Should warn about no endpoints and still succeed
+        // Should warn about no feeds and still succeed
         TestHelpers.assertOutputContains(
             tr,
             'Warning_NoEndpointsToAuth'
