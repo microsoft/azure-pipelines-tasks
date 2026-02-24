@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 269,
-    "Patch": 2
+    "Minor": 270,
+    "Patch": 1
   },
   "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
   "minimumAgentVersion": "2.104.1",
@@ -133,18 +133,24 @@
         "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
         "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
         "DOTNET-ISOLATED|9.0": "DOTNET-ISOLATED|9.0",
+        "DOTNET-ISOLATED|10.0": "DOTNET-ISOLATED|10.0",
         "JAVA|8": "JAVA|8",
         "JAVA|11": "JAVA|11",
         "JAVA|17": "JAVA|17",
         "JAVA|21": "JAVA|21",
+        "JAVA|25": "JAVA|25",
         "NODE|14": "NODE|14",
         "NODE|16": "NODE|16",
         "NODE|18": "NODE|18",
         "NODE|20": "NODE|20",
+        "NODE|22": "NODE|22",
+        "NODE|24": "NODE|24",
         "PYTHON|3.8": "PYTHON|3.8",
         "PYTHON|3.9": "PYTHON|3.9",
         "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
+        "PYTHON|3.11": "PYTHON|3.11",
+        "PYTHON|3.12": "PYTHON|3.12",
+        "PYTHON|3.13": "PYTHON|3.13"
       },
       "visibleRule": "appType = functionAppLinux && isFlexConsumption = false",
       "helpMarkDown": "Refer [this doc](https://docs.microsoft.com/azure/azure-functions/functions-versions#languages) for supported runtime versions.  Old values like `DOCKER|microsoft/azure-functions-*` are deprecated, please use the new values from dropdown."
