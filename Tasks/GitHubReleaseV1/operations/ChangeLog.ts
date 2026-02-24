@@ -115,9 +115,15 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
-                console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
-                return "";
+                // If issue was not found (or is a Discussion), raise a warning and continue with other issues.
+                if (issuesListResponse.body.errors.every(error => error.type === "NOT_FOUND")) {
+                    tl.warning("Some issues were not found. They might be GitHub Discussions or the issue ID might be wrong. Please verify the issue IDs linked in the commits.");
+                }
+                else {
+                    tl.error(tl.loc("IssuesFetchError"));
+                    tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                    return "";
+                }
             }
             else {
                 let changeLog: string = "";
@@ -182,9 +188,15 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
-                console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
-                return "";
+                // If issue was not found (or is a Discussion), raise a warning and continue with other issues.
+                if (issuesListResponse.body.errors.every(error => error.type === "NOT_FOUND")) {
+                    tl.warning("Some issues were not found. They might be GitHub Discussions or the issue ID might be wrong. Please verify the issue IDs linked in the commits.");
+                }
+                else {
+                    console.log(tl.loc("IssuesFetchError"));
+                    tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                    return "";
+                }
             }
             else {
                 let changeLog: string = "";
