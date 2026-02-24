@@ -119,7 +119,10 @@ export async function getPipelineReport(job: Job, taskOptions: TaskOptions, http
             const body = await response.readBody();
             return body;
         } else {
-            throw new Error('Failed to get pipeline report');
+            throw new HttpError(
+                { statusCode: response.message.statusCode, statusMessage: response.message.statusMessage },
+                'Failed to get pipeline report'
+            );
         }
     } catch (err) {
         throw err;
@@ -204,8 +207,7 @@ async function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: 
         } else if (err instanceof HttpError) {
             throw err;
         } else {
-            const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
-            throw error;
+            throw new Error(tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)));
         }
     }
 }

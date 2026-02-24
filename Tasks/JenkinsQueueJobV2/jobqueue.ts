@@ -276,11 +276,20 @@ export class JobQueue {
             util.getPipelineReport(job, taskOptions, httpClient)
                 .then((body) => {
                     if (body) {
-                        const parsedBody: any = JSON.parse(body);
-                        callback(createPipelineReport(job, taskOptions, parsedBody));
+                        try {
+                            const parsedBody: any = JSON.parse(body);
+                            callback(createPipelineReport(job, taskOptions, parsedBody));
+                        } catch (parseError) {
+                            tl.debug(`Failed to parse pipeline report: ${parseError.message}`);
+                            callback(tl.loc('FailedToGenerateSummary'));
+                        }
                     } else {
                         callback(tl.loc('FailedToGenerateSummary'));
                     }
+                })
+                .catch((err) => {
+                    tl.debug(`Failed to get pipeline report: ${err.message}`);
+                    callback(tl.loc('FailedToGenerateSummary'));
                 });
         }
 
