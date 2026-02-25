@@ -239,7 +239,8 @@
         "AzureCLIV2",
         "AzureCLIV3",
         "AzurePowerShellV4",
-        "AzurePowerShellV5"
+        "AzurePowerShellV5",
+        "AzureKeyVaultV2"
     ],
     "Node24_2": [],
     "Node24_3": [],
