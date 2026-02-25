@@ -496,8 +496,9 @@ export class Job {
         }
         return text
             // Remove standard ANSI escape codes (colors, cursor movement, formatting)
-            // Matches: ESC[0m, ESC[32m, ESC[1;31m, etc.
-            .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
+            // Also handles DEC private mode sequences (ESC[?25h, ESC[?25l, etc.)
+            // Matches: ESC[0m, ESC[32m, ESC[1;31m, ESC[?25h, ESC[?25l, etc.
+            .replace(/\x1B\[[0-9;?]*[a-zA-Z]/g, '')
             // Remove Jenkins Pipeline console notes [8mha:////...[0m
             .replace(/\[8mha:[\s\S]*?\[0m/g, '')
             // Remove standalone Jenkins Pipeline console notes (ha:////...base64...)
