@@ -152,6 +152,68 @@ describe('Bash Suite', function () {
         }, taskRunner);
     });
 
+    it('Runs pre-job script correctly', async () => {
+        let tp: string = path.join(__dirname, 'L0PreJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Pre-job script should have succeeded.');
+            assert(tr.stderr.length === 0, 'Pre-job script should not have written to stderr');
+            assert(tr.stdout.indexOf('Running pre-job setup') > 0, 'Pre-job script should have executed correctly');
+        }, tr);
+    });
+
+    it('Skips pre-job script when not provided', async () => {
+        let tp: string = path.join(__dirname, 'L0PreJobSkip.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Pre-job should have succeeded (skipped).');
+            assert(tr.stdout.indexOf('No pre-job script provided') > 0, 'Pre-job should report it was skipped');
+        }, tr);
+    });
+
+    it('Runs post-job script correctly', async () => {
+        let tp: string = path.join(__dirname, 'L0PostJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Post-job script should have succeeded.');
+            assert(tr.stderr.length === 0, 'Post-job script should not have written to stderr');
+            assert(tr.stdout.indexOf('Running post-job cleanup') > 0, 'Post-job script should have executed correctly');
+        }, tr);
+    });
+
+    it('Skips post-job script when not provided', async () => {
+        let tp: string = path.join(__dirname, 'L0PostJobSkip.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Post-job should have succeeded (skipped).');
+            assert(tr.stdout.indexOf('No post-job script provided') > 0, 'Post-job should report it was skipped');
+        }, tr);
+    });
+
+    it('Post-job script does not fail the task on error', async () => {
+        let tp: string = path.join(__dirname, 'L0PostJobFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'Post-job should succeed even when script fails.');
+            assert(tr.warningIssues.length > 0, 'Post-job should have warning issues for failure');
+        }, tr);
+    });
+
     describe('File args env processing tests', () => {
         BashEnvProcessingTests()
 
