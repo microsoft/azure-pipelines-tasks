@@ -1,6 +1,6 @@
 # Introduction
 Creation: 18-05-2023
-Last Update: 2026-02-26 13:42:51
+Last Update: 2026-02-26
 
 This page lists the Azure DevOps tasks that are no longer supported or maintained and are marked as deprecated. These tasks were found under https://github.com/microsoft/azure-pipelines-tasks.
 
