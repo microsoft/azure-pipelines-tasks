@@ -410,7 +410,7 @@ exports.ensureTool = ensureTool;
 const node20Version = '20.20.0';
 exports.node20Version = node20Version;
 
-const node24Version = '24.13.0';
+const node24Version = '24.14.0';
 exports.node24Version = node24Version;
 
 var installNodeAsync = async function (nodeVersion) {
