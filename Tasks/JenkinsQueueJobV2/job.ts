@@ -495,19 +495,24 @@ export class Job {
             return text;
         }
         return text
-            // Remove standard ANSI escape codes (colors, cursor movement, formatting)
-            // Also handles DEC private mode sequences (ESC[?25h, ESC[?25l, etc.)
-            // Matches: ESC[0m, ESC[32m, ESC[1;31m, ESC[?25h, ESC[?25l, etc.
-            .replace(/\x1B\[[0-9;?]*[a-zA-Z]/g, '')
-            // Remove Jenkins Pipeline console notes [8mha:////...[0m
-            .replace(/\[8mha:[\s\S]*?\[0m/g, '')
-            // Remove standalone Jenkins Pipeline console notes (ha:////...base64...)
-            // These are metadata annotations that appear as junk in non-Jenkins consoles
-            .replace(/ha:\/\/\/\/[A-Za-z0-9+\/=]+/g, '')
-            // Remove literal \033[...m sequences (shown in command echo output)
-            .replace(/\\033\[[0-9;]*m/g, '')
-            // Remove orphaned bracket codes [0m, [32m, [1;31m, etc.
-            .replace(/\[[0-9;]*m/g, '');
+            // 1) Remove Jenkins ConsoleNote blocks atomically
+            // Jenkins uses PREAMBLE "\x1B[8mha:" and POSTAMBLE "\x1B[0m"
+            .replace(/\x1B\[8mha:[\s\S]*?\x1B\[0m/g, '')
+
+            // 2) Remove OSC sequences (window titles, hyperlinks)
+            .replace(/\x1B\][^\x07]*(?:\x07|\x1B\\)/g, '')
+
+            // 3) Remove all ANSI CSI sequences (colors, cursor, erase, modes)
+            .replace(/[\x1B\x9B][[\]()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[A-Za-z~]/g, '')
+
+            // 4) Remove residual Jenkins annotations (require 30+ base64 chars for safety)
+            .replace(/ha:\s*[A-Za-z0-9+/=]{30,}/g, '')
+
+            // 5) Remove literal \033[...X sequences (from echo output)
+            .replace(/\\033\[[0-9;]*[A-Za-z]/g, '')
+
+            // 6) Remove orphaned bracket codes [0m, [2J, etc.
+            .replace(/\[\d+(?:;\d*)*[A-Za-z~]/g, '');
     }
 
     private debug(message: string) {
