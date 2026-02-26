@@ -1,0 +1,401 @@
+{
+  "id": "7c8f9a3b-2d4e-4f1a-9b6c-8e5d3a1f7c2b",
+  "name": "BicepDeploy",
+  "friendlyName": "Bicep Deploy",
+  "description": "Deploy and Manage Azure Resources using Bicep Files",
+  "preview": true,
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/bicepdeploytaskreadme)",
+  "category": "Deploy",
+  "visibility": ["Build", "Release"],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 270,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Bicep $(operation) $(name)",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "Azure Details",
+      "isExpanded": true
+    },
+    {
+      "name": "Template",
+      "displayName": "Template",
+      "isExpanded": true
+    },
+    {
+      "name": "DeploymentStack",
+      "displayName": "Deployment Stack Options",
+      "isExpanded": false,
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "type",
+      "type": "pickList",
+      "label": "Execution type",
+      "defaultValue": "deployment",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the execution type: deployment or deploymentStack.",
+      "options": {
+        "deployment": "Deployment",
+        "deploymentStack": "Deployment Stack"
+      }
+    },
+    {
+      "name": "operation",
+      "type": "pickList",
+      "label": "Operation",
+      "defaultValue": "create",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the operation to perform. Deployment supports: create, validate, whatIf. Deployment Stack supports: create, validate, delete.",
+      "options": {
+        "create": "Create or update",
+        "validate": "Validate",
+        "whatIf": "What-If (preview changes)",
+        "delete": "Delete"
+      },
+      "visibleRule": "type = deployment || (type = deploymentStack && operation != whatIf)",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "scope",
+      "type": "pickList",
+      "label": "Deployment scope",
+      "defaultValue": "resourceGroup",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the scope at which resources are deployed.",
+      "options": {
+        "resourceGroup": "Resource Group",
+        "subscription": "Subscription",
+        "managementGroup": "Management Group",
+        "tenant": "Tenant"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "label": "Deployment name",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the name of the deployment or deployment stack. If not provided, a default name will be generated."
+    },
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureResourceManagerConnection"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Select the Azure Resource Manager service connection.",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel >= scope"
+      }
+    },
+    {
+      "name": "subscriptionId",
+      "type": "pickList",
+      "label": "Subscription",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Select the Azure subscription. Required if scope is subscription or resourceGroup.",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope != tenant && scope != managementGroup"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "pickList",
+      "label": "Resource group",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Provide the name of the resource group.",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope = resourceGroup"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "Location",
+      "required": false,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Location to store deployment metadata. Required for subscription, managementGroup, and tenant scopes.",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope != resourceGroup"
+    },
+    {
+      "name": "tenantId",
+      "type": "string",
+      "label": "Tenant ID",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the tenant ID. Required if scope is tenant.",
+      "visibleRule": "scope = tenant"
+    },
+    {
+      "name": "managementGroupId",
+      "type": "string",
+      "label": "Management group ID",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "Specifies the management group ID. Required if scope is managementGroup.",
+      "visibleRule": "scope = managementGroup"
+    },
+    {
+      "name": "templateFile",
+      "type": "filePath",
+      "label": "Template file",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "Specify the path to the Bicep template file (.bicep)."
+    },
+    {
+      "name": "parametersFile",
+      "type": "filePath",
+      "label": "Parameters file",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "Specify the path to the parameters file (.json or .bicepparam)."
+    },
+    {
+      "name": "parameters",
+      "type": "multiLine",
+      "label": "Override parameters",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "Specify inline parameters as a JSON or YAML object. Example: {\"param1\": \"value1\", \"param2\": \"value2\"}"
+    },
+    {
+      "name": "actionOnUnmanageResources",
+      "type": "pickList",
+      "label": "Action on unmanaged resources",
+      "defaultValue": "detach",
+      "required": true,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Specifies the action to take on resources not defined in the template.",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "actionOnUnmanageResourceGroups",
+      "type": "pickList",
+      "label": "Action on unmanaged resource groups",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Specifies the action to take on resource groups not defined in the template.",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "actionOnUnmanageManagementGroups",
+      "type": "pickList",
+      "label": "Action on unmanaged management groups",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Specifies the action to take on management groups not defined in the template.",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "denySettingsMode",
+      "type": "pickList",
+      "label": "Deny settings mode",
+      "defaultValue": "none",
+      "required": true,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Specifies the mode of the deny settings to prevent unauthorized changes.",
+      "options": {
+        "none": "None",
+        "denyDelete": "Deny Delete",
+        "denyWriteAndDelete": "Deny Write and Delete"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "denySettingsExcludedActions",
+      "type": "string",
+      "label": "Deny settings excluded actions",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Comma-separated list of actions to exclude from deny settings.",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "denySettingsExcludedPrincipals",
+      "type": "string",
+      "label": "Deny settings excluded principals",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Comma-separated list of principal IDs to exclude from deny settings.",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "denySettingsApplyToChildScopes",
+      "type": "boolean",
+      "label": "Apply deny settings to child scopes",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "When enabled, deny settings also apply to child scopes of managed resources.",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "bypassStackOutOfSyncError",
+      "type": "boolean",
+      "label": "Bypass stack out of sync error",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "Bypass errors when the deployment stack is out of sync.",
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "label": "Description",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Description for the deployment or deployment stack."
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "label": "Tags",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Tags as JSON or YAML object. Example: {\"Environment\": \"Development\", \"Owner\": \"TeamName\"}",
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "bicepVersion",
+      "type": "string",
+      "label": "Bicep version",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Specify the version of Bicep to use (e.g., '0.38.5'). If not provided, the latest version will be used."
+    },
+    {
+      "name": "maskedOutputs",
+      "type": "string",
+      "label": "Masked outputs",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Comma-separated list of output names to mask values for (e.g., secrets)."
+    },
+    {
+      "name": "environment",
+      "type": "pickList",
+      "label": "Azure environment",
+      "defaultValue": "azureCloud",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Specifies the Azure environment to use.",
+      "options": {
+        "azureCloud": "Azure Cloud",
+        "azureChinaCloud": "Azure China Cloud",
+        "azureGermanCloud": "Azure German Cloud",
+        "azureUSGovernment": "Azure US Government"
+      }
+    },
+    {
+      "name": "whatIfExcludeChangeTypes",
+      "type": "string",
+      "label": "What-If exclude change types",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Comma-separated list of change types to exclude from What-If operation (e.g., noChange, ignore).",
+      "visibleRule": "operation = whatIf"
+    },
+    {
+      "name": "validationLevel",
+      "type": "pickList",
+      "label": "Validation level",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "Validation level for deployment operations.",
+      "options": {
+        "provider": "Provider",
+        "template": "Template",
+        "providerNoRbac": "Provider (No RBAC)"
+      },
+      "visibleRule": "type = deployment && (operation = validate || operation = whatIf)"
+    }
+  ],
+  "messages": {
+    "StartingOperation": "Starting %s %s at %s '%s' scope%s",
+    "UsingTemplateFile": "Using template file: %s",
+    "UsingParametersFile": "Using parameters file: %s",
+    "BicepVersionInstalled": "Installed Bicep version %s to %s",
+    "DiagnosticsReturned": "Diagnostics returned by the API",
+    "FilesIgnoredForDelete": "Template and parameter files are not required for delete operations and will be ignored.",
+    "OperationSucceeded": "Operation completed successfully",
+    "InputRequired": "Input '%s' is required but not provided",
+    "InputMustBeBoolean": "Input '%s' must be a boolean value",
+    "InputMustBeEnum": "Input '%s' must be one of the following values: '%s'",
+    "InputMustBeValidObject": "Input '%s' must be a valid JSON or YAML object",
+    "InputMustBeStringObject": "Input '%s' must be a valid JSON or YAML object containing only string values",
+    "LocationRequired": "Location is required",
+    "TemplateFileRequired": "Template file is required",
+    "UnsupportedTemplateFile": "Unsupported template file type: %s",
+    "UnsupportedParametersFile": "Unsupported parameters file type: %s",
+    "FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
+    "CreateFailed": "Create failed",
+    "ValidationFailed": "Validation failed",
+    "OperationFailed": "Operation failed",
+    "RequestFailedCorrelation": "Request failed. CorrelationId: %s",
+    "InvalidChangeType": "Invalid change type: %s",
+    "UnknownPropertyChangeType": "Unknown property change type: %s.",
+    "InvalidJsonValue": "Invalid JSON value: %s",
+    "FailedToLogout": "The following error occurred while logging out: %s"
+  },
+  "execution": {
+    "Node24": {
+      "target": "main.js"
+    }
+  }
+}

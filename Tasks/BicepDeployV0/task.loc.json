@@ -1,0 +1,404 @@
+{
+  "id": "7c8f9a3b-2d4e-4f1a-9b6c-8e5d3a1f7c2b",
+  "name": "BicepDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "preview": true,
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 270,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "Template",
+      "displayName": "ms-resource:loc.group.displayName.Template",
+      "isExpanded": true
+    },
+    {
+      "name": "DeploymentStack",
+      "displayName": "ms-resource:loc.group.displayName.DeploymentStack",
+      "isExpanded": false,
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "type",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.type",
+      "defaultValue": "deployment",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.type",
+      "options": {
+        "deployment": "Deployment",
+        "deploymentStack": "Deployment Stack"
+      }
+    },
+    {
+      "name": "operation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.operation",
+      "defaultValue": "create",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.operation",
+      "options": {
+        "create": "Create or update",
+        "validate": "Validate",
+        "whatIf": "What-If (preview changes)",
+        "delete": "Delete"
+      },
+      "visibleRule": "type = deployment || (type = deploymentStack && operation != whatIf)",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "scope",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.scope",
+      "defaultValue": "resourceGroup",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.scope",
+      "options": {
+        "resourceGroup": "Resource Group",
+        "subscription": "Subscription",
+        "managementGroup": "Management Group",
+        "tenant": "Tenant"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.name",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.name"
+    },
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureResourceManagerConnection"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel >= scope"
+      }
+    },
+    {
+      "name": "subscriptionId",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.subscriptionId",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.subscriptionId",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope != tenant && scope != managementGroup"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope = resourceGroup"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": false,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.location",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "scope != resourceGroup"
+    },
+    {
+      "name": "tenantId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tenantId",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.tenantId",
+      "visibleRule": "scope = tenant"
+    },
+    {
+      "name": "managementGroupId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.managementGroupId",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.managementGroupId",
+      "visibleRule": "scope = managementGroup"
+    },
+    {
+      "name": "templateFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.templateFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.templateFile"
+    },
+    {
+      "name": "parametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.parametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.parametersFile"
+    },
+    {
+      "name": "parameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.parameters",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.parameters"
+    },
+    {
+      "name": "actionOnUnmanageResources",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.actionOnUnmanageResources",
+      "defaultValue": "detach",
+      "required": true,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.actionOnUnmanageResources",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "actionOnUnmanageResourceGroups",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.actionOnUnmanageResourceGroups",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.actionOnUnmanageResourceGroups",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "actionOnUnmanageManagementGroups",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.actionOnUnmanageManagementGroups",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.actionOnUnmanageManagementGroups",
+      "options": {
+        "delete": "Delete",
+        "detach": "Detach"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "denySettingsMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.denySettingsMode",
+      "defaultValue": "none",
+      "required": true,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.denySettingsMode",
+      "options": {
+        "none": "None",
+        "denyDelete": "Deny Delete",
+        "denyWriteAndDelete": "Deny Write and Delete"
+      },
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "denySettingsExcludedActions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.denySettingsExcludedActions",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.denySettingsExcludedActions",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "denySettingsExcludedPrincipals",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.denySettingsExcludedPrincipals",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.denySettingsExcludedPrincipals",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "denySettingsApplyToChildScopes",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.denySettingsApplyToChildScopes",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.denySettingsApplyToChildScopes",
+      "visibleRule": "type = deploymentStack && denySettingsMode != none"
+    },
+    {
+      "name": "bypassStackOutOfSyncError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.bypassStackOutOfSyncError",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "DeploymentStack",
+      "helpMarkDown": "ms-resource:loc.input.help.bypassStackOutOfSyncError",
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.description",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.description"
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.tags",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.tags",
+      "visibleRule": "type = deploymentStack"
+    },
+    {
+      "name": "bicepVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.bicepVersion",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.bicepVersion"
+    },
+    {
+      "name": "maskedOutputs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.maskedOutputs",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.maskedOutputs"
+    },
+    {
+      "name": "environment",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.environment",
+      "defaultValue": "azureCloud",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.environment",
+      "options": {
+        "azureCloud": "Azure Cloud",
+        "azureChinaCloud": "Azure China Cloud",
+        "azureGermanCloud": "Azure German Cloud",
+        "azureUSGovernment": "Azure US Government"
+      }
+    },
+    {
+      "name": "whatIfExcludeChangeTypes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.whatIfExcludeChangeTypes",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.whatIfExcludeChangeTypes",
+      "visibleRule": "operation = whatIf"
+    },
+    {
+      "name": "validationLevel",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.validationLevel",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.validationLevel",
+      "options": {
+        "provider": "Provider",
+        "template": "Template",
+        "providerNoRbac": "Provider (No RBAC)"
+      },
+      "visibleRule": "type = deployment && (operation = validate || operation = whatIf)"
+    }
+  ],
+  "messages": {
+    "StartingOperation": "ms-resource:loc.messages.StartingOperation",
+    "UsingTemplateFile": "ms-resource:loc.messages.UsingTemplateFile",
+    "UsingParametersFile": "ms-resource:loc.messages.UsingParametersFile",
+    "BicepVersionInstalled": "ms-resource:loc.messages.BicepVersionInstalled",
+    "DiagnosticsReturned": "ms-resource:loc.messages.DiagnosticsReturned",
+    "FilesIgnoredForDelete": "ms-resource:loc.messages.FilesIgnoredForDelete",
+    "OperationSucceeded": "ms-resource:loc.messages.OperationSucceeded",
+    "InputRequired": "ms-resource:loc.messages.InputRequired",
+    "InputMustBeBoolean": "ms-resource:loc.messages.InputMustBeBoolean",
+    "InputMustBeEnum": "ms-resource:loc.messages.InputMustBeEnum",
+    "InputMustBeValidObject": "ms-resource:loc.messages.InputMustBeValidObject",
+    "InputMustBeStringObject": "ms-resource:loc.messages.InputMustBeStringObject",
+    "LocationRequired": "ms-resource:loc.messages.LocationRequired",
+    "TemplateFileRequired": "ms-resource:loc.messages.TemplateFileRequired",
+    "UnsupportedTemplateFile": "ms-resource:loc.messages.UnsupportedTemplateFile",
+    "UnsupportedParametersFile": "ms-resource:loc.messages.UnsupportedParametersFile",
+    "FailedToDetermineScope": "ms-resource:loc.messages.FailedToDetermineScope",
+    "CreateFailed": "ms-resource:loc.messages.CreateFailed",
+    "ValidationFailed": "ms-resource:loc.messages.ValidationFailed",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "RequestFailedCorrelation": "ms-resource:loc.messages.RequestFailedCorrelation",
+    "InvalidChangeType": "ms-resource:loc.messages.InvalidChangeType",
+    "UnknownPropertyChangeType": "ms-resource:loc.messages.UnknownPropertyChangeType",
+    "InvalidJsonValue": "ms-resource:loc.messages.InvalidJsonValue",
+    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout"
+  },
+  "execution": {
+    "Node24": {
+      "target": "main.js"
+    }
+  }
+}

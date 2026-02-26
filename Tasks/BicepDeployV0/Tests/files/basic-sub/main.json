@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.30.23.60470",
+      "templateHash": "16476773654784878732"
+    }
+  },
+  "parameters": {
+    "stringParam": {
+      "type": "string"
+    },
+    "intParam": {
+      "type": "int"
+    },
+    "objectParam": {
+      "type": "object"
+    }
+  },
+  "resources": [],
+  "outputs": {
+    "stringOutput": {
+      "type": "string",
+      "value": "[parameters('stringParam')]"
+    },
+    "intOutput": {
+      "type": "int",
+      "value": "[parameters('intParam')]"
+    },
+    "objectOutput": {
+      "type": "object",
+      "value": "[parameters('objectParam')]"
+    }
+  }
+}
