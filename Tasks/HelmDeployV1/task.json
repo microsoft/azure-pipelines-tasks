@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 269,
-    "Patch": 1
+    "Minor": 270,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -530,6 +530,10 @@
     "Node20_1": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -543,6 +547,10 @@
     "Node20_1": {
       "target": "src//helm.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -554,6 +562,10 @@
       "target": "src//deletesecurefiles.js"
     },
     "Node20_1": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
     }
