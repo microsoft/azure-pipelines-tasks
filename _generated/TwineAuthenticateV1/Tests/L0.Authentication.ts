@@ -162,19 +162,38 @@ describe('TwineAuthenticate L0 Suite - Authentication', function () {
             const fileContent = fs.readFileSync(pypircFile, 'utf-8');
             const lines = fileContent.split(/\r?\n/);
             
-            // Check format
+            // [distutils] header and index-servers lists the feed name
             assert.strictEqual(lines[0], testConstants.TestData.pypircDistutils,
                 'First line should be [distutils]');
-            assert(lines[1].startsWith(testConstants.TestData.pypircIndexServers),
-                'Second line should be index-servers=');
-            
-            // Should have repository config
-            assert(fileContent.includes(testConstants.TestData.pypircRepository),
-                'Should have repository field');
-            assert(fileContent.includes(testConstants.TestData.pypircUsername),
-                'Should have username field');
-            assert(fileContent.includes(testConstants.TestData.pypircPassword),
-                'Should have password field');
+            assert.strictEqual(
+                lines[1],
+                `${testConstants.TestData.pypircIndexServers}${testConstants.TestData.singleFeed}`,
+                `index-servers line should be "index-servers=${testConstants.TestData.singleFeed}"`
+            );
+
+            // Feed section header
+            assert(
+                fileContent.includes(`[${testConstants.TestData.singleFeed}]`),
+                'Should have feed section header matching the feed name'
+            );
+
+            // Repository URL comes from the mock (getPackagingRouteUrl returns https://vsts/packagesource/<feedId>)
+            assert(
+                fileContent.includes(`repository=https://vsts/packagesource/${testConstants.TestData.singleFeed}`),
+                'repository= should contain the feed URL from the location mock'
+            );
+
+            // username is always "build" for internal ADO feeds
+            assert(
+                fileContent.includes('username=build'),
+                'username= should be "build" for internal feeds'
+            );
+
+            // password is the system access token
+            assert(
+                fileContent.includes(`password=${testConstants.TestData.defaultAccessToken}`),
+                `password= should be the system access token — got:\n${fileContent}`
+            );
         });
     });
 

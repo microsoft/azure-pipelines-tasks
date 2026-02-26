@@ -45,6 +45,36 @@ if (process.env[testConstants.TestEnvVars.systemTeamFoundationCollectionUri]) {
 const pkgMock = require('azure-pipelines-tasks-artifacts-common/Tests/MockHelper');
 pkgMock.registerLocationHelpersMock(tr);
 
+// Override connectionDataUtils to produce clean, predictable feed URLs with the feed name
+// visible in the path. The default mock from registerLocationHelpersMock can produce garbled
+// output under nyc's --all instrumentation, breaking URL-content assertions.
+const collectionBase = (process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] || 'https://dev.azure.com/testorg/').replace(/\/$/, '');
+tr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', {
+    getPackagingRouteUrl: function(protocolType: any, apiVersion: string, locationGuid: string, feedId: string, project: string | null): string {
+        const projectSegment = project ? `${project}/` : '';
+        return `${collectionBase}/${projectSegment}_packaging/${feedId}/pypi/simple/`;
+    }
+});
+
+// Override webapi mock to return the test-specific access token.
+// MockHelper hardcodes 'token' for getSystemAccessToken, which would prevent
+// asserting that the correct token was embedded in the authentication URL.
+const testSystemAccessToken = process.env['SYSTEM_ACCESSTOKEN'] || 'token';
+tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
+    getSystemAccessToken: function() {
+        return testSystemAccessToken;
+    },
+    getWebApiWithProxy: function(serviceUri: string, accessToken: string) {
+        return {
+            vsoClient: {
+                getVersioningData: function(ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj: any) {
+                    return Promise.resolve({ requestUrl: 'foobar' });
+                }
+            }
+        };
+    }
+});
+
 // Register mock for utilities module that has getUriWithCredentials
 tr.registerMock('./utilities', {
     addCredentialsToUri: function(username: string, password: string, feedUri: string) {

@@ -2,6 +2,7 @@
 
 import * as path from 'path';
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestConstants } from './TestConstants';
@@ -40,7 +41,22 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // Task creates settings.xml with feed authentication
+
+        // Verify the settings.xml was written with the correct server credential block
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should have been written by the task');
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.feeds.feedName1}</id>`),
+            `settings.xml should contain server <id>${TestConstants.feeds.feedName1}</id>`
+        );
+        assert(
+            xmlContent!.includes('<username>AzureDevOps</username>'),
+            'settings.xml should contain <username>AzureDevOps</username>'
+        );
+        assert(
+            xmlContent!.includes(`<password>${TestConstants.systemToken}</password>`),
+            `settings.xml should embed the system access token as the server password`
+        );
     });
 
     it('should handle multiple feeds', async () => {
@@ -56,6 +72,18 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
+
+        // Verify both feed server entries are written to settings.xml
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should have been written for multiple feeds');
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.feeds.feedName1}</id>`),
+            `settings.xml should contain server entry for ${TestConstants.feeds.feedName1}`
+        );
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.feeds.feedName2}</id>`),
+            `settings.xml should contain server entry for ${TestConstants.feeds.feedName2}`
+        );
     });
 
     it('should preserve existing settings.xml entries', async () => {
@@ -72,7 +100,18 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // Task should preserve existing otherFeedName and add feedName1
+
+        // Verify the new feed was added AND the pre-existing server entry was preserved
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should have been written');
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.feeds.otherFeedName}</id>`),
+            `Pre-existing server entry <id>${TestConstants.feeds.otherFeedName}</id> should be preserved`
+        );
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.feeds.feedName1}</id>`),
+            `New server entry <id>${TestConstants.feeds.feedName1}</id> should be added`
+        );
     });
 
     // Note: Duplicate feed warning test skipped due to mock infrastructure limitations
@@ -94,6 +133,13 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // Task uses custom token for authentication
+
+        // Verify the specific token was embedded as the server password
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should have been written');
+        assert(
+            xmlContent!.includes(`<password>${customToken}</password>`),
+            `settings.xml server password should be the custom System.AccessToken value`
+        );
     });
 });

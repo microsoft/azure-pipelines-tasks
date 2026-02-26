@@ -1,7 +1,10 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as testConstants from './TestConstants';
+
+const pypircPath = path.join(__dirname, 'temp', '.pypirc');
 
 /**
  * Helper methods for TwineAuthenticateV1 tests
@@ -25,6 +28,12 @@ export class TestHelpers {
         
         // Clear pypirc-specific environment variables
         delete process.env['PYPIRC_PATH'];
+
+        // Remove any .pypirc left over from a previous test so content assertions
+        // always reflect only the current test's run.
+        if (fs.existsSync(pypircPath)) {
+            fs.unlinkSync(pypircPath);
+        }
     }
 
     /**
@@ -44,6 +53,11 @@ export class TestHelpers {
         delete process.env['SYSTEM_ACCESSTOKEN'];
         delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
         delete process.env['SYSTEM_DEBUG'];
+
+        // Delete the .pypirc written during the test so it cannot bleed into the next test.
+        if (fs.existsSync(pypircPath)) {
+            fs.unlinkSync(pypircPath);
+        }
     }
 
     /**

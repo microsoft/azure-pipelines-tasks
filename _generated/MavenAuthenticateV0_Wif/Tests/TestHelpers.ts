@@ -1,6 +1,8 @@
 // Test helper functions for MavenAuthenticate L0 tests
 
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestEnvVars } from './TestSetup';
 
@@ -30,6 +32,41 @@ export class TestHelpers {
         Object.values(TestEnvVars).forEach(envVar => {
             delete process.env[envVar];
         });
+        TestHelpers.cleanupTestFiles();
+    }
+
+    /**
+     * Return the path to the settings.xml written during tests.
+     * Mirrors the path computed in TestSetup.ts.
+     */
+    static getSettingsXmlPath(): string {
+        return path.join(__dirname, 'testhome', '.m2', 'settings.xml');
+    }
+
+    /**
+     * Delete any settings.xml (and backup) written during the test run.
+     */
+    static cleanupTestFiles(): void {
+        const settingsXmlPath = TestHelpers.getSettingsXmlPath();
+        if (fs.existsSync(settingsXmlPath)) {
+            fs.unlinkSync(settingsXmlPath);
+        }
+        const backupPath = path.join(__dirname, 'testhome', '.m2', '_settings.xml');
+        if (fs.existsSync(backupPath)) {
+            fs.unlinkSync(backupPath);
+        }
+    }
+
+    /**
+     * Read the settings.xml file written by the task and return its content.
+     * Returns null if the file was not written.
+     */
+    static readSettingsXml(): string | null {
+        const settingsXmlPath = TestHelpers.getSettingsXmlPath();
+        if (!fs.existsSync(settingsXmlPath)) {
+            return null;
+        }
+        return fs.readFileSync(settingsXmlPath, 'utf-8');
     }
 
     /**

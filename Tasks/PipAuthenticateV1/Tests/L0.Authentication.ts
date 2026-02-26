@@ -47,12 +47,14 @@ describe('PipAuthenticate L0 Suite - Authentication', function () {
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.pipIndexUrlVar);
             
-            // Verify the URL contains the feed name and credentials
+            // Verify the URL embeds the correct credentials: build:<token>@<host>
             const pipIndexUrl = TestHelpers.extractEnvironmentVariable(tr.stdout, testConstants.TestData.pipIndexUrlVar);
             assert(pipIndexUrl && pipIndexUrl.indexOf(testConstants.TestData.singleFeed) >= 0,
                 'PIP_INDEX_URL should contain feed name');
-            assert(pipIndexUrl && pipIndexUrl.indexOf('build:') >= 0,
-                'PIP_INDEX_URL should contain authentication credentials');
+            assert(
+                pipIndexUrl && pipIndexUrl.includes(`build:${testConstants.TestData.defaultAccessToken}@`),
+                `PIP_INDEX_URL should embed the token as "build:<token>@" — got: ${pipIndexUrl}`
+            );
             
             // Extra index should not be set for single feed
             TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.pipExtraIndexUrlVar);

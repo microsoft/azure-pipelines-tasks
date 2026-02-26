@@ -49,6 +49,25 @@ if (!fs.existsSync(tempDir)) {
 const pkgMock = require('azure-pipelines-tasks-artifacts-common/Tests/MockHelper');
 pkgMock.registerLocationHelpersMock(tr);
 
+// Override webapi mock to return the test-specific access token.
+// MockHelper hardcodes 'token' for getSystemAccessToken, which would prevent
+// asserting that the correct token appears in .pypirc credentials.
+const testSystemAccessToken = process.env['SYSTEM_ACCESSTOKEN'] || 'token';
+tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
+    getSystemAccessToken: function() {
+        return testSystemAccessToken;
+    },
+    getWebApiWithProxy: function(serviceUri: string, accessToken: string) {
+        return {
+            vsoClient: {
+                getVersioningData: function(ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj: any) {
+                    return Promise.resolve({ requestUrl: 'foobar' });
+                }
+            }
+        };
+    }
+});
+
 // Mock serviceConnectionUtils for external endpoints
 tr.registerMock('azure-pipelines-tasks-artifacts-common/serviceConnectionUtils', {
     getPackagingServiceConnections: function(inputKey: string) {

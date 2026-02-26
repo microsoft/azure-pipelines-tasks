@@ -161,7 +161,13 @@ tr.registerMock('./mavenutils', {
         return { settings: {} };
     },
     jsonToXmlConverter: async (filePath: string, jsonContent: any) => {
-        // Mock - no-op for tests
+        // Write actual XML so tests can assert the server credential configuration.
+        const xml2jsLib = require('xml2js');
+        const fsLib = require('fs');
+        const pathLib = require('path');
+        fsLib.mkdirSync(pathLib.dirname(filePath), { recursive: true });
+        const builder = new xml2jsLib.Builder();
+        fsLib.writeFileSync(filePath, builder.buildObject(jsonContent));
         return Promise.resolve();
     },
     addRepositoryEntryToSettingsJson: function(json: any, serverJson:any): any {
