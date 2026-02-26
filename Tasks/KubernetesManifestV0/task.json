@@ -233,9 +233,10 @@
       "options": {
         "deployment": "deployment",
         "replicaset": "replicaset",
-        "statefulset": "statefulset"
+        "statefulset": "statefulset",
+        "replicationcontroller": "replicationcontroller"
       },
-      "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
+      "helpMarkDown": "Kind of K8s object; deployment, replicaset, statefulset, replicationcontroller etc.",
       "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
