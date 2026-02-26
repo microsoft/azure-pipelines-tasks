@@ -173,7 +173,7 @@ describe('Bash Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'Pre-job should have succeeded (skipped).');
-            assert(tr.stdout.indexOf('No pre-job script provided') > 0, 'Pre-job should report it was skipped');
+            assert(tr.stdout.indexOf('loc_mock_PreJobScriptNotProvided') > 0, 'Pre-job should report it was skipped');
         }, tr);
     });
 
@@ -198,7 +198,7 @@ describe('Bash Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'Post-job should have succeeded (skipped).');
-            assert(tr.stdout.indexOf('No post-job script provided') > 0, 'Post-job should report it was skipped');
+            assert(tr.stdout.indexOf('loc_mock_PostJobScriptNotProvided') > 0, 'Post-job should report it was skipped');
         }, tr);
     });
 

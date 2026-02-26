@@ -11,8 +11,8 @@ async function run() {
 
         // If no pre-job script is provided, skip execution
         if (!preJobScript || preJobScript.trim() === '') {
-            console.log('No pre-job script provided. Skipping pre-job execution.');
-            tl.setResult(tl.TaskResult.Succeeded, 'No pre-job script provided', true);
+            console.log(tl.loc('PreJobScriptNotProvided'));
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('PreJobScriptNotProvided'), true);
             return;
         }
 

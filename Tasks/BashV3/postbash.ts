@@ -11,8 +11,8 @@ async function run() {
 
         // If no post-job script is provided, skip execution
         if (!postJobScript || postJobScript.trim() === '') {
-            console.log('No post-job script provided. Skipping post-job execution.');
-            tl.setResult(tl.TaskResult.Succeeded, 'No post-job script provided', true);
+            console.log(tl.loc('PostJobScriptNotProvided'));
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('PostJobScriptNotProvided'), true);
             return;
         }
 
@@ -35,7 +35,7 @@ async function run() {
 
         // Post-job scripts should not fail the pipeline, only warn
         if (bashResult.result === tl.TaskResult.Failed) {
-            tl.warning('Post-job script failed but not failing the task');
+            tl.warning(tl.loc('PostJobScriptFailed', bashResult.exitCode));
         }
 
         tl.setResult(tl.TaskResult.Succeeded, null, true);
