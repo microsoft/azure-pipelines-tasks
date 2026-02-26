@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 270,
     "Patch": 0
   },
   "satisfies": [
@@ -80,6 +80,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "usenode.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "usenode.js",
       "argumentFormat": ""
     }
