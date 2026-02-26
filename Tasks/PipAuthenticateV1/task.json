@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 271,
     "Patch": 0
   },
   "runsOn": [
@@ -106,6 +106,8 @@
     "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "FailedToAddAuthentication": "Failed to add authentication.",
+    "Error_MissingWifServiceConnection": "feedUrl was provided but workloadIdentityServiceConnection was not. Both inputs are required for Workload Identity Federation.",
+    "Error_MissingWifFeedUrl": "workloadIdentityServiceConnection was provided but feedUrl was not. Both inputs are required for Workload Identity Federation.",
     "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   }

@@ -25,6 +25,8 @@
   "loc.messages.FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
+  "loc.messages.Error_MissingWifServiceConnection": "feedUrl was provided but workloadIdentityServiceConnection was not. Both inputs are required for Workload Identity Federation.",
+  "loc.messages.Error_MissingWifFeedUrl": "workloadIdentityServiceConnection was provided but feedUrl was not. Both inputs are required for Workload Identity Federation.",
   "loc.messages.Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
   "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s" 
 }
