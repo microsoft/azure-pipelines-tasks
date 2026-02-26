@@ -447,6 +447,8 @@ Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
+Tasks/UniversalPackagesV1/     @microsoft/azure-artifacts-packages
+
 Tasks/UseDotNetV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/UseNodeV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani

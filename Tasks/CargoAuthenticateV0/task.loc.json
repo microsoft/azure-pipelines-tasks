@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 262,
-    "Patch": 0
+    "Minor": 270,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -45,6 +45,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
     }

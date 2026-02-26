@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 263,
-    "Patch": 5
+    "Minor": 270,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -74,6 +74,10 @@
     "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -88,8 +92,8 @@
     "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.263.4",
+    "Default": "1.270.2",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.263.5"
+    "wif_242": "1.270.3"
   }
 }
