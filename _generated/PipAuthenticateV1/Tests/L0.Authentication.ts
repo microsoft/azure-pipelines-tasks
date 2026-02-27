@@ -105,6 +105,13 @@ describe('PipAuthenticate L0 Suite - Authentication', function () {
                 'PIP_EXTRA_INDEX_URL should contain second feed');
             assert(pipExtraIndexUrl && pipExtraIndexUrl.indexOf('Feed3') >= 0,
                 'PIP_EXTRA_INDEX_URL should contain third feed');
+
+            // Credentials must be embedded in EXTRA_INDEX_URL entries too, not just INDEX_URL.
+            // A regression that strips auth from extra feeds would pass without this check.
+            assert(
+                pipExtraIndexUrl && pipExtraIndexUrl.includes(`build:${testConstants.TestData.defaultAccessToken}@`),
+                `PIP_EXTRA_INDEX_URL should embed credentials as "build:<token>@" — got: ${pipExtraIndexUrl}`
+            );
         });
 
         it('respects onlyAddExtraIndex flag', async () => {

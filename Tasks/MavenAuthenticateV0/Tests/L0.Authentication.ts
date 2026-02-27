@@ -6,19 +6,11 @@ import * as fs from 'fs';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestConstants } from './TestConstants';
-import { TestEnvVars } from './TestSetup';
+import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 describe('MavenAuthenticate L0 - Feed Authentication', function () {
     this.timeout(20000);
-
-    before(function () {
-        // Placeholder for any global setup
-    });
-
-    after(function () {
-        // Placeholder for any global cleanup
-    });
 
     beforeEach(function () {
         TestHelpers.beforeEach();
@@ -56,6 +48,14 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
         assert(
             xmlContent!.includes(`<password>${TestConstants.systemToken}</password>`),
             `settings.xml should embed the system access token as the server password`
+        );
+
+        // Verify the file is at the agent home dir path ($USERPROFILE/.m2/).
+        // TestSetup redirects USERPROFILE/HOME to __dirname/testhome, so the file must appear there.
+        const settingsXmlPath = TestHelpers.getSettingsXmlPath();
+        assert(
+            fs.existsSync(settingsXmlPath),
+            `settings.xml must be written at the agent home path: ${settingsXmlPath}`
         );
     });
 
@@ -113,10 +113,6 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
             `New server entry <id>${TestConstants.feeds.feedName1}</id> should be added`
         );
     });
-
-    // Note: Duplicate feed warning test skipped due to mock infrastructure limitations
-    // The real implementation correctly detects and warns about duplicates, but the warning
-    // is called from within a mocked module where tl.warning() calls aren't tracked by MockTestRunner
 
     it('should use System.AccessToken for authentication', async () => {
         // Arrange

@@ -18,19 +18,10 @@ export interface MavenTestOptions {
     wifShouldFail?: boolean;
 }
 
-// Environment variable keys for test configuration
-export const TestEnvVars = {
-    artifactsFeeds: '__artifactsFeeds__',
-    mavenServiceConnections: '__mavenServiceConnections__',
-    workloadIdentityServiceConnection: '__workloadIdentityServiceConnection__',
-    verbosity: '__verbosity__',
-    settingsXmlExists: '__settingsXmlExists__',
-    settingsXmlContent: '__settingsXmlContent__',
-    m2FolderExists: '__m2FolderExists__',
-    systemAccessToken: '__systemAccessToken__',
-    wifToken: '__wifToken__',
-    wifShouldFail: '__wifShouldFail__'
-};
+// TestEnvVars lives in TestConstants.ts — import from there so test files
+// can consume it without loading azure-pipelines-task-lib into the mocha process.
+import { TestEnvVars } from './TestConstants';
+export { TestEnvVars };
 
 // When this file is executed by MockTestRunner
 const taskPath = path.join(__dirname, '..', 'mavenauth.js');
@@ -58,10 +49,10 @@ const systemAccessToken = process.env[TestEnvVars.systemAccessToken] || TestCons
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
 
-// Suppress debug output unless explicitly requested
-if (!process.env['SYSTEM_DEBUG']) {
-    delete process.env['SYSTEM_DEBUG'];
-}
+// Suppress debug output in tests — SYSTEM_DEBUG=true is set globally by make.js
+// for the test-runner process but should not be inherited by the task child process.
+// Only propagate it if a test explicitly requests it via TestEnvVars.
+delete process.env['SYSTEM_DEBUG'];
 
 // Set task inputs
 tr.setInput('artifactsFeeds', artifactsFeeds);
@@ -300,4 +291,8 @@ if (settingsXmlExists && settingsXmlContent) {
     });
 }
 
-tr.run();
+// Only run when this file is executed directly by MockTestRunner
+// (not when require'd by test files to access exported TestEnvVars)
+if (require.main === module) {
+    tr.run();
+}

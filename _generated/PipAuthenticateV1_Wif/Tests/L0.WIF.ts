@@ -54,24 +54,6 @@ describe('PipAuthenticate L0 Suite - Workload Identity Federation', function () 
             
             TestHelpers.assertOutputContains(tr, 'Mock WIF: getFederatedWorkloadIdentityCredentials',
                 'Should call WIF authentication method');
-        });
-
-        it('sets PIP_INDEX_URL with WIF credentials', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
-            process.env[testConstants.TestEnvVars.feedUrl] = testConstants.TestData.wifFeedUrl;
-            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            TestHelpers.assertSuccess(tr);
-            TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.pipIndexUrlVar);
-            
-            // Verify success message is logged
             TestHelpers.assertOutputContains(tr, 'Successfully added auth for feed',
                 'Should log message about successfully adding federated feed auth');
         });

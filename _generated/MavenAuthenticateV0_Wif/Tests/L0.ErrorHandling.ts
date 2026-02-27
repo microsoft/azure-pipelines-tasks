@@ -5,7 +5,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestConstants } from './TestConstants';
-import { TestEnvVars } from './TestSetup';
+import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 describe('MavenAuthenticate L0 - Error Handling', function () {
@@ -39,10 +39,6 @@ describe('MavenAuthenticate L0 - Error Handling', function () {
         );
         TestHelpers.assertSuccess(tr, 'Task should succeed with warning');
     });
-
-    // Note: Duplicate feed warning test skipped due to mock infrastructure limitations
-    // The real implementation correctly detects and warns about duplicates, but the warning
-    // is called from within a mocked module where tl.warning() calls aren't tracked by MockTestRunner
 
     it('should handle missing .m2 folder', async () => {
         // Arrange

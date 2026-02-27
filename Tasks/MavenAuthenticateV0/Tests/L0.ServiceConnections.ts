@@ -5,19 +5,11 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestConstants } from './TestConstants';
-import { TestEnvVars } from './TestSetup';
+import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 describe('MavenAuthenticate L0 - Service Connections', function () {
     this.timeout(20000);
-
-    before(function () {
-        // Placeholder for any global setup
-    });
-
-    after(function () {
-        // Placeholder for any global cleanup
-    });
 
     beforeEach(function () {
         TestHelpers.beforeEach();
@@ -40,7 +32,16 @@ describe('MavenAuthenticate L0 - Service Connections', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // Task creates settings.xml with tokenBased service connection
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should be written for token-based service connection');
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.serviceConnections.tokenBased.id}</id>`),
+            'settings.xml should contain the service connection repository id'
+        );
+        assert(
+            xmlContent!.includes(`<password>${TestConstants.serviceConnections.tokenBased.token}</password>`),
+            'settings.xml should contain the service connection token as the server password'
+        );
     });
 
     it('should add auth for username/password service connection', async () => {
@@ -56,6 +57,20 @@ describe('MavenAuthenticate L0 - Service Connections', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
+        const xmlContent = TestHelpers.readSettingsXml();
+        assert(xmlContent !== null, 'settings.xml should be written for username/password service connection');
+        assert(
+            xmlContent!.includes(`<id>${TestConstants.serviceConnections.usernamePassword.id}</id>`),
+            'settings.xml should contain the service connection repository id'
+        );
+        assert(
+            xmlContent!.includes(`<username>${TestConstants.serviceConnections.usernamePassword.username}</username>`),
+            'settings.xml should contain the service connection username'
+        );
+        assert(
+            xmlContent!.includes(`<password>${TestConstants.serviceConnections.usernamePassword.password}</password>`),
+            'settings.xml should contain the service connection password'
+        );
     });
 
     it('should add auth for private key service connection', async () => {

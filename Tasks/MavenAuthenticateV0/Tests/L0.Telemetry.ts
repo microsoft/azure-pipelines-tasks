@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { TestConstants } from './TestConstants';
-import { TestEnvVars } from './TestSetup';
+import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 describe('MavenAuthenticate L0 - Telemetry', function () {

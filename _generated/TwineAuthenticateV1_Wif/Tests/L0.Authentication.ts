@@ -69,7 +69,6 @@ describe('TwineAuthenticate L0 Suite - Authentication', function () {
             
             // Assert
             TestHelpers.assertSuccess(tr);
-            // Secret marking happens in authentication.ts
             TestHelpers.assertMarkedAsSecret(tr);
         });
 
@@ -136,10 +135,31 @@ describe('TwineAuthenticate L0 Suite - Authentication', function () {
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertEnvironmentVariableSet(tr, testConstants.TestData.pypircPathVar);
             
-            // Verify PYPIRC_PATH was set with external endpoints configuration
-            const pypircPath = TestHelpers.extractEnvironmentVariable(tr.stdout, testConstants.TestData.pypircPathVar);
-            assert(pypircPath && pypircPath.indexOf('.pypirc') >= 0,
-                'PYPIRC_PATH should be set for external endpoints');
+            // Verify the external endpoint section was written to .pypirc with correct credentials.
+            // The TestSetup configures ENDPOINT_URL/AUTH env vars so the task can resolve the
+            // endpoint — without these the external section would be silently omitted.
+            const pypircFile = path.join(tempDir, '.pypirc');
+            const fileContent = fs.readFileSync(pypircFile, 'utf-8');
+
+            // Both feeds should appear in index-servers
+            assert(
+                fileContent.includes(testConstants.TestData.singleFeed),
+                '.pypirc should list the internal feed'
+            );
+            assert(
+                fileContent.includes(testConstants.TestData.externalServiceEndpoint),
+                '.pypirc should list the external endpoint section'
+            );
+
+            // External endpoint section must have the repository URL and token credential
+            assert(
+                fileContent.includes(`repository=https://external.pypi.org/${testConstants.TestData.externalServiceEndpoint}/simple/`),
+                'External endpoint repository= should use the mocked endpoint URL'
+            );
+            assert(
+                fileContent.includes(`password=${testConstants.TestData.externalEndpointToken}`),
+                'External endpoint password= should be the api token from the service connection'
+            );
         });
     });
 

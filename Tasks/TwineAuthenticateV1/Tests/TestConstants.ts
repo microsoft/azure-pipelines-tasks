@@ -48,6 +48,7 @@ export const TestData = {
     
     // Service endpoints
     externalServiceEndpoint: 'TestExternalEndpoint',
+    externalEndpointToken: 'external-test-token-abc123',
     wifServiceConnection: 'TestWifServiceConnection',
     
     // Pypirc content sections

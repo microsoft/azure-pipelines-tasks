@@ -116,6 +116,26 @@ tr.registerMock('./utilities', {
     }
 });
 
+// Wire up external endpoint data so tl.getEndpointUrl / getEndpointAuthorization
+// return real values when the test sets the externalEndpoints env var.
+// Without this, getExternalAuthInfoArray() receives no task input and silently
+// returns an empty set, meaning external endpoint sections never appear in .pypirc.
+if (process.env[testConstants.TestEnvVars.externalEndpoints]) {
+    const endpointId = process.env[testConstants.TestEnvVars.externalEndpoints].split(',')[0].trim();
+    tr.setInput('pythonUploadServiceConnection', endpointId);
+    // ENDPOINT_URL_<id>  — read by tl.getEndpointUrl(id)
+    process.env[`ENDPOINT_URL_${endpointId}`] = `https://external.pypi.org/${endpointId}/simple/`;
+    // ENDPOINT_DATA_<id>_ENDPOINTNAME  — key is uppercased by task-lib
+    process.env[`ENDPOINT_DATA_${endpointId}_ENDPOINTNAME`] = endpointId;
+    // ENDPOINT_AUTH_<id>  — read by tl.getEndpointAuthorization(id)
+    process.env[`ENDPOINT_AUTH_${endpointId}`] = JSON.stringify({
+        parameters: { apitoken: testConstants.TestData.externalEndpointToken },
+        scheme: 'Token'
+    });
+    // ENDPOINT_AUTH_SCHEME_<id>  — read by tl.getEndpointAuthorizationScheme(id) via vault
+    process.env[`ENDPOINT_AUTH_SCHEME_${endpointId}`] = 'Token';
+}
+
 // Set up mock answers
 const answers: ma.TaskLibAnswers = {
     which: {},

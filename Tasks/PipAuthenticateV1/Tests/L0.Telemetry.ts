@@ -86,8 +86,6 @@ describe('PipAuthenticate L0 Suite - Telemetry & Logging', function () {
             await tr.runAsync();
             
             // Assert
-            // Current implementation: telemetry errors cause task failure
-            // This could be improved to catch telemetry errors, but for now test actual behavior
             TestHelpers.assertFailure(tr);
         });
     });

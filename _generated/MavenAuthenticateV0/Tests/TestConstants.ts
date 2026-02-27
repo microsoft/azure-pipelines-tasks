@@ -86,3 +86,20 @@ export const TestConstants = {
         passwordTag: /<password>/gi
     }
 };
+
+// Environment variable keys used to pass test configuration into the
+// TestSetup.js child process spawned by MockTestRunner.
+// Kept here (not in TestSetup.ts) so test files can import them without
+// force-loading azure-pipelines-task-lib into the mocha process.
+export const TestEnvVars = {
+    artifactsFeeds: '__artifactsFeeds__',
+    mavenServiceConnections: '__mavenServiceConnections__',
+    workloadIdentityServiceConnection: '__workloadIdentityServiceConnection__',
+    verbosity: '__verbosity__',
+    settingsXmlExists: '__settingsXmlExists__',
+    settingsXmlContent: '__settingsXmlContent__',
+    m2FolderExists: '__m2FolderExists__',
+    systemAccessToken: '__systemAccessToken__',
+    wifToken: '__wifToken__',
+    wifShouldFail: '__wifShouldFail__'
+};

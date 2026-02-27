@@ -4,7 +4,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { TestEnvVars } from './TestSetup';
+import { TestEnvVars } from './TestConstants';
 
 /**
  * Helper functions for Maven L0 tests
