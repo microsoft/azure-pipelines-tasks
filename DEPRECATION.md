@@ -1,6 +1,6 @@
 # Introduction
 Creation: 18-05-2023
-Last Update: 2025-10-09
+Last Update: 2026-02-26
 
 This page lists the Azure DevOps tasks that are no longer supported or maintained and are marked as deprecated. These tasks were found under https://github.com/microsoft/azure-pipelines-tasks.
 
@@ -62,6 +62,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | PackerBuild V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | PowerShellOnTargetMachines V1 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | PowerShellOnTargetMachines V2 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
+| PyPIPublisher V0 | [PR #21675](https://github.com/microsoft/azure-pipelines-tasks/pull/21675) | 2026-01-07 |
 | PublishCodeCoverageResults V1 | N/A | N/A |
 | QuickPerfTest V1 | N/A | N/A |
 | ServiceFabricComposeDeploy V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
