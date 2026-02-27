@@ -10,9 +10,7 @@ export function fetchPipelines() {
             return new Promise((resolve) => resolve(cachedPipelines));
         }
         try {
-            console.log('About to fetch pipelines...');
             cachedPipelines = await api.getDefinitions();
-            console.log(`Successfully fetched ${cachedPipelines.length} pipelines`);
 
             return cachedPipelines;
         } catch (err: any) {
