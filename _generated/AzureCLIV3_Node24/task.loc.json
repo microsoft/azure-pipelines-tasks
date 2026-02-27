@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 270,
-    "Patch": 5
+    "Minor": 271,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -273,7 +273,7 @@
     "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
   },
   "_buildConfigMapping": {
-    "Default": "3.270.4",
-    "Node24_1": "3.270.5"
+    "Default": "3.271.0",
+    "Node24_1": "3.271.1"
   }
 }
