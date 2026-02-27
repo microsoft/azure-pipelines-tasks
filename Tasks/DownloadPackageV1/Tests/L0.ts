@@ -115,6 +115,29 @@ describe("Download single file package suite", function() {
 
     });
 
+    it("downloads nuget file as nupkg and extracts it when extract input is 'True' (capital T)", async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0DownloadNugetPackage_extractCaseInsensitive.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "singlePackageName.nupkg");
+        const zipStats = tl.stats(zipPath);
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
+
+        var extractedFilePath = path.join(destinationDir, "nugetFile");
+        const fileStats = tl.stats(extractedFilePath);
+        assert(fileStats && fileStats.isFile(), "nupkg file should be extracted even with capital T");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+
+    });
+
     it("downloads nuget file as nupkg and does not extract it", async () => {
         this.timeout(1000);
 
