@@ -17,11 +17,11 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
         return;
     }
 
-    const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
-    const wmicTool = tl.tool('wmic');
-    const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
-    wmicTool.arg(wmicArgs);
-    let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    // Use PowerShell Get-ItemProperty instead of deprecated wmic
+    const powershellTool = tl.tool('powershell');
+    const powershellArgs = ['-Command', `try { (Get-ItemProperty -Path '${vstestexeLocation}' -ErrorAction Stop).VersionInfo.FileVersion } catch { throw "Failed to get version info for ${vstestexeLocation}: $_" }`];
+    powershellTool.arg(powershellArgs);
+    let output = powershellTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
     if (utils.Helper.isNullOrWhitespace(output)) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
@@ -29,14 +29,10 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     }
     output = output.trim();
     tl.debug('VSTest Version information: ' + output);
-    const verSplitArray = output.split('=');
-    if (verSplitArray.length !== 2) {
-        tl.error(tl.loc('ErrorReadingVstestVersion'));
-        throw new Error(tl.loc('ErrorReadingVstestVersion'));
-    }
-
-    const versionArray = verSplitArray[1].split('.');
-    if (versionArray.length !== 4) {
+    
+    // PowerShell returns version directly, no need to split by '='
+    const versionArray = output.split('.');
+    if (versionArray.length < 3) {
         tl.warning(tl.loc('UnexpectedVersionString', output));
         throw new Error(tl.loc('UnexpectedVersionString', output));
     }
@@ -48,8 +44,8 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
 
     if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
-        tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-        throw new Error(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
+        tl.warning(tl.loc('UnexpectedVersionNumber', output));
+        throw new Error(tl.loc('UnexpectedVersionNumber', output));
     }
 
     switch (majorVersion) {
