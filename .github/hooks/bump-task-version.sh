@@ -11,8 +11,14 @@ FILE_PATH=$(echo "$INPUT" | jq -r '
   .toolInput.path //
   empty' 2>/dev/null || true)
 
-# Only act when editing task.json or task.loc.json under Tasks/
-if [[ ! "$FILE_PATH" =~ Tasks/.*task\.(loc\.)?json$ ]]; then
+# Only act when editing files under a Tasks/ directory
+if [[ ! "$FILE_PATH" =~ ^Tasks/ ]]; then
+  exit 0
+fi
+
+# Extract task name from path for the system message
+TASK_NAME=$(echo "$FILE_PATH" | sed -n 's|^Tasks/\([^/]*\)/.*|\1|p')
+if [[ -z "$TASK_NAME" ]]; then
   exit 0
 fi
 
@@ -38,6 +44,6 @@ fi
 
 cat <<EOF
 {
-  "systemMessage": "TASK VERSION BUMPING — Sprint data (${REASON}): target Minor=${TARGET_MINOR}. Rules: if the task's current Minor already equals ${TARGET_MINOR}, increment Patch by 1. Otherwise set Minor=${TARGET_MINOR} and Patch=0. Always update BOTH task.json AND task.loc.json with the same version. For major behavioural changes, increment Major instead."
+  "systemMessage": "TASK VERSION BUMPING (${TASK_NAME}) — Sprint data (${REASON}): target Minor=${TARGET_MINOR}. Rules: if the task's current Minor already equals ${TARGET_MINOR}, increment Patch by 1. Otherwise set Minor=${TARGET_MINOR} and Patch=0. Always update BOTH task.json AND task.loc.json with the same version. Do NOT increment Major — major version changes require creating a new task directory (e.g. TaskV3 -> TaskV4)."
 }
 EOF
