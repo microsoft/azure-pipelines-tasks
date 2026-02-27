@@ -34,9 +34,7 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
             // Assert
             TestHelpers.assertSuccess(tr);
-            // Verify via stdout log that appendToNpmrc was called with the right token
             TestHelpers.assertAuthAppended(tr, 'internal-auth-token-abc');
-            // Verify the token was physically written to the .npmrc file on disk
             TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=internal-auth-token-abc');
         });
 
@@ -65,7 +63,6 @@ describe('NpmAuthenticate L0 - Authentication', function () {
             TestHelpers.assertAuthAppended(tr, 'token-feed2');
             const appended = TestHelpers.getAppendedAuth(tr);
             assert.strictEqual(appended.length, 2, 'appendToNpmrc should be called once per matching registry');
-            // Verify both tokens are physically present in the file
             TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=token-feed1');
             TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=token-feed2');
         });
@@ -87,7 +84,6 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
             // Assert
             TestHelpers.assertSuccess(tr);
-            // Task should log that it's adding local credentials
             TestHelpers.assertOutputContains(tr, 'AddingLocalCredentials');
         });
     });
@@ -111,9 +107,7 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
             // Assert
             TestHelpers.assertSuccess(tr);
-            // The external service token should appear in the appended auth
             TestHelpers.assertAuthAppended(tr, TestData.externalRegistryToken);
-            // Verify it was physically written to the .npmrc file
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.externalRegistryToken}`);
         });
 
@@ -155,11 +149,8 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
             // Assert
             TestHelpers.assertSuccess(tr);
-            // No auth should be written
             TestHelpers.assertNoAuthAppended(tr, 'appendToNpmrc should not be called for unmatched registry');
-            // Task should log that the registry was ignored
             TestHelpers.assertOutputContains(tr, 'IgnoringRegistry');
-            // File should be unchanged — no _authToken line added
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken');
         });
 
@@ -178,7 +169,6 @@ describe('NpmAuthenticate L0 - Authentication', function () {
             // Assert
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNoAuthAppended(tr);
-            // File should still be empty
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken');
         });
     });

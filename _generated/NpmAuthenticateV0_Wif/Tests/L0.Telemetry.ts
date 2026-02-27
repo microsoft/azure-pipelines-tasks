@@ -32,7 +32,6 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // Telemetry must be emitted with the correct area and feature name
         TestHelpers.assertOutputContains(
             tr,
             `${TestData.telemetryPrefix}Packaging.NpmAuthenticateV0`,
