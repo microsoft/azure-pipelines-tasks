@@ -439,7 +439,7 @@ export class Job {
                     thisJob.RetryConnection();
                 }
             } else {
-                thisJob.consoleLog(body); // redirect Jenkins console to task console
+                thisJob.consoleLog(thisJob.stripAnsiCodes(body)); // redirect Jenkins console to task console, strip ANSI codes
                 const xMoreData: string = httpResponse.headers['x-more-data'];
                 if (xMoreData && xMoreData == 'true') {
                     const offset: string = httpResponse.headers['x-text-size'];
@@ -482,6 +482,37 @@ export class Job {
             console.log(message);
         }
         this.jobConsole += message;
+    }
+
+    /**
+     * Strips ANSI escape codes and Jenkins pipeline annotations from console output.
+     * Newer Jenkins versions include these codes which appear as junk characters in ADO logs.
+     * @param text The raw console output from Jenkins
+     * @returns The sanitized text with ANSI codes removed
+     */
+    private stripAnsiCodes(text: string): string {
+        if (!text) {
+            return text;
+        }
+        return text
+            // 1) Remove Jenkins ConsoleNote blocks atomically
+            // Jenkins uses PREAMBLE "\x1B[8mha:" and POSTAMBLE "\x1B[0m"
+            .replace(/\x1B\[8mha:[\s\S]*?\x1B\[0m/g, '')
+
+            // 2) Remove OSC sequences (window titles, hyperlinks)
+            .replace(/\x1B\][^\x07]*(?:\x07|\x1B\\)/g, '')
+
+            // 3) Remove all ANSI CSI sequences (colors, cursor, erase, modes)
+            .replace(/[\x1B\x9B][[\]()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[A-Za-z~]/g, '')
+
+            // 4) Remove residual Jenkins annotations (require 30+ base64 chars for safety)
+            .replace(/ha:\s*[A-Za-z0-9+/=]{30,}/g, '')
+
+            // 5) Remove literal \033[...X sequences (from echo output)
+            .replace(/\\033\[[0-9;]*[A-Za-z]/g, '')
+
+            // 6) Remove orphaned bracket codes [0m, [2J, etc.
+            .replace(/\[\d+(?:;\d*)*[A-Za-z~]/g, '');
     }
 
     private debug(message: string) {
