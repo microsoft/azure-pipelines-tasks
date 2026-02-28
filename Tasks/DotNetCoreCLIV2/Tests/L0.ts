@@ -559,4 +559,14 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
     });
+
+    it('test command finds non-root global.json file based on working directory', async () => {
+      const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
+      const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+      
+      assert(tr.succeeded, 'task should succeed when global.json is found');
+      assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+    });
 });
