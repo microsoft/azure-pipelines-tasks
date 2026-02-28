@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "Zu PATH hinzufügen",
   "loc.input.help.addToPath": "Gibt an, ob die abgerufene Python-Version der PATH-Umgebungsvariable vorangestellt wird, um sie in nachfolgenden Aufgaben oder Skripts zur Verfügung zu stellen, ohne die Ausgabevariable zu verwenden.",
   "loc.input.label.architecture": "Architektur",
-  "loc.input.help.architecture": "Die Zielarchitektur für den Python-Interpreter (x86, x64).",
+  "loc.input.help.architecture": "Die Zielarchitektur für den Python-Interpreter (x86, x64, arm64).",
   "loc.messages.ListAvailableVersions": "Versionen in %s:",
   "loc.messages.PlatformNotRecognized": "Plattform nicht erkannt.",
   "loc.messages.PrependPath": "Der PATH-Umgebungsvariable wird das Verzeichnis \"%s\" vorangestellt.",

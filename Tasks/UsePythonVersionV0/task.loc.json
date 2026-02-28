@@ -14,8 +14,8 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 268,
-    "Patch": 1
+    "Minor": 269,
+    "Patch": 0
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -78,7 +78,8 @@
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     }
   ],

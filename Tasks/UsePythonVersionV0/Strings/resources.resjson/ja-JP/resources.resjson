@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "PATH に追加",
   "loc.input.help.addToPath": "取得した Python バージョンを PATH 環境変数の先頭に追加して、後続のタスクまたはスクリプトで出力変数を使うことなく利用できるようにするかどうか。",
   "loc.input.label.architecture": "アーキテクチャ",
-  "loc.input.help.architecture": "Python インタープリターのターゲット アーキテクチャ (x86、x64) です。",
+  "loc.input.help.architecture": "Python インタープリターのターゲット アーキテクチャ (x86、x64, arm64) です。",
   "loc.messages.ListAvailableVersions": "%s のバージョン:",
   "loc.messages.PlatformNotRecognized": "プラットフォームが認識されません",
   "loc.messages.PrependPath": "ディレクトリ %s を PATH 環境変数の前に追加しています",

@@ -115,13 +115,24 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.failed, 'task should have failed');
     });
 
-    it('selects architecture passed as input', async function () {
+    it('selects x86 architecture passed as input', async function () {
         const testFile = path.join(__dirname, 'L0SelectsArchitecture.js');
         const testRunner = new MockTestRunner(testFile);
 
         await testRunner.runAsync();
 
         assert(didSetVariable(testRunner, 'pythonLocation', 'x86ToolPath'));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('selects arm64 architecture passed as input', async function () {
+        const testFile = path.join(__dirname, 'L0SelectsARMArchitecture.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(didSetVariable(testRunner, 'pythonLocation', 'arm64ToolPath'));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
