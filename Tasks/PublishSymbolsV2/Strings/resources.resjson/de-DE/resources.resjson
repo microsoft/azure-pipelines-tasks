@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "Der Symbolspeicher \"lastid.txt\" wurde unter \"{0}\" nicht gefunden.",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "Der Arbeitsbereich kann aus dem Quellordner \"{0}\" nicht ermittelt werden.",
   "loc.messages.UnableToIndexSources": "Quellen können nicht indiziert werden.",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Die Bibliothek \"dbghelp.dll\" wurde bereits aus einem unerwarteten Pfad geladen. Erwartet: \"{0}\". Tatsächlich: \"{0}\".",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "Die Bibliothek \"dbghelp.dll\" wurde bereits aus einem unerwarteten Pfad geladen. Erwartet: \"{0}\". Tatsächlich: \"{1}\".",
   "loc.messages.UnsupportedSourceProvider0": "Nicht unterstützter Quellanbieter \"{0}\" für die Quellindizierung.",
   "loc.messages.Win32Error0FromMethod1": "Win32-Fehler \"{0}\" aus der Methode \"{1}\".",
   "loc.messages.NodeVersionSupport": "Node v{0} wird ab dem 31.08.2024 nicht mehr unterstützt. Aktualisieren Sie den Pipeline-Agent auf die neueste Version für Node 16 oder höher.",
