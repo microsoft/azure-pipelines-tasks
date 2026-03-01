@@ -51,6 +51,15 @@
     ],
     "instanceNameFormat": "Cache",
     "execution": {
+        "Node10": {
+            "target": "restoreCache.js"
+        },
+        "Node16": {
+            "target": "restoreCache.js"
+        },
+        "Node20": {
+            "target": "restoreCache.js"
+        },
         "AgentPlugin": {
             "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
         }
