@@ -46,10 +46,11 @@
       "options": {
         "x64": "X64",
         "x86": "X86",
-        "arm64": "arm64"
+        "arm64": "arm64",
+        "aarch64": "aarch64"
       },
       "required": true,
-      "helpMarkDown": "The architecture (x86, x64, arm64) of the JDK."
+      "helpMarkDown": "The architecture (x86, x64, arm64, aarch64) of the JDK."
     },
     {
       "name": "jdkSourceOption",
