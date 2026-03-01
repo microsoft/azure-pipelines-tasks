@@ -4,9 +4,13 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
+import * as DockerComposeUtils from "./dockercomposeutils";
 
 export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
-    var command = connection.createComposeCommand();
+    var arg = tl.getInput("arguments", false);
+    var parsedArgs = DockerComposeUtils.parseComposeArguments(arg || "");
+    
+    var command = connection.createComposeCommand(parsedArgs.globalArgs);
     command.arg("up");
 
     var detached = tl.getBoolInput("detached");
@@ -24,9 +28,12 @@ export function run(connection: DockerComposeConnection, outputUpdate: (data: st
         command.arg("--abort-on-container-exit");
     }
 
-    var arg = tl.getInput("arguments", false);
-    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
-    command.line(commandArgs || "");
+    // Add command-specific arguments
+    if (parsedArgs.commandArgs.length > 0) {
+        parsedArgs.commandArgs.forEach(cmdArg => {
+            command.arg(cmdArg);
+        });
+    }
 
     return connection.execCommandWithLogging(command)
     .then((output) => outputUpdate(utils.writeTaskOutput("up", output)))
