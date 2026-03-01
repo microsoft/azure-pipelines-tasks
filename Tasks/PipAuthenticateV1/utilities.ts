@@ -1,6 +1,5 @@
 import * as common from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as url from "url";
 
 export function getUriWithCredentials(serviceConnection: common.ServiceConnection): string{
     let username: string;
@@ -29,12 +28,12 @@ export function getUriWithCredentials(serviceConnection: common.ServiceConnectio
 }
 
 export function addCredentialsToUri(username: string, password: string, uri: string) {
-    try{
-        const authenticationString = username + ":" + password;
-        let parsedUrl = url.parse(uri);
-        parsedUrl.auth = authenticationString;
-        return url.format(parsedUrl);
-    } catch (error){
+    try {
+        const parsedUrl = new URL(uri);
+        parsedUrl.username = username;
+        parsedUrl.password = password;
+        return parsedUrl.href;
+    } catch (error) {
         throw new Error(tl.loc("Error_FailedToParseFeedUrlAndAuth", error));
     }
 }
