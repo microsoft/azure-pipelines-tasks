@@ -1,7 +1,6 @@
 import * as path from "path";
 import * as assert from "assert";
 import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
-import tl = require('azure-pipelines-task-lib');
 
 describe('GoToolV0 Suite', function() {
     this.timeout(60000);
@@ -10,8 +9,65 @@ describe('GoToolV0 Suite', function() {
         done();
     });
 
+    function runValidations(validator: () => void, tr: MockTestRunner) {
+        try {
+            validator();
+        }
+        catch (error) {
+            console.log('STDERR', tr.stderr);
+            console.log('STDOUT', tr.stdout);
+            throw error;
+        }
+    }
+
     after(function () {
         // Cleanup if needed
+    });
+
+    // go.mod feature tests
+    it('Installs version from go.mod (single file)', async () => {
+        process.env['__case__'] = 'useGoModSingle';
+        const tp = path.join(__dirname, 'gotoolTests.js');
+        const tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'Task should have succeeded');
+            assert(tr.stdout.indexOf("Parsed Go version '1.22'") > -1, 'Should log parsed Go version 1.22');
+        }, tr);
+    });
+
+    it('Installs versions from multiple go.mod files', async () => {
+        process.env['__case__'] = 'useGoModMulti';
+        const tp = path.join(__dirname, 'gotoolTests.js');
+        const tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'Task should have succeeded');
+            assert(tr.stdout.indexOf("Parsed Go version '1.21'") > -1, 'Should parse 1.21');
+            assert(tr.stdout.indexOf("Parsed Go version '1.22'") > -1, 'Should parse 1.22');
+        }, tr);
+    });
+
+    it('Fails when go.mod not found', async () => {
+        process.env['__case__'] = 'useGoModNotFound';
+        const tp = path.join(__dirname, 'gotoolTests.js');
+        const tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'Task should have failed');
+            assert(tr.stdout.indexOf('FailedToFindGoMod') > -1 || tr.stderr.indexOf('FailedToFindGoMod') > -1, 'Should output failure message for missing go.mod');
+        }, tr);
+    });
+
+    it('Installs version from explicit input (useGoMod disabled)', async () => {
+        process.env['__case__'] = 'explicitVersion';
+        const tp = path.join(__dirname, 'gotoolTests.js');
+        const tr: MockTestRunner = new MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'Task should have succeeded');
+            assert(tr.stdout.indexOf('Go tool is cached under') > -1, 'Should have cached the tool');
+        }, tr);
     });
 
     // Official Go (go.dev) tests
