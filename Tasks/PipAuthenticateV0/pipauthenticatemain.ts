@@ -7,8 +7,8 @@ import * as utils from "./utilities";
 import { getProjectAndFeedIdFromInput, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 async function main(): Promise<void> {
-    tl.setResourcePath(path.join(__dirname, "task.json"));
     tl.warning(tl.loc("TaskDeprecationNotice"));
+    tl.setResourcePath(path.join(__dirname, "task.json"));
 
     try {
         let packagingLocation: string;
@@ -68,7 +68,6 @@ async function main(): Promise<void> {
             tl.warning(tl.loc("Warn_TooManyFeedEntries"));
         }
         tl.debug(pipEnvVar);
-        tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("TaskDeprecationNotice"));
     }
     catch (error) {
         tl.error(error);

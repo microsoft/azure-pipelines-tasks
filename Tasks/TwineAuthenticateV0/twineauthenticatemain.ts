@@ -24,8 +24,8 @@ export class Repository
 }
 
 async function main(): Promise<void> {
-    tl.setResourcePath(path.join(__dirname, "task.json"));
     tl.warning(tl.loc("TaskDeprecationNotice"));
+    tl.setResourcePath(path.join(__dirname, "task.json"));
     try {
         // Local feeds
         const internalFeeds = await auth.getInternalAuthInfoArray("feedList");
@@ -71,7 +71,6 @@ async function main(): Promise<void> {
 
         // Configuring the pypirc file
         console.log(tl.loc("Info_SuccessAddingAuth", internalFeeds.length, externalEndpoints.length));
-        tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("TaskDeprecationNotice"));
     }
     catch (error) {
         tl.error(error);

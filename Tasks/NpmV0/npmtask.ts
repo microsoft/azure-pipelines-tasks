@@ -39,7 +39,7 @@ async function executeTask() {
         // deprecated version of task, which just runs the npm command with NO auth support.
         try{
             var code : number = await npmRunner.exec();
-            setDeprecatedSuccessResult(code);
+            tl.setResult(code, tl.loc('NpmReturnCode', code));
         } catch (err) {
             tl.debug('taskRunner fail');
             tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
@@ -77,21 +77,12 @@ async function executeTask() {
             await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
             var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
             cleanUpTempNpmrcPath(tempNpmrcPath);
-            setDeprecatedSuccessResult(code);
+            tl.setResult(code, tl.loc('NpmReturnCode', code));
         } catch (err) {
             cleanUpTempNpmrcPath(tempNpmrcPath);
             tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
         }
     }
-}
-
-function setDeprecatedSuccessResult(code: number) {
-    if (code === 0) {
-        tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("TaskDeprecationNotice"));
-        return;
-    }
-
-    tl.setResult(code, tl.loc('NpmReturnCode', code));
 }
 
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
