@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 268,
+    "Minor": 271,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +95,7 @@
     }
   },
   "messages": {
+    "TaskDeprecationNotice": "This task will be deprecated soon. Please switch to using TwineAuthenticate@1.",
     "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
     "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
     "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
