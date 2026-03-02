@@ -8,7 +8,7 @@
   "loc.input.help.feedList": "Select feeds to authenticate present in this organization",
   "loc.input.label.externalSources": "Feeds from external organizations",
   "loc.input.help.externalSources": "Select endpoints to authenticate outside this organization.",
-  "loc.messages.TaskDeprecationNotice": "The PipAuthenticateV0 task is scheduled for deprecation in July 2026. Please switch to using PipAuthenticateV1.",
+  "loc.messages.TaskDeprecationNotice": "The PipAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using PipAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
   "loc.messages.Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
   "loc.messages.Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",

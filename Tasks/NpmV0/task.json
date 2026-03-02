@@ -65,7 +65,7 @@
     }
   },
   "messages": {
-    "TaskDeprecationNotice": "The NpmV0 task is scheduled for deprecation in July 2026. Please switch to using NpmAuthenticate and script tasks, or NpmV1.",
+    "TaskDeprecationNotice": "The NpmV0 task is scheduled for deprecation in June 2026. Please switch to using NpmAuthenticate and script tasks, or NpmV1.",
     "InvalidCommand": "Only one command should be used for npm. Use 'Arguments' input for additional arguments.",
     "NpmReturnCode": "npm exited with return code: %d",
     "NpmFailed": "npm failed with error: %s",

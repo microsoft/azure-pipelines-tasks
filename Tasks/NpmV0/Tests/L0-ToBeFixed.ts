@@ -11,12 +11,12 @@ describe('Npm Task', function () {
     });
 
     /* Current behavior */
-    it("should execute 'npm config list' successfully", (done: MochaDone) => {
+    it("should execute 'npm config list' successfully", async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-configlist.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 3, 'should have run vsts-npm-auth, npm config list and npm command');
         assert(tr.ran(`${NpmMockHelper.NpmCmdPath} config list`), 'it should have run npm');
@@ -26,15 +26,14 @@ describe('Npm Task', function () {
         // assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
-        done();
     });
     
-    it('should pass when no arguments are supplied', (done: MochaDone) => {
+    it('should pass when no arguments are supplied', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-commandWithoutArguments.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 3, 'should have run npm');
         assert(tr.ran(`${NpmMockHelper.NpmCmdPath} root`), 'it should have run npm');
@@ -45,42 +44,39 @@ describe('Npm Task', function () {
         // assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
-        done();
     });
     
-    it('should fail when command contains spaces', (done: MochaDone) => {
+    it('should fail when command contains spaces', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-commandContainsSpaces.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 0, 'should not have run npm');
         assert(tr.failed, 'should have failed');
 
-        done();
     });
       
-    it('should fail when task fails', (done: MochaDone) => {
+    it('should fail when task fails', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-npmFailure.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 3, 'should have run npm');
         assert(tr.failed, 'should have failed');
 
-        done();
     });
 
     /* Deprecated behavior */
-    it("should execute 'npm config list' successfully (deprecated task)", (done: MochaDone) => {
+    it("should execute 'npm config list' successfully (deprecated task)", async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-configlist-deprecated.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 1, 'should have run npm');
         assert(tr.ran(`${NpmMockHelper.NpmCmdPath} config list`), 'it should have run npm');
@@ -89,15 +85,14 @@ describe('Npm Task', function () {
         assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
-        done();
     });
     
-    it('should pass when no arguments are supplied (deprecated task)', (done: MochaDone) => {
+    it('should pass when no arguments are supplied (deprecated task)', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-commandWithoutArguments-deprecated.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 1, 'should have run npm');
         assert(tr.ran(`${NpmMockHelper.NpmCmdPath} root`), 'it should have run npm');
@@ -107,32 +102,29 @@ describe('Npm Task', function () {
         assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
-        done();
     });
     
-    it('should fail when command contains spaces (deprecated task)', (done: MochaDone) => {
+    it('should fail when command contains spaces (deprecated task)', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-commandContainsSpaces-deprecated.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 0, 'should not have run npm');
         assert(tr.failed, 'should have failed');
 
-        done();
     });
       
-    it('should fail when task fails (deprecated task)', (done: MochaDone) => {
+    it('should fail when task fails (deprecated task)', async function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'test-npmFailure-deprecated.js')
         let tr = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tr.invokedToolCount, 1, 'should have run npm');
         assert(tr.failed, 'should have failed');
 
-        done();
     });
 });

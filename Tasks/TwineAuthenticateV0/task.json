@@ -99,7 +99,7 @@
     }
   },
   "messages": {
-    "TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in July 2026. Please switch to using TwineAuthenticateV1.",
+    "TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
     "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
     "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
     "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",

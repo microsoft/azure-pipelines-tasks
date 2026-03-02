@@ -11,7 +11,7 @@
   "loc.input.help.externalSources": "Select endpoints to authenticate outside this organization. Make sure the endpoints have package upload permissions.",
   "loc.input.label.publishPackageMetadata": "Publish pipeline metadata",
   "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package when uploading to my feeds.",
-  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in July 2026. Please switch to using TwineAuthenticateV1.",
+  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
   "loc.messages.Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
   "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
