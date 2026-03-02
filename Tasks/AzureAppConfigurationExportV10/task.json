@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 268,
+        "Minor": 271,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
@@ -140,7 +140,11 @@
             "target": "index.js"
         },
         "Node20_1": {
-            "target": "index.js"
+        "target": "index.js"
+        },
+        "Node24": {
+            "target": "index.js",
+            "argumentFormat": ""
         }
     },
     "messages": {

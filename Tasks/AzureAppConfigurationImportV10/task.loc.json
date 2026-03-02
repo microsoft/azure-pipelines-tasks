@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 268,
+    "Minor": 271,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -273,6 +273,10 @@
     },
     "Node20_1": {
       "target": "index.js"
+    },
+    "Node24": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
