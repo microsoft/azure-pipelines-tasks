@@ -58,6 +58,10 @@
     "Node20_1": {
       "target": "npmtask.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npmtask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
