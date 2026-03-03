@@ -5,6 +5,7 @@ if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
     argv.includeLocalPackagesBuildConfig=true;
 }
 
+
 // modules
 var fs = require('fs');
 var os = require('os');
