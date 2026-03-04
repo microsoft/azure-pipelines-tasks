@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import { NpmrcBackupManager } from './npmauthutils';
+import { NpmrcBackupManager } from './npmrcBackupManager';
 
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));

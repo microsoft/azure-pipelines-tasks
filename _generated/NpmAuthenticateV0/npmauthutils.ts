@@ -8,9 +8,6 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 import { NpmrcBackupManager } from './npmrcBackupManager';
-#if WIF
-import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
-#endif
 
 export { NpmrcCredential } from './npmrcCredential';
 export { NpmrcBackupManager } from './npmrcBackupManager';
@@ -257,18 +254,6 @@ export function removeExistingCredentialEntries(
 
 // ─── WIF helpers ─────────────────────────────────────────────────────────────
 
-#if WIF
-export async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string): Promise<string | undefined> {
-    if (!adoServiceConnection) {
-        return undefined;
-    }
-    const federatedAuthToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
-    if (!federatedAuthToken) {
-        throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
-    }
-    return federatedAuthToken;
-}
-#endif
 
 // ─── Error logging ───────────────────────────────────────────────────────────
 

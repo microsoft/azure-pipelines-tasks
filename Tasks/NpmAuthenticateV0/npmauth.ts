@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
-import * as npmregistry from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
 import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as npmauthutils from './npmauthutils';
@@ -63,13 +62,13 @@ async function main(): Promise<void> {
 
     for (let RegistryURLString of npmrcRegistries) {
         let registryURL = URL.parse(RegistryURLString);
-        let registry: npmregistry.NpmRegistry;
+        let registry: npmauthutils.NpmrcCredential;
 
 #if WIF
         if (feedUrl && entraWifServiceConnectionName){
             if (npmauthutils.toNerfDart(npmauthutils.normalizeRegistry(feedUrl)) == npmauthutils.toNerfDart(RegistryURLString)) {
                 console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-                registry =  new npmregistry.NpmRegistry(RegistryURLString, `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true);
+                registry =  { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, authOnly: true };
                 let url = URL.parse(RegistryURLString);
                 addedRegistry.push(url);
                 npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, url, addedRegistry);
@@ -78,7 +77,7 @@ async function main(): Promise<void> {
             }
         } else if (!feedUrl && entraWifServiceConnectionName){
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            registry = new npmregistry.NpmRegistry(RegistryURLString, `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, true)
+            registry = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, authOnly: true }
             let url = URL.parse(RegistryURLString);
             addedRegistry.push(url);
             npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, url, addedRegistry);
@@ -88,7 +87,7 @@ async function main(): Promise<void> {
 #endif
 
         if (!registry && endpointRegistries && endpointRegistries.length > 0) {
-            registry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries) as npmregistry.NpmRegistry;
+            registry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries) as npmauthutils.NpmrcCredential;
             if (registry) {
                 let serviceURL = URL.parse(registry.url);
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
@@ -104,7 +103,7 @@ async function main(): Promise<void> {
                 localProjectNpmRegistries,
                 endpointsArray,
                 registryURL.host
-            ) as npmregistry.NpmRegistry;
+            ) as npmauthutils.NpmrcCredential;
             if (registry) {
                 let localURL = URL.parse(registry.url);
                 console.log(tl.loc("AddingLocalCredentials"));
