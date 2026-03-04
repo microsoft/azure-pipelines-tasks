@@ -137,8 +137,7 @@
       "target": "index.js"
     },
     "Node24": {
-      "target": "index.js",
-      "argumentFormat": ""
+      "target": "index.js"
     }
   },
   "messages": {
