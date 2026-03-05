@@ -30,10 +30,8 @@ if (tempDirectory) {
 
 // ── tl.exist answers ──────────────────────────────────────────────────────────
 
-// Compute the index.json path that npmauthcleanup.ts derives from SAVE_NPMRC_PATH
 const indexFilePath = saveNpmrcPath ? path.join(saveNpmrcPath, 'index.json') : '';
 
-// Defaults: both the index file and the .npmrc file exist unless overridden
 const indexShouldExist = process.env[TestEnvVars.cleanupIndexShouldExist] !== 'false';
 const npmrcShouldExist = process.env[TestEnvVars.cleanupNpmrcShouldExist] !== 'false';
 const tempDirExists   = process.env[TestEnvVars.cleanupTempDirExists] === 'true';
@@ -55,18 +53,6 @@ const answers: ma.TaskLibAnswers = {
 };
 
 tr.setAnswers(answers);
-
-// ── Mock: packaging util ──────────────────────────────────────────────────────
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/util', {
-    restoreFileWithName: function (filePath: string, _fileContent: string, _backupDir: string) {
-        // Log so L0.Cleanup.ts tests can assert restoreFileWithName was reached
-        console.log(`RESTORE_FILE_CALLED:${filePath}`);
-    },
-    saveFileWithName: function () {},
-    logError:   function (e: any)    { console.error(String(e)); },
-    toNerfDart: function (url: string) { return url.replace(/^https?:/, ''); }
-});
 
 // ── Run ───────────────────────────────────────────────────────────────────────
 

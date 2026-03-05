@@ -16,16 +16,13 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
     });
 
     it('emits telemetry on successful authentication', async () => {
-        // Arrange
-        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.internalRegistryUrl}`);
+        // Arrange: internal feed that matches the collection URI host
+        const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
+        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = TestData.internalRegistryUrl;
-        process.env[TestEnvVars.localRegistries] = JSON.stringify([
-            TestHelpers.buildLocalRegistry(TestData.internalRegistryUrl, 'some-token')
-        ]);
 
         // Act
         await tr.runAsync();
@@ -41,7 +38,6 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
 
     it('emits telemetry even when the task fails', async () => {
         // Arrange: point at a file without .npmrc extension — task fails early
-        // telemetry is in a finally() block so it must fire regardless
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr = new ttm.MockTestRunner(tp);
         process.env[TestEnvVars.npmrcPath] = path.join(os.tmpdir(), 'badfile.json');
@@ -65,7 +61,6 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = TestData.externalRegistryUrl;
         process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
         process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
         process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
@@ -75,7 +70,6 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        // ExternalFeedAuthCount should be 1 since one endpoint was authenticated
         TestHelpers.assertOutputContains(tr, '"ExternalFeedAuthCount":1');
     });
 });

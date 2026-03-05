@@ -96,7 +96,7 @@ export function resolveLocalNpmRegistries(
 ): NpmrcCredential[] {
     const projectNpmrcPath = path.join(workingDirectory, '.npmrc');
 
-    if (!tl.exist(projectNpmrcPath)) {
+    if (!fs.existsSync(projectNpmrcPath)) {
         return [];
     }
 
@@ -222,7 +222,7 @@ export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
 
 /** Append auth lines to the end of an .npmrc file. */
 export function appendAuthToNpmrc(npmrcPath: string, authEntry: string): void {
-    tl.writeFile(npmrcPath, os.EOL + authEntry + os.EOL, { flag: 'a' });
+    fs.appendFileSync(npmrcPath, os.EOL + authEntry + os.EOL);
 }
 
 /**

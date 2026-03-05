@@ -26,7 +26,6 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = TestData.wifRegistryUrl;
         process.env[TestEnvVars.workloadIdentityServiceConnection] = TestData.wifServiceConnection;
         process.env[TestEnvVars.wifRegistryUrl] = TestData.wifRegistryUrl;
         process.env[TestEnvVars.wifToken] = TestData.wifToken;
@@ -36,7 +35,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        TestHelpers.assertAuthAppended(tr, TestData.wifToken,
+        TestHelpers.assertNpmrcContains(npmrcPath, TestData.wifToken,
             'The WIF federated token should be written as the auth token for the registry');
         TestHelpers.assertOutputContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
@@ -49,7 +48,6 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = differentRegistry;
         process.env[TestEnvVars.workloadIdentityServiceConnection] = TestData.wifServiceConnection;
         // feedUrl points to a registry that is NOT in the .npmrc
         process.env[TestEnvVars.wifRegistryUrl] = TestData.wifRegistryUrl;
@@ -74,7 +72,6 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = [url1, url2].join(';');
         process.env[TestEnvVars.workloadIdentityServiceConnection] = TestData.wifServiceConnection;
         // No wifRegistryUrl → feedUrl input is not set
         process.env[TestEnvVars.wifToken] = TestData.wifToken;
@@ -84,10 +81,11 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        const appended = TestHelpers.getAppendedAuth(tr);
-        assert.strictEqual(appended.length, 2, 'appendToNpmrc should be called once per registry');
-        assert(appended.every(a => a.includes(TestData.wifToken)),
-            'Every appended auth entry should contain the WIF token');
+        TestHelpers.assertNpmrcContains(npmrcPath, TestData.wifToken,
+            'WIF token should be written for all registries when no feedUrl is specified');
+        // Verify both registries got auth
+        const appended = TestHelpers.getAppendedAuth(tr, npmrcPath);
+        assert.strictEqual(appended.length, 2, 'auth should be appended for each of the 2 registries');
     });
 
     it('fails when feedUrl is provided without a service connection', async () => {
@@ -97,7 +95,6 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = TestData.wifRegistryUrl;
         process.env[TestEnvVars.wifRegistryUrl] = TestData.wifRegistryUrl;
         // workloadIdentityServiceConnection intentionally not set
 
@@ -116,7 +113,6 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const tr = new ttm.MockTestRunner(tp);
 
         process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.npmrcRegistries] = TestData.wifRegistryUrl;
         process.env[TestEnvVars.workloadIdentityServiceConnection] = TestData.wifServiceConnection;
         process.env[TestEnvVars.wifRegistryUrl] = TestData.wifRegistryUrl;
         process.env[TestEnvVars.wifShouldFail] = 'true';

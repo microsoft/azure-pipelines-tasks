@@ -22,7 +22,13 @@ export const TestEnvVars = {
     cleanupIndexShouldExist: '__npmcleanup_indexShouldExist__',
     cleanupNpmrcShouldExist: '__npmcleanup_npmrcShouldExist__',
     cleanupTempDirectory: '__npmcleanup_tempDirectory__',
-    cleanupTempDirExists: '__npmcleanup_tempDirExists__'
+    cleanupTempDirExists: '__npmcleanup_tempDirExists__',
+
+    // Endpoint credential tests
+    endpointAuthScheme: '__npmauth_endpointAuthScheme__',    // 'Token' or 'UsernamePassword'
+    endpointUsername: '__npmauth_endpointUsername__',
+    endpointPassword: '__npmauth_endpointPassword__',
+    isInternalEndpoint: '__npmauth_isInternalEndpoint__'     // 'true' to simulate Azure DevOps headers
 };
 
 // Test data constants

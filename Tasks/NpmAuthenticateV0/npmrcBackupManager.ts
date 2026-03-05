@@ -39,7 +39,7 @@ export class NpmrcBackupManager {
         }
 
         const backupPath = this.getBackupFilePath(entryId);
-        if (!tl.exist(backupPath)) {
+        if (!fs.existsSync(backupPath)) {
             return false;
         }
 

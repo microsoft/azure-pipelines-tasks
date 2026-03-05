@@ -92,41 +92,47 @@ export class TestHelpers {
     }
 
     /**
-     * Return all auth strings that the mock appendToNpmrc captured.
-     * The TestSetup logs each call as "APPEND_TO_NPMRC:<authContent>".
+     * Return auth lines from the .npmrc file that contain _authToken, _password, or always-auth.
+     * Reads the actual file on disk — works with both the old mock and the inlined writeFile approach.
      */
-    static getAppendedAuth(tr: ttm.MockTestRunner): string[] {
-        return tr.stdout
+    static getAppendedAuth(tr: ttm.MockTestRunner, npmrcPath?: string): string[] {
+        // Try the npmrcPath passed explicitly, or fall back to the env var
+        const filePath = npmrcPath || process.env[TestEnvVars.npmrcPath] || '';
+        if (!filePath || !fs.existsSync(filePath)) {
+            return [];
+        }
+        const content = fs.readFileSync(filePath, 'utf8');
+        return content
             .split('\n')
-            .filter(l => l.startsWith(TestData.appendPrefix))
-            .map(l => l.substring(TestData.appendPrefix.length).trim());
+            .map(l => l.trim())
+            .filter(l => l.includes('_authToken=') || l.includes('_password=') || l.includes('always-auth='));
     }
 
     /**
-     * Assert that appendToNpmrc was called at least once and that at least
-     * one of the captured auth strings includes the expected substring.
+     * Assert that auth was written to the .npmrc file and contains the expected substring.
      */
     static assertAuthAppended(tr: ttm.MockTestRunner, expectedSubstring: string, message?: string): void {
-        const appended = this.getAppendedAuth(tr);
+        const npmrcFilePath = process.env[TestEnvVars.npmrcPath] || '';
+        assert(npmrcFilePath, 'npmrcPath must be set to check appended auth');
+        const content = fs.readFileSync(npmrcFilePath, 'utf8');
         assert(
-            appended.length > 0,
-            `appendToNpmrc should have been called at least once.\nStdout: ${tr.stdout}`
-        );
-        const found = appended.some(a => a.includes(expectedSubstring));
-        assert(
-            found,
-            message || `None of the appended auth strings contain "${expectedSubstring}".\nAppended: ${JSON.stringify(appended)}`
+            content.includes(expectedSubstring),
+            message || `Expected .npmrc to contain "${expectedSubstring}" after auth was appended.\nActual content:\n${content}`
         );
     }
 
     /**
-     * Assert that appendToNpmrc was never called (no auth was written).
+     * Assert that no auth was written to the .npmrc file.
      */
     static assertNoAuthAppended(tr: ttm.MockTestRunner, message?: string): void {
-        const appended = this.getAppendedAuth(tr);
-        assert.strictEqual(
-            appended.length, 0,
-            message || `appendToNpmrc should not have been called but got: ${JSON.stringify(appended)}`
+        const npmrcFilePath = process.env[TestEnvVars.npmrcPath] || '';
+        if (!npmrcFilePath || !fs.existsSync(npmrcFilePath)) {
+            return; // file doesn't exist — nothing was appended
+        }
+        const content = fs.readFileSync(npmrcFilePath, 'utf8');
+        assert(
+            !content.includes('_authToken='),
+            message || `Expected no auth to be written but .npmrc contains _authToken.\nContent:\n${content}`
         );
     }
 

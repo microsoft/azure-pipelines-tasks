@@ -44,8 +44,6 @@ if (process.env[TestEnvVars.existingEndpoints]) {
 process.env['AGENT_BUILDDIRECTORY'] = os.tmpdir();
 
 // Pre-create SAVE_NPMRC_PATH so the task skips its mkdirP+mkdtempSync block.
-// tl.mkdirP() in mock mode logs the path but does NOT create the directory on
-// disk, so fs.mkdtempSync() would throw ENOENT if we let the task reach it.
 const _saveNpmrcBase = path.join(os.tmpdir(), 'npmAuthenticate');
 if (!fs.existsSync(_saveNpmrcBase)) {
     fs.mkdirSync(_saveNpmrcBase, { recursive: true });
@@ -60,71 +58,6 @@ tr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', {
         return { PackagingUris: [TestData.collectionUri] };
     },
     ProtocolType: { Npm: 1 }
-});
-
-// ── Mock: npmutil — controls local registry discovery and auth writes ─────────
-
-const localRegistriesJson = process.env[TestEnvVars.localRegistries];
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/npm/npmutil', {
-    getLocalNpmRegistries: async function (_workingDir: string, _packagingUris: string[]) {
-        if (localRegistriesJson) {
-            return JSON.parse(localRegistriesJson);
-        }
-        return [];
-    },
-    appendToNpmrc: function (_npmrcFile: string, content: string) {
-        // Write to disk — mirrors real tl.writeFile append behaviour so tests
-        // can assert on the actual .npmrc file content after the task runs.
-        fs.appendFileSync(_npmrcFile, content);
-        // Also log so tests can assert on what was written via tr.stdout.
-        // Trim surrounding newlines so the token stays on a single log line —
-        // the task passes os.EOL + auth + os.EOL as content.
-        console.log(`${TestData.appendPrefix}${content.trim()}`);
-    }
-});
-
-// ── Mock: npmrcparser — controls what registries are parsed from .npmrc ───────
-
-const npmrcRegistries = process.env[TestEnvVars.npmrcRegistries] || '';
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/npm/npmrcparser', {
-    GetRegistries: function (_npmrcFile: string, _saveNormalized?: boolean) {
-        return npmrcRegistries.split(';').filter(Boolean);
-    },
-    NormalizeRegistry: function (url: string) { return url; }
-});
-
-// ── Mock: npmregistry — controls external service-connection auth ─────────────
-
-const extUrl = process.env[TestEnvVars.externalRegistryUrl] || TestData.externalRegistryUrl;
-const extToken = process.env[TestEnvVars.externalRegistryToken] || TestData.externalRegistryToken;
-
-// NpmRegistry must be a constructor (WIF code does `new npmregistry.NpmRegistry(url, auth)`)
-// AND expose a static FromServiceEndpoint (external service connection path).
-function NpmRegistryMock(this: any, url: string, auth: string) {
-    this.url = url;
-    this.auth = auth;
-}
-(NpmRegistryMock as any).FromServiceEndpoint = async function (_endpointId: string, _requireExists: boolean) {
-    const nerfDart = extUrl.replace(/^https?:/, '');
-    return { url: extUrl, auth: `${nerfDart}:_authToken=${extToken}` };
-};
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/npm/npmregistry', {
-    NpmRegistry: NpmRegistryMock
-});
-
-// ── Mock: packaging util ──────────────────────────────────────────────────────
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/util', {
-    saveFileWithName: function () { /* no-op: skip backing up .npmrc */ },
-    restoreFileWithName: function () {},
-    logError: function (error: any) { console.error(String(error)); },
-    toNerfDart: function (url: string) {
-        // //host/path/: — strip the scheme, keep the rest
-        return url.replace(/^https?:/, '');
-    }
 });
 
 // ── Mock: telemetry ───────────────────────────────────────────────────────────
@@ -157,9 +90,65 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConne
     }
 });
 
+// ── Mock: http/https for isEndpointInternal probe ─────────────────────────────
+// The inlined isEndpointInternal() does an HTTP GET to check for x-tfs/x-vss
+// headers. We mock the https module to return external (no Azure DevOps headers)
+// so Token endpoints get bearer auth formatting.
+
+const mockHttpModule = {
+    get: function (_url: any, _options: any, callback: Function) {
+        // Simulate a non-Azure DevOps response (no x-tfs/x-vss headers)
+        const mockResponse = {
+            rawHeaders: ['Content-Type', 'application/json'],
+            resume: function () {}
+        };
+        if (callback) { callback(mockResponse); }
+        return {
+            on: function (_event: string, _handler: Function) {}
+        };
+    }
+};
+
+tr.registerMock('https', mockHttpModule);
+tr.registerMock('http', mockHttpModule);
+
+// ── Endpoint auth mocks ───────────────────────────────────────────────────────
+// resolveServiceEndpointCredential reads endpoint auth/URL from the task lib.
+// TaskMockRunner does not support setEndpointAuthorization, so we mock the
+// npmrcCredential module directly to provide controlled credentials.
+
+const extUrl = process.env[TestEnvVars.externalRegistryUrl] || '';
+const extToken = process.env[TestEnvVars.externalRegistryToken] || '';
+const customEndpoint = process.env[TestEnvVars.customEndpoint] || '';
+
+if (customEndpoint) {
+    // Mock just resolveServiceEndpointCredential from our local module.
+    // This avoids needing to mock tl.getEndpointAuthorization which TaskMockRunner
+    // doesn't support well.
+    tr.registerMock('./npmrcCredential', {
+        resolveServiceEndpointCredential: async function (_endpointId: string, _normalizeRegistry: Function, _toNerfDart: Function) {
+            const nerfDart = extUrl.replace(/^https?:/, '');
+            return {
+                url: extUrl,
+                auth: `${nerfDart}:_authToken=${extToken}`,
+                authOnly: true
+            };
+        },
+        NpmrcCredential: {} // type-only export, not used at runtime
+    });
+}
+
+// ── SYSTEMVSSCONNECTION mock ──────────────────────────────────────────────────
+// resolveLocalNpmRegistries reads System.AccessToken via
+// tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false).
+// The task lib reads this from environment variables in the form:
+// ENDPOINT_AUTH_PARAMETER_<ID>_<KEY>
+
+process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = TestData.systemAccessToken;
+process.env['ENDPOINT_AUTH_SCHEME_SYSTEMVSSCONNECTION'] = 'OAuth';
+
 // ── Task-lib answers ──────────────────────────────────────────────────────────
 
-// By default the .npmrc is considered to exist; set npmrcShouldExist='false' to test missing-file path
 const npmrcShouldExist = process.env[TestEnvVars.npmrcShouldExist] !== 'false';
 
 const answers: ma.TaskLibAnswers = {
