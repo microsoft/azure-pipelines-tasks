@@ -253,7 +253,6 @@
     "Node24_10": [],
     "Node24_overwrite": ["VsTestV2" ,
         "VsTestV3",
-        "PublishCodeCoverageResultsV1",
         "PublishCodeCoverageResultsV2"
     ],
     "wif_242": [
