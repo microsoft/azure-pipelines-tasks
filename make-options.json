@@ -241,6 +241,7 @@
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureKeyVaultV2",
+        "AzureFileCopyV5",
         "AzureFileCopyV6"
     ],
     "Node24_2": [],
