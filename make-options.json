@@ -253,7 +253,6 @@
     "Node24_10": [],
     "Node24_overwrite": ["VsTestV2" ,
         "VsTestV3",
-        "PublishTestResultsV2",
         "PublishCodeCoverageResultsV1",
         "PublishCodeCoverageResultsV2"
     ],
