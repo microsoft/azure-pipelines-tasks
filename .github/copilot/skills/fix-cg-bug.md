@@ -84,7 +84,7 @@ From the alert JSON response, extract:
 
 ### Step 2a: Get All Affected Locations (Optional but Recommended)
 
-To programmatically find all tasks/locations where the vulnerable component is used, first get the latest snapshot ID from the Component Governance API:
+To programmatically find all tasks/locations where the vulnerable component is used, retrieve a production snapshot ID from the Component Governance API. Note that CG alerts are not tied to a specific snapshot - they represent vulnerabilities detected across production snapshots.
 
 ```bash
 # Get the most recent production snapshot type ID dynamically
@@ -130,6 +130,18 @@ cat /tmp/locations.json | jq -r '.value["minimatch 4.2.3 -Npm"][]' \
 ```
 
 **Note**: The snapshot type ID changes over time as new builds are scanned. Always retrieve it dynamically from the `/Branches/master` endpoint rather than hardcoding it. The command above selects the most recent production snapshot by sorting by `latestScanDate`.
+
+**Important Considerations:**
+- **Alerts vs. Snapshots**: Component Governance alerts are not tied to a specific snapshot. An alert represents a vulnerability that exists in your codebase, and CG scans multiple snapshots (from different build phases) to detect it.
+- **Multiple Production Snapshots**: Multiple production snapshots may exist from different build phases (e.g., "Build all tasks (Windows)", "Create GitHub Release", "Courtesy Push"). All production snapshots from the same date typically contain the same dependency information.
+- **Using Latest Snapshot**: Using the most recent production snapshot is usually sufficient because it reflects the current state of the master branch. The component locations will show all places where the vulnerable package is used.
+- **Comprehensive Coverage**: If you need to be extra thorough or if the latest snapshot seems incomplete, you can query component locations for all production snapshots:
+  ```bash
+  # Get all production snapshot IDs and check each one
+  curl -s -H "Authorization: Bearer $TOKEN" \
+    "https://governance.dev.azure.com/mseng/{projectId}/_apis/ComponentGovernance/GovernedRepositories/{repositoryId}/Branches/master" \
+    | jq -r '.snapshotTypes[] | select(.externalTrackingState == "production") | .typeId'
+  ```
 
 This will give you a definitive list of all task directories that use the vulnerable package, saving you from manual searching.
 
