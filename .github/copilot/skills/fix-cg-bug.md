@@ -358,7 +358,59 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 git push origin CopilotSkill/CGFix/2362243
 ```
 
-After pushing, create a pull request from your feature branch to merge the changes into the main branch.
+## Step 10: Create Pull Request
+
+After pushing the branch, create a pull request to merge your changes. The PR must follow the repository's pull request template.
+
+### Option A: Using GitHub MCP Tools (Automated)
+
+Use the `mcp_github_create_pull_request` tool to create a PR programmatically:
+
+```bash
+# The tool will automatically populate the PR template with:
+# - Context: ADO work item link and CVE details
+# - Task names
+# - Description of changes
+# - Risk assessment (typically Low for dependency updates)
+# - Documentation/testing requirements
+# - Checklist items
+```
+
+**Key PR Details to Include:**
+- **Title**: `Fix CG alert: update <package> to <version> in <TaskNames>`
+- **Context Section**: Link to ADO work item, CVE ID, severity, vulnerability type
+- **Risk Assessment**: Low for minor dependency updates
+- **Change Behind Feature Flag**: No (dependency updates don't use feature flags)
+- **Documentation Changes**: No (for internal dependency updates)
+- **Unit Tests**: No new tests needed (existing tests validate functionality)
+- **Rollback**: Yes (revert PR if issues found)
+- **Dependency Impact**: Yes (CG identified affected tasks, regression tests will validate)
+
+### Option B: Manual PR Creation
+
+1. Push the branch: `git push origin CopilotSkill/CGFix/<WORK_ITEM_ID>`
+2. GitHub will output a PR creation URL
+3. Visit the URL or go to: `https://github.com/microsoft/azure-pipelines-tasks/pull/new/CopilotSkill/CGFix/<WORK_ITEM_ID>`
+4. Fill out the PR template with vulnerability details
+5. Reference the ADO work item using the [linking format](https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops)
+6. Complete all checklist items
+
+**Example PR Title:**
+```
+Fix CG alert: update minimatch to 4.2.5 in ExtractFilesV1 and XamarinTestCloudV1
+```
+
+**Example Context Section:**
+```markdown
+This PR fixes a Component Governance security alert identified in [ADO Work Item #2362243](https://mseng.visualstudio.com/AzureDevOps/_workitems/edit/2362243).
+
+**Vulnerability Details:**
+- **CVE ID**: CVE-2026-27903
+- **Severity**: High (7.5 CVSS)
+- **Type**: ReDoS (Regular Expression Denial of Service)
+- **Affected Package**: minimatch 4.2.3
+- **Fix Version**: minimatch 4.2.5
+```
 
 Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
 ```
