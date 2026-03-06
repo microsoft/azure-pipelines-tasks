@@ -34,8 +34,14 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
+
+    // Normalize aarch64 to arm64 for compatibility.
+    // Regardless of input, treat aarch64 the same as arm64.
+    if (jdkArchitectureOption.toLowerCase() === 'aarch64') {
+        jdkArchitectureOption = 'arm64';
+    }
+
     const extendedJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption}`.toUpperCase();
-    const extendedARMJavaHome: string = `JAVA_HOME_${versionSpec}_${jdkArchitectureOption.toLowerCase()}`;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
@@ -44,13 +50,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (preInstalled) {
-        let preInstalledJavaDirectory: string | undefined = taskLib.getVariable(extendedJavaHome);
-        // MS-hosted runners set JAVA_HOME_<version>_arm64 variable for pre-installed ARM JDKs.
-        // If JAVA_HOME_<version>_ARM64 is not found, search for JAVA_HOME_<version>_arm64.
-        if (!preInstalledJavaDirectory) {
-            // Using process.env to read the environment variable as taskLib.getVariable converts the name to upper case.
-            preInstalledJavaDirectory = process.env[extendedARMJavaHome];
-        }
+        const preInstalledJavaDirectory: string | undefined = findPreInstalledJava(versionSpec, jdkArchitectureOption);
         if (!preInstalledJavaDirectory) {
             throw new Error(taskLib.loc('JavaNotPreinstalled', versionSpec));
         }
@@ -88,6 +88,57 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
     toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
+}
+
+/**
+ * Search for a pre-installed Java directory by checking environment variables
+ * in multiple casing variants. For arm64, also falls back to aarch64 variants.
+ * @param versionSpec JDK version spec (e.g. "21").
+ * @param architecture Normalized architecture (x86, x64, or arm64).
+ * @returns The pre-installed Java directory path, or undefined if not found.
+ */
+function findPreInstalledJava(versionSpec: string, architecture: string): string | undefined {
+    // Check JAVA_HOME with uppercase architecture: e.g. JAVA_HOME_21_ARM64
+    // taskLib.getVariable is case-insensitive — covers ARM64, Arm64, arm64, etc.
+    const javaHomeUpperCase: string = `JAVA_HOME_${versionSpec}_${architecture}`.toUpperCase();
+    let javaDirectory: string | undefined = taskLib.getVariable(javaHomeUpperCase);
+    if (javaDirectory) {
+        console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeUpperCase, javaDirectory));
+        return javaDirectory;
+    }
+
+    // process.env is case-sensitive on Linux/macOS.
+    // Check JAVA_HOME with exact lowercase architecture: e.g. JAVA_HOME_21_arm64
+    const javaHomeLowerCaseArch: string = `JAVA_HOME_${versionSpec}_${architecture.toLowerCase()}`;
+    javaDirectory = process.env[javaHomeLowerCaseArch];
+    if (javaDirectory) {
+        console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeLowerCaseArch, javaDirectory));
+        return javaDirectory;
+    }
+
+    // For arm64, fall back to checking aarch64 variants
+    if (architecture.toLowerCase() === 'arm64') {
+        console.log(taskLib.loc('JavaHomeArm64NotFound', javaHomeUpperCase));
+
+        // Check JAVA_HOME with AARCH64: e.g. JAVA_HOME_21_AARCH64
+        // taskLib.getVariable is case-insensitive — covers AARCH64, Aarch64, aarch64, etc.
+        const javaHomeAarch64UpperCase: string = `JAVA_HOME_${versionSpec}_AARCH64`;
+        javaDirectory = taskLib.getVariable(javaHomeAarch64UpperCase);
+        if (javaDirectory) {
+            console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64UpperCase, javaDirectory));
+            return javaDirectory;
+        }
+
+        // Check JAVA_HOME with exact lowercase aarch64 via process.env: e.g. JAVA_HOME_21_aarch64
+        const javaHomeAarch64LowerCase: string = `JAVA_HOME_${versionSpec}_aarch64`;
+        javaDirectory = process.env[javaHomeAarch64LowerCase];
+        if (javaDirectory) {
+            console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64LowerCase, javaDirectory));
+            return javaDirectory;
+        }
+    }
+
+    return undefined;
 }
 
 /**
