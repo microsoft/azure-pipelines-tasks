@@ -203,7 +203,16 @@ If the vulnerable package is a transitive dependency through a third-party npm p
    ```
    If the `overrides` section already exists, add the new entry to it. Do NOT replace existing overrides.
 
-2. Run `npm install` in the task directory to apply the override
+2. **Run `npm install`** in each task directory to regenerate `package-lock.json`:
+   ```bash
+   cd Tasks/<TaskName>
+   npm install
+   cd ../..
+   ```
+   
+   This updates the lock file to reflect the fixed dependency versions. **You must commit the updated `package-lock.json` files.**
+   
+   **Note**: `npm install` may fail locally due to authentication issues with the private Azure DevOps npm registry. This is expected and acceptable - the CI/CD pipeline will properly authenticate and validate the changes. If you cannot run `npm install` locally, you can skip this step and let CI handle it, but still include `package-lock.json` files in your commit if they were updated.
 
 ### Step 6: Verify the Fix
 
@@ -330,8 +339,8 @@ node make.js test --task ExtractFilesV1 --suite L0
 Create a commit with a clear message on your feature branch:
 
 ```bash
-# Stage the changes
-git add Tasks/<TaskName>/package.json Tasks/<TaskName>/task.json Tasks/<TaskName>/task.loc.json
+# Stage the changes (include package-lock.json)
+git add Tasks/<TaskName>/package.json Tasks/<TaskName>/package-lock.json Tasks/<TaskName>/task.json Tasks/<TaskName>/task.loc.json
 
 # Commit with a descriptive message
 git commit -m "Fix CG alert: update <PACKAGE_NAME> to <SAFE_VERSION> in <TaskName>
@@ -347,7 +356,7 @@ git push origin CopilotSkill/CGFix/<WORK_ITEM_ID>
 
 **Example:**
 ```bash
-git add Tasks/ExtractFilesV1/package.json Tasks/ExtractFilesV1/task.json Tasks/ExtractFilesV1/task.loc.json
+git add Tasks/ExtractFilesV1/package.json Tasks/ExtractFilesV1/package-lock.json Tasks/ExtractFilesV1/task.json Tasks/ExtractFilesV1/task.loc.json
 git commit -m "Fix CG alert: update minimatch to 4.2.5 in ExtractFilesV1
 
 - Updated direct dependency to address CVE-2026-27903
