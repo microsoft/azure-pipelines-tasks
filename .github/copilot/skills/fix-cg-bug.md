@@ -84,12 +84,16 @@ From the alert JSON response, extract:
 
 ### Step 2a: Get All Affected Locations (Optional but Recommended)
 
-To programmatically find all tasks/locations where the vulnerable component is used:
+To programmatically find all tasks/locations where the vulnerable component is used, first get the latest snapshot ID from the Component Governance API:
 
 ```bash
-# The snapshotTypeId is typically 536113 for the current snapshot
-# You can adjust this if working with different snapshots
-SNAPSHOT_TYPE_ID=536113
+# Get the most recent production snapshot type ID dynamically
+SNAPSHOT_TYPE_ID=$(curl -s -H "Authorization: Bearer $TOKEN" \
+  "https://governance.dev.azure.com/mseng/{projectId}/_apis/ComponentGovernance/GovernedRepositories/{repositoryId}/Branches/master" \
+  | jq -r '.snapshotTypes[] | select(.externalTrackingState == "production") | "\(.latestScanDate) \(.typeId)"' \
+  | sort -r | head -1 | awk '{print $2}')
+
+echo "Using snapshot type ID: $SNAPSHOT_TYPE_ID"
 
 # Get all component locations from Component Governance
 curl -s -H "Authorization: Bearer $TOKEN" \
@@ -106,7 +110,14 @@ cat /tmp/locations.json | jq -r '.value["<PACKAGE_NAME> <VERSION> -Npm"][]' \
 
 **Example with actual values:**
 ```bash
-SNAPSHOT_TYPE_ID=536113
+# Get the latest production snapshot ID
+SNAPSHOT_TYPE_ID=$(curl -s -H "Authorization: Bearer $TOKEN" \
+  "https://governance.dev.azure.com/mseng/b924d696-3eae-4116-8443-9a18392d8544/_apis/ComponentGovernance/GovernedRepositories/33/Branches/master" \
+  | jq -r '.snapshotTypes[] | select(.externalTrackingState == "production") | "\(.latestScanDate) \(.typeId)"' \
+  | sort -r | head -1 | awk '{print $2}')
+
+echo "Using snapshot type ID: $SNAPSHOT_TYPE_ID"
+
 curl -s -H "Authorization: Bearer $TOKEN" \
   "https://governance.dev.azure.com/mseng/b924d696-3eae-4116-8443-9a18392d8544/_apis/ComponentGovernance/GovernedRepositories/33/ComponentLocations?snapshotTypeId=${SNAPSHOT_TYPE_ID}" \
   > /tmp/locations.json
@@ -117,6 +128,8 @@ cat /tmp/locations.json | jq -r '.value["minimatch 4.2.3 -Npm"][]' \
   | sed 's|.*/Tasks/\([^/]*\)/.*|\1|' \
   | sort | uniq
 ```
+
+**Note**: The snapshot type ID changes over time as new builds are scanned. Always retrieve it dynamically from the `/Branches/master` endpoint rather than hardcoding it. The command above selects the most recent production snapshot by sorting by `latestScanDate`.
 
 This will give you a definitive list of all task directories that use the vulnerable package, saving you from manual searching.
 
