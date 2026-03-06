@@ -378,7 +378,7 @@ Use the `mcp_github_create_pull_request` tool to create a PR programmatically:
 
 **Key PR Details to Include:**
 - **Title**: `Fix CG alert: update <package> to <version> in <TaskNames>`
-- **Context Section**: Link to ADO work item, CVE ID, severity, vulnerability type
+- **Context Section**: Use `AB#<WORK_ITEM_ID>` format (e.g., `AB#2362243`) for automatic Azure Boards linking, include CVE ID, severity, vulnerability type
 - **Risk Assessment**: Low for minor dependency updates
 - **Change Behind Feature Flag**: No (dependency updates don't use feature flags)
 - **Documentation Changes**: No (for internal dependency updates)
@@ -391,9 +391,8 @@ Use the `mcp_github_create_pull_request` tool to create a PR programmatically:
 1. Push the branch: `git push origin CopilotSkill/CGFix/<WORK_ITEM_ID>`
 2. GitHub will output a PR creation URL
 3. Visit the URL or go to: `https://github.com/microsoft/azure-pipelines-tasks/pull/new/CopilotSkill/CGFix/<WORK_ITEM_ID>`
-4. Fill out the PR template with vulnerability details
-5. Reference the ADO work item using the [linking format](https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops)
-6. Complete all checklist items
+4. Fill out the PR template with vulnerability details (use `AB#<WORK_ITEM_ID>` for automatic Azure Boards linking)
+5. Complete all checklist items
 
 **Example PR Title:**
 ```
@@ -402,7 +401,7 @@ Fix CG alert: update minimatch to 4.2.5 in ExtractFilesV1 and XamarinTestCloudV1
 
 **Example Context Section:**
 ```markdown
-This PR fixes a Component Governance security alert identified in [ADO Work Item #2362243](https://mseng.visualstudio.com/AzureDevOps/_workitems/edit/2362243).
+This PR fixes a Component Governance security alert identified in AB#2362243.
 
 **Vulnerability Details:**
 - **CVE ID**: CVE-2026-27903
@@ -411,6 +410,8 @@ This PR fixes a Component Governance security alert identified in [ADO Work Item
 - **Affected Package**: minimatch 4.2.3
 - **Fix Version**: minimatch 4.2.5
 ```
+
+**Note**: Use the `AB#<WORK_ITEM_ID>` format (e.g., `AB#2362243`) to automatically link Azure DevOps work items to GitHub PRs. This is the [Azure Boards linking syntax](https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops) that creates bidirectional references between GitHub and ADO.
 
 Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
 ```
