@@ -204,8 +204,46 @@ If the vulnerable package is a direct dependency in the task's `package.json`:
    ```
 2. Run `npm install` in the task directory to update `package-lock.json`
 
-#### Case B: Transitive Dependency via a Common Package (`azure-pipelines-tasks-*`)
-If the vulnerable package comes through a common package like `azure-pipelines-tasks-utility-common`, `azure-pipelines-tasks-packaging-common`, `azure-pipelines-tasks-azure-arm-rest`, etc.:
+#### Case B: Transitive Dependency via an Owned Common Package
+If the vulnerable package comes through one of our owned packages listed below, the fix must happen in the source repo first.
+
+**How to identify owned packages:** Match the dependency name against these patterns. Some packages have been renamed over time, so both old and new names must be recognized.
+
+**Owned packages from `azure-pipelines-tasks-common-packages` repo** (https://github.com/microsoft/azure-pipelines-tasks-common-packages):
+
+| Pattern | Known names | Source folder |
+|---|---|---|
+| `*artifacts-common*` | `azure-pipelines-tasks-artifacts-common` | `artifacts-common` |
+| `*az-blobstorage-provider*` | `azp-tasks-az-blobstorage-provider` | `az-blobstorage-provider` |
+| `*azure-arm-rest*` | `azure-pipelines-tasks-azure-arm-rest` | `azure-arm-rest` |
+| `*azurermdeploycommon*` | `azure-pipelines-tasks-azurermdeploycommon` | `azurermdeploycommon` |
+| `*codeanalysis-common*` | `azure-pipelines-tasks-codeanalysis-common` | `codeanalysis-common` |
+| `*codecoverage-tools*` | `azure-pipelines-tasks-codecoverage-tools` | `codecoverage-tools` |
+| `*docker-common*` | `azure-pipelines-tasks-docker-common` | `docker-common` |
+| `*ios-signing-common*` | `azure-pipelines-tasks-ios-signing-common` | `ios-signing-common` |
+| `*java-common*` | `azure-pipelines-tasks-java-common` | `java-common` |
+| `*k8s-common*` or `*kubernetes-common*` | `azure-pipelines-tasks-k8s-common` (current npm name), `azure-pipelines-tasks-kubernetes-common` (old name, still used in some tasks) | `kubernetes-common` |
+| `*msbuildhelpers*` | `azure-pipelines-tasks-msbuildhelpers` | `msbuildhelpers` |
+| `*packaging-common*` | `azure-pipelines-tasks-packaging-common`, `azure-pipelines-tasks-packaging-common-v3` (legacy variant) | `packaging-common` |
+| `*securefiles-common*` | `azure-pipelines-tasks-securefiles-common` | `securefiles-common` |
+| `*utility-common*` | `azure-pipelines-tasks-utility-common` | `utility-common` |
+| `*webdeployment-common*` | `azure-pipelines-tasks-webdeployment-common` | `webdeployment-common` |
+
+**Owned packages from `azure-pipelines-task-lib` repo** (https://github.com/microsoft/azure-pipelines-task-lib):
+
+| Pattern | Known names |
+|---|---|
+| `azure-pipelines-task-lib` | `azure-pipelines-task-lib` |
+
+**Owned packages from `azure-pipelines-tool-lib` repo** (https://github.com/microsoft/azure-pipelines-tool-lib):
+
+| Pattern | Known names |
+|---|---|
+| `azure-pipelines-tool-lib` | `azure-pipelines-tool-lib` |
+
+**Matching logic:** When checking if a dependency is an owned package, use pattern/substring matching rather than exact name matching. For example, if `npm ls` shows the vulnerable package comes through a package containing `k8s-common` OR `kubernetes-common`, treat it as an owned package.
+
+If the vulnerable package is a transitive dependency brought in by any of the above:
 
 **STOP and inform the user:**
 > The vulnerable package `<PACKAGE_NAME>` is a transitive dependency brought in by `<COMMON_PACKAGE_NAME>`. This common package is maintained in the separate repository: https://github.com/microsoft/azure-pipelines-tasks-common-packages
