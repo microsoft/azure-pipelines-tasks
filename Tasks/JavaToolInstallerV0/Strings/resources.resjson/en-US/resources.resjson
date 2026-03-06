@@ -58,7 +58,6 @@
   "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s",
   "loc.messages.JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
   "loc.messages.JavaHomeArm64NotFound": "%s is not defined. Searching for aarch64 variant.",
-  "loc.messages.JavaHomeFoundWithAarch64": "Found pre-installed Java using %s.",
   "loc.messages.JavaHomeResolvedFrom": "Resolved Java home from %s: %s",
   "loc.messages.UsePreinstalledJava": "Use preinstalled JDK from %s",
   "loc.messages.WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",

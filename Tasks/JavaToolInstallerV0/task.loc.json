@@ -221,7 +221,6 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "JavaHomeArm64NotFound": "ms-resource:loc.messages.JavaHomeArm64NotFound",
-    "JavaHomeFoundWithAarch64": "ms-resource:loc.messages.JavaHomeFoundWithAarch64",
     "JavaHomeResolvedFrom": "ms-resource:loc.messages.JavaHomeResolvedFrom",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
     "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",

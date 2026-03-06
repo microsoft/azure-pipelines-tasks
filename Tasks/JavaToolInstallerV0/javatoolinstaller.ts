@@ -125,7 +125,6 @@ function findPreInstalledJava(versionSpec: string, architecture: string): string
         const javaHomeAarch64UpperCase: string = `JAVA_HOME_${versionSpec}_AARCH64`;
         javaDirectory = taskLib.getVariable(javaHomeAarch64UpperCase);
         if (javaDirectory) {
-            console.log(taskLib.loc('JavaHomeFoundWithAarch64', javaHomeAarch64UpperCase));
             console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64UpperCase, javaDirectory));
             return javaDirectory;
         }
@@ -134,7 +133,6 @@ function findPreInstalledJava(versionSpec: string, architecture: string): string
         const javaHomeAarch64LowerCase: string = `JAVA_HOME_${versionSpec}_aarch64`;
         javaDirectory = process.env[javaHomeAarch64LowerCase];
         if (javaDirectory) {
-            console.log(taskLib.loc('JavaHomeFoundWithAarch64', javaHomeAarch64LowerCase));
             console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64LowerCase, javaDirectory));
             return javaDirectory;
         }
