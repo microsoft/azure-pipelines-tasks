@@ -14,11 +14,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 271,
+    "Minor": 263,
     "Patch": 0
   },
-  "deprecated": true,
-  "deprecationMessage": "The VisualStudioTestPlatformInstaller@1 task is deprecated. Please use the latest version of the Visual Studio Test Platform Installer task.",
   "satisfies": [
     "VsTest"
   ],
