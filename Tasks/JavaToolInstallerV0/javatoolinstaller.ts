@@ -35,8 +35,6 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     let compressedFileExtension: string;
     let jdkDirectory: string;
 
-    // Normalize aarch64 to arm64 for compatibility.
-    // Regardless of input, treat aarch64 the same as arm64.
     if (jdkArchitectureOption.toLowerCase() === 'aarch64') {
         jdkArchitectureOption = 'arm64';
     }
@@ -90,16 +88,7 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
     toolLib.prependPath(path.join(jdkDirectory, BIN_FOLDER));
 }
 
-/**
- * Search for a pre-installed Java directory by checking environment variables
- * in multiple casing variants. For arm64, also falls back to aarch64 variants.
- * @param versionSpec JDK version spec (e.g. "21").
- * @param architecture Normalized architecture (x86, x64, or arm64).
- * @returns The pre-installed Java directory path, or undefined if not found.
- */
 function findPreInstalledJava(versionSpec: string, architecture: string): string | undefined {
-    // Check JAVA_HOME with uppercase architecture: e.g. JAVA_HOME_21_ARM64
-    // taskLib.getVariable is case-insensitive — covers ARM64, Arm64, arm64, etc.
     const javaHomeUpperCase: string = `JAVA_HOME_${versionSpec}_${architecture}`.toUpperCase();
     let javaDirectory: string | undefined = taskLib.getVariable(javaHomeUpperCase);
     if (javaDirectory) {
@@ -107,8 +96,6 @@ function findPreInstalledJava(versionSpec: string, architecture: string): string
         return javaDirectory;
     }
 
-    // process.env is case-sensitive on Linux/macOS.
-    // Check JAVA_HOME with exact lowercase architecture: e.g. JAVA_HOME_21_arm64
     const javaHomeLowerCaseArch: string = `JAVA_HOME_${versionSpec}_${architecture.toLowerCase()}`;
     javaDirectory = process.env[javaHomeLowerCaseArch];
     if (javaDirectory) {
@@ -116,12 +103,9 @@ function findPreInstalledJava(versionSpec: string, architecture: string): string
         return javaDirectory;
     }
 
-    // For arm64, fall back to checking aarch64 variants
     if (architecture.toLowerCase() === 'arm64') {
         console.log(taskLib.loc('JavaHomeArm64NotFound', javaHomeUpperCase));
 
-        // Check JAVA_HOME with AARCH64: e.g. JAVA_HOME_21_AARCH64
-        // taskLib.getVariable is case-insensitive — covers AARCH64, Aarch64, aarch64, etc.
         const javaHomeAarch64UpperCase: string = `JAVA_HOME_${versionSpec}_AARCH64`;
         javaDirectory = taskLib.getVariable(javaHomeAarch64UpperCase);
         if (javaDirectory) {
@@ -129,7 +113,6 @@ function findPreInstalledJava(versionSpec: string, architecture: string): string
             return javaDirectory;
         }
 
-        // Check JAVA_HOME with exact lowercase aarch64 via process.env: e.g. JAVA_HOME_21_aarch64
         const javaHomeAarch64LowerCase: string = `JAVA_HOME_${versionSpec}_aarch64`;
         javaDirectory = process.env[javaHomeAarch64LowerCase];
         if (javaDirectory) {
