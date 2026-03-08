@@ -269,14 +269,13 @@
       "label": "JDK architecture",
       "defaultValue": "x64",
       "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64, aarch64) of the JDK.",
+      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
       "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
         "x64": "x64",
-        "arm64": "arm64",
-        "aarch64": "aarch64"
+        "arm64": "arm64"
       }
     },
     {
