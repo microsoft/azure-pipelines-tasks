@@ -23,7 +23,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^5.2.5",
     "collections": "3.0.0",
-    "minimatch": "^4.0.0"
+    "minimatch": "^4.2.5"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
