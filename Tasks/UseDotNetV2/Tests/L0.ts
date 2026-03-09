@@ -361,7 +361,7 @@ describe('UseDotNet', function () {
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
         await tr.runAsync();
         runValidations(() => {
-            assert(tr.succeeded == false, ("Should have failed as the URL is whitespace only."));
+              assert(tr.succeeded == false, ("Should have failed as the URL is invalid."));
             assert(tr.stdout.indexOf("VersionCanNotBeDownloadedFromUrl") > -1, "Should have thrown URL validation error.");
         }, tr);
     });
