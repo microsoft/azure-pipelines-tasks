@@ -194,7 +194,7 @@ export class VersionInstaller {
             new URL(urlString);
             return true;
         } catch {
-            return true;
+            return false;
         }
     }
 

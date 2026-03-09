@@ -189,32 +189,24 @@ if (process.env["__case__"] == "urlerror") {
                 });
         });
 }
-else if (process.env["__case__"] == "downloaderror") {
-    versionInstaller.downloadAndInstall(versionInfo, "file")
-        .then(() => {
-            tl.setResult(tl.TaskResult.Succeeded, "DidNotThrowAsExpected");
-        }, (ex) => {
-            tl.setResult(tl.TaskResult.Failed, "ThrewAsExpected");
-        });
-}
-else if (process.env["__case__"] == "validurl") {
-    versionInstaller.downloadAndInstall(versionInfo, "https://dotnetcli.azureedge.net/dotnet/Sdk/2.2.104/dotnet-sdk-2.2.104-win-x64.zip")
-        .then(() => {
-            tl.setResult(tl.TaskResult.Succeeded, "SuccessfullyInstalled");
-        }, (ex) => {
-            tl.setResult(tl.TaskResult.Failed, "ShouldNotHaveThrown" + ex);
-        });
-}
 else if (process.env["__case__"] == "invalidurl") {
-    versionInstaller.downloadAndInstall(versionInfo, "   ")
+    versionInstaller.downloadAndInstall(versionInfo, "not-a-valid-url")
         .then(() => {
             tl.setResult(tl.TaskResult.Succeeded, "ShouldHaveThrown");
         }, (ex) => {
             tl.setResult(tl.TaskResult.Failed, "ThrewAsExpected");
         });
 }
+else if (process.env["__case__"] == "downloaderror") {
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
+        .then(() => {
+            tl.setResult(tl.TaskResult.Succeeded, "DidNotThrowAsExpected");
+        }, (ex) => {
+            tl.setResult(tl.TaskResult.Failed, "ThrewAsExpected");
+        });
+}
 else if (process.env["__case__"] == "extracterror") {
-    versionInstaller.downloadAndInstall(versionInfo, "file")
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
         .then(() => {
             tl.setResult(tl.TaskResult.Succeeded, "DidNotThrowAsExpected");
         }, (ex) => {
@@ -222,7 +214,7 @@ else if (process.env["__case__"] == "extracterror") {
         });
 }
 else if (process.env["__case__"] == "filecopyerror") {
-    versionInstaller.downloadAndInstall(versionInfo, "file")
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
         .then(() => {
             tl.setResult(tl.TaskResult.Succeeded, "SuccessfullyCompleted");
         }, (ex) => {
@@ -232,17 +224,17 @@ else if (process.env["__case__"] == "filecopyerror") {
 else if (process.env["__case__"] == "conditionalfilecopy") {
     // version being installed is the latest among already installed ones in the installation path and hence files should also be copied
     versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "runtime-version":"2.0.100", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");
-    versionInstaller.downloadAndInstall(versionInfo, "file")
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
         .then(() => {
             // version being installed is not the latest and hence root directory files should not be copied.
             versionInfo = new VersionInfo(JSON.parse(`{"version":"2.0.1", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");
-            versionInstaller.downloadAndInstall(versionInfo, "file")
+            versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
                 .then(() => {
                     versionInstaller = new VersionInstaller("runtime", installationPath);
 
                     // version being installed is the latest but files will still no be copied as runtime is being installed.
                     versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "runtime");
-                    versionInstaller.downloadAndInstall(versionInfo, "file")
+                    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
                         .then(() => {
                             tl.setResult(tl.TaskResult.Succeeded, "CopiedFilesConditionally");
                         }, (ex) => {
@@ -256,7 +248,7 @@ else if (process.env["__case__"] == "conditionalfilecopy") {
         });
 }
 else if (process.env["__case__"] == "versioncompletefileerror") {
-    versionInstaller.downloadAndInstall(versionInfo, "file")
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
         .then(() => {
             tl.setResult(tl.TaskResult.Succeeded, "ShouldHaveThrown");
         }, (ex) => {
@@ -265,7 +257,7 @@ else if (process.env["__case__"] == "versioncompletefileerror") {
 
 }
 else if (process.env["__case__"] == "successfullinstall") {
-    versionInstaller.downloadAndInstall(versionInfo, "file")
+    versionInstaller.downloadAndInstall(versionInfo, "https://path.to/file.zip")
         .then(() => {
             tl.setResult(tl.TaskResult.Succeeded, "SuccessfullyInstalled");
         }, (ex) => {

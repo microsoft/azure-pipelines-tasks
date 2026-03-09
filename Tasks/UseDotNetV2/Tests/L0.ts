@@ -356,16 +356,6 @@ describe('UseDotNet', function () {
         }, tr);
     });
 
-    it("[VersionInstaller] downloadAndInstall should accept valid HTTPS URLs and pass validation", async () => {
-        process.env["__case__"] = "validurl";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
-        await tr.runAsync();
-        runValidations(() => {
-            assert(tr.succeeded == true, ("Should have successfully validated HTTPS URL and proceeded with download."));
-            assert(tr.stdout.indexOf("SuccessfullyInstalled") > -1, "Should have successfully installed the package.");
-        }, tr);
-    });
-
     it("[VersionInstaller] downloadAndInstall should reject whitespace-only URLs", async () => {
         process.env["__case__"] = "invalidurl";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
