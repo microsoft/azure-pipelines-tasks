@@ -263,7 +263,7 @@ function Get-VstsFederatedToken {
 
         if ($retryAttempt -lt $retryLimit) {
             Write-Verbose "Failed to fetch federated token. Remaining retries count = '$($retryLimit - $retryAttempt)'"
-            Start-Sleep -m $timeToWait * $retryAttempt
+            Start-Sleep -m ($timeToWait * $retryAttempt)
         }
     }
 
