@@ -23,7 +23,7 @@
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4",
     "azure-pipelines-tasks-ios-signing-common": "2.0.3-preview",
-    "azure-pipelines-tasks-securefiles-common": "2.263.0"
+    "azure-pipelines-tasks-securefiles-common": "^2.270.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

@@ -3,13 +3,19 @@ import * as path from 'path';
 import { format, parse, Url } from 'url';
 import * as Q from 'q';
 
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tlModule from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
 import * as util from 'azure-pipelines-tasks-packaging-common/util';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
+
+let tl: typeof tlModule = tlModule;
+
+export function __setTaskLibForTesting(taskLib: typeof tlModule): void {
+    tl = taskLib;
+}
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;

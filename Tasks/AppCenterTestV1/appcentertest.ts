@@ -1,7 +1,9 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import apim = require('azure-devops-node-api');
+
 import * as lim from 'azure-devops-node-api/interfaces/LocationsInterfaces';
+
 import os = require('os');
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
@@ -87,7 +89,7 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
     let prepareRunner = tl.tool(cliPath);
     let framework: string = tl.getInput('framework', true);
 
-    // framework agnositic options 
+    // framework agnositic options
     prepareRunner.arg(['test', 'prepare', framework]);
     prepareRunner.arg(['--artifacts-dir', artifactsDir]);
 

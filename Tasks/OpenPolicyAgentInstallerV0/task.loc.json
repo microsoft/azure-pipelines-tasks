@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 263,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -39,6 +39,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "src//opatoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//opatoolinstaller.js",
       "argumentFormat": ""
     }

@@ -24,6 +24,7 @@ export class Repository
 }
 
 async function main(): Promise<void> {
+    tl.warning(tl.loc("TaskDeprecationNotice"));
     tl.setResourcePath(path.join(__dirname, "task.json"));
     try {
         // Local feeds
