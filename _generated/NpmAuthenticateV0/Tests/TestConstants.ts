@@ -28,7 +28,9 @@ export const TestEnvVars = {
     endpointAuthScheme: '__npmauth_endpointAuthScheme__',    // 'Token' or 'UsernamePassword'
     endpointUsername: '__npmauth_endpointUsername__',
     endpointPassword: '__npmauth_endpointPassword__',
-    isInternalEndpoint: '__npmauth_isInternalEndpoint__'     // 'true' to simulate Azure DevOps headers
+    isInternalEndpoint: '__npmauth_isInternalEndpoint__',
+    packagingLocationShouldFail: '__npmauth_packagingLocationShouldFail__',
+    httpProbeShouldFail: '__npmauth_httpProbeShouldFail__'
 };
 
 // Test data constants

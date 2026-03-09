@@ -1,48 +1,18 @@
-/**
- * npmrcCredential.ts
- *
- * Resolves service endpoint credentials into .npmrc auth lines.
- *
- * Given a service endpoint ID, this module reads the endpoint's URL and auth
- * scheme from the task lib, determines whether the endpoint targets an Azure
- * DevOps registry (via an HTTP probe), and formats the appropriate .npmrc
- * credential lines.  All secret values are masked via tl.setSecret().
- */
-
 import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-/** A resolved credential entry ready to be written into an .npmrc file. */
 export interface NpmrcCredential {
-    /** The registry URL this credential applies to. */
     url: string;
-    /** One or more .npmrc auth lines (e.g. nerfDart:_authToken=...). */
     auth: string;
-    /** When true, only auth lines are written — no registry= line. */
     authOnly: boolean;
 }
 
-/** Intermediate representation of endpoint username/password/email fields. */
 interface EndpointCredentials {
     username: string;
     password: string;
     email: string;
 }
 
-// ─── Public API ──────────────────────────────────────────────────────────────
-
-/**
- * Build an NpmrcCredential from a service endpoint ID.
- *
- * Reads the endpoint's URL and auth scheme from the task lib, determines
- * whether the endpoint targets an Azure DevOps registry (via an HTTP probe),
- * and formats the appropriate .npmrc auth lines:
- *   - Token + internal:  basic auth (VssToken / base64 password)
- *   - Token + external:  bearer auth (_authToken)
- *   - UsernamePassword:  basic auth (username / base64 password)
- */
 export async function resolveServiceEndpointCredential(
     endpointId: string,
     normalizeRegistry: (url: string) => string,
@@ -52,8 +22,8 @@ export async function resolveServiceEndpointCredential(
     const endpointUrl = getEndpointUrl(endpointId, normalizeRegistry);
     const nerfed = toNerfDart(endpointUrl);
 
-    // For Token auth, probe the endpoint to determine if it's an Azure DevOps
-    // registry (uses basic auth) or an external registry (uses bearer token).
+    // For Token auth, probe whether this is an Azure DevOps registry (basic auth)
+    // or an external registry (bearer token).
     const isInternalEndpoint = endpointAuth.scheme === 'Token'
         ? await isEndpointInternal(endpointUrl)
         : false;
@@ -61,7 +31,6 @@ export async function resolveServiceEndpointCredential(
     const credentials = buildEndpointCredentials(endpointAuth, isInternalEndpoint);
     const auth = formatNpmrcAuthLines(nerfed, credentials);
 
-    // Mask raw secrets so they don't appear in pipeline logs.
     if (credentials.password) {
         tl.setSecret(credentials.password);
     }
@@ -69,9 +38,6 @@ export async function resolveServiceEndpointCredential(
     return { url: endpointUrl, auth, authOnly: true };
 }
 
-// ─── Endpoint auth resolution ────────────────────────────────────────────────
-
-/** Read endpoint authorization, throwing a clear error on failure. */
 function getEndpointAuth(endpointId: string): tl.EndpointAuthorization {
     try {
         return tl.getEndpointAuthorization(endpointId, false);
@@ -80,7 +46,6 @@ function getEndpointAuth(endpointId: string): tl.EndpointAuthorization {
     }
 }
 
-/** Read and normalize the endpoint URL. */
 function getEndpointUrl(endpointId: string, normalizeRegistry: (url: string) => string): string {
     try {
         return normalizeRegistry(tl.getEndpointUrl(endpointId, false));
@@ -89,11 +54,7 @@ function getEndpointUrl(endpointId: string, normalizeRegistry: (url: string) => 
     }
 }
 
-/**
- * Map an endpoint auth scheme to username/password/email fields.
- * Token auth on Azure DevOps endpoints is re-encoded as basic auth
- * because Azure DevOps npm registries don't support Bearer PATs.
- */
+// ADO npm registries don't support Bearer PATs, so Token auth gets re-encoded as basic auth
 function buildEndpointCredentials(
     endpointAuth: tl.EndpointAuthorization,
     isInternalEndpoint: boolean
@@ -108,10 +69,8 @@ function buildEndpointCredentials(
             const apitoken = endpointAuth.parameters['apitoken'];
             tl.setSecret(apitoken);
             if (!isInternalEndpoint) {
-                // External registry — use bearer auth directly.
                 return { username: '', password: apitoken, email: '' };
             }
-            // Azure DevOps — re-encode as basic auth.
             return { username: 'VssToken', password: apitoken, email: 'VssEmail' };
         }
         default:
@@ -119,19 +78,16 @@ function buildEndpointCredentials(
     }
 }
 
-// ─── Auth line formatting ────────────────────────────────────────────────────
-
-/** Format credential fields into .npmrc auth lines. */
 function formatNpmrcAuthLines(nerfed: string, credentials: EndpointCredentials): string {
     const lineEnd = os.EOL;
 
-    // Bearer-style (external token — no username, just a token)
+    // Bearer-style (external token)
     if (!credentials.username && credentials.password) {
         return `${nerfed}:_authToken=${credentials.password}${lineEnd}`
              + `${nerfed}:always-auth=true`;
     }
 
-    // Basic-style (username + base64-encoded password)
+    // Basic-style (username + base64 password)
     const password64 = Buffer.from(credentials.password).toString('base64');
     tl.setSecret(password64);
 
@@ -141,12 +97,8 @@ function formatNpmrcAuthLines(nerfed: string, credentials: EndpointCredentials):
          + `${nerfed}:always-auth=true`;
 }
 
-// ─── Internal endpoint detection ─────────────────────────────────────────────
-
-/**
- * Probe the endpoint to determine whether it is an Azure DevOps service
- * by inspecting HTTP response headers for x-tfs / x-vss markers.
- */
+// Probes the endpoint with an HTTP GET to check for x-tfs/x-vss response
+// headers, which indicate an Azure DevOps service.
 async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
     const httpModule = endpointUrl.startsWith('https') ? await import('https') : await import('http');
 
@@ -155,7 +107,6 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
             headers: { 'X-TFS-FedAuthRedirect': 'Suppress' }
         };
 
-        // Use proxy if configured.
         try {
             const proxy = tl.getHttpProxyConfiguration();
             if (proxy) {
@@ -166,7 +117,6 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
         }
 
         const req = httpModule.get(endpointUrl, options, (resp) => {
-            // Drain the response body to prevent connection leak.
             resp.resume();
 
             const rawHeaders = resp.rawHeaders || [];

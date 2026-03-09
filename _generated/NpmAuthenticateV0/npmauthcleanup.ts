@@ -9,7 +9,7 @@ async function run() {
     const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
     if (indexFile && tl.exist(indexFile) && tl.exist(workingFilePath)) {
-        const backupManager = NpmrcBackupManager.fromSaveDirectory(npmrcPath);
+        const backupManager = NpmrcBackupManager.fromBackupDirectory(npmrcPath);
         const restored = backupManager.restoreBackedUpFile(workingFilePath);
         if (restored) {
             console.log(tl.loc("RevertedChangesToNpmrc", workingFilePath));

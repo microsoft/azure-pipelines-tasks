@@ -1,27 +1,20 @@
-/**
- * npmrcBackupManager.ts
- *
- * Tracks which .npmrc files have been backed up during this pipeline run so
- * that npmauthcleanup can restore them to their original state.  State is
- * persisted to an index.json file inside the agent temp directory so that
- * multiple consecutive calls to NpmAuthenticate on the same .npmrc are
- * idempotent (the very first snapshot is kept and used for the final restore).
- */
-
 import * as path from 'path';
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
+
+// Tracks which .npmrc files have been backed up so that npmauthcleanup can
+// restore them.  The first snapshot per file is kept; subsequent calls for
+// the same path are no-ops.
 
 export class NpmrcBackupManager {
     private readonly indexFilePath: string;
     private index: { [key: string]: number };
 
-    constructor(private readonly saveNpmrcPath: string) {
-        this.indexFilePath = path.join(saveNpmrcPath, 'index.json');
+    constructor(private readonly backupDirectory: string) {
+        this.indexFilePath = path.join(backupDirectory, 'index.json');
         this.index = this.loadOrCreateIndex();
     }
 
-    /** Backs up `npmrcPath` if it has not already been backed up this run. */
     ensureBackedUp(npmrcPath: string): void {
         if (this.index[npmrcPath] !== undefined) {
             return;
@@ -49,7 +42,7 @@ export class NpmrcBackupManager {
     }
 
     isOnlyIndexFileRemaining(): boolean {
-        return fs.readdirSync(this.saveNpmrcPath).length === 1;
+        return fs.readdirSync(this.backupDirectory).length === 1;
     }
 
     private loadOrCreateIndex(): { [key: string]: number } {
@@ -64,7 +57,7 @@ export class NpmrcBackupManager {
     }
 
     private getBackupFilePath(entryId: number | string): string {
-        return path.join(this.saveNpmrcPath, String(entryId));
+        return path.join(this.backupDirectory, String(entryId));
     }
 
     private saveFileWithName(sourcePath: string, entryId: number | string): void {
@@ -73,7 +66,7 @@ export class NpmrcBackupManager {
         fs.copyFileSync(sourcePath, backupPath);
     }
 
-    static fromSaveDirectory(saveNpmrcPath: string): NpmrcBackupManager {
-        return new NpmrcBackupManager(saveNpmrcPath);
+    static fromBackupDirectory(backupDirectory: string): NpmrcBackupManager {
+        return new NpmrcBackupManager(backupDirectory);
     }
 }

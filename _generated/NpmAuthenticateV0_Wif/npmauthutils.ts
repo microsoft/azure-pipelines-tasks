@@ -13,9 +13,6 @@ import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-a
 export { NpmrcCredential } from './npmrcCredential';
 export { NpmrcBackupManager } from './npmrcBackupManager';
 
-// ─── URL utilities ───────────────────────────────────────────────────────────
-
-/** Ensure a registry URL ends with a trailing slash. */
 export function normalizeRegistry(registryUrl: string): string {
     if (registryUrl && !registryUrl.endsWith('/')) {
         registryUrl += '/';
@@ -23,10 +20,8 @@ export function normalizeRegistry(registryUrl: string): string {
     return registryUrl;
 }
 
-/**
- * Convert a registry URL to its nerf-dart form (//host/path/).
- * Used for matching registry entries and formatting .npmrc auth keys.
- */
+// Convert a registry URL to nerf-dart form (//host/path/) for matching
+// registry entries and formatting .npmrc auth keys.
 export function toNerfDart(registryUrl: string): string {
     const parsed = URL.parse(registryUrl);
     const host = (parsed.host || '').toLowerCase();
@@ -36,9 +31,6 @@ export function toNerfDart(registryUrl: string): string {
     }
     return `//${host}${pathname}`;
 }
-
-// ─── Task setup ──────────────────────────────────────────────────────────────
-// Called once at the start of main(): validate inputs, set up temp directories.
 
 export function validateNpmrcPath(): string {
     const npmrcPath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
@@ -52,23 +44,23 @@ export function validateNpmrcPath(): string {
     return npmrcPath;
 }
 
-export function getKnownEndpointsFromVariable(): string[] {
+export function getPreviouslyAuthenticatedUrls(): string[] {
     return tl.getVariable('EXISTING_ENDPOINTS')
         ? tl.getVariable('EXISTING_ENDPOINTS').split(',')
         : [];
 }
 
-export function initializeSaveDirectory(): string {
+export function initializeBackupDirectory(): string {
     if (tl.getVariable('SAVE_NPMRC_PATH')) {
         return tl.getVariable('SAVE_NPMRC_PATH');
     }
     let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
     tempPath = path.join(tempPath, 'npmAuthenticate');
     tl.mkdirP(tempPath);
-    const saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
-    tl.setVariable('SAVE_NPMRC_PATH', saveNpmrcPath, false);
+    const backupDirectory = fs.mkdtempSync(tempPath + path.sep);
+    tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
     tl.setVariable('NPM_AUTHENTICATE_TEMP_DIRECTORY', tempPath, false);
-    return saveNpmrcPath;
+    return backupDirectory;
 }
 
 export async function resolvePackagingLocation(): Promise<pkgLocationUtils.PackagingLocation> {
@@ -81,14 +73,11 @@ export async function resolvePackagingLocation(): Promise<pkgLocationUtils.Packa
     }
 }
 
-// ─── Registry discovery ──────────────────────────────────────────────────────
-// Collect credential sources: local project .npmrc feeds + service endpoints.
-
-/**
- * Takes `workingDirectory` (not a file path) because the project .npmrc is always at `{workingDirectory}/.npmrc`.
- * This is NOT the user-specified `workingFile` input that the task modifies.
- */
-export function resolveLocalNpmRegistries(
+// Discovers registries from the project-scoped .npmrc (workingDirectory/.npmrc)
+// that match packaging service hosts, and authenticates them with System.AccessToken.
+// Takes workingDirectory (not a file path) because this reads the project .npmrc
+// alongside package.json, NOT the user-specified workingFile input.
+export function resolveInternalFeedCredentials(
     workingDirectory: string,
     packagingUris: string[]
 ): NpmrcCredential[] {
@@ -98,13 +87,10 @@ export function resolveLocalNpmRegistries(
         return [];
     }
 
-    // Extract host names from the org's packaging URIs for comparison.
     const packagingHosts = packagingUris
         .map(uri => { try { return new URL.URL(uri).host.toLowerCase(); } catch { return undefined; } })
         .filter((host): host is string => host !== undefined);
 
-    // Parse the project .npmrc and keep only registries whose host matches
-    // one of the org's packaging hosts — these are internal feeds.
     const allRegistries = getRegistriesFromNpmrc(projectNpmrcPath);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
@@ -117,10 +103,9 @@ export function resolveLocalNpmRegistries(
 
     tl.debug(tl.loc('FoundLocalRegistries', localRegistries.length));
 
-    // Authenticate each local registry with the pipeline's System.AccessToken.
     return localRegistries.map(registryUrl => {
         const nerfed = toNerfDart(registryUrl);
-        // SYSTEMVSSCONNECTION is always OAuth — getEndpointAuthorizationParameter throws if missing.
+        // SYSTEMVSSCONNECTION is always OAuth — throws if missing.
         const accessToken = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
         tl.setSecret(accessToken);
         return {
@@ -131,12 +116,7 @@ export function resolveLocalNpmRegistries(
     });
 }
 
-/**
- * Resolve credentials for each service endpoint listed in the `customEndpoint`
- * task input.  Each endpoint is read from the task lib, its auth scheme is
- * mapped to .npmrc credential lines, and secrets are masked.
- */
-export async function resolveEndpointRegistries(knownEndpoints: string[]): Promise<NpmrcCredential[]> {
+export async function resolveEndpointRegistries(previouslyAuthenticatedUrls: string[]): Promise<NpmrcCredential[]> {
     const endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (!endpointIds || endpointIds.length === 0) {
         return [];
@@ -145,19 +125,16 @@ export async function resolveEndpointRegistries(knownEndpoints: string[]): Promi
     const registries: NpmrcCredential[] = [];
     await Promise.all(endpointIds.map(async (endpointId) => {
         const credential = await resolveServiceEndpointCredential(endpointId, normalizeRegistry, toNerfDart);
-        if (knownEndpoints.indexOf(credential.url) !== -1) {
+        if (previouslyAuthenticatedUrls.indexOf(credential.url) !== -1) {
             tl.warning(tl.loc('DuplicateCredentials', credential.url));
         } else {
-            knownEndpoints.push(credential.url);
-            tl.setVariable('EXISTING_ENDPOINTS', knownEndpoints.join(','), false);
+            previouslyAuthenticatedUrls.push(credential.url);
+            tl.setVariable('EXISTING_ENDPOINTS', previouslyAuthenticatedUrls.join(','), false);
         }
         registries.push(credential);
     }));
     return registries;
 }
-
-// ─── Per-registry credential matching ────────────────────────────────────────
-// Called inside the auth loop to find which credential source matches a registry URL.
 
 export function tryResolveFromEndpoints(
     registryUrlString: string,
@@ -174,13 +151,12 @@ export function tryResolveFromEndpoints(
 export function tryResolveFromLocalRegistries(
     registryUrlString: string,
     localRegistries: NpmrcCredential[],
-    knownEndpoints: string[],
+    previouslyAuthenticatedUrls: string[],
     registryHost: string
 ): NpmrcCredential | null {
     for (const localRegistry of localRegistries) {
         if (toNerfDart(localRegistry.url) === toNerfDart(registryUrlString)) {
-            if (knownEndpoints.indexOf(localRegistry.url) !== -1) {
-                // Warn when a local registry was already configured via a service endpoint.
+            if (previouslyAuthenticatedUrls.indexOf(localRegistry.url) !== -1) {
                 tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                 tl.warning(tl.loc('FoundEndpointCredentials', registryHost));
             }
@@ -190,10 +166,6 @@ export function tryResolveFromLocalRegistries(
     return null;
 }
 
-// ─── .npmrc reading and writing ──────────────────────────────────────────────
-// Parse registries from .npmrc, append auth entries, strip stale credentials.
-
-/** Parse all registry URLs from an .npmrc file, normalizing and saving them back. */
 export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
     if (!fs.existsSync(npmrcPath)) {
         tl.warning(`npmrc file not found: ${npmrcPath}`);
@@ -211,24 +183,16 @@ export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
         }
     }
 
-    // Write normalized registry URLs back to disk so downstream npm/yarn
-    // sees consistent trailing-slash URLs.
+    // Write normalized URLs back so downstream npm/yarn sees trailing slashes.
     tl.writeFile(npmrcPath, ini.stringify(config));
 
     return registries;
 }
 
-/** Append auth lines to the end of an .npmrc file. */
 export function appendAuthToNpmrc(npmrcPath: string, authEntry: string): void {
     fs.appendFileSync(npmrcPath, os.EOL + authEntry + os.EOL);
 }
 
-/**
- * Removes any credential lines that reference `registryUrl` from `lines` and
- * writes the updated content back to disk.  Warns once if checked-in
- * credentials are being overridden (suppressed when the same URL appears
- * multiple times in the file, e.g. both `registry=` and `@scope:registry=`).
- */
 export function removeExistingCredentialEntries(
     npmrcPath: string,
     lines: string[],
@@ -253,8 +217,6 @@ export function removeExistingCredentialEntries(
     return lines;
 }
 
-// ─── WIF helpers ─────────────────────────────────────────────────────────────
-
 export async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string): Promise<string | undefined> {
     if (!adoServiceConnection) {
         return undefined;
@@ -265,8 +227,6 @@ export async function getAzureDevOpsServiceConnectionCredentials(adoServiceConne
     }
     return federatedAuthToken;
 }
-
-// ─── Error logging ───────────────────────────────────────────────────────────
 
 export function logPackagingError(error: Error): void {
     if (error && (error as any).stack) {
