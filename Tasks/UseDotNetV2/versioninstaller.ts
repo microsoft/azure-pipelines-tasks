@@ -1,7 +1,6 @@
 "use strict";
 import * as path from 'path';
 import * as fs from "fs";
-import * as url from "url";
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
@@ -28,7 +27,7 @@ export class VersionInstaller {
      * @param downloadUrl The download url of the sdk / runtime.
      */
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
-        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
+        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !this.isValidUrl(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
         let version = versionInfo.getVersion();
@@ -185,6 +184,15 @@ export class VersionInstaller {
         console.log("Using fallback url for download: " + url);
         var downloadPath = await toolLib.downloadToolWithRetries(url)
         return downloadPath;
+    }
+
+    private isValidUrl(urlString: string): boolean {
+        try {
+            new URL(urlString);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     private packageType: string;
