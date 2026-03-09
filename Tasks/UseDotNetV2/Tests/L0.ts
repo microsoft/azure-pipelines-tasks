@@ -356,7 +356,7 @@ describe('UseDotNet', function () {
         }, tr);
     });
 
-    it("[VersionInstaller] downloadAndInstall should reject whitespace-only URLs", async () => {
+    it("[VersionInstaller] downloadAndInstall should reject invalid URLs", async () => {
         process.env["__case__"] = "invalidurl";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
         await tr.runAsync();

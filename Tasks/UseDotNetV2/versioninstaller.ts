@@ -27,7 +27,7 @@ export class VersionInstaller {
      * @param downloadUrl The download url of the sdk / runtime.
      */
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
-        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !this.isValidUrl(downloadUrl)) {
+        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !this.isValidHttpUrl(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
         let version = versionInfo.getVersion();
@@ -186,13 +186,13 @@ export class VersionInstaller {
         return downloadPath;
     }
 
-    private isValidUrl(urlString: string): boolean {
+    private isValidHttpUrl(urlString: string): boolean {
         if (!urlString || urlString.trim().length === 0) {
             return false;
         }
         try {
-            new URL(urlString);
-            return true;
+            const u = new URL(urlString);
+            return u.protocol === "http:" || u.protocol === "https:";
         } catch {
             return false;
         }
