@@ -9,14 +9,13 @@ const dotnetPath = path.join('path','dotnet');
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
 const globalJsonPath = path.join(repoRoot,'global.json');
 
-
 const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 
-tmr.setInput('workingDirectory','src');
+tmr.setInput('command','test');
 tmr.setInput('projects', path.join('src','app','temp.csproj'));
 tmr.setInput('publishTestResults','false');
 tmr.setInput('workingDirectory','src/app');

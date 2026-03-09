@@ -7,8 +7,6 @@ const repoRoot = path.join('agent','home','directory','sources');
 const dotnetPath = path.join('path','dotnet');
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
-const globalJsonPath = path.join(repoRoot,'global.json');
-
 
 const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -16,7 +14,7 @@ const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 
-tmr.setInput('workingDirectory','src');
+tmr.setInput('command','test');
 tmr.setInput('projects', path.join('src','app','temp.csproj'));
 tmr.setInput('publishTestResults','false');
 tmr.setInput('workingDirectory','src/app');
@@ -35,7 +33,7 @@ const answers: ma.TaskLibAnswers = {
         [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
     exist: {
-        
+        // intentionally empty → no global.json
     },
     stats: {
         [projectPath]: { isFile: true }
@@ -56,4 +54,5 @@ const fs = require('fs');
 const fsClone = { ...fs };
 
 tmr.registerMock('fs', fsClone);
+
 tmr.run();
