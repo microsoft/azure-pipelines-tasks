@@ -49,7 +49,7 @@ namespace BuildConfigGen
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
                 ["typescript"] = "^5.7.2",
-                ["azure-pipelines-task-lib"] = "^5.2.4",
+                ["azure-pipelines-task-lib"] = "^5.2.6",
                 ["azure-devops-node-api"] = "^15.1.3",
                 ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
                 ["azure-pipelines-tasks-azure-arm-rest"] = "^3.270.0",
@@ -222,7 +222,7 @@ namespace BuildConfigGen
 
             Console.WriteLine($"Current sprint: {currentSprint}");
 
-            if (bumpBaseTask) 
+            if (bumpBaseTask)
             {
                 // Split the task string and bump each task individually
                 var taskList = task!.Split(',', '|');
@@ -673,7 +673,7 @@ namespace BuildConfigGen
 
                 if (targetConfigs.Any(x => x.isNode))
                 {
-                    // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+                    // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0)
                     if (!HasNodeHandler(taskHandlerContents))
                     {
                         Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
@@ -798,7 +798,7 @@ namespace BuildConfigGen
                                         {
                                             throw new Exception($"There is no default config for task {task}");
                                         }
-                                        
+
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                     }
@@ -1135,7 +1135,7 @@ namespace BuildConfigGen
 
         /// <summary>
         /// Writes task.json with version information and build config mapping.
-        /// When useSemverBuildConfig is true, uses the same major.minor.patch for all build configuration tasks, 
+        /// When useSemverBuildConfig is true, uses the same major.minor.patch for all build configuration tasks,
         /// but the "build" suffix of semver is different and directly corresponds to the config name.
         /// </summary>
         private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName, string? existingLocalPackageVersion, bool useSemverBuildConfig = false, Config.ConfigRecord? defaultConfig = null)
@@ -1262,6 +1262,8 @@ namespace BuildConfigGen
             {
                 UpdateDependencyIfExists(outputNodePackagePathJsonNode, kvp.Key, kvp.Value);
             }
+
+            UpdateDependencyIfExists(outputNodePackagePathJsonNode, "azure-pipelines-tasks-kubernetes-common", "npm:azure-pipelines-tasks-k8s-common@^2.270.1");
 
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
@@ -1686,7 +1688,7 @@ always-auth=true", false);
                 if (config.useGlobalVersion)
                 {
                     TaskVersion versionToUse = globalVersion;
-                    
+
                     if (config.abTaskReleases && useSemverBuildConfig)
                     {
                         // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.

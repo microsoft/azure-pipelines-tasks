@@ -27,7 +27,7 @@
     "azure-pipelines-task-lib": "^5.2.6",
     "azure-pipelines-tasks-azure-arm-rest": "^3.270.0",
     "azure-pipelines-tasks-docker-common": "^2.268.0",
-    "azure-pipelines-tasks-kubernetes-common": "^2.267.0",
+    "azure-pipelines-tasks-kubernetes-common": "npm:azure-pipelines-tasks-k8s-common@^2.270.1",
     "azure-pipelines-tool-lib": "^2.0.10",
     "js-yaml": "^3.14.1"
   }
