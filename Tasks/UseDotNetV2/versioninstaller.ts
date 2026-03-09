@@ -187,11 +187,14 @@ export class VersionInstaller {
     }
 
     private isValidUrl(urlString: string): boolean {
+        if (!urlString || urlString.trim().length === 0) {
+            return false;
+        }
         try {
             new URL(urlString);
             return true;
         } catch {
-            return false;
+            return true;
         }
     }
 

@@ -197,6 +197,22 @@ else if (process.env["__case__"] == "downloaderror") {
             tl.setResult(tl.TaskResult.Failed, "ThrewAsExpected");
         });
 }
+else if (process.env["__case__"] == "validurl") {
+    versionInstaller.downloadAndInstall(versionInfo, "https://dotnetcli.azureedge.net/dotnet/Sdk/2.2.104/dotnet-sdk-2.2.104-win-x64.zip")
+        .then(() => {
+            tl.setResult(tl.TaskResult.Succeeded, "SuccessfullyInstalled");
+        }, (ex) => {
+            tl.setResult(tl.TaskResult.Failed, "ShouldNotHaveThrown" + ex);
+        });
+}
+else if (process.env["__case__"] == "invalidurl") {
+    versionInstaller.downloadAndInstall(versionInfo, "   ")
+        .then(() => {
+            tl.setResult(tl.TaskResult.Succeeded, "ShouldHaveThrown");
+        }, (ex) => {
+            tl.setResult(tl.TaskResult.Failed, "ThrewAsExpected");
+        });
+}
 else if (process.env["__case__"] == "extracterror") {
     versionInstaller.downloadAndInstall(versionInfo, "file")
         .then(() => {
