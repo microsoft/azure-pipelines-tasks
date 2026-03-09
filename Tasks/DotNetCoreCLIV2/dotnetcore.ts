@@ -147,42 +147,40 @@ export class dotNetExe {
     }
 
     private findGlobalJsonFile(): string | null {
-    const repoRoot =
-        path.resolve(
-            tl.getVariable('Build.SourcesDirectory') ||
-            tl.getVariable('System.DefaultWorkingDirectory') ||
-            process.cwd()
-        );
+        const repoRoot =
+            path.resolve(
+                tl.getVariable('Build.SourcesDirectory') ||
+                tl.getVariable('System.DefaultWorkingDirectory') ||
+                process.cwd()
+            );
 
-    const inputWd = tl.getInput('workingDirectory', false) || process.cwd();
-    let searchDir = path.resolve(inputWd);
+        let searchDir = path.resolve(this.workingDirectory || process.cwd());
 
-    tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+        tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
 
-    while (true) {
-        const candidate = path.join(searchDir, 'global.json');
-        tl.debug(`Checking for global.json at: ${candidate}`);
+        while (true) {
+            const candidate = path.join(searchDir, 'global.json');
+            tl.debug(`Checking for global.json at: ${candidate}`);
 
-        if (tl.exist(candidate)) {
-            tl.debug(`Found global.json at: ${candidate}`);
-            return candidate;
+            if (tl.exist(candidate)) {
+                tl.debug(`Found global.json at: ${candidate}`);
+                return candidate;
+            }
+
+            const parentDir = path.dirname(searchDir);
+            if (parentDir === searchDir) {
+                break;
+            }
+
+            const rel = path.relative(repoRoot, parentDir);
+            if (rel.startsWith('..') || path.isAbsolute(rel)) {
+                break;
+            }
+
+            searchDir = parentDir;
         }
 
-        const parentDir = path.dirname(searchDir);
-        if (parentDir === searchDir) {
-            break;
-        }
-
-        const rel = path.relative(repoRoot, parentDir);
-        if (rel.startsWith('..') || path.isAbsolute(rel) && rel === '') {
-
-            break;
-        }
-
-        searchDir = parentDir;
-    }
-
-    return null;
+        return null;
     }
 
     private getIsMicrosoftTestingPlatform(): boolean {
@@ -202,7 +200,7 @@ export class dotNetExe {
         try {
             //const testRunner = JSON5.parse(globalJsonContents)?.test?.runner??.testRunner;
             const parsed = JSON5.parse(globalJsonContents);
-            const testRunner = parsed?.test?.runner ?? parsed?.testRunner;
+            const testRunner = parsed?.test?.runner;
             tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {

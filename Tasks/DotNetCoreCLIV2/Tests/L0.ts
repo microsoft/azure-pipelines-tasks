@@ -561,6 +561,7 @@ describe('DotNetCoreExe Suite', function () {
     });
 
     it('test command finds non-root global.json file based on working directory', async () => {
+      
       const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
       const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -569,4 +570,49 @@ describe('DotNetCoreExe Suite', function () {
       assert(tr.succeeded, 'task should succeed when global.json is found');
       assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
     });
+
+    it('finds global.json in parent directory of workingDirectory', async () => {
+
+    const tp = path.join(__dirname, './TestCommandTests/runTestsWithParentGlobalJson.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.succeeded, 'task should succeed when global.json exists in parent directory');
+    assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+});
+
+   it('does not search above repository root for global.json', async () => {
+
+    const tp = path.join(__dirname, './TestCommandTests/runTestsWithGlobalJsonAboveRepo.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.succeeded, 'task should still succeed');
+    assert.strictEqual(tr.errorIssues.length, 0);
+});
+  
+   it('returns null when no global.json exists in repository', async () => {
+
+    const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutGlobalJson.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.succeeded, 'task should succeed even if global.json is not present');
+    assert.strictEqual(tr.errorIssues.length, 0);
+});
+
+it('finds global.json located at repository root', async () => {
+
+    const tp = path.join(__dirname, './TestCommandTests/runTestsWithRootGlobalJson.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assert(tr.succeeded, 'task should succeed when global.json exists at repo root');
+    assert.strictEqual(tr.errorIssues.length, 0);
+});
+
 });
