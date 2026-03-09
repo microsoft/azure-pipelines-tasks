@@ -51,6 +51,12 @@ namespace BuildConfigGen
                 ["typescript"] = "^5.7.2",
                 ["azure-pipelines-task-lib"] = "^5.2.4",
                 ["azure-devops-node-api"] = "^15.1.3",
+                ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.270.0",
+                ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
+                ["azure-pipelines-tasks-packaging-common"] = "^3.270.0",
+                ["azure-pipelines-tasks-securefiles-common"] = "^2.270.0",
+                ["azure-pipelines-tasks-utility-common"] = "^3.270.0",
                 ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
             };
 
@@ -80,7 +86,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node20_229_13 = new ConfigRecord(name: nameof(Node20_229_13), constMappingKey: "Node20_229_13", isDefault: false, isNode: true, nodePackageVersion: "^20.11.0", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node20", mergeToBase: true);
             public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node20", mergeToBase: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
-            public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: true, nodeHandler: "Node20_1", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Wif");
+            public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: true, nodeHandler: "Node24", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Wif",shouldUpdateLocalPkgs: false, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: false, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "LocalPackages", shouldUpdateLocalPkgs: true, useGlobalVersion: true, useAltGeneratedPath: true);
             public static readonly ConfigRecord Node24_1 = new ConfigRecord(name: nameof(Node24_1), constMappingKey: "Node24_1", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_2 = new ConfigRecord(name: nameof(Node24_2), constMappingKey: "Node24_2", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
@@ -1227,7 +1233,7 @@ namespace BuildConfigGen
                 // Upgrade task-lib to npm version if specified, otherwise use local file path
                 if (!string.IsNullOrEmpty(effectiveTaskLibVersion))
                 {
-                    outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = effectiveTaskLibVersion;
+                    UpdateDependencyIfExists(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", effectiveTaskLibVersion);
                 }
                 else
                 {

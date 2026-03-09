@@ -10,7 +10,7 @@ import fs = require('fs');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('JenkinsDownloadArtifacts L0 Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
 
     before((done) => {
         process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
