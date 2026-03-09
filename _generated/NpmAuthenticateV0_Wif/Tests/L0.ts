@@ -1,16 +1,8 @@
-import fs = require('fs');
-import assert = require('assert');
-import path = require('path');
+// NpmAuthenticateV0 L0 test suite entrypoint
+// Imports all grouped test files so mocha discovers them via a single target
 
-describe('NpmAuthenticateV0 Suite', function () {
-    before(() => {
-    });
-
-    after(() => {
-    });
-
-    it('Does a basic hello world test', function(done: MochaDone) {
-        // TODO - add real tests
-        done();
-    });
-});
+import './L0.Authentication';
+import './L0.InputValidation';
+import './L0.Telemetry';
+import './L0.Cleanup';
+import './L0.WIF';

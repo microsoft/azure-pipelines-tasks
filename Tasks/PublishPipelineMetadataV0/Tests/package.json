@@ -4,7 +4,7 @@
   "description": "Azure Pipelines Publish Pipeline Metadata V0 Task Tests",
   "main": "L0.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha L0.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,11 @@
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^5.2.5"
+  },
   "devDependencies": {
-    "@types/mocha": "^5.2.0"
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^20.17.0"
   }
 }

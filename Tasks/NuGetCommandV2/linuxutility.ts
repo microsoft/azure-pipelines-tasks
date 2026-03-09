@@ -17,7 +17,9 @@ export function detectUnsupportedUbuntuVersion(): boolean {
                     tl.which('mono', true);
                 }
                 catch (error) {
-                    if (error.message === tl.loc("LIB_WhichNotFound_Linux", 'mono')) {
+                    // Check if mono is not found - handle both the localized message and any which-not-found error
+                    const errorMessage = error instanceof Error ? error.message : String(error);
+                    if (errorMessage.includes('mono') || errorMessage === tl.loc("LIB_WhichNotFound_Linux", 'mono')) {
                         return true;
                     }
                     throw error;

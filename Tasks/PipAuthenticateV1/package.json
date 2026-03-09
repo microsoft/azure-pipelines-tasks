@@ -27,12 +27,12 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-artifacts-common": "^2.262.0"
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-artifacts-common": "^2.270.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }
