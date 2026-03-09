@@ -147,41 +147,40 @@ export class dotNetExe {
     }
 
     private findGlobalJsonFile(): string | null {
-    const repoRoot =
-        path.resolve(
-            tl.getVariable('Build.SourcesDirectory') ||
-            tl.getVariable('System.DefaultWorkingDirectory') ||
-            process.cwd()
-        );
+        const repoRoot =
+            path.resolve(
+                tl.getVariable('Build.SourcesDirectory') ||
+                tl.getVariable('System.DefaultWorkingDirectory') ||
+                process.cwd()
+            );
 
-    const inputWd = tl.getInput('workingDirectory', false) || process.cwd();
-    let searchDir = path.resolve(inputWd);
+        let searchDir = path.resolve(this.workingDirectory || process.cwd());
 
-    tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+        tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
 
-    while (true) {
-        const candidate = path.join(searchDir, 'global.json');
-        tl.debug(`Checking for global.json at: ${candidate}`);
+        while (true) {
+            const candidate = path.join(searchDir, 'global.json');
+            tl.debug(`Checking for global.json at: ${candidate}`);
 
-        if (tl.exist(candidate)) {
-            tl.debug(`Found global.json at: ${candidate}`);
-            return candidate;
+            if (tl.exist(candidate)) {
+                tl.debug(`Found global.json at: ${candidate}`);
+                return candidate;
+            }
+
+            const parentDir = path.dirname(searchDir);
+            if (parentDir === searchDir) {
+                break;
+            }
+
+            const rel = path.relative(repoRoot, parentDir);
+            if (rel.startsWith('..') || path.isAbsolute(rel)) {
+                break;
+            }
+
+            searchDir = parentDir;
         }
 
-        const parentDir = path.dirname(searchDir);
-        if (parentDir === searchDir) {
-            break;
-        }
-
-        const rel = path.relative(repoRoot, parentDir);
-        if (rel.startsWith('..') || path.isAbsolute(rel) && rel === '') {
-            break;
-        }
-
-        searchDir = parentDir;
-    }
-
-    return null;
+        return null;
     }
 
 
@@ -200,7 +199,9 @@ export class dotNetExe {
         }
 
         try {
-            const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
+            //const testRunner = JSON5.parse(globalJsonContents)?.test?.runner??.testRunner;
+            const parsed = JSON5.parse(globalJsonContents);
+            const testRunner = parsed?.test?.runner;
             tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {
@@ -242,10 +243,23 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (projectFile) {
-             dotnet.arg(projectFile);
+            
+            if (isMTP && projectFile.length > 0) {
+                // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
+                if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
+                    dotnet.arg("--project");
+                }
+                else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
+                    dotnet.arg("--solution");
+                }
+                else {
+                    tl.error(`Project file '${projectFile}' has an unrecognized extension.`);
+                    failedProjects.push(projectFile);
+                    continue;
+                }
             }
 
+            dotnet.arg(projectFile);
             dotnet.line(this.arguments);
 
             
