@@ -240,7 +240,10 @@
         "AzureCLIV3",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
-        "AzureKeyVaultV2"
+        "AzureKeyVaultV2",
+        "AzureFileCopyV4",
+        "AzureFileCopyV5",
+        "AzureFileCopyV6"
     ],
     "Node24_2": [],
     "Node24_3": [],
