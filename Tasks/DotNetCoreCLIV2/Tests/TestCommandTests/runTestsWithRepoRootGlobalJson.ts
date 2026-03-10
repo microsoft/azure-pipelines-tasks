@@ -3,36 +3,38 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
-const repoRoot = 'c:\\agent\\home\\directory\\sources';
-const dotnetPath = 'c:\\path\\dotnet';
+const repoRoot = path.join('agent','home','directory','sources');
+const dotnetPath = path.join('path','dotnet');
 
-const projectPath = path.join(repoRoot, 'src', 'app', 'temp.csproj');
-const globalJsonPath = path.join(repoRoot, 'global.json');
+const projectPath = path.join(repoRoot,'src','app','temp.csproj');
+const globalJsonPath = path.join(repoRoot,'global.json');
 
-const taskPath = path.join(__dirname, '..', '..', 'dotnetcore.js');
+const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 
-tmr.setInput('command', 'test');
-tmr.setInput('projects', 'src/app/temp.csproj');
-tmr.setInput('publishTestResults', 'false');
-tmr.setInput('workingDirectory', 'src/app');
-
-tmr.setVariable('Build.SourcesDirectory', repoRoot);
+tmr.setInput('command','test');
+tmr.setInput('projects', path.join('src','app','temp.csproj'));
+tmr.setInput('publishTestResults','false');
+tmr.setInput('workingDirectory','src/app');
 
 const answers: ma.TaskLibAnswers = {
     osType: {},
+    checkPath: {
+        [projectPath]: true,
+        [dotnetPath]: true,
+        [globalJsonPath]: true
+    },
     which: {
         dotnet: dotnetPath
     },
-    checkPath: {
-        [projectPath]: true,
-        [dotnetPath]: true
+    exec: {
+        [`${dotnetPath} test ${projectPath}`]: { code:0, stdout:'', stderr:'' },
+        [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
     exist: {
-        [projectPath]: true,
         [globalJsonPath]: true
     },
     stats: {
@@ -40,11 +42,7 @@ const answers: ma.TaskLibAnswers = {
         [globalJsonPath]: { isFile: true }
     },
     findMatch: {
-        'src/app/temp.csproj': [projectPath]
-    },
-    exec: {
-        [`${dotnetPath} test ${projectPath}`]: { code: 0, stdout: '', stderr: '' },
-        [`"${dotnetPath}" test "${projectPath}"`]: { code: 0, stdout: '', stderr: '' }
+        [path.join('src','app','temp.csproj')]: [projectPath]
     }
 };
 
@@ -58,8 +56,8 @@ nmh.registerNugetConfigMock();
 const fs = require('fs');
 const fsClone = { ...fs };
 
-fsClone.readFileSync = function (filePath: string) {
-    if (filePath === globalJsonPath) {
+fsClone.readFileSync = function(filePath:string){
+    if(filePath === globalJsonPath){
         return '{"test":{"runner":"Microsoft.Testing.Platform"}}';
     }
     return fs.readFileSync(filePath);
