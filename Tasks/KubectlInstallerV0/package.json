@@ -7,8 +7,8 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^5.2.4",
-    "azure-pipelines-tasks-kubernetes-common": "^2.267.0",
+    "azure-pipelines-task-lib": "^5.2.6",
+    "azure-pipelines-tasks-kubernetes-common": "npm:azure-pipelines-tasks-k8s-common@^2.270.1",
     "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
