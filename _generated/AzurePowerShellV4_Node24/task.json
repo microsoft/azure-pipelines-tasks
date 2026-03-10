@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 271,
-    "Patch": 1
+    "Minor": 272,
+    "Patch": 0
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -220,6 +220,7 @@
   },
   "_buildConfigMapping": {
     "Default": "4.271.0",
-    "Node24_1": "4.271.1"
+    "LocalPackages": "4.249.4",
+    "Node24_1": "4.272.0"
   }
 }
