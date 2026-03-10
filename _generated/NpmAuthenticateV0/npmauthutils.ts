@@ -24,7 +24,7 @@ export function normalizeRegistry(registryUrl: string): string {
 export function toNerfDart(registryUrl: string): string {
     const parsed = URL.parse(registryUrl);
     const host = (parsed.host || '').toLowerCase();
-    let pathname = (parsed.pathname || '/').toLowerCase();
+    let pathname = parsed.pathname || '/';
     if (!pathname.endsWith('/')) {
         pathname += '/';
     }
