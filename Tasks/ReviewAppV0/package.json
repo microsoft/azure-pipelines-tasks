@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Dynamic Resource Task",
   "main": "run.js",
   "scripts": {
+    "build": "node ../../make.js build --task ReviewAppV0",
+    "serverBuild": "node ../../make.js serverBuild --task ReviewAppV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,12 +19,15 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.0.1-preview"
+    "azure-pipelines-task-lib": "^5.2.4"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }

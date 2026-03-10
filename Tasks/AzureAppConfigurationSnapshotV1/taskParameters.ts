@@ -23,7 +23,7 @@ export class TaskParameters {
         let filters: string;
 
         try {
-            taskParameters.configStoreUrl = tl.getInput("AppConfigurationEndpoint", true);
+            taskParameters.configStoreUrl = this.trimTrailingSlash(tl.getInput("AppConfigurationEndpoint", true));
             taskParameters.snapshotName = tl.getInput("SnapshotName", true);
             compositionType = tl.getInput("CompositionType", true);
             filters = tl.getInput("Filters", true);
@@ -147,4 +147,10 @@ export class TaskParameters {
         return tagsObject;
     }
 
+    private static trimTrailingSlash(endpoint: string): string {
+        if (endpoint.endsWith("/")) {
+            return endpoint.slice(0,-1)
+        }
+        return endpoint;
+    }
 }

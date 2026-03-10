@@ -76,11 +76,11 @@ async function getStableHelmVersion(): Promise<string> {
         let latestHelmVersion = semver.clean(stableHelmVersion);
         responseArray.forEach(response => {
             if (response && response.tag_name) {
-                let currentHelmVerison = semver.clean(response.tag_name.toString());
-                if (currentHelmVerison) {
-                    if (currentHelmVerison.toString().indexOf('rc') == -1 && semver.gt(currentHelmVerison, latestHelmVersion)) {
+                let currentHelmVersion = semver.clean(response.tag_name.toString());
+                if (currentHelmVersion) {
+                    if (!semver.prerelease(currentHelmVersion) && semver.gt(currentHelmVersion, latestHelmVersion)) {
                         //If current helm version is not a pre release and is greater than latest helm version
-                        latestHelmVersion = currentHelmVerison;
+                        latestHelmVersion = currentHelmVersion;
                     }
                 }
             }
@@ -110,4 +110,4 @@ function getExecutableExtention(): string {
     }
 
     return "";
-} 
+}

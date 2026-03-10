@@ -1,15 +1,19 @@
 {
   "name": "AzureResourceGroupDeployment",
   "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task AzureResourceGroupDeploymentV2",
+    "serverBuild": "node ../../make.js serverBuild --task AzureResourceGroupDeploymentV2"
+  },
   "dependencies": {
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "agent-base": "6.0.2",
-    "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.254.0",
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-azure-arm-rest": "3.270.0",
     "moment": "^2.29.4",
     "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }

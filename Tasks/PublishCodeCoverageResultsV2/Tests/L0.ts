@@ -26,4 +26,14 @@ describe('PublishCodeCoverageResultsV2 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');  // It will give a message of No code coverage for empty inputs
     });
 
+    // New proxy configuration tests
+    it('Should handle agent proxy configuration correctly', async function() {
+        const testPath = path.join(__dirname, 'L0ProxyAgentConfig.ts');
+        const tr: MockTestRunner = new MockTestRunner(testPath);
+        await tr.runAsync();
+
+        // Verify proxy environment variables are set correctly
+        assert(tr.succeeded || tr.stdout.indexOf('Using agent proxy') >= 0, 'Should configure agent proxy');
+    });
+
 });

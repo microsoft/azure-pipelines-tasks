@@ -4,6 +4,8 @@
   "description": "File transformation and variable substitution",
   "main": "filetransformtask.js",
   "scripts": {
+    "build": "node ../../make.js build --task FileTransformV2",
+    "serverBuild": "node ../../make.js serverBuild --task FileTransformV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,12 +20,13 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common": "4.257.0",
-    "q": "1.4.1"
+    "azure-pipelines-tasks-webdeployment-common": "^4.268.0",
+    "q": "1.4.1",
+    "azure-pipelines-task-lib": "^5.2.4"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   }
 }

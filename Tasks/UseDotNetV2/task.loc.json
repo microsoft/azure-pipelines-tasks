@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 256,
-    "Patch": 0
+    "Minor": 271,
+    "Patch": 1
   },
   "satisfies": [
     "DotNetCore"
@@ -80,6 +80,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion"
     },
     {
+      "name": "checkForExistingVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkForExistingVersion",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkForExistingVersion",
+      "groupName": "advanced"
+    },
+    {
       "name": "includePreviewVersions",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includePreviewVersions",
@@ -124,6 +133,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "usedotnet.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "usedotnet.js",
       "argumentFormat": ""
     }
@@ -204,6 +217,8 @@
     "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
-    "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
+    "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore",
+    "ApplyingRollForwardPolicy": "ms-resource:loc.messages.ApplyingRollForwardPolicy",
+    "InvalidRollForwardPolicy": "ms-resource:loc.messages.InvalidRollForwardPolicy"
   }
 }

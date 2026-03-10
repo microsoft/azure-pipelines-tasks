@@ -3,7 +3,7 @@ import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
-import * as toml from 'toml';
+import * as JSON5 from 'json5';
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -118,7 +118,7 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
-            if (this.isBuildCommand()) {
+            if (this.isBuildCommand() || (this.isPublishCommand() && this.shouldUsePublishLogger())) {
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -147,12 +147,24 @@ export class dotNetExe {
     }
 
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("dotnet.config")) {
+        if (!tl.exist("global.json")) {
+            tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let dotnetConfig = fs.readFileSync("dotnet.config", 'utf8');
-        return toml.parse(dotnetConfig).dotnet?.test?.runner?.name === 'Microsoft.Testing.Platform';
+        let globalJsonContents = fs.readFileSync("global.json", 'utf8');
+        if (!globalJsonContents.length) {
+            return false;
+        }
+
+        try {
+            const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
+            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            return testRunner === 'Microsoft.Testing.Platform';
+        } catch (error) {
+            tl.warning(`Error occurred reading global.json: ${error}`);
+            return false;
+        }
     }
 
     private async executeTestCommand(): Promise<void> {
@@ -188,7 +200,7 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP) {
+            if (isMTP && projectFile.length > 0) {
                 // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
                 if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
                     dotnet.arg("--project");
@@ -449,6 +461,20 @@ export class dotNetExe {
 
     private isRunCommand(): boolean {
         return this.command === "run";
+    }
+
+    private shouldUsePublishLogger(): boolean {
+        // Feature flag to control MSBuild logger for dotnet publish command
+        // Default: enabled (opt-out pattern) - users can disable if needed
+        // Set DISTRIBUTEDTASK_TASKS_DISABLEDOTNETPUBLISHLOGGER=true to disable
+        const disablePublishLogger = tl.getPipelineFeature('DisableDotNetPublishLogger');
+        
+        if (disablePublishLogger) {
+            tl.debug('MSBuild logger disabled for dotnet publish via feature flag DisableDotNetPublishLogger');
+            return false;
+        }
+        
+        return true;
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {

@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 271,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -79,9 +79,14 @@
     "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
+    "TaskDeprecationNotice": "ms-resource:loc.messages.TaskDeprecationNotice",
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",

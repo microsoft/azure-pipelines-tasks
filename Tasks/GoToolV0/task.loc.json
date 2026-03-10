@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 251,
-    "Patch": 1
+    "Minor": 269,
+    "Patch": 0
   },
   "satisfies": [
     "GO"
@@ -50,6 +50,15 @@
       "label": "ms-resource:loc.input.label.goBin",
       "helpMarkDown": "ms-resource:loc.input.help.goBin",
       "groupName": "advanced"
+    },
+    {
+      "name": "goDownloadUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goDownloadUrl",
+      "required": false,
+      "defaultValue": "https://go.dev/dl",
+      "helpMarkDown": "ms-resource:loc.input.help.goDownloadUrl",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -62,6 +71,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "gotool.js",
       "argumentFormat": ""
     }

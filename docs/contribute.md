@@ -100,6 +100,12 @@ npm run build
 node make.js build --task ShellScript
 ```
 
+## Build task with the bypassed auditing step
+
+```bash
+node make.js build --task ShellScript --BypassNpmAudit
+```
+
 ## Run Tests
 
 Tests for each task are located in Tests folder for each task.  To get additional debugging when you are running your tests, set the environment variable TASK_TEST_TRACE to 1.  This will cause additional logging to be printed to STDOUT.

@@ -67,36 +67,6 @@ function Initialize-AzModule {
 }
 
 function Initialize-AzConfig {
-    if ([System.Convert]::ToBoolean($env:USE_FIXED_AZ_CONFIG_INIT)) {
-        Initialize-AzConfigNew
-    } else {
-        Initialize-AzConfigOld
-    }
-}
-
-function Initialize-AzConfigOld {
-    if (Get-Command Get-AzConfig -ErrorAction SilentlyContinue) {
-
-        $configValue = Get-AzConfig -AppliesTo Az -Scope CurrentUser | Where-Object { $_.Key -eq "DisplayBreakingChangeWarning" }  
-        if ($null -ne $configValue -and $configValue.Value -eq $true) {
-            # Update-AzConfig is a part of Az.Accounts
-            if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
-                Write-Verbose "Supressing breaking changes warnings of Az module."
-                Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
-                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az -Scope Process
-            } else {
-                Write-Verbose "Update-AzConfig cmdlet is not available."
-            }                            
-        } else {
-            Write-Verbose "No need to update the config." 
-        } 
-         
-    } else {
-         Write-Verbose "Get-AzConfig cmdlet is not available."
-    }  
-}
-
-function Initialize-AzConfigNew {
     Write-Verbose "Initializing Az Config."
 
     if (![bool](Get-Command Update-AzConfig -ErrorAction SilentlyContinue)) {

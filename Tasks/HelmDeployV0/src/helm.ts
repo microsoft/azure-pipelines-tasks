@@ -70,7 +70,7 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
-    if (!helmCli.isHelmV3()) {
+    if (!helmCli.isHelmV3orHigher()) {
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }

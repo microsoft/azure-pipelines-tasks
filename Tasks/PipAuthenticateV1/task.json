@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 248,
-    "Patch": 1
+    "Minor": 271,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -86,6 +86,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }

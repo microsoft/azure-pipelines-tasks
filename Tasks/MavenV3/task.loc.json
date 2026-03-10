@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
-    "Patch": 6
+    "Minor": 264,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -266,7 +266,8 @@
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     },
     {

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 251,
-    "Patch": 1
+    "Minor": 271,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -46,6 +46,10 @@
     "Node20_1": {
       "target": "npmauth.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -58,6 +62,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
@@ -92,8 +100,8 @@
     "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   },
   "_buildConfigMapping": {
-    "Default": "0.251.1",
+    "Default": "0.271.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.251.2"
+    "wif_242": "0.271.1"
   }
 }

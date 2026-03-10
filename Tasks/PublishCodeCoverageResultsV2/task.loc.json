@@ -10,13 +10,14 @@
     "Build"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 257,
-    "Patch": 0
+    "Minor": 271,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -57,6 +58,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     }

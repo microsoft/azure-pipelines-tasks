@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 269,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -54,6 +54,10 @@
       "target": "src//dockertoolinstaller.js"
     },
     "Node20_1": {
+      "target": "src//dockertoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "src//dockertoolinstaller.js",
       "argumentFormat": ""
     }

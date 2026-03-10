@@ -123,6 +123,7 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
         envVars = this.addToProcessEnvVars(envVars, 'agenttempdirectory', tl.getVariable('Agent.TempDirectory'));
         envVars = this.addToProcessEnvVars(envVars, 'failtaskonfailuretopublishresults', this.failTaskOnFailureToPublishResults);
+        envVars = this.addToProcessEnvVars(envVars, 'allowPtrToDetectTestRunRetryFiles', tl.getVariable('AllowPtrToDetectTestRunRetryFiles'));
         // Setting proxy details
         envVars = this.addToProcessEnvVars(envVars, "proxyurl", tl.getVariable('agent.proxyurl'));
         envVars = this.addToProcessEnvVars(envVars, "proxyusername", tl.getVariable('agent.proxyusername'));
