@@ -6,9 +6,8 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
+import * as npmutils from './npmutils';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
-import * as util from 'azure-pipelines-tasks-packaging-common/util';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
@@ -18,7 +17,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug('Unable to get packaging URIs');
-        util.logError(error);
+        npmutils.logError(error);
         throw error;
     }
     const forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
@@ -45,6 +44,6 @@ async function main(): Promise<void> {
 }
 
 main().catch(error => {
-    tl.rmRF(util.getTempPath());
+    tl.rmRF(npmutils.getTempPath());
     tl.setResult(tl.TaskResult.Failed, error);
 });
