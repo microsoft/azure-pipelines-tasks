@@ -582,7 +582,8 @@ describe('DotNetCoreExe Suite', function () {
     assert.strictEqual(tr.errorIssues.length, 0);
 
     assert(
-        tr.stdOutContained('Test run is MTP'),
+        tr.stdOutContained('Microsoft.Testing.Platform') ||
+        tr.stdOutContained('MTP'),
         'should detect global.json in parent directory'
     );
 });
@@ -627,7 +628,7 @@ describe('DotNetCoreExe Suite', function () {
     );
 });
 
-it('finds global.json located at repository root', async () => {
+  it('finds global.json located at repository root', async () => {
 
     const tp = path.join(__dirname,'./TestCommandTests/runTestsWithRepoRootGlobalJson.js');
     const tr = new ttm.MockTestRunner(tp);
@@ -638,7 +639,8 @@ it('finds global.json located at repository root', async () => {
     assert.strictEqual(tr.errorIssues.length, 0);
 
     assert(
-        tr.stdOutContained('Test run is MTP'),
+        tr.stdOutContained('Microsoft.Testing.Platform') ||
+        tr.stdOutContained('MTP'),
         'should detect global.json at repository root'
     );
 });

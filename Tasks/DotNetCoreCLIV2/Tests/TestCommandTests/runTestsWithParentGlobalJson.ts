@@ -3,8 +3,8 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
-const repoRoot = path.join('c:\\','agent','home','directory','sources');
-const dotnetPath = path.join('c:\\','path','dotnet');
+const repoRoot = 'c:\\agent\\home\\directory\\sources';
+const dotnetPath = 'c:\\path\\dotnet';
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
 const globalJsonPath = path.join(repoRoot,'src','global.json');
