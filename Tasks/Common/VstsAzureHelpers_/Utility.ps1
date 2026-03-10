@@ -1,6 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2'
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureHelpers'
 }
 
 function Add-Certificate {

@@ -1350,7 +1350,7 @@ function ConvertTo-Pfx {
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
     Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
 
-    $useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2VstsAzureRestHelpers'
+    $useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureRestHelpers'
     if(-not $useOpenssLatestVersion) {
         $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
         $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
