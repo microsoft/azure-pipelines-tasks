@@ -541,4 +541,52 @@ describe('UseDotNet', function () {
             assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
         }, tr);
     });
+
+    it("[globaljsonfetcher] run should resolve latestFeature rollForward to major.minor.x version spec.", async () => {
+        process.env["__case__"] = "rollForwardLatestFeature";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("ApplyingRollForwardPolicy") > -1, "should log the rollForward policy being applied");
+        }, tr);
+    });
+    it("[globaljsonfetcher] run should resolve latestPatch rollForward to feature band range.", async () => {
+        process.env["__case__"] = "rollForwardLatestPatch";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("ApplyingRollForwardPolicy") > -1, "should log the rollForward policy being applied");
+        }, tr);
+    });
+    it("[globaljsonfetcher] run should warn and ignore invalid rollForward policy.", async () => {
+        process.env["__case__"] = "invalidRollForward";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("WARNING:") > -1, "should have printed a warning for invalid rollForward policy");
+        }, tr);
+    });
+
+    it("[VersionUtilities] applyRollForwardPolicy should return correct version specs for all policies", async () => {
+        process.env["__case__"] = "returnsCorrectSpecs";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionUtilityApplyRollForwardTests.js"));
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have succeeded"));
+            assert(tr.stdout.indexOf("RollForwardSpecsCorrect") > -1, "Should have returned correct specs for all rollForward policies.");
+        }, tr);
+    });
+
+    it("[VersionUtilities] applyRollForwardPolicy should handle edge cases correctly", async () => {
+        process.env["__case__"] = "edgeCases";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionUtilityApplyRollForwardTests.js"));
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have succeeded"));
+            assert(tr.stdout.indexOf("EdgeCasesCorrect") > -1, "Should have handled all edge cases correctly.");
+        }, tr);
+    });
 });

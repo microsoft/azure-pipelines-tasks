@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
+    "Minor": 271,
     "Patch": 1
   },
   "runsOn": [
@@ -114,8 +114,8 @@
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.270.0",
+    "Default": "0.271.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.270.1"
+    "wif_242": "0.271.1"
   }
 }

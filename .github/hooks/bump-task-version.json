@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": ".github/hooks/bump-task-version.sh",
+        "timeout": 10
+      }
+    ]
+  }
+}
