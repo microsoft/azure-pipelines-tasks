@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
+    "Minor": 271,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -370,7 +370,8 @@
     "StartingOperation": "Starting %s %s at %s '%s' scope%s",
     "UsingTemplateFile": "Using template file: %s",
     "UsingParametersFile": "Using parameters file: %s",
-    "BicepVersionInstalled": "Installed Bicep version %s to %s",
+    "BicepCacheHit": "Using cached Bicep version %s from %s",
+    "BicepDownloading": "Downloading Bicep version %s...",
     "DiagnosticsReturned": "Diagnostics returned by the API",
     "FilesIgnoredForDelete": "Template and parameter files are not required for delete operations and will be ignored.",
     "OperationSucceeded": "Operation completed successfully",
@@ -384,6 +385,7 @@
     "UnsupportedTemplateFile": "Unsupported template file type: %s",
     "UnsupportedParametersFile": "Unsupported parameters file type: %s",
     "FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
+    "FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
     "CreateFailed": "Create failed",
     "ValidationFailed": "Validation failed",
     "OperationFailed": "Operation failed",

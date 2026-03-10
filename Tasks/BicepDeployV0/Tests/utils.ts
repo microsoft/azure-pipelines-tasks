@@ -66,3 +66,52 @@ export function createMockAuthHelper() {
     }
   };
 }
+
+// Register tool-lib mock to prevent real tool cache operations (tl.stats crash on mock paths)
+export function registerToolLibMock(tr: any) {
+  const path = require('path');
+  tr.registerMock('azure-pipelines-tool-lib/tool', {
+    findLocalTool: function(_toolName: string, _versionSpec: string, _arch?: string) { return undefined; },
+    cacheFile: function(_sourceFile: string, _targetFile: string, _tool: string, _version: string, _arch?: string) {
+      return path.join(__dirname, '_tools', 'bicep', _version, _arch || 'x64');
+    },
+  });
+  process.env['AGENT_TOOLSDIRECTORY'] = path.join(__dirname, '_tools');
+}
+
+// Create a TaskMockRunner with common mocks and inputs pre-registered
+export function createTaskMockRunner(rewiremock?: any) {
+  const path = require('path');
+  const tmrm = require('azure-pipelines-task-lib/mock-run');
+  const taskPath = path.join(__dirname, '..', 'main.js');
+  const tr = new tmrm.TaskMockRunner(taskPath);
+  setupMockAzureEndpoint('AzureRM');
+  tr.registerMock('./auth', createMockAuthHelper());
+  registerToolLibMock(tr);
+  if (rewiremock) {
+    const { createBicepNodeMock } = require('./bicepNodeMock');
+    rewiremock('bicep-node').with(createBicepNodeMock());
+  }
+  tr.setInput('ConnectedServiceName', 'AzureRM');
+  tr.setInput('scope', 'resourceGroup');
+  tr.setInput('subscriptionId', environmentData.subscriptionId);
+  tr.setInput('resourceGroupName', environmentData.resourceGroupName);
+  return tr;
+}
+
+// Create a TaskMockRunner pre-configured for deployment tests
+export function createDeploymentMockRunner(rewiremock?: any) {
+  const tr = createTaskMockRunner(rewiremock);
+  tr.setInput('type', 'deployment');
+  return tr;
+}
+
+// Create a TaskMockRunner pre-configured for deployment stack tests
+export function createStackMockRunner(rewiremock?: any) {
+  const tr = createTaskMockRunner(rewiremock);
+  tr.setInput('type', 'deploymentStack');
+  tr.setInput('actionOnUnmanageResources', 'detach');
+  tr.setInput('actionOnUnmanageResourceGroups', 'detach');
+  tr.setInput('denySettingsMode', 'none');
+  return tr;
+}

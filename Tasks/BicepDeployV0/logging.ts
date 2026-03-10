@@ -15,8 +15,10 @@ export class TaskLogger implements Logger {
 
 export const loggingMessageConfig: LoggingMessageConfig = {
     diagnosticsReturned: tl.loc('DiagnosticsReturned'),
-    bicepVersionInstalled: (version: string, path: string) => 
-        tl.loc('BicepVersionInstalled', version, path),
+    bicepCacheHit: (version: string, path: string) =>
+        tl.loc('BicepCacheHit', version, path),
+    bicepDownloading: (version: string) =>
+        tl.loc('BicepDownloading', version),
     requestFailedCorrelation: (correlationId: string | null) => 
         tl.loc('RequestFailedCorrelation', correlationId),
     filesIgnoredForDelete: tl.loc('FilesIgnoredForDelete'),
@@ -58,6 +60,10 @@ export const errorMessageConfig: ErrorMessageConfig = {
     unsupportedTemplateFile: (templateFile: string) => 
         tl.loc('UnsupportedTemplateFile', templateFile),
     templateFileRequired: tl.loc('TemplateFileRequired'),
+    
+    // Bicep cache errors
+    failedToResolveBicepVersion: (url: string) =>
+        tl.loc('FailedToResolveBicepVersion', url),
     
     // WhatIf errors
     invalidChangeType: (changeType: string) => 

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
+    "Minor": 271,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -373,7 +373,8 @@
     "StartingOperation": "ms-resource:loc.messages.StartingOperation",
     "UsingTemplateFile": "ms-resource:loc.messages.UsingTemplateFile",
     "UsingParametersFile": "ms-resource:loc.messages.UsingParametersFile",
-    "BicepVersionInstalled": "ms-resource:loc.messages.BicepVersionInstalled",
+    "BicepCacheHit": "ms-resource:loc.messages.BicepCacheHit",
+    "BicepDownloading": "ms-resource:loc.messages.BicepDownloading",
     "DiagnosticsReturned": "ms-resource:loc.messages.DiagnosticsReturned",
     "FilesIgnoredForDelete": "ms-resource:loc.messages.FilesIgnoredForDelete",
     "OperationSucceeded": "ms-resource:loc.messages.OperationSucceeded",
@@ -387,6 +388,7 @@
     "UnsupportedTemplateFile": "ms-resource:loc.messages.UnsupportedTemplateFile",
     "UnsupportedParametersFile": "ms-resource:loc.messages.UnsupportedParametersFile",
     "FailedToDetermineScope": "ms-resource:loc.messages.FailedToDetermineScope",
+    "FailedToResolveBicepVersion": "ms-resource:loc.messages.FailedToResolveBicepVersion",
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "ValidationFailed": "ms-resource:loc.messages.ValidationFailed",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",

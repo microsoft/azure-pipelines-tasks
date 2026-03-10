@@ -2,7 +2,7 @@ import assert = require("assert");
 import path = require("path");
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 
-// Enable to improve traces while testing
+// Uncomment to improve traces while testing
 // beforeEach(() => {
 //   process.env.TASK_TEST_TRACE = '1';
 // });
@@ -25,8 +25,17 @@ function assertSucceeded(tr: ttm.MockTestRunner, testName: string) {
   assert(tr.stdout.includes("OperationSucceeded"), `${testName}: should have success message`);
 }
 
+// Helper function to validate that output variables are set via ##vso[task.setvariable]
+function assertOutputVariables(tr: ttm.MockTestRunner, expectedOutputs: { name: string, value: string }[], testName: string) {
+  expectedOutputs.forEach(({ name, value }) => {
+    const expectedCommand = `##vso[task.setvariable variable=${name};isOutput=true;issecret=false;]${value}`;
+    assert(tr.stdout.includes(expectedCommand),
+      `${testName}: should set output variable '${name}' to '${value}'\nExpected: ${expectedCommand}\nStdout: ${tr.stdout}`);
+  });
+}
+
 describe("run error handling tests", function() {
-  this.timeout(60000);
+  this.timeout(30000);
   it("sets the failed result using a string error", async function() {
     let tp: string = path.join(__dirname, "runStringError.js");
     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -47,8 +56,8 @@ describe("run error handling tests", function() {
 });
 
 describe("deployments tests", function() {
-  // Set timeout for all tests in this suite (needed for Bicep installation)
-  this.timeout(90000);
+  // Bicep is mocked - no real installation needed
+  this.timeout(30000);
 
   it("runs validation", async function() {
     let tp: string = path.join(__dirname, "deploymentsValidation.js");
@@ -109,11 +118,26 @@ describe("deployments tests", function() {
 
     assertSucceeded(tr, this.test!.title);
   });
+
+  it("runs create and sets output variables", async function() {
+    let tp: string = path.join(__dirname, "deploymentsCreate.js");
+
+    let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assertSucceeded(tr, this.test!.title);
+    assertOutputVariables(tr, [
+      { name: 'stringOutput', value: 'hello world' },
+      { name: 'intOutput', value: '42' },
+      { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
+    ], this.test!.title);
+  });
 });
 
 describe("stacks tests", function() {
-  // Set timeout for all tests in this suite (needed for Bicep installation)
-  this.timeout(90000);
+  // Bicep is mocked - no real installation needed
+  this.timeout(30000);
 
   it("runs validation", async function() {
     let tp: string = path.join(__dirname, "stacksValidation.js");
@@ -163,5 +187,20 @@ describe("stacks tests", function() {
     await tr.runAsync();
 
     assertSucceeded(tr, this.test!.title);
+  });
+
+  it("runs create and sets output variables", async function() {
+    let tp: string = path.join(__dirname, "stacksCreate.js");
+
+    let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assertSucceeded(tr, this.test!.title);
+    assertOutputVariables(tr, [
+      { name: 'stringOutput', value: 'hello world' },
+      { name: 'intOutput', value: '42' },
+      { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
+    ], this.test!.title);
   });
 });

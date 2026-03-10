@@ -4,11 +4,16 @@ const rewiremock = require('rewiremock/node');
 import * as path from 'path';
 import { createStackMockRunner } from './utils';
 
-// Mock stackValidate to return successful validation
-// Note: validate operations do not set output variables (only create does)
-const mockStackValidate = async () => {
+// Mock stackCreate to return successful stack deployment with outputs
+const mockStackCreate = async () => {
   return {
-    properties: {}
+    properties: {
+      outputs: {
+        stringOutput: { type: 'String', value: 'hello world' },
+        intOutput: { type: 'Int', value: 42 },
+        objectOutput: { type: 'Object', value: { key1: 'value1', key2: 'value2' } }
+      }
+    }
   };
 };
 
@@ -18,12 +23,12 @@ rewiremock.enable();
 // Mock the stacks module
 rewiremock('@azure/bicep-deploy-common/stacks')
   .callThrough()
-  .with({ stackValidate: mockStackValidate });
+  .with({ stackCreate: mockStackCreate });
 
 let tr = createStackMockRunner(rewiremock);
 
-tr.setInput('operation', 'validate');
-tr.setInput('name', 'test-validate');
+tr.setInput('operation', 'create');
+tr.setInput('name', 'test-stack-create');
 tr.setInput('parametersFile', path.join(__dirname, 'files', 'basic', 'main.bicepparam'));
 
 tr.run();

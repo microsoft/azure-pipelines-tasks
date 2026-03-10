@@ -4,6 +4,7 @@ import { parseConfig, execute } from '@azure/bicep-deploy-common';
 import { TaskInputParameterNames, TaskInputReader, TaskOutputSetter } from './taskIO';
 import { TaskLogger, errorMessageConfig, loggingMessageConfig } from './logging';
 import { AzureAuthenticationHelper } from './auth';
+import { TaskBicepCache } from './bicepCache';
 
 export async function run(): Promise<void> {
     const authHelper = new AzureAuthenticationHelper();
@@ -15,6 +16,7 @@ export async function run(): Promise<void> {
         const inputParameterNames = new TaskInputParameterNames();
         const logger = new TaskLogger();
         const outputSetter = new TaskOutputSetter();
+        const bicepCache = new TaskBicepCache();
 
         // Parse and validate configuration before Azure login (fail fast)
         const config = parseConfig(inputReader, inputParameterNames);
@@ -23,7 +25,7 @@ export async function run(): Promise<void> {
         await authHelper.loginAzure(connectedService);
 
         // Execute the deployment or deployment stack operation
-        await execute(config, logger, outputSetter, errorMessageConfig, loggingMessageConfig);
+        await execute(config, logger, outputSetter, bicepCache, errorMessageConfig, loggingMessageConfig);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('OperationSucceeded'));
     } catch (err: any) {
         const errorMessage = err instanceof Error ? err.message : String(err);

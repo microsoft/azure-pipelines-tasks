@@ -10,7 +10,9 @@ export class TaskInputReader implements InputReader {
 export class TaskOutputSetter implements OutputSetter {
     setOutput(name: string, value: any): void {
         // The 4th parameter (isOutput=true) makes this variable available as $(taskName.outputName)
-        tl.setVariable(name, value, false, true);
+        // tl.setVariable expects a string — stringify objects/arrays to JSON
+        const stringValue = (typeof value === 'object' && value !== null) ? JSON.stringify(value) : String(value);
+        tl.setVariable(name, stringValue, false, true);
     }
 
     setFailed(message: string): void {
