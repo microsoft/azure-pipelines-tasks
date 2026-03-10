@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 269,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -332,6 +332,15 @@
       "defaultValue": true,
       "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
       "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "allowPackageConflicts",
+      "groupName": "pushAdvanced",
+      "type": "boolean",
+      "label": "Allow duplicates to be skipped",
+      "defaultValue": false,
+      "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that have changed, use this option. It allows the task to report success even if some of your packages are rejected with a 409 Conflict error. This option appends the --skip-duplicate argument to the dotnet nuget push command.",
+      "visibleRule": "command = push"
     },
     {
       "name": "externalEndpoint",

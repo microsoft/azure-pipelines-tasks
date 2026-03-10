@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 269,
+    "Minor": 270,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -332,6 +332,15 @@
       "defaultValue": true,
       "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
       "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "allowPackageConflicts",
+      "groupName": "pushAdvanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowPackageConflicts",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowPackageConflicts",
+      "visibleRule": "command = push"
     },
     {
       "name": "externalEndpoint",
