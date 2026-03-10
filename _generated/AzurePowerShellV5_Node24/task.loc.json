@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 272,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -213,7 +213,7 @@
     "Az_LowerVersionWarning": "ms-resource:loc.messages.Az_LowerVersionWarning"
   },
   "_buildConfigMapping": {
-    "Default": "5.271.0",
-    "Node24_1": "5.272.0"
+    "Default": "5.272.0",
+    "Node24_1": "5.272.1"
   }
 }
