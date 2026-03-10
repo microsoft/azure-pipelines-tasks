@@ -65,6 +65,7 @@ describe('NuGetV0 L0 Suite - Command Execution', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'restore', 'myProject.sln');
             TestHelpers.assertStdoutContains(tr, '-NonInteractive');
         });
     });

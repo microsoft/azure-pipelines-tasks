@@ -27,22 +27,26 @@ describe('NuGetV0 L0 Suite - Tool Resolution', function () {
     });
 
     describe('Credential Provider', function () {
-        it('succeeds when credential provider is available', async () => {
+        it('executes NuGet successfully when credential provider is available', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults()
             );
 
             TestHelpers.assertSuccess(tr);
+            // Verify NuGet actually executed (not just that the task didn't crash)
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'testCommand', 'testArgument');
         });
     });
 
     describe('Extra URL Prefixes', function () {
-        it('succeeds when NuGetTasks.ExtraUrlPrefixesForTesting is set', async () => {
+        it('executes NuGet successfully when extra URL prefixes are configured', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forExtraUrlPrefixes('https://proxy1.example.com;https://proxy2.example.com')
             );
 
             TestHelpers.assertSuccess(tr);
+            // Verify NuGet still executed with the extra prefixes in play
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'testCommand', 'testArgument');
         });
 
         it('does not add extra prefixes when variable is not set', async () => {

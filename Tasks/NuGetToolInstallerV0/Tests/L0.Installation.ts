@@ -14,6 +14,7 @@ describe('NuGetToolInstallerV0 L0 Suite - Tool Installation', function () {
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertStdoutContains(tr, `getNuGet called with versionSpec=${TestData.explicitVersionSpec}`);
+            TestHelpers.assertStdoutDoesNotContain(tr, 'resolveNuGetVersion called');
         });
 
         it('installs NuGet with default version when no spec provided', async () => {
@@ -22,7 +23,10 @@ describe('NuGetToolInstallerV0 L0 Suite - Tool Installation', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            // Verify version was resolved AND the resolved version was passed to getNuGet
             TestHelpers.assertStdoutContains(tr, 'resolveNuGetVersion called');
+            TestHelpers.assertStdoutContains(tr, `getNuGet called with versionSpec=${TestData.resolvedVersionSpec}`);
+            TestHelpers.assertStdoutDoesNotContain(tr, `getNuGet called with versionSpec=${TestData.defaultVersionSpec}`);
         });
     });
 

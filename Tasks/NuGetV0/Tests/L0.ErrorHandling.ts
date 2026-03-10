@@ -1,3 +1,4 @@
+import * as assert from 'assert';
 import { TestHelpers } from './TestHelpers';
 import { TestDataBuilder } from './TestConstants';
 
@@ -13,6 +14,8 @@ describe('NuGetV0 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
+            // Verify the task result was set to failed (errorIssues populated)
+            assert(tr.errorIssues.length > 0, 'Should have error issues from nonzero exit code');
         });
     });
 

@@ -59,6 +59,7 @@ describe('NuGetToolInstallerV0 L0 Suite - Error Handling', function () {
             TestHelpers.assertFailure(tr);
             assert(tr.stderr.indexOf('Failed to resolve NuGet version') >= 0,
                 'stderr should contain the resolve version error');
+            TestHelpers.assertStdoutDoesNotContain(tr, 'getNuGet called with versionSpec=');
         });
     });
 
@@ -68,9 +69,12 @@ describe('NuGetToolInstallerV0 L0 Suite - Error Handling', function () {
                 TestDataBuilder.forNullVersionInfo()
             );
 
-            // Task should succeed; nugetVersion in telemetry will be undefined
+            // Task should succeed; nugetVersion is absent from telemetry (undefined is omitted by JSON.stringify)
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr);
+            // Verify nugetVersion was NOT included (it's undefined, so JSON.stringify skips it)
+            assert(tr.stdout.indexOf('"nugetVersion":"') < 0,
+                'nugetVersion should not have a string value in telemetry when fileVersion is null');
         });
     });
 });

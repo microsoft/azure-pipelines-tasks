@@ -15,7 +15,7 @@ describe('NuGetV0 L0 Suite - Version Validation', function () {
             TestHelpers.assertFailure(tr, 'Info_NuGetSupportedAfter3_5');
         });
 
-        it('succeeds with NuGet version exactly 3.5.0', async () => {
+        it('succeeds and executes NuGet with version exactly 3.5.0', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults({
                     [TestEnvVars.nuGetVersion]: '3.5.0',
@@ -24,9 +24,11 @@ describe('NuGetV0 L0 Suite - Version Validation', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            // Verify NuGet actually executed past the version check
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'testCommand', 'testArgument');
         });
 
-        it('succeeds with NuGet version above 3.5.0', async () => {
+        it('succeeds and executes NuGet with version above 3.5.0', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults({
                     [TestEnvVars.nuGetVersion]: TestData.newVersion,
@@ -35,6 +37,7 @@ describe('NuGetV0 L0 Suite - Version Validation', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'testCommand', 'testArgument');
         });
 
         it('fails when major version is below 3', async () => {
@@ -70,7 +73,7 @@ describe('NuGetV0 L0 Suite - Version Validation', function () {
             TestHelpers.assertFailure(tr, 'Info_NuGetSupportedAfter3_5');
         });
 
-        it('succeeds with NuGet version 4.0.0', async () => {
+        it('succeeds and executes NuGet with version 4.0.0', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults({
                     [TestEnvVars.nuGetVersion]: '4.0.0',
@@ -79,6 +82,7 @@ describe('NuGetV0 L0 Suite - Version Validation', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertNuGetRan(tr, TestData.defaultNuGetPath, 'testCommand', 'testArgument');
         });
     });
 });
