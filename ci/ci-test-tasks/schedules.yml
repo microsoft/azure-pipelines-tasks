@@ -10,7 +10,7 @@ trigger: none
 pr: none
 
 variables:
-  SCHEDULED_TASKS: "KubKubernetesManifestV1,KubernetesV1,HemlDeployV0,HelmDeployV1,KubernetesV0"
+  SCHEDULED_TASKS: "KubernetesManifestV1,KubernetesV1,HemlDeployV0,HelmDeployV1,KubernetesV0"
 
 jobs:
 - job: set_tasks
