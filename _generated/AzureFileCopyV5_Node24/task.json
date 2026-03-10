@@ -310,7 +310,6 @@
   },
   "_buildConfigMapping": {
     "Default": "5.271.2",
-    "LocalPackages": "5.249.4",
     "Node24_1": "5.271.3"
   }
 }
