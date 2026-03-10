@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 271,
-    "Patch": 3
+    "Minor": 272,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -310,6 +310,7 @@
   },
   "_buildConfigMapping": {
     "Default": "5.271.2",
-    "Node24_1": "5.271.3"
+    "LocalPackages": "5.249.4",
+    "Node24_1": "5.272.0"
   }
 }
