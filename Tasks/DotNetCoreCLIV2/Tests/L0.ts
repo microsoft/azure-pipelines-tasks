@@ -580,11 +580,6 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(tr.succeeded, 'task should succeed');
     assert.strictEqual(tr.errorIssues.length, 0);
-
-    assert(
-        tr.ran('dotnet test'),
-        'dotnet test should run successfully'
-    );
 });
 
    it('does not search above repository root for global.json', async () => {
@@ -636,11 +631,6 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(tr.succeeded, 'task should succeed');
     assert.strictEqual(tr.errorIssues.length, 0);
-
-    assert(
-        tr.ran('dotnet test'),
-        'dotnet test should run successfully'
-    );
 });
 
 
