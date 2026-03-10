@@ -97,7 +97,7 @@ describe('PublishCodeCoverageResultsV1 Suite', function () {
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(!tr.stdOutContained('ReportGenerator.dll -reports:/user/admin/summary.xml'), 'Should not have run ReportGenerator');
-        assert(tr.stdOutContained('##vso\\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=/user/admin/summary.xml;additionalcodecoveragefiles=;]'), 'should publish code coverage results.');
+        assert(tr.stdOutContained('##vso[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=/user/admin/summary.xml;additionalcodecoveragefiles=;]'), 'should publish code coverage results.');
     });
 
     it('Publish code coverage results when file path matches the given additonal files input', async function () {
