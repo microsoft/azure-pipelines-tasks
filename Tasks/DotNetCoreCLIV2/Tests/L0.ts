@@ -582,7 +582,7 @@ describe('DotNetCoreExe Suite', function () {
     assert.strictEqual(tr.errorIssues.length, 0);
 
     assert(
-        tr.stdOutContained('Found global.json'),
+        tr.stdOutContained('Test run is MTP'),
         'should detect global.json in parent directory'
     );
 });
@@ -629,17 +629,16 @@ describe('DotNetCoreExe Suite', function () {
 
 it('finds global.json located at repository root', async () => {
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithRepoRootGlobalJson.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    const tp = path.join(__dirname,'./TestCommandTests/runTestsWithRepoRootGlobalJson.js');
+    const tr = new ttm.MockTestRunner(tp);
 
     await tr.runAsync();
 
-    assert(tr.succeeded, 'task should succeed when global.json exists at repo root');
+    assert(tr.succeeded, 'task should succeed');
     assert.strictEqual(tr.errorIssues.length, 0);
 
-    // verify global.json was discovered
     assert(
-        tr.stdout.indexOf('Found global.json') >= 0,
+        tr.stdOutContained('Test run is MTP'),
         'should detect global.json at repository root'
     );
 });
