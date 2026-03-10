@@ -7,7 +7,8 @@ import * as tlModule from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
-import * as npmutils from './npmutils';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 let tl: typeof tlModule = tlModule;
@@ -161,7 +162,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         // get the potential package sources
-        let registries: string[] = npmutils.getRegistriesFromNpmrc(this.projectNpmrc());
+        let registries: string[] = npmutil.getAllNpmRegistries(this.projectNpmrc());
 
         // convert to urls
         let registryUris = registries.reduce(function(result: Url[], currentRegistry: string): Url[] {
@@ -247,7 +248,7 @@ export class NpmToolRunner extends tr.ToolRunner {
     private _saveProjectNpmrc(): void {
         if (this.overrideProjectNpmrc) {
             tl.debug(tl.loc('OverridingProjectNpmrc', this.projectNpmrc()));
-            npmutils.saveFile(this.projectNpmrc());
+            util.saveFile(this.projectNpmrc());
             tl.rmRF(this.projectNpmrc());
         }
     }
@@ -255,7 +256,7 @@ export class NpmToolRunner extends tr.ToolRunner {
     private _restoreProjectNpmrc(): void {
         if (this.overrideProjectNpmrc) {
             tl.debug(tl.loc('RestoringProjectNpmrc'));
-            npmutils.restoreFile(this.projectNpmrc());
+            util.restoreFile(this.projectNpmrc());
         }
     }
 }

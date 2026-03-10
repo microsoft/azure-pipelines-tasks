@@ -1,25 +1,26 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { INpmRegistry, NpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as npmutils from './npmutils';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import { PackagingLocation } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 
 export async function run(packagingLocation: PackagingLocation, command?: string): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    const npmrc = npmutils.getTempNpmrcPath();
+    const npmrc = npmutil.getTempNpmrcPath();
     const npmRegistries: INpmRegistry[] = await getCustomRegistries(packagingLocation);
     const overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) === RegistryLocation.Feed) ? true : false;
 
     for (const registry of npmRegistries) {
         if (registry.authOnly === false) {
             tl.debug(tl.loc('UsingRegistry', registry.url));
-            npmutils.appendToNpmrc(npmrc, `registry=${registry.url}`);
+            npmutil.appendToNpmrc(npmrc, `registry=${registry.url}\n`);
         }
 
         tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-        npmutils.appendToNpmrc(npmrc, registry.auth);
+        npmutil.appendToNpmrc(npmrc, `${registry.auth}\n`);
     }
 
     const npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
@@ -28,18 +29,18 @@ export async function run(packagingLocation: PackagingLocation, command?: string
     npm.execSync();
 
     tl.rmRF(npmrc);
-    tl.rmRF(npmutils.getTempPath());
+    tl.rmRF(util.getTempPath());
 }
 
 /** Return Custom NpmRegistry with masked auth*/
-export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<INpmRegistry[]> {
+export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    const npmRegistries: INpmRegistry[] = npmutils.resolveInternalFeedCredentials(workingDir, packagingLocation.PackagingUris);
+    const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);
     const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry) || null;
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
-            const feed = npmutils.getProjectAndFeedIdFromInputParam(NpmTaskInput.CustomFeed);
+            const feed = util.getProjectAndFeedIdFromInputParam(NpmTaskInput.CustomFeed);
             npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId));
             break;
         case RegistryLocation.Npmrc:

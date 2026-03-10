@@ -1,20 +1,22 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { INpmRegistry, NpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as npmutils from './npmutils';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import { getSystemAccessToken, PackagingLocation, getFeedRegistryUrl, RegistryType } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import * as os from 'os';
 
 export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    const npmrc = npmutils.getTempNpmrcPath();
+    const npmrc = npmutil.getTempNpmrcPath();
     const npmRegistry: INpmRegistry = await getPublishRegistry(packagingLocation);
 
     tl.debug(tl.loc('PublishRegistry', npmRegistry.url));
-    npmutils.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
-    npmutils.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
+    npmutil.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
+    npmutil.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
 
     // For publish, always override their project .npmrc
     const npm = new NpmToolRunner(workingDir, npmrc, true);
@@ -23,7 +25,7 @@ export async function run(packagingLocation: PackagingLocation): Promise<void> {
     npm.execSync();
 
     tl.rmRF(npmrc);
-    tl.rmRF(npmutils.getTempPath());
+    tl.rmRF(util.getTempPath());
 }
 
 /** Return Publish NpmRegistry with masked auth*/
@@ -33,7 +35,7 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
-            const feed = npmutils.getProjectAndFeedIdFromInputParam(NpmTaskInput.PublishFeed);
+            const feed = util.getProjectAndFeedIdFromInputParam(NpmTaskInput.PublishFeed);
             npmRegistry = await getNpmRegistry(
                 packagingLocation.DefaultPackagingUri,
                 feed,
@@ -59,8 +61,8 @@ async function getNpmRegistry(defaultPackagingUri: string, feed: any, authOnly?:
     let email: string;
     let password64: string;
 
-    url = npmutils.normalizeRegistry(await getFeedRegistryUrl(defaultPackagingUri, RegistryType.npm, feed.feedId, feed.projectId, null, useSession));
-    nerfed = npmutils.toNerfDart(url);
+    url = npmrcparser.NormalizeRegistry(await getFeedRegistryUrl(defaultPackagingUri, RegistryType.npm, feed.feedId, feed.projectId, null, useSession));
+    nerfed = util.toNerfDart(url);
 
     // Setting up auth info
     const accessToken = getAccessToken();
