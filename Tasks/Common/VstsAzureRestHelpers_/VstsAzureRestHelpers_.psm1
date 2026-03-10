@@ -1352,12 +1352,14 @@ function ConvertTo-Pfx {
 
     $useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2VstsAzureRestHelpers'
     if(-not $useOpenssLatestVersion) {
-        $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-        $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
-    }
-    else {
         $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
         $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
+        $env:RANDFILE=".rnd"
+        $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    }
+    else {
+        $openSSLExePath = "$PSScriptRoot\opensslv3.6.1\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.6.1\openssl.cnf"
         $env:RANDFILE=".rnd"
         $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
     }
