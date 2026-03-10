@@ -87,34 +87,50 @@ tr.registerMock('./authentication', {
     getInternalAuthInfoArray: async function(inputKey: string, packagingLocation: any) {
         const artifactFeed = process.env['__L1_ARTIFACT_FEED__'];
         if (!artifactFeed) {
-            return [];
+            return new Set();
         }
 
         const feedNames = artifactFeed.split(',').map(s => s.trim());
         const collectionUri = process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] || 'https://dev.azure.com/mock-org/';
         const accessToken = process.env['SYSTEM_ACCESSTOKEN'] || 'mock-token';
 
-        return feedNames.map(feedName => ({
-            feedName: feedName,
-            feedUri: `${collectionUri}_packaging/${feedName}/pypi/upload`,
-            username: 'build',
-            password: accessToken
-        }));
+        const authInfoSet = new Set();
+        feedNames.forEach(feedName => {
+            authInfoSet.add({
+                packageSource: {
+                    feedName: feedName,
+                    feedUri: `${collectionUri}_packaging/${feedName}/pypi/upload`,
+                    isInternalSource: true
+                },
+                authType: 0,
+                username: 'build',
+                password: accessToken
+            });
+        });
+        return authInfoSet;
     },
     
     getExternalAuthInfoArray: async function(inputKey: string) {
         const serviceConnections = process.env['__L1_EXTERNAL_ENDPOINTS__'];
         if (!serviceConnections) {
-            return [];
+            return new Set();
         }
 
         const connectionNames = serviceConnections.split(',').map(s => s.trim());
-        return connectionNames.map(name => ({
-            feedName: name,
-            feedUri: `https://upload.pypi.org/legacy/`,
-            username: `mock-user-${name}`,
-            password: `mock-password-${name}`
-        }));
+        const authInfoSet = new Set();
+        connectionNames.forEach(name => {
+            authInfoSet.add({
+                packageSource: {
+                    feedName: name,
+                    feedUri: `https://upload.pypi.org/legacy/`,
+                    isInternalSource: false
+                },
+                authType: 0,
+                username: `mock-user-${name}`,
+                password: `mock-password-${name}`
+            });
+        });
+        return authInfoSet;
     }
 });
 
