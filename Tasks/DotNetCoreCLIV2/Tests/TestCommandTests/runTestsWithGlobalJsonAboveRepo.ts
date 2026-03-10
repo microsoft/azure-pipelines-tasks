@@ -7,6 +7,8 @@ const repoRoot = path.join('agent','home','directory','sources');
 const dotnetPath = path.join('path','dotnet');
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
+
+// global.json OUTSIDE repo root
 const globalJsonPath = path.join('agent','home','global.json');
 
 const taskPath = path.join(__dirname,'../..','dotnetcore.js');
@@ -34,6 +36,7 @@ const answers: ma.TaskLibAnswers = {
         [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
     exist: {
+        // global.json exists but outside repo root
         [globalJsonPath]: true
     },
     stats: {

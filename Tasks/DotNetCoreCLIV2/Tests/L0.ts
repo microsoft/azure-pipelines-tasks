@@ -571,15 +571,20 @@ describe('DotNetCoreExe Suite', function () {
       assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
     });
 
-    it('finds global.json in parent directory of workingDirectory', async () => {
+    it('finds global.json located in parent directory of workingDirectory', async () => {
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithParentGlobalJson.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    const tp = path.join(__dirname,'./TestCommandTests/runTestsWithParentGlobalJson.js');
+    const tr = new ttm.MockTestRunner(tp);
 
     await tr.runAsync();
 
-    assert(tr.succeeded, 'task should succeed when global.json exists in parent directory');
-    assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+    assert(tr.succeeded, 'task should succeed');
+    assert.strictEqual(tr.errorIssues.length, 0);
+
+    assert(
+        tr.stdOutContained('Found global.json'),
+        'should detect global.json in parent directory'
+    );
 });
 
    it('does not search above repository root for global.json', async () => {
@@ -591,6 +596,18 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(tr.succeeded, 'task should still succeed');
     assert.strictEqual(tr.errorIssues.length, 0);
+
+    // Ensure global.json above repo root was NOT discovered
+    assert(
+        tr.stdout.indexOf('global.json not found') >= 0,
+        'should log that global.json was not found'
+    );
+
+    // Ensure the task did not detect the file outside the repo
+    assert(
+        tr.stdout.indexOf('Found global.json') === -1,
+        'should NOT discover global.json above repository root'
+    );
 });
   
    it('returns null when no global.json exists in repository', async () => {
@@ -602,17 +619,29 @@ describe('DotNetCoreExe Suite', function () {
 
     assert(tr.succeeded, 'task should succeed even if global.json is not present');
     assert.strictEqual(tr.errorIssues.length, 0);
+
+    // verify the correct code path was taken
+    assert(
+        tr.stdout.indexOf('global.json not found. Test run is VSTest') >= 0,
+        'should log that global.json was not found and fallback to VSTest'
+    );
 });
 
 it('finds global.json located at repository root', async () => {
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithRootGlobalJson.js');
+    const tp = path.join(__dirname, './TestCommandTests/runTestsWithRepoRootGlobalJson.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
     await tr.runAsync();
 
     assert(tr.succeeded, 'task should succeed when global.json exists at repo root');
     assert.strictEqual(tr.errorIssues.length, 0);
+
+    // verify global.json was discovered
+    assert(
+        tr.stdout.indexOf('Found global.json') >= 0,
+        'should detect global.json at repository root'
+    );
 });
 
 

@@ -32,9 +32,10 @@ const answers: ma.TaskLibAnswers = {
         [`${dotnetPath} test ${projectPath}`]: { code:0, stdout:'', stderr:'' },
         [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
-    exist: {
-        // intentionally empty → no global.json
-    },
+
+    // intentionally empty → simulate no global.json anywhere
+    exist: {},
+
     stats: {
         [projectPath]: { isFile: true }
     },
