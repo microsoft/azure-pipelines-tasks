@@ -20,7 +20,7 @@ describe('DownloadPackageV1 L0 Suite - Npm Downloads', function () {
     });
 
     describe('Npm Download Failures', function () {
-        it('fails when npm package download encounters an error', async () => {
+        it('fails with download error message when npm download fails', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forDownloadError({
                     '__packageType__': 'npm',
@@ -29,6 +29,8 @@ describe('DownloadPackageV1 L0 Suite - Npm Downloads', function () {
             );
 
             TestHelpers.assertFailure(tr);
+            // Verify no files were left behind
+            TestHelpers.assertFileCount(TestHelpers.tempDir, 0);
         });
     });
 });

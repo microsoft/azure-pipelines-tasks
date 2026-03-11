@@ -14,8 +14,7 @@ describe('NuGetToolInstallerV0 L0 Suite - Telemetry', function () {
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr);
-            TestHelpers.assertStdoutContains(tr, TestData.telemetryArea);
-            TestHelpers.assertStdoutContains(tr, TestData.telemetryFeature);
+            TestHelpers.assertStdoutContains(tr, `${TestData.telemetryArea}.${TestData.telemetryFeature}`);
         });
 
         it('includes checkLatest value in telemetry', async () => {
@@ -28,14 +27,15 @@ describe('NuGetToolInstallerV0 L0 Suite - Telemetry', function () {
             TestHelpers.assertStdoutContains(tr, '"isCheckLatestEnabled":true');
         });
 
-        it('includes NuGet version in telemetry', async () => {
+        it('includes NuGet path and version in telemetry', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults()
             );
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr);
-            TestHelpers.assertStdoutContains(tr, '"nuGetPath"');
+            TestHelpers.assertStdoutContains(tr, `"nuGetPath":"${TestData.defaultNuGetPath.replace(/\\/g, '\\\\')}"`);
+            TestHelpers.assertStdoutContains(tr, `"nugetVersion":"${TestData.defaultNuGetVersionInfo.join('.')}"`);
         });
 
         it('includes requested version spec in telemetry', async () => {

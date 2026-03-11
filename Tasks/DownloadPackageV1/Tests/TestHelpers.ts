@@ -139,4 +139,12 @@ export class TestHelpers {
         assert(tr.stdout.indexOf(expectedString) >= 0,
             message || `Output should contain: ${expectedString}`);
     }
+
+    /**
+     * Assert that stdout does not contain a specific string
+     */
+    static assertStdoutDoesNotContain(tr: ttm.MockTestRunner, unexpectedString: string, message?: string): void {
+        assert(tr.stdout.indexOf(unexpectedString) < 0,
+            message || `Output should not contain: ${unexpectedString}`);
+    }
 }

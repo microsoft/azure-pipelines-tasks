@@ -115,8 +115,14 @@ tr.registerMock('./universal', {
         filterPattern: string,
         executeWithRetries: any
     ): Promise<void> {
-        console.log('Mock: Universal package download called');
+        console.log(`Mock: Universal package download called with feedId=${feedId}, projectId=${projectId}, packageId=${packageId}, version=${version}`);
         return;
+    }
+});
+
+tr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
+    emitTelemetry: function (area: string, feature: string, data: any) {
+        console.log(`Telemetry emitted: ${area}.${feature} with data: ${JSON.stringify(data)}`);
     }
 });
 

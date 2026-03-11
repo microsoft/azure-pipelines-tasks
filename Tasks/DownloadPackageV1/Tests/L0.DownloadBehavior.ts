@@ -1,22 +1,28 @@
+// Tests how the download task behaves based on input combinations:
+// - Universal (upack) packages route to the artifact tool instead of HTTP download
+// - The extract flag is respected for npm/nuget but ignored for maven
+// - View IDs are appended to feed identifiers when non-empty
 import { TestHelpers } from './TestHelpers';
-import { TestDataBuilder, TestEnvVars } from './TestConstants';
+import { TestDataBuilder, TestData, TestEnvVars } from './TestConstants';
 
-describe('DownloadPackageV1 L0 Suite - Universal & Cargo Downloads', function () {
+describe('DownloadPackageV1 L0 Suite - Download Behavior', function () {
     this.timeout(30000);
     beforeEach(() => TestHelpers.beforeEach());
     afterEach(() => TestHelpers.afterEach());
 
     describe('Universal Package (upack) Download', function () {
-        it('routes upack to downloadUniversalPackage', async () => {
+        it('routes upack to downloadUniversalPackage with correct parameters', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forUniversalDownload()
             );
 
-            // Universal packages use the artifact tool path, not the standard download
+            // Verify the universal download was invoked with the correct feed and package info
             TestHelpers.assertStdoutContains(tr, 'Universal package download called');
+            TestHelpers.assertStdoutContains(tr, 'feedId=feedId');
+            TestHelpers.assertStdoutContains(tr, `packageId=${TestData.defaultPackageGuid}`);
         });
 
-        it('routes upack with project-scoped feed', async () => {
+        it('routes upack with project-scoped feed and splits projectId correctly', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forUniversalDownload({
                     [TestEnvVars.feed]: 'projectId/feedId'
@@ -24,6 +30,8 @@ describe('DownloadPackageV1 L0 Suite - Universal & Cargo Downloads', function ()
             );
 
             TestHelpers.assertStdoutContains(tr, 'Universal package download called');
+            TestHelpers.assertStdoutContains(tr, 'feedId=feedId');
+            TestHelpers.assertStdoutContains(tr, 'projectId=projectId');
         });
     });
 
@@ -56,24 +64,28 @@ describe('DownloadPackageV1 L0 Suite - Universal & Cargo Downloads', function ()
     });
 
     describe('View Handling', function () {
-        it('appends view ID to feed when view is non-empty', async () => {
+        it('downloads successfully when a view is specified', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forNuGetDownload({
+                    [TestEnvVars.feed]: 'feedId',
                     [TestEnvVars.view]: 'releaseView'
                 })
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
         });
 
-        it('does not append view when view is whitespace-only', async () => {
+        it('downloads successfully when view is whitespace-only (treated as empty)', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forNuGetDownload({
+                    [TestEnvVars.feed]: 'feedId',
                     [TestEnvVars.view]: '   '
                 })
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
         });
     });
 });

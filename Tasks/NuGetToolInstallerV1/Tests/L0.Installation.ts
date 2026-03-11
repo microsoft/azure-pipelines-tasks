@@ -14,6 +14,7 @@ describe('NuGetToolInstallerV1 L0 Suite - Tool Installation', function () {
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertStdoutContains(tr, `getNuGet called with versionSpec=${TestData.explicitVersionSpec}`);
+            TestHelpers.assertStdoutDoesNotContain(tr, 'getNuGet called with versionSpec=>=4.9');
         });
 
         it('uses default >=4.9 when no version spec is provided', async () => {
@@ -24,6 +25,7 @@ describe('NuGetToolInstallerV1 L0 Suite - Tool Installation', function () {
             TestHelpers.assertSuccess(tr);
             // V1 falls back to DEFAULT_NUGET_VERSION '>=4.9' instead of calling resolveNuGetVersion
             TestHelpers.assertStdoutContains(tr, 'getNuGet called with versionSpec=>=4.9');
+            TestHelpers.assertStdoutDoesNotContain(tr, 'resolveNuGetVersion called');
         });
     });
 
