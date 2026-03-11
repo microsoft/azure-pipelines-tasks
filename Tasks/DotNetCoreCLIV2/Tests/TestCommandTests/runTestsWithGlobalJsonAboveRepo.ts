@@ -10,7 +10,8 @@ const dotnetPath = path.join('path','dotnet');
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
 
 // global.json OUTSIDE repo root
-const globalJsonPath = path.join('agent','home','global.json');
+const agentHome = process.env['AGENT_HOMEDIRECTORY'] || path.join('c:\\agent','home');
+const globalJsonPath = path.join(agentHome,'global.json');
 
 const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
