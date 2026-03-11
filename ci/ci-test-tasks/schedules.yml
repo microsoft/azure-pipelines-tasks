@@ -1,5 +1,5 @@
 schedules:
-- cron: "35 10 * * *"
+- cron: "45 10 * * *"
   displayName: Daily
   branches:
     include:
@@ -10,7 +10,7 @@ trigger: none
 pr: none
 
 variables:
-  SCHEDULED_TASKS: "AzureAppServiceManageV0,AzureAppServiceSettingsV1,AzureCLIV1,AzureCLIV2,AzureCloudPowerShellDeploymentV1,AzureCloudPowerShellDeploymentV2,AzureContainerAppsV0,AzureContainerAppsV1,AzureFileCopyV1,AzureFileCopyV2,AzureFileCopyV3,AzureFileCopyV4,AzureFileCopyV5,AzureFileCopyV6,AzureFunctionAppV1,AzureFunctionAppV2,AzureFunctionAppContainerV1,AzureFunctionOnKubernetesV0,AzureFunctionOnKubernetesV1,AzureFunctionV1,AzureKeyVaultV1,AzureKeyVaultV2,AzureMonitorV0,AzureMonitorV1,AzureMysqlDeploymentV1,AzureNLBManagementV1,AzurePolicyV0,AzurePowerShellV2,AzurePowerShellV3,AzurePowerShellV4,AzurePowerShellV5,AzureResourceGroupDeploymentV2,AzureResourceManagerTemplateDeploymentV3,AzureRmWebAppDeploymentV3,AzureRmWebAppDeploymentV4,AzureRmWebAppDeploymentV5,AzureWebAppV1,AzureWebAppContainerV1,AzureVmssDeploymentV0,AzureVmssDeploymentV1,ChefV1,ChefKnifeV1,ContainerBuildV0,DelayV1,DockerV0,DockerV1,DockerV2,DockerComposeV0,DockerComposeV1,DockerInstallerV0,DownloadBuildArtifactsV0,DownloadFileshareArtifactsV1,DownloadGitHubNpmPackageV1,DownloadGitHubNugetPackageV1,DownloadGitHubReleaseV0,FileTransformV1,FileTransformV2,FuncToolsInstallerV0,GitHubReleaseV0,GitHubReleaseV1,GoV0,GoToolV0,HelmDeployV0,HelmDeployV1,HelmInstallerV0,HelmInstallerV1,IISWebAppDeployment,IISWebAppDeploymentOnMachineGroupV0,IISWebAppManagementOnMachineGroupV0,InvokeRestApiV1,JenkinsDownloadArtifactsV1,JenkinsDownloadArtifactsV2,KubectlInstallerV0,KubeloginInstallerV0,KubernetesV0,KubernetesV1,KubernetesManifestV0,KubernetesManifestV1"
+  SCHEDULED_TASKS: "AzureAppServiceManageV0,AzureAppServiceSettingsV1,AzureCLIV1,AzureCLIV2,AzureCloudPowerShellDeploymentV1,AzureCloudPowerShellDeploymentV2,AzureContainerAppsV0,AzureContainerAppsV1,AzureFileCopyV1,AzureFileCopyV2,AzureFileCopyV3,AzureFileCopyV4,AzureFileCopyV5,AzureFileCopyV6,AzureFunctionAppV1,AzureFunctionAppV2,AzureFunctionAppContainerV1,AzureFunctionOnKubernetesV0,AzureFunctionOnKubernetesV1,AzureFunctionV1,AzureKeyVaultV1,AzureKeyVaultV2,AzureMonitorV0,AzureMonitorV1,AzureMysqlDeploymentV1,AzureNLBManagementV1,AzurePolicyV0,AzurePowerShellV2,AzurePowerShellV3,AzurePowerShellV4,AzurePowerShellV5,AzureResourceGroupDeploymentV2,AzureResourceManagerTemplateDeploymentV3,AzureRmWebAppDeploymentV3,AzureRmWebAppDeploymentV4,AzureRmWebAppDeploymentV5,AzureWebAppV1,AzureWebAppContainerV1,AzureVmssDeploymentV0,AzureVmssDeploymentV1,ChefV1,ChefKnifeV1,ContainerBuildV0,DelayV1,DockerV0,DockerV1,DockerV2,DockerComposeV0,DockerComposeV1,DockerInstallerV0,DownloadBuildArtifactsV0,DownloadFileshareArtifactsV1,DownloadGitHubNpmPackageV1,DownloadGitHubNugetPackageV1,DownloadGitHubReleaseV0,FileTransformV1,FileTransformV2,FuncToolsInstallerV0,GitHubReleaseV0,GitHubReleaseV1,GoV0,GoToolV0,HelmDeployV0,HelmDeployV1,HelmInstallerV0,HelmInstallerV1,IISWebAppDeployment,IISWebAppDeploymentOnMachineGroupV0,IISWebAppManagementOnMachineGroupV0,InvokeRestApiV1,JenkinsDownloadArtifactsV1,JenkinsDownloadArtifactsV2,KubectlInstallerV0,KubeloginInstallerV0,KubernetesV0,KubernetesV1,KubernetesManifestV0,KubernetesManifestV1,ManualInterventionV8,ManualValidationV0,ManualValidationV1,MysqlDeploymentOnMachineGroupV1,PowerShellOnTargetMachinesV1,PowerShellOnTargetMachinesV2,PowerShellOnTargetMachinesV3,PublishPipelineMetadataV0,PublishToAzureServiceBusV1,PublishToAzureServiceBusV2,QueryWorkItemsV0,ServiceFabricComposeDeployV0,ServiceFabricDeployV1,ServiceFabricPowerShellV1,ServiceFabricUpdateManifestsV2,SqlAzureDacpacDeploymentV1,SqlDacpacDeploymentOnMachineGroupV0,SqlServerDacpacDeployment,WindowsMachineFileCopyV1,WindowsMachineFileCopyV2"
 
 jobs:
 
@@ -21,11 +21,10 @@ jobs:
 
   steps:
   - bash: |
-      echo "Using scheduled tasks list"
-      echo "Tasks: $(SCHEDULED_TASKS)"
-
-      echo "##vso[task.setvariable variable=tasks;isoutput=true]$(SCHEDULED_TASKS)"
-    displayName: Set scheduled tasks
+      tasks="$(SCHEDULED_TASKS)"
+      echo "Tasks selected: $tasks"
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]$tasks"
+    displayName: Set tasks to test
     name: set
 
 
@@ -36,13 +35,12 @@ jobs:
 
   variables:
   - name: tasks
-    value: $[ dependencies.set_tasks.outputs['set.tasks'] ]
+    value: $[dependencies.set_tasks.outputs['set.tasks']]
 
   pool:
     vmImage: ubuntu-latest
 
   steps:
-
   - task: NodeTool@0
     displayName: Use Node 20.x
     inputs:
@@ -56,11 +54,6 @@ jobs:
 
   - bash: |
       echo "Tasks to test: $(tasks)"
-
-      node ./ci/ci-test-tasks/test-and-verify-v2 \
-        $(System.AccessToken) \
-        $(ADOUrl) \
-        $(System.TeamProject) \
-        "$(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
     failOnStderr: true
