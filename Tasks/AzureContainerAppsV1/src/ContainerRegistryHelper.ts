@@ -13,9 +13,11 @@ export class ContainerRegistryHelper {
      public loginAcrWithUsernamePassword(acrName: string, acrUsername: string, acrPassword: string) {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with username and password credentials`);
         try {
-            child.execSync(
-                `docker login --password-stdin --username ${acrUsername} ${acrName}.azurecr.io`,
-                { input: acrPassword });
+            child.execFileSync('docker', [
+                'login', '--password-stdin',
+                '--username', acrUsername,
+                `${acrName}.azurecr.io`
+            ], { input: acrPassword });
         } catch (err) {
             tl.error(tl.loc('AcrUsernamePasswordAuthFailed', acrName));
             throw err;
@@ -30,8 +32,22 @@ export class ContainerRegistryHelper {
      public async loginAcrWithAccessTokenAsync(acrName: string) {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with access token`);
         try {
-            const command: string = `CA_ADO_TASK_ACR_ACCESS_TOKEN=$(az acr login --name ${acrName} --output json --expose-token --only-show-errors | jq -r '.accessToken'); docker login ${acrName}.azurecr.io -u 00000000-0000-0000-0000-000000000000 -p $CA_ADO_TASK_ACR_ACCESS_TOKEN > /dev/null 2>&1`;
-            await new CommandHelper().execCommandAsync(command);
+            const tokenJson = child.execFileSync('az', [
+                'acr', 'login',
+                '--name', acrName,
+                '--output', 'json',
+                '--expose-token',
+                '--only-show-errors'
+            ], { encoding: 'utf8' });
+
+            const accessToken = JSON.parse(tokenJson).accessToken;
+
+            child.execFileSync('docker', [
+                'login',
+                `${acrName}.azurecr.io`,
+                '-u', '00000000-0000-0000-0000-000000000000',
+                '-p', accessToken
+            ], { stdio: 'pipe' });
         } catch (err) {
             tl.error(tl.loc('AcrAccessTokenAuthFailed', acrName));
             throw err;
