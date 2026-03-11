@@ -1,23 +1,9 @@
-import * as path from 'path';
-import * as assert from 'assert';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+// NuGetV0 L0 Test Suite Orchestrator
+// This file imports all scenario-based test modules to run the complete test suite
 
-describe('NuGet Task Suite', function () {
-    before(() => {
-    });
-
-    after(() => {
-    });
-
-    it('Happy path', async () => {
-        let tp = path.join(__dirname, 'happypath.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe testCommand -NonInteractive testArgument'), 'NuGet was not run with the expected parameters');
-        assert(tr.stdOutContained('setting console code page'), 'It should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "The NuGet output was not found on stdOut");
-        assert(tr.succeeded, 'should have succeeded');
-        assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
-    }).timeout(60000);
-});
+// Scenario-based test modules (organized by feature)
+import './L0.CommandExecution';   // NuGet command execution scenarios
+import './L0.VersionValidation';  // NuGet version validation scenarios
+import './L0.VersionGateUnit';    // Pure version gate boundary logic
+import './L0.ToolResolution';     // NuGet tool path resolution scenarios
+import './L0.ErrorHandling';      // Error handling and failure scenarios

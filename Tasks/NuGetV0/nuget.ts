@@ -9,6 +9,7 @@ import peParser = require('azure-pipelines-tasks-packaging-common-v3/pe-parser/i
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
 import { getVersionFallback } from 'azure-pipelines-tasks-packaging-common/nuget/ProductVersionHelper';
+import { isNuGetVersionSupported } from './nugetVersion';
 
 class NuGetExecutionOptions {
     constructor(
@@ -53,7 +54,7 @@ async function main(): Promise<void> {
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     const parsedVersion = getVersionFallback(version);
-    if(parsedVersion.a < 3 || (parsedVersion.a <= 3 && parsedVersion.b < 5))
+    if (!isNuGetVersionSupported(parsedVersion))
     {
         tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
         return;
