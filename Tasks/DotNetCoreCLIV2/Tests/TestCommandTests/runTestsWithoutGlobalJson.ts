@@ -3,7 +3,8 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
-const repoRoot = path.join('agent','home','directory','sources');
+const repoRoot = process.env['BUILD_SOURCESDIRECTORY'] || 
+    path.join('c:\\agent','home','directory','sources');
 const dotnetPath = path.join('path','dotnet');
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
@@ -32,9 +33,10 @@ const answers: ma.TaskLibAnswers = {
         [`${dotnetPath} test ${projectPath}`]: { code:0, stdout:'', stderr:'' },
         [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
-    exist: {
-        // intentionally empty → no global.json
-    },
+
+    // intentionally empty → simulate no global.json anywhere
+    exist: {},
+
     stats: {
         [projectPath]: { isFile: true }
     },

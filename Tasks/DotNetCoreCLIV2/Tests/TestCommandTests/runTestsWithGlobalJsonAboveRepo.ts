@@ -3,11 +3,15 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
-const repoRoot = path.join('agent','home','directory','sources');
+const repoRoot = process.env['BUILD_SOURCESDIRECTORY'] || 
+    path.join('c:\\agent','home','directory','sources');
 const dotnetPath = path.join('path','dotnet');
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
-const globalJsonPath = path.join('agent','home','global.json');
+
+// global.json OUTSIDE repo root
+const agentHome = process.env['AGENT_HOMEDIRECTORY'] || path.join('c:\\agent','home');
+const globalJsonPath = path.join(agentHome,'global.json');
 
 const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -34,6 +38,7 @@ const answers: ma.TaskLibAnswers = {
         [`"${dotnetPath}" test "${projectPath}"`]: { code:0, stdout:'', stderr:'' }
     },
     exist: {
+        // global.json exists but outside repo root
         [globalJsonPath]: true
     },
     stats: {

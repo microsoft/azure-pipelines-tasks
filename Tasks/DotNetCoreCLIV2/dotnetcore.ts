@@ -158,6 +158,12 @@ export class dotNetExe {
 
         tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
 
+        const relStart = path.relative(repoRoot, searchDir);
+        if (relStart.startsWith('..') || path.isAbsolute(relStart)) {
+            tl.debug(`Working directory '${searchDir}' is outside repo root '${repoRoot}'. Skipping search.`);
+            return null;
+        }
+
         while (true) {
             const candidate = path.join(searchDir, 'global.json');
             tl.debug(`Checking for global.json at: ${candidate}`);
@@ -198,13 +204,12 @@ export class dotNetExe {
         }
 
         try {
-            //const testRunner = JSON5.parse(globalJsonContents)?.test?.runner??.testRunner;
             const parsed = JSON5.parse(globalJsonContents);
             const testRunner = parsed?.test?.runner;
             tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {
-            tl.warning(`Error occurred reading global.json at ${globalJsonPath} ${error}`);
+            tl.warning(`Error occurred reading global.json at ${globalJsonPath}: ${error}`);
             return false;
         }
     }

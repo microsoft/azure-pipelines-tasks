@@ -3,7 +3,10 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
-const repoRoot = path.join('agent','home','directory','sources');
+const repoRoot = process.env['BUILD_SOURCESDIRECTORY'] || 
+    path.join('c:\\agent','home','directory','sources');
+
+
 const dotnetPath = path.join('path','dotnet');
 
 const projectPath = path.join(repoRoot,'src','app','temp.csproj');
@@ -24,7 +27,8 @@ const answers: ma.TaskLibAnswers = {
     osType: {},
     checkPath: {
         [projectPath]: true,
-        [dotnetPath]: true
+        [dotnetPath]: true,
+        [globalJsonPath]: true
     },
     which: {
         dotnet: dotnetPath
@@ -37,7 +41,8 @@ const answers: ma.TaskLibAnswers = {
         [globalJsonPath]: true
     },
     stats: {
-        [projectPath]: { isFile: true }
+        [projectPath]: { isFile: true },
+        [globalJsonPath]: { isFile: true }
     },
     findMatch: {
         [path.join('src','app','temp.csproj')]: [projectPath]
@@ -62,4 +67,5 @@ fsClone.readFileSync = function(filePath:string){
 };
 
 tmr.registerMock('fs', fsClone);
+
 tmr.run();

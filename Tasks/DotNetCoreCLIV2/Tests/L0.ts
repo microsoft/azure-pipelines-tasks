@@ -570,49 +570,63 @@ describe('DotNetCoreExe Suite', function () {
       assert(tr.succeeded, 'task should succeed when global.json is found');
       assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
     });
+    
+    it('finds global.json located in parent directory of workingDirectory', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithParentGlobalJson.js');
+        const tr = new ttm.MockTestRunner(tp);
 
-    it('finds global.json in parent directory of workingDirectory', async () => {
+        await tr.runAsync();
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithParentGlobalJson.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        assert(tr.succeeded, 'task should succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
+    });
 
-    await tr.runAsync();
+    it('does not search above repository root for global.json', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithGlobalJsonAboveRepo.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    assert(tr.succeeded, 'task should succeed when global.json exists in parent directory');
-    assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
-});
+        await tr.runAsync();
 
-   it('does not search above repository root for global.json', async () => {
+        assert(tr.succeeded, 'task should still succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithGlobalJsonAboveRepo.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        // Ensure global.json above repo root was NOT discovered
+        assert(
+            tr.stdout.indexOf('global.json not found') >= 0,
+            'should log that global.json was not found'
+        );
 
-    await tr.runAsync();
+        // Ensure the task did not detect the file outside the repo
+        assert(
+            tr.stdout.indexOf('Found global.json') === -1,
+            'should NOT discover global.json above repository root'
+        );
+    });
 
-    assert(tr.succeeded, 'task should still succeed');
-    assert.strictEqual(tr.errorIssues.length, 0);
-});
-  
-   it('returns null when no global.json exists in repository', async () => {
+    it('returns null when no global.json exists in repository', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutGlobalJson.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutGlobalJson.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
 
-    await tr.runAsync();
+        assert(tr.succeeded, 'task should succeed even if global.json is not present');
+        assert.strictEqual(tr.errorIssues.length, 0);
 
-    assert(tr.succeeded, 'task should succeed even if global.json is not present');
-    assert.strictEqual(tr.errorIssues.length, 0);
-});
+        // verify the correct code path was taken
+        assert(
+            tr.stdout.indexOf('global.json not found. Test run is VSTest') >= 0,
+            'should log that global.json was not found and fallback to VSTest'
+        );
+    });
 
-it('finds global.json located at repository root', async () => {
+    it('finds global.json located at repository root', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithRepoRootGlobalJson.js');
+        const tr = new ttm.MockTestRunner(tp);
 
-    const tp = path.join(__dirname, './TestCommandTests/runTestsWithRootGlobalJson.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
 
-    await tr.runAsync();
-
-    assert(tr.succeeded, 'task should succeed when global.json exists at repo root');
-    assert.strictEqual(tr.errorIssues.length, 0);
-});
+        assert(tr.succeeded, 'task should succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
+    });
 
 });
