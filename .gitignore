@@ -229,5 +229,3 @@ task-lib/
 tasks-common/
 
 pnpm-exec-summary.json
-test-coverage-comparison.md
-baseline-coverage.md

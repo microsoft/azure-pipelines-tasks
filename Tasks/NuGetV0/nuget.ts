@@ -54,7 +54,7 @@ async function main(): Promise<void> {
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     const parsedVersion = getVersionFallback(version);
-    if (!isNuGetVersionSupported(parsedVersion))
+    if(parsedVersion.a < 3 || (parsedVersion.a <= 3 && parsedVersion.b < 5))
     {
         tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
         return;
