@@ -35,7 +35,7 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "required": true,
-            "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL"
+            "helpMarkDown": "Select an Azure Resource Manager connection for authenticating requests to Azure Functions using managed identity. The connection provides the OAuth token via the specified resource URL."
         },
         {
             "name": "function",
@@ -90,7 +90,7 @@
             "label": "Query parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Query parameters string to append to the function URL. It should not start with with \"?\" nor \"&\"."
+            "helpMarkDown": "Query parameters string to append to the function URL. It should not start with \"?\" nor \"&\"."
         },
         {
             "name": "body",
