@@ -158,6 +158,12 @@ export class dotNetExe {
 
         tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
 
+        const relStart = path.relative(repoRoot, searchDir);
+        if (relStart.startsWith('..') || path.isAbsolute(relStart)) {
+            tl.debug(`Working directory '${searchDir}' is outside repo root '${repoRoot}'. Skipping search.`);
+            return null;
+        }
+
         while (true) {
             const candidate = path.join(searchDir, 'global.json');
             tl.debug(`Checking for global.json at: ${candidate}`);
