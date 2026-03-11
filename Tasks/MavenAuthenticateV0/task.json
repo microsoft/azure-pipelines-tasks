@@ -9,7 +9,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< users/alextorres/PythonMavenAuthL2s
     "Minor": 272,
+=======
+    "Minor": 271,
+>>>>>>> master
     "Patch": 0
   },
   "runsOn": [

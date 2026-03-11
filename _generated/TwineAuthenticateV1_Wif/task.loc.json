@@ -9,7 +9,11 @@
   "category": "Package",
   "version": {
     "Major": 1,
+<<<<<<< users/alextorres/PythonMavenAuthL2s
     "Minor": 272,
+=======
+    "Minor": 271,
+>>>>>>> master
     "Patch": 1
   },
   "runsOn": [
@@ -152,8 +156,14 @@
     }
   },
   "_buildConfigMapping": {
+<<<<<<< users/alextorres/PythonMavenAuthL2s
     "Default": "1.272.0",
     "LocalPackages": "1.249.4",
     "wif_242": "1.272.1"
+=======
+    "Default": "1.271.0",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.271.1"
+>>>>>>> master
   }
 }

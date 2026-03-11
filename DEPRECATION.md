@@ -1,6 +1,6 @@
 # Introduction
 Creation: 18-05-2023
-Last Update: 2025-10-09
+Last Update: 2026-03-02
 
 This page lists the Azure DevOps tasks that are no longer supported or maintained and are marked as deprecated. These tasks were found under https://github.com/microsoft/azure-pipelines-tasks.
 
@@ -34,6 +34,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | Chef V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | ChefKnife V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | CloudLoadTest V1 | N/A | N/A |
+| CondaEnvironment V0 | [PR #21675](https://github.com/microsoft/azure-pipelines-tasks/pull/21675) | 2026-01-07 |
 | CondaEnvironment V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | Docker V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DockerCompose V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |

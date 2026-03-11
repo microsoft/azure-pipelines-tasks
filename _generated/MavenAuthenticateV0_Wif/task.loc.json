@@ -9,7 +9,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< users/alextorres/PythonMavenAuthL2s
     "Minor": 272,
+=======
+    "Minor": 271,
+>>>>>>> master
     "Patch": 1
   },
   "runsOn": [
@@ -114,8 +118,14 @@
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth"
   },
   "_buildConfigMapping": {
+<<<<<<< users/alextorres/PythonMavenAuthL2s
     "Default": "0.272.0",
     "LocalPackages": "0.249.4",
     "wif_242": "0.272.1"
+=======
+    "Default": "0.271.0",
+    "LocalPackages": "0.249.4",
+    "wif_242": "0.271.1"
+>>>>>>> master
   }
 }
