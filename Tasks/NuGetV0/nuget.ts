@@ -9,7 +9,6 @@ import peParser = require('azure-pipelines-tasks-packaging-common-v3/pe-parser/i
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
 import { getVersionFallback } from 'azure-pipelines-tasks-packaging-common/nuget/ProductVersionHelper';
-import { isNuGetVersionSupported } from './nugetVersion';
 
 class NuGetExecutionOptions {
     constructor(
