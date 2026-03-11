@@ -30,15 +30,15 @@
   ],
   "inputs": [
     {
-      "name": "ARMAuthentication",
+      "name": "azureServiceConnection",
       "aliases": [
-        "azureServiceConnection",
+        "connectedServiceARM",
         "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ARMAuthentication",
+      "label": "ms-resource:loc.input.label.azureServiceConnection",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ARMAuthentication"
+      "helpMarkDown": "ms-resource:loc.input.help.azureServiceConnection"
     },
     {
       "name": "function",
@@ -136,7 +136,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
-        "EndpointId": "$(ARMAuthentication)",
+        "EndpointId": "$(azureServiceConnection)",
         "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
         "ResourceURL": "api://$(endpoint.serviceprincipalid)",
         "Method": "$(method)",

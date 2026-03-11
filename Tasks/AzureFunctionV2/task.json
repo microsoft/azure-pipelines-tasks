@@ -30,12 +30,12 @@
     ],
     "inputs": [
         {
-            "name": "ARMAuthentication",
-            "aliases": ["azureServiceConnection", "azureSubscription"],
+            "name": "azureServiceConnection",
+            "aliases": ["connectedServiceARM", "azureSubscription"],
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Service Connection",
             "required": true,
-            "helpMarkDown": "Select an Azure Resource Manager connection for authenticating requests to Azure Functions using managed identity. The connection provides the OAuth token via the specified resource URL."
+            "helpMarkDown": "Service connection used to authenticate when invoking the Azure Function. Provides an Entra Access Token for Service Principal or Managed Identity access."
         },
         {
             "name": "function",
@@ -133,7 +133,7 @@
     "execution": {
         "HttpRequest": {
             "Execute": {
-                "EndpointId": "$(ARMAuthentication)",
+                "EndpointId": "$(azureServiceConnection)",
                 "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
                 "ResourceURL": "api://$(endpoint.serviceprincipalid)",
                 "Method": "$(method)",
