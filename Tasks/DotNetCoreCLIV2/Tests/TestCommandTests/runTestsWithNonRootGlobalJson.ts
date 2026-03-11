@@ -6,7 +6,8 @@ import util = require('../DotnetMockHelper');
 // ------------------------------------------------------------
 // Paths
 // ------------------------------------------------------------
-const repoRoot = path.join('agent', 'home', 'directory', 'sources');
+const repoRoot = process.env['BUILD_SOURCESDIRECTORY'] || 
+    path.join('c:\\agent','home','directory','sources');
 const dotnetPath = path.join('path', 'dotnet');
 const projectPath = path.join(repoRoot, 'src', 'temp.csproj');
 const globalJsonPath = path.join(repoRoot, 'src', 'global.json');
