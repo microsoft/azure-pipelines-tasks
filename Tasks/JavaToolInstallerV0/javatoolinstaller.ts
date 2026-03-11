@@ -89,36 +89,42 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
 }
 
 function findPreInstalledJava(versionSpec: string, architecture: string): string | undefined {
-    const javaHomeUpperCase: string = `JAVA_HOME_${versionSpec}_${architecture}`.toUpperCase();
+    // Try resolving JAVA_HOME from pipeline variables or environment
+    let javaDirectory: string | undefined = resolveJavaHomeFromVariable(versionSpec, architecture);
+    if (javaDirectory) {
+        return javaDirectory;
+    }
+
+    // For arm64, also check AARCH64 variants since some agents define JAVA_HOME_<ver>_AARCH64
+    if (architecture.toLowerCase() === 'arm64') {
+        taskLib.debug(taskLib.loc('JavaHomeArm64NotFound', `JAVA_HOME_${versionSpec}_ARM64`));
+        javaDirectory = resolveJavaHomeFromVariable(versionSpec, 'AARCH64');
+        if (javaDirectory) {
+            return javaDirectory;
+        }
+    }
+
+    return undefined;
+}
+
+/**
+ * Resolves JAVA_HOME by checking both uppercase and lowercase arch variants.
+ * taskLib.getVariable checks JAVA_HOME_<ver>_<ARCH> (case-insensitive).
+ * process.env checks JAVA_HOME_<ver>_<arch> (case-sensitive, lowercase).
+ */
+function resolveJavaHomeFromVariable(versionSpec: string, arch: string): string | undefined {
+    const javaHomeUpperCase: string = `JAVA_HOME_${versionSpec}_${arch.toUpperCase()}`;
     let javaDirectory: string | undefined = taskLib.getVariable(javaHomeUpperCase);
     if (javaDirectory) {
         console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeUpperCase, javaDirectory));
         return javaDirectory;
     }
 
-    const javaHomeLowerCaseArch: string = `JAVA_HOME_${versionSpec}_${architecture.toLowerCase()}`;
+    const javaHomeLowerCaseArch: string = `JAVA_HOME_${versionSpec}_${arch.toLowerCase()}`;
     javaDirectory = process.env[javaHomeLowerCaseArch];
     if (javaDirectory) {
         console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeLowerCaseArch, javaDirectory));
         return javaDirectory;
-    }
-
-    if (architecture.toLowerCase() === 'arm64') {
-        console.log(taskLib.loc('JavaHomeArm64NotFound', javaHomeUpperCase));
-
-        const javaHomeAarch64UpperCase: string = `JAVA_HOME_${versionSpec}_AARCH64`;
-        javaDirectory = taskLib.getVariable(javaHomeAarch64UpperCase);
-        if (javaDirectory) {
-            console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64UpperCase, javaDirectory));
-            return javaDirectory;
-        }
-
-        const javaHomeAarch64LowerCase: string = `JAVA_HOME_${versionSpec}_aarch64`;
-        javaDirectory = process.env[javaHomeAarch64LowerCase];
-        if (javaDirectory) {
-            console.log(taskLib.loc('JavaHomeResolvedFrom', javaHomeAarch64LowerCase, javaDirectory));
-            return javaDirectory;
-        }
     }
 
     return undefined;
