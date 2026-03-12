@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 271,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -30,14 +30,28 @@
   ],
   "inputs": [
     {
+      "name": "authenticationType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authenticationType",
+      "required": true,
+      "defaultValue": "functionKey",
+      "helpMarkDown": "ms-resource:loc.input.help.authenticationType",
+      "options": {
+        "functionKey": "Function Key",
+        "azureServiceConnection": "Service Connection (Entra ID)"
+      }
+    },
+    {
       "name": "azureServiceConnection",
       "aliases": [
+        "azureServiceConnection",
         "connectedServiceARM",
         "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureServiceConnection",
       "required": true,
+      "visibleRule": "authenticationType = azureServiceConnection",
       "helpMarkDown": "ms-resource:loc.input.help.azureServiceConnection"
     },
     {
@@ -54,6 +68,7 @@
       "label": "ms-resource:loc.input.label.key",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "authenticationType = functionKey",
       "helpMarkDown": "ms-resource:loc.input.help.key"
     },
     {
@@ -134,17 +149,37 @@
     }
   ],
   "execution": {
-    "HttpRequest": {
-      "Execute": {
-        "EndpointId": "$(azureServiceConnection)",
-        "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
-        "ResourceURL": "api://$(endpoint.serviceprincipalid)",
-        "Method": "$(method)",
-        "Body": "$(body)",
-        "Headers": "$(headers)",
-        "WaitForCompletion": "$(waitForCompletion)",
-        "Expression": "$(successCriteria)"
-      }
+    "HttpRequestChain": {
+      "Execute": [
+        {
+          "RequestInputs": {
+            "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+            "Method": "$(method)",
+            "Body": "$(body)",
+            "Headers": "$(headers)",
+            "WaitForCompletion": "$(waitForCompletion)",
+            "Expression": "$(successCriteria)"
+          },
+          "ExecutionOptions": {
+            "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureServiceConnection')"
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(azureServiceConnection)",
+            "EndpointUrl": "$(function)?$(queryParameters)",
+            "ResourceURL": "api://$(endpoint.serviceprincipalid)",
+            "Method": "$(method)",
+            "Body": "$(body)",
+            "Headers": "$(headers)",
+            "WaitForCompletion": "$(waitForCompletion)",
+            "Expression": "$(successCriteria)"
+          },
+          "ExecutionOptions": {
+            "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'functionKey')"
+          }
+        }
+      ]
     }
   }
 }

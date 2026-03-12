@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 271,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Azure Function: $(function)",
     "groups": [
@@ -30,11 +30,24 @@
     ],
     "inputs": [
         {
+            "name": "authenticationType",
+            "type": "pickList",
+            "label": "Authentication type",
+            "required": true,
+            "defaultValue": "functionKey",
+            "helpMarkDown": "Select the authentication method. Use **Function Key** to authenticate with an Azure Function key. Use **Service Connection** to authenticate via Entra Access Token for Service Principal or Managed Identity access.",
+            "options": {
+                "functionKey": "Function Key",
+                "azureServiceConnection": "Service Connection (Entra ID)"
+            }
+        },
+        {
             "name": "azureServiceConnection",
-            "aliases": ["connectedServiceARM", "azureSubscription"],
+            "aliases": ["azureServiceConnection", "connectedServiceARM", "azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure Service Connection",
             "required": true,
+            "visibleRule": "authenticationType = azureServiceConnection",
             "helpMarkDown": "Service connection used to authenticate when invoking the Azure Function. Provides an Entra Access Token for Service Principal or Managed Identity access."
         },
         {
@@ -51,6 +64,7 @@
             "label": "Function key",
             "defaultValue": "",
             "required": true,
+            "visibleRule": "authenticationType = functionKey",
             "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
         },
         {
@@ -131,17 +145,37 @@
         }
     ],
     "execution": {
-        "HttpRequest": {
-            "Execute": {
-                "EndpointId": "$(azureServiceConnection)",
-                "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
-                "ResourceURL": "api://$(endpoint.serviceprincipalid)",
-                "Method": "$(method)",
-                "Body": "$(body)",
-                "Headers": "$(headers)",
-                "WaitForCompletion": "$(waitForCompletion)",
-                "Expression": "$(successCriteria)"
-            }
+        "HttpRequestChain": {
+            "Execute": [
+                {
+                    "RequestInputs": {
+                        "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+                        "Method": "$(method)",
+                        "Body": "$(body)",
+                        "Headers": "$(headers)",
+                        "WaitForCompletion": "$(waitForCompletion)",
+                        "Expression": "$(successCriteria)"
+                    },
+                    "ExecutionOptions": {
+                        "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureServiceConnection')"
+                    }
+                },
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(azureServiceConnection)",
+                        "EndpointUrl": "$(function)?$(queryParameters)",
+                        "ResourceURL": "api://$(endpoint.serviceprincipalid)",
+                        "Method": "$(method)",
+                        "Body": "$(body)",
+                        "Headers": "$(headers)",
+                        "WaitForCompletion": "$(waitForCompletion)",
+                        "Expression": "$(successCriteria)"
+                    },
+                    "ExecutionOptions": {
+                        "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'functionKey')"
+                    }
+                }
+            ]
         }
     }
 }
