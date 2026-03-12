@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 270,
-    "Patch": 4
+    "Minor": 271,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -234,7 +234,7 @@
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
   },
   "_buildConfigMapping": {
-    "Default": "2.270.3",
-    "Node24_1": "2.270.4"
+    "Default": "2.271.0",
+    "Node24_1": "2.271.1"
   }
 }
