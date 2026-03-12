@@ -38,16 +38,16 @@
             "helpMarkDown": "Select the authentication method. Use **Function Key** to authenticate with an Azure Function key. Use **Service Connection** to authenticate via Entra Access Token for Service Principal or Managed Identity access.",
             "options": {
                 "functionKey": "Function Key",
-                "azureServiceConnection": "Service Connection (Entra ID)"
+                "azureSubscription": "Service Connection (Entra ID)"
             }
         },
         {
-            "name": "azureServiceConnection",
-            "aliases": ["azureSubscription", "connectedServiceARM"],
+            "name": "azureSubscription",
+            "aliases": ["azureServiceConnection", "connectedServiceARM"],
             "type": "connectedService:AzureRM",
             "label": "Azure Service Connection",
             "required": true,
-            "visibleRule": "authenticationType = azureServiceConnection",
+            "visibleRule": "authenticationType = azureSubscription",
             "helpMarkDown": "Service connection used to authenticate when invoking the Azure Function. Provides an Entra Access Token for Service Principal or Managed Identity access."
         },
         {
@@ -157,12 +157,12 @@
                         "Expression": "$(successCriteria)"
                     },
                     "ExecutionOptions": {
-                        "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureServiceConnection')"
+                        "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureSubscription')"
                     }
                 },
                 {
                     "RequestInputs": {
-                        "EndpointId": "$(azureServiceConnection)",
+                        "EndpointId": "$(azureSubscription)",
                         "EndpointUrl": "$(function)?$(queryParameters)",
                         "ResourceURL": "api://$(endpoint.serviceprincipalid)",
                         "Method": "$(method)",

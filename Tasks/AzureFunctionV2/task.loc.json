@@ -38,21 +38,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.authenticationType",
       "options": {
         "functionKey": "Function Key",
-        "azureServiceConnection": "Service Connection (Entra ID)"
+        "azureSubscription": "Service Connection (Entra ID)"
       }
     },
     {
-      "name": "azureServiceConnection",
+      "name": "azureSubscription",
       "aliases": [
         "azureServiceConnection",
-        "connectedServiceARM",
-        "azureSubscription"
+        "connectedServiceARM"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureServiceConnection",
+      "label": "ms-resource:loc.input.label.azureSubscription",
       "required": true,
-      "visibleRule": "authenticationType = azureServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.azureServiceConnection"
+      "visibleRule": "authenticationType = azureSubscription",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
     },
     {
       "name": "function",
@@ -161,12 +160,12 @@
             "Expression": "$(successCriteria)"
           },
           "ExecutionOptions": {
-            "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureServiceConnection')"
+            "SkipSectionExpression": "eq(taskInputs['authenticationType'], 'azureSubscription')"
           }
         },
         {
           "RequestInputs": {
-            "EndpointId": "$(azureServiceConnection)",
+            "EndpointId": "$(azureSubscription)",
             "EndpointUrl": "$(function)?$(queryParameters)",
             "ResourceURL": "api://$(endpoint.serviceprincipalid)",
             "Method": "$(method)",
