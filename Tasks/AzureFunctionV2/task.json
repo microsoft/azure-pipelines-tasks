@@ -43,7 +43,7 @@
         },
         {
             "name": "azureServiceConnection",
-            "aliases": ["azureServiceConnection", "connectedServiceARM", "azureSubscription"],
+            "aliases": ["azureSubscription", "connectedServiceARM"],
             "type": "connectedService:AzureRM",
             "label": "Azure Service Connection",
             "required": true,
