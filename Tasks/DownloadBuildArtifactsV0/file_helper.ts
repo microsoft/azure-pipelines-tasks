@@ -113,7 +113,7 @@ export function cleanUpFolder(folderToClean: string): void {
     console.log(tl.loc('CleaningDestinationFolder', folderToClean));
 
     // stat the specified folder path
-    let destinationFolderStats: Stats;
+    let destinationFolderStats: tl.FsStats;
     try {
         destinationFolderStats = tl.stats(folderToClean);
     } catch (err) {
