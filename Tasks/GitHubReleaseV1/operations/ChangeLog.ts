@@ -115,9 +115,15 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
-                console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
-                return "";
+                // If issue was not found (or is a Discussion), raise a warning and continue with other issues.
+                if (issuesListResponse.body.errors.every(error => error.type === "NOT_FOUND")) {
+                    tl.warning("Some issues were not found. They might be GitHub Discussions or the issue ID might be wrong. Please verify the issue IDs linked in the commits.");
+                }
+                else {
+                    tl.error(tl.loc("IssuesFetchError"));
+                    tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                    return "";
+                }
             }
             else {
                 let changeLog: string = "";
@@ -182,9 +188,15 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
-                console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
-                return "";
+                // If issue was not found (or is a Discussion), raise a warning and continue with other issues.
+                if (issuesListResponse.body.errors.every(error => error.type === "NOT_FOUND")) {
+                    tl.warning("Some issues were not found. They might be GitHub Discussions or the issue ID might be wrong. Please verify the issue IDs linked in the commits.");
+                }
+                else {
+                    console.log(tl.loc("IssuesFetchError"));
+                    tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                    return "";
+                }
             }
             else {
                 let changeLog: string = "";
@@ -193,6 +205,10 @@ export class ChangeLog {
                 let issuesList = issuesListResponse.body.data.repository;
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
+                    // Skip null entries (e.g. GitHub Discussions) 
+                    if (!issuesList[key]) {
+                        return;
+                    }
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
                     // See more functionality
                     if (index >= this._changeLogVisibleLimit) {
@@ -489,6 +505,10 @@ export class ChangeLog {
         });
         labelsIssuesDictionary[this._defaultGroup] = [];
         Object.keys(issuesList).forEach((issue: string) => {
+            // Skip null entries (e.g. GitHub Discussions)
+            if (!issuesList[issue]) {
+                return;
+            }
             let group: string = null;
             let currentLabelRank: number = Number.MAX_SAFE_INTEGER;
             let issueState = issuesList[issue].state;
