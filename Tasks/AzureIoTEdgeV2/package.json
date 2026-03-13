@@ -13,7 +13,7 @@
     "applicationinsights": "^1.0.2",
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-artifacts-common": "^2.262.0",
-    "azure-pipelines-tasks-docker-common": "^2.242.0",
+    "azure-pipelines-tasks-docker-common": "^2.268.0",
     "azure-pipelines-tasks-utility-common": "3.265.1",
     "minimatch": "^3.1.2"
   },
