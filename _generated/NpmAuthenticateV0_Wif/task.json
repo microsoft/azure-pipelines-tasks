@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 271,
-    "Patch": 1
+    "Minor": 272,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -118,12 +118,13 @@
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "MissingFeedUrlOrServiceConnection": "If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.",
     "SkippingParsingNpmrc": "Skipping parsing npmrc",
+    "InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
   },
   "_buildConfigMapping": {
-    "Default": "0.271.0",
+    "Default": "0.272.2",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.271.1"
+    "wif_242": "0.272.3"
   }
 }
