@@ -135,6 +135,22 @@ describe('ExtractFile Suite', function () {
         }, tr);
     });
 
+    it('Successfully extracts a zip with UTF-8 filenames using 7zip', async () => {
+        this.timeout(5000);
+        process.env['archiveFilePatterns'] = 'zip_utf8.zip';
+        process.env['overwriteExistingFiles'] = 'true';
+        delete process.env['cleanDestinationFolder'];
+
+        let tp: string = path.join(__dirname, 'L0Extract.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('extracted zip_utf8') > -1, 'Should extract zip with UTF-8 filenames using 7zip');
+        }, tr);
+    });
+
     it('User is able to setup custom path to 7z', async () => {
         this.timeout(5000);
         process.env['archiveFilePatterns'] = 'zip3.7z';

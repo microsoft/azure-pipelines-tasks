@@ -311,10 +311,8 @@ function extractFiles(files: string[]) {
         } else { // not windows
             if (isTar(file)) {
                 tarExtract(file, destinationFolder);
-            } else if (isZip(file)) {
-                unzipExtract(file, destinationFolder);
-            } else { // fall through and use sevenZip
-                sevenZipExtract(file, destinationFolder)
+            } else { // use sevenZip for zip and other archive types to handle UTF-8 filenames correctly
+                sevenZipExtract(file, destinationFolder);
             }
         }
     }

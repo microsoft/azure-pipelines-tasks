@@ -69,12 +69,14 @@ let sevenZip1Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__d
 let sevenZip2Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
 let sevenZip3Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
 let tarCommand = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
+let sevenZipUtf8Command: string = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip_utf8.zip')}`;
 if (!isWindows) {
-    zipExecutable = 'path/to/unzip'
-    sevenZip1Command = `${zipExecutable} -o ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
-    sevenZip2Command = `${zipExecutable} -o ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
+    zipExecutable = 'path/to/7z'
+    sevenZip1Command = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
+    sevenZip2Command = `${zipExecutable} -aoa x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
     sevenZip3Command = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip3.7z')}`;
     tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
+    sevenZipUtf8Command = `path/to/7z -aoa x -o${__dirname} ${path.join(__dirname, 'zip_utf8.zip')}`;
 }
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -107,6 +109,10 @@ a['exec'][tarCommand] = {
 a['exec'][sevenZip3Command] = {
     "code": 0,
     "stdout": "extracted 7z"
+}
+a['exec'][sevenZipUtf8Command] = {
+    "code": 0,
+    "stdout": "extracted zip_utf8"
 }
 
 tmr.setAnswers(a);
