@@ -2,7 +2,6 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as URL from 'url';
 import {
 	appendAuthToNpmrc,
 	normalizeRegistry,
@@ -147,7 +146,7 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-unit-'));
 			try {
 				const npmrcPath = path.join(tempDir, '.npmrc');
-				const registryUrl = URL.parse('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+				const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
 				const lines = [
 					'registry=https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/',
 					'//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token',

@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as URL from 'url';
 import * as fs from 'fs';
 import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
@@ -38,7 +37,7 @@ async function main(): Promise<void> {
     // Read the target .npmrc into memory for credential line replacement
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    let addedRegistry = [];
+    let addedRegistry: URL[] = [];
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
@@ -59,14 +58,13 @@ async function main(): Promise<void> {
     }
 
     for (let RegistryURLString of npmrcRegistries) {
-        // todo - I belive url.parse is deprecated?
-        let registryURL = URL.parse(RegistryURLString);
+        let registryURL = new URL(RegistryURLString);
         let npmrcEntry: npmauthutils.NpmrcCredential;
 
         if (entraWifServiceConnectionName) {
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             npmrcEntry = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, authOnly: true };
-            let url = URL.parse(RegistryURLString);
+            let url = new URL(RegistryURLString);
             addedRegistry.push(url);
             npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, url, addedRegistry);
             federatedFeedAuthSuccessCount++;
@@ -76,7 +74,7 @@ async function main(): Promise<void> {
         if (!npmrcEntry && endpointRegistries && endpointRegistries.length > 0) {
             npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries) as npmauthutils.NpmrcCredential;
             if (npmrcEntry) {
-                let serviceURL = URL.parse(npmrcEntry.url);
+                let serviceURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                 addedRegistry.push(serviceURL);
                 npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistry);
@@ -92,7 +90,7 @@ async function main(): Promise<void> {
                 registryURL.host
             ) as npmauthutils.NpmrcCredential;
             if (npmrcEntry) {
-                let localURL = URL.parse(npmrcEntry.url);
+                let localURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingLocalCredentials"));
                 addedRegistry.push(localURL);
                 npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistry);

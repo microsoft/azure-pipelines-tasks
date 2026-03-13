@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as URL from 'url';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as constants from './constants';
@@ -22,7 +21,7 @@ export function normalizeRegistry(registryUrl: string): string {
 // Convert a registry URL to nerf-dart form (//host/path/) for matching
 // registry entries and formatting .npmrc auth keys.
 export function toNerfDart(registryUrl: string): string {
-    const parsed = URL.parse(registryUrl);
+    const parsed = new URL(registryUrl);
     const host = (parsed.host || '').toLowerCase();
     let pathname = parsed.pathname || '/';
     if (!pathname.endsWith('/')) {
@@ -87,13 +86,13 @@ export function resolveInternalFeedCredentials(
     }
 
     const packagingHosts = packagingUris
-        .map(uri => { try { return new URL.URL(uri).host.toLowerCase(); } catch { return undefined; } })
+        .map(uri => { try { return new URL(uri).host.toLowerCase(); } catch { return undefined; } })
         .filter((host): host is string => host !== undefined);
 
     const allRegistries = getRegistriesFromNpmrc(projectNpmrcPath);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
-            const host = new URL.URL(registryUrl).host.toLowerCase();
+            const host = new URL(registryUrl).host.toLowerCase();
             return packagingHosts.includes(host);
         } catch {
             return false;
@@ -195,14 +194,14 @@ export function appendAuthToNpmrc(npmrcPath: string, authEntry: string): void {
 export function removeExistingCredentialEntries(
     npmrcPath: string,
     lines: string[],
-    registryUrl: URL.Url,
-    addedRegistryUrls: URL.Url[]
+    registryUrl: URL,
+    addedRegistryUrls: URL[]
 ): string[] {
     let warned = false;
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const referencesHost = line.indexOf(registryUrl.host) !== -1;
-        const referencesPath = line.indexOf(registryUrl.path) !== -1;
+        const referencesPath = line.indexOf(registryUrl.pathname) !== -1;
         const isRegistryLine = line.indexOf('registry=') !== -1;
         if (referencesHost && referencesPath && !isRegistryLine) {
             if (!warned && addedRegistryUrls.indexOf(registryUrl) === -1) {
