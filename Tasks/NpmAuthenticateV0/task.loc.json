@@ -96,6 +96,7 @@
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.MissingFeedUrlOrServiceConnection",
     "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc",
+    "InvalidRegistryUrl": "ms-resource:loc.messages.InvalidRegistryUrl",
     "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
     "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
   }

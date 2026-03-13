@@ -60,7 +60,13 @@ async function main(): Promise<void> {
 #endif
 
     for (let RegistryURLString of npmrcRegistries) {
-        let registryURL = new URL(RegistryURLString);
+        let registryURL: URL;
+        try {
+            registryURL = new URL(RegistryURLString);
+        } catch {
+            tl.warning(tl.loc('InvalidRegistryUrl', RegistryURLString));
+            continue;
+        }
         let npmrcEntry: npmauthutils.NpmrcCredential;
 
 #if WIF
