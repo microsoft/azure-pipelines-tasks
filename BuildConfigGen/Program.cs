@@ -52,7 +52,7 @@ namespace BuildConfigGen
                 ["azure-pipelines-task-lib"] = "^5.2.4",
                 ["azure-devops-node-api"] = "^15.1.3",
                 ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
-                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.270.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.271.1",
                 ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
                 ["azure-pipelines-tasks-packaging-common"] = "^3.270.0",
                 ["azure-pipelines-tasks-securefiles-common"] = "^2.270.0",
@@ -1233,7 +1233,7 @@ namespace BuildConfigGen
                 // Upgrade task-lib to npm version if specified, otherwise use local file path
                 if (!string.IsNullOrEmpty(effectiveTaskLibVersion))
                 {
-                    outputNodePackagePathJsonNode["dependencies"]!["azure-pipelines-task-lib"] = effectiveTaskLibVersion;
+                    UpdateDependencyIfExists(outputNodePackagePathJsonNode, "azure-pipelines-task-lib", effectiveTaskLibVersion);
                 }
                 else
                 {

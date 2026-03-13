@@ -38,5 +38,8 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "uuid": "7.0.3"
   }
 }

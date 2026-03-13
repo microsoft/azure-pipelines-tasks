@@ -9,7 +9,7 @@
     "@types/node": "^24.10.0",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^5.2.4",
-    "azure-pipelines-tasks-azure-arm-rest": "3.267.1",
+    "azure-pipelines-tasks-azure-arm-rest": "3.270.0",
     "moment": "^2.29.4",
     "typed-rest-client": "^1.8.9"
   },
