@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 268,
-    "Patch": 1
+    "Minor": 269,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -77,6 +77,34 @@
       "helpMarkDown": ""
     },
     {
+      "name": "preJobScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.preJobScript",
+      "required": false,
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.preJobScript",
+      "groupName": "advanced"
+    },
+    {
+      "name": "postJobScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.postJobScript",
+      "required": false,
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.postJobScript",
+      "groupName": "advanced"
+    },
+    {
       "name": "workingDirectory",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.workingDirectory",
@@ -103,6 +131,24 @@
       "groupName": "advanced"
     }
   ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "prebash.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "prebash.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "prebash.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "prebash.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node10": {
       "target": "bash.js",
@@ -121,6 +167,24 @@
       "argumentFormat": ""
     }
   },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postbash.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postbash.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "postbash.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "postbash.js",
+      "argumentFormat": ""
+    }
+  },
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
@@ -131,6 +195,10 @@
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
     "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "PreJobScriptNotProvided": "ms-resource:loc.messages.PreJobScriptNotProvided",
+    "PostJobScriptNotProvided": "ms-resource:loc.messages.PostJobScriptNotProvided",
+    "PreJobScriptFailed": "ms-resource:loc.messages.PreJobScriptFailed",
+    "PostJobScriptFailed": "ms-resource:loc.messages.PostJobScriptFailed"
   }
 }
