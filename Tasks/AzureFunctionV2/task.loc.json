@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 271,
+    "Minor": 272,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -31,7 +31,10 @@
   "inputs": [
     {
       "name": "azureServiceConnection",
-      "aliases": ["azureSubscription", "connectedServiceARM"],
+      "aliases": [
+        "azureSubscription",
+        "connectedServiceARM"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureServiceConnection",
       "required": false,
