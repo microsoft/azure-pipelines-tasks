@@ -31,13 +31,10 @@
   "inputs": [
     {
       "name": "azureServiceConnection",
-      "aliases": [
-        "connectedServiceARM",
-        "azureSubscription"
-      ],
+      "aliases": ["azureSubscription", "connectedServiceARM"],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureServiceConnection",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.azureServiceConnection"
     },
     {
@@ -53,7 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.key",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.key"
     },
     {
@@ -136,6 +133,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
+        "AllowEmptyEndpointId": true,
         "EndpointId": "$(azureServiceConnection)",
         "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
         "ResourceURL": "api://$(endpoint.serviceprincipalid)",

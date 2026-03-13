@@ -31,10 +31,10 @@
     "inputs": [
         {
             "name": "azureServiceConnection",
-            "aliases": ["connectedServiceARM", "azureSubscription"],
+            "aliases": ["azureSubscription", "connectedServiceARM"],
             "type": "connectedService:AzureRM",
             "label": "Azure Service Connection",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Service connection used to authenticate when invoking the Azure Function. Provides an Entra Access Token for Service Principal or Managed Identity access."
         },
         {
@@ -50,7 +50,7 @@
             "type": "string",
             "label": "Function key",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
         },
         {
@@ -133,6 +133,7 @@
     "execution": {
         "HttpRequest": {
             "Execute": {
+                "AllowEmptyEndpointId": true,
                 "EndpointId": "$(azureServiceConnection)",
                 "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
                 "ResourceURL": "api://$(endpoint.serviceprincipalid)",
