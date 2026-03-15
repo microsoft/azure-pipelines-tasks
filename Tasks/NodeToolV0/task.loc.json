@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 271,
-    "Patch": 3
+    "Minor": 272,
+    "Patch": 1
   },
   "deprecated": true,
   "deprecationMessage": "This task is deprecated and will no longer receive updates. Please use UseNodeV1 as a replacement.",
