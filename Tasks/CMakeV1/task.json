@@ -15,22 +15,13 @@
       "name": "advanced",
       "displayName": "Advanced"
     }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
   ],
   "demands": [
     "cmake"
   ],
   "version": {
     "Major": 1,
-<<<<<<< Updated upstream
-    "Minor": 268,
-=======
     "Minor": 271,
->>>>>>> Stashed changes
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -87,8 +78,4 @@
     "CMakeReturnCode": "CMake exited with return code: %d",
     "CMakeFailed": "CMake failed with error: %s"
   }
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }

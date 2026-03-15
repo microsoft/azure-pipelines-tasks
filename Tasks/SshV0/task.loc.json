@@ -17,17 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-<<<<<<< Updated upstream
-    "Minor": 268,
-=======
-<<<<<<< Updated upstream
-    "Minor": 207,
->>>>>>> Stashed changes
-    "Patch": 1
-=======
     "Minor": 271,
     "Patch": 0
->>>>>>> Stashed changes
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",

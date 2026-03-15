@@ -1,13 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-<<<<<<< Updated upstream
-import * as path from 'path';
-=======
-<<<<<<< Updated upstream
-=======
 import * as path from 'path';
 import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 const UNCPathPattern: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 

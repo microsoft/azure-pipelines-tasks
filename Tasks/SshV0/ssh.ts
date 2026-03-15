@@ -5,17 +5,9 @@ import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
-<<<<<<< Updated upstream
-import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
-import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
-=======
-<<<<<<< Updated upstream
-=======
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 /**
  * By default configuration, SSH runs on port 22.
