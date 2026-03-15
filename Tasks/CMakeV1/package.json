@@ -19,9 +19,22 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+<<<<<<< Updated upstream
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4"
+=======
+<<<<<<< Updated upstream
+    "azure-pipelines-task-lib": "^3.1.2",
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7"
+=======
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-utility-common": "3.271.0"
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "@tsconfig/node10": "^1.0.11",

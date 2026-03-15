@@ -17,7 +17,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< Updated upstream
     "Minor": 268,
+=======
+<<<<<<< Updated upstream
+    "Minor": 205,
+=======
+    "Minor": 271,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     "Patch": 0
   },
   "demands": [],

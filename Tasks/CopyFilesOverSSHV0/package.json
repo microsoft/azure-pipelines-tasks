@@ -19,9 +19,21 @@
   },
   "homepage": "https://github.com/Microsoft.com/vsts-tasks#readme",
   "dependencies": {
+<<<<<<< Updated upstream
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4",
+=======
+<<<<<<< Updated upstream
+    "ssh2": "^1.4.0",
+    "ssh2-sftp-client": "^7.0.4",
+=======
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-utility-common": "3.271.0",
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     "minimatch": "^3.0.4",
     "ssh2": "^1.15.0",
     "ssh2-sftp-client": "^12.0.1"

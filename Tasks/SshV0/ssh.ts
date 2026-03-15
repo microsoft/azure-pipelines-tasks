@@ -5,8 +5,17 @@ import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
+<<<<<<< Updated upstream
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+=======
+<<<<<<< Updated upstream
+=======
+import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 /**
  * By default configuration, SSH runs on port 22.
@@ -150,7 +159,7 @@ async function run() {
                 //set execute permissions on the script
                 tl.debug('Setting execute permission on script copied to remote machine');
                 console.log(`chmod +x ${remoteScriptPath}`);
-                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${remoteScriptPath}`, sshClientConnection, remoteCmdOptions);
+                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${shellQuote(remoteScriptPath)}`, sshClientConnection, remoteCmdOptions);
 
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
@@ -189,9 +198,9 @@ async function run() {
                 }
 
                 //setup command to clean up script file
-                cleanUpScriptCmd = `rm -f ${remoteScriptPath}`;
+                cleanUpScriptCmd = `rm -f ${shellQuote(remoteScriptPath)}`;
                 if (isWin) {
-                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${originalScriptPath}`;
+                    cleanUpScriptCmd = `rm -f ${shellQuote(remoteScriptPath)} ${shellQuote(originalScriptPath)}`;
                 }
 
                 console.log(runScriptCmd);
