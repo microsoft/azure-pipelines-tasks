@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
+    "Minor": 271,
     "Patch": 0
   },
   "satisfies": [
@@ -220,6 +220,8 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
+    "JavaHomeArm64NotFound": "ms-resource:loc.messages.JavaHomeArm64NotFound",
+    "JavaHomeResolvedFrom": "ms-resource:loc.messages.JavaHomeResolvedFrom",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
     "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
     "WrongArchiveFile": "ms-resource:loc.messages.WrongArchiveFile",
