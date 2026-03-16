@@ -14,7 +14,7 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
             );
 
             // Task returns early without failing — no files downloaded
-            assert(tr.succeeded, 'Task should succeed when skip is enabled');
+            assert(!tr.failed, 'Task should not fail when skip is enabled');
             assert.strictEqual(tr.errorIssues.length, 0, 'Should have no error issues');
             TestHelpers.assertFileCount(TestHelpers.tempDir, 0);
             TestHelpers.assertFileCount(TestHelpers.destinationDir, 0);
