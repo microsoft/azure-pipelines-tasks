@@ -68,8 +68,6 @@ Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @
 
 Tasks/AzureFunctionV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionV2/     @microsoft/release-management-task-team @manolerazvan 
-
 Tasks/AzureIoTEdgeV2/     @marianan 
 
 Tasks/AzureKeyVaultV1/     @microsoft/release-management-task-team @manolerazvan 
