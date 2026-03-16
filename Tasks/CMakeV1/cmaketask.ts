@@ -1,7 +1,13 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
-import { neutralizeCommandSubstitution, shellSplit } from 'azure-pipelines-tasks-utility-common/shellEscaping';
+import { shellSplit } from 'azure-pipelines-tasks-utility-common/shellEscaping';
+
+function neutralizeCmdSubstitution(value: string): string {
+    return value
+        .replace(/`/g, '\\`')
+        .replace(/\$\(/g, '\\$(');
+}
 
 async function run() {
     try {
@@ -17,9 +23,9 @@ async function run() {
         const cmakeArgs: string = tl.getInput('cmakeArgs', false);
 
         if (cmakeArgs) {
-            if (runInsideShell) {
-                const safeTokens = shellSplit(cmakeArgs).map(t => neutralizeCommandSubstitution(t));
-                safeTokens.forEach(t => cmake.arg(t));
+            if (runInsideShell && process.platform !== 'win32') {
+                const tokens = shellSplit(cmakeArgs);
+                tokens.forEach(t => cmake.arg(neutralizeCmdSubstitution(t)));
             } else {
                 cmake.line(cmakeArgs);
             }
