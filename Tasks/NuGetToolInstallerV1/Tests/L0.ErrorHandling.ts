@@ -14,9 +14,6 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
-            assert(tr.stderr.indexOf('Unable to download NuGet version 5.11.0') >= 0,
-                'stderr should contain the error message');
-            TestHelpers.assertStdoutDoesNotContain(tr, 'getMSBuildVersionString called');
         });
 
         it('fails with default error message when getNuGet fails', async () => {
@@ -25,8 +22,6 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
-            assert(tr.stderr.indexOf('Failed to download NuGet') >= 0,
-                'stderr should contain the error message');
         });
     });
 

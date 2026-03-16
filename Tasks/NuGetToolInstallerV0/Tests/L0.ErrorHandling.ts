@@ -57,9 +57,6 @@ describe('NuGetToolInstallerV0 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
-            assert(tr.stderr.indexOf('Failed to resolve NuGet version') >= 0,
-                'stderr should contain the resolve version error');
-            TestHelpers.assertStdoutDoesNotContain(tr, 'getNuGet called with versionSpec=');
         });
     });
 

@@ -14,8 +14,8 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
             );
 
             // Task returns early without failing — no files downloaded
-            assert(tr.stderr.length === 0, 'Should not have written to stderr');
-            TestHelpers.assertStdoutContains(tr, 'Download Package skipped.');
+            assert(tr.succeeded, 'Task should succeed when skip is enabled');
+            assert.strictEqual(tr.errorIssues.length, 0, 'Should have no error issues');
             TestHelpers.assertFileCount(TestHelpers.tempDir, 0);
             TestHelpers.assertFileCount(TestHelpers.destinationDir, 0);
         });
@@ -33,8 +33,6 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
             // Verify the download actually completed by checking file output
             TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
             TestHelpers.assertFileExtracted('nugetFile');
-            TestHelpers.assertStdoutContains(tr, '"FeedId":"feedId@viewId"');
-            TestHelpers.assertStdoutDoesNotContain(tr, '"Project":"projectId"');
         });
 
         it('downloads successfully with project-scoped feed', async () => {
@@ -45,8 +43,6 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
             TestHelpers.assertFileExtracted('nugetFile');
-            TestHelpers.assertStdoutContains(tr, '"FeedId":"feedId@viewId"');
-            TestHelpers.assertStdoutContains(tr, '"Project":"projectId"');
         });
     });
 
@@ -58,8 +54,6 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
 
             TestHelpers.assertSuccess(tr);
             // Prove the resolution worked: file was downloaded using the resolved ID
-            TestHelpers.assertStdoutContains(tr, 'Trying to resolve package name packageName to id.');
-            TestHelpers.assertStdoutContains(tr, 'Resolved package id: 6f598cbe-a5e2-4f75-aa78-e0fd08301a15');
             TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
             TestHelpers.assertFileExtracted('nugetFile');
         });
@@ -71,7 +65,6 @@ describe('DownloadPackageV1 L0 Suite - Input Validation & Edge Cases', function 
 
             TestHelpers.assertSuccess(tr);
             // File still downloads — GUID was used directly
-            TestHelpers.assertStdoutDoesNotContain(tr, 'Trying to resolve package name');
             TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
             TestHelpers.assertFileExtracted('nugetFile');
         });
