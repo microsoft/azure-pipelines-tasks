@@ -38,5 +38,6 @@
   "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc",
   "loc.messages.InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
   "loc.messages.DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
-  "loc.messages.FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
+  "loc.messages.FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
+  "loc.messages.Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs."
 }

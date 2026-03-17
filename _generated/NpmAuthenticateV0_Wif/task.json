@@ -120,7 +120,8 @@
     "SkippingParsingNpmrc": "Skipping parsing npmrc",
     "InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
-    "FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
+    "FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
+    "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs."
   },
   "_buildConfigMapping": {
     "Default": "0.272.2",

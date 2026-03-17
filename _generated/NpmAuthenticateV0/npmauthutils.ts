@@ -62,13 +62,7 @@ export function initializeBackupDirectory(): string {
 }
 
 export async function resolvePackagingLocation(): Promise<pkgLocationUtils.PackagingLocation> {
-    try {
-        return await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
-    } catch (error) {
-        tl.debug('Unable to get packaging URIs');
-        logPackagingError(error);
-        throw error;
-    }
+    return await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
 }
 
 // Discovers registries from the project-scoped .npmrc (workingDirectory/.npmrc)
@@ -204,7 +198,12 @@ export function removeExistingCredentialEntries(
         const referencesPath = line.indexOf(registryUrl.pathname) !== -1;
         const isRegistryLine = line.indexOf('registry=') !== -1;
         if (referencesHost && referencesPath && !isRegistryLine) {
-            if (!warned && addedRegistryUrls.indexOf(registryUrl) === -1) {
+            // Suppress the warning if we've already added auth for this exact
+            // registry (e.g., same URL appears as both registry= and @scope:registry=).
+            const isRegistryAlreadyAdded = addedRegistryUrls.some(
+                url => url !== registryUrl && toNerfDart(url.href) === toNerfDart(registryUrl.href)
+            );
+            if (!warned && !isRegistryAlreadyAdded) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', registryUrl.host));
             }
             warned = true;

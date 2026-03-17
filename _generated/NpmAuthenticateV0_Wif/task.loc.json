@@ -120,7 +120,8 @@
     "SkippingParsingNpmrc": "ms-resource:loc.messages.SkippingParsingNpmrc",
     "InvalidRegistryUrl": "ms-resource:loc.messages.InvalidRegistryUrl",
     "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
-    "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials"
+    "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials",
+    "Error_UnableToGetPackagingUris": "ms-resource:loc.messages.Error_UnableToGetPackagingUris"
   },
   "_buildConfigMapping": {
     "Default": "0.272.2",

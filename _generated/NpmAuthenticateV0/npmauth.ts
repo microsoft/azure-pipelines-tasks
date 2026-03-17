@@ -24,9 +24,7 @@ async function main(): Promise<void> {
     try {
         packagingLocation = await npmauthutils.resolvePackagingLocation();
     } catch (error) {
-        // todo - this should use a loc string
-        tl.debug('Unable to get packaging URIs');
-        npmauthutils.logPackagingError(error);
+        tl.error(tl.loc('Error_UnableToGetPackagingUris'));
         throw error;
     }
 

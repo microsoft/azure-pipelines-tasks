@@ -24,9 +24,7 @@ async function main(): Promise<void> {
     try {
         packagingLocation = await npmauthutils.resolvePackagingLocation();
     } catch (error) {
-        // todo - this should use a loc string
-        tl.debug('Unable to get packaging URIs');
-        npmauthutils.logPackagingError(error);
+        tl.error(tl.loc('Error_UnableToGetPackagingUris'));
         throw error;
     }
 
@@ -41,16 +39,19 @@ async function main(): Promise<void> {
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-    const federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
-
     const feedUrl = tl.getInput("feedUrl");
+
     if (feedUrl && !entraWifServiceConnectionName) {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 
+    const federatedAuthToken = entraWifServiceConnectionName
+        ? await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
+        : undefined;
+
     // When feedUrl is provided, we should only add WIF credentials for matching registries in the npmrc
     // Otherwise, apply WIF credentials to all registries in the npmrc (that is, the old behavior of the task when feedUrl input didn't exist)
-    if(feedUrl){
+    if (feedUrl){
         npmrcRegistries = npmrcRegistries.filter(x=> npmauthutils.toNerfDart(x) == npmauthutils.toNerfDart(npmauthutils.normalizeRegistry(feedUrl)));
         if(npmrcRegistries.length == 0){
             throw new Error(tl.loc("IgnoringRegistry", feedUrl));

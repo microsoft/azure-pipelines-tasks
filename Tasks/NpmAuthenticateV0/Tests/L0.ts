@@ -10,3 +10,6 @@ import './L0.ErrorPaths';
 #if WIF
 import './L0.WIF';
 #endif
+
+// Unit tests (pure logic, no task runner)
+import './Unit';

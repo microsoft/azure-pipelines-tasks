@@ -1,11 +1,6 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
 import {
-	appendAuthToNpmrc,
 	normalizeRegistry,
-	removeExistingCredentialEntries,
 	toNerfDart,
 	tryResolveFromEndpoints,
 	tryResolveFromLocalRegistries,
@@ -123,55 +118,6 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			);
 
 			assert.strictEqual(resolved, null);
-		});
-	});
-
-	describe('npmrc file mutations', function () {
-		it('appends auth entry to npmrc file', function () {
-			const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-unit-'));
-			try {
-				const npmrcPath = path.join(tempDir, '.npmrc');
-				fs.writeFileSync(npmrcPath, 'registry=https://registry.npmjs.org/\n', 'utf8');
-
-				appendAuthToNpmrc(npmrcPath, '//registry.npmjs.org/:_authToken=test-token');
-
-				const content = fs.readFileSync(npmrcPath, 'utf8');
-				assert(content.includes('//registry.npmjs.org/:_authToken=test-token'));
-			} finally {
-				fs.rmSync(tempDir, { recursive: true, force: true });
-			}
-		});
-
-		it('removes pre-existing credential lines for the same registry', function () {
-			const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-unit-'));
-			try {
-				const npmrcPath = path.join(tempDir, '.npmrc');
-				const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
-				const lines = [
-					'registry=https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/',
-					'//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token',
-					'//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:always-auth=true'
-				];
-
-				fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
-
-				const updated = removeExistingCredentialEntries(
-					npmrcPath,
-					[...lines],
-					registryUrl,
-					[registryUrl]
-				);
-
-				assert.strictEqual(updated[0], lines[0]);
-				assert.strictEqual(updated[1], '');
-				assert.strictEqual(updated[2], '');
-
-				const fileContent = fs.readFileSync(npmrcPath, 'utf8');
-				assert(!fileContent.includes('_authToken=old-token'));
-				assert(!fileContent.includes('always-auth=true'));
-			} finally {
-				fs.rmSync(tempDir, { recursive: true, force: true });
-			}
 		});
 	});
 });

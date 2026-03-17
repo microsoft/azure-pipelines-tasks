@@ -1,7 +1,11 @@
 import * as path from 'path';
+import * as assert from 'assert';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
+import { appendAuthToNpmrc, removeExistingCredentialEntries } from '../npmauthutils';
 
 describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     this.timeout(20000);
@@ -189,6 +193,110 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
             // Both credential sources should be logged
             TestHelpers.assertOutputContains(tr, 'AddingLocalCredentials');
             TestHelpers.assertOutputContains(tr, 'AddingEndpointCredentials');
+        });
+    });
+
+    describe('npmrc file mutations', function () {
+        let tempDir: string;
+
+        beforeEach(function () {
+            tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-l0-'));
+        });
+
+        afterEach(function () {
+            fs.rmSync(tempDir, { recursive: true, force: true });
+        });
+
+        it('appends auth entry to npmrc file', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'registry=https://registry.npmjs.org/\n', 'utf8');
+
+            appendAuthToNpmrc(npmrcPath, '//registry.npmjs.org/:_authToken=test-token');
+
+            const content = fs.readFileSync(npmrcPath, 'utf8');
+            assert(content.includes('//registry.npmjs.org/:_authToken=test-token'));
+        });
+
+        it('removes pre-existing credential lines for the same registry', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const lines = [
+                'registry=https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token',
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:always-auth=true'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const updated = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                registryUrl,
+                [registryUrl]
+            );
+
+            assert.strictEqual(updated[0], lines[0], 'registry= line should be preserved');
+            assert.strictEqual(updated[1], '', 'old auth token line should be blanked');
+            assert.strictEqual(updated[2], '', 'old always-auth line should be blanked');
+
+            const fileContent = fs.readFileSync(npmrcPath, 'utf8');
+            assert(!fileContent.includes('_authToken=old-token'));
+            assert(!fileContent.includes('always-auth=true'));
+        });
+
+        it('suppresses warning when same URL was already added by a prior iteration', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const previouslyAdded = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const lines = [
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const updated = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                registryUrl,
+                [previouslyAdded, registryUrl]
+            );
+
+            assert.strictEqual(updated[0], '', 'old auth should be blanked even for duplicate');
+        });
+
+        it('processes separately when scoped and default registries point to different feeds', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const feedAUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/');
+            const feedBUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/');
+            const lines = [
+                'registry=https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=old-tokenA',
+                '@scope:registry=https://pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/:_authToken=old-tokenB'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const afterFeedA = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                feedAUrl,
+                [feedAUrl]
+            );
+
+            assert.strictEqual(afterFeedA[1], '', 'feedA old auth should be blanked');
+            assert.strictEqual(afterFeedA[3], lines[3], 'feedB auth should be untouched');
+
+            const afterFeedB = removeExistingCredentialEntries(
+                npmrcPath,
+                [...afterFeedA],
+                feedBUrl,
+                [feedAUrl, feedBUrl]
+            );
+
+            assert.strictEqual(afterFeedB[3], '', 'feedB old auth should be blanked');
+            assert.strictEqual(afterFeedB[0], lines[0], 'feedA registry= line still preserved');
+            assert.strictEqual(afterFeedB[2], lines[2], 'feedB registry= line still preserved');
         });
     });
 });
