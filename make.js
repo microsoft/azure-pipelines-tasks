@@ -229,12 +229,14 @@ CLI.gendocs = function() {
 //
 CLI.build = async function(/** @type {{ task: string }} */ argv)
 {
+    console.time('Total build time');
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     writeUpdatedsFromGenTasks = true;
     await CLI.serverBuild(argv);
+    console.timeEnd('Total build time');
 }
 
 CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
@@ -362,7 +364,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     console.log(`✅ Successful:    ${buildResults.successful}`);
     console.log(`❌ Failed:        ${buildResults.failed}`);
     console.log(`⏭️  Skipped:       ${buildResults.skipped}`);
-    
+
     if (buildResults.failures.length > 0) {
         console.log('\n❌ FAILED TASKS:');
         buildResults.failures.forEach((failure, index) => {
@@ -606,7 +608,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         });
         fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
     }
-    
+
     // copy default resources and any additional resources defined in the task's make.json
     console.log();
     console.log('> copying task resources');
