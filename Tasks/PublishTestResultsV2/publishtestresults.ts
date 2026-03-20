@@ -16,7 +16,7 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults) {
+function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults, allowPtrToDetectTestRunRetryFiles) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
 
@@ -43,6 +43,9 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     }
     if(failTaskOnFailureToPublishResults){
         properties['failTaskOnFailureToPublishResults'] = failTaskOnFailureToPublishResults;
+    }
+    if(allowPtrToDetectTestRunRetryFiles){
+        properties['isDetectTestRunRetry'] = allowPtrToDetectTestRunRetryFiles;
     }
     properties['testRunSystem'] = testRunSystem;
 
@@ -75,8 +78,9 @@ async function run() {
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
-	const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
+	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
+        const allowPtrToDetectTestRunRetryFiles = tl.getVariable('allowPtrToDetectTestRunRetryFiles');
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
@@ -87,8 +91,9 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
-	tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
+	    tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
         tl.debug('failTaskOnFailureToPublishResults: ' + failTaskOnFailureToPublishResults);
+        tl.debug('allowPtrToDetectTestRunRetryFiles: ' + allowPtrToDetectTestRunRetryFiles);
 
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
@@ -118,8 +123,9 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
-	ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
-	ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
+        ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
+        ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
+        ci.addToConsolidatedCi('allowPtrToDetectTestRunRetryFiles', allowPtrToDetectTestRunRetryFiles);
 
         const dotnetVersion = getDotNetVersion();
         ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
@@ -167,7 +173,8 @@ async function run() {
                         testRunTitle,
                         publishRunAttachments,
                         TESTRUN_SYSTEM,
-                        failTaskOnFailureToPublishResults);
+                        failTaskOnFailureToPublishResults,
+                        allowPtrToDetectTestRunRetryFiles);
                 } else if (exitCode === 40000) {
                     // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
                     ci.addToConsolidatedCi('failedTestsInRun', true);
@@ -188,7 +195,8 @@ async function run() {
                     testRunTitle,
                     publishRunAttachments,
                     TESTRUN_SYSTEM,
-                    failTaskOnFailureToPublishResults);
+                    failTaskOnFailureToPublishResults,
+                    allowPtrToDetectTestRunRetryFiles);
             }
         }
         tl.setResult(tl.TaskResult.Succeeded, '');
