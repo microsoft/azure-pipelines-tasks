@@ -83,6 +83,7 @@
   "loc.messages.Info_ArtifactToolPath": "Artifact tool path: %s",
   "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata.",
   "loc.messages.FailedToGetArtifactTool": "Failed to get artifact tool. %s",
+  "loc.messages.Error_ArtifactToolPathNotSet": "Artifact tool path was not set by pre-job execution.",
   "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
   "loc.messages.FailedToGetLatestPackageVersion": "Failed to get package versions",
   "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",

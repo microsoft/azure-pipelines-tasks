@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 270,
-    "Patch": 1
+    "Minor": 272,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -407,6 +407,20 @@
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
+  "prejobexecution" : {
+    "Node16": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node10": {
       "target": "universalmain.js",
@@ -459,6 +473,7 @@
     "Info_ArtifactToolPath": "Artifact tool path: %s",
     "FailedToGetPackageMetadata": "Failed to get package metadata.",
     "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
+    "Error_ArtifactToolPathNotSet": "Artifact tool path was not set by pre-job execution.",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
     "FailedToGetLatestPackageVersion": "Failed to get package versions",
     "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
