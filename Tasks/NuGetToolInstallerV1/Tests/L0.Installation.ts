@@ -1,62 +1,41 @@
 import { TestHelpers } from './TestHelpers';
-import { TestDataBuilder, TestData, TestEnvVars } from './TestConstants';
+import { TestDataBuilder, TestData } from './TestConstants';
 
 describe('NuGetToolInstallerV1 L0 Suite - Tool Installation', function () {
     this.timeout(30000);
     beforeEach(() => TestHelpers.beforeEach());
     afterEach(() => TestHelpers.afterEach());
 
-    describe('Explicit Version Spec', function () {
-        it('installs NuGet with explicit version spec', async () => {
+    describe('Behavior validation', function () {
+        it('uses explicit versionSpec and resolves MSBuild version string', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forExplicitVersion(TestData.explicitVersionSpec)
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, `Mock: getNuGet called with versionSpec=${TestData.explicitVersionSpec}, checkLatest=false`);
+            TestHelpers.assertStdoutContains(tr, 'Mock: getMSBuildVersionString called');
+            TestHelpers.assertTelemetryEmitted(tr);
         });
 
-        it('uses default >=4.9 when no version spec is provided', async () => {
+        it('uses default >=4.9 when no versionSpec is provided', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forDefaultVersion()
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, `Mock: getNuGet called with versionSpec=${TestData.defaultVersionSpec}, checkLatest=false`);
+            TestHelpers.assertStdoutContains(tr, 'Mock: getMSBuildVersionString called');
+            TestHelpers.assertTelemetryEmitted(tr);
         });
-    });
 
-    describe('Check Latest', function () {
-        it('succeeds with checkLatest=true', async () => {
+        it('forwards checkLatest=true to getNuGet', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forCheckLatest()
             );
 
             TestHelpers.assertSuccess(tr);
-        });
-
-        it('succeeds with checkLatest=false', async () => {
-            const tr = await TestHelpers.runTest(
-                TestDataBuilder.withDefaults()
-            );
-
-            TestHelpers.assertSuccess(tr);
-        });
-    });
-
-    describe('MSBuild Version Resolution', function () {
-        it('succeeds with explicit version spec', async () => {
-            const tr = await TestHelpers.runTest(
-                TestDataBuilder.forExplicitVersion(TestData.explicitVersionSpec)
-            );
-
-            TestHelpers.assertSuccess(tr);
-        });
-
-        it('succeeds with default version', async () => {
-            const tr = await TestHelpers.runTest(
-                TestDataBuilder.forDefaultVersion()
-            );
-
-            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, `Mock: getNuGet called with versionSpec=${TestData.explicitVersionSpec}, checkLatest=true`);
         });
     });
 });

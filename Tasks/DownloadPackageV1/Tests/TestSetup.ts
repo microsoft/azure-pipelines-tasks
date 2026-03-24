@@ -28,7 +28,7 @@ tr.setInput('definition', definition);
 tr.setInput('version', version);
 tr.setInput('downloadPath', outputPath);
 tr.setInput('extract', extract);
-tr.setInput('verbosity', 'verbose');
+// tr.setInput('verbosity', 'verbose');
 if (files) {
     tr.setInput('files', files);
 }

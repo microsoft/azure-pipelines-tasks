@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { TestHelpers } from './TestHelpers';
-import { TestDataBuilder } from './TestConstants';
+import { TestDataBuilder, TestData } from './TestConstants';
 
 describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
     this.timeout(30000);
@@ -14,6 +14,7 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
+            TestHelpers.assertStdoutContains(tr, `Mock: getNuGet called with versionSpec=${TestData.explicitVersionSpec}, checkLatest=false`);
         });
 
         it('fails with default error message when getNuGet fails', async () => {
@@ -32,8 +33,8 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
             );
 
             TestHelpers.assertFailure(tr);
-            // Telemetry should still be emitted in the finally block
             TestHelpers.assertTelemetryEmitted(tr);
+            TestHelpers.assertStdoutContains(tr, `${TestData.telemetryArea}.${TestData.telemetryFeature}`);
         });
 
         it('handles telemetry errors gracefully without affecting task result', async () => {
@@ -41,8 +42,8 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
                 TestDataBuilder.forTelemetryError()
             );
 
-            // Task should still succeed even if telemetry throws
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutDoesNotContain(tr, 'Telemetry emitted:');
         });
     });
 
@@ -55,6 +56,7 @@ describe('NuGetToolInstallerV1 L0 Suite - Error Handling', function () {
             // Task should succeed; nugetVersion is omitted from telemetry when fileVersion is null
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertTelemetryEmitted(tr);
+            TestHelpers.assertStdoutContains(tr, `Mock: getNuGet called with versionSpec=${TestData.explicitVersionSpec}, checkLatest=false`);
             assert(tr.stdout.indexOf('"nugetVersion":"') < 0,
                 'nugetVersion should not have a string value in telemetry when fileVersion is null');
         });

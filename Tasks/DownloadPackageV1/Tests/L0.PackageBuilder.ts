@@ -82,4 +82,59 @@ describe('DownloadPackageV1 L0 Suite - PackageBuilder Unit Behavior', function (
     it('throws for unsupported package type', () => {
         assert.throws(() => new PackageUrlsBuilder().ofType('invalid-type'));
     });
+
+    it('maps cargo to single-file package with .crate extension', async () => {
+        const builder = new PackageUrlsBuilder().ofType('cargo');
+        const pkg = await builder.build();
+
+        assert.strictEqual(builder.PackageProtocolAreaName, 'Cargo');
+        assert.strictEqual(builder.Extension, '.crate');
+        assert(pkg instanceof SingleFilePackage);
+    });
+
+    it('exposes correct area IDs for nuget', () => {
+        const builder = new PackageUrlsBuilder().ofType('nuget');
+
+        assert.strictEqual(builder.PackagingMetadataAreaId, '7A20D846-C929-4ACC-9EA2-0D5A7DF1B197');
+        assert.strictEqual(builder.PackageProtocolDownloadAreadId, '6EA81B8C-7386-490B-A71F-6CF23C80B388');
+    });
+
+    it('exposes correct area IDs for npm', () => {
+        const builder = new PackageUrlsBuilder().ofType('npm');
+
+        assert.strictEqual(builder.PackagingMetadataAreaId, '7A20D846-C929-4ACC-9EA2-0D5A7DF1B197');
+        assert.strictEqual(builder.PackageProtocolDownloadAreadId, '75CAA482-CB1E-47CD-9F2C-C048A4B7A43E');
+    });
+
+    it('builds maven route params with primary groupId when available', () => {
+        const builder = new PackageUrlsBuilder().ofType('maven');
+        const routeParams = builder.GetRouteParams(
+            'feedId',
+            'projectId',
+            {
+                protocolMetadata: {
+                    data: {
+                        groupId: 'org.primary',
+                        parent: { groupId: 'org.parent' },
+                        artifactId: 'my-lib',
+                        version: '2.0.0'
+                    }
+                }
+            },
+            { name: 'my-lib-2.0.0.jar' }
+        );
+
+        assert.strictEqual(routeParams.path, 'org.primary/my-lib/2.0.0/my-lib-2.0.0.jar');
+    });
+
+    it('chains builder methods fluently', () => {
+        const builder = new PackageUrlsBuilder();
+        const result = builder
+            .ofType('nuget')
+            .matchingPattern(['*.nupkg'])
+            .withRetries(async (op) => op());
+
+        assert.strictEqual(result, builder, 'Builder methods should return the same instance');
+        assert.deepStrictEqual(builder.Pattern, ['*.nupkg']);
+    });
 });

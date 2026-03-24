@@ -9,3 +9,5 @@ import './L0.InputValidation';   // Input validation and edge case scenarios
 import './L0.DownloadBehavior';  // Universal routing, extract flag per type, view handling
 import './L0.Retry';             // Retry algorithm unit behavior
 import './L0.PackageBuilder';    // Package builder mapping and route-param logic
+import './L0.PackageFileResult'; // PackageFileResult data class unit tests
+import './L0.PackageFile';       // PackageFile constructor and path resolution
