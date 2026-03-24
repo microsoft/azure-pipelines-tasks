@@ -471,6 +471,7 @@
     "Info_ResolvePackageVersionRoute": "Resolved get highest package version route: %s",
     "Info_RetrievingArtifactToolUri": "Retrieving artifact tool from: %s",
     "Info_ArtifactToolPath": "Artifact tool path: %s",
+    "Info_ArtifactToolPathResolvedFromCache": "Artifact tool already available, skipping download.",
     "FailedToGetPackageMetadata": "Failed to get package metadata.",
     "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
     "Error_ArtifactToolPathNotSet": "Artifact tool path was not set by pre-job execution.",

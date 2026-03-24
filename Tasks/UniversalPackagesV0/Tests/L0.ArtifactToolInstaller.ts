@@ -41,7 +41,7 @@ describe('UniversalPackages L0 Suite - Artifact Tool Installer', function () {
             });
 
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertStdoutContains(tr, 'Artifact tool path resolved from cached pipeline variable');
+            TestHelpers.assertStdoutContains(tr, 'loc_mock_Info_ArtifactToolPathResolvedFromCache');
         });
 
         it('emits telemetry on success', async () => {

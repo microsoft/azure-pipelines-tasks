@@ -20,7 +20,7 @@ async function run(): Promise<void> {
         // Check if another pre-job instance already resolved the artifact tool path
         const cachedPath = tl.getVariable("UPACK_ARTIFACTTOOL_PATH_CACHED");
         if (cachedPath) {
-            tl.debug("Artifact tool path resolved from cached pipeline variable");
+            console.log(tl.loc("Info_ArtifactToolPathResolvedFromCache"));
             artifactToolPath = cachedPath;
         } else {
             const localAccessToken = pkgLocationUtils.getSystemAccessToken();

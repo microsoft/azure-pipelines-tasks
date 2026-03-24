@@ -471,6 +471,7 @@
     "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
     "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
     "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
+    "Info_ArtifactToolPathResolvedFromCache": "ms-resource:loc.messages.Info_ArtifactToolPathResolvedFromCache",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
     "Error_ArtifactToolPathNotSet": "ms-resource:loc.messages.Error_ArtifactToolPathNotSet",
