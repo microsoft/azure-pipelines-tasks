@@ -1,6 +1,5 @@
-import * as path from 'path';
 import * as os from 'os';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as path from 'path';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
@@ -19,13 +18,11 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
         // Arrange: internal feed that matches the collection URI host
         const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
-        const tp = path.join(__dirname, 'TestSetup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.npmrcPath] = npmrcPath;
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath
+        });
 
         // Assert
         TestHelpers.assertSuccess(tr);
@@ -38,12 +35,11 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
 
     it('emits telemetry even when the task fails', async () => {
         // Arrange: point at a file without .npmrc extension — task fails early
-        const tp = path.join(__dirname, 'TestSetup.js');
-        const tr = new ttm.MockTestRunner(tp);
-        process.env[TestEnvVars.npmrcPath] = path.join(os.tmpdir(), 'badfile.json');
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: path.join(os.tmpdir(), 'badfile.json')
+        });
 
         // Assert
         TestHelpers.assertFailure(tr);
@@ -57,16 +53,14 @@ describe('NpmAuthenticate L0 - Telemetry', function () {
     it('records external feed auth count in telemetry', async () => {
         // Arrange: one external service connection to authenticate
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-        const tp = path.join(__dirname, 'TestSetup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.npmrcPath] = npmrcPath;
-        process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-        process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-        process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+            [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+            [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+        });
 
         // Assert
         TestHelpers.assertSuccess(tr);

@@ -1,11 +1,13 @@
-import * as path from 'path';
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as os from 'os';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 import { appendAuthToNpmrc, removeExistingCredentialEntries } from '../npmauthutils';
+
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     this.timeout(20000);
@@ -24,12 +26,10 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
             // The registry host (dev.azure.com) matches the collectionUri host.
             const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.systemAccessToken}`);
@@ -38,12 +38,10 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
         it('logs that credentials are being added', async () => {
             const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'AddingLocalCredentials');
@@ -53,15 +51,13 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     describe('External service connection authentication', function () {
         it('appends auth token for a matching external registry', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.externalRegistryToken}`);
@@ -69,15 +65,13 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
 
         it('logs that endpoint credentials are being added', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'AddingEndpointCredentials');
@@ -88,12 +82,10 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
         it('ignores registry when no auth source matches', async () => {
             const unmatchedUrl = 'https://registry.npmjs.org/';
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${unmatchedUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'IgnoringRegistry');
@@ -102,12 +94,10 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
 
         it('succeeds with no auth when .npmrc has no registries', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc('');
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken');
@@ -117,16 +107,14 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     describe('Duplicate endpoint detection', function () {
         it('warns when external endpoint was already registered in a prior task run', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            process.env[TestEnvVars.existingEndpoints] = TestData.externalRegistryUrl;
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken,
+                [TestEnvVars.existingEndpoints]: TestData.externalRegistryUrl
+            });
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertWarningIssue(tr, 'DuplicateCredentials',
@@ -145,16 +133,14 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
                 `//registry.example.com/npm/:always-auth=true`
             ].join('\n');
             const npmrcPath = TestHelpers.createTempNpmrc(npmrcContent);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
-
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
 
             // Act
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
             // Assert
             TestHelpers.assertSuccess(tr);
@@ -173,16 +159,14 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
                 `@external:registry=${TestData.externalRegistryUrl}`
             ].join('\n');
             const npmrcPath = TestHelpers.createTempNpmrc(npmrcContent);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
-
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
 
             // Act
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
             // Assert
             TestHelpers.assertSuccess(tr);

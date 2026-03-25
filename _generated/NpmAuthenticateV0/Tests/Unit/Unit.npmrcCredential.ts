@@ -1,25 +1,17 @@
 import * as assert from 'assert';
+import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { resolveServiceEndpointCredential } from '../../npmrcCredential';
-
-function normalizeRegistry(url: string): string {
-    return url.endsWith('/') ? url : `${url}/`;
-}
-
-function toNerfDart(url: string): string {
-    const parsed = new URL(url);
-    const host = parsed.host.toLowerCase();
-    let pathname = parsed.pathname;
-    if (!pathname.endsWith('/')) {
-        pathname += '/';
-    }
-    return `//${host}${pathname}`;
-}
+import { normalizeRegistry, toNerfDart } from '../../npmauthutils';
 
 describe('NpmAuthenticateV0 Unit - npmrcCredential', function () {
     const originalGetEndpointAuthorization = (tl as any).getEndpointAuthorization;
     const originalGetEndpointUrl = (tl as any).getEndpointUrl;
     const endpointId = 'UnitEndpoint';
+
+    before(function () {
+        tl.setResourcePath(path.join(__dirname, '..', '..', 'task.json'));
+    });
 
     afterEach(function () {
         (tl as any).getEndpointAuthorization = originalGetEndpointAuthorization;
@@ -36,7 +28,8 @@ describe('NpmAuthenticateV0 Unit - npmrcCredential', function () {
             await resolveServiceEndpointCredential(endpointId, normalizeRegistry, toNerfDart);
             assert.fail('Expected resolveServiceEndpointCredential to throw');
         } catch (error) {
-            assert(String(error).length > 0);
+            assert(String(error).includes('service connection'),
+                `Expected error about service connection, got: ${error}`);
         }
     });
 
@@ -53,7 +46,8 @@ describe('NpmAuthenticateV0 Unit - npmrcCredential', function () {
             await resolveServiceEndpointCredential(endpointId, normalizeRegistry, toNerfDart);
             assert.fail('Expected resolveServiceEndpointCredential to throw');
         } catch (error) {
-            assert(String(error).includes('ServiceEndpointUrlNotDefined'));
+            assert(String(error).includes('URL for the service connection'),
+                `Expected error about service connection URL, got: ${error}`);
         }
     });
 
@@ -68,7 +62,7 @@ describe('NpmAuthenticateV0 Unit - npmrcCredential', function () {
             await resolveServiceEndpointCredential(endpointId, normalizeRegistry, toNerfDart);
             assert.fail('Expected resolveServiceEndpointCredential to throw');
         } catch (error) {
-            assert(String(error).includes('Unsupported auth scheme') || String(error).length > 0);
+            assert(String(error).includes('Unsupported auth scheme'));
         }
     });
 

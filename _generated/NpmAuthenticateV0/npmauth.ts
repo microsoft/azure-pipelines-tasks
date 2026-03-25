@@ -35,7 +35,7 @@ async function main(): Promise<void> {
     // Read the target .npmrc into memory for credential line replacement
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    let addedRegistry: URL[] = [];
+    let addedRegistries: URL[] = [];
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
 
@@ -55,8 +55,8 @@ async function main(): Promise<void> {
             if (npmrcEntry) {
                 let serviceURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
-                addedRegistry.push(serviceURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistry);
+                addedRegistries.push(serviceURL);
+                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistries);
                 externalFeedSuccessCount++;
             }
         }
@@ -71,8 +71,9 @@ async function main(): Promise<void> {
             if (npmrcEntry) {
                 let localURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingLocalCredentials"));
-                addedRegistry.push(localURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistry);
+                addedRegistries.push(localURL);
+                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistries);
+                internalFeedSuccessCount++;
             }
         }
 

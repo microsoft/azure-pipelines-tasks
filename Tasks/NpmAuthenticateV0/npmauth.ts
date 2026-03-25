@@ -12,8 +12,8 @@ let federatedFeedAuthSuccessCount: number = 0;
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const npmrc = npmauthutils.validateNpmrcPath();
-    let workingDirectory = path.dirname(npmrc);
-    let previouslyAuthenticatedUrls = npmauthutils.getPreviouslyAuthenticatedUrls();
+    const workingDirectory = path.dirname(npmrc);
+    const previouslyAuthenticatedUrls = npmauthutils.getPreviouslyAuthenticatedUrls();
 
     // Preserve the original .npmrc on first task execution, so the post-job cleanup can restore it. 
     const backupDirectory = npmauthutils.initializeBackupDirectory();
@@ -29,36 +29,35 @@ async function main(): Promise<void> {
     }
 
     // Collect auth sources: internal feeds (from project .npmrc) and external registries (from service connections)
-    let internalFeedCredentials = await npmauthutils.resolveInternalFeedCredentials(workingDirectory, packagingLocation.PackagingUris);
-    let endpointRegistries = await npmauthutils.resolveEndpointRegistries(previouslyAuthenticatedUrls);
+    const internalFeedCredentials = npmauthutils.resolveInternalFeedCredentials(workingDirectory, packagingLocation.PackagingUris);
+    const endpointRegistries = await npmauthutils.resolveEndpointRegistries(previouslyAuthenticatedUrls);
 
     // Read the target .npmrc into memory for credential line replacement
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    let addedRegistry: URL[] = [];
+    let addedRegistries: URL[] = [];
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
 #if WIF
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
     const feedUrl = tl.getInput("feedUrl");
+    let federatedAuthToken: string | undefined;
 
-    if (feedUrl && !entraWifServiceConnectionName) {
-        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
-    }
+    if (entraWifServiceConnectionName) {
+        federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName);
 
-    const federatedAuthToken = entraWifServiceConnectionName
-        ? await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
-        : undefined;
-
-    // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
-    // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
-    if (feedUrl) {
-        npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === npmauthutils.toNerfDart(npmauthutils.normalizeRegistry(feedUrl)));
-        if (npmrcRegistries.length === 0) {
-            // Note: IgnoringRegistry message is soft-toned but this is a hard failure.
-            // Consider adding a dedicated error key in a future change.
-            throw new Error(tl.loc("IgnoringRegistry", feedUrl));
+        // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
+        // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
+        if (feedUrl) {
+            npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === npmauthutils.toNerfDart(feedUrl));
+            if (npmrcRegistries.length === 0) {
+                throw new Error(tl.loc("IgnoringRegistry", feedUrl));
+            }
+        } else {
+            tl.debug(tl.loc('Info_ApplyingWifToAllRegistries', npmrcRegistries.length));
         }
+    } else if (feedUrl) {
+        throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 #endif
 
@@ -72,25 +71,27 @@ async function main(): Promise<void> {
         }
         let npmrcEntry: npmauthutils.NpmrcCredential;
 
+        // Auth resolution priority: WIF > external service connection > internal feed.
+        // The first match wins; subsequent sources are skipped for this registry.
+
 #if WIF
         if (entraWifServiceConnectionName) {
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            npmrcEntry = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}`, authOnly: true };
-            let url = new URL(RegistryURLString);
-            addedRegistry.push(url);
-            npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, url, addedRegistry);
+            npmrcEntry = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}` };
+            addedRegistries.push(registryURL);
+            npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
         }
 #endif
 
-        if (!npmrcEntry && endpointRegistries && endpointRegistries.length > 0) {
-            npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries) as npmauthutils.NpmrcCredential;
+        if (!npmrcEntry && endpointRegistries.length > 0) {
+            npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries);
             if (npmrcEntry) {
                 let serviceURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
-                addedRegistry.push(serviceURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistry);
+                addedRegistries.push(serviceURL);
+                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistries);
                 externalFeedSuccessCount++;
             }
         }
@@ -101,12 +102,13 @@ async function main(): Promise<void> {
                 internalFeedCredentials,
                 previouslyAuthenticatedUrls,
                 registryURL.host
-            ) as npmauthutils.NpmrcCredential;
+            );
             if (npmrcEntry) {
                 let localURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingLocalCredentials"));
-                addedRegistry.push(localURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistry);
+                addedRegistries.push(localURL);
+                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistries);
+                internalFeedSuccessCount++;
             }
         }
 
@@ -122,6 +124,7 @@ async function main(): Promise<void> {
         }
     }
 }
+
 
 main().catch(error => {
     if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {

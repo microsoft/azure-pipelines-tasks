@@ -99,6 +99,7 @@
     "InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
-    "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs."
+    "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
+    "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc."
   }
 }

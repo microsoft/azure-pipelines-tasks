@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
@@ -39,14 +38,12 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         const originalContent = 'registry=https://registry.npmjs.org/\n';
         const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
         const saveDir   = createSaveDir(npmrcPath, originalContent);
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]      = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]  = saveDir;
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
@@ -60,15 +57,13 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         // Arrange — save dir exists but index.json is absent
         const npmrcPath = TestHelpers.createTempNpmrc();
         const saveDir   = TestHelpers.createTempDir('npm-auth-save-');   // no index.json written
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]       = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]   = saveDir;
-        process.env[TestEnvVars.cleanupIndexShouldExist] = 'false';
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupIndexShouldExist]: 'false'
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
@@ -80,15 +75,13 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         // Arrange — index.json is present but the .npmrc it references is gone
         const npmrcPath = TestHelpers.createTempNpmrc();
         const saveDir   = createSaveDir(npmrcPath);
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]        = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]    = saveDir;
-        process.env[TestEnvVars.cleanupNpmrcShouldExist] = 'false';   // simulate deleted .npmrc
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupNpmrcShouldExist]: 'false'
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
@@ -103,16 +96,14 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
         const saveDir   = createSaveDir(npmrcPath);
         const tempDir   = TestHelpers.createTempDir('npm-auth-temp-');
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]       = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]   = saveDir;
-        process.env[TestEnvVars.cleanupTempDirectory]   = tempDir;
-        process.env[TestEnvVars.cleanupTempDirExists]   = 'true';
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTempDirectory]: tempDir,
+            [TestEnvVars.cleanupTempDirExists]: 'true'
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);

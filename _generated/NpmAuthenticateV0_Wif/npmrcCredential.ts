@@ -4,7 +4,6 @@ import * as tl from 'azure-pipelines-task-lib/task';
 export interface NpmrcCredential {
     url: string;
     auth: string;
-    authOnly: boolean;
 }
 
 interface EndpointCredentials {
@@ -35,7 +34,7 @@ export async function resolveServiceEndpointCredential(
         tl.setSecret(credentials.password);
     }
 
-    return { url: endpointUrl, auth, authOnly: true };
+    return { url: endpointUrl, auth };
 }
 
 function getEndpointAuth(endpointId: string): tl.EndpointAuthorization {

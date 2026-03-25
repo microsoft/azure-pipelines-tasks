@@ -2,8 +2,6 @@
 // (npmrcCredential.ts) via TestSetupEndpointCredential, which provides
 // endpoint auth through ENDPOINT_AUTH_* env vars instead of mocking.
 
-import * as path from 'path';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
@@ -16,16 +14,14 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
     describe('Token auth on external registry', function () {
         it('writes bearer _authToken for an external Token endpoint', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetupEndpointCredential.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            process.env[TestEnvVars.endpointAuthScheme] = 'Token';
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken,
+                [TestEnvVars.endpointAuthScheme]: 'Token'
+            }, 'TestSetupEndpointCredential.js');
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.externalRegistryToken}`);
@@ -36,17 +32,15 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
     describe('Token auth on internal (Azure DevOps) registry', function () {
         it('writes basic auth for an internal Token endpoint', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetupEndpointCredential.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            process.env[TestEnvVars.endpointAuthScheme] = 'Token';
-            process.env[TestEnvVars.isInternalEndpoint] = 'true';
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken,
+                [TestEnvVars.endpointAuthScheme]: 'Token',
+                [TestEnvVars.isInternalEndpoint]: 'true'
+            }, 'TestSetupEndpointCredential.js');
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, 'username=VssToken');
@@ -58,17 +52,15 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
     describe('UsernamePassword auth', function () {
         it('writes basic auth with the provided username', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetupEndpointCredential.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.endpointAuthScheme] = 'UsernamePassword';
-            process.env[TestEnvVars.endpointUsername] = 'myuser';
-            process.env[TestEnvVars.endpointPassword] = 'mypassword';
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.endpointAuthScheme]: 'UsernamePassword',
+                [TestEnvVars.endpointUsername]: 'myuser',
+                [TestEnvVars.endpointPassword]: 'mypassword'
+            }, 'TestSetupEndpointCredential.js');
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, 'username=myuser');
@@ -80,16 +72,14 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
     describe('Telemetry with real credential resolution', function () {
         it('records ExternalFeedAuthCount', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetupEndpointCredential.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            process.env[TestEnvVars.endpointAuthScheme] = 'Token';
-
-            await tr.runAsync();
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken,
+                [TestEnvVars.endpointAuthScheme]: 'Token'
+            }, 'TestSetupEndpointCredential.js');
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, '"ExternalFeedAuthCount":1');

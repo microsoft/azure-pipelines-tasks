@@ -111,8 +111,16 @@ export class TestHelpers {
             message || `Expected .npmrc NOT to contain "${unexpected}".\nActual content:\n${content}`);
     }
 
-    static buildLocalRegistry(url: string, authToken: string): object {
-        const nerfDart = url.replace(/^https?:/, '');
-        return { url, auth: `${nerfDart}:_authToken=${authToken}` };
+    static async runTestWithEnv(
+        envVars: { [key: string]: string },
+        setupScript: string = 'TestSetup.js'
+    ): Promise<ttm.MockTestRunner> {
+        const tp = path.join(__dirname, setupScript);
+        const tr = new ttm.MockTestRunner(tp);
+        for (const [key, value] of Object.entries(envVars)) {
+            process.env[key] = value;
+        }
+        await tr.runAsync();
+        return tr;
     }
 }

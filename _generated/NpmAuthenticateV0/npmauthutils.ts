@@ -102,8 +102,7 @@ export function resolveInternalFeedCredentials(
         tl.setSecret(accessToken);
         return {
             url: registryUrl,
-            auth: `${nerfed}:_authToken=${accessToken}`,
-            authOnly: true
+            auth: `${nerfed}:_authToken=${accessToken}`
         };
     });
 }
@@ -214,10 +213,3 @@ export function removeExistingCredentialEntries(
     return lines;
 }
 
-
-export function logPackagingError(error: Error): void {
-    if (error && (error as any).stack) {
-        tl.debug((error as any).stack);
-    }
-    tl.error(error && (error as any).message ? (error as any).message : String(error));
-}

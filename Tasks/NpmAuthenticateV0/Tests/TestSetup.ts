@@ -102,8 +102,7 @@ if (customEndpoint) {
             const nerfDart = extUrl.replace(/^https?:/, '');
             return {
                 url: extUrl,
-                auth: `${nerfDart}:_authToken=${extToken}`,
-                authOnly: true
+                auth: `${nerfDart}:_authToken=${extToken}`
             };
         },
         NpmrcCredential: {}

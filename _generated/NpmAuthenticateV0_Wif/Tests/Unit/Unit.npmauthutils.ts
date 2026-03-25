@@ -45,13 +45,11 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const endpointRegistries: NpmrcCredential[] = [
 				{
 					url: 'https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/',
-					auth: '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=tokenA',
-					authOnly: true
+					auth: '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=tokenA'
 				},
 				{
 					url: 'https://pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/',
-					auth: '//pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/:_authToken=tokenB',
-					authOnly: true
+					auth: '//pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/:_authToken=tokenB'
 				}
 			];
 
@@ -67,8 +65,7 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const endpointRegistries: NpmrcCredential[] = [
 				{
 					url: 'https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/',
-					auth: '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=tokenA',
-					authOnly: true
+					auth: '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=tokenA'
 				}
 			];
 
@@ -86,8 +83,7 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const localRegistries: NpmrcCredential[] = [
 				{
 					url: 'https://pkgs.dev.azure.com/org/_packaging/internal/npm/registry/',
-					auth: '//pkgs.dev.azure.com/org/_packaging/internal/npm/registry/:_authToken=internal',
-					authOnly: true
+					auth: '//pkgs.dev.azure.com/org/_packaging/internal/npm/registry/:_authToken=internal'
 				}
 			];
 
@@ -105,8 +101,7 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const localRegistries: NpmrcCredential[] = [
 				{
 					url: 'https://pkgs.dev.azure.com/org/_packaging/internal/npm/registry/',
-					auth: '//pkgs.dev.azure.com/org/_packaging/internal/npm/registry/:_authToken=internal',
-					authOnly: true
+					auth: '//pkgs.dev.azure.com/org/_packaging/internal/npm/registry/:_authToken=internal'
 				}
 			];
 

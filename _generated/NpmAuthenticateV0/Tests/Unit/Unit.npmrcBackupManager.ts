@@ -2,7 +2,10 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { NpmrcBackupManager } from '../../npmrcBackupManager';
+
+tl.setResourcePath(path.join(__dirname, '..', '..', 'task.json'));
 
 describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
     it('backs up and restores a file', function () {
