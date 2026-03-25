@@ -1,5 +1,7 @@
 // parse command line options
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+    boolean: ['fast-build', 'fb']
+});
 
 if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
     argv.includeLocalPackagesBuildConfig=true;
@@ -66,7 +68,7 @@ var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
-const isFastBuildEnabled = process.argv.includes('--fast-build') || process.argv.includes('-fb');
+const isFastBuildEnabled = argv['fast-build'] || argv['fb'];
 
 var CLI = {};
 
@@ -229,21 +231,13 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = async function(/** @type {{ task: string }} */ argv)
-{
+CLI.build = async function(/** @type {{ task: string }} */ argv){
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     writeUpdatedsFromGenTasks = true;
-
-    console.time('Total build time');
     await CLI.serverBuild(argv);
-    console.timeEnd('Total build time');
-
-    if (!isFastBuildEnabled) {
-        console.log('🚀 \x1b[91mUse --fast-build or -fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.\x1b[0m');
-    }
 }
 
 CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
@@ -252,6 +246,8 @@ CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
 }
 
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
+    console.time('Total build time');
+
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -411,6 +407,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
                 buildResults.skipped++;
             }
         }
+    }
+
+    console.timeEnd('Total build time');
+
+    if (!isFastBuildEnabled) {
+        console.log('🚀 \x1b[91mUse --fast-build or --fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.\x1b[0m');
     }
 }
 
