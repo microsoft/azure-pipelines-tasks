@@ -242,7 +242,7 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
     console.timeEnd('Total build time');
 
     if (!isFastBuildEnabled) {
-        console.log('Use --fast-build or -fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.');
+        console.log('🚀 \x1b[91mUse --fast-build or -fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.\x1b[0m');
     }
 }
 
