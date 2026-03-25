@@ -66,6 +66,8 @@ var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
+const isFastBuildEnabled = process.argv.includes('--fast-build') || process.argv.includes('-fb');
+
 var CLI = {};
 
 // node min version
@@ -237,6 +239,10 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
     writeUpdatedsFromGenTasks = true;
     await CLI.serverBuild(argv);
     console.timeEnd('Total build time');
+
+    if (!isFastBuildEnabled) {
+        console.log('Use --fast-build or -fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.');
+    }
 }
 
 CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
@@ -609,27 +615,48 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
     }
 
-    // Move node_modules to build output instead of copy+delete.
-    // This avoids a slow recursive deep-copy of thousands of small files via shelljs.
-    const taskNodeModulesPath = path.join(taskPath, 'node_modules');
-    const outNodeModulesPath = path.join(outDir, 'node_modules');
-    if (fs.existsSync(taskNodeModulesPath)) {
-        console.log('\n> moving node_modules to build output');
-        fs.renameSync(taskNodeModulesPath, outNodeModulesPath);
-    }
+    if (isFastBuildEnabled) {
+        // Move node_modules to build output instead of copy+delete.
+        // This avoids a slow recursive deep-copy of thousands of small files via shelljs.
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+        const outNodeModulesPath = path.join(outDir, 'node_modules');
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> moving node_modules to build output');
+            fs.renameSync(taskNodeModulesPath, outNodeModulesPath);
+        }
 
-    const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
-    const outTestsNodeModulesPath = path.join(outDir, 'Tests', 'node_modules');
-    if (fs.existsSync(taskTestsNodeModulesPath)) {
-        console.log('\n> moving Tests/node_modules to build output');
-        mkdir('-p', path.join(outDir, 'Tests'));
-        fs.renameSync(taskTestsNodeModulesPath, outTestsNodeModulesPath);
-    }
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        const outTestsNodeModulesPath = path.join(outDir, 'Tests', 'node_modules');
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> moving Tests/node_modules to build output');
+            mkdir('-p', path.join(outDir, 'Tests'));
+            fs.renameSync(taskTestsNodeModulesPath, outTestsNodeModulesPath);
+        }
 
-    // Copy remaining task resources (node_modules already moved, will be skipped by matchCopy)
-    console.log();
-    console.log('> copying task resources');
-    copyTaskResources(taskMake, taskPath, outDir);
+        // Copy remaining task resources (node_modules already moved, will be skipped by matchCopy)
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
+    } else {
+        // copy default resources and any additional resources defined in the task's make.json
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
+
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> removing node modules');
+            rm('-Rf', taskNodeModulesPath);
+        }
+
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> removing task tests node modules');
+            rm('-Rf', taskTestsNodeModulesPath);
+        }
+    }
 
     // remove duplicated task libs node modules from build tasks.
     var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
