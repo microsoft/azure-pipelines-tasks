@@ -231,12 +231,13 @@ CLI.gendocs = function() {
 //
 CLI.build = async function(/** @type {{ task: string }} */ argv)
 {
-    console.time('Total build time');
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     writeUpdatedsFromGenTasks = true;
+
+    console.time('Total build time');
     await CLI.serverBuild(argv);
     console.timeEnd('Total build time');
 
