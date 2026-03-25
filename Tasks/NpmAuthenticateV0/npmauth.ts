@@ -50,11 +50,13 @@ async function main(): Promise<void> {
         ? await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName)
         : undefined;
 
-    // When feedUrl is provided, we should only add WIF credentials for matching registries in the npmrc
-    // Otherwise, apply WIF credentials to all registries in the npmrc (that is, the old behavior of the task when feedUrl input didn't exist)
-    if (feedUrl){
-        npmrcRegistries = npmrcRegistries.filter(x=> npmauthutils.toNerfDart(x) == npmauthutils.toNerfDart(npmauthutils.normalizeRegistry(feedUrl)));
-        if(npmrcRegistries.length == 0){
+    // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
+    // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
+    if (feedUrl) {
+        npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === npmauthutils.toNerfDart(npmauthutils.normalizeRegistry(feedUrl)));
+        if (npmrcRegistries.length === 0) {
+            // Note: IgnoringRegistry message is soft-toned but this is a hard failure.
+            // Consider adding a dedicated error key in a future change.
             throw new Error(tl.loc("IgnoringRegistry", feedUrl));
         }
     }
