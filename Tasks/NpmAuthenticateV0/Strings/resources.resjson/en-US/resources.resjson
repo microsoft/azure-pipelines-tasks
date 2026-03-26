@@ -36,6 +36,11 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
   "loc.messages.MissingFeedUrlOrServiceConnection": "If feed url is provided, the 'Azure DevOps' service connection must be provided and cannot be empty.",
   "loc.messages.SkippingParsingNpmrc": "Skipping parsing npmrc",
+  "loc.messages.InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
   "loc.messages.DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
-  "loc.messages.FoundEndpointCredentials": "Found set credentials for the '%s' service connection."
+  "loc.messages.FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
+  "loc.messages.Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
+  "loc.messages.Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
+  "loc.messages.Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
+  "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s"
 }
