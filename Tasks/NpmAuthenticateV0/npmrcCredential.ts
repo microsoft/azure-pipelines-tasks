@@ -73,7 +73,7 @@ function buildEndpointCredentials(
             return { username: 'VssToken', password: apitoken, email: 'VssEmail' };
         }
         default:
-            throw new Error(`Unsupported auth scheme: ${endpointAuth.scheme}`);
+            throw new Error(tl.loc('Error_UnsupportedAuthScheme', endpointAuth.scheme));
     }
 }
 
@@ -100,10 +100,12 @@ function formatNpmrcAuthLines(nerfed: string, credentials: EndpointCredentials):
 // headers, which indicate an Azure DevOps service.
 async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
     const httpModule = endpointUrl.startsWith('https') ? await import('https') : await import('http');
+    const TIMEOUT_MS = 10000;
 
     return new Promise<boolean>((resolve) => {
         const options: Record<string, any> = {
-            headers: { 'X-TFS-FedAuthRedirect': 'Suppress' }
+            headers: { 'X-TFS-FedAuthRedirect': 'Suppress' },
+            timeout: TIMEOUT_MS
         };
 
         try {
@@ -123,6 +125,12 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
                 h => h.toLowerCase().includes('x-tfs') || h.toLowerCase().includes('x-vss')
             );
             resolve(isInternal);
+        });
+
+        req.on('timeout', () => {
+            tl.debug(`isEndpointInternal timed out after ${TIMEOUT_MS}ms`);
+            req.destroy();
+            resolve(false);
         });
 
         req.on('error', (error) => {

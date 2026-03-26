@@ -100,6 +100,7 @@
     "DuplicateCredentials": "Auth for the registry '%s' was previously set. Overwriting with new configuration.",
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
     "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
-    "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc."
+    "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
+    "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'."
   }
 }
