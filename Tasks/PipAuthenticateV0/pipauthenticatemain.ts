@@ -7,8 +7,8 @@ import * as utils from "./utilities";
 import { getProjectAndFeedIdFromInput, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 async function main(): Promise<void> {
-    tl.warning(tl.loc("TaskDeprecationNotice"));
     tl.setResourcePath(path.join(__dirname, "task.json"));
+    tl.warning(tl.loc("TaskDeprecationNotice"));
 
     try {
         let packagingLocation: string;
