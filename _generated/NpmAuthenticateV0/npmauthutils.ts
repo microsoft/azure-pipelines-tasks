@@ -6,10 +6,6 @@ import * as constants from './constants';
 import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager } from './npmrcBackupManager';
-
-export { NpmrcCredential } from './npmrcCredential';
-export { NpmrcBackupManager } from './npmrcBackupManager';
 
 export function normalizeRegistry(registryUrl: string): string {
     if (registryUrl && !registryUrl.endsWith('/')) {
@@ -159,7 +155,7 @@ export function tryResolveFromLocalRegistries(
 
 export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
     if (!fs.existsSync(npmrcPath)) {
-        tl.warning(`npmrc file not found: ${npmrcPath}`);
+        tl.warning(tl.loc('Warning_NpmrcFileNotFound', npmrcPath));
         return [];
     }
 

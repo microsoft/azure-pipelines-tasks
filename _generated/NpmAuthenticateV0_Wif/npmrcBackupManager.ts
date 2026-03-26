@@ -8,25 +8,28 @@ import * as tl from 'azure-pipelines-task-lib/task';
 
 export class NpmrcBackupManager {
     private readonly indexFilePath: string;
-    private index: { [key: string]: number };
+    private nextId: number;
+    private entries: { [npmrcPath: string]: number };
 
     constructor(private readonly backupDirectory: string) {
         this.indexFilePath = path.join(backupDirectory, 'index.json');
-        this.index = this.loadOrCreateIndex();
+        const data = this.loadOrCreateIndex();
+        this.nextId = data.nextId;
+        this.entries = data.entries;
     }
 
     ensureBackedUp(npmrcPath: string): void {
-        if (this.index[npmrcPath] !== undefined) {
+        if (this.entries[npmrcPath] !== undefined) {
             return;
         }
-        const entryId = this.index['index']++;
-        this.index[npmrcPath] = entryId;
+        const entryId = this.nextId++;
+        this.entries[npmrcPath] = entryId;
         this.saveIndex();
         this.saveFileWithName(npmrcPath, entryId);
     }
 
     restoreBackedUpFile(npmrcPath: string): boolean {
-        const entryId = this.index[npmrcPath];
+        const entryId = this.entries[npmrcPath];
         if (entryId === undefined) {
             return false;
         }
@@ -45,15 +48,15 @@ export class NpmrcBackupManager {
         return fs.readdirSync(this.backupDirectory).length === 1;
     }
 
-    private loadOrCreateIndex(): { [key: string]: number } {
+    private loadOrCreateIndex(): { nextId: number; entries: { [npmrcPath: string]: number } } {
         if (fs.existsSync(this.indexFilePath)) {
             return JSON.parse(fs.readFileSync(this.indexFilePath, 'utf8'));
         }
-        return { index: 0 };
+        return { nextId: 0, entries: {} };
     }
 
     private saveIndex(): void {
-        fs.writeFileSync(this.indexFilePath, JSON.stringify(this.index));
+        fs.writeFileSync(this.indexFilePath, JSON.stringify({ nextId: this.nextId, entries: this.entries }));
     }
 
     private getBackupFilePath(entryId: number | string): string {

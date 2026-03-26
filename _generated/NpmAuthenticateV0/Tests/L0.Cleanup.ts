@@ -7,13 +7,12 @@ import { TestHelpers } from './TestHelpers';
 
 /**
  * Create a SAVE_NPMRC_PATH directory containing an index.json and a backup file
- * in the format NpmrcBackupManager expects: { "index": 1, "<npmrcPath>": 0 }
+ * in the format NpmrcBackupManager expects: { "nextId": 1, "entries": { "<npmrcPath>": 0 } }
  * with a file named "0" holding the original .npmrc content.
  */
 function createSaveDir(npmrcPath: string, originalContent: string = 'original=https://registry.npmjs.org/\n'): string {
     const saveDir = TestHelpers.createTempDir('npm-auth-save-');
-    const index: { [key: string]: number } = { index: 1 };
-    index[npmrcPath] = 0;
+    const index = { nextId: 1, entries: { [npmrcPath]: 0 } };
     fs.writeFileSync(path.join(saveDir, 'index.json'), JSON.stringify(index), 'utf8');
     // Create the backup file that restoreBackedUpFile() will copy back
     fs.writeFileSync(path.join(saveDir, '0'), originalContent, 'utf8');

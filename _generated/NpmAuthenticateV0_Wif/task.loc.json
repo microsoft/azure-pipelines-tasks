@@ -121,7 +121,10 @@
     "InvalidRegistryUrl": "ms-resource:loc.messages.InvalidRegistryUrl",
     "DuplicateCredentials": "ms-resource:loc.messages.DuplicateCredentials",
     "FoundEndpointCredentials": "ms-resource:loc.messages.FoundEndpointCredentials",
-    "Error_UnableToGetPackagingUris": "ms-resource:loc.messages.Error_UnableToGetPackagingUris"
+    "Error_UnableToGetPackagingUris": "ms-resource:loc.messages.Error_UnableToGetPackagingUris",
+    "Info_ApplyingWifToAllRegistries": "ms-resource:loc.messages.Info_ApplyingWifToAllRegistries",
+    "Error_UnsupportedAuthScheme": "ms-resource:loc.messages.Error_UnsupportedAuthScheme",
+    "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound"
   },
   "_buildConfigMapping": {
     "Default": "0.272.2",

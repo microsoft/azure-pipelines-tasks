@@ -3,9 +3,9 @@ import {
 	normalizeRegistry,
 	toNerfDart,
 	tryResolveFromEndpoints,
-	tryResolveFromLocalRegistries,
-	NpmrcCredential
+	tryResolveFromLocalRegistries
 } from '../../npmauthutils';
+import { NpmrcCredential } from '../../npmrcCredential';
 
 describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 	describe('normalizeRegistry', function () {

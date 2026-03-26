@@ -101,6 +101,7 @@
     "FoundEndpointCredentials": "Found set credentials for the '%s' service connection.",
     "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
-    "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'."
+    "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
+    "Warning_NpmrcFileNotFound": "npmrc file not found: %s"
   }
 }

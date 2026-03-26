@@ -158,7 +158,7 @@ export function tryResolveFromLocalRegistries(
 
 export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
     if (!fs.existsSync(npmrcPath)) {
-        tl.warning(`npmrc file not found: ${npmrcPath}`);
+        tl.warning(tl.loc('Warning_NpmrcFileNotFound', npmrcPath));
         return [];
     }
 
