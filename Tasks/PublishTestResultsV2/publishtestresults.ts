@@ -16,6 +16,11 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
+function parseBooleanVariable(variableValue: string): boolean {
+    const normalizedValue = (variableValue || '').trim().toLowerCase();
+    return normalizedValue === 'true' || normalizedValue === '1';
+}
+
 function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults, allowPtrToDetectTestRunRetryFiles) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
@@ -80,7 +85,7 @@ async function run() {
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
 	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
-        const allowPtrToDetectTestRunRetryFiles = tl.getVariable('allowPtrToDetectTestRunRetryFiles');
+        const allowPtrToDetectTestRunRetryFiles = parseBooleanVariable(tl.getVariable('allowPtrToDetectTestRunRetryFiles'));
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
