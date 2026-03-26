@@ -78,6 +78,10 @@ process.env.ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE = "Kubeconfig";
 process.env.ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG = `{"apiVersion":"v1", "clusters": [{"cluster": {"insecure-skip-tls-verify":"true", "server":"https://5.6.7.8", "name" : "scratch"}}], "contexts": [{"context" : {"cluster": "scratch", "namespace" : "default", "user": "experimenter", "name" : "exp-scratch"}], "current-context" : "exp-scratch", "kind": "Config", "users" : [{"user": {"password": "regpassword", "username" : "test"}]}`;
 process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = "testnamespace";
 
+// ACR endpoint auth parameters for RMTest (testAzureSubscriptionEndpointForACR)
+process.env.ENDPOINT_AUTH_PARAMETER_RMTest_SERVICEPRINCIPALID = "";
+process.env.ENDPOINT_AUTH_PARAMETER_RMTest_SERVICEPRINCIPALKEY = "";
+
 if (process.env.RemoveNamespaceFromEndpoint) {
     process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = "";
 }
