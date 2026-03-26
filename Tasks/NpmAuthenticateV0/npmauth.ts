@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as npmauthutils from './npmauthutils';
+import { NpmrcCredential } from './npmrcCredential';
+import { NpmrcBackupManager } from './npmrcBackupManager';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
@@ -17,7 +19,7 @@ async function main(): Promise<void> {
 
     // Preserve the original .npmrc on first task execution, so the post-job cleanup can restore it. 
     const backupDirectory = npmauthutils.initializeBackupDirectory();
-    const backupManager = new npmauthutils.NpmrcBackupManager(backupDirectory);
+    const backupManager = new NpmrcBackupManager(backupDirectory);
     backupManager.ensureBackedUp(npmrc);
     
     let packagingLocation;
@@ -61,7 +63,7 @@ async function main(): Promise<void> {
     }
 #endif
 
-    for (let RegistryURLString of npmrcRegistries) {
+    for (const RegistryURLString of npmrcRegistries) {
         let registryURL: URL;
         try {
             registryURL = new URL(RegistryURLString);
@@ -69,60 +71,60 @@ async function main(): Promise<void> {
             tl.warning(tl.loc('InvalidRegistryUrl', RegistryURLString));
             continue;
         }
-        let npmrcEntry: npmauthutils.NpmrcCredential;
 
         // Auth resolution priority: WIF > external service connection > internal feed.
-        // The first match wins; subsequent sources are skipped for this registry.
-
+        // First match wins; subsequent sources are skipped for this registry.
 #if WIF
         if (entraWifServiceConnectionName) {
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            npmrcEntry = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}` };
-            addedRegistries.push(registryURL);
-            npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, registryURL, addedRegistries);
+            const npmrcEntry: NpmrcCredential = { url: RegistryURLString, auth: `${npmauthutils.toNerfDart(RegistryURLString)}:_authToken=${federatedAuthToken}` };
+            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryURLString));
+            continue;
         }
 #endif
 
-        if (!npmrcEntry && endpointRegistries.length > 0) {
-            npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries);
+        if (endpointRegistries.length > 0) {
+            const npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryURLString, endpointRegistries);
             if (npmrcEntry) {
-                let serviceURL = new URL(npmrcEntry.url);
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
-                addedRegistries.push(serviceURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, serviceURL, addedRegistries);
+                writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
+                continue;
             }
         }
 
-        if (!npmrcEntry) {
-            npmrcEntry = npmauthutils.tryResolveFromLocalRegistries(
-                RegistryURLString,
-                internalFeedCredentials,
-                previouslyAuthenticatedUrls,
-                registryURL.host
-            );
-            if (npmrcEntry) {
-                let localURL = new URL(npmrcEntry.url);
-                console.log(tl.loc("AddingLocalCredentials"));
-                addedRegistries.push(localURL);
-                npmrcFile = npmauthutils.removeExistingCredentialEntries(npmrc, npmrcFile, localURL, addedRegistries);
-                internalFeedSuccessCount++;
-            }
-        }
-
+        const npmrcEntry = npmauthutils.tryResolveFromLocalRegistries(
+            RegistryURLString,
+            internalFeedCredentials,
+            previouslyAuthenticatedUrls,
+            registryURL.host
+        );
         if (npmrcEntry) {
-            tl.debug(tl.loc('AddingAuthRegistry', npmrcEntry.url));
-            npmauthutils.appendAuthToNpmrc(npmrc, npmrcEntry.auth);
-            tl.debug(tl.loc('SuccessfulAppend'));
-            npmrcFile.push(os.EOL + npmrcEntry.auth + os.EOL);
-            tl.debug(tl.loc('SuccessfulPush'));
+            console.log(tl.loc("AddingLocalCredentials"));
+            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
+            internalFeedSuccessCount++;
+            continue;
         }
-        else {
-            console.log(tl.loc("IgnoringRegistry", registryURL.host));
-        }
+
+        console.log(tl.loc("IgnoringRegistry", registryURL.host));
     }
+}
+
+/** Removes any pre-existing credential lines for the registry, then appends fresh auth. */
+function writeCredentialEntry(
+    npmrcPath: string,
+    npmrcFile: string[],
+    entry: NpmrcCredential,
+    registryURL: URL,
+    addedRegistries: URL[]
+): void {
+    addedRegistries.push(registryURL);
+    npmauthutils.removeExistingCredentialEntries(npmrcPath, npmrcFile, registryURL, addedRegistries);
+    tl.debug(tl.loc('AddingAuthRegistry', entry.url));
+    npmauthutils.appendAuthToNpmrc(npmrcPath, entry.auth);
+    npmrcFile.push(os.EOL + entry.auth + os.EOL);
 }
 
 

@@ -6,13 +6,9 @@ import * as constants from './constants';
 import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager } from './npmrcBackupManager';
 #if WIF
 import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
 #endif
-
-export { NpmrcCredential } from './npmrcCredential';
-export { NpmrcBackupManager } from './npmrcBackupManager';
 
 export function normalizeRegistry(registryUrl: string): string {
     if (registryUrl && !registryUrl.endsWith('/')) {
