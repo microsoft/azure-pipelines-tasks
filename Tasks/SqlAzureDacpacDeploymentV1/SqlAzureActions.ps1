@@ -268,34 +268,20 @@ function ConvertTo-SqlCmdParameterHashtable {
         throw "SqlAdditionalArguments contains characters that are not allowed for security reasons."
     }
 
-    # Whitelist of allowed Invoke-Sqlcmd parameters
-    $allowedParams = @(
-        'ConnectionTimeout', 'QueryTimeout', 'AbortOnError',
-        'DedicatedAdministratorConnection', 'DisableCommands',
-        'DisableVariables', 'EncryptConnection', 'ErrorLevel',
-        'MaxCharLength', 'MaxBinaryLength', 'OutputSqlErrors',
-        'SeverityLevel', 'Variable', 'Verbose', 'OutputAs',
-        'SuppressProviderContextWarning', 'IgnoreProviderContext'
-    )
-
-    # Simple regex parse: split on parameter boundaries
+    # Parse -ParamName Value pairs into a hashtable for safe splatting
     $pairs = [regex]::Matches($argumentString, '-(\w+)\s*("(?:[^"]*)"|\S+)?')
     foreach ($match in $pairs) {
         $paramName = $match.Groups[1].Value
-        $matched = $allowedParams | Where-Object { $_ -ieq $paramName }
-        if (-not $matched) {
-            throw "SqlAdditionalArguments contains unsupported parameter: -$paramName"
-        }
-
         $rawValue = $match.Groups[2].Value.Trim('"')
+
         if ([string]::IsNullOrEmpty($rawValue)) {
-            $result[$matched] = $true
+            $result[$paramName] = $true
         }
         elseif ($rawValue -match '^\d+$') {
-            $result[$matched] = [int]$rawValue
+            $result[$paramName] = [int]$rawValue
         }
         else {
-            $result[$matched] = $rawValue
+            $result[$paramName] = $rawValue
         }
     }
 
