@@ -283,8 +283,13 @@ function Execute-Command {
     )
 
     $ErrorActionPreference = 'Continue'
-    Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
+    # Split argument string into array, respecting quoted values
+    $argArray = [regex]::Matches($Arguments, '(?:[^\s"]+|"[^"]*")+') | ForEach-Object { $_.Value }
+    $errors = @()
+
+    & $FileName $argArray 2>&1 | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            $errors += $_
             Write-Error $_
         }
         else {

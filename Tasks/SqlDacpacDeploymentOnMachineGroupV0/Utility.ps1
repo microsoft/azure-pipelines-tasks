@@ -1,4 +1,39 @@
-﻿function Invoke-SqlScriptsInTransaction
+﻿function ConvertTo-SqlCmdParameterHashtable {
+    param (
+        [string] $argumentString
+    )
+
+    $result = @{}
+    if ([string]::IsNullOrWhiteSpace($argumentString)) {
+        return $result
+    }
+
+    # Reject strings containing PowerShell injection patterns
+    if ($argumentString -match '[;|&`]|\$\(') {
+        throw "AdditionalArguments contains characters that are not allowed."
+    }
+
+    # Parse -ParamName Value pairs into a hashtable for safe splatting
+    $pairs = [regex]::Matches($argumentString, '-(\w+)\s*("(?:[^"]*)"|\S+)?')
+    foreach ($match in $pairs) {
+        $paramName = $match.Groups[1].Value
+        $rawValue = $match.Groups[2].Value.Trim('"')
+
+        if ([string]::IsNullOrEmpty($rawValue)) {
+            $result[$paramName] = $true
+        }
+        elseif ($rawValue -match '^\d+$') {
+            $result[$paramName] = [int]$rawValue
+        }
+        else {
+            $result[$paramName] = $rawValue
+        }
+    }
+
+    return $result
+}
+
+function Invoke-SqlScriptsInTransaction
 {
     param
     (
@@ -47,10 +82,14 @@
     $spaltArguments.Add("Variable", $scriptVariables)
     $spaltArguments.Add("OutputSqlErrors", $true)
 
-    $additionalArguments = EscapeSpecialChars $additionalArguments
+    # Safely parse and merge additional arguments
+    $additionalParams = ConvertTo-SqlCmdParameterHashtable $additionalArguments
+    foreach ($key in $additionalParams.Keys) {
+        $spaltArguments[$key] = $additionalParams[$key]
+    }
 
     #Execute the query
-    Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"  
+    Invoke-SqlCmd @spaltArguments
 }
 
 # Function to import SqlPS module & avoid directory switch

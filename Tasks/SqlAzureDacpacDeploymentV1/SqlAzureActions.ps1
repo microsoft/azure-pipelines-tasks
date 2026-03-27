@@ -365,6 +365,15 @@ function Check-ConnectionString {
     }
 }
 
+function Invoke-SqlCmdExe {
+    param(
+        [string] $exePath,
+        [string[]] $arguments
+    )
+
+    return (& $exePath $arguments 2>&1) | Out-String
+}
+
 function Get-AgentIPRange {
     param(
         [String] $authenticationType,
@@ -400,8 +409,8 @@ function Get-AgentIPRange {
         $ErrorActionPreference = 'Continue'
 
         $errors = @()
-        $output = (& $sqlCmd $sqlCmdArgs 2>&1) | Out-String
-        # Capture any error records from the 2>&1 redirect
+        $output = Invoke-SqlCmdExe -exePath $sqlCmd -arguments $sqlCmdArgs
+        # Capture any error records from the output
         if ($output -match 'Sqlcmd: Error|HResult') {
             $errors = @($output)
         }
