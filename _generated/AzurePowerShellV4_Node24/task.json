@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 272,
-    "Patch": 5
+    "Patch": 7
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -219,7 +219,8 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "4.272.4",
-    "Node24_1": "4.272.5"
+    "Default": "4.272.6",
+    "LocalPackages": "4.249.4",
+    "Node24_1": "4.272.7"
   }
 }
