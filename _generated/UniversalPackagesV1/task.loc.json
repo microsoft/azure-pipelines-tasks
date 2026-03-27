@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 272,
     "Patch": 0
   },
   "runsOn": [
@@ -99,6 +99,16 @@
       "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
     }
   ],
+  "prejobexecution": {
+    "Node20_1": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node20_1": {
       "target": "universalMain.js",
@@ -144,6 +154,7 @@
     "Debug_UsingServiceUri": "ms-resource:loc.messages.Debug_UsingServiceUri",
     "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
     "Debug_WifTokenObtained": "ms-resource:loc.messages.Debug_WifTokenObtained",
+    "Error_ArtifactToolPathNotSet": "ms-resource:loc.messages.Error_ArtifactToolPathNotSet",
     "Error_AuthenticationFailed": "ms-resource:loc.messages.Error_AuthenticationFailed",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
@@ -161,6 +172,7 @@
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
     "Error_VersionInputRequired": "ms-resource:loc.messages.Error_VersionInputRequired",
     "Error_VersionInputsMutuallyExclusive": "ms-resource:loc.messages.Error_VersionInputsMutuallyExclusive",
+    "Info_ArtifactToolPathResolvedFromCache": "ms-resource:loc.messages.Info_ArtifactToolPathResolvedFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_DownloadingPackage": "ms-resource:loc.messages.Info_DownloadingPackage",
     "Info_PublishingPackage": "ms-resource:loc.messages.Info_PublishingPackage",
@@ -176,8 +188,8 @@
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.0",
+    "Default": "1.272.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.270.1"
+    "wif_242": "1.272.1"
   }
 }

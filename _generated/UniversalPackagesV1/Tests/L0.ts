@@ -6,6 +6,9 @@ import { TEST_CONSTANTS, getDefaultEnvVars } from './testConstants';
 // Set resource path to enable localization in tests
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
+// Import pre-job installer tests
+import './L0.ArtifactToolInstaller';
+
 describe('UniversalPackages Suite', function () {
     describe('Download Operations', function () {
         this.timeout(10000);

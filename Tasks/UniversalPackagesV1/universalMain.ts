@@ -23,8 +23,13 @@ async function main(): Promise<void> {
     // Parse feed input
     helpers.setFeed(context);
 
-    // Download artifact tool
-    if (!(await helpers.tryDownloadArtifactTool(context))) return;
+    // The pre-execution step should have downloaded artifacttool and set the path
+    const artifactToolPath = tl.getTaskVariable("UPACK_ARTIFACTTOOL_PATH");
+    if (!artifactToolPath) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc("Error_FailedToGetArtifactTool", tl.loc("Error_ArtifactToolPathNotSet")));
+        return;
+    }
+    context.artifactToolPath = artifactToolPath;
 
     // Calling the command. download/publish
     switch (context.command) {

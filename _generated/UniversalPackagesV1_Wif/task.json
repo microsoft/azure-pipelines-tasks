@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 272,
     "Patch": 1
   },
   "runsOn": [
@@ -122,6 +122,16 @@
       "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
     }
   ],
+  "prejobexecution": {
+    "Node20_1": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node20_1": {
       "target": "universalMain.js",
@@ -167,6 +177,7 @@
     "Debug_UsingServiceUri": "Using service URI: %s",
     "Debug_UsingWifAuth": "Using WIF authentication with service connection: %s",
     "Debug_WifTokenObtained": "Successfully obtained WIF token for authentication",
+    "Error_ArtifactToolPathNotSet": "Artifact tool path was not set by pre-job execution.",
     "Error_AuthenticationFailed": "Unable to authenticate for Universal Packages operations. Ensure the task runs in an Azure Pipelines build/release or provide a valid service connection.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_FailedToGetArtifactTool": "Failed to get artifact tool. %s",
@@ -184,6 +195,7 @@
     "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
     "Error_VersionInputRequired": "For publish operations, either 'packageVersion' or 'versionIncrement' must be specified.",
     "Error_VersionInputsMutuallyExclusive": "Cannot specify both 'packageVersion' and 'versionIncrement'. Please use only one.",
+    "Info_ArtifactToolPathResolvedFromCache": "Artifact tool already available, skipping download.",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
     "Info_DownloadingPackage": "Downloading package '%s' version '%s' to '%s'",
     "Info_PublishingPackage": "Publishing package '%s' version '%s' from '%s'",
@@ -199,8 +211,8 @@
     "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection '%s'"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.0",
+    "Default": "1.272.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.270.1"
+    "wif_242": "1.272.1"
   }
 }
