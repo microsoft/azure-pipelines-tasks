@@ -302,7 +302,6 @@ function Run-SqlCmd {
         [string] $token
     )
 
-    $sqlPassword = EscapeSpecialChars -str $sqlPassword
     $params = @{ InputFile = $sqlFilePath }
 
     switch ($authenticationType) {
@@ -321,7 +320,7 @@ function Run-SqlCmd {
         }
         "connectionString" {
             Check-ConnectionString
-            $params['ConnectionString'] = EscapeSpecialChars -str $connectionString
+            $params['ConnectionString'] = $connectionString
         }
         { $_ -eq "aadAuthenticationPassword" -or $_ -eq "aadAuthenticationIntegrated" } {
             Check-ConnectionString
@@ -400,7 +399,12 @@ function Get-AgentIPRange {
 
         $ErrorActionPreference = 'Continue'
 
+        $errors = @()
         $output = (& $sqlCmd $sqlCmdArgs 2>&1) | Out-String
+        # Capture any error records from the 2>&1 redirect
+        if ($output -match 'Sqlcmd: Error|HResult') {
+            $errors = @($output)
+        }
 
         $ErrorActionPreference = 'Stop'
     }
