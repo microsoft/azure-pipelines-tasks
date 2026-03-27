@@ -253,6 +253,55 @@ function Run-InlineSql {
     }
 }
 
+function ConvertTo-SqlCmdParameterHashtable {
+    param (
+        [string] $argumentString
+    )
+
+    $result = @{}
+    if ([string]::IsNullOrWhiteSpace($argumentString)) {
+        return $result
+    }
+
+    # Reject strings containing PowerShell injection patterns
+    if ($argumentString -match '[;|&`]|\$\(') {
+        throw "SqlAdditionalArguments contains characters that are not allowed for security reasons."
+    }
+
+    # Whitelist of allowed Invoke-Sqlcmd parameters
+    $allowedParams = @(
+        'ConnectionTimeout', 'QueryTimeout', 'AbortOnError',
+        'DedicatedAdministratorConnection', 'DisableCommands',
+        'DisableVariables', 'EncryptConnection', 'ErrorLevel',
+        'MaxCharLength', 'MaxBinaryLength', 'OutputSqlErrors',
+        'SeverityLevel', 'Variable', 'Verbose', 'OutputAs',
+        'SuppressProviderContextWarning', 'IgnoreProviderContext'
+    )
+
+    # Simple regex parse: split on parameter boundaries
+    $pairs = [regex]::Matches($argumentString, '-(\w+)\s*("(?:[^"]*)"|\S+)?')
+    foreach ($match in $pairs) {
+        $paramName = $match.Groups[1].Value
+        $matched = $allowedParams | Where-Object { $_ -ieq $paramName }
+        if (-not $matched) {
+            throw "SqlAdditionalArguments contains unsupported parameter: -$paramName"
+        }
+
+        $rawValue = $match.Groups[2].Value.Trim('"')
+        if ([string]::IsNullOrEmpty($rawValue)) {
+            $result[$matched] = $true
+        }
+        elseif ($rawValue -match '^\d+$') {
+            $result[$matched] = [int]$rawValue
+        }
+        else {
+            $result[$matched] = $rawValue
+        }
+    }
+
+    return $result
+}
+
 function Run-SqlCmd {
     [CmdletBinding()]
     param (
@@ -268,60 +317,60 @@ function Run-SqlCmd {
     )
 
     $sqlPassword = EscapeSpecialChars -str $sqlPassword
+    $params = @{ InputFile = $sqlFilePath }
 
-    if ($authenticationType -eq "server") {
+    switch ($authenticationType) {
+        "server" {
+            if ($sqlUsername) {
+                $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+            }
+            $params['ServerInstance'] = $serverName
+            $params['Database'] = $databaseName
+            $params['Username'] = $sqlUsername
+            $params['Password'] = $sqlPassword
 
-        if ($sqlUsername) {
-            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+            if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
+                $params['ConnectionTimeout'] = 120
+            }
         }
-
-        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
-
-        $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
-        $commandToLog = $scriptArgument + " -Password ****** "
-
-        # Increase Timeout to 120 seconds in case its not provided by User
-        if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
-            # Add Timeout of 120 Seconds
-            $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
+        "connectionString" {
+            Check-ConnectionString
+            $params['ConnectionString'] = EscapeSpecialChars -str $connectionString
+        }
+        { $_ -eq "aadAuthenticationPassword" -or $_ -eq "aadAuthenticationIntegrated" } {
+            Check-ConnectionString
+            $params['ConnectionString'] = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+        }
+        "servicePrincipal" {
+            $params['AccessToken'] = $token
+            $params['ServerInstance'] = $serverName
+            $params['Database'] = $databaseName
         }
     }
-    elseif ($authenticationType -eq "connectionString") {
-        Check-ConnectionString
-        $connectionString = EscapeSpecialChars -str $connectionString
-        $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
-        $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
-    }
-    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
-        Check-connectionString
-        $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
-        $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
-        $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
-    }
-    elseif ($authenticationType -eq "servicePrincipal") {
-        $commandToRun = "Invoke-Sqlcmd -AccessToken `"$token`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
-        $commandToLog = "Invoke-Sqlcmd -AccessToken `"**********`" -ServerInstance `"$serverName`" -Database `"$databaseName`" "
 
+    # Safely parse and merge additional arguments
+    $additionalParams = ConvertTo-SqlCmdParameterHashtable $sqlcmdAdditionalArguments
+    foreach ($key in $additionalParams.Keys) {
+        $params[$key] = $additionalParams[$key]
     }
 
-    $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
-    $commandToLog += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
+    # Log command with secrets masked
+    $secretKeys = @('Password', 'ConnectionString', 'AccessToken')
+    $logParts = $params.GetEnumerator() | ForEach-Object {
+        $val = if ($secretKeys -contains $_.Key) { '******' } else { $_.Value }
+        "-$($_.Key) `"$val`""
+    }
+    Write-Host "Invoke-Sqlcmd $($logParts -join ' ')"
 
-    Write-Host $commandToLog
-
-    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
+    $useVerbose = $sqlcmdAdditionalArguments -and $sqlcmdAdditionalArguments.ToLower().Contains("-verbose")
+    if ($useVerbose) {
         $ErrorActionPreference = 'Continue'
-
-        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
-
-        if ($errors.Count -gt 0) {
-            throw $errMsg
-        }
-
+        (Invoke-Sqlcmd @params -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
+        if ($errors.Count -gt 0) { throw $errMsg }
         $ErrorActionPreference = 'Stop'
     }
     else {
-        Invoke-Expression $commandToRun
+        Invoke-Sqlcmd @params
     }
 }
 
@@ -359,13 +408,13 @@ function Get-AgentIPRange {
         $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
         $env:SQLCMDPASSWORD = $sqlPassword
 
-        $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+        $sqlCmdArgs = @("-S", $serverName, "-U", $formattedSqlUsername, "-Q", "select getdate()")
 
         Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
         $ErrorActionPreference = 'Continue'
 
-        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        $output = (& $sqlCmd $sqlCmdArgs 2>&1) | Out-String
 
         $ErrorActionPreference = 'Stop'
     }
