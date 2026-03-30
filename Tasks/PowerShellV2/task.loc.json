@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 266,
-    "Patch": 0
+    "Minor": 268,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -242,6 +242,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "powershell.js",
       "argumentFormat": ""
     }

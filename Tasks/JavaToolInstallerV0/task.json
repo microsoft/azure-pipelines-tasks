@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 266,
+    "Minor": 271,
     "Patch": 0
   },
   "satisfies": [
@@ -173,6 +173,10 @@
     "Node20_1": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "javatoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -216,6 +220,8 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "CorrelationIdForARM": "Correlation ID from ARM api call response : %s",
     "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
+    "JavaHomeArm64NotFound": "%s is not defined. Searching for aarch64 variant.",
+    "JavaHomeResolvedFrom": "Resolved Java home from %s: %s",
     "UsePreinstalledJava": "Use preinstalled JDK from %s",
     "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",
     "WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",

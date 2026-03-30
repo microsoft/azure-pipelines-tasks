@@ -24,7 +24,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -173,6 +173,11 @@ function performNpmAudit(taskPath) {
         return;
     }
 
+    if (!fs.existsSync(path.join(taskPath, "package.json"))) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit because no package.json found in the build task at "${taskPath}".`);
+        return;
+    }
+
     try {
         const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
             stdio: 'pipe',
@@ -242,6 +247,19 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        // Clean up broken symlinks in .bin directory
+        var binPath = path.join(taskPath, "node_modules", ".bin");
+        if (test('-d', binPath)) {
+            // Remove TypeScript-related symlinks
+            var tscBinPath = path.join(binPath, "tsc");
+            var tsserverBinPath = path.join(binPath, "tsserver");
+            if (test('-f', tscBinPath) || test('-L', tscBinPath)) {
+                rm('-f', tscBinPath);
+            }
+            if (test('-f', tsserverBinPath) || test('-L', tsserverBinPath)) {
+                rm('-f', tsserverBinPath);
+            }
+        }
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     }
@@ -389,12 +407,16 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-const node20Version = '20.17.0';
+const node20Version = '20.20.0';
 exports.node20Version = node20Version;
+
+const node24Version = '24.14.0';
+exports.node24Version = node24Version;
 
 var installNodeAsync = async function (nodeVersion) {
     const versions = {
-        20: node20Version
+        20: node20Version,
+        24: node24Version
     };
 
     if (!nodeVersion) {
@@ -1872,18 +1894,23 @@ exports.ensureBuildConfigGeneratorPrereqs = ensureBuildConfigGeneratorPrereqs;
  * @param {Boolean} includeLocalPackagesBuildConfig When set to true, generate LocalPackages BuildConfig
  * @param {Boolean} useSemverBuildConfig When set to true, use semver build config and A/B releases
  */
-var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig) {
+var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, configs, bumpBaseTask) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     var tasks = taskList.join('|')
     ensureBuildConfigGeneratorPrereqs(baseConfigToolPath);
-    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" -- `
+    var programPath = `dotnet run --no-launch-profile --project "${baseConfigToolPath}/BuildConfigGen.csproj" `
 
     const args = [
         "--task",
         `"${tasks}"`
     ];
+
+    if (configs) {
+        args.push("--configs");
+        args.push(`"${configs}"`);
+    }
 
     if (sprintNumber) {
         args.push("--current-sprint");
@@ -1896,6 +1923,9 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
         writeUpdateArg += " --write-updates";
     }
 
+    if(bumpBaseTask) {
+        writeUpdateArg += " --bump-base-task";
+    }
     if(includeLocalPackagesBuildConfig)
     {
         writeUpdateArg += " --include-local-packages-build-config";

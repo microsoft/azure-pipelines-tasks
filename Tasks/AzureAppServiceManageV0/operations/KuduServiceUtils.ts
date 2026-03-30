@@ -1,5 +1,4 @@
 import tl = require('azure-pipelines-task-lib/task');
-import Q = require('q');
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 const pythonExtensionPrefix: string = "azureappservice-";

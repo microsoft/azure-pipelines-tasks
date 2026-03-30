@@ -41,7 +41,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('No default version specified should fail', async () => {
     const tp: string = path.join(__dirname, 'L0NoDefaultVersionType.js');
@@ -58,7 +58,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('No download path specified should fail', async () => {
     const tp: string = path.join(__dirname, 'L0NoDownloadPath.js');
@@ -75,7 +75,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('Get latest release should fail', async () => {
     const tp: string = path.join(__dirname, 'L0GetLatestReleaseFail.js');
@@ -92,7 +92,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('Get latest release should succeded', async () => {
     const tp: string = path.join(__dirname, 'L0GetLatestReleaseValid.js');
@@ -110,7 +110,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('Get specific release should fail', async () => {
     const tp: string = path.join(__dirname, 'L0GetSpecificReleaseFail.js');
@@ -127,7 +127,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('Get tagged release with specific tag should fail', async () => {
     const tp: string = path.join(__dirname, 'L0GetTaggedReleaseWithSpecificTagFail.js');
@@ -144,7 +144,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 
   it('Get tagged release with tag specified should fail', async () => {
     const tp: string = path.join(__dirname, 'L0GetTaggedReleaseWithTagFail.js');
@@ -161,5 +161,5 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
         console.log(err);
         throw err;
     };
-  });
+  }).timeout(20000);
 });

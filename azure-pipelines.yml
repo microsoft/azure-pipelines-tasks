@@ -43,12 +43,14 @@ extends:
     sdl:
       sbom:
         enabled: true
+      binskim:
+        preReleaseVersion: '4.3.1'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
       sourceAnalysisPool:
         name: 1ES-ABTT-Shared-Pool
-        image: abtt-windows-2022
+        image: abtt-windows-2025
         os: windows
       sourceRepositoriesToScan: 
         exclude: 
@@ -66,7 +68,7 @@ extends:
         timeoutInMinutes: 1440 # AntiMalware takes 3 hours to scan tasks.zip
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
+          image: abtt-windows-2025
           os: windows
         templateContext:
           outputs:
@@ -93,7 +95,7 @@ extends:
         timeoutInMinutes: 360
         pool:
           name: 1ES-ABTT-Shared-Pool
-          image: abtt-ubuntu-2204
+          image: abtt-ubuntu-2404
           os: linux
         steps:
         - template: /ci/build-all-steps.yml@self

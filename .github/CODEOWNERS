@@ -9,13 +9,13 @@ Tasks/AndroidSigningV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunrams
 
 Tasks/ANTV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE
+Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms
 
-Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms    @DergachevE
+Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms
 
-Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms    @DergachevE
+Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms
 
-Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE
+Tasks/AppCenterTestV1/   @imenkov    @lucen-ms
 
 Tasks/ArchiveFilesV2/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
@@ -33,6 +33,8 @@ Tasks/AzureAppServiceSettingsV1/  @microsoft/release-management-task-team @manol
 Tasks/AzureCLIV1/      @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureCLIV2/     @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/AzureCLIV3/     @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team  @manolerazvan 
 
@@ -93,6 +95,8 @@ Tasks/AzurePowerShellV5/   @microsoft/release-management-task-team @manolerazvan
 Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/BicepDeployV0/      @azure/bicep-admins
 
 # DRI rotation: App Service (Web Apps)
 Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
@@ -206,11 +210,11 @@ Tasks/DockerComposeV1/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreCLIV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
+Tasks/DotNetCoreCLIV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/DotNetCoreInstallerV0/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
+Tasks/DotNetCoreInstallerV0/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
-Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE 
+Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -445,7 +449,9 @@ Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
-Tasks/UseDotNetV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani @DergachevE
+Tasks/UniversalPackagesV1/     @microsoft/azure-artifacts-packages
+
+Tasks/UseDotNetV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/UseNodeV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 259,
-    "Patch": 0
+    "Minor": 268,
+    "Patch": 1
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "minimumAgentVersion": "2.115.0",
@@ -113,6 +113,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "bash.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "bash.js",
       "argumentFormat": ""
     }

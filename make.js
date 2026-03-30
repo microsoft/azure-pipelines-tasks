@@ -1,5 +1,7 @@
 // parse command line options
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+    boolean: ['fast-build', 'fb']
+});
 
 if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
     argv.includeLocalPackagesBuildConfig=true;
@@ -66,6 +68,8 @@ var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
 
+const isFastBuildEnabled = argv['fast-build'] || argv['fb'];
+
 var CLI = {};
 
 // node min version
@@ -128,7 +132,7 @@ function validateTaskPaths() {
         .concat(fs.existsSync(genTaskPath) ? fs.readdirSync(genTaskPath).map(taskName => path.join(genTaskPath, taskName)) : [])
         .concat(fs.existsSync(genTaskPathLocal) ? fs.readdirSync(genTaskPathLocal).map(taskName => path.join(genTaskPathLocal, taskName)) : []);
 
-    const invalidPaths = paths.filter(taskPath => test('-d', taskPath) && !test('-f', path.join(taskPath, 'task.json')) && !taskPath.includes('_buildConfigs'));
+    const invalidPaths = paths.filter(taskPath => test('-d', taskPath) && !test('-f', path.join(taskPath, 'task.json')) && !taskPath.includes('_buildConfigs') && !taskPath.endsWith('Common'));
     if (invalidPaths.length > 0) {
         fail(`The following paths do not contain task.json and need to be cleaned up:\n${invalidPaths.join('\n')}. They were likely left over after syncing.\nTo clean, use 'git clean -dn' to see what would be deleted and 'git clean -df' to delete the paths.`);
     }
@@ -227,8 +231,7 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = async function(/** @type {{ task: string }} */ argv)
-{
+CLI.build = async function(/** @type {{ task: string }} */ argv){
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
@@ -243,6 +246,8 @@ CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
 }
 
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
+    console.time('Total build time');
+
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -257,7 +262,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
         const makeOptions = fileToJson(makeOptionsPath);
 
         // Verify generated files across tasks are up-to-date
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig, argv.useSemverBuildConfig || false);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir'], argv.includeLocalPackagesBuildConfig, argv.useSemverBuildConfig || false, argv.configs, argv.bumpBaseTask);
     }
 
     if (argv.includeLocalPackagesBuildConfig)
@@ -310,21 +315,27 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 
     // Wrap build function  to store files that changes after the build
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, genTaskPathLocal, argv.includeLocalPackagesBuildConfig, writeUpdatedsFromGenTasks);
-    const { allTasksNode20, allTasksDefault } = allTasks.
+    const { allTasksNode20, allTasksNode24, allTasksDefault } = allTasks.
         reduce((res, taskName) => {
-            if (getNodeVersion(taskName, argv.includeLocalPackagesBuildConfig) == 20) {
+            const nodeVersion = getNodeVersion(taskName, argv.includeLocalPackagesBuildConfig);
+            if (nodeVersion == 24) {
+                res.allTasksNode24.push(taskName)
+            } else if (nodeVersion == 20) {
                 res.allTasksNode20.push(taskName)
             } else {
                 res.allTasksDefault.push(taskName)
             }
 
             return res;
-        }, {allTasksNode20: [], allTasksDefault: []})
+        }, {allTasksNode20: [], allTasksNode24: [], allTasksDefault: []})
 
     const builtTasks = new Set();
 
     // This code is structured to support installing/building with multiple node versions in the future, including the same task for multiple node versions
-    // Currently, we only support Node.js 20
+    // Currently, we support Node.js 20 and 24
+    if (allTasksNode24.length > 0) {
+        await installNodeAndBuildTasks(24, util.node24Version, allTasksNode24, builtTasks, buildResults);
+    }
     if (allTasksNode20.length > 0) {
         await installNodeAndBuildTasks(20, util.node20Version, allTasksNode20, builtTasks, buildResults);
     }
@@ -356,7 +367,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     console.log(`✅ Successful:    ${buildResults.successful}`);
     console.log(`❌ Failed:        ${buildResults.failed}`);
     console.log(`⏭️  Skipped:       ${buildResults.skipped}`);
-    
+
     if (buildResults.failures.length > 0) {
         console.log('\n❌ FAILED TASKS:');
         buildResults.failures.forEach((failure, index) => {
@@ -397,6 +408,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
             }
         }
     }
+
+    console.timeEnd('Total build time');
+
+    if (!isFastBuildEnabled) {
+        console.log('🚀 \x1b[91mUse --fast-build or --fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.\x1b[0m');
+    }
 }
 
 function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
@@ -415,6 +432,7 @@ function getNodeVersion (taskName, includeLocalPackagesBuildConfig) {
 
     // get node runner from task.json
     const handlers = getTaskNodeVersion(taskPath, taskName);
+    if (handlers.includes(24)) return 24;
     if (handlers.includes(20)) return 20;
 
     return 10;
@@ -599,24 +617,48 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         });
         fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
     }
-    
-    // copy default resources and any additional resources defined in the task's make.json
-    console.log();
-    console.log('> copying task resources');
-    copyTaskResources(taskMake, taskPath, outDir);
 
-    const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+    if (isFastBuildEnabled) {
+        // Move node_modules to build output instead of copy+delete.
+        // This avoids a slow recursive deep-copy of thousands of small files via shelljs.
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+        const outNodeModulesPath = path.join(outDir, 'node_modules');
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> moving node_modules to build output');
+            fs.renameSync(taskNodeModulesPath, outNodeModulesPath);
+        }
 
-    if (fs.existsSync(taskNodeModulesPath)) {
-        console.log('\n> removing node modules');
-        rm('-Rf', taskNodeModulesPath);
-    }
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        const outTestsNodeModulesPath = path.join(outDir, 'Tests', 'node_modules');
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> moving Tests/node_modules to build output');
+            mkdir('-p', path.join(outDir, 'Tests'));
+            fs.renameSync(taskTestsNodeModulesPath, outTestsNodeModulesPath);
+        }
 
-    const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        // Copy remaining task resources (node_modules already moved, will be skipped by matchCopy)
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
+    } else {
+        // copy default resources and any additional resources defined in the task's make.json
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
 
-    if (fs.existsSync(taskTestsNodeModulesPath)) {
-        console.log('\n> removing task tests node modules');
-        rm('-Rf', taskTestsNodeModulesPath);
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> removing node modules');
+            rm('-Rf', taskNodeModulesPath);
+        }
+
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> removing task tests node modules');
+            rm('-Rf', taskTestsNodeModulesPath);
+        }
     }
 
     // remove duplicated task libs node modules from build tasks.

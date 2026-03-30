@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 266,
+    "Minor": 271,
     "Patch": 0
   },
   "demands": [],
@@ -74,11 +74,12 @@
       "label": "Architecture",
       "defaultValue": "x64",
       "required": true,
-      "helpMarkDown": "The target architecture (x86, x64) of the Python interpreter.",
+      "helpMarkDown": "The target architecture (x86, x64, arm64) of the Python interpreter.",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
-        "x64": "x64"
+        "x64": "x64",
+        "arm64": "arm64"
       }
     }
   ],
@@ -98,6 +99,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "main.js",
       "argumentFormat": ""
     }

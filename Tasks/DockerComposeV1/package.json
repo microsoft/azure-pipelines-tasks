@@ -5,16 +5,16 @@
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^24.10.0",
     "@types/q": "^1.5.0",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-docker-common": "2.265.0",
+    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-tasks-docker-common": "^2.268.0",
     "del": "2.2.0",
     "esprima": "2.7.1",
-    "js-yaml": "3.13.1"
+    "js-yaml": "^3.14.2"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "^5.7.2"
   }
 }
