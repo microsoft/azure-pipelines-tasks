@@ -30,7 +30,6 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     output = output.trim();
     tl.debug('VSTest Version information: ' + output);
     
-    // PowerShell returns version directly, no need to split by '='
     const versionArray = output.split('.');
     if (versionArray.length < 3) {
         tl.warning(tl.loc('UnexpectedVersionString', output));
