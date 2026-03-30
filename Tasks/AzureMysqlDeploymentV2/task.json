@@ -3,8 +3,9 @@
   "name": "AzureMysqlDeployment",
   "friendlyName": "Azure Database for MySQL deployment",
   "description": "Run your scripts and make changes to your Azure Database for MySQL Flexible Server",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-mysql-deployment-v2",
+  "helpMarkDown": "[Learn more about this task](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMysqlDeploymentV2/README.md)",
+  "releaseNotes": "What's new in Version 2.0:\n- Azure Database for MySQL Flexible Server support (replaces retiring Single Server).\n- New custom ARM client targeting Microsoft.DBforMySQL/flexibleServers (API 2021-12-01-preview).\n- Native MySQL authentication — no @servername suffix required for username.\n- Reliable SQL file execution via stdin piping (replaces broken 'source' command).\n- Async firewall rule creation with exponential-backoff polling (handles 202 responses).\n- Server list pagination support via nextLink.\n- Migration: Update pipeline to AzureMysqlDeployment@2, use Flexible Server FQDN, and remove @servername from SqlUsername.",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -17,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 272,
-    "Patch": 4
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -87,7 +88,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don't recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/flexible-server/how-to-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
+      "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don't recall the password you can change the password from [Azure portal](https://learn.microsoft.com/azure/mysql/flexible-server/how-to-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
     },
     {
       "name": "TaskNameSelector",

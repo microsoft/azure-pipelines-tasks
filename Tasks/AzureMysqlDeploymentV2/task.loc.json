@@ -3,8 +3,9 @@
   "name": "AzureMysqlDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-mysql-deployment-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -17,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 272,
-    "Patch": 4
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
