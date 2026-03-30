@@ -54,6 +54,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | Maven V2 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | Maven V3 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | MysqlDeploymentOnMachineGroup V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
+| NodeTool V0 | [PR #21902](https://github.com/microsoft/azure-pipelines-tasks/pull/21902) | 2026-03-20 |
 | NuGet V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetAuthenticate V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetInstaller V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
