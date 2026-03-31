@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 264,
+    "Minor": 270,
     "Patch": 0
   },
   "demands": [],
@@ -93,7 +93,6 @@
       "defaultValue": true,
       "groupName": "AzureDetails"
     },
-   
     {
       "name": "managedImageName",
       "type": "string",
@@ -217,7 +216,8 @@
       "defaultValue": "",
       "helpMarkDown": "Specify the arguments to be passed to deployment script.",
       "groupName": "DeploymentInputs"
-    }, {
+    },
+    {
       "name": "canDeleteTempFolder",
       "type": "boolean",
       "label": "Delete temp folder",
@@ -313,6 +313,10 @@
       "target": "./src//main.js"
     },
     "Node20_1": {
+      "target": "./src//main.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "./src//main.js",
       "argumentFormat": ""
     }

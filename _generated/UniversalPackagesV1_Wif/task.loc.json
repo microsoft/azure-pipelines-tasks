@@ -1,0 +1,206 @@
+{
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 270,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "4.248.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "download",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "options": {
+        "download": "Download",
+        "publish": "Publish"
+      }
+    },
+    {
+      "name": "adoServiceConnection",
+      "aliases": [
+        "workloadIdentityServiceConnection",
+        "azureDevOpsServiceConnection"
+      ],
+      "type": "connectedService:workloadidentityuser",
+      "label": "ms-resource:loc.input.label.adoServiceConnection",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "organization",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.organization",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.organization",
+      "visibleRule": "adoServiceConnection != ''"
+    },
+    {
+      "name": "feed",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feed",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feed"
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "packageVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.packageVersion"
+    },
+    {
+      "name": "versionIncrement",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionIncrement",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionIncrement",
+      "visibleRule": "command = publish",
+      "options": {
+        "major": "Major",
+        "minor": "Minor",
+        "patch": "Patch"
+      }
+    },
+    {
+      "name": "directory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.directory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.directory",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "packageDescription",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageDescription",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageDescription",
+      "required": "false",
+      "visibleRule": "command = publish"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "packageName",
+      "description": "The name of the published package. Only set when command is 'publish'."
+    },
+    {
+      "name": "packageVersion",
+      "description": "The version of the published package. Only set when command is 'publish'. Especially useful with versionIncrement, where the version is computed at runtime."
+    }
+  ],
+  "execution": {
+    "Node20_1": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "universalMain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Debug_ArtifactToolPath": "ms-resource:loc.messages.Debug_ArtifactToolPath",
+    "Debug_AuthenticatedIdentity": "ms-resource:loc.messages.Debug_AuthenticatedIdentity",
+    "Debug_CalculatedVersion": "ms-resource:loc.messages.Debug_CalculatedVersion",
+    "Debug_CreatingLocationApi": "ms-resource:loc.messages.Debug_CreatingLocationApi",
+    "Debug_DiscoveredTenant": "ms-resource:loc.messages.Debug_DiscoveredTenant",
+    "Debug_Downloading": "ms-resource:loc.messages.Debug_Downloading",
+    "Debug_FailedToGetFeedTenantId": "ms-resource:loc.messages.Debug_FailedToGetFeedTenantId",
+    "Debug_FailedToGetIdentityInfo": "ms-resource:loc.messages.Debug_FailedToGetIdentityInfo",
+    "Debug_FeedServiceUri": "ms-resource:loc.messages.Debug_FeedServiceUri",
+    "Debug_GettingArtifactTool": "ms-resource:loc.messages.Debug_GettingArtifactTool",
+    "Debug_GettingConnectionData": "ms-resource:loc.messages.Debug_GettingConnectionData",
+    "Debug_HighestPackageVersion": "ms-resource:loc.messages.Debug_HighestPackageVersion",
+    "Debug_NoProvenanceSession": "ms-resource:loc.messages.Debug_NoProvenanceSession",
+    "Debug_OrgScopedFeed": "ms-resource:loc.messages.Debug_OrgScopedFeed",
+    "Debug_ParsedFeedInfo": "ms-resource:loc.messages.Debug_ParsedFeedInfo",
+    "Debug_ProjectScopedFeed": "ms-resource:loc.messages.Debug_ProjectScopedFeed",
+    "Debug_ProvenanceApiUrl": "ms-resource:loc.messages.Debug_ProvenanceApiUrl",
+    "Debug_ProvenanceDisabled": "ms-resource:loc.messages.Debug_ProvenanceDisabled",
+    "Debug_ProvenanceResponseStatus": "ms-resource:loc.messages.Debug_ProvenanceResponseStatus",
+    "Debug_Publishing": "ms-resource:loc.messages.Debug_Publishing",
+    "Debug_ResolvedPackagingUrl": "ms-resource:loc.messages.Debug_ResolvedPackagingUrl",
+    "Debug_ResolvingFeedServiceUri": "ms-resource:loc.messages.Debug_ResolvingFeedServiceUri",
+    "Debug_ResolvingVersionIncrement": "ms-resource:loc.messages.Debug_ResolvingVersionIncrement",
+    "Debug_RetrievingArtifactToolUri": "ms-resource:loc.messages.Debug_RetrievingArtifactToolUri",
+    "Debug_SetOutputVariables": "ms-resource:loc.messages.Debug_SetOutputVariables",
+    "Debug_TelemetryInitFailed": "ms-resource:loc.messages.Debug_TelemetryInitFailed",
+    "Debug_TelemetryResultFailed": "ms-resource:loc.messages.Debug_TelemetryResultFailed",
+    "Debug_UsingArtifactToolDownload": "ms-resource:loc.messages.Debug_UsingArtifactToolDownload",
+    "Debug_UsingArtifactToolPublish": "ms-resource:loc.messages.Debug_UsingArtifactToolPublish",
+    "Debug_UsingBuildServiceCreds": "ms-resource:loc.messages.Debug_UsingBuildServiceCreds",
+    "Debug_UsingProvenanceSession": "ms-resource:loc.messages.Debug_UsingProvenanceSession",
+    "Debug_UsingServiceUri": "ms-resource:loc.messages.Debug_UsingServiceUri",
+    "Debug_UsingWifAuth": "ms-resource:loc.messages.Debug_UsingWifAuth",
+    "Debug_WifTokenObtained": "ms-resource:loc.messages.Debug_WifTokenObtained",
+    "Error_AuthenticationFailed": "ms-resource:loc.messages.Error_AuthenticationFailed",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_FailedToGetArtifactTool": "ms-resource:loc.messages.Error_FailedToGetArtifactTool",
+    "Error_FailedToResolveFeedUri": "ms-resource:loc.messages.Error_FailedToResolveFeedUri",
+    "Error_FeedServiceUriNoLocationUrl": "ms-resource:loc.messages.Error_FeedServiceUriNoLocationUrl",
+    "Error_FeedServiceUriRequestFailed": "ms-resource:loc.messages.Error_FeedServiceUriRequestFailed",
+    "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
+    "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
+    "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
+    "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
+    "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",
+    "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Error_UnexpectedErrorArtifactToolPublish": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolPublish",
+    "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
+    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
+    "Error_VersionInputRequired": "ms-resource:loc.messages.Error_VersionInputRequired",
+    "Error_VersionInputsMutuallyExclusive": "ms-resource:loc.messages.Error_VersionInputsMutuallyExclusive",
+    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
+    "Info_DownloadingPackage": "ms-resource:loc.messages.Info_DownloadingPackage",
+    "Info_PublishingPackage": "ms-resource:loc.messages.Info_PublishingPackage",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingIncrementedVersion": "ms-resource:loc.messages.Info_UsingIncrementedVersion",
+    "Success_PackagesDownloaded": "ms-resource:loc.messages.Success_PackagesDownloaded",
+    "Success_PackagesPublished": "ms-resource:loc.messages.Success_PackagesPublished",
+    "Warning_BuildServiceIdentityHint": "ms-resource:loc.messages.Warning_BuildServiceIdentityHint",
+    "Warning_ProvenanceSessionFailed": "ms-resource:loc.messages.Warning_ProvenanceSessionFailed",
+    "Warning_ServiceConnectionIdentityHint": "ms-resource:loc.messages.Warning_ServiceConnectionIdentityHint",
+    "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
+    "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.270.0",
+    "LocalPackages": "1.249.4",
+    "wif_242": "1.270.1"
+  }
+}
