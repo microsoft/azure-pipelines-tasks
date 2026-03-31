@@ -65,5 +65,24 @@ describe('DownloadPackageV1 L0 Suite - NuGet Downloads', function () {
             TestHelpers.assertFileDownloaded('badNupkgPackageName.nupkg');
             TestHelpers.assertFileNotExists(TestHelpers.destinationDir, 'nugetFile');
         });
+
+        it('fails when download throws an error', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forDownloadError()
+            );
+
+            TestHelpers.assertFailure(tr);
+        });
+    });
+
+    describe('NuGet Latest Version Resolution', function () {
+        it('resolves latest version and downloads successfully', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forLatestVersion()
+            );
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertFileDownloaded('singlePackageName.nupkg');
+        });
     });
 });

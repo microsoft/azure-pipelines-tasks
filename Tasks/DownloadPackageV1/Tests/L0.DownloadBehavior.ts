@@ -16,8 +16,12 @@ describe('DownloadPackageV1 L0 Suite - Download Behavior', function () {
                 TestDataBuilder.forUniversalDownload()
             );
 
-            // Task should succeed — universal download was invoked
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, `UniversalDownload:downloadPath=`);
+            TestHelpers.assertStdoutContains(tr, `feedId=feedId`);
+            TestHelpers.assertStdoutContains(tr, `packageId=${TestData.defaultPackageGuid}`);
+            TestHelpers.assertStdoutContains(tr, `version=${TestData.defaultVersion}`);
+            TestHelpers.assertStdoutContains(tr, `filterPattern=**`);
         });
 
         it('routes upack with project-scoped feed and splits projectId correctly', async () => {
@@ -28,6 +32,8 @@ describe('DownloadPackageV1 L0 Suite - Download Behavior', function () {
             );
 
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, `feedId=feedId`);
+            TestHelpers.assertStdoutContains(tr, `projectId=projectId`);
         });
     });
 

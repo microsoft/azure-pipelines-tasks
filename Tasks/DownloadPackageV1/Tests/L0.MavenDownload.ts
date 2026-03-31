@@ -1,5 +1,5 @@
 import { TestHelpers } from './TestHelpers';
-import { TestDataBuilder } from './TestConstants';
+import { TestDataBuilder, TestEnvVars } from './TestConstants';
 
 describe('DownloadPackageV1 L0 Suite - Maven Downloads', function () {
     this.timeout(30000);
@@ -14,6 +14,21 @@ describe('DownloadPackageV1 L0 Suite - Maven Downloads', function () {
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertFileCount(TestHelpers.destinationDir, 2);
+            TestHelpers.assertFileInDestination('packageName.jar');
+            TestHelpers.assertFileInDestination('packageName.pom');
+        });
+
+        it('skips files with no content or storageId', async () => {
+            // The mock has packageName.xml with storageId=null and content=null
+            // It should be skipped (only jar and pom downloaded)
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forMavenDownload({
+                    [TestEnvVars.files]: '*.jar; *.pom; *.xml'
+                })
+            );
+
+            TestHelpers.assertSuccess(tr);
+            // xml has no content/storageId, should be skipped
             TestHelpers.assertFileInDestination('packageName.jar');
             TestHelpers.assertFileInDestination('packageName.pom');
         });

@@ -17,6 +17,18 @@ describe('DownloadPackageV1 L0 Suite - Npm Downloads', function () {
             TestHelpers.assertFileDownloaded('singlePackageName.tgz');
             TestHelpers.assertFileExtracted('npmFile');
         });
+
+        it('downloads npm without extraction', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forNpmDownload({
+                    '__extract__': 'false'
+                })
+            );
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertFileCount(TestHelpers.tempDir, 0);
+            TestHelpers.assertFileInDestination('singlePackageName.tgz');
+        });
     });
 
     describe('Npm Download Failures', function () {

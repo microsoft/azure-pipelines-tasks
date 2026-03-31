@@ -84,25 +84,11 @@ tr.setAnswers({
 });
 
 // Register connections mock
-if (downloadShouldFail) {
-    tr.registerMock('./connections', {
-        getConnection: function (): Promise<any> {
-            return Promise.resolve(new WebApiMock());
-        }
-    });
-    // Mock the package module to throw download error
-    tr.registerMock('./package', {
-        download: async function (): Promise<any> {
-            throw 'download error';
-        }
-    });
-} else {
-    tr.registerMock('./connections', {
-        getConnection: function (): Promise<any> {
-            return Promise.resolve(new WebApiMock());
-        }
-    });
-}
+tr.registerMock('./connections', {
+    getConnection: function (): Promise<any> {
+        return Promise.resolve(new WebApiMock({ downloadShouldFail: downloadShouldFail }));
+    }
+});
 
 // Mock universal package download
 tr.registerMock('./universal', {
@@ -115,7 +101,7 @@ tr.registerMock('./universal', {
         filterPattern: string,
         executeWithRetries: any
     ): Promise<void> {
-        console.log(`Mock: Universal package download called with feedId=${feedId}, projectId=${projectId}, packageId=${packageId}, version=${version}`);
+        console.log(`UniversalDownload:downloadPath=${downloadPath},feedId=${feedId},projectId=${projectId},packageId=${packageId},version=${version},filterPattern=${filterPattern}`);
         return;
     }
 });
