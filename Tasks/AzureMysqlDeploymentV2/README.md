@@ -1,50 +1,46 @@
-# Azure Database for MySQL Flexible Server Deployment
-
+# Azure Database for MySQL Flexible Server Deployment (V2)
 
 ## Overview
 
-The task is used for deploying to Azure Database for MySQL Flexible Server. There are two ways to deploy, either using a script file or writing the script in our inline editor.
+This task deploys scripts to [Azure Database for MySQL Flexible Server](https://learn.microsoft.com/azure/mysql/flexible-server/overview). You can deploy using a SQL script file or by writing the script inline.
 
-This V2 task targets Azure Database for MySQL Flexible Server, which is the recommended deployment model for MySQL on Azure. Azure Database for MySQL Single Server is on the retirement path — V2 replaces V1 to align with the Flexible Server resource provider and APIs.
-
+V2 replaces V1, which targeted the now-retiring Azure Database for MySQL Single Server. V2 uses the Flexible Server resource provider (`Microsoft.DBforMySQL/flexibleServers`) and its management APIs.
 
 ## Contact Information
 
-Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+Please report a problem at the [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. You can also share feedback about the task, like what additional functionality should be added or what other tasks you would like to have, at the same place.
 
 
-## Pre-requisites for the Task
+## Prerequisites
 
-The following pre-requisites need to be setup for the task to work properly.
+The following prerequisites need to be set up for the task to work properly.
 
-#### Azure Subscription
+### Azure Subscription
 
-To deploy to Azure Database for MySQL, an Azure subscription has to be linked to Team Foundation Server or to Azure DevOps using the Service connections tab in the settings section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
-Use 'Azure Resource Manager'([ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/)) endpoint type; for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+To deploy to Azure Database for MySQL, an Azure subscription must be linked to Azure DevOps using the Service Connections tab in the project settings. Use the 'Azure Resource Manager' ([ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/)) endpoint type. For details, follow the steps [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
-#### Azure Database for MySQL Flexible Server Resource
+### Azure Database for MySQL Flexible Server
 
-This task expects that the Azure resource for [Azure Database for MySQL Flexible Server](https://learn.microsoft.com/azure/mysql/flexible-server/overview) is already available in the [Azure portal](https://portal.azure.com/). The task can create a new database along with other MySQL commands but doesn't create the server.
+This task expects an [Azure Database for MySQL Flexible Server](https://learn.microsoft.com/azure/mysql/flexible-server/overview) resource to already exist in the [Azure portal](https://portal.azure.com/). The task can create a new database and run MySQL commands, but it does not create the server itself.
 
-#### MySQL Client in Agent Box
+### MySQL Client on the Agent
 
-This task expects MySQL client must be in agent box:
-- **Windows Agent:** Use this [script file](https://aka.ms/window-mysqlcli-installer) to install MySQL client.
-- **Linux Agent:** Run command `apt-get install mysql-client` to install MySQL client.
+- **Windows Agent:** Use this [script](https://aka.ms/window-mysqlcli-installer) to install the MySQL client.
+- **Linux Agent:** Run `apt-get install mysql-client`.
 
 
-## Parameters of the Task
+## Parameters
 
-The parameters of the task are described in detail, including examples, to show how to input the parameters. Parameters listed with a \* are required.
+Parameters listed with a \* are required.
 
-#### General
+### General
 
 | Parameter              | Required | Description                                                                                   |
 |------------------------|----------|-----------------------------------------------------------------------------------------------|
 | Display name           | Yes      | A name to identify the task among others in your pipeline.                                    |
 | Azure subscription     | Yes      | The Azure subscription where the MySQL Flexible Server resource is present.                   |
 
-#### DB Details
+### DB Details
 
 | Parameter              | Required | Description                                                                                                                                                  |
 |------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -53,7 +49,7 @@ The parameters of the task are described in detail, including examples, to show 
 | Server admin login     | Yes      | Flexible Server supports native MySQL authentication. Use the admin login directly. Example: `bbo1` (no `@servername` suffix needed).                        |
 | Password               | Yes      | Administrator password for the Flexible Server. You can reset it from the [Azure portal](https://learn.microsoft.com/azure/mysql/flexible-server/how-to-manage-server-portal). |
 
-#### Deployment Package
+### Deployment Package
 
 | Parameter                  | Required | Description                                                                                                                                         |
 |----------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -62,7 +58,7 @@ The parameters of the task are described in detail, including examples, to show 
 | Inline script (Inline)     | Yes      | The SQL statements to execute directly.                                                                                                             |
 | Additional MySQL options   | No       | Extra options for the MySQL CLI, e.g., output format (`--html`, `--xml`) or `--quick` for large result sets.                                        |
 
-#### Firewall
+### Firewall
 
 | Parameter                      | Required | Description                                                                                                           |
 |--------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------|
@@ -75,16 +71,16 @@ The parameters of the task are described in detail, including examples, to show 
 ---
 
 
-## Changes from V1 to V2 (Flexible Server Support)
+## What Changed from V1 to V2
 
-This section documents all changes made to create AzureMysqlDeploymentV2 from V1 and how support for Azure Database for MySQL Flexible Server was added.
+This section documents the changes from V1 (Single Server) to V2 (Flexible Server).
 
 ### Why V2?
 
-Azure Database for MySQL Single Server is on the retirement path. Azure Database for MySQL **Flexible Server** is the recommended deployment model going forward. V2 targets the Flexible Server resource provider (`Microsoft.DBforMySQL/flexibleServers`) and its APIs.
+Azure Database for MySQL Single Server is on the retirement path. **Flexible Server** is the recommended deployment model going forward. V2 targets the Flexible Server resource provider (`Microsoft.DBforMySQL/flexibleServers`).
 
 
-### Summary of All File Changes
+### File Changes Summary
 
 | File                                     | Change Type  | Description                                                                     |
 |------------------------------------------|--------------|---------------------------------------------------------------------------------|
@@ -94,26 +90,34 @@ Azure Database for MySQL Single Server is on the retirement path. Azure Database
 | `operations/MysqlServerOperations.ts`    | **Modified** | Swapped management client import to Flexible Server client                      |
 | `operations/FirewallOperations.ts`       | **Modified** | Swapped management client import to Flexible Server client                      |
 | `sql/MysqlClient.ts`                     | **Modified** | New stdin-piped file execution, inline/file branching, username format change   |
-| `tsconfig.json`                          | **Modified** | Added `skipLibCheck: true`                                                      |
-| `azuremysqldeploy.ts`                    | Unchanged    | Only comment updates, no logic change                                           |
-| `package.json`                           | Unchanged    | Same dependencies; name changed to `vsts-tasks-azuremysql-v2`                  |
-| `models/AzureMysqlTaskParameter.ts`      | Unchanged    | Identical                                                                       |
-| `models/Firewall.ts`                     | Unchanged    | Identical                                                                       |
-| `models/FirewallConfiguration.ts`        | Unchanged    | Identical                                                                       |
-| `models/MysqlServer.ts`                  | Unchanged    | Identical                                                                       |
-| `operations/MysqlUtiliy.ts`              | Unchanged    | Identical                                                                       |
-| `operations/ToolPathOperations.ts`       | Unchanged    | Identical                                                                       |
-| `sql/ISqlClient.ts`                      | Unchanged    | Identical                                                                       |
-| `Tests/` (all test files)               | Unchanged    | Identical                                                                       |
-| `make.json`                              | Unchanged    | Identical                                                                       |
-| `Window-MysqlCli-Installer.ps1`         | Unchanged    | Identical                                                                       |
+| `azuremysqldeploy.ts`                    | **Modified** | Debug messages updated to reference "flexible server"                           |
+| `package.json`                           | **Modified** | Name changed to `vsts-tasks-azuremysql-v2`; description updated                |
+| `operations/MysqlUtiliy.ts`              | Minor        | Trailing newline fix only                                                       |
+| `make.json`                              | Minor        | Trailing newline fix only                                                       |
+| `Tests/L0.ts`                            | **Modified** | Suite name updated to V2; refactored to async/await, removed try/catch wrappers |
+| `Tests/mock_utils.ts`                    | **Modified** | API paths updated to `flexibleServers` and `2021-12-01-preview`                 |
+| `Tests/package.json`                     | **Modified** | Name and description updated for V2                                             |
+| `Tests/ToolPathOperationsL0Tests.ts`     | Minor        | Trailing newline fix only                                                       |
+| `models/AzureMysqlTaskParameter.ts`      | Identical    | No changes                                                                      |
+| `models/Firewall.ts`                     | Identical    | No changes                                                                      |
+| `models/FirewallConfiguration.ts`        | Identical    | No changes                                                                      |
+| `models/MysqlServer.ts`                  | Identical    | No changes                                                                      |
+| `operations/ToolPathOperations.ts`       | Identical    | No changes                                                                      |
+| `sql/ISqlClient.ts`                      | Identical    | No changes                                                                      |
+| `Tests/FirewallOperationTests.ts`        | Identical    | No changes                                                                      |
+| `Tests/FirewallOperationsL0Tests.ts`     | Identical    | No changes                                                                      |
+| `Tests/MysqlClientTests.ts`             | Identical    | No changes                                                                      |
+| `Tests/MysqlClientL0Tests.ts`           | Identical    | No changes                                                                      |
+| `Tests/MysqlServerOperationsL0Tests.ts`  | Identical    | No changes                                                                      |
+| `Tests/ToolPathOperationTests.ts`        | Identical    | No changes                                                                      |
+| `Window-MysqlCli-Installer.ps1`         | Identical    | No changes                                                                      |
 
 
 ### Detailed Changes
 
-#### 1. New File — `azure-arm-mysql-flexible.ts`
+#### 1. New File: `azure-arm-mysql-flexible.ts`
 
-A custom Azure ARM client targeting the MySQL Flexible Server management API. Replaces the legacy `AzureMysqlManagementClient` from `azure-pipelines-tasks-azure-arm-rest/azure-arm-mysql`.
+Custom Azure ARM client targeting the MySQL Flexible Server management API. Replaces the legacy `AzureMysqlManagementClient` from `azure-pipelines-tasks-azure-arm-rest/azure-arm-mysql`.
 
 | Class                                       | Purpose                                                                                      |
 |---------------------------------------------|----------------------------------------------------------------------------------------------|
@@ -137,7 +141,7 @@ Key API path change: `Microsoft.DBforMySQL/servers/` → `Microsoft.DBforMySQL/f
 | Error messages             | 22 messages referencing "MySQL server"                  | All updated to "MySQL Flexible Server"; 1 new message added  |
 
 
-#### 3. Operations Layer — `MysqlServerOperations.ts` & `FirewallOperations.ts`
+#### 3. Operations Layer: `MysqlServerOperations.ts` & `FirewallOperations.ts`
 
 | Aspect                     | V1 (Single Server)                                     | V2 (Flexible Server)                                        |
 |----------------------------|---------------------------------------------------------|--------------------------------------------------------------|
@@ -147,9 +151,9 @@ Key API path change: `Microsoft.DBforMySQL/servers/` → `Microsoft.DBforMySQL/f
 | Business logic             | —                                                       | Unchanged (compatible interface)                             |
 
 
-#### 4. SQL Execution — `sql/MysqlClient.ts`
+#### 4. SQL Execution: `sql/MysqlClient.ts`
 
-This file has the most significant **behavioral change**.
+This file has the most significant behavioral change.
 
 | Aspect                     | V1 (Single Server)                                     | V2 (Flexible Server)                                        |
 |----------------------------|---------------------------------------------------------|--------------------------------------------------------------|
@@ -160,21 +164,14 @@ This file has the most significant **behavioral change**.
 | `_getFileSourceArgument()` | Handles both inline and file-based SQL                  | Simplified — only handles inline SQL                         |
 | `executeSqlCommand()`      | Always calls `_executeSqlScript(arg + fileSource)`      | Branches: inline → `_executeSqlScript`, file → `_executeSqlScriptFromFile` |
 
-**Why this matters:** The V1 `source` command only works in interactive MySQL CLI sessions. In non-interactive/automated pipeline execution it can fail silently. V2 pipes file content through stdin via `child_process.spawn()`, which works correctly in all execution modes.
+**Why this matters:** The V1 `source` command only works in interactive MySQL CLI sessions. In automated pipeline execution it can fail silently. V2 pipes file content through stdin via `child_process.spawn()`, which works reliably in all execution modes.
 
 
-#### 5. `tsconfig.json`
-
-| Setting                    | V1                                                      | V2                                                           |
-|----------------------------|---------------------------------------------------------|--------------------------------------------------------------|
-| `skipLibCheck`             | Not set                                                 | `true`                                                       |
-
-
-### Migration Notes for Users
+### Migration Guide
 
 | #  | Topic            | Details                                                                                          |
 |----|------------------|--------------------------------------------------------------------------------------------------|
-| 1  | Server type      | V2 only works with **Flexible Server**. If using Single Server, continue using V1.               |
+| 1  | Server type      | V2 only works with **Flexible Server**. If still using Single Server, continue with V1.          |
 | 2  | Username format  | Use plain username (`bbo1`) instead of `username@servername` (`bbo1@fabrikam`).                   |
-| 3  | Node10 removed   | This task requires Node16 or Node20 agent execution handlers.                                    |
-| 4  | File-based SQL   | Now uses stdin piping instead of `source` command — more reliable in automated pipelines.        |
+| 3  | Node10 removed   | V2 requires Node16 or Node20 agent execution handlers.                                           |
+| 4  | File-based SQL   | Now uses stdin piping instead of `source` command for more reliable automated execution.          |
