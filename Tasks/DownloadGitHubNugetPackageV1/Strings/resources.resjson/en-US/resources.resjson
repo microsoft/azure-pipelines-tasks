@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Download GitHub Nuget Packages",
+  "loc.friendlyName": "[Deprecated] GitHub Nuget Packages",
   "loc.helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "Restore your nuget packages using dotnet CLI",
-  "loc.instanceNameFormat": "dotnet restore",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
+  "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "Feeds and authentication",
   "loc.group.displayName.restoreAdvanced": "Advanced",
   "loc.input.label.packageName": "Package Name",

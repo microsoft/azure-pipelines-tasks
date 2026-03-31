@@ -40,6 +40,8 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | DockerCompose V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DotNetCoreInstaller V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DotNetCoreInstaller V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
+| DownloadGitHubNpmPackage V1 | N/A | 2026-03-31 |
+| DownloadGitHubNugetPackage V1 | N/A | 2026-03-31 |
 | DownloadPackage V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DownloadPipelineArtifact V0 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | DuffleInstaller V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
