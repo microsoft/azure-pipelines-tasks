@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 272,
-    "Patch": 2
+    "Minor": 273,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -102,6 +102,9 @@
     "Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
     "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
-    "Warning_NpmrcFileNotFound": "npmrc file not found: %s"
+    "Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+    "Debug_UnableToDetermineProxy": "Unable to determine proxy configuration.",
+    "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
+    "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   }
 }

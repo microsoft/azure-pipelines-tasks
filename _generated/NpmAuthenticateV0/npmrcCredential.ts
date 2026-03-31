@@ -1,5 +1,6 @@
 import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
+const createHttpsProxyAgent = require('https-proxy-agent');
 
 export interface NpmrcCredential {
     url: string;
@@ -108,13 +109,9 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
             timeout: TIMEOUT_MS
         };
 
-        try {
-            const proxy = tl.getHttpProxyConfiguration();
-            if (proxy) {
-                options.agent = new (require('https-proxy-agent'))(proxy.proxyUrl);
-            }
-        } catch {
-            tl.debug('Unable to determine proxy configuration');
+        const proxy = tl.getHttpProxyConfiguration();
+        if (proxy) {
+            options.agent = createHttpsProxyAgent(proxy.proxyUrl);
         }
 
         const req = httpModule.get(endpointUrl, options, (resp) => {
@@ -128,13 +125,13 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
         });
 
         req.on('timeout', () => {
-            tl.debug(`isEndpointInternal timed out after ${TIMEOUT_MS}ms`);
+            tl.debug(tl.loc('Debug_EndpointProbeTimedOut', TIMEOUT_MS));
             req.destroy();
             resolve(false);
         });
 
         req.on('error', (error) => {
-            tl.debug(`isEndpointInternal check failed: ${error}`);
+            tl.debug(tl.loc('Debug_EndpointProbeFailed', error));
             resolve(false);
         });
     });

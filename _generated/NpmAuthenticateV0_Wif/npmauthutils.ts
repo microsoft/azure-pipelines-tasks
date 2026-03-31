@@ -62,17 +62,13 @@ export async function resolvePackagingLocation(): Promise<pkgLocationUtils.Packa
     return await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
 }
 
-// Discovers registries from the project-scoped .npmrc (workingDirectory/.npmrc)
-// that match packaging service hosts, and authenticates them with System.AccessToken.
-// Takes workingDirectory (not a file path) because this reads the project .npmrc
-// alongside package.json, NOT the user-specified workingFile input.
+// Discovers registries from the .npmrc that match packaging service hosts,
+// and generates auth tokens for them using System.AccessToken.
 export function resolveInternalFeedCredentials(
-    workingDirectory: string,
+    npmrc: string,
     packagingUris: string[]
 ): NpmrcCredential[] {
-    const projectNpmrcPath = path.join(workingDirectory, '.npmrc');
-
-    if (!fs.existsSync(projectNpmrcPath)) {
+    if (!fs.existsSync(npmrc)) {
         return [];
     }
 
@@ -80,7 +76,7 @@ export function resolveInternalFeedCredentials(
         .map(uri => { try { return new URL(uri).host.toLowerCase(); } catch { return undefined; } })
         .filter((host): host is string => host !== undefined);
 
-    const allRegistries = getRegistriesFromNpmrc(projectNpmrcPath);
+    const allRegistries = getRegistriesFromNpmrc(npmrc);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
             const host = new URL(registryUrl).host.toLowerCase();

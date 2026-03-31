@@ -38,5 +38,8 @@
   "loc.messages.Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
   "loc.messages.Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
-  "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s"
+  "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+  "loc.messages.Debug_UnableToDetermineProxy": "Unable to determine proxy configuration.",
+  "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
+  "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
 }

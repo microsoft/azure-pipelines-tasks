@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 272,
-    "Patch": 2
+    "Minor": 273,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -102,11 +102,14 @@
     "Error_UnableToGetPackagingUris": "ms-resource:loc.messages.Error_UnableToGetPackagingUris",
     "Info_ApplyingWifToAllRegistries": "ms-resource:loc.messages.Info_ApplyingWifToAllRegistries",
     "Error_UnsupportedAuthScheme": "ms-resource:loc.messages.Error_UnsupportedAuthScheme",
-    "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound"
+    "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound",
+    "Debug_UnableToDetermineProxy": "ms-resource:loc.messages.Debug_UnableToDetermineProxy",
+    "Debug_EndpointProbeTimedOut": "ms-resource:loc.messages.Debug_EndpointProbeTimedOut",
+    "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.272.2",
+    "Default": "0.273.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.272.3"
+    "wif_242": "0.273.1"
   }
 }

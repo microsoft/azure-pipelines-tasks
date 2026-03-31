@@ -4,7 +4,6 @@ export const TestEnvVars = {
     npmrcPath: '__npmauth_npmrcPath__',
     npmrcShouldExist: '__npmauth_npmrcShouldExist__',   // 'false' to simulate missing file
     npmrcRegistries: '__npmauth_npmrcRegistries__',      // semicolon-separated registry URLs
-    localRegistries: '__npmauth_localRegistries__',      // JSON array of {url, auth} objects
     customEndpoint: '__npmauth_customEndpoint__',
     externalRegistryUrl: '__npmauth_externalRegistryUrl__',
     externalRegistryToken: '__npmauth_externalRegistryToken__',
@@ -53,6 +52,5 @@ export const TestData = {
     collectionUri: 'https://dev.azure.com/testorg/',
 
     // Log prefixes used in stdout assertions
-    appendPrefix: 'APPEND_TO_NPMRC:',
     telemetryPrefix: 'TELEMETRY:'
 };
