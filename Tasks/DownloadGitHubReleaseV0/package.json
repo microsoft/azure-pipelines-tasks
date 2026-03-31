@@ -21,7 +21,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "artifact-engine": "^1.5.5",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.2.8",
     "nock": "^9.6.1",
     "typed-rest-client": "^2.2.0"
   },
