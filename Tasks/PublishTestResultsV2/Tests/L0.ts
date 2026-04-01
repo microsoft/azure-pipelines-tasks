@@ -35,6 +35,26 @@ describe('PublishTestResults Suite', function() {
         done();
     });
 
+    function setCommonRetryDetectionInputs(): void {
+        process.env[constants.osType] = 'Ubuntu';
+        process.env[constants.testRunner] = 'VSTest';
+        process.env[constants.testResultsFiles] = '"n-files0.xml"';
+        process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
+        process.env[constants.platform] = '';
+        process.env[constants.configuration] = '';
+        process.env[constants.testRunTitle] = '';
+        process.env[constants.publishRunAttachments] = 'false';
+        process.env[constants.searchFolder] = '';
+        process.env[constants.listPackagesReturnCode] = '20000';
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = 'http://example.org';
+        process.env[constants.proxyUserName] = '1';
+        process.env[constants.proxyPassword] = '1';
+        process.env[constants.proxyByPassHosts] = undefined;
+        process.env[constants.failTaskOnFailureToPublishResults] = 'false';
+    }
+
     after(function () {
     });
 
@@ -200,23 +220,7 @@ describe('PublishTestResults Suite', function() {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        process.env[constants.osType] = 'Ubuntu';
-        process.env[constants.testRunner] = 'VSTest';
-        process.env[constants.testResultsFiles] = '"n-files0.xml"';
-        process.env[constants.mergeTestResults] = 'false';
-        process.env[constants.failTaskOnFailedTests] = 'false';
-        process.env[constants.platform] = '';
-        process.env[constants.configuration] = '';
-        process.env[constants.testRunTitle] = '';
-        process.env[constants.publishRunAttachments] = 'false';
-        process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = '20000';
-        process.env[constants.agentTempDirectory] = __dirname;
-        process.env[constants.proxyUrl] = 'http://example.org';
-        process.env[constants.proxyUserName] = '1';
-        process.env[constants.proxyPassword] = '1';
-        process.env[constants.proxyByPassHosts] = undefined;
-        process.env[constants.failTaskOnFailureToPublishResults] = 'false';
+        setCommonRetryDetectionInputs();
         process.env[constants.allowPtrToDetectTestRunRetryFiles] = 'true';
 
         tr.run();
@@ -233,23 +237,7 @@ describe('PublishTestResults Suite', function() {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        process.env[constants.osType] = 'Ubuntu';
-        process.env[constants.testRunner] = 'VSTest';
-        process.env[constants.testResultsFiles] = '"n-files0.xml"';
-        process.env[constants.mergeTestResults] = 'false';
-        process.env[constants.failTaskOnFailedTests] = 'false';
-        process.env[constants.platform] = '';
-        process.env[constants.configuration] = '';
-        process.env[constants.testRunTitle] = '';
-        process.env[constants.publishRunAttachments] = 'false';
-        process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = '20000';
-        process.env[constants.agentTempDirectory] = __dirname;
-        process.env[constants.proxyUrl] = 'http://example.org';
-        process.env[constants.proxyUserName] = '1';
-        process.env[constants.proxyPassword] = '1';
-        process.env[constants.proxyByPassHosts] = undefined;
-        process.env[constants.failTaskOnFailureToPublishResults] = 'false';
+        setCommonRetryDetectionInputs();
         process.env[constants.allowPtrToDetectTestRunRetryFiles] = 'false';
 
         tr.run();
