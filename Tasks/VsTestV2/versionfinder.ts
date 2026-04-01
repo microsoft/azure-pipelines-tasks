@@ -20,13 +20,16 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     // Use PowerShell Get-ItemProperty instead of deprecated wmic
     const powershellTool = tl.tool('powershell');
     const powershellArgs = ['-Command', `
-        try {
-            (Get-ItemProperty -Path '${vstestexeLocation}' -ErrorAction Stop).VersionInfo.FileVersion
+        & {
+            param([string]$path)
+            try {
+                (Get-ItemProperty -LiteralPath $path -ErrorAction Stop).VersionInfo.FileVersion
+            }
+            catch {
+                throw "Failed to get version info for $path: $_"
+            }
         }
-        catch {
-            throw "Failed to get version info for ${vstestexeLocation}: $_"
-        }
-    `];
+    `, vstestexeLocation];
     powershellTool.arg(powershellArgs);
     let output = powershellTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
