@@ -19,5 +19,11 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
-  "loc.messages.Warn_IgnoringFeedUrl": "Ignoring feedUrl"
+  "loc.messages.Warn_IgnoringFeedUrl": "Ignoring feedUrl",
+  "loc.messages.CredProvider_Installed": "Installed %s credential provider to %s",
+  "loc.messages.CredProvider_Downloading": "Downloading credential provider from %s",
+  "loc.messages.CredProvider_UnsupportedPlatform": "No credential provider archive available for platform %s. Falling back to bundled provider.",
+  "loc.messages.CredProvider_PlatformFallback": "No native credential provider for %s, using fallback: %s",
+  "loc.messages.CredProvider_DownloadFailed": "Failed to download credential provider: %s. Falling back to bundled netfx provider.",
+  "loc.messages.CredProvider_DownloadFailedNonWindows": "Failed to download credential provider on non-Windows platform: %s"
 }

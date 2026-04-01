@@ -25,7 +25,8 @@
   "dependencies": {
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4",
-    "azure-pipelines-tasks-artifacts-common": "^2.270.0"
+    "azure-pipelines-tasks-artifacts-common": "^2.270.0",
+    "azure-pipelines-tool-lib": "^2.0.8"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

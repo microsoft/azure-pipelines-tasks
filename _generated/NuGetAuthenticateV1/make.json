@@ -10,12 +10,8 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/c.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/2.0.0/c.zip",
                 "dest": "./ArtifactsCredProvider/"
-            },
-            {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/n6.zip",
-                "dest": "./ArtifactsCredProviderNet6/"
             }
         ]
     }

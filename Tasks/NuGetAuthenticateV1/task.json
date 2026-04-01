@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 2
+    "Minor": 273,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -65,6 +65,12 @@
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection",
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
-    "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
+    "Warn_IgnoringFeedUrl": "Ignoring feedUrl",
+    "CredProvider_Installed": "Installed %s credential provider to %s",
+    "CredProvider_Downloading": "Downloading credential provider from %s",
+    "CredProvider_UnsupportedPlatform": "No credential provider archive available for platform %s. Falling back to bundled provider.",
+    "CredProvider_PlatformFallback": "No native credential provider for %s, using fallback: %s",
+    "CredProvider_DownloadFailed": "Failed to download credential provider: %s. Falling back to bundled netfx provider.",
+    "CredProvider_DownloadFailedNonWindows": "Failed to download credential provider on non-Windows platform: %s"
   }
 }

@@ -3,10 +3,11 @@ import * as tl from 'azure-pipelines-task-lib/task';
 #if WIF
 import { configureEntraCredProvider } from "azure-pipelines-tasks-artifacts-common/credentialProviderUtils";
 #endif
-import { installCredProviderToUserProfile, configureCredProvider, configureCredProviderForSameOrganizationFeeds} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
+import { configureCredProvider, configureCredProviderForSameOrganizationFeeds} from 'azure-pipelines-tasks-artifacts-common/credentialProviderUtils'
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 import { getPackagingServiceConnections } from 'azure-pipelines-tasks-artifacts-common/serviceConnectionUtils'
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
+import { downloadAndInstallCredProvider } from './credProviderInstaller'
 
 async function main(): Promise<void> {
     let forceReinstallCredentialProvider = null;
@@ -19,9 +20,9 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        // Install the credential provider
+        // Install the credential provider — download only the platform-specific archive at runtime
         forceReinstallCredentialProvider = tl.getBoolInput("forceReinstallCredentialProvider", false);
-        await installCredProviderToUserProfile(forceReinstallCredentialProvider);
+        await downloadAndInstallCredProvider(forceReinstallCredentialProvider);
 
         serviceConnections = getPackagingServiceConnections('nuGetServiceConnections');
 #if WIF

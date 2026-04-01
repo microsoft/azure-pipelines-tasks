@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 3
+    "Minor": 273,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -89,11 +89,17 @@
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
-    "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
+    "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl",
+    "CredProvider_Installed": "ms-resource:loc.messages.CredProvider_Installed",
+    "CredProvider_Downloading": "ms-resource:loc.messages.CredProvider_Downloading",
+    "CredProvider_UnsupportedPlatform": "ms-resource:loc.messages.CredProvider_UnsupportedPlatform",
+    "CredProvider_PlatformFallback": "ms-resource:loc.messages.CredProvider_PlatformFallback",
+    "CredProvider_DownloadFailed": "ms-resource:loc.messages.CredProvider_DownloadFailed",
+    "CredProvider_DownloadFailedNonWindows": "ms-resource:loc.messages.CredProvider_DownloadFailedNonWindows"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.2",
+    "Default": "1.273.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.270.3"
+    "wif_242": "1.273.1"
   }
 }
