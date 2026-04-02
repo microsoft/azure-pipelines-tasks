@@ -2,7 +2,7 @@
 // These tests exercise the #if WIF code paths, which are only compiled into
 // the NpmAuthenticateV0_Wif build variant.
 
-import * as assert from 'assert';
+import assert from 'assert';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 

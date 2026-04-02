@@ -1,9 +1,9 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { TestEnvVars, TestData } from './TestConstants';
+import { TestEnvVars } from './TestConstants';
 
 export class TestHelpers {
     private static _tempDirs: string[] = [];

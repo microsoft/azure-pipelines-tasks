@@ -7,7 +7,7 @@ async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
-    let indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
+    const indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
     if (indexFile && tl.exist(indexFile) && tl.exist(workingFilePath)) {
         const backupManager = NpmrcBackupManager.fromBackupDirectory(npmrcPath);
         const restored = backupManager.restoreBackedUpFile(workingFilePath);

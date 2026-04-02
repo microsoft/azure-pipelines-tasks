@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { resolveServiceEndpointCredential } from '../../npmrcCredential';

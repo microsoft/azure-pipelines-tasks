@@ -92,6 +92,7 @@ export function resolveInternalFeedCredentials(
         // SYSTEMVSSCONNECTION is always OAuth — throws if missing.
         const accessToken = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
         tl.setSecret(accessToken);
+        tl.debug(tl.loc('FoundBuildCredentials'));
         return {
             url: registryUrl,
             auth: `${nerfed}:_authToken=${accessToken}`
@@ -174,6 +175,7 @@ export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
 
 export function appendAuthToNpmrc(npmrcPath: string, authEntry: string): void {
     fs.appendFileSync(npmrcPath, os.EOL + authEntry + os.EOL);
+    tl.debug(tl.loc('SuccessfulAppend'));
 }
 
 export function removeExistingCredentialEntries(

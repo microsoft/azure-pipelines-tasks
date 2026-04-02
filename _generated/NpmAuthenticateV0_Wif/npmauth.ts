@@ -27,7 +27,7 @@ async function main(): Promise<void> {
         packagingLocation = await npmauthutils.resolvePackagingLocation();
     } catch (error) {
         tl.error(tl.loc('Error_UnableToGetPackagingUris'));
-        throw(error);   
+        throw error;   
     }
 
     // Collect internal feeds (from .npmrc) and external registries (from service connections)
@@ -35,9 +35,9 @@ async function main(): Promise<void> {
     const endpointRegistries = await npmauthutils.resolveEndpointRegistries(previouslyAuthenticatedUrls);
 
     // Read the target .npmrc into memory for credential line replacement
-    let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+    const npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
-    let addedRegistries: URL[] = [];
+    const addedRegistries: URL[] = [];
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
@@ -61,28 +61,29 @@ async function main(): Promise<void> {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 
-    for (const RegistryUrlString of npmrcRegistries) {
+    for (const registryUrlString of npmrcRegistries) {
         let registryURL: URL;
         try {
-            registryURL = new URL(RegistryUrlString);
+            registryURL = new URL(registryUrlString);
         } catch {
-            tl.warning(tl.loc('InvalidRegistryUrl', RegistryUrlString));
+            tl.warning(tl.loc('InvalidRegistryUrl', registryUrlString));
             continue;
         }
 
         // Auth resolution priority: WIF > external service connection > internal feed.
         // First match wins; subsequent sources are skipped for this registry.
         if (entraWifServiceConnectionName) {
+            console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            const npmrcEntry: NpmrcCredential = { url: RegistryUrlString, auth: `${npmauthutils.toNerfDart(RegistryUrlString)}:_authToken=${federatedAuthToken}` };
+            const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", RegistryUrlString));
+            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;
         }
 
         if (endpointRegistries.length > 0) {
-            const npmrcEntry = npmauthutils.tryResolveFromEndpoints(RegistryUrlString, endpointRegistries);
+            const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
                 console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
@@ -92,7 +93,7 @@ async function main(): Promise<void> {
         }
 
         const npmrcEntry = npmauthutils.tryResolveFromLocalRegistries(
-            RegistryUrlString,
+            registryUrlString,
             internalFeedCredentials,
             previouslyAuthenticatedUrls,
             registryURL.host
