@@ -99,7 +99,6 @@
     "Info_ApplyingWifToAllRegistries": "ms-resource:loc.messages.Info_ApplyingWifToAllRegistries",
     "Error_UnsupportedAuthScheme": "ms-resource:loc.messages.Error_UnsupportedAuthScheme",
     "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound",
-    "Debug_UnableToDetermineProxy": "ms-resource:loc.messages.Debug_UnableToDetermineProxy",
     "Debug_EndpointProbeTimedOut": "ms-resource:loc.messages.Debug_EndpointProbeTimedOut",
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   }

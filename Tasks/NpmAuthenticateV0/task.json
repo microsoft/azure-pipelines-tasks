@@ -99,7 +99,6 @@
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
     "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
     "Warning_NpmrcFileNotFound": "npmrc file not found: %s",
-    "Debug_UnableToDetermineProxy": "Unable to determine proxy configuration.",
     "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   }

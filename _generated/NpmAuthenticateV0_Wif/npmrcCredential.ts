@@ -125,13 +125,13 @@ async function isEndpointInternal(endpointUrl: string): Promise<boolean> {
         });
 
         req.on('timeout', () => {
-            tl.debug(`isEndpointInternal timed out after ${TIMEOUT_MS}ms`);
+            tl.debug(tl.loc('Error_EndpointProbeTimeout', TIMEOUT_MS));
             req.destroy();
             resolve(false);
         });
 
         req.on('error', (error) => {
-            tl.debug(`isEndpointInternal check failed: ${error}`);
+            tl.debug(tl.loc('Error_EndpointProbeFailed', error));
             resolve(false);
         });
     });
