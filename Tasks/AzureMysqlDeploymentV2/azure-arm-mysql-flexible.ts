@@ -131,6 +131,13 @@ export class FlexibleServerFirewallRules {
             tl.debug("Response for delete firewall rule " + statusCode);
             if (statusCode != 200 && statusCode != 202 && statusCode != 204) {
                 deferred.reject(new ApiResult(ToError(response)));
+            } else if (statusCode === 202) {
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3, 0).then(() => {
+                    deferred.resolve(new ApiResult(null, response.body));
+                }, () => {
+                    // Firewall rule may already be deleted; resolve anyway
+                    deferred.resolve(new ApiResult(null, response.body));
+                });
             } else {
                 deferred.resolve(new ApiResult(null, response.body));
             }
@@ -234,7 +241,7 @@ export class FlexibleMysqlServers {
                     if (nextResult.error) {
                         return new ApiResult(nextResult.error);
                     }
-                    result.concat(nextResult.result);
+                    result = result.concat(nextResult.result);
                 }
                 return new ApiResult(null, result);
             } else {

@@ -57,6 +57,11 @@ export class MysqlServerOperations{
             task.debug("Mysql flexible server list is empty or null.");
             throw new Error(task.loc("EmptyOrNullServerList"));
         }
+
+        if (!mysqlServer) {
+            throw new Error(task.loc("EmptyOrNullServerList"));
+        }
+
         return mysqlServer;
     }
 

@@ -71,7 +71,7 @@ export class FirewallOperations {
         if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
             this._preparefirewallRule(mysqlServer.getName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), mysqlServer.getResourceGroupName(), "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
                 let firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
-                console.log(" firewall conf " +JSON.stringify(firewallConfiguration));
+                task.debug(" firewall conf " +JSON.stringify(firewallConfiguration));
 
                 if(!firewallConfiguration.isIpAdressAlreadyAdded()){
                     task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());

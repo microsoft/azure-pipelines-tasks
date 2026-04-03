@@ -1,8 +1,8 @@
 {
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
-  "friendlyName": "Azure Database for MySQL deployment",
-  "description": "Run your scripts and make changes to your Azure Database for MySQL",
+  "friendlyName": "[Deprecated] Azure MySQL deploy",
+  "description": "Deprecated: use the AzureMysqlDeployment@2 task instead. V2 targets Azure Database for MySQL Flexible Server.",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "category": "Deploy",
@@ -16,11 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureMysqlDeployment@1 task is deprecated. Use AzureMysqlDeployment@2 which targets Azure Database for MySQL Flexible Server.",
   "groups": [
     {
       "name": "target",
@@ -186,7 +188,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
-  "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
+  "instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
   "execution": {
     "Node16": {
       "target": "azuremysqldeploy.js",

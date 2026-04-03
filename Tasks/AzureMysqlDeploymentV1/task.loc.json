@@ -1,7 +1,7 @@
 {
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
-  "friendlyName": "ms-resource:loc.friendlyName",
+  "friendlyName": "[Deprecated] ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -16,11 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureMysqlDeployment@1 task is deprecated. Use AzureMysqlDeployment@2 which targets Azure Database for MySQL Flexible Server.",
   "groups": [
     {
       "name": "target",
@@ -186,7 +188,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "[Deprecated] ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node16": {
       "target": "azuremysqldeploy.js",

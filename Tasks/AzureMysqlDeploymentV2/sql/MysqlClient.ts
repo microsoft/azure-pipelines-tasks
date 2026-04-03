@@ -142,6 +142,7 @@ export class MysqlClient implements ISqlClient {
         const fileStream = fs.createReadStream(sqlFilePath);
         fileStream.pipe(mysqlProcess.stdin);
         fileStream.on('error', (err) => {
+            mysqlProcess.stdin.destroy();
             defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
         });
         mysqlProcess.on('close', (code) => {
