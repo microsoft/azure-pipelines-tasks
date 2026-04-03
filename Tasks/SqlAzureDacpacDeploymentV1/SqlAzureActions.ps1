@@ -263,27 +263,60 @@ function ConvertTo-SqlCmdParameterHashtable {
         return $result
     }
 
-    # Reject strings containing PowerShell injection patterns
-    if ($argumentString -match '[;|&`]|\$\(') {
-        throw "SqlAdditionalArguments contains characters that are not allowed for security reasons."
+    # Use PowerShell's built-in parser to tokenize the argument string.
+    # ParseInput is a pure parser (never executes code) that correctly handles
+    # quoting, comma-separated arrays, escape sequences, and all PS syntax.
+    # No injection validation is needed because values are passed via splatting
+    # (Invoke-Sqlcmd @params), which treats them as literals — never evaluated.
+    $tokens = $null
+    $parseErrors = $null
+    $null = [System.Management.Automation.Language.Parser]::ParseInput(
+        "Invoke-Sqlcmd $argumentString", [ref]$tokens, [ref]$parseErrors)
+
+    $currentParam = $null
+    $values = [System.Collections.Generic.List[object]]::new()
+
+    # Commits the current parameter and its collected values into $result.
+    $flushParam = {
+        if (-not $currentParam) { return }
+        if ($values.Count -eq 0)     { $result[$currentParam] = $true }
+        elseif ($values.Count -eq 1) { $result[$currentParam] = $values[0] }
+        else                         { $result[$currentParam] = [object[]]$values.ToArray() }
     }
 
-    # Parse -ParamName Value pairs into a hashtable for safe splatting
-    $pairs = [regex]::Matches($argumentString, '-(\w+)\s*("(?:[^"]*)"|\S+)?')
-    foreach ($match in $pairs) {
-        $paramName = $match.Groups[1].Value
-        $rawValue = $match.Groups[2].Value.Trim('"')
+    for ($i = 1; $i -lt $tokens.Count; $i++) {
+        $token = $tokens[$i]
+        if ($token.Kind -eq 'EndOfInput') { break }
 
-        if ([string]::IsNullOrEmpty($rawValue)) {
-            $result[$paramName] = $true
+        if ($token.Kind -eq 'Parameter') {
+            & $flushParam
+            $currentParam = $token.ParameterName
+            $values = [System.Collections.Generic.List[object]]::new()
         }
-        elseif ($rawValue -match '^\d+$') {
-            $result[$paramName] = [int]$rawValue
-        }
-        else {
-            $result[$paramName] = $rawValue
+        elseif ($token.Kind -ne 'Comma') {
+            # Collect value tokens (skip commas which just separate array elements)
+            switch ($token.Kind) {
+                'Number' {
+                    $values.Add($token.Value)
+                }
+                { $_ -in 'StringLiteral', 'StringExpandable' } {
+                    $values.Add($token.Value)
+                }
+                'Variable' {
+                    switch ($token.Name) {
+                        'true'  { $values.Add($true) }
+                        'false' { $values.Add($false) }
+                        default { $values.Add($token.Text) }
+                    }
+                }
+                default {
+                    $values.Add($token.Text)
+                }
+            }
         }
     }
+
+    & $flushParam
 
     return $result
 }
@@ -371,7 +404,11 @@ function Invoke-SqlCmdExe {
         [string[]] $arguments
     )
 
-    return (& $exePath $arguments 2>&1) | Out-String
+    $output = (& $exePath $arguments 2>&1) | Out-String
+    return @{
+        Output   = $output
+        ExitCode = $LASTEXITCODE
+    }
 }
 
 function Get-AgentIPRange {
@@ -409,9 +446,10 @@ function Get-AgentIPRange {
         $ErrorActionPreference = 'Continue'
 
         $errors = @()
-        $output = Invoke-SqlCmdExe -exePath $sqlCmd -arguments $sqlCmdArgs
-        # Capture any error records from the output
-        if ($output -match 'Sqlcmd: Error|HResult') {
+        $result = Invoke-SqlCmdExe -exePath $sqlCmd -arguments $sqlCmdArgs
+        $output = $result.Output
+        # Use exit code for locale-independent error detection
+        if ($result.ExitCode -ne 0) {
             $errors = @($output)
         }
 

@@ -18,7 +18,7 @@ $startIP = "167.220.238.0"
 $endIP = "167.220.238.255"
 $authenticationType = "server"
 
-Register-Mock Invoke-SqlCmdExe { return $sqlErrorMsg }
+Register-Mock Invoke-SqlCmdExe { return @{ Output = $sqlErrorMsg; ExitCode = 1 } }
 $IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
@@ -26,7 +26,7 @@ Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
 
 # TEST 2 : If connection succeeded without firewall exception using Sqlcmd.exe
 Unregister-Mock Invoke-SqlCmdExe
-Register-Mock Invoke-SqlCmdExe { return "" }
+Register-Mock Invoke-SqlCmdExe { return @{ Output = ""; ExitCode = 0 } }
 
 $IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
