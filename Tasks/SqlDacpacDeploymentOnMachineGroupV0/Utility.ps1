@@ -19,7 +19,7 @@
         "Invoke-Sqlcmd $argumentString", [ref]$tokens, [ref]$parseErrors)
 
     $currentParam = $null
-    $values = [System.Collections.Generic.List[object]]::new()
+    $values = New-Object System.Collections.Generic.List[object]
 
     # Commits the current parameter and its collected values into $result.
     $flushParam = {
@@ -36,7 +36,7 @@
         if ($token.Kind -eq 'Parameter') {
             & $flushParam
             $currentParam = $token.ParameterName
-            $values = [System.Collections.Generic.List[object]]::new()
+            $values = New-Object System.Collections.Generic.List[object]
         }
         elseif ($token.Kind -ne 'Comma') {
             # Collect value tokens (skip commas which just separate array elements)
