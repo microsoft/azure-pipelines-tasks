@@ -73,7 +73,7 @@ async function run() {
              }
         }
 
-        var endpoint = JSON.stringify(endpointObject);
+        var endpoint = JSON.stringify(endpointObject).replace(/'/g, "''");
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
