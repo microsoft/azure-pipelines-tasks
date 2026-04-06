@@ -24,10 +24,10 @@ steps:
     version: 8.x
 
 # Use node 20, npm 9
-- task: NodeTool@0
+- task: UseNode@1
   displayName: Use node 20
   inputs:
-    versionSpec: 20.x
+    version: 20.20.x
 
 - task: NpmAuthenticate@0
   inputs:
@@ -103,11 +103,11 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
 
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
 

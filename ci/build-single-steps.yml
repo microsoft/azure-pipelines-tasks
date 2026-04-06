@@ -54,7 +54,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+- script: node make.js serverBuild --task "$(task_pattern)" $(includeLocalPackagesBuildConfigParameter) --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: Build Tasks
 
 # Check diff for task sources
