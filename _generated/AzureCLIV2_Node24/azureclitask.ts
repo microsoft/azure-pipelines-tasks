@@ -57,7 +57,7 @@ export class azureclitask {
             if (versionCommand) {
                 azVersionResult = tl.execSync("az", "version");
 
-                if (azVersionResult.code !== 0 || azVersionResult.stderr) {
+                if (azVersionResult.code !== 0 || azVersionResult.stderr || !azVersionResult.stdout || azVersionResult.stdout.trim() === '') {
                     tl.debug("az version failed, falling back to 'az --version'");
                     azVersionResult = tl.execSync("az", "--version");
                 }
