@@ -207,5 +207,10 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "PS_ExitCode": "PowerShell exited with code '{0}'.",
     "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
+  },
+  "_buildConfigMapping": {
+    "Default": "5.273.0",
+    "LocalPackages": "5.249.4",
+    "Node24_1": "5.273.1"
   }
 }
