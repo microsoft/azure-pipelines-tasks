@@ -9,6 +9,8 @@
   "loc.input.help.checkLatest": "バージョン仕様を満たす利用可能な最新バージョンを常にオンラインで確認します。これは false にするのが一般的ですが、常に最新版を取得する特定のシナリオの場合は例外です。これにより、実際には必要でない場合にもダウンロードのコストが発生することになります (ホストされたビルド プールの場合は特にそう言えます)。",
   "loc.input.label.force32bit": "x64 エージェントで 32 ビット バージョンを使用する",
   "loc.input.help.force32bit": "エージェントの CPU アーキテクチャに関係なく、Node の x86 バージョンをインストールします。",
+  "loc.input.label.nodejsMirror": "Node.js バイナリのソースを設定する",
+  "loc.input.help.nodejsMirror": "Node.js バイナリをソース化するときは、代替インストール ミラーを使用します。",
   "loc.input.label.retryCountOnDownloadFails": "ノードのダウンロードに失敗した場合の再試行回数を設定する",
   "loc.input.help.retryCountOnDownloadFails": "タスクがミラーからノード バイナリをダウンロードできなかった場合は、このオプションを使用します。タスクは指定された時間、バイナリのダウンロードを再試行します。",
   "loc.input.label.delayBetweenRetries": "再試行の間隔を設定する",

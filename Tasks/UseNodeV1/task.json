@@ -52,6 +52,15 @@
       "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
     },
     {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "Set source for Node.js binaries",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
+    },
+    {
       "name": "retryCountOnDownloadFails",
       "type": "string",
       "label": "Set retry count when nodes downloads failed",

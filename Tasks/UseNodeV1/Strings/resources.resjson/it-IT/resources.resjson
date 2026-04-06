@@ -9,6 +9,8 @@
   "loc.input.help.checkLatest": "Verifica sempre online se è disponibile una versione più recente che soddisfi l'identificatore di versione. Il valore di questa opzione è in genere false a meno che non sia stato predisposto uno scenario specifico per scaricare sempre la versione più recente. Questa opzione può comportare costi di download potenzialmente non necessari, in particolare con il pool di compilazione ospitato.",
   "loc.input.label.force32bit": "Usa la versione a 32 bit in agenti x64",
   "loc.input.help.force32bit": "Installa la versione x86 di Node indipendentemente dall'architettura della CPU dell'agente.",
+  "loc.input.label.nodejsMirror": "Imposta origine per file binari Node.js",
+  "loc.input.help.nodejsMirror": "Usare un mirror di installazione alternativo per l'acquisizione dei file binari di Node.js.",
   "loc.input.label.retryCountOnDownloadFails": "Impostare il numero di tentativi quando il download dei nodi non riesce",
   "loc.input.help.retryCountOnDownloadFails": "Utilizzare questa opzione quando l'attività non è riuscita a scaricare i file binari del nodo dal mirror. L'attività proverà a scaricare i file binari per gli orari specificati.",
   "loc.input.label.delayBetweenRetries": "Impostare il ritardo tra i tentativi",

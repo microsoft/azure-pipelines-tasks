@@ -52,6 +52,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
     },
     {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nodejsMirror",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
+    },
+    {
       "name": "retryCountOnDownloadFails",
       "type": "string",
       "label": "ms-resource:loc.input.label.retryCountOnDownloadFails",
