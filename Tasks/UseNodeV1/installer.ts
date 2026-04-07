@@ -230,8 +230,8 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
     catch (err) {
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] === '404') {
-              exeUrl = `${nodejsMirror}/v${version}/node.exe`;
-              libUrl = `${nodejsMirror}/v${version}/node.lib`;
+            exeUrl = `${nodejsMirror}/v${version}/node.exe`;
+            libUrl = `${nodejsMirror}/v${version}/node.lib`;
 
             await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
             await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
