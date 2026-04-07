@@ -49,7 +49,7 @@ async function run(): Promise<void> {
         tl.setTaskVariable('UPACK_ARTIFACTTOOL_PATH', artifactToolPath);
     }
     catch (error) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc("Error_FailedToGetArtifactTool", error.message));
+        tl.setResult(tl.TaskResult.Failed, tl.loc("Error_FailedToGetArtifactTool", error?.message ?? String(error)));
         return;
     } finally {
         logPreJobTelemetry(artifactToolPath);
@@ -58,13 +58,12 @@ async function run(): Promise<void> {
 
 function logPreJobTelemetry(artifactToolPath: string): void {
     try {
-        const preJobTelemetry = {
+        telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", {
             "command": tl.getInput("command"),
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
             "artifactToolPath": artifactToolPath,
-        };
-
-        telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", preJobTelemetry);
+            "overrideArtifactToolPath": tl.getVariable("UPack.OverrideArtifactToolPath") || "",
+            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+        });
     } catch (err) {
         tl.debug(tl.loc("Debug_FailedToEmitPreJobTelemetry", err.message));
     }

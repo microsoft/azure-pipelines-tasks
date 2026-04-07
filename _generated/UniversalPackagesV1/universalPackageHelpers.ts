@@ -161,6 +161,26 @@ export async function handleTaskError(err: any, errorMessage: string, context?: 
     tl.setResult(tl.TaskResult.Failed, errorMessage);
 }
 
+export function logArtifactToolTelemetry(context: UniversalPackageContext): void {
+    try {
+        let artifactToolTelemetry = {
+            "command": context.command,
+            "organization": context.organization,
+            "feed": context.projectAndFeed,
+            "packageName": context.packageName,
+            "packageVersion": context.packageVersion,
+            "versionIncrement": context.versionIncrement,
+            "adoServiceConnection": context.adoServiceConnection,
+            "artifactToolPath": context.artifactToolPath,
+            "pipelineCollectionUri": context.pipelineCollectionUri,
+        };
+
+        telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", artifactToolTelemetry);
+    } catch (err) {
+        tl.debug(tl.loc('Debug_TelemetryInitFailed', err));
+    }
+}
+
 export function logCommandResult(area: string, feature: string, resultCode: number): void {
     try {
         telemetry.logResult(area, feature, resultCode);

@@ -30,6 +30,7 @@ async function main(): Promise<void> {
         return;
     }
     context.artifactToolPath = artifactToolPath;
+    helpers.logArtifactToolTelemetry(context);
 
     // Calling the command. download/publish
     switch (context.command) {
