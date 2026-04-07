@@ -74,6 +74,18 @@ describe('GitHubReleaseTaskTests Suite', function() {
         });
     });
 
+    it('Validate create action is called with generateReleaseNotes=true when releaseNotesSource = generateReleaseNotes', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, 'CreateReleaseGenerateNotesL0Tests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync()
+        .then(() => {
+            assert(tr.stdout.search(TestString.createReleaseGenerateNotesKeyword) >= 0, 'should have printed: ' + TestString.createReleaseGenerateNotesKeyword);
+            done();
+        });
+    });
+
+
     it('Validate task fails with correct error when action input is invalid', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'InvalidActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -92,6 +104,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         tr.runAsync()
         .then(() => {
             assert(tr.stdout.search(TestString.getReleaseNoteKeyword) >= 0, 'should have printed: ' + TestString.getReleaseNoteKeyword);
+            assert(tr.stdout.search(TestString.getReleaseNoteGenerateModeKeyword) >= 0, 'should have printed: ' + TestString.getReleaseNoteGenerateModeKeyword);
             assert(tr.stdout.search(TestString.invalidBranchNameKeyword) >= 0, 'should have printed: ' + TestString.invalidBranchNameKeyword);
             assert(tr.stdout.search(TestString.tagMatchingKeyword) >= 0, 'should have printed: ' + TestString.tagMatchingKeyword);
             assert(tr.stdout.search(TestString.parseHTTPHeaderLinkKeyword) >= 0, 'should have printed: ' + TestString.parseHTTPHeaderLinkKeyword);
