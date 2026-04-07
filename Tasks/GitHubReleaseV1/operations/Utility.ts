@@ -90,7 +90,8 @@ export class Utility {
         else if (releaseNotesSource === ReleaseNotesSelectionMode.inline) {
             releaseNote = releaseNoteInput;
         }
-        // For generateReleaseNotes mode, releaseNote stays empty — GitHub generates it server-side
+        // For generateReleaseNotes mode, releaseNote starts empty — GitHub auto-generates the body.
+        // If addChangeLog is enabled, the changelog will still be appended to the body.
         tl.debug("ReleaseNote:\n" + releaseNote);
 
         if (!releaseNote) {
