@@ -74,7 +74,19 @@ function locateVSTestConsole(testConfig: models.TestConfigurations): string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath: string = vstestExeFolder;
     if (vstestExeFolder) {
-        vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
+        if (testConfig.vstestArchitecture && testConfig.vstestArchitecture.toLowerCase() === 'arm64') {
+            // ARM64 native vstest.console.exe resides in the arm64 subdirectory (VS 2022 / 17.0+)
+            const arm64Path = path.join(vstestExeFolder, 'arm64', 'vstest.console.exe');
+            if (utils.Helper.pathExistsAsFile(arm64Path)) {
+                tl.debug('Found ARM64 vstest.console.exe at: ' + arm64Path);
+                vstestExePath = arm64Path;
+            } else {
+                tl.warning(tl.loc('Arm64VstestNotFound', arm64Path));
+                vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
+            }
+        } else {
+            vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
+        }
     }
     return vstestExePath;
 }

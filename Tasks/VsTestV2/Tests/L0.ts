@@ -296,4 +296,81 @@ describe('VsTestV2 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
             'should throw UnexpectedVersionNumber for non-numeric version parts'
         );
     });
+
+    // -----------------------------------------------------------------------
+    // ARM64 architecture tests
+    // -----------------------------------------------------------------------
+
+    it('uses arm64/vstest.console.exe when vstestArchitecture is arm64 and arm64 binary exists', function() {
+        setupMocks('17.0.33.0\n');
+        // Override helpers mock so arm64 path exists; also keep base location valid
+        libMocker.registerMock('./helpers', {
+            Helper: {
+                pathExistsAsFile: function(p: string) { return p === fakeVsTestLocation || p.includes('arm64'); },
+                pathExistsAsDirectory: function(_p: string) { return false; },
+                isNullOrWhitespace: function(s: string) {
+                    return s === null || s === undefined || s.replace(/\s/g, '').length < 1;
+                },
+                trimString: function(s: string) { return s ? s.trim() : s; },
+                getVSVersion: function(v: number) { return v.toString(); },
+                isToolsInstallerFlow: function(_config: any) { return false; }
+            },
+            Constants: { vsTestLocationString: 'location', vsTestVersionString: 'version' }
+        });
+        const vf = loadVersionfinder();
+        const config = Object.assign(makeTestConfig('17.0'), { vstestArchitecture: 'arm64' });
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails);
+        assert.strictEqual(config.vsTestVersionDetails.majorVersion, 17);
+        // vstest location must include the arm64 subdirectory
+        assert.ok(
+            config.vsTestVersionDetails.vstestExeLocation.includes('arm64'),
+            'vstestExeLocation should include arm64 subdirectory'
+        );
+    });
+
+    it('falls back to x64 vstest.console.exe when vstestArchitecture is arm64 but arm64 binary is absent', function() {
+        setupMocks('17.0.33.0\n');
+        // pathExistsAsFile returns false for arm64 path, true for x64 path
+        libMocker.registerMock('./helpers', {
+            Helper: {
+                pathExistsAsFile: function(p: string) { return !p.includes('arm64'); },
+                pathExistsAsDirectory: function(_p: string) { return false; },
+                isNullOrWhitespace: function(s: string) {
+                    return s === null || s === undefined || s.replace(/\s/g, '').length < 1;
+                },
+                trimString: function(s: string) { return s ? s.trim() : s; },
+                getVSVersion: function(v: number) { return v.toString(); },
+                isToolsInstallerFlow: function(_config: any) { return false; }
+            },
+            Constants: { vsTestLocationString: 'location', vsTestVersionString: 'version' }
+        });
+        const vf = loadVersionfinder();
+        const config = Object.assign(makeTestConfig('17.0'), { vstestArchitecture: 'arm64' });
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails);
+        // Should fall back: location must not include arm64 subdirectory
+        assert.ok(
+            !config.vsTestVersionDetails.vstestExeLocation.split('\\').includes('arm64'),
+            'vstestExeLocation should NOT use arm64 subdirectory on fallback'
+        );
+    });
+
+    it('uses regular vstest.console.exe when vstestArchitecture is x64 (default)', function() {
+        setupMocks('17.0.33.0\n');
+        const vf = loadVersionfinder();
+        const config = Object.assign(makeTestConfig('17.0'), { vstestArchitecture: 'x64' });
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails);
+        assert.ok(
+            !config.vsTestVersionDetails.vstestExeLocation.split('\\').includes('arm64'),
+            'x64 path should not include arm64 subdirectory'
+        );
+    });
 });
