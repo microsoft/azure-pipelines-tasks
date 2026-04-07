@@ -8,7 +8,7 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
 
-    public async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, makeLatest: string): Promise<WebResponse> {
+    public async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, makeLatest: string, generateReleaseNotes: boolean = false): Promise<WebResponse> {
         let request = new WebRequest();
 
         request.uri = util.format(this._createReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -20,7 +20,8 @@ export class Release {
             "body": releaseNote,
             "draft": isDraft,
             "prerelease": isPrerelease,
-            "make_latest": makeLatest
+            "make_latest": makeLatest,
+            "generate_release_notes": generateReleaseNotes
         });
         request.headers = {
             "Content-Type": "application/json",
@@ -31,7 +32,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string, makeLatest: string): Promise<WebResponse> {
+    public async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string, makeLatest: string, generateReleaseNotes: boolean = false): Promise<WebResponse> {
         let request = new WebRequest();
 
         request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
@@ -43,7 +44,8 @@ export class Release {
             "body": releaseNote,
             "draft": isDraft,
             "prerelease": isPrerelease,
-            "make_latest": makeLatest
+            "make_latest": makeLatest,
+            "generate_release_notes": generateReleaseNotes
         });
         request.headers = {
             "Content-Type": "application/json",

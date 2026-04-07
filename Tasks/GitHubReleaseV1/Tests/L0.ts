@@ -74,6 +74,17 @@ describe('GitHubReleaseTaskTests Suite', function() {
         });
     });
 
+    it('Validate create action is called when releaseNotesSource = githubGenerated.', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, 'CreateActionGitHubGeneratedL0Tests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync()
+        .then(() => {
+            assert(tr.stdout.search(TestString.createActionGitHubGeneratedKeyWord) >= 0, 'should have printed: ' + TestString.createActionGitHubGeneratedKeyWord);
+            done();
+        });
+    });
+
     it('Validate task fails with correct error when action input is invalid', (done: Mocha.Done) => {
         let tp = path.join(__dirname, 'InvalidActionL0Tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
