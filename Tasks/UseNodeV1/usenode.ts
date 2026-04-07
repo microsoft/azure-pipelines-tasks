@@ -26,7 +26,7 @@ async function run() {
         const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
         if (version) {
             const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-            await installer.getNode(version, checkLatest, nodejsMirror.replace(/\/$/, ''), parseInt(retryCountOnDownloadFails), parseInt(delayBetweenRetries));
+            await installer.getNode(version, checkLatest, installer.normalizeMirrorUrl(nodejsMirror), parseInt(retryCountOnDownloadFails), parseInt(delayBetweenRetries));
         }
 
         const proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();

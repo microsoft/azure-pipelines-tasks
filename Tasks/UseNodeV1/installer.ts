@@ -157,7 +157,7 @@ async function acquireNode(version: string, installedArch: string, nodejsMirror:
 
     const fileExtension: string = isWin32 ? '.7z' : '.tar.gz';
 
-    const downloadUrl: string = `${nodejsMirror}/v${version}/${fileName}${fileExtension}`;
+    const downloadUrl: string = new URL(`v${version}/${fileName}${fileExtension}`, nodejsMirror).toString();
 
     let downloadPath: string;
 
@@ -221,8 +221,8 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
     console.log("Aquiring Node from callback called")
     console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
     try {
-        exeUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.exe`;
-        libUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.lib`;
+        exeUrl = new URL(`v${version}/win-${osArch}/node.exe`, nodejsMirror).toString();
+        libUrl = new URL(`v${version}/win-${osArch}/node.lib`, nodejsMirror).toString();
 
         await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
         await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
@@ -230,8 +230,8 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
     catch (err) {
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] === '404') {
-            exeUrl = `${nodejsMirror}/v${version}/node.exe`;
-            libUrl = `${nodejsMirror}/v${version}/node.lib`;
+            exeUrl = new URL(`v${version}/node.exe`, nodejsMirror).toString();
+            libUrl = new URL(`v${version}/node.lib`, nodejsMirror).toString();
 
             await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
             await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
@@ -251,4 +251,11 @@ function isDarwinArm(osPlat: string, installedArch: string): boolean {
         return execResult.code === 0 && !!execResult.stdout;
     }
     return false;
+}
+
+// Normalize the mirror url to ensure that it ends with a slash and does not contain trailing slash
+export function normalizeMirrorUrl(nodejsMirror: string): string {
+    const url = new URL((nodejsMirror || '').trim());
+    url.pathname = url.pathname.replace(/\/+$/, '/');
+    return url.toString();
 }
