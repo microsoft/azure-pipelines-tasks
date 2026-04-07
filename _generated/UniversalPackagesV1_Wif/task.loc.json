@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 272,
+    "Minor": 273,
     "Patch": 1
   },
   "runsOn": [
@@ -124,11 +124,11 @@
   ],
   "prejobexecution": {
     "Node20_1": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     },
     "Node24": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     }
   },
@@ -185,6 +185,7 @@
     "Error_FeedServiceUriNoLocationUrl": "ms-resource:loc.messages.Error_FeedServiceUriNoLocationUrl",
     "Error_FeedServiceUriRequestFailed": "ms-resource:loc.messages.Error_FeedServiceUriRequestFailed",
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
+    "Error_NoAccessToken": "ms-resource:loc.messages.Error_NoAccessToken",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
@@ -211,8 +212,8 @@
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   },
   "_buildConfigMapping": {
-    "Default": "1.272.0",
+    "Default": "1.273.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.272.1"
+    "wif_242": "1.273.1"
   }
 }

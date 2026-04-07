@@ -1,9 +1,10 @@
-import tl = require('azure-pipelines-task-lib/task');
+import * as tl from "azure-pipelines-task-lib/task";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as path from "path";
+import { getSystemAccessToken, validateServerType } from "./universalPackageHelpers";
 
 async function run(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -13,10 +14,7 @@ async function run(): Promise<void> {
     let artifactToolPath: string = "";
 
     try {
-        const serverType = tl.getVariable("System.ServerType");
-        if (!serverType || serverType.toLowerCase() !== "hosted") {
-            throw new Error(tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
-        }
+        if (!(await validateServerType())) return;
 
         // Check if another pre-job instance already resolved the artifact tool path
         const cachedPath = tl.getVariable("UPACK_ARTIFACTTOOL_PATH_CACHED");
@@ -24,7 +22,12 @@ async function run(): Promise<void> {
             console.log(tl.loc("Info_ArtifactToolPathResolvedFromCache"));
             artifactToolPath = cachedPath;
         } else {
-            const localAccessToken = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false)?.parameters?.['AccessToken'];
+            const localAccessToken = getSystemAccessToken();
+            if (!localAccessToken) {
+                throw new Error(tl.loc("Error_NoAccessToken"));
+            }
+            tl.setSecret(localAccessToken);
+
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(
                 serviceUri,
@@ -32,14 +35,13 @@ async function run(): Promise<void> {
 
             tl.debug(tl.loc("Debug_RetrievingArtifactToolUri", blobUri));
 
-            // Finding the artifact tool directory
+            // Finding artifact tool path directory
             artifactToolPath = await retryOnException(
                 () => artifactToolUtilities.getArtifactToolFromService(
                     blobUri,
                     localAccessToken,
                     "artifacttool"), 3, 1000);
 
-            // Cache for other task instances in this job
             tl.setVariable("UPACK_ARTIFACTTOOL_PATH_CACHED", artifactToolPath);
         }
 
@@ -64,7 +66,7 @@ function logPreJobTelemetry(artifactToolPath: string): void {
 
         telemetry.emitTelemetry("Packaging", "UniversalPackagesV1", preJobTelemetry);
     } catch (err) {
-        tl.debug(`Unable to log Universal Packages pre-job telemetry. Err:( ${err} )`);
+        tl.debug(tl.loc("Debug_FailedToEmitPreJobTelemetry", err.message));
     }
 }
 

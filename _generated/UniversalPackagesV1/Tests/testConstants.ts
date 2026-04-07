@@ -28,7 +28,7 @@ export const TEST_CONSTANTS = {
     MOCK_TENANT_ID: '12345678-1234-1234-1234-123456789abc'
 };
 
-// Default environment variables for all tests
+// Default environment variables for main tests
 export function getDefaultEnvVars(): { [key: string]: string } {
     return {
         'INPUT_PACKAGEVERSION': TEST_CONSTANTS.PACKAGE_VERSION,
@@ -42,5 +42,17 @@ export function getDefaultEnvVars(): { [key: string]: string } {
         'SYSTEM_DEBUG': 'false',
         'MOCK_HIGHEST_PACKAGE_VERSION': TEST_CONSTANTS.HIGHEST_PACKAGE_VERSION,
         'VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH': TEST_CONSTANTS.ARTIFACT_TOOL_PATH
+    };
+}
+
+// Default environment variables for pre-job tests
+export function getDefaultPreJobEnvVars(): { [key: string]: string } {
+    return {
+        'AGENT_HOMEDIRECTORY': 'c:\\agent\\home\\directory',
+        'BUILD_SOURCESDIRECTORY': 'c:\\agent\\home\\directory\\sources',
+        'ENDPOINT_URL_SYSTEMVSSCONNECTION': TEST_CONSTANTS.SERVICE_URL,
+        'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
+        'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': TEST_CONSTANTS.SERVICE_URL,
+        'SYSTEM_SERVERTYPE': 'hosted',
     };
 }

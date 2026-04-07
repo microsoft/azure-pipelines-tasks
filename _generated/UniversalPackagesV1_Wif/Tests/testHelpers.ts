@@ -60,7 +60,6 @@ export async function runTestWithEnv(testRunnerFile: string, envVars: { [key: st
         for (const key of envKeys) {
             delete process.env[key];
         }
-        delete process.env['VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH'];
     }
 }
 

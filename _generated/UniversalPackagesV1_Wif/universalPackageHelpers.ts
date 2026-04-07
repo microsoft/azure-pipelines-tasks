@@ -41,7 +41,7 @@ export function validateVersionInputs(context: UniversalPackageContext): boolean
     return true;
 }
 
-function getSystemAccessToken(): string | undefined {
+export function getSystemAccessToken(): string | undefined {
     const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
     return auth?.parameters?.['AccessToken'];
 }

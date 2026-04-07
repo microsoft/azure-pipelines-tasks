@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 272,
+    "Minor": 273,
     "Patch": 0
   },
   "runsOn": [
@@ -101,11 +101,11 @@
   ],
   "prejobexecution": {
     "Node20_1": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     },
     "Node24": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     }
   },
@@ -162,6 +162,7 @@
     "Error_FeedServiceUriNoLocationUrl": "ms-resource:loc.messages.Error_FeedServiceUriNoLocationUrl",
     "Error_FeedServiceUriRequestFailed": "ms-resource:loc.messages.Error_FeedServiceUriRequestFailed",
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
+    "Error_NoAccessToken": "ms-resource:loc.messages.Error_NoAccessToken",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",

@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 272,
+    "Minor": 273,
     "Patch": 1
   },
   "runsOn": [
@@ -124,11 +124,11 @@
   ],
   "prejobexecution": {
     "Node20_1": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     },
     "Node24": {
-      "target": "PreJobExecutionUniversalPackages.js",
+      "target": "preJobExecution.js",
       "argumentFormat": ""
     }
   },
@@ -185,6 +185,7 @@
     "Error_FeedServiceUriNoLocationUrl": "Resource area response did not contain locationUrl",
     "Error_FeedServiceUriRequestFailed": "Failed to resolve feed service URI: %s %s",
     "Error_InvalidVersionIncrement": "Invalid version increment value: %s. Expected 'major', 'minor', or 'patch'.",
+    "Error_NoAccessToken": "Unable to obtain access token from the SYSTEMVSSCONNECTION endpoint.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
     "Error_PackageVersionRequired": "Package version is required for download operations.",
     "Error_PackagesFailedToDownload": "Failed to download package '%s' version '%s' from feed '%s'",
@@ -211,8 +212,8 @@
     "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection '%s'"
   },
   "_buildConfigMapping": {
-    "Default": "1.272.0",
+    "Default": "1.273.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.272.1"
+    "wif_242": "1.273.1"
   }
 }
