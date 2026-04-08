@@ -1,72 +1,4 @@
-﻿function ConvertTo-SqlCmdParameterHashtable {
-    param (
-        [string] $argumentString
-    )
-
-    $result = @{}
-    if ([string]::IsNullOrWhiteSpace($argumentString)) {
-        return $result
-    }
-
-    # Use PowerShell's built-in parser to tokenize the argument string.
-    # ParseInput is a pure parser (never executes code) that correctly handles
-    # quoting, comma-separated arrays, escape sequences, and all PS syntax.
-    # No injection validation is needed because values are passed via splatting
-    # (Invoke-Sqlcmd @params), which treats them as literals — never evaluated.
-    $tokens = $null
-    $parseErrors = $null
-    $null = [System.Management.Automation.Language.Parser]::ParseInput(
-        "Invoke-Sqlcmd $argumentString", [ref]$tokens, [ref]$parseErrors)
-
-    $currentParam = $null
-    $values = New-Object System.Collections.Generic.List[object]
-
-    # Commits the current parameter and its collected values into $result.
-    $flushParam = {
-        if (-not $currentParam) { return }
-        if ($values.Count -eq 0)     { $result[$currentParam] = $true }
-        elseif ($values.Count -eq 1) { $result[$currentParam] = $values[0] }
-        else                         { $result[$currentParam] = [object[]]$values.ToArray() }
-    }
-
-    for ($i = 1; $i -lt $tokens.Count; $i++) {
-        $token = $tokens[$i]
-        if ($token.Kind -eq 'EndOfInput') { break }
-
-        if ($token.Kind -eq 'Parameter') {
-            & $flushParam
-            $currentParam = $token.ParameterName
-            $values = New-Object System.Collections.Generic.List[object]
-        }
-        elseif ($token.Kind -ne 'Comma') {
-            # Collect value tokens (skip commas which just separate array elements)
-            switch ($token.Kind) {
-                'Number' {
-                    $values.Add($token.Value)
-                }
-                { $_ -in 'StringLiteral', 'StringExpandable' } {
-                    $values.Add($token.Value)
-                }
-                'Variable' {
-                    switch ($token.Name) {
-                        'true'  { $values.Add($true) }
-                        'false' { $values.Add($false) }
-                        default { $values.Add($token.Text) }
-                    }
-                }
-                default {
-                    $values.Add($token.Text)
-                }
-            }
-        }
-    }
-
-    & $flushParam
-
-    return $result
-}
-
-function Invoke-SqlScriptsInTransaction
+﻿function Invoke-SqlScriptsInTransaction
 {
     param
     (
@@ -115,14 +47,10 @@ function Invoke-SqlScriptsInTransaction
     $spaltArguments.Add("Variable", $scriptVariables)
     $spaltArguments.Add("OutputSqlErrors", $true)
 
-    # Safely parse and merge additional arguments
-    $additionalParams = ConvertTo-SqlCmdParameterHashtable $additionalArguments
-    foreach ($key in $additionalParams.Keys) {
-        $spaltArguments[$key] = $additionalParams[$key]
-    }
+    $additionalArguments = EscapeSpecialChars $additionalArguments
 
     #Execute the query
-    Invoke-SqlCmd @spaltArguments
+    Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"  
 }
 
 # Function to import SqlPS module & avoid directory switch

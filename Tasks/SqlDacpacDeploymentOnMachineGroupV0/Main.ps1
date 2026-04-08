@@ -96,6 +96,11 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
 # Telemetry for SQL Dacpac deployment on machine group
 $encodedServerName = GetSHA256String($serverName)
 $encodedDatabaseName = GetSHA256String($databaseName)
@@ -110,6 +115,15 @@ Try
     {
         $additionalArguments = $additionalArgumentsSql
         $targetMethod = "server"
+    }
+
+    # Sanitize additional arguments when FF is active
+    if ($useSanitizerCall) {
+        $sanitizedArgs = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "SqlDacpacDeploymentOnMachineGroupV0"
+    }
+
+    if ($useSanitizerActivate) {
+        $additionalArguments = $sanitizedArgs -join " "
     }
 
     if($sqlUsername -and $sqlPassword)

@@ -35,6 +35,11 @@ $ErrorActionPreference = 'Stop'
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
@@ -65,6 +70,19 @@ try {
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
 
     Import-Sqlps
+
+    # Sanitize additional arguments when FF is active
+    if ($useSanitizerCall) {
+        $sanitizedSqlcmdArgs = Protect-ScriptArguments -InputArgs $sqlcmdAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
+        $sanitizedSqlcmdInlineArgs = Protect-ScriptArguments -InputArgs $sqlcmdInlineAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
+        $sanitizedSqlpackageArgs = Protect-ScriptArguments -InputArgs $sqlpackageAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
+    }
+
+    if ($useSanitizerActivate) {
+        $sqlcmdAdditionalArguments = $sanitizedSqlcmdArgs -join " "
+        $sqlcmdInlineAdditionalArguments = $sanitizedSqlcmdInlineArgs -join " "
+        $sqlpackageAdditionalArguments = $sanitizedSqlpackageArgs -join " "
+    }
 
     # Detect authentication type for YAML flow
     if (-not $authenticationType) {

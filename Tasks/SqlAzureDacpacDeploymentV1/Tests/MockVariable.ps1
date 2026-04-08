@@ -57,5 +57,3 @@ $endIPAddress = "10.10.10.11"
 
 $autoIp = "10.10.10.10"
 $sqlPackageArguments = "Test Arguments"
-$sqlcmdAdditionalArguments = "-ConnectionTimeout 120"
-$sqlcmdInlineAdditionalArguments = "-ConnectionTimeout 120"

@@ -283,18 +283,8 @@ function Execute-Command {
     )
 
     $ErrorActionPreference = 'Continue'
-    # Use PowerShell's built-in parser to split the argument string into an array,
-    # correctly handling quoted values with spaces and special characters.
-    $tokens = $null
-    $null = [System.Management.Automation.Language.Parser]::ParseInput(
-        "f $Arguments", [ref]$tokens, [ref]$null)
-    $argArray = @($tokens | Where-Object { $_.Kind -ne 'EndOfInput' } |
-        Select-Object -Skip 1 | ForEach-Object { $_.Text })
-    $errors = @()
-
-    & $FileName $argArray 2>&1 | ForEach-Object {
+    Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            $errors += $_
             Write-Error $_
         }
         else {
