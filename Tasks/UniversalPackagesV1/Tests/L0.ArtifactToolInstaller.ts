@@ -23,7 +23,8 @@ describe('UniversalPackagesV1 - Artifact Tool Installer (Pre-Job)', function () 
             });
 
             assert(tr.succeeded, 'Task should have succeeded');
-            assert(tr.stdOutContained('UPACK_ARTIFACTTOOL_PATH'), 'Should set UPACK_ARTIFACTTOOL_PATH task variable');
+            const vars = tr.getSetVariables();
+            assert.strictEqual(vars.get('UPACK_ARTIFACTTOOL_PATH'), TEST_CONSTANTS.ARTIFACT_TOOL_PATH, 'Should set UPACK_ARTIFACTTOOL_PATH task variable');
         });
 
         it('caches artifact tool path in pipeline variable', async () => {
@@ -32,7 +33,8 @@ describe('UniversalPackagesV1 - Artifact Tool Installer (Pre-Job)', function () 
             });
 
             assert(tr.succeeded, 'Task should have succeeded');
-            assert(tr.stdOutContained('UPACK_ARTIFACTTOOL_PATH_CACHED'), 'Should cache path in pipeline variable');
+            const vars = tr.getSetVariables();
+            assert.strictEqual(vars.get('UPACK_ARTIFACTTOOL_PATH_CACHED'), TEST_CONSTANTS.ARTIFACT_TOOL_PATH, 'Should cache path in pipeline variable');
         });
 
         it('skips installation if artifact tool is already cached', async () => {
@@ -43,6 +45,9 @@ describe('UniversalPackagesV1 - Artifact Tool Installer (Pre-Job)', function () 
 
             assert(tr.succeeded, 'Task should have succeeded');
             assert(tr.stdOutContained('loc_mock_Info_ArtifactToolPathResolvedFromCache'), 'Should use cached path');
+            const vars = tr.getSetVariables();
+            assert.strictEqual(vars.get('UPACK_ARTIFACTTOOL_PATH'), TEST_CONSTANTS.ARTIFACT_TOOL_PATH, 'Should still set task variable from cache');
+            assert(!vars.has('UPACK_ARTIFACTTOOL_PATH_CACHED'), 'Should not re-cache when already cached');
         });
     });
 
