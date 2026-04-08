@@ -70,7 +70,7 @@
   "loc.messages.SymbolStoreLastIdTxtNotFoundAt0": "在 '{0}' 中找不到符號存放區 lastid.txt。",
   "loc.messages.UnableToDetermineWorkspaceFromSourceFolder0": "無法從來源資料夾 '{0}' 決定工作區。",
   "loc.messages.UnableToIndexSources": "無法編製來源的索引。",
-  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已從未預期的路徑載入程式庫 dbghelp.dll。預期為 '{0}'。實際為 '{0}'。",
+  "loc.messages.UnexpectedDbghelpdllExpected0Actual1": "已從未預期的路徑載入程式庫 dbghelp.dll。預期為 '{0}'。實際為 '{1}'。",
   "loc.messages.UnsupportedSourceProvider0": "來源索引編製作業不支援來源提供者 '{0}'。",
   "loc.messages.Win32Error0FromMethod1": "方法 '{1}' 遇到 Win32 錯誤 '{0}'。",
   "loc.messages.NodeVersionSupport": "自 2024 年 8 月 31 日起將不再支援 Node v{0}。請將管線代理程式升級為 Node 16 以上的最新版本。",
