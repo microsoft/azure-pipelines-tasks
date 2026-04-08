@@ -86,7 +86,7 @@ if ($validateScriptSignature) {
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
-$endpoint = ConvertTo-Json $endpointObject
+$endpoint = (ConvertTo-Json $endpointObject).Replace("'", "''")
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
