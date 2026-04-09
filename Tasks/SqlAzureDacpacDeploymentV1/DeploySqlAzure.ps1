@@ -67,17 +67,25 @@ try {
 
     Import-Sqlps
 
-    
-    if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
-        $sqlcmdAdditionalArguments = Get-SanitizedSqlArguments `
-            -InputArgs $sqlcmdAdditionalArguments `
-            -TaskName "SqlAzureDacpacDeploymentV1"
-    }
-    
-    if (-not [string]::IsNullOrWhiteSpace($sqlcmdInlineAdditionalArguments)) {
-        $sqlcmdInlineAdditionalArguments = Get-SanitizedSqlArguments `
-            -InputArgs $sqlcmdInlineAdditionalArguments `
-            -TaskName "SqlAzureDacpacDeploymentV1"
+    # Sanitize user-controlled additional arguments only when both feature flags are enabled
+    if (Should-UseSanitizedArguments) {
+        if (-not [string]::IsNullOrWhiteSpace($sqlpackageAdditionalArguments)) {
+            $sqlpackageAdditionalArguments = Get-SanitizedSqlArguments `
+                -InputArgs $sqlpackageAdditionalArguments `
+                -TaskName "SqlAzureDacpacDeploymentV1"
+        }
+        
+        if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
+            $sqlcmdAdditionalArguments = Get-SanitizedSqlArguments `
+                -InputArgs $sqlcmdAdditionalArguments `
+                -TaskName "SqlAzureDacpacDeploymentV1"
+        }
+        
+        if (-not [string]::IsNullOrWhiteSpace($sqlcmdInlineAdditionalArguments)) {
+            $sqlcmdInlineAdditionalArguments = Get-SanitizedSqlArguments `
+                -InputArgs $sqlcmdInlineAdditionalArguments `
+                -TaskName "SqlAzureDacpacDeploymentV1"
+        }
     }
 
     # Detect authentication type for YAML flow

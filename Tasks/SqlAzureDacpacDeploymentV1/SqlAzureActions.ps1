@@ -309,19 +309,102 @@ function Run-SqlCmd {
 
     Write-Host $commandToLog
 
-    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
-        $ErrorActionPreference = 'Continue'
-
-        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
-
-        if ($errors.Count -gt 0) {
-            throw $errMsg
+    if (Should-UseSanitizedArguments) {
+        $splatArgs = @{
+            InputFile = $sqlFilePath
         }
-
-        $ErrorActionPreference = 'Stop'
+        
+        # Add authentication parameters based on type
+        if ($authenticationType -eq "server") {
+            $splatArgs['ServerInstance'] = $serverName
+            $splatArgs['Database'] = $databaseName
+            if ($sqlUsername) {
+                $splatArgs['Username'] = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+            }
+            if ($sqlPassword) {
+                $splatArgs['Password'] = $sqlPassword
+            }
+        }
+        elseif ($authenticationType -eq "connectionString" -or $authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
+            $splatArgs['ConnectionString'] = $connectionString
+        }
+        elseif ($authenticationType -eq "servicePrincipal") {
+            $splatArgs['AccessToken'] = $token
+            $splatArgs['ServerInstance'] = $serverName
+            $splatArgs['Database'] = $databaseName
+        }
+        
+        # Parse and merge additional arguments
+        if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
+            $tokens = $null
+            $parseErrors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseInput(
+                "cmd $sqlcmdAdditionalArguments",
+                [ref]$tokens,
+                [ref]$parseErrors
+            )
+            
+            if ($parseErrors -and $parseErrors.Count -gt 0) {
+                $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+                Write-Error "Failed to parse SQL additional arguments: $($errorMessages -join '; ')"
+                throw "Invalid additional argument syntax. Arguments must be properly quoted."
+            }
+            
+            $argTokens = @($tokens | 
+                Where-Object { $_.Kind -ne 'EndOfInput' } | 
+                Select-Object -Skip 1 | 
+                ForEach-Object { $_.Value })
+            
+            for ($i = 0; $i -lt $argTokens.Count; $i++) {
+                if ($argTokens[$i] -match '^-(.+)') {
+                    $paramName = $Matches[1]
+                    # Collect all values until next parameter or end
+                    $values = @()
+                    $j = $i + 1
+                    while ($j -lt $argTokens.Count -and $argTokens[$j] -notmatch '^-') {
+                        $values += $argTokens[$j]
+                        $j++
+                    }
+                    if ($values.Count -eq 0) {
+                        $splatArgs[$paramName] = $true
+                    } elseif ($values.Count -eq 1) {
+                        $splatArgs[$paramName] = $values[0]
+                    } else {
+                        $splatArgs[$paramName] = $values
+                    }
+                    $i = $j - 1
+                }
+            }
+        }
+        
+        # Execute with splat (no Invoke-Expression)
+        if ($splatArgs.ContainsKey('verbose')) {
+            $ErrorActionPreference = 'Continue'
+            (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
+            if ($errors.Count -gt 0) {
+                throw "SQL command execution failed with errors."
+            }
+            $ErrorActionPreference = 'Stop'
+        } else {
+            Invoke-SqlCmd @splatArgs
+        }
     }
     else {
-        Invoke-Expression $commandToRun
+        # OLD VULNERABLE PATH - At least one feature flag disabled: exact old behavior with Invoke-Expression
+        if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
+            $ErrorActionPreference = 'Continue'
+
+            (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
+
+            if ($errors.Count -gt 0) {
+                throw $errMsg
+            }
+
+            $ErrorActionPreference = 'Stop'
+        }
+        else {
+            Invoke-Expression $commandToRun
+        }
     }
 }
 
@@ -476,5 +559,6 @@ function Execute-SqlPackage {
     $sqlPackagePath = Get-SqlPackageOnTargetMachine
     Write-Host "`"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
 
+    # Execute-Command has FF gating internally (uses AST Parser when FFs ON, Invoke-Expression when OFF)
     Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
 }

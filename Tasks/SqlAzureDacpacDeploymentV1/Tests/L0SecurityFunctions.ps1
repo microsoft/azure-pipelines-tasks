@@ -27,13 +27,13 @@ Describe "Execute-Command Security Tests" {
             $utilityContent -match 'throw.*Invalid sqlpackage argument' | Should Be $true
         }
 
-        It "Should use array-based argument passing, not Invoke-Expression" {
+        It "Should have FF-gated dual-path in Execute-Command" {
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Should NOT use Invoke-Expression in Execute-Command
             $executeCommandSection = $utilityContent -split 'function Execute-Command'
             if ($executeCommandSection.Count -gt 1) {
                 $functionBody = $executeCommandSection[1] -split 'function ', 2 | Select-Object -First 1
-                $functionBody -match 'Invoke-Expression' | Should Be $false
+                # Should have FF check
+                $functionBody -match 'Should-UseSanitizedArguments' | Should Be $true
             }
         }
     }
@@ -122,6 +122,24 @@ Describe "Comment Restoration Tests" {
         It "Should have function comment in Utility.ps1" {
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
             $utilityContent -match '# Function to import SqlPS module' | Should Be $true
+        }
+    }
+}
+
+Describe "Run-SqlCmd FF Gating Tests" {
+    Context "Feature Flag Dual-Path" {
+        It "Should have FF-gated dual-path in Run-SqlCmd" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $actionsContent -match 'if\s*\(\s*Should-UseSanitizedArguments\s*\)' | Should Be $true
+        }
+    }
+}
+
+Describe "Upstream Sanitization FF Gating Tests" {
+    Context "DeploySqlAzure.ps1 Sanitization" {
+        It "Should wrap sanitization with FF check" {
+            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
+            ($deployContent -match 'Should-UseSanitizedArguments') -and ($deployContent -match 'Get-SanitizedSqlArguments') | Should Be $true
         }
     }
 }
