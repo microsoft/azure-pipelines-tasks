@@ -301,7 +301,7 @@ function Execute-Command {
     $argArray = @($tokens | 
         Where-Object { $_.Kind -ne 'EndOfInput' } | 
         Select-Object -Skip 1 | 
-        ForEach-Object { $_.Text })
+        ForEach-Object { $_.Value })
     
     $errors = @()
     & $FileName $argArray 2>&1 | ForEach-Object {

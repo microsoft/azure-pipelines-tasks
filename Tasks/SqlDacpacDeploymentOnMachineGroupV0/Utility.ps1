@@ -123,10 +123,11 @@ function Should-UseSanitizedArguments {
     }
     
     if (-not $orgLevelEnabled) {
-        Write-Verbose "SQL argument sanitization disabled: Org-level feature flag not enabled"
+        Write-Verbose "SQL argument sanitization disabled"
         return $false
     }
     
+    # in case older agents miss this command, we attempt to import the module containing it and check again before giving up on sanitization
     $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
     
     if (-not $hasFeatureFlagCmdlet) {
@@ -175,7 +176,7 @@ function Should-UseSanitizedArguments {
     }
     
     if (-not $pipelineLevelEnabled) {
-        Write-Verbose "SQL argument sanitization disabled: Pipeline-level feature flag not enabled"
+        Write-Verbose "SQL argument sanitization disabled: Feature flag not enabled"
         return $false
     }
     
@@ -238,7 +239,7 @@ function Get-SanitizedSqlArguments {
         return $sanitizedString
     }
     catch {
-        $errorMessage = "SECURITY ERROR: Failed to sanitize SQL arguments. Task cannot proceed safely. Error: $_"
+        $errorMessage = "Failed to sanitize SQL arguments. Task cannot proceed safely. Error: $_"
         Write-Error $errorMessage
         
         $telemetryData = @{
