@@ -31,16 +31,10 @@ $deleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 
 $ErrorActionPreference = 'Stop'
 
-# Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
-
-# Sanitizer
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
-$useSanitizerCall = Get-SanitizerCallStatus
-$useSanitizerActivate = Get-SanitizerActivateStatus
 
-# Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
@@ -234,10 +228,10 @@ catch [Exception] {
     }
 
     if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
-        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+        $errorMessage += " " + (Get-VstsLocString -Key "SAD_DriftReportWarning")
     }
 
-    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
+    $errorMessage += " " + (Get-VstsLocString -Key "SAD_TroubleshootingLink")
 
     throw $errorMessage
 }

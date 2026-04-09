@@ -93,15 +93,10 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
-$useSanitizerCall = Get-SanitizerCallStatus
-$useSanitizerActivate = Get-SanitizerActivateStatus
-
-# Telemetry for SQL Dacpac deployment on machine group
 $encodedServerName = GetSHA256String($serverName)
 $encodedDatabaseName = GetSHA256String($databaseName)
 $telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",

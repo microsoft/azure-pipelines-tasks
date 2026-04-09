@@ -132,8 +132,8 @@ function Should-UseSanitizedArguments {
     if (-not $hasFeatureFlagCmdlet) {
         Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
         
+        $vstsTaskSdkPath = Join-Path $PSScriptRoot "ps_modules\VstsTaskSdk"
         try {
-            $vstsTaskSdkPath = Join-Path $PSScriptRoot "ps_modules\VstsTaskSdk"
             if (Test-Path $vstsTaskSdkPath) {
                 Import-Module $vstsTaskSdkPath -ErrorAction Stop
                 Write-Verbose "Successfully imported VstsTaskSdk from: $vstsTaskSdkPath"
@@ -147,11 +147,6 @@ function Should-UseSanitizedArguments {
         }
         catch {
             Write-Warning "Failed to import VstsTaskSdk module: $_"
-            Publish-FeatureFlagCheckTelemetry -CheckType "VstsTaskSdkImport" -AdditionalData @{
-                importFailed = $true
-                errorMessage = $_.Exception.Message
-                attemptedPath = $vstsTaskSdkPath
-            }
         }
         
         if (-not $hasFeatureFlagCmdlet) {
@@ -159,6 +154,8 @@ function Should-UseSanitizedArguments {
             Publish-FeatureFlagCheckTelemetry -CheckType "PipelineLevelFeatureFlag" -AdditionalData @{
                 cmdletMissing = $true
                 importAttempted = $true
+                errorMessage = if ($Error[0]) { $Error[0].Exception.Message } else { "Unknown" }
+                attemptedPath = $vstsTaskSdkPath
                 psModulePath = $env:PSModulePath
             }
             return $false
@@ -214,6 +211,9 @@ function Get-SanitizedSqlArguments {
         }
         if ($sanitizedArray -isnot [Array]) {
             throw "Protect-ScriptArguments returned unexpected type: $($sanitizedArray.GetType().FullName)"
+        }
+        if ($sanitizedArray.Count -eq 0) {
+            throw "Protect-ScriptArguments returned empty array - all input was blocked"
         }
         
         $sanitizedString = $sanitizedArray -join " "
