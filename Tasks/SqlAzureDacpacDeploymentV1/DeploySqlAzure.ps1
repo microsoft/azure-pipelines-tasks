@@ -71,17 +71,17 @@ try {
 
     Import-Sqlps
 
-    # Sanitize additional arguments when FF is active
-    if ($useSanitizerCall) {
-        $sanitizedSqlcmdArgs = Protect-ScriptArguments -InputArgs $sqlcmdAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
-        $sanitizedSqlcmdInlineArgs = Protect-ScriptArguments -InputArgs $sqlcmdInlineAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
-        $sanitizedSqlpackageArgs = Protect-ScriptArguments -InputArgs $sqlpackageAdditionalArguments -TaskName "SqlAzureDacpacDeploymentV1"
+    
+    if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
+        $sqlcmdAdditionalArguments = Get-SanitizedSqlArguments `
+            -InputArgs $sqlcmdAdditionalArguments `
+            -TaskName "SqlAzureDacpacDeploymentV1"
     }
-
-    if ($useSanitizerActivate) {
-        $sqlcmdAdditionalArguments = $sanitizedSqlcmdArgs -join " "
-        $sqlcmdInlineAdditionalArguments = $sanitizedSqlcmdInlineArgs -join " "
-        $sqlpackageAdditionalArguments = $sanitizedSqlpackageArgs -join " "
+    
+    if (-not [string]::IsNullOrWhiteSpace($sqlcmdInlineAdditionalArguments)) {
+        $sqlcmdInlineAdditionalArguments = Get-SanitizedSqlArguments `
+            -InputArgs $sqlcmdInlineAdditionalArguments `
+            -TaskName "SqlAzureDacpacDeploymentV1"
     }
 
     # Detect authentication type for YAML flow

@@ -117,13 +117,10 @@ Try
         $targetMethod = "server"
     }
 
-    # Sanitize additional arguments when FF is active
-    if ($useSanitizerCall) {
-        $sanitizedArgs = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "SqlDacpacDeploymentOnMachineGroupV0"
-    }
-
-    if ($useSanitizerActivate) {
-        $additionalArguments = $sanitizedArgs -join " "
+    if (-not [string]::IsNullOrWhiteSpace($additionalArguments)) {
+        $additionalArguments = Get-SanitizedSqlArguments `
+            -InputArgs $additionalArguments `
+            -TaskName "SqlDacpacDeploymentOnMachineGroupV0"
     }
 
     if($sqlUsername -and $sqlPassword)
