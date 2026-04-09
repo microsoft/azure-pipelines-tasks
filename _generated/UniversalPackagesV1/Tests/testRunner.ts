@@ -49,7 +49,11 @@ const mockFetch = async (url: string, options?: RequestInit): Promise<Response> 
 };
 (global as any).fetch = mockFetch;
 
-let taskPath = path.join(__dirname, '..', 'universalMain.js');
+const isPreJob = process.env['MOCK_PRE_JOB'] === 'true';
+
+let taskPath = isPreJob
+    ? path.join(__dirname, '..', 'preJobExecution.js')
+    : path.join(__dirname, '..', 'universalMain.js');
 let tmr: TaskMockRunner = new TaskMockRunner(taskPath);
 
 // All configuration from environment variables
@@ -122,5 +126,26 @@ for (const [key, value] of Object.entries(config.inputs)) {
 
 // Create UniversalMockHelper with all configuration (constructor registers mocks as side effects)
 new UniversalMockHelper(tmr, config);
+
+// --- Pre-job mock overrides ---
+
+if (process.env['MOCK_SHOULD_FAIL_INSTALL'] === 'true') {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities', {
+        getArtifactToolFromService: function () {
+            throw new Error('Failed to download artifact tool');
+        },
+        getPackageNameFromId: function () {
+            return '';
+        }
+    });
+}
+
+if (process.env['MOCK_SHOULD_FAIL_BLOB_URI'] === 'true') {
+    tmr.registerMock('azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities', {
+        getBlobstoreUriFromBaseServiceUri: function () {
+            throw new Error('Failed to resolve blob store URI');
+        }
+    });
+}
 
 tmr.run();
