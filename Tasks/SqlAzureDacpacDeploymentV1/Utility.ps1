@@ -284,10 +284,12 @@ function Execute-Command {
 
     $ErrorActionPreference = 'Continue'
     
+    # Parse arguments using PowerShell AST Parser for safe tokenization
+    # Prepend placeholder command name since parser expects complete command structure
     $tokens = $null
     $parseErrors = $null
     [void][System.Management.Automation.Language.Parser]::ParseInput(
-        "dummy $Arguments", 
+        "cmd $Arguments", 
         [ref]$tokens, 
         [ref]$parseErrors
     )
