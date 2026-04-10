@@ -58,6 +58,7 @@
         "AzureVmssDeploymentV1",
         "BashV3",
         "BatchScriptV1",
+        "BicepDeployV0",
         "CacheBetaV0",
         "CacheBetaV1",
         "CacheV2",
@@ -201,6 +202,7 @@
         "TwineAuthenticateV0",
         "TwineAuthenticateV1",
         "UniversalPackagesV0",
+        "UniversalPackagesV1",
         "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",
@@ -236,7 +238,13 @@
     "Node24_1": [
         "AzureCLIV1",
         "AzureCLIV2",
-        "AzureCLIV3"
+        "AzureCLIV3",
+        "AzurePowerShellV4",
+        "AzurePowerShellV5",
+        "AzureKeyVaultV2",
+        "AzureFileCopyV4",
+        "AzureFileCopyV5",
+        "AzureFileCopyV6"
     ],
     "Node24_2": [],
     "Node24_3": [],
@@ -255,7 +263,8 @@
         "CondaAuthenticateV0",
         "NuGetAuthenticateV1",
         "MavenAuthenticateV0",
-        "TwineAuthenticateV1"
+        "TwineAuthenticateV1",
+        "UniversalPackagesV1"
     ],
     "LocalPackages": [
         "AndroidSigningV2",
@@ -432,6 +441,7 @@
         "TwineAuthenticateV0",
         "TwineAuthenticateV1",
         "UniversalPackagesV0",
+        "UniversalPackagesV1",
         "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",

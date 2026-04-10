@@ -24,10 +24,10 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^9.0.0",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^5.2.6",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.270.0",
-    "azure-pipelines-tasks-docker-common": "^2.268.0",
-    "azure-pipelines-tasks-kubernetes-common": "^2.267.0",
+    "azure-pipelines-task-lib": "^5.2.8",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.272.1",
+    "azure-pipelines-tasks-docker-common": "^2.273.0",
+    "azure-pipelines-tasks-kubernetes-common": "^2.272.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "js-yaml": "^3.14.1"
   }

@@ -96,6 +96,8 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/BicepDeployV0/      @azure/bicep-admins
+
 # DRI rotation: App Service (Web Apps)
 Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
@@ -215,6 +217,8 @@ Tasks/DotNetCoreInstallerV0/   @microsoft/azure-pipelines-tasks-and-agent @tarun
 Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/DownloadBuildArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -446,6 +450,8 @@ Tasks/TwineAuthenticateV0/     @microsoft/azure-artifacts-packages
 Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
+
+Tasks/UniversalPackagesV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UseDotNetV2/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
