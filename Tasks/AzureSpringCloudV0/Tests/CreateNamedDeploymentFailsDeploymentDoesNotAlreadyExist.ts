@@ -30,17 +30,15 @@ export class CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist {
         let taskPath = path.join(__dirname, 'CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mockTaskInputParameters();
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_DeploymentDoesntExist nonexistentDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             done(error);
-        }
+        });
     };
 
 }
