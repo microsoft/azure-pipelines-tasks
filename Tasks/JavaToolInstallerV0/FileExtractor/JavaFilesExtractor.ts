@@ -148,9 +148,11 @@ export class JavaFilesExtractor {
                 // Unpack the pack file synchronously
                 const p = path.parse(fsPath);
                 const toolName = process.platform.match(/^win/i) ? 'unpack200.exe' : 'unpack200'; 
-                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';
                 const name = path.join(p.dir, p.name);
-                taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`); 
+                const execArgs: string[] = process.platform.match(/^win/i)
+                    ? ['-r', '-v', '-l', '', `${name}.pack`, `${name}.jar`]
+                    : [`${name}.pack`, `${name}.jar`];
+                taskLib.execSync(path.join(javaBinPath, toolName), execArgs); 
             }
         }    
     }
