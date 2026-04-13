@@ -2,6 +2,30 @@ $featureFlags = @{
     enableUserOutputPath = Get-VstsPipelineFeature -FeatureName 'SqlAzureDacpac.EnableUserOutputPath'
 }
 
+function Get-EffectiveOutputPath {
+    param (
+        [string] $defaultOutputPath,
+        [string] $additionalArguments
+    )
+
+    $result = @{
+        EffectiveOutputPath = $defaultOutputPath
+        ResolvedFilePath    = $defaultOutputPath
+    }
+
+    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -match '/OutputPath[:=](?:"[^"]+"|[^\s]+)') {
+        $userPath = ($Matches[0] -replace '^/OutputPath[:=]').Trim('"')
+        if ([string]::IsNullOrWhiteSpace($userPath)) {
+            throw "User-provided /OutputPath is empty or invalid."
+        }
+        Write-Verbose "User-provided /OutputPath detected: $userPath. Skipping default output path."
+        $result.EffectiveOutputPath = $null
+        $result.ResolvedFilePath = $userPath
+    }
+
+    return $result
+}
+
 function Extract-Dacpac {
     param (
         [string] $serverName,
@@ -99,12 +123,10 @@ function Deploy-Report {
     }
 
     # Use user-provided /OutputPath from additional arguments if present; otherwise use default
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
-    $effectiveOutputPath = $outputXmlPath
-    if ($featureFlags.enableUserOutputPath -and $sqlpackageAdditionalArguments -and $sqlpackageAdditionalArguments -match '/OutputPath:(?:"[^"]+"|[^\s]+)') {
-        $effectiveOutputPath = $null
-        $outputXmlPath = ($Matches[0] -replace '^/OutputPath:').Trim('"')
-    }
+    $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputXmlPath = $outputPathResult.ResolvedFilePath
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
@@ -131,12 +153,10 @@ function Drift-Report {
     )
 
     # Use user-provided /OutputPath from additional arguments if present; otherwise use default
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
-    $effectiveOutputPath = $outputXmlPath
-    if ($featureFlags.enableUserOutputPath -and $sqlpackageAdditionalArguments -and $sqlpackageAdditionalArguments -match '/OutputPath:(?:"[^"]+"|[^\s]+)') {
-        $effectiveOutputPath = $null
-        $outputXmlPath = ($Matches[0] -replace '^/OutputPath:').Trim('"')
-    }
+    $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputXmlPath = $outputPathResult.ResolvedFilePath
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
@@ -173,12 +193,10 @@ function Script-Action {
     }
 
     # Use user-provided /OutputPath from additional arguments if present; otherwise use default
-    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
-    $effectiveOutputPath = $outputSqlPath
-    if ($featureFlags.enableUserOutputPath -and $sqlpackageAdditionalArguments -and $sqlpackageAdditionalArguments -match '/OutputPath:(?:"[^"]+"|[^\s]+)') {
-        $effectiveOutputPath = $null
-        $outputSqlPath = ($Matches[0] -replace '^/OutputPath:').Trim('"')
-    }
+    $defaultOutputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputSqlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputSqlPath = $outputPathResult.ResolvedFilePath
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
