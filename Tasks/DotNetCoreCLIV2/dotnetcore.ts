@@ -264,6 +264,7 @@ export class dotNetExe {
                 } else if (projectFile.endsWith(".sln") || projectFile.endsWith(".slnx") || projectFile.endsWith(".slnf")) {
                     dotnet.arg("--solution");
                 }
+                // For project files in VSTest mode, no positional flag is needed
             }
 
             dotnet.arg(projectFile);

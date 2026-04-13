@@ -44,9 +44,4 @@ nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
 
-const fs = require('fs');
-const fsClone = { ...fs };
-
-tmr.registerMock('fs', fsClone);
-
 tmr.run();
