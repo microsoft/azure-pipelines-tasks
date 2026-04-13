@@ -9,8 +9,6 @@
   "loc.input.help.checkLatest": "Recherche toujours en ligne la dernière version disponible répondant à la spécification de version. Cela n'est généralement pas le cas, sauf si vous disposez d'un scénario spécifique visant à obtenir toujours la dernière version. Cela peut entraîner des coûts de téléchargement inutiles, en particulier avec le pool de builds hébergé.",
   "loc.input.label.force32bit": "Utiliser la version 32 bits sur les agents x64",
   "loc.input.help.force32bit": "Installe la version x86 de Node quelle que soit l'architecture du processeur de l'agent.",
-  "loc.input.label.nodejsMirror": "Définir la source des fichiers binaires Node.js",
-  "loc.input.help.nodejsMirror": "Utilisez un autre miroir d’installation pour approvisionner les fichiers binaires Node.js.",
   "loc.input.label.retryCountOnDownloadFails": "Définir le nombre de nouvelles tentatives en cas d’échec des téléchargements de nœuds",
   "loc.input.help.retryCountOnDownloadFails": "Utilisez cette option lorsque la tâche n’a pas pu télécharger les binaires de nœuds à partir du miroir. La tâche réessaiera de télécharger les fichiers binaires pour les heures spécifiées.",
   "loc.input.label.delayBetweenRetries": "Définir le délai entre les nouvelles tentatives",

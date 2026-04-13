@@ -117,7 +117,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     }
 
     const versions: string[] = [];
-    const dataUrl = nodejsMirror + "/index.json";
+    const dataUrl = new URL('index.json', nodejsMirror).toString();
     const proxyRequestOptions: ifm.IRequestOptions = {
         proxy: taskLib.getHttpProxyConfiguration(dataUrl),
         cert: taskLib.getHttpCertConfiguration(),
@@ -255,7 +255,12 @@ function isDarwinArm(osPlat: string, installedArch: string): boolean {
 
 // Normalize the mirror url to ensure that it ends with a slash and does not contain trailing slash
 export function normalizeMirrorUrl(nodejsMirror: string): string {
-    const url = new URL((nodejsMirror || '').trim());
+    let url: URL;
+    try {
+      url = new URL((nodejsMirror || '').trim());
+    } catch {
+      throw new Error(taskLib.loc('InvalidNodejsMirror', nodejsMirror));
+    }
     url.pathname = url.pathname.replace(/\/+$/, '/');
     return url.toString();
 }

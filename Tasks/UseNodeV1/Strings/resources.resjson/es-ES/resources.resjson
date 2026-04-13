@@ -9,8 +9,6 @@
   "loc.input.help.checkLatest": "Comprueba siempre en línea la última versión disponible que cumple la especificación de versión. Este valor suele ser false a menos que tenga un escenario específico que deba obtener siempre la última versión. Esto dará lugar a costos de descarga, cuando puede que no sea necesario, especialmente con el grupo de compilación hospedado.",
   "loc.input.label.force32bit": "Usar la versión de 32 bits en agentes x64",
   "loc.input.help.force32bit": "Instala la versión x86 de Node, independientemente de la arquitectura de CPU del agente.",
-  "loc.input.label.nodejsMirror": "Establecimiento del origen de los archivos binarios de Node.js",
-  "loc.input.help.nodejsMirror": "Use un reflejo de instalación alternativo al obtener los archivos binarios de Node.js.",
   "loc.input.label.retryCountOnDownloadFails": "Establezca el número de reintentos cuando se produce un error en las descargas de nodos",
   "loc.input.help.retryCountOnDownloadFails": "Use esta opción cuando la tarea no pudo descargar los archivos binarios del nodo desde el reflejo. La tarea volverá a intentar descargar los archivos binarios para las horas especificadas.",
   "loc.input.label.delayBetweenRetries": "Retardo entre reintentos",

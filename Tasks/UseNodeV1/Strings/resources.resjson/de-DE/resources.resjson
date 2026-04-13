@@ -9,8 +9,6 @@
   "loc.input.help.checkLatest": "Sucht online immer nach der letzten verfügbaren Version, die die Versionsangabe erfüllt. Dies ist in der Regel \"false\", sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Dadurch entstehen Downloadkosten, die unter Umständen nicht erforderlich sind, insbesondere beim gehosteten Buildpool.",
   "loc.input.label.force32bit": "32-Bit-Version für x64-Agents verwenden",
   "loc.input.help.force32bit": "Installiert die x86-Version von Node unabhängig von der CPU-Architektur des Agents.",
-  "loc.input.label.nodejsMirror": "Quelle für Node.js-Binärdateien festlegen",
-  "loc.input.help.nodejsMirror": "Verwenden Sie eine alternative Installationsspiegelung, wenn Sie die Node.js-Binärdateien beziehen.",
   "loc.input.label.retryCountOnDownloadFails": "Wiederholungsanzahl festlegen, wenn Knotendownloads fehlgeschlagen sind",
   "loc.input.help.retryCountOnDownloadFails": "Verwenden Sie diese Option, wenn die Aufgabe keine Knotenbinärdateien aus der Spiegelung herunterladen konnte. Die Aufgabe versucht erneut, die Binärdateien für die angegebenen Zeiten herunterzuladen.",
   "loc.input.label.delayBetweenRetries": "Verzögerung zwischen Wiederholungen festlegen",
