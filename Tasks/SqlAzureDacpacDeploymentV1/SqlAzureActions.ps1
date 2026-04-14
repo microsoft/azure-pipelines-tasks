@@ -13,8 +13,8 @@ function Get-EffectiveOutputPath {
         ResolvedFilePath    = $defaultOutputPath
     }
 
-    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -imatch '/OutputPath[:=](?:"[^"]+"|[^\s]+)') {
-        $userPath = ($Matches[0] -replace '(?i)^/OutputPath[:=]').Trim('"')
+    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -imatch '/OutputPath\s*:\s*(?:"[^"]+"|[^\s]+)') {
+        $userPath = ($Matches[0] -replace '(?i)^/OutputPath\s*:\s*').Trim('"')
         if ([string]::IsNullOrWhiteSpace($userPath)) {
             throw "User-provided /OutputPath is empty or invalid."
         }
@@ -122,7 +122,6 @@ function Deploy-Report {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
-    # Use user-provided /OutputPath from additional arguments if present; otherwise use default
     $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
     $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
     $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
@@ -152,7 +151,6 @@ function Drift-Report {
         [string] $token
     )
 
-    # Use user-provided /OutputPath from additional arguments if present; otherwise use default
     $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
     $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
     $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
@@ -192,7 +190,6 @@ function Script-Action {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
-    # Use user-provided /OutputPath from additional arguments if present; otherwise use default
     $defaultOutputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
     $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputSqlPath -additionalArguments $sqlpackageAdditionalArguments
     $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
