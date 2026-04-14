@@ -330,7 +330,7 @@ function Execute-CommandV2 {
     $argArray = @($tokens | 
         Where-Object { $_.Kind -ne 'EndOfInput' } | 
         Select-Object -Skip 1 | 
-        ForEach-Object { $_.Value })
+        ForEach-Object { if ($null -ne $_.Value) { $_.Value } else { $_.Text } })
     
     $errors = @()
     & $FileName $argArray 2>&1 | ForEach-Object {
@@ -380,7 +380,19 @@ function Publish-FeatureFlagCheckTelemetry {
     Write-Host "##vso[telemetry.publish area=TaskHub;feature=SqlArgumentSanitizationCheck]$telemetryJson"
 }
 
+$script:_shouldUseSanitizedArgsResult = $null
+
 function Should-UseSanitizedArguments {
+    if ($null -ne $script:_shouldUseSanitizedArgsResult) {
+        return $script:_shouldUseSanitizedArgsResult
+    }
+
+    $result = Get-ShouldUseSanitizedArgumentsInternal
+    $script:_shouldUseSanitizedArgsResult = $result
+    return $result
+}
+
+function Get-ShouldUseSanitizedArgumentsInternal {
     try {
         $orgLevelEnabled = Get-SanitizerCallStatus
     }
@@ -394,7 +406,7 @@ function Should-UseSanitizedArguments {
     }
     
     if (-not $orgLevelEnabled) {
-        Write-Verbose "SQL argument sanitization disabled: Org-level feature flag not enabled"
+        Write-Verbose "SQL argument sanitization disabled: 'Enable shell tasks arguments validation' is not enabled"
         return $false
     }
     
@@ -446,82 +458,12 @@ function Should-UseSanitizedArguments {
     }
     
     if (-not $pipelineLevelEnabled) {
-        Write-Verbose "SQL argument sanitization disabled: Pipeline-level feature flag not enabled"
+        Write-Verbose "SQL argument sanitization disabled: EnableSqlAdditionalArgumentsSanitization feature flag not enabled"
         return $false
     }
     
     Write-Verbose "SQL argument sanitization ENABLED (both feature flags are active)"
     return $true
-}
-
-function Get-SanitizedSqlArguments {
-    param(
-        [Parameter(Mandatory=$false)]
-        [ValidateNotNull()]
-        [string]$InputArgs = "",
-        
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TaskName
-    )
-    
-    if ([string]::IsNullOrWhiteSpace($InputArgs)) {
-        return ""
-    }
-    
-    if (-not (Should-UseSanitizedArguments)) {
-        Write-Verbose "Returning unsanitized arguments (feature flags disabled)"
-        return $InputArgs
-    }
-    
-    try {
-        $sanitizedArray = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName
-        
-        if ($null -eq $sanitizedArray) {
-            throw "Protect-ScriptArguments returned null instead of string array"
-        }
-        if ($sanitizedArray -isnot [Array]) {
-            throw "Protect-ScriptArguments returned unexpected type: $($sanitizedArray.GetType().FullName)"
-        }
-        if ($sanitizedArray.Count -eq 0) {
-            throw "Protect-ScriptArguments returned empty array - all input was blocked"
-        }
-        
-        $sanitizedString = $sanitizedArray -join " "
-        
-        if ($sanitizedString -ne $InputArgs) {
-            Write-Warning "SQL arguments were sanitized. Potentially dangerous characters were removed."
-            
-            $telemetryData = @{
-                taskName = $TaskName
-                sanitizationApplied = $true
-                inputLength = $InputArgs.Length
-                outputLength = $sanitizedString.Length
-                charactersRemoved = $InputArgs.Length - $sanitizedString.Length
-            }
-            $telemetryJson = $telemetryData | ConvertTo-Json -Compress
-            Write-Host "##vso[telemetry.publish area=TaskHub;feature=SqlArgumentSanitization]$telemetryJson"
-        }
-        else {
-            Write-Verbose "SQL arguments passed sanitization without modification"
-        }
-        
-        return $sanitizedString
-    }
-    catch {
-        $errorMessage = "SECURITY ERROR: Failed to sanitize SQL arguments. Task cannot proceed safely. Error: $_"
-        Write-Error $errorMessage
-        
-        $telemetryData = @{
-            taskName = $TaskName
-            sanitizationFailed = $true
-            errorMessage = $_.Exception.Message
-        }
-        $telemetryJson = $telemetryData | ConvertTo-Json -Compress
-        Write-Host "##vso[telemetry.publish area=TaskHub;feature=SqlArgumentSanitization]$telemetryJson"
-        
-        throw $errorMessage
-    }
 }
 
 function Detect-AuthenticationType {
