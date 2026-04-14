@@ -1,4 +1,4 @@
-# Unit tests for SQL argument sanitization security functions
+# Unit tests for SQL argument sanitization security functions (V2 refactor)
 [CmdletBinding()]
 param()
 
@@ -8,140 +8,183 @@ param()
 # Import the functions under test
 . $PSScriptRoot\..\Utility.ps1
 
-Describe "Execute-Command Security Tests" {
+Describe "Execute-Command - Original (Master) Code" {
+    Context "Exact Master Behavior" {
+        It "Should use Invoke-Expression with stop-parsing token" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $executeCommandSection = ($utilityContent -split 'function Execute-Command\s*\{')[1] -split 'function Execute-CommandV2' | Select-Object -First 1
+            $executeCommandSection -match 'Invoke-Expression' | Should Be $true
+        }
+
+        It "Should NOT contain Should-UseSanitizedArguments" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $executeCommandSection = ($utilityContent -split 'function Execute-Command\s*\{')[1] -split 'function Execute-CommandV2' | Select-Object -First 1
+            $executeCommandSection -match 'Should-UseSanitizedArguments' | Should Be $false
+        }
+    }
+}
+
+Describe "Execute-CommandV2 - Safe Execution" {
     Context "AST Parser Validation" {
+        It "Should exist as a separate function" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $utilityContent -match 'function Execute-CommandV2' | Should Be $true
+        }
+
+        It "Should use AST Parser (not Invoke-Expression)" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match 'System\.Management\.Automation\.Language\.Parser' | Should Be $true
+            $v2Section -match 'Invoke-Expression' | Should Be $false
+        }
+
         It "Should use token .Value instead of .Text" {
-            # This test verifies the fix for Ivan's concern about quote handling
-            # We check that the code uses $_.Value which removes quotes,
-            # rather than $_.Text which keeps them (causing double-quoting)
-            
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'ForEach-Object\s*\{\s*\$_\.Value\s*\}' | Should Be $true
-            $utilityContent -match 'ForEach-Object\s*\{\s*\$_\.Text\s*\}' | Should Be $false
+            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match 'ForEach-Object\s*\{\s*\$_\.Value\s*\}' | Should Be $true
         }
 
-        It "Should validate parse errors before execution" {
+        It "Should use array invocation with & operator" {
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Should check parseErrors and throw if any exist
-            $utilityContent -match 'if\s*\(\s*\$parseErrors' | Should Be $true
-            $utilityContent -match 'throw.*Invalid sqlpackage argument' | Should Be $true
+            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match '& \$FileName \$argArray' | Should Be $true
+        }
+    }
+}
+
+Describe "Execute-SqlPackage - FF Dispatch" {
+    Context "Feature Flag Dispatch" {
+        It "Should call Execute-CommandV2 when FF enabled" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
+            $sqlPackageSection -match 'Execute-CommandV2' | Should Be $true
         }
 
-        It "Should have FF-gated dual-path in Execute-Command" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $executeCommandSection = $utilityContent -split 'function Execute-Command'
-            if ($executeCommandSection.Count -gt 1) {
-                $functionBody = $executeCommandSection[1] -split 'function ', 2 | Select-Object -First 1
-                # Should have FF check
-                $functionBody -match 'Should-UseSanitizedArguments' | Should Be $true
-            }
+        It "Should call Execute-Command when FF disabled" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
+            $sqlPackageSection -match 'Execute-Command -FileName' | Should Be $true
+        }
+
+        It "Should dispatch based on Should-UseSanitizedArguments" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
+            $sqlPackageSection -match 'Should-UseSanitizedArguments' | Should Be $true
+        }
+    }
+}
+
+Describe "Run-SqlCmd - Original (Master) Code" {
+    Context "Exact Master Behavior" {
+        It "Should use Invoke-Expression" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $runSqlCmdSection = ($actionsContent -split 'function Run-SqlCmd\s*\{')[1] -split 'function Run-SqlCmdV2' | Select-Object -First 1
+            $runSqlCmdSection -match 'Invoke-Expression \$commandToRun' | Should Be $true
+        }
+
+        It "Should NOT contain Should-UseSanitizedArguments" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $runSqlCmdSection = ($actionsContent -split 'function Run-SqlCmd\s*\{')[1] -split 'function Run-SqlCmdV2' | Select-Object -First 1
+            $runSqlCmdSection -match 'Should-UseSanitizedArguments' | Should Be $false
+        }
+    }
+}
+
+Describe "Run-SqlCmdV2 - Safe Execution" {
+    Context "AST Parser + Splat" {
+        It "Should exist as a separate function" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $actionsContent -match 'function Run-SqlCmdV2' | Should Be $true
+        }
+
+        It "Should use AST Parser (not Invoke-Expression)" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match 'System\.Management\.Automation\.Language\.Parser' | Should Be $true
+            $v2Section -match 'Invoke-Expression' | Should Be $false
+        }
+
+        It "Should use splat invocation" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match 'Invoke-SqlCmd @splatArgs' | Should Be $true
+        }
+
+        It "Should filter comma tokens for array parameters" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match "\-ne ','" | Should Be $true
+        }
+
+        It "Should handle all authentication types" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
+            $v2Section -match 'authenticationType -eq "server"' | Should Be $true
+            $v2Section -match 'authenticationType -eq "connectionString"' | Should Be $true
+            $v2Section -match 'authenticationType -eq "servicePrincipal"' | Should Be $true
+        }
+    }
+}
+
+Describe "Run-SqlFiles / Run-InlineSql - FF Dispatch" {
+    Context "Callers Dispatch Based on FF" {
+        It "Run-SqlFiles should dispatch to Run-SqlCmdV2 when FF enabled" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $runSqlFilesSection = ($actionsContent -split 'function Run-SqlFiles')[1] -split 'function Run-InlineSql' | Select-Object -First 1
+            $runSqlFilesSection -match 'Should-UseSanitizedArguments' | Should Be $true
+            $runSqlFilesSection -match 'Run-SqlCmdV2' | Should Be $true
+        }
+
+        It "Run-InlineSql should dispatch to Run-SqlCmdV2 when FF enabled" {
+            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
+            $runInlineSection = ($actionsContent -split 'function Run-InlineSql')[1] -split 'function Run-SqlCmd\b' | Select-Object -First 1
+            $runInlineSection -match 'Should-UseSanitizedArguments' | Should Be $true
+            $runInlineSection -match 'Run-SqlCmdV2' | Should Be $true
+        }
+    }
+}
+
+Describe "DeploySqlAzure.ps1 - No Upstream Sanitization" {
+    Context "Clean Entry Point" {
+        It "Should NOT call Get-SanitizedSqlArguments" {
+            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
+            $deployContent -match 'Get-SanitizedSqlArguments' | Should Be $false
+        }
+
+        It "Should have original comments preserved" {
+            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
+            $deployContent -match '# Initialize Rest API Helpers' | Should Be $true
+            $deployContent -match '# Import the loc strings' | Should Be $true
         }
     }
 }
 
 Describe "Should-UseSanitizedArguments Dual-Gating Tests" {
-    Context "Backward Compatibility" {
+    Context "Feature Flag Checks" {
+        It "Should check org-level toggle" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $utilityContent -match 'Get-SanitizerCallStatus' | Should Be $true
+        }
+
+        It "Should check pipeline-level feature flag" {
+            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
+            $utilityContent -match 'Get-VstsPipelineFeature.*EnableSqlAdditionalArgumentsSanitization' | Should Be $true
+        }
+
         It "Should fail-open when VstsTaskSdk unavailable" {
-            # When Get-VstsPipelineFeature cmdlet doesn't exist,
-            # should return false (backward compatibility)
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
             $utilityContent -match 'Get-Command.*Get-VstsPipelineFeature.*SilentlyContinue' | Should Be $true
         }
     }
 }
 
-Describe "Get-SanitizedSqlArguments Security Tests" {
-    Context "Fail-Closed Behavior" {
-        It "Should validate sanitizer returns an array" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Should check that result is an array type
-            $utilityContent -match '\$sanitizedArray -isnot \[Array\]' | Should Be $true
-            $utilityContent -match 'throw.*unexpected type' | Should Be $true
-        }
-
-        It "Should detect empty array (all input blocked)" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Should check for empty array
-            $utilityContent -match '\$sanitizedArray\.Count -eq 0' | Should Be $true
-            $utilityContent -match 'throw.*empty array.*blocked' | Should Be $true
-        }
-
-        It "Should throw on sanitizer failure" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Should have try-catch that throws on error
-            $getSanitizedSection = $utilityContent -split 'function Get-SanitizedSqlArguments'
-            if ($getSanitizedSection.Count -gt 1) {
-                $functionBody = $getSanitizedSection[1] -split 'function ', 2 | Select-Object -First 1
-                $functionBody -match 'catch\s*\{' | Should Be $true
-                $functionBody -match 'SECURITY ERROR.*Failed to sanitize' | Should Be $true
-                $functionBody -match 'throw\s*\$errorMessage' | Should Be $true
-            }
-        }
-    }
-
-    Context "Telemetry" {
-        It "Should emit telemetry when sanitization modifies input" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'if\s*\(\s*\$sanitizedString -ne \$InputArgs\s*\)' | Should Be $true
-            $utilityContent -match 'telemetry\.publish.*SqlArgumentSanitization' | Should Be $true
-        }
-    }
-}
-
-Describe "Publish-FeatureFlagCheckTelemetry Tests" {
-    Context "Telemetry Format" {
+Describe "Telemetry Tests" {
+    Context "Publish-FeatureFlagCheckTelemetry" {
         It "Should emit telemetry with correct area and feature" {
             $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
             $utilityContent -match 'telemetry\.publish area=TaskHub;feature=SqlArgumentSanitizationCheck' | Should Be $true
         }
-
-        It "Should include checkType in telemetry data" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            # Function should accept CheckType parameter and include in data
-            $telemetrySection = $utilityContent -split 'function Publish-FeatureFlagCheckTelemetry'
-            if ($telemetrySection.Count -gt 1) {
-                $functionBody = $telemetrySection[1] -split 'function ', 2 | Select-Object -First 1
-                $functionBody -match 'checkType\s*=' | Should Be $true
-            }
-        }
     }
 }
 
-Describe "Comment Restoration Tests" {
-    Context "Original Comments" {
-        It "Should have 'Initialize Rest API Helpers' comment in DeploySqlAzure.ps1" {
-            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
-            $deployContent -match '# Initialize Rest API Helpers' | Should Be $true
-        }
-
-        It "Should have 'Import the loc strings' comment in DeploySqlAzure.ps1" {
-            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
-            $deployContent -match '# Import the loc strings' | Should Be $true
-        }
-
-        It "Should have function comment in Utility.ps1" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match '# Function to import SqlPS module' | Should Be $true
-        }
-    }
-}
-
-Describe "Run-SqlCmd FF Gating Tests" {
-    Context "Feature Flag Dual-Path" {
-        It "Should have FF-gated dual-path in Run-SqlCmd" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $actionsContent -match 'if\s*\(\s*Should-UseSanitizedArguments\s*\)' | Should Be $true
-        }
-    }
-}
-
-Describe "Upstream Sanitization FF Gating Tests" {
-    Context "DeploySqlAzure.ps1 Sanitization" {
-        It "Should wrap sanitization with FF check" {
-            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
-            ($deployContent -match 'Should-UseSanitizedArguments') -and ($deployContent -match 'Get-SanitizedSqlArguments') | Should Be $true
-        }
-    }
-}
-
-Write-Host "Security function tests completed"
+Write-Host "Security function tests completed (V2 refactor)"

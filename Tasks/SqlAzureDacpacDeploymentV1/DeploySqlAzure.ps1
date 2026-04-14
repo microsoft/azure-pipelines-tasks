@@ -67,27 +67,6 @@ try {
 
     Import-Sqlps
 
-    # Sanitize user-controlled additional arguments only when both feature flags are enabled
-    if (Should-UseSanitizedArguments) {
-        if (-not [string]::IsNullOrWhiteSpace($sqlpackageAdditionalArguments)) {
-            $sqlpackageAdditionalArguments = Get-SanitizedSqlArguments `
-                -InputArgs $sqlpackageAdditionalArguments `
-                -TaskName "SqlAzureDacpacDeploymentV1"
-        }
-        
-        if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
-            $sqlcmdAdditionalArguments = Get-SanitizedSqlArguments `
-                -InputArgs $sqlcmdAdditionalArguments `
-                -TaskName "SqlAzureDacpacDeploymentV1"
-        }
-        
-        if (-not [string]::IsNullOrWhiteSpace($sqlcmdInlineAdditionalArguments)) {
-            $sqlcmdInlineAdditionalArguments = Get-SanitizedSqlArguments `
-                -InputArgs $sqlcmdInlineAdditionalArguments `
-                -TaskName "SqlAzureDacpacDeploymentV1"
-        }
-    }
-
     # Detect authentication type for YAML flow
     if (-not $authenticationType) {
         $authenticationType = Detect-AuthenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -aadSqlUsername $aadSqlUserName -aadSqlPassword $aadSqlPassword -connectionString $connectionString

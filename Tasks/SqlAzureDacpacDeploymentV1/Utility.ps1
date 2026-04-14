@@ -282,66 +282,75 @@ function Execute-Command {
         [String][Parameter(Mandatory = $true)] $Arguments
     )
 
-    if (Should-UseSanitizedArguments) {
-        $ErrorActionPreference = 'Continue'
-        
-        # Parse arguments using PowerShell AST Parser for safe tokenization
-        # Prepend placeholder command name since parser expects complete command structure
-        $tokens = $null
-        $parseErrors = $null
-        [void][System.Management.Automation.Language.Parser]::ParseInput(
-            "cmd $Arguments", 
-            [ref]$tokens, 
-            [ref]$parseErrors
-        )
-        
-        if ($parseErrors -and $parseErrors.Count -gt 0) {
-            $errorMessages = $parseErrors | ForEach-Object { $_.Message }
-            Write-Error "Failed to parse sqlpackage arguments: $($errorMessages -join '; ')"
-            throw "Invalid sqlpackage argument syntax. Arguments must be properly quoted."
+    $ErrorActionPreference = 'Continue'
+    Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            Write-Error $_
         }
-        
-        $argArray = @($tokens | 
-            Where-Object { $_.Kind -ne 'EndOfInput' } | 
-            Select-Object -Skip 1 | 
-            ForEach-Object { $_.Value })
-        
-        $errors = @()
-        & $FileName $argArray 2>&1 | ForEach-Object {
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                $errors += $_
-                Write-Error $_
-            }
-            else {
-                Write-Host $_
-            }
-        }
-
-        foreach ($errorMsg in $errors) {
-            Write-Error $errorMsg
-        }
-
-        $ErrorActionPreference = 'Stop'
-
-        if ($errors.Count -gt 0) {
-            throw "Execution failed. See errors above."
+        else {
+            Write-Host $_
         }
     }
-    else {
-        $ErrorActionPreference = 'Continue'
-        $errors = @()
-        Invoke-Expression "& `"$FileName`" $Arguments" 2>&1 | ForEach-Object {
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                $errors += $_
-                Write-Error $_
-            } else {
-                Write-Host $_
-            }
+
+    foreach ($errorMsg in $errors) {
+        Write-Error $errorMsg
+    }
+    $ErrorActionPreference = 'Stop'
+    if ($LASTEXITCODE -ne 0) {
+        throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
+    }
+}
+
+# V2: Safe execution using AST Parser + array invocation (no Invoke-Expression)
+# Called when both feature flags are enabled via Should-UseSanitizedArguments
+function Execute-CommandV2 {
+    param(
+        [String][Parameter(Mandatory = $true)] $FileName,
+        [String][Parameter(Mandatory = $true)] $Arguments
+    )
+
+    $ErrorActionPreference = 'Continue'
+    
+    # Parse arguments using PowerShell AST Parser for safe tokenization
+    # Prepend placeholder command name since parser expects complete command structure
+    $tokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseInput(
+        "cmd $Arguments", 
+        [ref]$tokens, 
+        [ref]$parseErrors
+    )
+    
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+        Write-Error "Failed to parse sqlpackage arguments: $($errorMessages -join '; ')"
+        throw "Invalid sqlpackage argument syntax. Arguments must be properly quoted."
+    }
+    
+    $argArray = @($tokens | 
+        Where-Object { $_.Kind -ne 'EndOfInput' } | 
+        Select-Object -Skip 1 | 
+        ForEach-Object { $_.Value })
+    
+    $errors = @()
+    & $FileName $argArray 2>&1 | ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            $errors += $_
+            Write-Error $_
         }
-        $ErrorActionPreference = 'Stop'
-        if ($errors.Count -gt 0) {
-            throw "Execution failed. See errors above."
+        else {
+            Write-Host $_
         }
+    }
+
+    foreach ($errorMsg in $errors) {
+        Write-Error $errorMsg
+    }
+
+    $ErrorActionPreference = 'Stop'
+
+    if ($errors.Count -gt 0) {
+        throw "Execution failed. See errors above."
     }
     
     if ($LASTEXITCODE -ne 0) {

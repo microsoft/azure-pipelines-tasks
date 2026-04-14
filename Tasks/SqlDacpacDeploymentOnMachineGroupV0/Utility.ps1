@@ -47,59 +47,111 @@
     $spaltArguments.Add("Variable", $scriptVariables)
     $spaltArguments.Add("OutputSqlErrors", $true)
 
-    if (Should-UseSanitizedArguments) {
-        if (-not [string]::IsNullOrWhiteSpace($additionalArguments)) {
-            $sanitizedArgs = Get-SanitizedSqlArguments -InputArgs $additionalArguments -TaskName "SqlDacpacDeploymentOnMachineGroup"
-            
-            # Parse sanitized arguments using AST Parser
-            $tokens = $null
-            $parseErrors = $null
-            [void][System.Management.Automation.Language.Parser]::ParseInput(
-                "cmd $sanitizedArgs",
-                [ref]$tokens,
-                [ref]$parseErrors
-            )
-            
-            if ($parseErrors -and $parseErrors.Count -gt 0) {
-                $errorMessages = $parseErrors | ForEach-Object { $_.Message }
-                Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
-                throw "Invalid additional argument syntax. Arguments must be properly quoted."
-            }
-            
-            # Extract and merge argument tokens into splat hashtable
-            $argTokens = @($tokens | 
-                Where-Object { $_.Kind -ne 'EndOfInput' } | 
-                Select-Object -Skip 1 | 
-                ForEach-Object { $_.Value })
-            
-            for ($i = 0; $i -lt $argTokens.Count; $i++) {
-                if ($argTokens[$i] -match '^-(.+)') {
-                    $paramName = $Matches[1]
-                    # Collect all values until next parameter or end
-                    $values = @()
-                    $j = $i + 1
-                    while ($j -lt $argTokens.Count -and $argTokens[$j] -notmatch '^-') {
-                        $values += $argTokens[$j]
-                        $j++
-                    }
-                    if ($values.Count -eq 0) {
-                        $spaltArguments[$paramName] = $true
-                    } elseif ($values.Count -eq 1) {
-                        $spaltArguments[$paramName] = $values[0]
-                    } else {
-                        $spaltArguments[$paramName] = $values
-                    }
-                    $i = $j - 1
-                }
-            }
+    $additionalArguments = EscapeSpecialChars $additionalArguments
+
+    #Execute the query
+    Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"
+}
+
+# V2: Safe execution using AST Parser + splat (no Invoke-Expression)
+# Called when both feature flags are enabled via Should-UseSanitizedArguments
+function Invoke-SqlScriptsInTransactionV2
+{
+    param
+    (
+        [string]$serverName,
+        [string]$databaseName,
+        [string]$appLockName,
+        [string]$sqlscriptFiles,
+        [string]$authscheme,
+        [System.Management.Automation.PSCredential]$sqlServerCredentials,
+        [string]$additionalArguments
+    )
+
+    Import-SqlPs
+
+    #Get Scalar Params to replace in SQL script
+    $_acquireLockParam = $appLockName
+    $_acquireLockMillisecondsParam = 10
+    $_acquireLockMaxAttemptsParam = 3
+    $_longRunningThresholdMilliSecondsParam = 10
+    $_acquireLockLastNAttemptsParam = 3
+    $_fileList = $sqlscriptFiles
+
+    #Get the wrapper sql script
+    $tsql = Get-Content $PSScriptRoot\ExecuteScriptsInTransaction.sql
+    $tsqlString = "$tsql"
+
+    #Splat the Arguments
+    $spaltArguments = @{
+        Query = $tsqlString
+        ServerInstance=$serverName
+        Database=$databaseName
+    }
+
+    if($authscheme -eq "sqlServerAuthentication")
+    {
+        if($sqlServerCredentials)
+        {
+            $sqlUsername = $sqlServerCredentials.Username
+            $sqlPassword = $sqlServerCredentials.GetNetworkCredential().password
+            $spaltArguments.Add("Username", $sqlUsername)
+            $spaltArguments.Add("Password", $sqlPassword)
+        }
+    }
+
+    $scriptVariables = "_acquireLockParam = '${_acquireLockParam}'", "_acquireLockMillisecondsParam = ${_acquireLockMillisecondsParam}", "_acquireLockMaxAttemptsParam = ${_acquireLockMaxAttemptsParam}", "_longRunningThresholdMilliSecondsParam = ${_longRunningThresholdMilliSecondsParam}", "_acquireLockLastNAttemptsParam = ${_acquireLockLastNAttemptsParam}", "_fileList = ${_fileList}"
+    $spaltArguments.Add("Variable", $scriptVariables)
+    $spaltArguments.Add("OutputSqlErrors", $true)
+
+    # Parse and merge additional arguments using AST Parser
+    if (-not [string]::IsNullOrWhiteSpace($additionalArguments)) {
+        $tokens = $null
+        $parseErrors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseInput(
+            "cmd $additionalArguments",
+            [ref]$tokens,
+            [ref]$parseErrors
+        )
+        
+        if ($parseErrors -and $parseErrors.Count -gt 0) {
+            $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+            Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
+            throw "Invalid additional argument syntax. Arguments must be properly quoted."
         }
         
-        # Execute with merged splat (no Invoke-Expression)
-        Invoke-SqlCmd @spaltArguments
-    } else {
-        $additionalArguments = EscapeSpecialChars $additionalArguments
-        Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"
+        # Extract and merge argument tokens into splat hashtable
+        $argTokens = @($tokens | 
+            Where-Object { $_.Kind -ne 'EndOfInput' } | 
+            Select-Object -Skip 1 | 
+            ForEach-Object { $_.Value })
+        
+        for ($i = 0; $i -lt $argTokens.Count; $i++) {
+            if ($argTokens[$i] -match '^-(.+)') {
+                $paramName = $Matches[1]
+                # Collect all values until next parameter or end (skip commas)
+                $values = @()
+                $j = $i + 1
+                while ($j -lt $argTokens.Count -and $argTokens[$j] -notmatch '^-') {
+                    if ($argTokens[$j] -ne ',') {
+                        $values += $argTokens[$j]
+                    }
+                    $j++
+                }
+                if ($values.Count -eq 0) {
+                    $spaltArguments[$paramName] = $true
+                } elseif ($values.Count -eq 1) {
+                    $spaltArguments[$paramName] = $values[0]
+                } else {
+                    $spaltArguments[$paramName] = $values
+                }
+                $i = $j - 1
+            }
+        }
     }
+    
+    # Execute with merged splat (no Invoke-Expression)
+    Invoke-SqlCmd @spaltArguments
 }
 
 # Function to import SqlPS module & avoid directory switch
