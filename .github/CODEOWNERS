@@ -220,6 +220,8 @@ Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarun
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/DownloadBuildArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DownloadGitHubNpmPackageV1/    @microsoft/release-management-task-team @manolerazvan 
