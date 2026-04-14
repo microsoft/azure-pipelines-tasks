@@ -24,12 +24,13 @@ export class Action {
      * @param isPrerelease - Whether the release is a prerelease
      * @param githubReleaseAssetInputPatterns - Patterns for assets to upload
      * @param makeLatest - Whether to mark the release as latest
+     * @param generateReleaseNotes - Whether to use GitHub's auto-generated release notes
      */
-    public async createReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], makeLatest: string): Promise<void> {
+    public async createReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], makeLatest: string, generateReleaseNotes: boolean = false): Promise<void> {
         console.log(tl.loc("CreatingRelease", tag));
 
         // Create release
-        let response: WebResponse = await new Release().createRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, makeLatest);
+        let response: WebResponse = await new Release().createRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, makeLatest, generateReleaseNotes);
         tl.debug("Create release response: " + JSON.stringify(response));
 
         if (response.statusCode === 201) {
@@ -77,11 +78,12 @@ export class Action {
      * @param githubReleaseAssetInputPatterns - Patterns for assets to upload
      * @param releaseId - ID of the release to edit
      * @param makeLatest - Whether to mark the release as latest
+     * @param generateReleaseNotes - Whether to use GitHub's auto-generated release notes
      */
-    public async editReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string, makeLatest: string): Promise<void> {
+    public async editReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string, makeLatest: string, generateReleaseNotes: boolean = false): Promise<void> {
         console.log(tl.loc("EditingRelease", tag));
 
-        let response: WebResponse = await new Release().editRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId, makeLatest);
+        let response: WebResponse = await new Release().editRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId, makeLatest, generateReleaseNotes);
         tl.debug("Edit release response: " + JSON.stringify(response));
 
         if (response.statusCode === 200) {

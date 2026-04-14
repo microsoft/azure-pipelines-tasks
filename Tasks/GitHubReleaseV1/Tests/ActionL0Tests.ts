@@ -6,9 +6,11 @@ export class ActionL0Tests {
         await this.validateCreateReleaseAction();
         await this.validateCreateReleaseActionWithMakeLatestTrue();
         await this.validateCreateReleaseActionWithMakeLatestLegacy();
+        await this.validateCreateReleaseActionWithGenerateReleaseNotes();
         await this.validateEditReleaseAction();
         await this.validateEditReleaseActionWithMakeLatestTrue();
         await this.validateEditReleaseActionWithMakeLatestLegacy();
+        await this.validateEditReleaseActionWithGenerateReleaseNotes();
         await this.validateDeleteReleaseAction();
     }
 
@@ -24,6 +26,11 @@ export class ActionL0Tests {
         await new Action().createReleaseAction("endpoint", "repo", "target", "tagName", "title", "note", false, false, [], "legacy");
     }
 
+    public static async validateCreateReleaseActionWithGenerateReleaseNotes() {
+        await new Action().createReleaseAction("endpoint", "repo", "target", "tagName", "title", "", false, false, [], "false", true);
+        console.log("CreateReleaseActionWithGenerateReleaseNotes");
+    }
+
     public static async validateEditReleaseAction() {
         await new Action().editReleaseAction("endpoint", "repo", "target", "tagName", "title", "note", false, false, [], "id", "false");
     }
@@ -34,6 +41,11 @@ export class ActionL0Tests {
 
     public static async validateEditReleaseActionWithMakeLatestLegacy() {
         await new Action().editReleaseAction("endpoint", "repo", "target", "tagName", "title", "note", false, false, [], "id", "legacy");
+    }
+
+    public static async validateEditReleaseActionWithGenerateReleaseNotes() {
+        await new Action().editReleaseAction("endpoint", "repo", "target", "tagName", "title", "", false, false, [], "id", "false", true);
+        console.log("EditReleaseActionWithGenerateReleaseNotes");
     }
 
     public static async validateDeleteReleaseAction() {

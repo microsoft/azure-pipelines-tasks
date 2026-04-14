@@ -3,7 +3,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 
 import { Action } from "./operations/Action";
-import { Utility, ActionType, Delimiters, ChangeLogStartCommit, ChangeLogType } from './operations/Utility';
+import { Utility, ActionType, Delimiters, ChangeLogStartCommit, ChangeLogType, ReleaseNotesSelectionMode } from './operations/Utility';
 import { Inputs} from "./operations/Constants";
 import { ChangeLog } from "./operations/ChangeLog";
 import { Helper } from "./operations/Helper";
@@ -60,7 +60,8 @@ class Main {
                     if (!!tag) {
                         helper.publishTelemetry();
                         const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
-                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest);
+                        const generateReleaseNotes: boolean = tl.getInput(Inputs.releaseNotesSource) === ReleaseNotesSelectionMode.githubGenerated;
+                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest, generateReleaseNotes);
                     }
                     else {
                         // If no tag found, then give warning.
@@ -73,6 +74,7 @@ class Main {
                 else if (action === ActionType.edit) {
                     helper.publishTelemetry();
                     const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
+                    const generateReleaseNotes: boolean = tl.getInput(Inputs.releaseNotesSource) === ReleaseNotesSelectionMode.githubGenerated;
                     // Get the release id of the release to edit.
                     console.log(tl.loc("FetchReleaseForTag", tag));
                     let releaseId: any = await helper.getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
@@ -81,11 +83,11 @@ class Main {
                     // Else create a new release.
                     if (!!releaseId) {
                         console.log(tl.loc("FetchReleaseForTagSuccess", tag));
-                        await actions.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId, makeLatest);
+                        await actions.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId, makeLatest, generateReleaseNotes);
                     }
                     else {
                         tl.warning(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
-                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest);
+                        await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, makeLatest, generateReleaseNotes);
                     }
                 }
             }
