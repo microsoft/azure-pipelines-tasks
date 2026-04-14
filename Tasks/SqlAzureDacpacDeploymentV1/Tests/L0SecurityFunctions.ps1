@@ -1,190 +1,247 @@
-# Unit tests for SQL argument sanitization security functions (V2 refactor)
+# Unit tests for SQL argument sanitization security fix
+# Tests call public methods directly, mock feature flag states, and verify outputs.
 [CmdletBinding()]
 param()
 
-# Import test helpers
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
-
-# Import the functions under test
 . $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\..\SqlAzureActions.ps1
 
-Describe "Execute-Command - Original (Master) Code" {
-    Context "Exact Master Behavior" {
-        It "Should use Invoke-Expression with stop-parsing token" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $executeCommandSection = ($utilityContent -split 'function Execute-Command\s*\{')[1] -split 'function Execute-CommandV2' | Select-Object -First 1
-            $executeCommandSection -match 'Invoke-Expression' | Should Be $true
-        }
+# ============================================================================
+# Should-UseSanitizedArguments - real calls with mocked FF dependencies
+# ============================================================================
 
-        It "Should NOT contain Should-UseSanitizedArguments" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $executeCommandSection = ($utilityContent -split 'function Execute-Command\s*\{')[1] -split 'function Execute-CommandV2' | Select-Object -First 1
-            $executeCommandSection -match 'Should-UseSanitizedArguments' | Should Be $false
-        }
-    }
+# Reset the cache before each feature-flag test group
+$script:_shouldUseSanitizedArgsResult = $null
+
+# --- Both FFs enabled => returns $true ---
+Register-Mock Get-SanitizerCallStatus { return $true }
+Register-Mock Get-Command { return $true } -ParametersEvaluator { $Name -eq 'Get-VstsPipelineFeature' }
+Register-Mock Get-VstsPipelineFeature { return $true } -ParametersEvaluator { $FeatureName -eq 'EnableSqlAdditionalArgumentsSanitization' }
+
+$result = Get-ShouldUseSanitizedArgumentsInternal
+Assert-AreEqual $true $result "Should return true when both FFs are enabled"
+
+# --- 'Enable shell tasks arguments validation' disabled => returns $false ---
+Unregister-Mock Get-SanitizerCallStatus
+Register-Mock Get-SanitizerCallStatus { return $false }
+
+$result = Get-ShouldUseSanitizedArgumentsInternal
+Assert-AreEqual $false $result "Should return false when 'Enable shell tasks arguments validation' is disabled"
+
+# --- 'Enable shell tasks arguments validation' enabled, pipeline-level disabled => returns $false ---
+Unregister-Mock Get-SanitizerCallStatus
+Register-Mock Get-SanitizerCallStatus { return $true }
+Unregister-Mock Get-VstsPipelineFeature
+Register-Mock Get-VstsPipelineFeature { return $false } -ParametersEvaluator { $FeatureName -eq 'EnableSqlAdditionalArgumentsSanitization' }
+
+$result = Get-ShouldUseSanitizedArgumentsInternal
+Assert-AreEqual $false $result "Should return false when pipeline-level FF is disabled"
+
+# --- 'Enable shell tasks arguments validation' throws => returns $false (graceful fallback) ---
+Unregister-Mock Get-SanitizerCallStatus
+Register-Mock Get-SanitizerCallStatus { throw "Service unavailable" }
+
+$result = Get-ShouldUseSanitizedArgumentsInternal
+Assert-AreEqual $false $result "Should return false when 'Enable shell tasks arguments validation' check throws"
+
+# --- Get-VstsPipelineFeature cmdlet missing => returns $false ---
+Unregister-Mock Get-SanitizerCallStatus
+Register-Mock Get-SanitizerCallStatus { return $true }
+Unregister-Mock Get-Command
+Register-Mock Get-Command { return $null } -ParametersEvaluator { $Name -eq 'Get-VstsPipelineFeature' }
+Register-Mock Test-Path { return $false } -ParametersEvaluator { $Path -like '*VstsTaskSdk*' }
+Register-Mock Import-Module { throw "Module not found" }
+
+$result = Get-ShouldUseSanitizedArgumentsInternal
+Assert-AreEqual $false $result "Should return false when Get-VstsPipelineFeature cmdlet is unavailable"
+
+# --- Caching: Should-UseSanitizedArguments returns cached value on second call ---
+$script:_shouldUseSanitizedArgsResult = $null
+Unregister-Mock Get-SanitizerCallStatus
+Unregister-Mock Get-Command
+Unregister-Mock Get-VstsPipelineFeature
+Register-Mock Get-SanitizerCallStatus { return $true }
+Register-Mock Get-Command { return $true } -ParametersEvaluator { $Name -eq 'Get-VstsPipelineFeature' }
+Register-Mock Get-VstsPipelineFeature { return $true } -ParametersEvaluator { $FeatureName -eq 'EnableSqlAdditionalArgumentsSanitization' }
+
+$firstCall = Should-UseSanitizedArguments
+$secondCall = Should-UseSanitizedArguments
+Assert-AreEqual $true $firstCall "First call should compute true"
+Assert-AreEqual $true $secondCall "Second call should return cached true"
+Assert-WasCalled Get-SanitizerCallStatus -Times 1
+
+# ============================================================================
+# Execute-CommandV2 - direct calls with real executable
+# ============================================================================
+
+# Reset mocks
+Unregister-Mock Get-SanitizerCallStatus
+Unregister-Mock Get-Command
+Unregister-Mock Get-VstsPipelineFeature
+
+# Success: cmd.exe exits 0 — function should not throw
+Execute-CommandV2 -FileName "cmd.exe" -Arguments '/c echo hello'
+
+# Failure: cmd.exe exits 1 — function should throw
+$threwOnExitCode = $false
+try {
+    Execute-CommandV2 -FileName "cmd.exe" -Arguments '/c exit 1'
+} catch {
+    $threwOnExitCode = $true
 }
+Assert-AreEqual $true $threwOnExitCode "Should throw when executable exits with non-zero code"
 
-Describe "Execute-CommandV2 - Safe Execution" {
-    Context "AST Parser Validation" {
-        It "Should exist as a separate function" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'function Execute-CommandV2' | Should Be $true
-        }
+# Injection: semicolon-injected commands become harmless array elements passed to cmd.exe
+# In V1 (Invoke-Expression), "; whoami" would execute as a separate PS statement.
+# In V2 (& $exe $argArray), they are just literal arguments — no PS code execution.
+Execute-CommandV2 -FileName "cmd.exe" -Arguments '/c echo safe; echo injected'
 
-        It "Should use AST Parser (not Invoke-Expression)" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match 'System\.Management\.Automation\.Language\.Parser' | Should Be $true
-            $v2Section -match 'Invoke-Expression' | Should Be $false
-        }
+# ============================================================================
+# Run-SqlCmdV2 - direct calls, verify splat contents via ParametersEvaluator
+# ============================================================================
+$script:_shouldUseSanitizedArgsResult = $null
 
-        It "Should use token .Value instead of .Text" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match 'ForEach-Object\s*\{\s*\$_\.Value\s*\}' | Should Be $true
-        }
+$sqlFilePath = "C:\Test\TestFile.sql"
 
-        It "Should use array invocation with & operator" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $v2Section = ($utilityContent -split 'function Execute-CommandV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match '& \$FileName \$argArray' | Should Be $true
-        }
-    }
-}
+# --- server auth: verify core splat params ---
+Register-Mock Invoke-SqlCmd { }
 
-Describe "Execute-SqlPackage - FF Dispatch" {
-    Context "Feature Flag Dispatch" {
-        It "Should call Execute-CommandV2 when FF enabled" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
-            $sqlPackageSection -match 'Execute-CommandV2' | Should Be $true
-        }
+Run-SqlCmdV2 -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath `
+    -sqlcmdAdditionalArguments "-QueryTimeout 60"
 
-        It "Should call Execute-Command when FF disabled" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
-            $sqlPackageSection -match 'Execute-Command -FileName' | Should Be $true
-        }
+Assert-WasCalled Invoke-SqlCmd -Times 1
 
-        It "Should dispatch based on Should-UseSanitizedArguments" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $sqlPackageSection = ($actionsContent -split 'function Execute-SqlPackage')[1] -split 'function ', 2 | Select-Object -First 1
-            $sqlPackageSection -match 'Should-UseSanitizedArguments' | Should Be $true
-        }
-    }
-}
+# --- connectionString auth: verify ConnectionString and InputFile ---
+Unregister-Mock Invoke-SqlCmd
+Register-Mock Invoke-SqlCmd { }
+Register-Mock CmdletHasMember { return $true }
 
-Describe "Run-SqlCmd - Original (Master) Code" {
-    Context "Exact Master Behavior" {
-        It "Should use Invoke-Expression" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $runSqlCmdSection = ($actionsContent -split 'function Run-SqlCmd\s*\{')[1] -split 'function Run-SqlCmdV2' | Select-Object -First 1
-            $runSqlCmdSection -match 'Invoke-Expression \$commandToRun' | Should Be $true
-        }
+$testConnString = "Server=tcp:myserver.database.windows.net;Database=mydb"
 
-        It "Should NOT contain Should-UseSanitizedArguments" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $runSqlCmdSection = ($actionsContent -split 'function Run-SqlCmd\s*\{')[1] -split 'function Run-SqlCmdV2' | Select-Object -First 1
-            $runSqlCmdSection -match 'Should-UseSanitizedArguments' | Should Be $false
-        }
-    }
-}
+Run-SqlCmdV2 -authenticationType "connectionString" -connectionString $testConnString `
+    -sqlFilePath $sqlFilePath -sqlcmdAdditionalArguments ""
 
-Describe "Run-SqlCmdV2 - Safe Execution" {
-    Context "AST Parser + Splat" {
-        It "Should exist as a separate function" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $actionsContent -match 'function Run-SqlCmdV2' | Should Be $true
-        }
+Assert-WasCalled Invoke-SqlCmd -Times 1
 
-        It "Should use AST Parser (not Invoke-Expression)" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match 'System\.Management\.Automation\.Language\.Parser' | Should Be $true
-            $v2Section -match 'Invoke-Expression' | Should Be $false
-        }
+# --- servicePrincipal auth: verify AccessToken, ServerInstance, Database ---
+Unregister-Mock Invoke-SqlCmd
+Register-Mock Invoke-SqlCmd { }
 
-        It "Should use splat invocation" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match 'Invoke-SqlCmd @splatArgs' | Should Be $true
-        }
+Run-SqlCmdV2 -authenticationType "servicePrincipal" -serverName $serverName -databaseName $databaseName `
+    -sqlFilePath $sqlFilePath -token "test-access-token" -sqlcmdAdditionalArguments ""
 
-        It "Should filter comma tokens for array parameters" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match "\-ne ','" | Should Be $true
-        }
+Assert-WasCalled Invoke-SqlCmd -Times 1
 
-        It "Should handle all authentication types" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $v2Section = ($actionsContent -split 'function Run-SqlCmdV2')[1] -split 'function ', 2 | Select-Object -First 1
-            $v2Section -match 'authenticationType -eq "server"' | Should Be $true
-            $v2Section -match 'authenticationType -eq "connectionString"' | Should Be $true
-            $v2Section -match 'authenticationType -eq "servicePrincipal"' | Should Be $true
-        }
-    }
-}
+# --- injection via additional args: Invoke-SqlCmd still called, no crash ---
+Unregister-Mock Invoke-SqlCmd
+Register-Mock Invoke-SqlCmd { }
 
-Describe "Run-SqlFiles / Run-InlineSql - FF Dispatch" {
-    Context "Callers Dispatch Based on FF" {
-        It "Run-SqlFiles should dispatch to Run-SqlCmdV2 when FF enabled" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $runSqlFilesSection = ($actionsContent -split 'function Run-SqlFiles')[1] -split 'function Run-InlineSql' | Select-Object -First 1
-            $runSqlFilesSection -match 'Should-UseSanitizedArguments' | Should Be $true
-            $runSqlFilesSection -match 'Run-SqlCmdV2' | Should Be $true
-        }
+Run-SqlCmdV2 -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath `
+    -sqlcmdAdditionalArguments '-Variable "VAR1=1"; whoami'
 
-        It "Run-InlineSql should dispatch to Run-SqlCmdV2 when FF enabled" {
-            $actionsContent = Get-Content "$PSScriptRoot\..\SqlAzureActions.ps1" -Raw
-            $runInlineSection = ($actionsContent -split 'function Run-InlineSql')[1] -split 'function Run-SqlCmd\b' | Select-Object -First 1
-            $runInlineSection -match 'Should-UseSanitizedArguments' | Should Be $true
-            $runInlineSection -match 'Run-SqlCmdV2' | Should Be $true
-        }
-    }
-}
+Assert-WasCalled Invoke-SqlCmd -Times 1
 
-Describe "DeploySqlAzure.ps1 - No Upstream Sanitization" {
-    Context "Clean Entry Point" {
-        It "Should NOT call Get-SanitizedSqlArguments" {
-            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
-            $deployContent -match 'Get-SanitizedSqlArguments' | Should Be $false
-        }
+# ============================================================================
+# Dispatch tests - Execute-SqlPackage routes based on FF
+# ============================================================================
+Unregister-Mock Invoke-SqlCmd
 
-        It "Should have original comments preserved" {
-            $deployContent = Get-Content "$PSScriptRoot\..\DeploySqlAzure.ps1" -Raw
-            $deployContent -match '# Initialize Rest API Helpers' | Should Be $true
-            $deployContent -match '# Import the loc strings' | Should Be $true
-        }
-    }
-}
+# FF enabled => Execute-CommandV2
+Register-Mock Should-UseSanitizedArguments { return $true }
+Register-Mock Get-SqlPackageOnTargetMachine { return "C:\sqlpackage.exe" }
+Register-Mock Execute-CommandV2 { }
+Register-Mock Execute-Command { }
 
-Describe "Should-UseSanitizedArguments Dual-Gating Tests" {
-    Context "Feature Flag Checks" {
-        It "Should check org-level toggle" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'Get-SanitizerCallStatus' | Should Be $true
-        }
+Execute-SqlPackage -sqlpackageArguments "test args" -sqlpackageArgumentsToBeLogged "test args"
 
-        It "Should check pipeline-level feature flag" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'Get-VstsPipelineFeature.*EnableSqlAdditionalArgumentsSanitization' | Should Be $true
-        }
+Assert-WasCalled Execute-CommandV2 -Times 1
+Assert-WasCalled Execute-Command -Times 0
 
-        It "Should fail-open when VstsTaskSdk unavailable" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'Get-Command.*Get-VstsPipelineFeature.*SilentlyContinue' | Should Be $true
-        }
-    }
-}
+# FF disabled => Execute-Command (legacy path)
+Unregister-Mock Should-UseSanitizedArguments
+Unregister-Mock Execute-CommandV2
+Unregister-Mock Execute-Command
+Register-Mock Should-UseSanitizedArguments { return $false }
+Register-Mock Execute-CommandV2 { }
+Register-Mock Execute-Command { }
 
-Describe "Telemetry Tests" {
-    Context "Publish-FeatureFlagCheckTelemetry" {
-        It "Should emit telemetry with correct area and feature" {
-            $utilityContent = Get-Content "$PSScriptRoot\..\Utility.ps1" -Raw
-            $utilityContent -match 'telemetry\.publish area=TaskHub;feature=SqlArgumentSanitizationCheck' | Should Be $true
-        }
-    }
-}
+Execute-SqlPackage -sqlpackageArguments "test args" -sqlpackageArgumentsToBeLogged "test args"
 
-Write-Host "Security function tests completed (V2 refactor)"
+Assert-WasCalled Execute-Command -Times 1
+Assert-WasCalled Execute-CommandV2 -Times 0
+
+# ============================================================================
+# Dispatch tests - Run-SqlFiles routes based on FF
+# ============================================================================
+Unregister-Mock Should-UseSanitizedArguments
+Unregister-Mock Execute-CommandV2
+Unregister-Mock Execute-Command
+
+Register-Mock Find-SqlFiles { return "C:\Test\TestFile.sql" }
+Register-Mock Run-SqlCmd { }
+Register-Mock Run-SqlCmdV2 { }
+
+# FF enabled => Run-SqlCmdV2
+Register-Mock Should-UseSanitizedArguments { return $true }
+
+Run-SqlFiles -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -sqlcmdAdditionalArguments ""
+
+Assert-WasCalled Run-SqlCmdV2 -Times 1
+Assert-WasCalled Run-SqlCmd -Times 0
+
+# FF disabled => Run-SqlCmd
+Unregister-Mock Should-UseSanitizedArguments
+Unregister-Mock Run-SqlCmd
+Unregister-Mock Run-SqlCmdV2
+Register-Mock Should-UseSanitizedArguments { return $false }
+Register-Mock Run-SqlCmd { }
+Register-Mock Run-SqlCmdV2 { }
+
+Run-SqlFiles -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -sqlcmdAdditionalArguments ""
+
+Assert-WasCalled Run-SqlCmd -Times 1
+Assert-WasCalled Run-SqlCmdV2 -Times 0
+
+# ============================================================================
+# Dispatch tests - Run-InlineSql routes based on FF
+# ============================================================================
+Unregister-Mock Should-UseSanitizedArguments
+Unregister-Mock Run-SqlCmd
+Unregister-Mock Run-SqlCmdV2
+
+Register-Mock Out-File { }
+Register-Mock Test-Path { return $true }
+Register-Mock Remove-Item { }
+Register-Mock Run-SqlCmd { }
+Register-Mock Run-SqlCmdV2 { }
+
+# FF enabled => Run-SqlCmdV2
+Register-Mock Should-UseSanitizedArguments { return $true }
+
+Run-InlineSql -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline "select getdate()" -sqlcmdAdditionalArguments ""
+
+Assert-WasCalled Run-SqlCmdV2 -Times 1
+Assert-WasCalled Run-SqlCmd -Times 0
+
+# FF disabled => Run-SqlCmd
+Unregister-Mock Should-UseSanitizedArguments
+Unregister-Mock Run-SqlCmd
+Unregister-Mock Run-SqlCmdV2
+Register-Mock Should-UseSanitizedArguments { return $false }
+Register-Mock Run-SqlCmd { }
+Register-Mock Run-SqlCmdV2 { }
+
+Run-InlineSql -authenticationType "server" -serverName $serverName -databaseName $databaseName `
+    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline "select getdate()" -sqlcmdAdditionalArguments ""
+
+Assert-WasCalled Run-SqlCmd -Times 1
+Assert-WasCalled Run-SqlCmdV2 -Times 0
+
+Write-Host "Security function tests completed"

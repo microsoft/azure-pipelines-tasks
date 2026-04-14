@@ -126,3 +126,27 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
         });
     }
 });
+
+describe('SqlAzureDacpacDeployment - Security Functions Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+        done();
+    });
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
+    });
+
+    if (psm.testSupported()) {
+        it('Validate security functions (FF dispatch, V2 methods, injection prevention)', (done) => {
+            psr.run(path.join(__dirname, 'L0SecurityFunctions.ps1'), done);
+        });
+    }
+});

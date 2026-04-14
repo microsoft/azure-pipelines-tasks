@@ -288,7 +288,7 @@ function Run-SqlCmd {
         $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
         $commandToLog = $scriptArgument + " -Password ****** "
 
-        # Increase Timeout to 120 seconds in case its not provided by User
+        # Increase Timeout to 120 seconds in case its not provided by User, since some sql scripts can take longer time to execute and sqlcmd.exe has default timeout of 30 seconds which can cause timeout issue.
         if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
             # Add Timeout of 120 Seconds
             $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
@@ -334,7 +334,7 @@ function Run-SqlCmd {
 }
 
 # V2: Safe execution using AST Parser + splat (no Invoke-Expression)
-# Called when both feature flags are enabled via Should-UseSanitizedArguments
+# Called when both feature flags are enabled in Should-UseSanitizedArguments
 function Run-SqlCmdV2 {
     [CmdletBinding()]
     param (
@@ -363,7 +363,7 @@ function Run-SqlCmdV2 {
             $splatArgs['Password'] = $sqlPassword
         }
 
-        # Increase Timeout to 120 seconds in case its not provided by User
+        # Increase Timeout to 120 seconds in case its not provided by User, since some sql scripts can take longer time to execute and sqlcmd.exe has default timeout of 30 seconds which can cause timeout issue.
         if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
             $splatArgs['ConnectionTimeout'] = 120
         }
@@ -440,7 +440,7 @@ function Run-SqlCmdV2 {
         }
     }
     
-    # Execute with splat (no Invoke-Expression)
+    # Execute
     if ($splatArgs.ContainsKey('verbose')) {
         $ErrorActionPreference = 'Continue'
         (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
