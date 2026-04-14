@@ -7,13 +7,7 @@ param()
 
 $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY = "C:\DefaultWorkingDirectory"
 
-# Mock the feature flag as enabled for most tests
-$featureFlags = @{
-    enableUserOutputPath = $true
-}
-
-# Dot-source only the Get-EffectiveOutputPath function by sourcing the actions file
-# but mock the pipeline feature call first
+# Mock the pipeline feature call before dot-sourcing so $featureFlags is initialized with $true
 Register-Mock Get-VstsPipelineFeature { return $true }
 . $PSScriptRoot\..\SqlAzureActions.ps1
 

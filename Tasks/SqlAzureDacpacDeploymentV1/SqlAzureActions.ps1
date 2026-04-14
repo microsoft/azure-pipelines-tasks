@@ -13,8 +13,8 @@ function Get-EffectiveOutputPath {
         ResolvedFilePath    = $defaultOutputPath
     }
 
-    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -match '/OutputPath[:=](?:"[^"]+"|[^\s]+)') {
-        $userPath = ($Matches[0] -replace '^/OutputPath[:=]').Trim('"')
+    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -imatch '/OutputPath[:=](?:"[^"]+"|[^\s]+)') {
+        $userPath = ($Matches[0] -replace '(?i)^/OutputPath[:=]').Trim('"')
         if ([string]::IsNullOrWhiteSpace($userPath)) {
             throw "User-provided /OutputPath is empty or invalid."
         }
