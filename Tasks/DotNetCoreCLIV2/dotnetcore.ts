@@ -147,7 +147,7 @@ export class dotNetExe {
     }
 
     private findGlobalJsonFile(): string | null {
-        const repoRoot =
+        let repoRoot =
             path.resolve(
                 tl.getVariable('Build.SourcesDirectory') ||
                 tl.getVariable('System.DefaultWorkingDirectory') ||
@@ -158,10 +158,34 @@ export class dotNetExe {
 
         tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
 
-        const relStart = path.relative(repoRoot, searchDir);
-        if (relStart.startsWith('..') || path.isAbsolute(relStart)) {
-            tl.debug(`Working directory '${searchDir}' is outside repo root '${repoRoot}'. Skipping search.`);
-            return null;
+        const isInside = (dir: string, root: string): boolean => {
+            const rel = path.relative(root, dir);
+            return !rel.startsWith('..') && !path.isAbsolute(rel);
+        };
+
+        if (!isInside(searchDir, repoRoot)) {
+            const fallbacks: { name: string; variable: string }[] = [
+                { name: 'System.DefaultWorkingDirectory', variable: tl.getVariable('System.DefaultWorkingDirectory') || '' },
+                { name: 'Agent.BuildDirectory', variable: tl.getVariable('Agent.BuildDirectory') || '' }
+            ];
+
+            let found = false;
+            for (const fb of fallbacks) {
+                if (fb.variable) {
+                    const altRoot = path.resolve(fb.variable);
+                    if (isInside(searchDir, altRoot)) {
+                        tl.debug(`Working directory '${searchDir}' is outside Build.SourcesDirectory '${repoRoot}'. Using ${fb.name} '${altRoot}' as search boundary.`);
+                        repoRoot = altRoot;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                tl.debug(`Working directory '${searchDir}' is outside all known root directories. Skipping global.json search.`);
+                return null;
+            }
         }
 
         while (true) {
