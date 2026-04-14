@@ -120,21 +120,20 @@ function Invoke-SqlScriptsInTransactionV2
             throw "Invalid additional argument syntax. Arguments must be properly quoted."
         }
         
-        # Extract and merge argument tokens into splat hashtable
-        $argTokens = @($tokens | 
+        # Use token objects to check Kind property (Parameter tokens have null .Value)
+        $parsedTokens = @($tokens | 
             Where-Object { $_.Kind -ne 'EndOfInput' } | 
-            Select-Object -Skip 1 | 
-            ForEach-Object { $_.Value })
+            Select-Object -Skip 1)
         
-        for ($i = 0; $i -lt $argTokens.Count; $i++) {
-            if ($argTokens[$i] -match '^-(.+)') {
-                $paramName = $Matches[1]
+        for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
+            if ($parsedTokens[$i].Kind -eq 'Parameter') {
+                $paramName = $parsedTokens[$i].Text -replace '^-', ''
                 # Collect all values until next parameter or end (skip commas)
                 $values = @()
                 $j = $i + 1
-                while ($j -lt $argTokens.Count -and $argTokens[$j] -notmatch '^-') {
-                    if ($argTokens[$j] -ne ',') {
-                        $values += $argTokens[$j]
+                while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
+                    if ($parsedTokens[$j].Kind -ne 'Comma') {
+                        $values += $parsedTokens[$j].Value
                     }
                     $j++
                 }
