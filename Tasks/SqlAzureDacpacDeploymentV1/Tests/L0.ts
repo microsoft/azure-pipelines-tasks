@@ -64,6 +64,10 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
             psr.run(path.join(__dirname, 'L0SqlAzureActionsUtilityTests.ps1'), done);
         });
 
+        it ('Validate Get-EffectiveOutputPath with feature flag and user /OutputPath', (done) => {
+            psr.run(path.join(__dirname, 'L0GetEffectiveOutputPath.ps1'), done);
+        });
+
         it ('Validate additional args validation blocks injection when FF enabled', (done) => {
             psr.run(path.join(__dirname, 'L0SqlCmdArgValidationEnabled.ps1'), done);
         });
