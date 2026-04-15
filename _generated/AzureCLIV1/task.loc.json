@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 272,
-    "Patch": 2
+    "Minor": 273,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -167,7 +167,7 @@
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "1.272.2",
-    "Node24_1": "1.272.3"
+    "Default": "1.273.0",
+    "Node24_1": "1.273.1"
   }
 }
