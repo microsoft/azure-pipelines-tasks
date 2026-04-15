@@ -620,7 +620,6 @@
     "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
     "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
     "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
-    "DetectedVsTestVersion": "ms-resource:loc.messages.DetectedVsTestVersion",
     "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
     "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound",
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
