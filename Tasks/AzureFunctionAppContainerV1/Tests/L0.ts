@@ -29,7 +29,7 @@ describe('AzureFunctionOnContainerDeployment Suite', function() {
     });
 
     ApplicationInsightsTests.ApplicationInsightsTests(60000);
-    AppServiceTests.AzureAppServiceMockTests();
+    AppServiceTests.AzureAppServiceMockTests(60000);
     KuduServiceTests.KuduServiceTests(60000);
     ResourcesTests.ResourcesTests(); 
 
