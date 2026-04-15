@@ -398,7 +398,7 @@ function Run-SqlCmdV2 {
     Merge-AdditionalSqlArguments -SplatHashtable $splatArgs -AdditionalArguments $sqlcmdAdditionalArguments
     
     # Execute
-    if ($splatArgs.ContainsKey('verbose')) {
+    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
         (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
         if ($errors.Count -gt 0) {

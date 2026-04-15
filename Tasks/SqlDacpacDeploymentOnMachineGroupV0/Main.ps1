@@ -193,7 +193,8 @@ Try
         else 
         {
             if (Should-UseSanitizedArguments) {
-                Invoke-SqlQueryDeploymentV2 -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
+                Invoke-SqlQueryDeploymentV2 -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
             } else {
                 $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
                 Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging

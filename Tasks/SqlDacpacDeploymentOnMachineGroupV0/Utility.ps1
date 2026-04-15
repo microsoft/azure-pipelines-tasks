@@ -201,7 +201,8 @@ function Invoke-SqlQueryDeploymentV2 {
         [string]$databaseName,
         [string]$authscheme,
         [System.Management.Automation.PSCredential]$sqlServerCredentials,
-        [string]$additionalArguments
+        [string]$additionalArguments,
+        [bool]$enableVerboseLogging = $false
     )
 
     try {
@@ -238,14 +239,22 @@ function Invoke-SqlQueryDeploymentV2 {
             }
         }
         $commandToLog += " $additionalArguments"
-        Write-Verbose "Invoke-SqlCmd arguments (V2 safe): $commandToLog"
+        if ($enableVerboseLogging) {
+            Write-Host "##[command] $commandToLog"
+        } else {
+            Write-Verbose "Invoke-SqlCmd arguments (V2 safe): $commandToLog"
+        }
 
         Merge-AdditionalSqlArguments -SplatHashtable $spaltArguments -AdditionalArguments $additionalArguments
 
         Invoke-SqlCmd @spaltArguments
     }
     catch {
-        throw $_.Exception
+        if ($enableVerboseLogging) {
+            Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
+        } else {
+            throw $_.Exception
+        }
     }
     finally {
         if ($taskType -eq "sqlInline" -and $sqlFile -and (Test-Path $sqlFile)) {

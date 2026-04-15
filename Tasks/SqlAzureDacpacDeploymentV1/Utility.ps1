@@ -333,12 +333,12 @@ function Execute-CommandV2 {
 
     $ErrorActionPreference = 'Stop'
 
-    if ($errors.Count -gt 0) {
-        throw "Execution failed. See errors above."
-    }
-    
     if ($LASTEXITCODE -ne 0) {
         throw (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
+    }
+
+    if ($errors.Count -gt 0) {
+        throw "Execution failed. See errors above."
     }
 }
 
