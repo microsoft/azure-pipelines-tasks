@@ -285,15 +285,40 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
         );
     });
 
-    it('throws UnexpectedVersionNumber when version parts are non-numeric', function() {
+    it('throws UnexpectedVersionString when version parts are non-numeric', function() {
         setupMocks('abc.def.ghi.jkl');
         const vf = loadVersionfinder();
         const config = makeTestConfig('17.0');
 
         assert.throws(
             () => vf.getVsTestRunnerDetails(config),
-            (err: Error) => err.message.startsWith('UnexpectedVersionNumber'),
-            'should throw UnexpectedVersionNumber for non-numeric version parts'
+            (err: Error) => err.message.startsWith('UnexpectedVersionString'),
+            'should throw UnexpectedVersionString for non-numeric version parts'
+        );
+    });
+
+    it('extracts version from text with surrounding non-numeric content (regression #21998)', function() {
+        setupMocks('VSTest version 18.3.0 (x64)\n');
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails, 'vsTestVersionDetails should be set');
+        assert.strictEqual(config.vsTestVersionDetails.majorVersion, 18);
+        assert.strictEqual(config.vsTestVersionDetails.minorversion, 3);
+        assert.strictEqual(config.vsTestVersionDetails.patchNumber, 0);
+    });
+
+    it('throws UnexpectedVersionString when output has no digits at all', function() {
+        setupMocks('hdhdh.djjd.djjd.jdjd');
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        assert.throws(
+            () => vf.getVsTestRunnerDetails(config),
+            (err: Error) => err.message.startsWith('UnexpectedVersionString'),
+            'should throw UnexpectedVersionString for output with no digits'
         );
     });
 });
