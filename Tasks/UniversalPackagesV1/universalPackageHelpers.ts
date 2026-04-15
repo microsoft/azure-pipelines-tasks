@@ -3,12 +3,9 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 #if WIF
 import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
-import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
-import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
 
 export { artifactToolRunner };
@@ -46,7 +43,7 @@ export function validateVersionInputs(context: UniversalPackageContext): boolean
     return true;
 }
 
-function getSystemAccessToken(): string | undefined {
+export function getSystemAccessToken(): string | undefined {
     const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
     return auth?.parameters?.['AccessToken'];
 }
@@ -193,37 +190,6 @@ export function setFeed(context: UniversalPackageContext): void {
     }
 }
 
-export async function tryDownloadArtifactTool(context: UniversalPackageContext): Promise<boolean> {
-    tl.debug(tl.loc('Debug_GettingArtifactTool'));
-    
-    try {
-        const localAccessToken = getSystemAccessToken();
-        const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        const blobUri = await clientToolUtils.getBlobstoreUriFromBaseServiceUri(
-            serviceUri,
-            localAccessToken);
-
-        tl.debug(tl.loc("Debug_RetrievingArtifactToolUri", blobUri));
-
-        const artifactToolPath = await retryOnException(
-            () => artifactToolUtilities.getArtifactToolFromService(
-                blobUri,
-                localAccessToken,
-                "artifacttool"), 3, 1000);
-
-        tl.debug(tl.loc("Debug_ArtifactToolPath", artifactToolPath));
-        
-        context.artifactToolPath = artifactToolPath;
-        return true;
-    } catch (error) {
-        const errorMessage = tl.loc("Error_FailedToGetArtifactTool", error.message);
-        await handleTaskError(error, errorMessage, context);
-        return false;
-    } finally {
-        logArtifactToolTelemetry(context);
-    }
-}
-
 export async function handleTaskError(err: any, errorMessage: string, context?: UniversalPackageContext): Promise<void> {
     tl.error(err);
 
@@ -236,7 +202,7 @@ export async function handleTaskError(err: any, errorMessage: string, context?: 
     tl.setResult(tl.TaskResult.Failed, errorMessage);
 }
 
-function logArtifactToolTelemetry(context: UniversalPackageContext): void {
+export function logArtifactToolTelemetry(context: UniversalPackageContext): void {
     try {
         let artifactToolTelemetry = {
             "command": context.command,
