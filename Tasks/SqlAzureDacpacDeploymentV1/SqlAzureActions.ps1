@@ -356,12 +356,12 @@ function Run-SqlCmdV2 {
     if ($authenticationType -eq "server") {
         $splatArgs['ServerInstance'] = $serverName
         $splatArgs['Database'] = $databaseName
+        $formattedUsername = $sqlUsername
         if ($sqlUsername) {
-            $splatArgs['Username'] = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+            $formattedUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
         }
-        if ($sqlPassword) {
-            $splatArgs['Password'] = $sqlPassword
-        }
+        $splatArgs['Username'] = $formattedUsername
+        $splatArgs['Password'] = $sqlPassword
 
         # Increase Timeout to 120 seconds in case its not provided by User, since some sql scripts can take longer time to execute and sqlcmd.exe has default timeout of 30 seconds which can cause timeout issue.
         if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
