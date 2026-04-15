@@ -267,5 +267,9 @@
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
     "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
     "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.273.2",
+    "Node24_1": "3.273.3"
   }
 }
