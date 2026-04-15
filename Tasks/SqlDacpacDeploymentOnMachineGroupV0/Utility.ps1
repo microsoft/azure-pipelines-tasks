@@ -1,13 +1,15 @@
-﻿function Assert-SqlCmdAdditionalArguments {
+﻿function Assert-AdditionalArguments {
     param (
-        [string] $arguments
+        [string] $arguments,
+        [string] $context = "additional"
     )
 
     if ([string]::IsNullOrWhiteSpace($arguments)) {
         return
     }
 
-    # Block PowerShell injection operators that have no legitimate use in Invoke-Sqlcmd arguments.
+    # Block PowerShell injection operators that have no legitimate use in task arguments.
+    # These characters can be used to inject arbitrary commands via Invoke-Expression.
     # Legitimate alternatives exist for all blocked patterns:
     #   @() -> comma-separated values;  ` (backtick) -> use quoting instead
     $blockedPatterns = @(
@@ -23,7 +25,7 @@
 
     foreach ($blocked in $blockedPatterns) {
         if ($arguments -match $blocked.Pattern) {
-            throw "Additional Invoke-Sqlcmd arguments contain a forbidden character or pattern: $($blocked.Name). This is blocked to prevent command injection. Please remove the '$($blocked.Name)' from your additional arguments."
+            throw "$context arguments contain a forbidden character or pattern: $($blocked.Name). This is blocked to prevent command injection. Please remove the '$($blocked.Name)' from your arguments."
         }
     }
 }
@@ -84,7 +86,7 @@ function Invoke-SqlScriptsInTransaction
 
     if ($enableArgsValidation) {
         Write-Verbose "Feature flag EnableSqlAdditionalArgumentsSanitization is enabled. Validating additional arguments."
-        Assert-SqlCmdAdditionalArguments -arguments $additionalArguments
+        Assert-AdditionalArguments -arguments $additionalArguments -context "Additional Invoke-Sqlcmd"
     }
 
     #Execute the query

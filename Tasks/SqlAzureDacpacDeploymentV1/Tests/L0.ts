@@ -75,6 +75,18 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
         it ('Validate additional args validation allows clean args when FF enabled', (done) => {
             psr.run(path.join(__dirname, 'L0SqlCmdArgValidationClean.ps1'), done);
         });
+
+        it ('Validate dacpac additional args validation blocks injection when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0DacpacArgValidationEnabled.ps1'), done);
+        });
+
+        it ('Validate dacpac additional args validation allows injection when FF disabled', (done) => {
+            psr.run(path.join(__dirname, 'L0DacpacArgValidationDisabled.ps1'), done);
+        });
+
+        it ('Validate dacpac additional args validation allows clean args when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0DacpacArgValidationClean.ps1'), done);
+        });
     }
 });
 

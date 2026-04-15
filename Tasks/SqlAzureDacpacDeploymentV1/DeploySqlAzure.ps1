@@ -148,6 +148,15 @@ try {
             Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments -token $accessToken
         }
         "DacpacTask" {
+            # Validate sqlpackage additional arguments for injection if feature flag is enabled.
+            # The Execute-Command function uses Invoke-Expression with --% (stop-parsing), but
+            # pipe (|) and chain (&&) operators are still interpreted by PowerShell at statement level.
+            $enableArgsValidation = Get-VstsPipelineFeature -FeatureName "EnableSqlAdditionalArgumentsSanitization" -ErrorAction Stop
+            if ($enableArgsValidation) {
+                Write-Verbose "Feature flag EnableSqlAdditionalArgumentsSanitization is enabled. Validating sqlpackage additional arguments."
+                Assert-AdditionalArguments -arguments $sqlpackageAdditionalArguments -context "Additional SqlPackage.exe"
+            }
+
             switch ($deploymentAction) {
                 "Publish" {
                     Write-Verbose "Executing 'Publish' action."
