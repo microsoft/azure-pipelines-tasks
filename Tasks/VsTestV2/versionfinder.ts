@@ -18,36 +18,32 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     }
 
     // Use PowerShell Get-ItemProperty instead of deprecated wmic
-    const powershellTool = tl.tool('powershell');
-    const powershellArgs = ['-Command', `
-        & {
-            param([string]$path)
-            try {
-                (Get-ItemProperty -LiteralPath $path -ErrorAction Stop).VersionInfo.FileVersion
-            }
-            catch {
-                throw "Failed to get version info for $path: $_"
-            }
-        }
-    `, vstestexeLocation];
-    powershellTool.arg(powershellArgs);
-    let output = powershellTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    const escapedPath = vstestexeLocation.replace(/'/g, "''");
+    let output = '';
+    try {
+        const powershellTool = tl.tool('powershell');
+        const powershellScript = `(Get-ItemProperty -LiteralPath '${escapedPath}' -ErrorAction Stop).VersionInfo.FileVersion`;
+        powershellTool.arg(['-Command', powershellScript]);
+        output = powershellTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    } catch (err) {
+        tl.debug('Get-ItemProperty failed: ' + err);
+    }
 
     if (utils.Helper.isNullOrWhitespace(output)) {
-        tl.debug('Primary version query (Get-ItemProperty) returned empty, trying CIM fallback');
+        tl.debug('Get-ItemProperty returned empty, trying legacy wmic fallback');
         try {
-            const cimTool = tl.tool('powershell');
-            const cimScript = `
-                & {
-                    param([string]$path)
-                    $escapedPath = $path -replace '\\\\', '\\\\'
-                    (Get-CimInstance Win32_DataFile -Filter "Name='$escapedPath'" -ErrorAction Stop).Version
+            const wmicTool = tl.tool('wmic');
+            const wmicEscapedPath = vstestexeLocation.replace(/\\/g, '\\\\');
+            wmicTool.arg(['datafile', 'where', 'name=\''.concat(wmicEscapedPath, '\''), 'get', 'Version', '/Value']);
+            const wmicOutput = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+            if (!utils.Helper.isNullOrWhitespace(wmicOutput)) {
+                const verSplitArray = wmicOutput.trim().split('=');
+                if (verSplitArray.length === 2) {
+                    output = verSplitArray[1];
                 }
-            `;
-            cimTool.arg(['-Command', cimScript, vstestexeLocation]);
-            output = cimTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+            }
         } catch (err) {
-            tl.debug('CIM fallback failed: ' + err);
+            tl.debug('Legacy wmic fallback failed: ' + err);
         }
     }
 
@@ -67,8 +63,6 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     const majorVersion = parseInt(versionMatch[1]);
     const minorVersion = parseInt(versionMatch[2]);
     const patchNumber = parseInt(versionMatch[3]);
-
-    console.log(tl.loc('DetectedVsTestVersion', `${majorVersion}.${minorVersion}.${patchNumber}`));
 
     ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
 

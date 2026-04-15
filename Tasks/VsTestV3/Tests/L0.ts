@@ -354,20 +354,20 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
         );
     });
 
-    it('falls back to CIM when primary Get-ItemProperty returns empty', function() {
-        setupMocksWithSequentialOutputs(['', '17.0.33.0\n']);
+    it('falls back to wmic when primary Get-ItemProperty returns empty', function() {
+        setupMocksWithSequentialOutputs(['', 'Version=17.0.33.0\n']);
         const vf = loadVersionfinder();
         const config = makeTestConfig('17.0');
 
         vf.getVsTestRunnerDetails(config);
 
-        assert.ok(config.vsTestVersionDetails, 'vsTestVersionDetails should be set via CIM fallback');
+        assert.ok(config.vsTestVersionDetails, 'vsTestVersionDetails should be set via wmic fallback');
         assert.strictEqual(config.vsTestVersionDetails.majorVersion, 17);
         assert.strictEqual(config.vsTestVersionDetails.minorversion, 0);
         assert.strictEqual(config.vsTestVersionDetails.patchNumber, 33);
     });
 
-    it('throws ErrorReadingVstestVersion when both primary and CIM fallback return empty', function() {
+    it('throws ErrorReadingVstestVersion when both primary and wmic fallback return empty', function() {
         setupMocksWithSequentialOutputs(['', '']);
         const vf = loadVersionfinder();
         const config = makeTestConfig('17.0');
