@@ -379,6 +379,67 @@ function Split-CLIArguments {
     return ,$args
 }
 
+# Parses additional Invoke-SqlCmd arguments using PowerShell AST Parser
+# and merges them into an existing splat hashtable.
+# Handles -Param:$true colon-bound syntax and resolves $true/$false/$null to booleans.
+function Merge-AdditionalSqlArguments {
+    param(
+        [Parameter(Mandatory = $true)]
+        [hashtable]$SplatHashtable,
+
+        [string]$AdditionalArguments
+    )
+
+    if ([string]::IsNullOrWhiteSpace($AdditionalArguments)) {
+        return
+    }
+
+    $tokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseInput(
+        "cmd $AdditionalArguments",
+        [ref]$tokens,
+        [ref]$parseErrors
+    )
+
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+        Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
+        throw "Invalid additional argument syntax. Arguments must be properly quoted."
+    }
+
+    $parsedTokens = @($tokens |
+        Where-Object { $_.Kind -ne 'EndOfInput' } |
+        Select-Object -Skip 1)
+
+    for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
+        if ($parsedTokens[$i].Kind -eq 'Parameter') {
+            $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
+            $values = @()
+            $j = $i + 1
+            while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
+                if ($parsedTokens[$j].Kind -ne 'Comma') {
+                    if ($parsedTokens[$j].Kind -eq 'Variable') {
+                        $varName = $parsedTokens[$j].Text -replace '^\$', ''
+                        if ($varName -eq 'true') { $values += $true }
+                        elseif ($varName -eq 'false') { $values += $false }
+                        elseif ($varName -eq 'null') { $values += $null }
+                        else { $values += $parsedTokens[$j].Text }
+                    } else {
+                        $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
+                        $values += $val
+                    }
+                }
+                $j++
+            }
+            if ($values.Count -eq 0) { $SplatHashtable[$paramName] = $true }
+            elseif ($values.Count -eq 1) { $SplatHashtable[$paramName] = $values[0] }
+            else { $SplatHashtable[$paramName] = $values }
+            $i = $j - 1
+        }
+    }
+}
+
 function Publish-FeatureFlagCheckTelemetry {
     param(
         [Parameter(Mandatory=$true)]

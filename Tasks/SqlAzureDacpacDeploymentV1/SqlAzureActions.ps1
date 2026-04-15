@@ -395,61 +395,7 @@ function Run-SqlCmdV2 {
     $commandToLog += " $sqlcmdAdditionalArguments"
     Write-Host $commandToLog
 
-    # Parse and merge additional arguments using AST Parser
-    if (-not [string]::IsNullOrWhiteSpace($sqlcmdAdditionalArguments)) {
-        $tokens = $null
-        $parseErrors = $null
-        [void][System.Management.Automation.Language.Parser]::ParseInput(
-            "cmd $sqlcmdAdditionalArguments",
-            [ref]$tokens,
-            [ref]$parseErrors
-        )
-        
-        if ($parseErrors -and $parseErrors.Count -gt 0) {
-            $errorMessages = $parseErrors | ForEach-Object { $_.Message }
-            Write-Error "Failed to parse SQL additional arguments: $($errorMessages -join '; ')"
-            throw "Invalid additional argument syntax. Arguments must be properly quoted."
-        }
-        
-        # Use token objects to check Kind property (Parameter tokens have null .Value)
-        $parsedTokens = @($tokens | 
-            Where-Object { $_.Kind -ne 'EndOfInput' } | 
-            Select-Object -Skip 1)
-        
-        for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
-            if ($parsedTokens[$i].Kind -eq 'Parameter') {
-                # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
-                $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
-                # Collect all values until next parameter or end (skip commas)
-                $values = @()
-                $j = $i + 1
-                while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
-                    if ($parsedTokens[$j].Kind -ne 'Comma') {
-                        # Resolve $true/$false/$null variable tokens to actual values
-                        if ($parsedTokens[$j].Kind -eq 'Variable') {
-                            $varName = $parsedTokens[$j].Text -replace '^\$', ''
-                            if ($varName -eq 'true') { $values += $true }
-                            elseif ($varName -eq 'false') { $values += $false }
-                            elseif ($varName -eq 'null') { $values += $null }
-                            else { $values += $parsedTokens[$j].Text }
-                        } else {
-                            $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
-                            $values += $val
-                        }
-                    }
-                    $j++
-                }
-                if ($values.Count -eq 0) {
-                    $splatArgs[$paramName] = $true
-                } elseif ($values.Count -eq 1) {
-                    $splatArgs[$paramName] = $values[0]
-                } else {
-                    $splatArgs[$paramName] = $values
-                }
-                $i = $j - 1
-            }
-        }
-    }
+    Merge-AdditionalSqlArguments -SplatHashtable $splatArgs -AdditionalArguments $sqlcmdAdditionalArguments
     
     # Execute
     if ($splatArgs.ContainsKey('verbose')) {

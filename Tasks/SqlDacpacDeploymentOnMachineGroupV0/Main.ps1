@@ -121,7 +121,11 @@ Try
     if ($taskType -eq "dacpac")
     {
         $dacpacFile = Get-SingleFile -pattern $dacpacFile
-        Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        if (Should-UseSanitizedArguments) {
+            Invoke-DacpacDeploymentV2 -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        } else {
+            Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        }
     }
     else
     {
@@ -177,15 +181,23 @@ Try
                     if (-not [string]::IsNullOrEmpty($sqlScript)) 
                     {
                         $sqlScript = Get-SingleFile -pattern $sqlScript
-                        Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        if (Should-UseSanitizedArguments) {
+                            Invoke-SqlQueryDeploymentV2 -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        } else {
+                            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        }
                     }
                 }
             }
         }
         else 
         {
-            $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
-            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
+            if (Should-UseSanitizedArguments) {
+                Invoke-SqlQueryDeploymentV2 -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            } else {
+                $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
+                Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
+            }
         }
     }
 }

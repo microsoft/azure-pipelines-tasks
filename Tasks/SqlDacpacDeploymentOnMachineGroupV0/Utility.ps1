@@ -105,62 +105,218 @@ function Invoke-SqlScriptsInTransactionV2
     $spaltArguments.Add("Variable", $scriptVariables)
     $spaltArguments.Add("OutputSqlErrors", $true)
 
-    # Parse and merge additional arguments using AST Parser
-    if (-not [string]::IsNullOrWhiteSpace($additionalArguments)) {
-        $tokens = $null
-        $parseErrors = $null
-        [void][System.Management.Automation.Language.Parser]::ParseInput(
-            "cmd $additionalArguments",
-            [ref]$tokens,
-            [ref]$parseErrors
-        )
-        
-        if ($parseErrors -and $parseErrors.Count -gt 0) {
-            $errorMessages = $parseErrors | ForEach-Object { $_.Message }
-            Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
-            throw "Invalid additional argument syntax. Arguments must be properly quoted."
-        }
-        
-        $parsedTokens = @($tokens | 
-            Where-Object { $_.Kind -ne 'EndOfInput' } | 
-            Select-Object -Skip 1)
-        
-        for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
-            if ($parsedTokens[$i].Kind -eq 'Parameter') {
-                # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
-                $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
-                # Collect all values until next parameter or end (skip commas)
-                $values = @()
-                $j = $i + 1
-                while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
-                    if ($parsedTokens[$j].Kind -ne 'Comma') {
-                        # Resolve $true/$false/$null variable tokens to actual values
-                        if ($parsedTokens[$j].Kind -eq 'Variable') {
-                            $varName = $parsedTokens[$j].Text -replace '^\$', ''
-                            if ($varName -eq 'true') { $values += $true }
-                            elseif ($varName -eq 'false') { $values += $false }
-                            elseif ($varName -eq 'null') { $values += $null }
-                            else { $values += $parsedTokens[$j].Text }
-                        } else {
-                            $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
-                            $values += $val
-                        }
-                    }
-                    $j++
-                }
-                if ($values.Count -eq 0) {
-                    $spaltArguments[$paramName] = $true
-                } elseif ($values.Count -eq 1) {
-                    $spaltArguments[$paramName] = $values[0]
-                } else {
-                    $spaltArguments[$paramName] = $values
-                }
-                $i = $j - 1
-            }
-        }
-    }
+    Merge-AdditionalSqlArguments -SplatHashtable $spaltArguments -AdditionalArguments $additionalArguments
     
     Invoke-SqlCmd @spaltArguments
+}
+
+# V2: Safe dacpac deployment using quote-aware CLI argument splitting (no Invoke-Expression)
+# Replicates Invoke-DacpacDeployment from TaskModuleSqlUtility but replaces
+# ExecuteCommand (which uses Invoke-Expression) with Split-CLIArguments + & operator.
+function Invoke-DacpacDeploymentV2 {
+    param (
+        [string]$dacpacFile,
+        [string]$targetMethod,
+        [string]$serverName,
+        [string]$databaseName,
+        [string]$authscheme,
+        [System.Management.Automation.PSCredential]$sqlServerCredentials,
+        [string]$connectionString,
+        [string]$publishProfile,
+        [string]$additionalArguments
+    )
+
+    $sqlPackage = Get-SqlPackageOnTargetMachine
+    $sqlPackageArguments = Get-SqlPackageCmdArgs -dacpacFile $dacpacFile -targetMethod $targetMethod `
+        -serverName $serverName -databaseName $databaseName -authscheme $authscheme `
+        -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString `
+        -publishProfile $publishProfile -additionalArguments $additionalArguments
+
+    Write-Verbose -Verbose $sqlPackageArguments
+    Write-Verbose "Executing command (V2 safe): $sqlPackage $sqlPackageArguments"
+
+    $argArray = Split-CLIArguments $sqlPackageArguments
+
+    $ErrorActionPreference = 'SilentlyContinue'
+    $result = ""
+    & $sqlPackage $argArray 2>&1 | ForEach-Object {
+        $result += ("$_ " + [Environment]::NewLine)
+    }
+    $ErrorActionPreference = 'Stop'
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Verbose "Deployment failed with error : $result"
+        throw $result
+    }
+
+    return $result
+}
+
+# Quote-aware argument splitter for CLI tools (sqlpackage.exe).
+# Splits on whitespace, respects double and single quotes.
+# Does not apply any PowerShell grammar — ;, $, () are treated as literal characters.
+function Split-CLIArguments {
+    param([string]$ArgumentString)
+
+    $result = @()
+    $current = ''
+    $inQuote = $false
+    $quoteChar = ''
+
+    for ($i = 0; $i -lt $ArgumentString.Length; $i++) {
+        $c = $ArgumentString[$i]
+        if ($inQuote) {
+            if ($c -eq $quoteChar) {
+                $inQuote = $false
+            } else {
+                $current += $c
+            }
+        } elseif ($c -eq '"' -or $c -eq "'") {
+            $inQuote = $true
+            $quoteChar = $c
+        } elseif ($c -eq ' ') {
+            if ($current.Length -gt 0) {
+                $result += $current
+                $current = ''
+            }
+        } else {
+            $current += $c
+        }
+    }
+    if ($current.Length -gt 0) {
+        $result += $current
+    }
+    return ,$result
+}
+
+# V2: Safe Invoke-SqlCmd execution using AST Parser + splatting (no Invoke-Expression)
+# Replicates Invoke-SqlQueryDeployment from TaskModuleSqlUtility but replaces
+# Invoke-Expression with AST-parsed splatting.
+function Invoke-SqlQueryDeploymentV2 {
+    param (
+        [string]$taskType,
+        [string]$sqlFile,
+        [string]$inlineSql,
+        [string]$serverName,
+        [string]$databaseName,
+        [string]$authscheme,
+        [System.Management.Automation.PSCredential]$sqlServerCredentials,
+        [string]$additionalArguments
+    )
+
+    try {
+        if ($taskType -eq "sqlInline") {
+            $sqlFile = Get-SqlFilepathOnTargetMachine $inlineSql
+        } else {
+            if ([System.IO.Path]::GetExtension($sqlFile) -ne ".sql") {
+                throw "Invalid Sql file [ $sqlFile ] provided"
+            }
+        }
+
+        Import-SqlPs
+
+        $spaltArguments = @{
+            ServerInstance = $serverName
+            Database = $databaseName
+            InputFile = $sqlFile
+        }
+
+        if ($authscheme -eq "sqlServerAuthentication") {
+            if ($sqlServerCredentials) {
+                $spaltArguments['Username'] = $sqlServerCredentials.Username
+                $spaltArguments['Password'] = $sqlServerCredentials.GetNetworkCredential().password
+            }
+        }
+
+        # Build log-safe representation
+        $commandToLog = "Invoke-SqlCmd"
+        foreach ($key in $spaltArguments.Keys) {
+            if ($key -eq 'Password') {
+                $commandToLog += " -$key `"*******`""
+            } else {
+                $commandToLog += " -$key `"$($spaltArguments[$key])`""
+            }
+        }
+        $commandToLog += " $additionalArguments"
+        Write-Verbose "Invoke-SqlCmd arguments (V2 safe): $commandToLog"
+
+        Merge-AdditionalSqlArguments -SplatHashtable $spaltArguments -AdditionalArguments $additionalArguments
+
+        Invoke-SqlCmd @spaltArguments
+    }
+    catch {
+        throw $_.Exception
+    }
+    finally {
+        if ($taskType -eq "sqlInline" -and $sqlFile -and (Test-Path $sqlFile)) {
+            Write-Verbose "Removing File $sqlFile"
+            Remove-Item $sqlFile -ErrorAction 'SilentlyContinue'
+        }
+    }
+}
+
+# Parses additional Invoke-SqlCmd arguments using PowerShell AST Parser
+# and merges them into an existing splat hashtable.
+# Handles -Param:$true colon-bound syntax and resolves $true/$false/$null to booleans.
+function Merge-AdditionalSqlArguments {
+    param(
+        [Parameter(Mandatory = $true)]
+        [hashtable]$SplatHashtable,
+
+        [string]$AdditionalArguments
+    )
+
+    if ([string]::IsNullOrWhiteSpace($AdditionalArguments)) {
+        return
+    }
+
+    $tokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseInput(
+        "cmd $AdditionalArguments",
+        [ref]$tokens,
+        [ref]$parseErrors
+    )
+
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+        Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
+        throw "Invalid additional argument syntax. Arguments must be properly quoted."
+    }
+
+    $parsedTokens = @($tokens |
+        Where-Object { $_.Kind -ne 'EndOfInput' } |
+        Select-Object -Skip 1)
+
+    for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
+        if ($parsedTokens[$i].Kind -eq 'Parameter') {
+            # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
+            $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
+            # Collect all values until next parameter or end (skip commas)
+            $values = @()
+            $j = $i + 1
+            while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
+                if ($parsedTokens[$j].Kind -ne 'Comma') {
+                    # Resolve $true/$false/$null variable tokens to actual values
+                    if ($parsedTokens[$j].Kind -eq 'Variable') {
+                        $varName = $parsedTokens[$j].Text -replace '^\$', ''
+                        if ($varName -eq 'true') { $values += $true }
+                        elseif ($varName -eq 'false') { $values += $false }
+                        elseif ($varName -eq 'null') { $values += $null }
+                        else { $values += $parsedTokens[$j].Text }
+                    } else {
+                        $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
+                        $values += $val
+                    }
+                }
+                $j++
+            }
+            if ($values.Count -eq 0) { $SplatHashtable[$paramName] = $true }
+            elseif ($values.Count -eq 1) { $SplatHashtable[$paramName] = $values[0] }
+            else { $SplatHashtable[$paramName] = $values }
+            $i = $j - 1
+        }
+    }
 }
 
 # Function to import SqlPS module & avoid directory switch
