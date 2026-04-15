@@ -629,4 +629,32 @@ describe('DotNetCoreExe Suite', function () {
         assert.strictEqual(tr.errorIssues.length, 0);
     });
 
+    it('finds global.json when workingDirectory is outside Build.SourcesDirectory but inside Agent.BuildDirectory (issue #21989)', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithWorkingDirOutsideSourcesDir.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when global.json found via Agent.BuildDirectory fallback');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Verify the fallback was used
+        assert(
+            tr.stdout.indexOf('Using Agent.BuildDirectory') >= 0,
+            'should log that Agent.BuildDirectory fallback was used'
+        );
+
+        // Verify global.json was found
+        assert(
+            tr.stdout.indexOf('Found global.json') >= 0,
+            'should discover global.json via the fallback boundary'
+        );
+
+        // Verify --solution flag was added (MTP detected)
+        assert(
+            tr.stdout.indexOf('--solution') >= 0,
+            'should add --solution flag when MTP is detected via fallback'
+        );
+    });
+
 });

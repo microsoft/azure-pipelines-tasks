@@ -14,6 +14,11 @@ const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
+// Prevent CI environment's AGENT_BUILDDIRECTORY from leaking into the
+// fallback chain inside findGlobalJsonFile, which would cause MTP detection
+// and --project to be added unexpectedly on non-Windows CI runners.
+delete process.env['AGENT_BUILDDIRECTORY'];
+
 nmh.setNugetVersionInputDefault();
 
 tmr.setInput('command','test');
