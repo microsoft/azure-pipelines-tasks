@@ -89,10 +89,13 @@ function Get-RemoteScriptJobArguments {
 
             if ($useSanitizerCall) {
                 $sanitizedArguments = Protect-ScriptArguments -InputArgs $input_ScriptArguments -TaskName "PowerShellOnTargetMachinesV3"
-            }
 
-            if ($useSanitizerActivate) {
-                $input_ScriptArguments = $sanitizedArguments -join " "
+                if ($useSanitizerActivate) {
+                    # -join " " collapses the sanitized token array back into a single string.
+                    # This may normalize multi-space gaps to single spaces — a known trade-off
+                    # shared with AzureFileCopy and WindowsMachineFileCopy tasks.
+                    $input_ScriptArguments = $sanitizedArguments -join " "
+                }
             }
 
             $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
