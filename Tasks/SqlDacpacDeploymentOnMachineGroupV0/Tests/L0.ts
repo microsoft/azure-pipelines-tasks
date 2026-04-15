@@ -27,4 +27,18 @@ describe('SqlServerDacpacDeploymentOnMachineGroupV0 Suite', function () {
         // TODO - add real tests
         done();
     });
+
+    if (psm.testSupported()) {
+        it('Validate additional args validation blocks injection when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0ArgValidationEnabled.ps1'), done);
+        });
+
+        it('Validate additional args validation allows injection when FF disabled', (done) => {
+            psr.run(path.join(__dirname, 'L0ArgValidationDisabled.ps1'), done);
+        });
+
+        it('Validate additional args validation allows clean args when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0ArgValidationClean.ps1'), done);
+        });
+    }
 });
