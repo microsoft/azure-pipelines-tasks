@@ -1,3 +1,31 @@
+$featureFlags = @{
+    enableUserOutputPath = Get-VstsPipelineFeature -FeatureName 'SqlAzureDacpac.EnableUserOutputPath'
+}
+
+function Get-EffectiveOutputPath {
+    param (
+        [string] $defaultOutputPath,
+        [string] $additionalArguments
+    )
+
+    $result = @{
+        EffectiveOutputPath = $defaultOutputPath
+        ResolvedFilePath    = $defaultOutputPath
+    }
+
+    if ($featureFlags.enableUserOutputPath -and $additionalArguments -and $additionalArguments -imatch '/OutputPath\s*:\s*(?:"[^"]+"|[^\s]+)') {
+        $userPath = ($Matches[0] -replace '(?i)^/OutputPath\s*:\s*').Trim('"')
+        if ([string]::IsNullOrWhiteSpace($userPath)) {
+            throw "User-provided /OutputPath is empty or invalid."
+        }
+        Write-Verbose "User-provided /OutputPath detected: $userPath. Skipping default output path."
+        $result.EffectiveOutputPath = $null
+        $result.ResolvedFilePath = $userPath
+    }
+
+    return $result
+}
+
 function Extract-Dacpac {
     param (
         [string] $serverName,
@@ -94,11 +122,14 @@ function Deploy-Report {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
+    $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputXmlPath = $outputPathResult.ResolvedFilePath
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -120,11 +151,14 @@ function Drift-Report {
         [string] $token
     )
 
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
+    $defaultOutputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputXmlPath = $outputPathResult.ResolvedFilePath
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
@@ -156,11 +190,14 @@ function Script-Action {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
-    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
+    $defaultOutputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
+    $outputPathResult = Get-EffectiveOutputPath -defaultOutputPath $defaultOutputSqlPath -additionalArguments $sqlpackageAdditionalArguments
+    $effectiveOutputPath = $outputPathResult.EffectiveOutputPath
+    $outputSqlPath = $outputPathResult.ResolvedFilePath
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -token $token
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -token $token
 
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $effectiveOutputPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure -token $token
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 

@@ -63,6 +63,10 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
         it ('Validate helper methods', (done) => {
             psr.run(path.join(__dirname, 'L0SqlAzureActionsUtilityTests.ps1'), done);
         });
+
+        it ('Validate Get-EffectiveOutputPath with feature flag and user /OutputPath', (done) => {
+            psr.run(path.join(__dirname, 'L0GetEffectiveOutputPath.ps1'), done);
+        });
     }
 });
 
