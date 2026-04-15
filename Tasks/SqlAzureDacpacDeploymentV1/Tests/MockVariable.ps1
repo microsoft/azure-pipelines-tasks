@@ -57,3 +57,5 @@ $endIPAddress = "10.10.10.11"
 
 $autoIp = "10.10.10.10"
 $sqlPackageArguments = "Test Arguments"
+$sqlcmdAdditionalArguments = ""
+$sqlcmdInlineAdditionalArguments = ""

@@ -63,6 +63,18 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
         it ('Validate helper methods', (done) => {
             psr.run(path.join(__dirname, 'L0SqlAzureActionsUtilityTests.ps1'), done);
         });
+
+        it ('Validate additional args validation blocks injection when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlCmdArgValidationEnabled.ps1'), done);
+        });
+
+        it ('Validate additional args validation allows injection when FF disabled', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlCmdArgValidationDisabled.ps1'), done);
+        });
+
+        it ('Validate additional args validation allows clean args when FF enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlCmdArgValidationClean.ps1'), done);
+        });
     }
 });
 

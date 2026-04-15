@@ -1,3 +1,33 @@
+function Assert-SqlCmdAdditionalArguments {
+    param (
+        [string] $arguments
+    )
+
+    if ([string]::IsNullOrWhiteSpace($arguments)) {
+        return
+    }
+
+    # Block PowerShell injection operators that have no legitimate use in Invoke-Sqlcmd arguments.
+    # Legitimate alternatives exist for all blocked patterns:
+    #   @() -> comma-separated values;  ` (backtick) -> use quoting instead
+    $blockedPatterns = @(
+        @{ Pattern = ';';   Name = 'semicolon' },
+        @{ Pattern = '\|';  Name = 'pipe' },
+        @{ Pattern = '&';   Name = 'ampersand' },
+        @{ Pattern = '`';   Name = 'backtick' },
+        @{ Pattern = '\$\('; Name = 'subexpression $(' },
+        @{ Pattern = '@\('; Name = 'array expression @(' },
+        @{ Pattern = '\{';  Name = 'opening brace' },
+        @{ Pattern = '\}';  Name = 'closing brace' }
+    )
+
+    foreach ($blocked in $blockedPatterns) {
+        if ($arguments -match $blocked.Pattern) {
+            throw "Additional Invoke-Sqlcmd arguments contain a forbidden character or pattern: $($blocked.Name). This is blocked to prevent command injection. Please remove the '$($blocked.Name)' from your additional arguments."
+        }
+    }
+}
+
 function Extract-Dacpac {
     param (
         [string] $serverName,
@@ -306,6 +336,14 @@ function Run-SqlCmd {
 
     $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
     $commandToLog += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
+
+    # Validate additional arguments for injection if feature flag is enabled
+    $enableArgsValidation = Get-VstsPipelineFeature -FeatureName "EnableSqlAdditionalArgumentsSanitization" -ErrorAction Stop
+
+    if ($enableArgsValidation) {
+        Write-Verbose "Feature flag EnableSqlAdditionalArgumentsSanitization is enabled. Validating additional arguments."
+        Assert-SqlCmdAdditionalArguments -arguments $sqlcmdAdditionalArguments
+    }
 
     Write-Host $commandToLog
 
