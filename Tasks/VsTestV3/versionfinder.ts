@@ -43,23 +43,20 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     }
     output = output.trim();
     tl.debug('VSTest Version information: ' + output);
-    
-    const versionArray = output.split('.');
-    if (versionArray.length < 3) {
+
+    const versionMatch = output.match(/(\d+)\.(\d+)\.(\d+)/);
+    if (!versionMatch) {
         tl.warning(tl.loc('UnexpectedVersionString', output));
         throw new Error(tl.loc('UnexpectedVersionString', output));
     }
 
-    const majorVersion = parseInt(versionArray[0]);
-    const minorVersion = parseInt(versionArray[1]);
-    const patchNumber = parseInt(versionArray[2]);
+    const majorVersion = parseInt(versionMatch[1]);
+    const minorVersion = parseInt(versionMatch[2]);
+    const patchNumber = parseInt(versionMatch[3]);
+
+    console.log(tl.loc('DetectedVsTestVersion', `${majorVersion}.${minorVersion}.${patchNumber}`));
 
     ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
-
-    if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
-        tl.warning(tl.loc('UnexpectedVersionNumber', output));
-        throw new Error(tl.loc('UnexpectedVersionNumber', output));
-    }
 
     switch (majorVersion) {
         case 14:

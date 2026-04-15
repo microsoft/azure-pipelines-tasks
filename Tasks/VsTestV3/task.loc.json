@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 272,
+    "Minor": 273,
     "Patch": 0
   },
   "demands": [
@@ -619,7 +619,7 @@
     "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime",
     "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
     "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
-    "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
+    "DetectedVsTestVersion": "ms-resource:loc.messages.DetectedVsTestVersion",
     "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
     "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound",
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
