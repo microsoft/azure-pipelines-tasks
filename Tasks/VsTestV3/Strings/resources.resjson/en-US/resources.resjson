@@ -121,6 +121,7 @@
   "loc.messages.UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
   "loc.messages.ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
   "loc.messages.UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
+  "loc.messages.UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
   "loc.messages.DetectedVsTestVersion": "Detected vstest.console.exe version: %s.",
   "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnostics via the exe.config files",
   "loc.messages.NoIncludePatternFound": "No include pattern found. Specify at least one include pattern to search test assemblies.",
