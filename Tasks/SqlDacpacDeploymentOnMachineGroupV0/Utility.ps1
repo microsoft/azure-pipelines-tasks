@@ -54,7 +54,7 @@
 }
 
 # V2: Safe execution using AST Parser + splat (no Invoke-Expression)
-# Called when both feature flags are enabled via Should-UseSanitizedArguments
+# Called when both feature flags are enabled in Should-UseSanitizedArguments
 function Invoke-SqlScriptsInTransactionV2
 {
     param

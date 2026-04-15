@@ -418,13 +418,24 @@ function Run-SqlCmdV2 {
         
         for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
             if ($parsedTokens[$i].Kind -eq 'Parameter') {
-                $paramName = $parsedTokens[$i].Text -replace '^-', ''
+                # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
+                $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
                 # Collect all values until next parameter or end (skip commas)
                 $values = @()
                 $j = $i + 1
                 while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
                     if ($parsedTokens[$j].Kind -ne 'Comma') {
-                        $values += $parsedTokens[$j].Value
+                        # Resolve $true/$false/$null variable tokens to actual values
+                        if ($parsedTokens[$j].Kind -eq 'Variable') {
+                            $varName = $parsedTokens[$j].Text -replace '^\$', ''
+                            if ($varName -eq 'true') { $values += $true }
+                            elseif ($varName -eq 'false') { $values += $false }
+                            elseif ($varName -eq 'null') { $values += $null }
+                            else { $values += $parsedTokens[$j].Text }
+                        } else {
+                            $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
+                            $values += $val
+                        }
                     }
                     $j++
                 }

@@ -301,7 +301,7 @@ function Execute-Command {
     }
 }
 
-# V2: Safe execution using AST Parser + array invocation (no Invoke-Expression)
+# V2: Safe execution using quote-aware CLI argument splitting (no Invoke-Expression)
 # Called when both feature flags are enabled via Should-UseSanitizedArguments
 function Execute-CommandV2 {
     param(
@@ -311,26 +311,10 @@ function Execute-CommandV2 {
 
     $ErrorActionPreference = 'Continue'
     
-    # Parse arguments using PowerShell AST Parser for safe tokenization
-    # Prepend placeholder command name since parser expects complete command structure
-    $tokens = $null
-    $parseErrors = $null
-    [void][System.Management.Automation.Language.Parser]::ParseInput(
-        "cmd $Arguments", 
-        [ref]$tokens, 
-        [ref]$parseErrors
-    )
-    
-    if ($parseErrors -and $parseErrors.Count -gt 0) {
-        $errorMessages = $parseErrors | ForEach-Object { $_.Message }
-        Write-Error "Failed to parse sqlpackage arguments: $($errorMessages -join '; ')"
-        throw "Invalid sqlpackage argument syntax. Arguments must be properly quoted."
-    }
-    
-    $argArray = @($tokens | 
-        Where-Object { $_.Kind -ne 'EndOfInput' } | 
-        Select-Object -Skip 1 | 
-        ForEach-Object { if ($null -ne $_.Value) { $_.Value } else { $_.Text } })
+    # Split arguments using quote-aware splitter instead of PowerShell AST Parser.
+    # CLI tools like sqlpackage.exe use /Property:Value syntax with characters
+    # (;, $, parentheses) that a PowerShell parser would misinterpret.
+    $argArray = Split-CLIArguments $Arguments
     
     $errors = @()
     & $FileName $argArray 2>&1 | ForEach-Object {
@@ -356,6 +340,43 @@ function Execute-CommandV2 {
     if ($LASTEXITCODE -ne 0) {
         throw (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
     }
+}
+
+# Quote-aware argument splitter for CLI tools.
+# Splits on whitespace, respects double and single quotes.
+# Does not apply any PowerShell grammar — ;, $, () are treated as literal characters.
+function Split-CLIArguments {
+    param([string]$ArgumentString)
+
+    $args = @()
+    $current = ''
+    $inQuote = $false
+    $quoteChar = ''
+
+    for ($i = 0; $i -lt $ArgumentString.Length; $i++) {
+        $c = $ArgumentString[$i]
+        if ($inQuote) {
+            if ($c -eq $quoteChar) {
+                $inQuote = $false
+            } else {
+                $current += $c
+            }
+        } elseif ($c -eq '"' -or $c -eq "'") {
+            $inQuote = $true
+            $quoteChar = $c
+        } elseif ($c -eq ' ') {
+            if ($current.Length -gt 0) {
+                $args += $current
+                $current = ''
+            }
+        } else {
+            $current += $c
+        }
+    }
+    if ($current.Length -gt 0) {
+        $args += $current
+    }
+    return ,$args
 }
 
 function Publish-FeatureFlagCheckTelemetry {
