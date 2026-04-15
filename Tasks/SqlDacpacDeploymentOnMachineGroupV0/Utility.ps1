@@ -53,8 +53,9 @@
     Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"
 }
 
-# V2: Safe execution using AST Parser + splat (no Invoke-Expression)
-# Called when both feature flags are enabled in Should-UseSanitizedArguments
+# V2: Safe Invoke-SqlCmd execution using AST Parser + splatting (no Invoke-Expression)
+# Called when both feature flags are enabled via Should-UseSanitizedArguments
+# AST Parser is the correct parser here because Invoke-SqlCmd is a PowerShell cmdlet.
 function Invoke-SqlScriptsInTransactionV2
 {
     param
@@ -120,20 +121,30 @@ function Invoke-SqlScriptsInTransactionV2
             throw "Invalid additional argument syntax. Arguments must be properly quoted."
         }
         
-        # Use token objects to check Kind property (Parameter tokens have null .Value)
         $parsedTokens = @($tokens | 
             Where-Object { $_.Kind -ne 'EndOfInput' } | 
             Select-Object -Skip 1)
         
         for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
             if ($parsedTokens[$i].Kind -eq 'Parameter') {
-                $paramName = $parsedTokens[$i].Text -replace '^-', ''
+                # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
+                $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
                 # Collect all values until next parameter or end (skip commas)
                 $values = @()
                 $j = $i + 1
                 while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
                     if ($parsedTokens[$j].Kind -ne 'Comma') {
-                        $values += $parsedTokens[$j].Value
+                        # Resolve $true/$false/$null variable tokens to actual values
+                        if ($parsedTokens[$j].Kind -eq 'Variable') {
+                            $varName = $parsedTokens[$j].Text -replace '^\$', ''
+                            if ($varName -eq 'true') { $values += $true }
+                            elseif ($varName -eq 'false') { $values += $false }
+                            elseif ($varName -eq 'null') { $values += $null }
+                            else { $values += $parsedTokens[$j].Text }
+                        } else {
+                            $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
+                            $values += $val
+                        }
                     }
                     $j++
                 }
@@ -149,7 +160,6 @@ function Invoke-SqlScriptsInTransactionV2
         }
     }
     
-    # Execute with merged splat (no Invoke-Expression)
     Invoke-SqlCmd @spaltArguments
 }
 

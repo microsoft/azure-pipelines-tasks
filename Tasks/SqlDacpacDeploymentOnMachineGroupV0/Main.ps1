@@ -112,12 +112,6 @@ Try
         $targetMethod = "server"
     }
 
-    if (-not [string]::IsNullOrWhiteSpace($additionalArguments)) {
-        $additionalArguments = Get-SanitizedSqlArguments `
-            -InputArgs $additionalArguments `
-            -TaskName "SqlDacpacDeploymentOnMachineGroupV0"
-    }
-
     if($sqlUsername -and $sqlPassword)
     {
         $secureAdminPassword = "$sqlPassword" | ConvertTo-SecureString  -AsPlainText -Force
