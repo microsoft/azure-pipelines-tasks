@@ -39,19 +39,23 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
 
     if (utils.Helper.isNullOrWhitespace(output)) {
         tl.debug('Primary version query (Get-ItemProperty) returned empty, trying CIM fallback');
-        const cimTool = tl.tool('powershell');
-        const cimScript = `
-            & {
-                param(
-                    [Parameter(Mandatory = $true)]
-                    [string] $LiteralPath
-                )
-                $escapedPath = $LiteralPath -replace '\\\\', '\\\\'
-                (Get-CimInstance Win32_DataFile -Filter "Name='$escapedPath'" -ErrorAction Stop).Version
-            }
-        `;
-        cimTool.arg(['-Command', cimScript, vstestexeLocation]);
-        output = cimTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+        try {
+            const cimTool = tl.tool('powershell');
+            const cimScript = `
+                & {
+                    param(
+                        [Parameter(Mandatory = $true)]
+                        [string] $LiteralPath
+                    )
+                    $escapedPath = $LiteralPath -replace '\\\\', '\\\\'
+                    (Get-CimInstance Win32_DataFile -Filter "Name='$escapedPath'" -ErrorAction Stop).Version
+                }
+            `;
+            cimTool.arg(['-Command', cimScript, vstestexeLocation]);
+            output = cimTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+        } catch (err) {
+            tl.debug('CIM fallback failed: ' + err);
+        }
     }
 
     if (utils.Helper.isNullOrWhitespace(output)) {
