@@ -306,9 +306,9 @@ function Merge-AdditionalSqlArguments {
             # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
             $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
 
-            # Skip reserved parameters that are already set by the task
-            if ($reservedParams -contains $paramName -and $SplatHashtable.ContainsKey($paramName)) {
-                Write-Warning "Additional argument '-$paramName' is reserved and cannot override the task-configured value. Skipping."
+            # Block reserved parameters unconditionally to prevent injection
+            if ($reservedParams -contains $paramName) {
+                Write-Warning "Additional argument '-$paramName' is reserved and cannot be set via additional arguments. Skipping."
                 # Skip this parameter and its values
                 $j = $i + 1
                 while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') { $j++ }
