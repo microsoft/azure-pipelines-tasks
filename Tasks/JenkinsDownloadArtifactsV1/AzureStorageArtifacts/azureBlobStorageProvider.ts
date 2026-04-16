@@ -1,9 +1,10 @@
 import path = require('path');
-import azureStorage = require('azure-storage');
+import { BlobServiceClient, StorageSharedKeyCredential, ContainerClient } from '@azure/storage-blob';
 import fs = require('fs');
 import models = require('artifact-engine/Models');
 import store = require('artifact-engine/Store');
 import * as tl from 'azure-pipelines-task-lib/task';
+import { Readable } from 'stream';
 
 export class AzureBlobProvider implements models.IArtifactProvider {
 
@@ -18,42 +19,32 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         } else {
             this._prefixFolderPath = "";
         }
-        this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
+        
+        const sharedKeyCredential = new StorageSharedKeyCredential(storageAccount, accessKey);
+        const blobEndpoint = host || `https://${storageAccount}.blob.core.windows.net`;
+        const blobServiceClient = new BlobServiceClient(blobEndpoint, sharedKeyCredential);
+        this._containerClient = blobServiceClient.getContainerClient(container);
         this._addPrefixToDownloadedItems = !!addPrefixToDownloadedItems;
     }
 
-    public putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
-        return new Promise(async (resolve, reject) => {
-            await this._ensureContainerExistence();
+    public async putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
+        await this._ensureContainerExistence();
 
-            var self = this;
-            console.log(tl.loc("UploadingItem", item.path));
-            var blobPath = this._prefixFolderPath ? this._prefixFolderPath + "/" + item.path : item.path;
+        console.log(tl.loc("UploadingItem", item.path));
+        var blobPath = this._prefixFolderPath ? this._prefixFolderPath + "/" + item.path : item.path;
 
-            var writeStream = this._blobSvc.createWriteStreamToBlockBlob(this._container, blobPath, null, function (error, result, response) {
-                if (error) {
-                    console.log(tl.loc("FailedToUploadBlob", blobPath, error.message));
-                    reject(error);
-                } else {
-                    var blobUrl = self._blobSvc.getUrl(self._container, blobPath);
-                    console.log(tl.loc("CreatedBlobForItem", item.path, blobUrl));
-                    item.metadata["destinationUrl"] = blobUrl;
-                    resolve(item);
-                }
-            });
-
-            readStream.pipe(writeStream);
-            writeStream.on("error",
-                (error) => {
-                    console.log("ErrorInWriteStream", error);
-                    reject(error);
-                });
-            readStream.on("error",
-                (error) => {
-                    console.log(tl.loc("ErrorInReadStream", error));
-                    reject(error);
-                });
-        });
+        try {
+            const blockBlobClient = this._containerClient.getBlockBlobClient(blobPath);
+            await blockBlobClient.uploadStream(readStream as Readable);
+            
+            var blobUrl = blockBlobClient.url;
+            console.log(tl.loc("CreatedBlobForItem", item.path, blobUrl));
+            item.metadata["destinationUrl"] = blobUrl;
+            return item;
+        } catch (error) {
+            console.log(tl.loc("FailedToUploadBlob", blobPath, error.message));
+            throw error;
+        }
     }
 
     public getRootItems(): Promise<models.ArtifactItem[]> {
@@ -64,102 +55,63 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         throw new Error(tl.loc("GetArtifactItemsNotSupported"));
     }
 
-    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
-        return new Promise((resolve, reject) => {
-            var readStream: NodeJS.ReadableStream;
-            if (!this._addPrefixToDownloadedItems && !!this._prefixFolderPath) {
-                // Adding prefix path to get the absolute path
-                readStream = this._blobSvc.createReadStream(this._container, this._prefixFolderPath + artifactItem.path, null); 
-            } else {
-                readStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
-            }
-            resolve(readStream);
-        });
+    public async getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
+        let blobPath: string;
+        if (!this._addPrefixToDownloadedItems && !!this._prefixFolderPath) {
+            blobPath = this._prefixFolderPath + artifactItem.path;
+        } else {
+            blobPath = artifactItem.path;
+        }
+        
+        const blobClient = this._containerClient.getBlobClient(blobPath);
+        const downloadResponse = await blobClient.download(0);
+        return downloadResponse.readableStreamBody as NodeJS.ReadableStream;
     }
 
     public dispose() {
     }
 
-    private _ensureContainerExistence(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (!this._isContainerExists) {
-                var self = this;
-                this._blobSvc.createContainerIfNotExists(this._container, function (error, result, response) {
-                    if (!!error) {
-                        console.log(tl.loc("FailedToCreateContainer", self._container, error.message));
-                        reject(error);
-                    } else {
-                        self._isContainerExists = true;
-                        console.log(tl.loc("CreatedContainer", self._container));
-                        resolve();
-                    }
-                });
-            } else {
-                resolve();
+    private async _ensureContainerExistence(): Promise<void> {
+        if (!this._containerExists) {
+            try {
+                await this._containerClient.createIfNotExists();
+                this._containerExists = true;
+                console.log(tl.loc("CreatedContainer", this._container));
+            } catch (error) {
+                console.log(tl.loc("FailedToCreateContainer", this._container, error.message));
+                throw error;
             }
-        });
+        }
     }
 
-    private _getItems(container: string, parentRelativePath?: string): Promise<models.ArtifactItem[]> {
-        var promise = new Promise<models.ArtifactItem[]>(async (resolve, reject) => {
-            var items: models.ArtifactItem[] = [];
-            var continuationToken = null;
-            var result;
-            do {
-                result = await this._getListOfItemsInsideContainer(container, parentRelativePath, continuationToken);
-                items = items.concat(this._convertBlobResultToArtifactItem(result.entries));
-                continuationToken = result.continuationToken;
-                if (!!continuationToken) {
-                    console.log(tl.loc("ContinuationTokenExistsFetchingRemainingFiles"));
-                }
-            } while (continuationToken);
-
-            console.log(tl.loc("SuccessFullyFetchedItemList"));
-            resolve(items);
-        });
-
-        return promise;
-    }
-
-    private async _getListOfItemsInsideContainer(container, parentRelativePath, continuationToken): Promise<azureStorage.BlobService.ListBlobsResult> {
-        var promise = new Promise<azureStorage.BlobService.ListBlobsResult>((resolve, reject) => {
-            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, continuationToken, async (error, result) => {
-                if (!!error) {
-                    console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-
-        return promise;
-    }
-
-    private _convertBlobResultToArtifactItem(blobResult: azureStorage.BlobService.BlobResult[]): models.ArtifactItem[] {
-        var artifactItems: models.ArtifactItem[] = new Array<models.ArtifactItem>();
-        blobResult.forEach(element => {
+    private async _getItems(container: string, parentRelativePath?: string): Promise<models.ArtifactItem[]> {
+        var items: models.ArtifactItem[] = [];
+        
+        const listOptions = parentRelativePath ? { prefix: parentRelativePath } : {};
+        
+        for await (const blob of this._containerClient.listBlobsFlat(listOptions)) {
             var artifactitem: models.ArtifactItem = new models.ArtifactItem();
             artifactitem.itemType = models.ItemType.File;
-            artifactitem.fileLength = parseInt(element.contentLength);
-            artifactitem.lastModified = new Date(element.lastModified + 'Z');
+            artifactitem.fileLength = blob.properties.contentLength || 0;
+            artifactitem.lastModified = blob.properties.lastModified || new Date();
+            
             if (!this._addPrefixToDownloadedItems && !!this._prefixFolderPath) {
-                 // Supplying relative path without prefix; removing the first occurence
-                artifactitem.path = element.name.replace(this._prefixFolderPath, "").trim();
+                artifactitem.path = blob.name.replace(this._prefixFolderPath, "").trim();
             } else {
-                artifactitem.path = element.name;
+                artifactitem.path = blob.name;
             }
-            artifactItems.push(artifactitem);
-        });
+            items.push(artifactitem);
+        }
 
-        return artifactItems;
+        console.log(tl.loc("SuccessFullyFetchedItemList"));
+        return items;
     }
 
     private _storageAccount: string;
     private _accessKey: string;
     private _container: string;
     private _prefixFolderPath: string;
-    private _isContainerExists: boolean = false;
-    private _blobSvc: azureStorage.BlobService;
+    private _containerExists: boolean = false;
+    private _containerClient: ContainerClient;
     private _addPrefixToDownloadedItems: boolean = false;
 }

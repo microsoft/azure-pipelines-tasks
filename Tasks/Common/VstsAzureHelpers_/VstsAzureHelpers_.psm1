@@ -24,6 +24,24 @@ Add-Tls12InSession
 if (-not $featureFlags.retireAzureRM) {
     . $PSScriptRoot/ImportFunctions.ps1
     . $PSScriptRoot/InitializeAzureRMFunctions.ps1
+
+    # we need to find out if it is safe to remove RETIRE_AZURERM_POWERSHELL_MODULE env variable
+    try {
+        $telemetry = @{
+            'RETIRE_AZURERM_POWERSHELL_MODULE' = $env:RETIRE_AZURERM_POWERSHELL_MODULE
+            'SYSTEM_TASKDISPLAYNAME'           = $env:SYSTEM_TASKDISPLAYNAME
+            'SYSTEM_TEAMFOUNDATIONSERVERURI'   = $env:SYSTEM_TEAMFOUNDATIONSERVERURI
+            'SYSTEM_TEAMPROJECT'               = $env:SYSTEM_TEAMPROJECT
+            'SYSTEM_DEFINITIONID'              = $env:SYSTEM_DEFINITIONID
+            'SYSTEM_JOBIDENTIFIER'             = $env:SYSTEM_JOBIDENTIFIER
+        }
+
+        $json = $telemetry | ConvertTo-Json -Compress
+        Write-Host "##vso[telemetry.publish area=TaskHub;feature=RetireAzureRmPowershellModuleDeprecation]$json"
+    }
+    catch {
+        Write-Warning "Failed to publish telemetry: $($_.Exception.Message)"
+    }
 }
 . $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/InitializeAzModuleFunctions.ps1

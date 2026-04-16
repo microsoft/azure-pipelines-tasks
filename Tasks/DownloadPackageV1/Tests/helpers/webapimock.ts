@@ -9,10 +9,10 @@ export class WebApiMock {
     rest: RestMock;
     http: HttpMock;
 
-    constructor() {
+    constructor(options?: { downloadShouldFail?: boolean }) {
         this.vsoClient = new VsoClientMock();
         this.rest = new RestMock();
-        this.http = new HttpMock();
+        this.http = new HttpMock(options?.downloadShouldFail);
     }
 
     public getCoreApi() {
@@ -26,7 +26,8 @@ class VsoClientMock {
         "6EA81B8C-7386-490B-A71F-6CF23C80B388": "nugetPackageDownloadUrl",
         "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E": "npmPackageDownloadUrl",
         "3B331909-6A86-44CC-B9EC-C1834C35498F": "multiPackageMetadataUrl",
-        "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E": "multiPackageDownloadUrl"
+        "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E": "multiPackageDownloadUrl",
+        "BCEB7750-5D24-4BEA-A2C8-1E3155DCEFA3": "cargoPackageDownloadUrl"
     };
     async getVersioningData(
         apiVersion: string,
@@ -47,6 +48,11 @@ class VsoClientMock {
 
         if(queryParams && "packageNameQuery" in queryParams) {
             return Promise.resolve({ requestUrl: "packageNameResolverUrl" })
+        }
+        // When resolveLatestVersion calls getPackageMetadata with protocolType but no packageNameQuery
+        if(queryParams && "protocolType" in queryParams && !("packageNameQuery" in queryParams)
+            && routeValues['packageId']) {
+                return Promise.resolve({ requestUrl: "packageVersionsUrl" });
         }
         return Promise.resolve({ requestUrl: this.packageUrlMap[locationId] });
     }
@@ -71,6 +77,15 @@ class RestMock {
         },
         singlePackageMetadataUrl: {
             name: "singlePackageName"
+        },
+        packageVersionsUrl: {
+            id: "6f598cbe-a5e2-4f75-aa78-e0fd08301a15",
+            versions: [
+                {
+                    normalizedVersion: "2.0.0",
+                    isListed: true
+                }
+            ]
         },
         multiPackageMetadataUrl: {
             protocolMetadata: {
@@ -117,6 +132,7 @@ class RestMock {
 }
 
 class HttpMock {
+    private shouldFail: boolean;
     private responseMap = {
         nugetPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "nugetFile.nupkg")),
         npmPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "npmFile.tgz")),
@@ -126,10 +142,18 @@ class HttpMock {
                 this.push(null);
             }
         }),
-        badNupKgDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "badNupkgPackageName.nupkg"))
+        badNupKgDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "badNupkgPackageName.nupkg")),
+        cargoPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "nugetFile.nupkg"))
     };
 
+    constructor(shouldFail?: boolean) {
+        this.shouldFail = !!shouldFail;
+    }
+
     async get(resource: string, additionalHeaders?: any): Promise<any> {
+        if (this.shouldFail) {
+            throw new Error('download error');
+        }
         var response = this.responseMap[resource] as IncomingMessage;
         response.statusCode = 200;
         return {

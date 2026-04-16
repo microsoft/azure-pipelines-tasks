@@ -73,6 +73,10 @@
     "Node20_1": {
       "target": "gotool.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "gotool.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
