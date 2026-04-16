@@ -1,10 +1,11 @@
-import { Utility } from "../operations/Utility";
+import { Utility, ReleaseNotesSelectionMode } from "../operations/Utility";
 import { TestString } from "./TestStrings";
 
 export class UtilityL0Tests {
 
     public static startTests() {
         this.validateGetReleaseNote();
+        this.validateGetReleaseNoteGenerateMode();
         this.validateNormalizeBranchName();
         this.validateIsTagMatching();
         this.validateParseHTTPHeaderLink();
@@ -17,9 +18,18 @@ export class UtilityL0Tests {
         let releaseNoteInput = "release_note_input";
         let changeLog = "change_log";
 
-        let releaseNote = Utility.getReleaseNote("input", null, releaseNoteInput, changeLog);
+        let releaseNote = Utility.getReleaseNote(ReleaseNotesSelectionMode.inline, null, releaseNoteInput, changeLog);
         if (releaseNote === (releaseNoteInput + changeLog)) {
             console.log(TestString.getReleaseNoteKeyword);
+        }
+    }
+
+    public static validateGetReleaseNoteGenerateMode() {
+        let changeLog = "change_log";
+
+        let releaseNote = Utility.getReleaseNote(ReleaseNotesSelectionMode.generateReleaseNotes, null, "", changeLog);
+        if (releaseNote === changeLog) {
+            console.log(TestString.getReleaseNoteGenerateModeKeyword);
         }
     }
 
