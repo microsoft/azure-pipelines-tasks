@@ -9,6 +9,7 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
+import { downloadToolWithRetries } from "azure-pipelines-tool-lib";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -412,7 +413,22 @@ export class azureclitask {
                 const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
                 if (!extensionInstalled) {
                     console.log("Azure DevOps extension not found in working environment. Attempting installation.");
-                    Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+
+                    try {
+                        Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                    } catch (error) {
+                        console.log("Standard installation of azure-devops extension failed.");
+
+                        const whlUrl =
+                            "https://pkgs.dev.azure.com/mseng/PipelineTools/_apis/packaging/feeds/" +
+                            "2442ccb9-e127-4ec5-99e5-28dd29f92057/pypi/packages/azure-devops/" +
+                            "versions/1.0.2/azure_devops-1.0.2-py2.py3-none-any.whl/content";
+                        const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
+                        const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
+                        
+                        Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                        console.log("Azure DevOps CLI extension installed successfully from wheel.");
+                    }
                 } else {
                     console.log("Azure DevOps extension is already installed, skipping installation.");
                 }
