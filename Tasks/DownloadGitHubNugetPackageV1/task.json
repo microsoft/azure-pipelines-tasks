@@ -22,7 +22,7 @@
   },
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "deprecationMessage": "The DownloadGitHubNugetPackage@1 (Download GitHub Nuget Packages) task has been deprecated and will soon be retired. Use the NuGetCommand@2 or DotNetCoreCLI@2 task instead.",
+  "deprecationMessage": "The DownloadGitHubNugetPackage@1 (Download GitHub NuGet Packages) task has been deprecated and will soon be retired. Use the NuGetCommand@2 or DotNetCoreCLI@2 task instead.",
   "instanceNameFormat": "[Deprecated] dotnet restore",
   "groups": [
     {
