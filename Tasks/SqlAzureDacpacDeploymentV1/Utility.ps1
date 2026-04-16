@@ -348,7 +348,7 @@ function Execute-CommandV2 {
 function Split-CLIArguments {
     param([string]$ArgumentString)
 
-    $args = @()
+    $result = @()
     $current = ''
     $inQuote = $false
     $quoteChar = ''
@@ -366,7 +366,7 @@ function Split-CLIArguments {
             $quoteChar = $c
         } elseif ($c -eq ' ') {
             if ($current.Length -gt 0) {
-                $args += $current
+                $result += $current
                 $current = ''
             }
         } else {
@@ -374,9 +374,9 @@ function Split-CLIArguments {
         }
     }
     if ($current.Length -gt 0) {
-        $args += $current
+        $result += $current
     }
-    return ,$args
+    return ,$result
 }
 
 # Parses additional Invoke-SqlCmd arguments using PowerShell AST Parser
