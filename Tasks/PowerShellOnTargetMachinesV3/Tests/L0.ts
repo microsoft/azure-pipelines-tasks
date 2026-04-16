@@ -27,4 +27,16 @@ describe('PowerShellOnTargetMachineV3 Suite', function () {
         // TODO - add real tests
         done();
     });
+
+    if (psm.testSupported()) {
+        it('Sanitizes ScriptArguments when feature flag is enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0SanitizerEnabled.ps1'), done);
+        });
+        it('Skips sanitization when feature flag is disabled', (done) => {
+            psr.run(path.join(__dirname, 'L0SanitizerDisabled.ps1'), done);
+        });
+        it('Skips sanitization for inline scripts', (done) => {
+            psr.run(path.join(__dirname, 'L0SanitizerSkippedForInline.ps1'), done);
+        });
+    }
 });
