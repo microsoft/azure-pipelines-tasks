@@ -297,10 +297,25 @@ function Merge-AdditionalSqlArguments {
         Where-Object { $_.Kind -ne 'EndOfInput' } |
         Select-Object -Skip 1)
 
+    # Reserved parameter names that cannot be overridden via additional arguments
+    # to prevent redirection of queries to attacker-controlled servers or scripts.
+    $reservedParams = @('ServerInstance', 'Database', 'InputFile', 'Password', 'Username', 'AccessToken', 'ConnectionString', 'Query')
+
     for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
         if ($parsedTokens[$i].Kind -eq 'Parameter') {
             # Strip leading dash and trailing colon (e.g. -OutputSqlErrors: => OutputSqlErrors)
             $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
+
+            # Skip reserved parameters that are already set by the task
+            if ($reservedParams -contains $paramName -and $SplatHashtable.ContainsKey($paramName)) {
+                Write-Warning "Additional argument '-$paramName' is reserved and cannot override the task-configured value. Skipping."
+                # Skip this parameter and its values
+                $j = $i + 1
+                while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') { $j++ }
+                $i = $j - 1
+                continue
+            }
+
             # Collect all values until next parameter or end (skip commas)
             $values = @()
             $j = $i + 1

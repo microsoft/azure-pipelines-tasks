@@ -469,7 +469,7 @@ function Get-AgentIPRange {
     if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue) {
         try {
             Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
-            Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline `"select getdate()`" -connectionString $connectionString -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
+            Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword ****** -sqlInline `"select getdate()`" -connectionString ********** -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
 
             $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -token $token -ErrorVariable errors | Out-String
         }
@@ -487,9 +487,17 @@ function Get-AgentIPRange {
 
         $ErrorActionPreference = 'Continue'
 
-        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        if (Should-UseSanitizedArguments) {
+            $argArray = Split-CLIArguments $sqlCmdArgs
+            $output = (& $sqlCmd $argArray 2>&1) | Out-String
+        } else {
+            $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        }
 
         $ErrorActionPreference = 'Stop'
+
+        # Clear password from environment variable
+        $env:SQLCMDPASSWORD = $null
     }
 
     if ($errors.Count -gt 0) {
