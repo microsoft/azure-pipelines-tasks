@@ -33,7 +33,7 @@
     "typescript": "5.1.6"
   },
   "overrides": {
-    "serialize-javascript":"^7.0.4",
-        "picomatch": "^2.0.4"
+    "serialize-javascript": "^7.0.4",
+    "picomatch": "^2.0.4"
   }
 }
