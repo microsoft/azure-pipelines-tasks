@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[.NET Core-Dokumentation anzeigen](https://docs.microsoft.com/dotnet/core/)",
   "loc.description": "Veraltet: Dieser Task wird nicht mehr gewartet. Verwenden Sie stattdessen den Task NuGetCommand@2 oder DotNetCoreCLI@2.",
   "loc.instanceNameFormat": "[Deprecated] dotnet restore",
+  "loc.group.displayName.restoreAuth": "Feeds und Authentifizierung",
   "loc.group.displayName.restoreAdvanced": "Erweitert",
   "loc.input.label.packageName": "Paketname",
   "loc.input.help.packageName": "Name des Pakets, das aus GitHub heruntergeladen werden soll",
