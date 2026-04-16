@@ -34,6 +34,7 @@ $ErrorActionPreference = 'Stop'
 # Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
@@ -216,10 +217,10 @@ catch [Exception] {
     }
 
     if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
-        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+        $errorMessage += " " + (Get-VstsLocString -Key "SAD_DriftReportWarning")
     }
 
-    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
+    $errorMessage += " " + (Get-VstsLocString -Key "SAD_TroubleshootingLink")
 
     throw $errorMessage
 }
