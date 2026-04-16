@@ -1,7 +1,7 @@
 {
   "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
   "name": "DownloadGitHubNugetPackage",
-  "friendlyName": "[Deprecated] GitHub Nuget Packages",
+  "friendlyName": "[Deprecated] Download GitHub NuGet",
   "description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
