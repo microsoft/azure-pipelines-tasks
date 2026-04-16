@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](http://go.microsoft.com/fwlink/?LinkID=827160) 또는 [Azure CLI 설명서 참조](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Linux 에이전트에서 실행하는 경우 셸 스크립트에서, Windows 에이전트에서 실행하는 경우 배치 스크립트에서 Azure 구독에 대해 Azure CLI 명령을 실행합니다.",
+  "loc.description": "사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 AzureCLI@2 작업을 사용하세요.",
   "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "버전 1.0의 새로운 기능:\n- Python 기반인 새 Azure CLI 2.0 지원\n- 플랫폼 간 에이전트(Linux, macOS 또는 Windows)에서 작동\n- Azure CLI 1.0(node.js 기반)에서 작동하려면 작업 버전 0.0으로 전환\n- 제한 사항:\n - Azure 클래식 구독 지원 안 함. Azure CLI 2.0은 ARM(Azure Resource Manager) 구독만 지원합니다.",
   "loc.group.displayName.advanced": "고급",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[深入了解此工作](http://go.microsoft.com/fwlink/?LinkID=827160)或[參閱 Azure CLI 文件](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "使用殼層指令碼 (在 Linux 代理程式上執行時) 或批次指令碼 (Windows 代理程式上執行時)，對 Azure 訂用帳戶執行 Azure CLI 命令。",
+  "loc.description": "已淘汰: 此工作已不再維護。請改用 AzureCLI@2 工作。",
   "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "1.0 版的新功能:\n- 支援以 Python 為基礎的新版 Azure CLI 2.0\n- 適用於跨平台代理程式 (Linux、macOS 或 Windows)\n- 為搭配 Azure CLI 1.0 (以 node.js 為基礎) 運作，會切換為工作版本 0.0\n- 限制:\n - 不支援 Azure 傳統訂用帳戶。Azure CLI 2.0 只支援 Azure Resource Manager (ARM) 訂用帳戶。",
   "loc.group.displayName.advanced": "進階",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Deprecated] CLI de Azure",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](http://go.microsoft.com/fwlink/?LinkID=827160) o [consultar la documentación de la CLI de Azure](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Ejecute los comandos de la CLI de Azure para una suscripción de Azure en un script de Shell (al ejecutarse en un agente de Linux) o en un script por lotes (al ejecutarse en un agente de Windows).",
+  "loc.description": "En desuso: esta tarea ya no recibe mantenimiento. Use la tarea AzureCLI@2 en su lugar.",
   "loc.instanceNameFormat": "[Deprecated] CLI de Azure $(scriptPath)",
   "loc.releaseNotes": "Novedades de la versión 1.0:\n- Admite la nueva CLI de Azure 2.0 basada en Python\n- Funciona con agentes multiplataforma (Linux, macOS o Windows)\n- Para trabajar con la CLI de Azure 1.0 (basada en node.js), cambie a la versión de tarea 0.0\n- Limitaciones:\n - No admite suscripciones de Azure clásico. La CLI de Azure 2.0 solo admite suscripciones de Azure Resource Manager (ARM).",
   "loc.group.displayName.advanced": "Avanzado",
