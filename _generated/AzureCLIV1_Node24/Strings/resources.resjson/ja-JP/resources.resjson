@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure CLI",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[このタスクの詳細を表示](http://go.microsoft.com/fwlink/?LinkID=827160)、または [Azure CLI のドキュメントを参照](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Linux エージェントで実行している場合はシェル スクリプト、Windows エージェントで実行している場合はバッチ スクリプトで、Azure サブスクリプションに対して Azure CLI コマンドを実行します。",
-  "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.description": "非推奨: このタスクはメンテナンスされなくなりました。代わりに AzureCLI@2 タスクを使用してください。",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "バージョン 1.0 の新機能:\n- Python ベースの新しい Azure CLI 2.0 をサポート\n- クロスプラットフォーム エージェント対応 (Linux、macOS、Windows)\n- Azure CLI 1.0 (node.js ベース) に対応するためのタスク バージョン 0.0 への切り替え\n- 制限事項:\n - Azure クラシック サブスクリプションはサポートされていません。Azure CLI 2.0 では Azure Resource Manager (ARM) サブスクリプションのみがサポートされています。",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.connectedServiceNameARM": "Azure サブスクリプション",
