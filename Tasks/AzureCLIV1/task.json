@@ -27,7 +27,7 @@
   "showEnvironmentVariables": true,
   "deprecated": true,
   "removalDate": "2026-06-30",
-  "deprecationMessage": "The AzureCLI@1 task is deprecated, please use the latest version of the AzureCLI task",
+  "deprecationMessage": "AzureCLI@1 is deprecated. Use AzureCLI@2 (or newer) instead.",
   "groups": [
     {
       "name": "advanced",
