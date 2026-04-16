@@ -26,7 +26,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "deprecated": true,
-  "removalDate": "2026-06-30",
   "deprecationMessage": "AzureCLI@1 is deprecated. Use AzureCLI@2 (or newer) instead.",
   "groups": [
     {

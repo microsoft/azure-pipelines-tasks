@@ -22,7 +22,6 @@
   },
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2026-06-30",
   "deprecationMessage": "The DownloadGitHubNugetPackage@1 (Download GitHub Nuget Packages) task has been deprecated and will soon be retired. Use the NuGetCommand@2 or DotNetCoreCLI@2 task instead.",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

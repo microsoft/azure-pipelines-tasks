@@ -21,7 +21,6 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2026-06-30",
   "deprecationMessage": "The DownloadGithubNpmPackage@1 (Download Github Npm Package) task has been deprecated and will soon be retired. Use the Npm@1 task instead.",
   "instanceNameFormat": "[Deprecated] Download GitHub Npm Package",
   "groups": [
