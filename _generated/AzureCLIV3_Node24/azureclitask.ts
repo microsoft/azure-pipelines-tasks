@@ -419,10 +419,7 @@ export class azureclitask {
                     } catch (error) {
                         console.log("Standard installation of azure-devops extension failed.");
 
-                        const whlUrl =
-                            "https://pkgs.dev.azure.com/mseng/PipelineTools/_apis/packaging/feeds/" +
-                            "2442ccb9-e127-4ec5-99e5-28dd29f92057/pypi/packages/azure-devops/" +
-                            "versions/1.0.2/azure_devops-1.0.2-py2.py3-none-any.whl/content";
+                        const whlUrl = "https://aka.ms/azure-devops-extension-whl";
                         const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
                         const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
                         
