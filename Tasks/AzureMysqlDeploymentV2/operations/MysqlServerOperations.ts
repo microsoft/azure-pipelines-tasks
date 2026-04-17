@@ -72,11 +72,12 @@ export class MysqlServerOperations{
         if(!id){
             throw new Error(task.loc("UnableToFindResourceGroupDueToNullId"));
         }
-        const pathArray =id.split("/");
-        if(pathArray[3] != 'resourceGroups'){
+        const pathArray = id.split("/");
+        const rgIndex = pathArray.findIndex(segment => segment.toLowerCase() === 'resourcegroups');
+        if(rgIndex === -1 || rgIndex + 1 >= pathArray.length){
             throw new Error(task.loc("UnableToFindResourceGroupDueToInvalidId"));
         }
-        return pathArray[4];
+        return pathArray[rgIndex + 1];
     }
 
 }

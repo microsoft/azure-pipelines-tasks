@@ -63,7 +63,7 @@ async function run() {
             if(firewallOperations && mysqlServer) {
                 await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
             }
-            task.debug('Sucessfully deleted firewall rule.');
+            task.debug('Successfully deleted firewall rule.');
         }
     }
 
