@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure Database for MySQL 배포",
+  "loc.friendlyName": "[사용 중단] Azure Database for MySQL 배포",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "스크립트를 실행하고 Azure Database for MySQL을 변경합니다.",
-  "loc.instanceNameFormat": "Azure MySQL 실행: $(TaskNameSelector)",
+  "loc.description": "사용 중단: 대신 AzureMysqlDeployment@2 작업을 사용하세요. V2는 Azure Database for MySQL Flexible Server를 대상으로 합니다.",
+  "loc.instanceNameFormat": "[사용 중단] Azure MySQL 실행: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 정보",
   "loc.group.displayName.taskDetails": "배포 패키지",
   "loc.group.displayName.firewall": "방화벽",

@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure Database for MySQL deployment",
+  "loc.friendlyName": "[Deprecated] Azure Database for MySQL deployment",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Run your scripts and make changes to your Azure Database for MySQL",
-  "loc.instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
+  "loc.description": "Deprecated: use the AzureMysqlDeployment@2 task instead. V2 targets Azure Database for MySQL Flexible Server.",
+  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB Details",
   "loc.group.displayName.taskDetails": "Deployment Package",
   "loc.group.displayName.firewall": "Firewall",
