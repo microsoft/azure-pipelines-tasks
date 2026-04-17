@@ -6,8 +6,8 @@ import * as telemetry from '../telemetry';
 import task = require("azure-pipelines-task-lib/task");
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
 import Q = require('q');
-var fs = require('fs');
-var child_process = require('child_process');
+import * as fs from 'fs';
+import * as child_process from 'child_process';
 
 export class MysqlClient implements ISqlClient {
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
@@ -169,7 +169,7 @@ export class MysqlClient implements ISqlClient {
      * Additional connection argument passed by user
      */
     private _getAdditionalArgument() : string{
-        return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : " ";
+        return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
     }
 
     /**
