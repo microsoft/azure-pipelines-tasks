@@ -98,6 +98,15 @@ function createMockToolRunner(stdout: string) {
     };
 }
 
+function createSequentialMockToolRunners(outputs: string[]) {
+    let callIndex = 0;
+    return function() {
+        const stdout = callIndex < outputs.length ? outputs[callIndex] : '';
+        callIndex++;
+        return createMockToolRunner(stdout);
+    };
+}
+
 const mockCi = { publishEvent: function(_data: object) {} };
 const mockRegedit = {};
 
@@ -106,6 +115,21 @@ function makeTlMock(powershellStdout: string) {
         tool: function(_toolName: string) {
             return createMockToolRunner(powershellStdout);
         },
+        error: function(_msg: string) {},
+        warning: function(_msg: string) {},
+        debug: function(_msg: string) {},
+        loc: function(key: string, ...args: any[]) {
+            return args.length ? `${key}:${args.join(',')}` : key;
+        },
+        getVariable: function(_name: string) { return ''; },
+        assertAgent: function(_version: string) {}
+    };
+}
+
+function makeTlMockWithSequentialOutputs(outputs: string[]) {
+    const toolFactory = createSequentialMockToolRunners(outputs);
+    return {
+        tool: toolFactory,
         error: function(_msg: string) {},
         warning: function(_msg: string) {},
         debug: function(_msg: string) {},
@@ -169,6 +193,14 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
 
     function setupMocks(powershellOutput: string, fileExists: boolean = true) {
         libMocker.registerMock('azure-pipelines-task-lib/task', makeTlMock(powershellOutput));
+        libMocker.registerMock('azure-pipelines-task-lib/toolrunner', {});
+        libMocker.registerMock('./helpers', makeHelpersMock(fileExists));
+        libMocker.registerMock('./cieventlogger', mockCi);
+        libMocker.registerMock('regedit', mockRegedit);
+    }
+
+    function setupMocksWithSequentialOutputs(outputs: string[], fileExists: boolean = true) {
+        libMocker.registerMock('azure-pipelines-task-lib/task', makeTlMockWithSequentialOutputs(outputs));
         libMocker.registerMock('azure-pipelines-task-lib/toolrunner', {});
         libMocker.registerMock('./helpers', makeHelpersMock(fileExists));
         libMocker.registerMock('./cieventlogger', mockCi);
@@ -285,15 +317,65 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
         );
     });
 
-    it('throws UnexpectedVersionNumber when version parts are non-numeric', function() {
+    it('throws UnexpectedVersionString when version parts are non-numeric', function() {
         setupMocks('abc.def.ghi.jkl');
         const vf = loadVersionfinder();
         const config = makeTestConfig('17.0');
 
         assert.throws(
             () => vf.getVsTestRunnerDetails(config),
-            (err: Error) => err.message.startsWith('UnexpectedVersionNumber'),
-            'should throw UnexpectedVersionNumber for non-numeric version parts'
+            (err: Error) => err.message.startsWith('UnexpectedVersionString'),
+            'should throw UnexpectedVersionString for non-numeric version parts'
+        );
+    });
+
+    it('extracts version from text with surrounding non-numeric content (regression #21998)', function() {
+        setupMocks('VSTest version 18.3.0 (x64)\n');
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails, 'vsTestVersionDetails should be set');
+        assert.strictEqual(config.vsTestVersionDetails.majorVersion, 18);
+        assert.strictEqual(config.vsTestVersionDetails.minorversion, 3);
+        assert.strictEqual(config.vsTestVersionDetails.patchNumber, 0);
+    });
+
+    it('throws UnexpectedVersionString when output has no digits at all', function() {
+        setupMocks('hdhdh.djjd.djjd.jdjd');
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        assert.throws(
+            () => vf.getVsTestRunnerDetails(config),
+            (err: Error) => err.message.startsWith('UnexpectedVersionString'),
+            'should throw UnexpectedVersionString for output with no digits'
+        );
+    });
+
+    it('falls back to wmic when primary Get-ItemProperty returns empty', function() {
+        setupMocksWithSequentialOutputs(['', 'Version=17.0.33.0\n']);
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        vf.getVsTestRunnerDetails(config);
+
+        assert.ok(config.vsTestVersionDetails, 'vsTestVersionDetails should be set via wmic fallback');
+        assert.strictEqual(config.vsTestVersionDetails.majorVersion, 17);
+        assert.strictEqual(config.vsTestVersionDetails.minorversion, 0);
+        assert.strictEqual(config.vsTestVersionDetails.patchNumber, 33);
+    });
+
+    it('throws ErrorReadingVstestVersion when both primary and wmic fallback return empty', function() {
+        setupMocksWithSequentialOutputs(['', '']);
+        const vf = loadVersionfinder();
+        const config = makeTestConfig('17.0');
+
+        assert.throws(
+            () => vf.getVsTestRunnerDetails(config),
+            (err: Error) => err.message === 'ErrorReadingVstestVersion',
+            'should throw ErrorReadingVstestVersion when both methods fail'
         );
     });
 });
