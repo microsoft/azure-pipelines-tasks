@@ -7,5 +7,5 @@ steps:
     tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
   displayName: 'Tfx login'
 
-- script: npm install axios@0.27.2
+- script: npm install axios@0.27.2 --ignore-scripts
   displayName: 'Npm install axios'

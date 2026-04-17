@@ -30,7 +30,7 @@ jobs:
     vmImage: ubuntu-20.04
   steps:
   - script: |
-      npm i axios
+      npm i axios@1.14.0 --ignore-scripts
     displayName: npm i axios
   - script: |
       echo $(tasks)
