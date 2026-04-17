@@ -92,7 +92,7 @@ Azure Database for MySQL Single Server is on the retirement path. **Flexible Ser
 | `sql/MysqlClient.ts`                     | **Modified** | New stdin-piped file execution, inline/file branching, username format change   |
 | `azuremysqldeploy.ts`                    | **Modified** | Debug messages updated to reference "flexible server"                           |
 | `package.json`                           | **Modified** | Name changed to `vsts-tasks-azuremysql-v2`; description updated                |
-| `operations/MysqlUtiliy.ts`              | Minor        | Trailing newline fix only                                                       |
+| `operations/MysqlUtility.ts`              | Minor        | Trailing newline fix only                                                       |
 | `make.json`                              | Minor        | Trailing newline fix only                                                       |
 | `Tests/L0.ts`                            | **Modified** | Suite name updated to V2; refactored to async/await, removed try/catch wrappers |
 | `Tests/mock_utils.ts`                    | **Modified** | API paths updated to `flexibleServers` and `2021-12-01-preview`                 |

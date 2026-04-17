@@ -1,7 +1,7 @@
 import { ISqlClient } from './ISqlClient';
 import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
-import { Utility } from '../operations/MysqlUtiliy';
+import { Utility } from '../operations/MysqlUtility';
 import * as telemetry from '../telemetry';
 import task = require("azure-pipelines-task-lib/task");
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
