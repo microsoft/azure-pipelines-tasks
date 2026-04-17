@@ -37,7 +37,7 @@ interface INodeVersion {
 //              toolPath = cacheDir
 //      PATH = cacheDir + PATH
 //
-export async function getNode(versionSpec: string, checkLatest: boolean, retryCountOnDownloadFails: number, delayBetweenRetries: number) {
+export async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number) {
     let installedArch = osArch;
 
     if (toolLib.isExplicitVersion(versionSpec)) {
@@ -62,13 +62,13 @@ export async function getNode(versionSpec: string, checkLatest: boolean, retryCo
             version = versionSpec;
         } else {
             // query nodejs.org for a matching version
-            version = await queryLatestMatch(versionSpec, installedArch);
+            version = await queryLatestMatch(versionSpec, installedArch, nodejsMirror);
 
             if (!version && isDarwinArm(osPlat, installedArch)) {
                 // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
                 console.log(taskLib.loc('TryRosetta', osPlat, installedArch));
 
-                version = await queryLatestMatch(versionSpec, 'x64');
+                version = await queryLatestMatch(versionSpec, 'x64', nodejsMirror);
                 installedArch = 'x64';
             }
 
@@ -82,7 +82,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean, retryCo
 
         if (!toolPath) {
             // download, extract, cache
-            toolPath = await acquireNode(version, installedArch, retryCountOnDownloadFails, delayBetweenRetries);
+            toolPath = await acquireNode(version, installedArch, nodejsMirror, retryCountOnDownloadFails, delayBetweenRetries);
         }
     }
 
@@ -106,7 +106,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean, retryCo
     });
 }
 
-async function queryLatestMatch(versionSpec: string, installedArch: string): Promise<string> {
+async function queryLatestMatch(versionSpec: string, installedArch: string, nodejsMirror: string): Promise<string> {
     // node offers a json list of versions
     let dataFileName: string;
     switch (osPlat) {
@@ -117,7 +117,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
     }
 
     const versions: string[] = [];
-    const dataUrl = 'https://nodejs.org/dist/index.json';
+    const dataUrl = new URL('index.json', nodejsMirror).toString();
     const proxyRequestOptions: ifm.IRequestOptions = {
         proxy: taskLib.getHttpProxyConfiguration(dataUrl),
         cert: taskLib.getHttpCertConfiguration(),
@@ -143,7 +143,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
     return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
-async function acquireNode(version: string, installedArch: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
+async function acquireNode(version: string, installedArch: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
@@ -157,7 +157,7 @@ async function acquireNode(version: string, installedArch: string, retryCountOnD
 
     const fileExtension: string = isWin32 ? '.7z' : '.tar.gz';
 
-    const downloadUrl: string = `https://nodejs.org/dist/v${version}/${fileName}${fileExtension}`;
+    const downloadUrl: string = new URL(`v${version}/${fileName}${fileExtension}`, nodejsMirror).toString();
 
     let downloadPath: string;
 
@@ -167,7 +167,7 @@ async function acquireNode(version: string, installedArch: string, retryCountOnD
         downloadPath = await toolLib.downloadToolWithRetries(downloadUrl, null, null, null, retryCountOnDownloadFails, delayBetweenRetries);
     } catch (err) {
         if (isWin32 && err['httpStatusCode'] == 404) {
-            return await acquireNodeFromFallbackLocation(version, retryCountOnDownloadFails, delayBetweenRetries);
+          return await acquireNodeFromFallbackLocation(version, nodejsMirror, retryCountOnDownloadFails, delayBetweenRetries);
         }
 
         throw err;
@@ -210,7 +210,7 @@ async function acquireNode(version: string, installedArch: string, retryCountOnD
 // This method attempts to download and cache the resources from these alternative locations.
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
-async function acquireNodeFromFallbackLocation(version: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
+async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     // Create temporary folder to download in to
     const tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2e9);
     const tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
@@ -221,8 +221,8 @@ async function acquireNodeFromFallbackLocation(version: string, retryCountOnDown
     console.log("Aquiring Node from callback called")
     console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
+        exeUrl = new URL(`v${version}/win-${osArch}/node.exe`, nodejsMirror).toString();
+        libUrl = new URL(`v${version}/win-${osArch}/node.lib`, nodejsMirror).toString();
 
         await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
         await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
@@ -230,8 +230,8 @@ async function acquireNodeFromFallbackLocation(version: string, retryCountOnDown
     catch (err) {
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] === '404') {
-            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
-            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
+            exeUrl = new URL(`v${version}/node.exe`, nodejsMirror).toString();
+            libUrl = new URL(`v${version}/node.lib`, nodejsMirror).toString();
 
             await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
             await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
@@ -251,4 +251,16 @@ function isDarwinArm(osPlat: string, installedArch: string): boolean {
         return execResult.code === 0 && !!execResult.stdout;
     }
     return false;
+}
+
+// Normalize the mirror url to ensure that it ends with a slash and does not contain trailing slash
+export function normalizeMirrorUrl(nodejsMirror: string): string {
+    let url: URL;
+    try {
+      url = new URL((nodejsMirror || '').trim());
+    } catch {
+      throw new Error(taskLib.loc('InvalidNodejsMirror', nodejsMirror));
+    }
+    url.pathname = url.pathname.replace(/\/+$/, '/');
+    return url.toString();
 }
