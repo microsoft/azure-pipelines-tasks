@@ -177,7 +177,7 @@ export class FlexibleServerFirewallRules {
         this.client.beginRequest(httpRequest).then(async (response) => {
             var deferred = Q.defer<ApiResult>();
             var statusCode = response.statusCode;
-            tl.debug("Response for get firewall rule " + JSON.stringify(response));
+            tl.debug("Response for get firewall rule statusCode=" + response.statusCode);
             if (statusCode === 200) {
                 deferred.resolve(new ApiResult(null, response));
             } else {

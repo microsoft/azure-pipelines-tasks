@@ -54,7 +54,7 @@ export class MysqlClient implements ISqlClient {
      * Note: Flexible Server uses username without @servername suffix
      */
     private _getArgumentString(): string{
-        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword();
+        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword() + " --ssl-mode=REQUIRED";
         return argumentString;
     }
 
