@@ -16,7 +16,7 @@ export class MysqlClientL0Tests  {
 
     public static async getFirewallConfiguration(){
         try{
-            const firewallConfiguration: FirewallConfiguration = await MysqlClientL0Tests.sqlClient.getFirewallConfiguration();
+            const firewallConfiguration: FirewallConfiguration = MysqlClientL0Tests.sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded() && firewallConfiguration.getIpAddress() == '250.250.250.250'){
                 tl.setResult(tl.TaskResult.Succeeded, 'MysqlClientL0Tests.getFirewallConfiguration should have passed.');
             }else{
