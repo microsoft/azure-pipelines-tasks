@@ -64,6 +64,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "Failed to install extension: permission denied"
         },
+        "az extension add --source \"/mock/path/azure_devops-1.0.2-py2.py3-none-any.whl\" -y": {
+            "code": 1,
+            "stdout": "Failed to install extension from wheel"
+        },
         "bash*": {
             "code": 0,
             "stdout": "test completed"
@@ -93,6 +97,13 @@ tmr.registerMock('azure-devops-node-api', {
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
+});
+
+tmr.registerMock('azure-pipelines-tool-lib', {
+    downloadToolWithRetries: function(url: string, fileName: string) {
+        console.log('Mock downloadToolWithRetries called');
+        return Promise.resolve('/mock/path/' + fileName);
+    }
 });
 
 tmr.registerMock('./src/Utility', {
