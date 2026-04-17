@@ -1,7 +1,7 @@
 {
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
-  "friendlyName": "[Deprecated] ms-resource:loc.friendlyName",
+  "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -188,7 +188,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
-  "instanceNameFormat": "[Deprecated] ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node16": {
       "target": "azuremysqldeploy.js",

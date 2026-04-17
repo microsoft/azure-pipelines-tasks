@@ -1,4 +1,3 @@
-import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient';
@@ -84,7 +83,7 @@ export class FlexibleServerFirewallRules {
             if (statusCode != 200 && statusCode != 201 && statusCode != 202) {
                 deferred.reject(new ApiResult(ToError(response)));
             } else if (statusCode === 202) {
-                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 5, 0).then((response) => {
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 5, 1).then((response) => {
                     deferred.resolve(new ApiResult(null, response));
                 }, (error) => {
                     deferred.reject(error);
@@ -132,7 +131,7 @@ export class FlexibleServerFirewallRules {
             if (statusCode != 200 && statusCode != 202 && statusCode != 204) {
                 deferred.reject(new ApiResult(ToError(response)));
             } else if (statusCode === 202) {
-                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3, 0).then(() => {
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3, 1).then(() => {
                     deferred.resolve(new ApiResult(null, response.body));
                 }, () => {
                     // Firewall rule may already be deleted; resolve anyway
@@ -189,14 +188,14 @@ export class FlexibleServerFirewallRules {
             (error) => callback(error));
     }
 
-    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number, timeToWait: number): Q.Promise<any> {
+    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number, retryAttempt: number): Q.Promise<any> {
         var deferred = Q.defer<any>();
-        let waitedTime = 2000 + timeToWait * 2;
+        let waitedTime = 2000 * Math.pow(2, retryAttempt);
         setTimeout(() => {
             this.get(resourceGroupName, serverName, firewallRuleName, (error, result, request, response) => {
                 if (error) {
                     if (retryOption > 0) {
-                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption - 1, waitedTime));
+                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption - 1, retryAttempt + 1));
                     } else {
                         deferred.reject(new Error(tl.loc("NotAbleToCreateFirewallRule", error)));
                     }

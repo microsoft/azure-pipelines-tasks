@@ -139,6 +139,12 @@ export class MysqlClient implements ISqlClient {
         task.debug('  ' + sqlFilePath);
         const args = Utility.argStringToArray(argument);
         const mysqlProcess = child_process.spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
+        mysqlProcess.on('error', (err) => {
+            defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
+        });
+        mysqlProcess.stdin.on('error', (err) => {
+            task.debug('stdin error: ' + err.message);
+        });
         const fileStream = fs.createReadStream(sqlFilePath);
         fileStream.pipe(mysqlProcess.stdin);
         fileStream.on('error', (err) => {
@@ -152,9 +158,6 @@ export class MysqlClient implements ISqlClient {
             } else {
                 defer.reject(new Error(task.loc("SqlExecutionException", code)));
             }
-        });
-        mysqlProcess.on('error', (err) => {
-            defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
         });
 
         return defer.promise;

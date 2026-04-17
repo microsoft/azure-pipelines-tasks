@@ -30,12 +30,10 @@ export class MysqlClientTests  {
                 "/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD" : {
                     "code": 1,
                     "stderr": "ERROR 9000 (HY000): Client with IP address '250.250.250.250' is not allowed to connect to this MySQL server."
-                },
-                '/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD -e" source null"' : {
-                    "code": 0,
-                    "stderr": "=executed successfully."
                 }
-
+                // Note: File-based SQL execution in V2 uses child_process.spawn with stdin piping,
+                // which cannot be mocked via TaskLibAnswers. Separate integration tests are needed
+                // to cover _executeSqlScriptFromFile behavior.
             }
         };
         tr.setAnswers(a);
