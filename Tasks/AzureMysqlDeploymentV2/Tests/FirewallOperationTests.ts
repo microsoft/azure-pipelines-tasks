@@ -15,7 +15,7 @@ export class FirewallOperationTests  {
         tr.setInput('IpDetectionMethod', 'IPAddressRange');
         tr.setInput('ServerName', 'MOCK_SERVER_NAME');
         tr.setInput('StartIpAddress', '0.0.0.0');
-        tr.setInput("EndIpAddress", "2 55.255.255.255");
+        tr.setInput("EndIpAddress", "255.255.255.255");
         tr.setInput("IpDetectionMethod", "IPAddressRange");
         tr.setInput("ConnectedServiceName", "DEMO_CONNECTED_SERVICE_NAME");
         tr.setInput("SqlUsername", "DEMO_SQL_USERNAME");

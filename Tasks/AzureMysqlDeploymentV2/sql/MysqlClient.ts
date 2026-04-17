@@ -28,6 +28,13 @@ export class MysqlClient implements ISqlClient {
         this._azureMysqlTaskParameter = azureMysqlTaskParameter;
         this._hostName = serverName;
         this._toolPath = toolPath;
+
+        // Ensure the password is masked in pipeline logs even when
+        // using child_process.spawn (which bypasses task-lib exec).
+        const password = azureMysqlTaskParameter.getSqlPassword();
+        if (password) {
+            task.setSecret(password);
+        }
     }
 
     /**
