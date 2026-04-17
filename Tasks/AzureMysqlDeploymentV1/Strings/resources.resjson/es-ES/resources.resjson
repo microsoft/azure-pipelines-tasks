@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Implementación de Azure Database for MySQL",
+  "loc.friendlyName": "[En desuso] Implementación de Azure Database for MySQL",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Ejecute los scripts y realice cambios en Azure Database for MySQL.",
-  "loc.instanceNameFormat": "Ejecutar Azure MySQL : $(TaskNameSelector)",
+  "loc.description": "En desuso: use la tarea AzureMysqlDeployment@2 en su lugar. V2 está destinada a Azure Database for MySQL Flexible Server.",
+  "loc.instanceNameFormat": "[En desuso] Ejecutar Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "Detalles de BD",
   "loc.group.displayName.taskDetails": "Paquete de implementación",
   "loc.group.displayName.firewall": "Firewall",
