@@ -1,8 +1,8 @@
 {
   "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
   "name": "DownloadGitHubNugetPackage",
-  "friendlyName": "Download GitHub Nuget Packages",
-  "description": "Restore your nuget packages using dotnet CLI",
+  "friendlyName": "[Deprecated] Download GitHub NuGet",
+  "description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
   "helpMarkDown": "[See the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
@@ -17,11 +17,13 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
-  "instanceNameFormat": "dotnet restore",
+  "deprecated": true,
+  "deprecationMessage": "The DownloadGitHubNugetPackage@1 (Download GitHub NuGet Packages) task has been deprecated and will soon be retired. Use the NuGetCommand@2 or DotNetCoreCLI@2 task instead.",
+  "instanceNameFormat": "[Deprecated] dotnet restore",
   "groups": [
     {
       "name": "restoreAuth",

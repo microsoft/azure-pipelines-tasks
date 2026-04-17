@@ -93,10 +93,10 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
-# Telemetry for SQL Dacpac deployment on machine group
 $encodedServerName = GetSHA256String($serverName)
 $encodedDatabaseName = GetSHA256String($databaseName)
 $telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",
@@ -121,7 +121,11 @@ Try
     if ($taskType -eq "dacpac")
     {
         $dacpacFile = Get-SingleFile -pattern $dacpacFile
-        Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        if (Should-UseSanitizedArguments) {
+            Invoke-DacpacDeploymentV2 -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        } else {
+            Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        }
     }
     else
     {
@@ -152,7 +156,11 @@ Try
                     }
                 }
                 Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
-                Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                if (Should-UseSanitizedArguments) {
+                    Invoke-SqlScriptsInTransactionV2 -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                } else {
+                    Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                }
 
                 if ($env:system_debug -eq $false)
                 {
@@ -173,15 +181,24 @@ Try
                     if (-not [string]::IsNullOrEmpty($sqlScript)) 
                     {
                         $sqlScript = Get-SingleFile -pattern $sqlScript
-                        Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        if (Should-UseSanitizedArguments) {
+                            Invoke-SqlQueryDeploymentV2 -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        } else {
+                            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        }
                     }
                 }
             }
         }
         else 
         {
-            $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
-            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
+            if (Should-UseSanitizedArguments) {
+                $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
+                Invoke-SqlQueryDeploymentV2 -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
+            } else {
+                $enableVerboseLogging = Get-VstsPipelineFeature -FeatureName "EnableVerboseLogging"
+                Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments -enableVerboseLogging $enableVerboseLogging
+            }
         }
     }
 }
