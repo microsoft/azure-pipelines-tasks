@@ -69,39 +69,22 @@ export class MysqlClient implements ISqlClient {
         if(this._azureMysqlTaskParameter.getDatabaseName()){
             // Creating databse if it doesn't exist 
             this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist()).then((resultCode)=>{
-                argument += this._azureMysqlTaskParameter.getDatabaseName() ? " -D" + this._azureMysqlTaskParameter.getDatabaseName() : "";
+                argument += " -D" + this._azureMysqlTaskParameter.getDatabaseName();
                 // Running sql script passed by user
-                if(this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
-                    this._executeSqlScript(argument + this._getFileSourceArgument()).then((resultCode)=>{
-                        defer.resolve(resultCode);
-                    },(error) => {
-                        defer.reject(error);
-                    });
-                } else {
-                    this._executeSqlScriptFromFile(argument).then((resultCode)=>{
-                        defer.resolve(resultCode);
-                    },(error) => {
-                        defer.reject(error);
-                    });
-                }
+                this._runUserScript(argument).then((resultCode) => {
+                    defer.resolve(resultCode);
+                }, (error) => {
+                    defer.reject(error);
+                });
             }).catch((error) => {
                 defer.reject(error);
             });
         }else{
-            argument += this._azureMysqlTaskParameter.getDatabaseName() ? " -D" + this._azureMysqlTaskParameter.getDatabaseName() : "";
-            if(this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
-                this._executeSqlScript(argument + this._getFileSourceArgument()).then((resultCode)=>{
-                    defer.resolve(resultCode);
-                },(error) => {
-                    defer.reject(error);
-                });
-            } else {
-                this._executeSqlScriptFromFile(argument).then((resultCode)=>{
-                    defer.resolve(resultCode);
-                },(error) => {
-                    defer.reject(error);
-                });
-            }
+            this._runUserScript(argument).then((resultCode) => {
+                defer.resolve(resultCode);
+            }, (error) => {
+                defer.reject(error);
+            });
         }
 
         return defer.promise;
@@ -110,6 +93,16 @@ export class MysqlClient implements ISqlClient {
     private _createDatabaseScriptIfItDoesnotExist() : string {
         return " -e" + '"' + "CREATE DATABASE IF NOT EXISTS `" + this._azureMysqlTaskParameter.getDatabaseName() + "` ; "  + '"' ;
     } 
+
+    /**
+     * Run the user-provided SQL script (inline or file-based)
+     */
+    private async _runUserScript(argument: string): Promise<number> {
+        if (this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
+            return this._executeSqlScript(argument + this._getFileSourceArgument());
+        }
+        return this._executeSqlScriptFromFile(argument);
+    }
 
     private async _executeSqlScript(argument: string): Promise<number> {
         let defer = Q.defer<number>();
@@ -134,13 +127,17 @@ export class MysqlClient implements ISqlClient {
      */
     private async _executeSqlScriptFromFile(argument: string): Promise<number> {
         let defer = Q.defer<number>();
+        let settled = false;
         task.debug('Started execution of mysql script from file via stdin');
         const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
         task.debug('  ' + sqlFilePath);
         const args = Utility.argStringToArray(argument);
         const mysqlProcess = child_process.spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
         mysqlProcess.on('error', (err) => {
-            defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
+            if (!settled) {
+                settled = true;
+                defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
+            }
         });
         mysqlProcess.stdin.on('error', (err) => {
             task.debug('stdin error: ' + err.message);
@@ -149,10 +146,15 @@ export class MysqlClient implements ISqlClient {
         fileStream.pipe(mysqlProcess.stdin);
         fileStream.on('error', (err) => {
             mysqlProcess.stdin.destroy();
-            defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
+            if (!settled) {
+                settled = true;
+                defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
+            }
         });
         mysqlProcess.on('close', (code) => {
             task.debug('Script execution on mysql server result: ' + code);
+            if (settled) return;
+            settled = true;
             if (code === 0) {
                 defer.resolve(code);
             } else {

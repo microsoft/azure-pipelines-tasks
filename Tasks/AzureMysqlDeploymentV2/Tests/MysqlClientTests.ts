@@ -31,9 +31,11 @@ export class MysqlClientTests  {
                     "code": 1,
                     "stderr": "ERROR 9000 (HY000): Client with IP address '250.250.250.250' is not allowed to connect to this MySQL server."
                 }
-                // Note: File-based SQL execution in V2 uses child_process.spawn with stdin piping,
-                // which cannot be mocked via TaskLibAnswers. Separate integration tests are needed
-                // to cover _executeSqlScriptFromFile behavior.
+                // Note: File-based SQL execution (_executeSqlScriptFromFile) uses child_process.spawn
+                // with stdin piping, which cannot be mocked via TaskLibAnswers or TaskMockRunner.
+                // To test this path, either:
+                //   1. Add an L1/L2 integration test with a real mysql binary, or
+                //   2. Refactor MysqlClient to accept an injectable spawn function.
             }
         };
         tr.setAnswers(a);
