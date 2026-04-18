@@ -315,8 +315,20 @@
       "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
       "groupName": "executionOptions"
     },
-    {
-      "name": "distributionBatchType",
+    {      "name": "vstestArchitecture",
+      "type": "pickList",
+      "label": "Test runner architecture",
+      "defaultValue": "x64",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64) of vstest.console.exe to run. Select arm64 to run tests natively on ARM64 Windows machines. Requires Visual Studio 2022 (17.0) or later.",
+      "groupName": "executionOptions",
+      "options": {
+        "x86": "x86",
+        "x64": "x64",
+        "arm64": "arm64"
+      }
+    },
+    {      "name": "distributionBatchType",
       "type": "pickList",
       "label": "Batch tests",
       "defaultValue": "basedOnTestCases",
@@ -618,6 +630,7 @@
     "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
     "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
     "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
+    "Arm64VstestNotFound": "ARM64 vstest.console.exe not found at '%s'. Falling back to x64 variant.",
     "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
     "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
     "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnostics via the exe.config files",
