@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tarea de autenticación para el cliente de Conda",
   "loc.instanceNameFormat": "Autenticación de Conda",
+  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
+  "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se generarán credenciales mediante una conexión de servicio en lugar de la identidad de la canalización de compilación.",
   "loc.messages.FailedToAddAuthentication": "No se pudo agregar la autenticación",
   "loc.messages.AddingAuthChannel": "Agregando autenticación para el token %s",
   "loc.messages.Info_AddingFederatedFeedAuth": "Agregando información de autenticación de la conexión de servicio %s",

@@ -22,7 +22,7 @@
   "loc.input.label.AdditionalArguments": "Argumentos adicionales",
   "loc.input.help.AdditionalArguments": "Argumentos adicionales de Web Deploy que se aplicarán cuando se implemente la aplicación web de Azure, como -disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.XmlTransformation": "Transformación XML",
-  "loc.input.help.XmlTransformation": "Las transformaciones de configuración se ejecutarán para \"*.Release.config\" y \"*.<NombreDeEntorno>.config\" en el \"archivo *.config\".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables.<br/>Las transformaciones XML solo se admiten para la plataforma Windows.",
+  "loc.input.help.XmlTransformation": "Las transformaciones de configuración se ejecutarán para \"*. Release.config\" y \"*.<EnvironmentName>.config\" en el archivo \"*.config\".<br/> Las transformaciones de configuración se ejecutarán antes de la sustitución de variables. <br/>Las transformaciones XML solo se admiten para la plataforma Windows.",
   "loc.input.label.XmlVariableSubstitution": "Sustitución de variables XML",
   "loc.input.help.XmlVariableSubstitution": "Las variables que se definen en la canalización de compilación o de versión se compararán con las entradas \"key\" o \"name\" de las secciones appSettings, applicationSettings y connectionStrings de cualquier archivo de configuración y parameters.xml. La sustitución de variable tiene lugar después de las transformaciones de configuración. <br/><br/> Nota: Si las mismas variables están definidas en la canalización de versión y en el entorno, las variables de entorno sustituirán las variables de la canalización de versión.<br/>",
   "loc.input.label.JSONFiles": "Sustitución de variables JSON",

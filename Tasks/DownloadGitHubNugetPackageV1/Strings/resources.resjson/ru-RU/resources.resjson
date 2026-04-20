@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Deprecated] Скачать пакеты NuGet GitHub",
+  "loc.friendlyName": "[Deprecated] Download GitHub NuGet",
   "loc.helpMarkDown": "[См. документацию по .NET Core](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "Не рекомендуется: эта задача больше не поддерживается. Используйте задачу NuGetCommand@2 или DotNetCoreCLI@2.",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
   "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "Веб-каналы и проверка подлинности",
   "loc.group.displayName.restoreAdvanced": "Дополнительно",

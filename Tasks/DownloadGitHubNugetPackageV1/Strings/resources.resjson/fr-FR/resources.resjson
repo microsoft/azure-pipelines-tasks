@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Deprecated] Télécharger les packages NuGet GitHub",
+  "loc.friendlyName": "[Deprecated] Download GitHub NuGet",
   "loc.helpMarkDown": "[Consulter la documentation de .NET Core](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "Déprécié : cette tâche n'est plus maintenue. Utilisez la tâche NuGetCommand@2 ou DotNetCoreCLI@2 à la place.",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
   "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "Flux et authentification",
   "loc.group.displayName.restoreAdvanced": "Avancé",

@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
   "loc.input.help.restoreNugetPackages": "Questa opzione è deprecata. Per ripristinare pacchetti NuGet, aggiungere un'attività [Programma di installazione strumento NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) prima della compilazione.",
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
-  "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64, arm64) of MSBuild to run.",
   "loc.input.label.logProjectEvents": "Registra dettagli progetto",
   "loc.input.help.logProjectEvents": "Registra facoltativamente i dettagli della sequenza temporale per ogni progetto.",
   "loc.input.label.createLogFile": "Crea file di log",

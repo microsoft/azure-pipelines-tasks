@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Deprecated] GitHub Nuget 패키지 다운로드",
+  "loc.friendlyName": "[Deprecated] Download GitHub NuGet",
   "loc.helpMarkDown": "[.NET Core 설명서 참조](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 NuGetCommand@2 또는 DotNetCoreCLI@2 작업을 사용하세요.",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
   "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "피드 및 인증",
   "loc.group.displayName.restoreAdvanced": "고급",

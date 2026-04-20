@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "Sélectionnez des points de terminaison pour permettre l'authentification en dehors de cette organisation. Vérifiez que les points de terminaison ont des autorisations relatives au chargement de packages.",
   "loc.input.label.publishPackageMetadata": "Publier des métadonnées de pipeline",
   "loc.input.help.publishPackageMetadata": "Associer les métadonnées de ce pipeline de build/mise en production (numéro d'exécution, informations de code source) au package durant le chargement vers mes flux.",
+  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Ajout d'informations d'authentification pour le ou les flux internes %s.",
   "loc.messages.Info_AddingExternalFeeds": "Ajout d'informations d'authentification pour le point de terminaison externe %s.",
   "loc.messages.Info_AddingAuthForRegistry": "Ajout de l'authentification à la configuration pour le registre %s",
