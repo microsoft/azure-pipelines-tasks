@@ -2,7 +2,7 @@
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
   "friendlyName": "[Deprecated] Azure MySQL deploy",
-  "description": "Deprecated: use the AzureMysqlDeployment@2 task instead. V2 targets Azure Database for MySQL Flexible Server.",
+  "description": "Deprecated: this task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "category": "Deploy",
@@ -17,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 273,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
   "deprecated": true,
-  "deprecationMessage": "The AzureMysqlDeployment@1 task is deprecated. Use AzureMysqlDeployment@2 which targets Azure Database for MySQL Flexible Server.",
+  "deprecationMessage": "AzureMysqlDeployment@1 is deprecated. Use AzureMysqlDeployment@2 (or newer) instead.",
   "groups": [
     {
       "name": "target",

@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecato] Distribuzione di Database di Azure per MySQL",
+  "loc.friendlyName": "[Deprecato] Distribuzione di Azure MySQL",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Deprecato: usare l'attività AzureMysqlDeployment@2. V2 è destinata ad Azure Database for MySQL Flexible Server.",
-  "loc.instanceNameFormat": "[Deprecato] Esegui attività MySQL di Azure: $(TaskNameSelector)",
+  "loc.description": "Deprecato: questa attività non è più gestita. Usare l'attività AzureMysqlDeployment@2.",
+  "loc.instanceNameFormat": "[Deprecato] Esegui Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Dettagli del database",
   "loc.group.displayName.taskDetails": "Pacchetto di distribuzione",
   "loc.group.displayName.firewall": "Firewall",

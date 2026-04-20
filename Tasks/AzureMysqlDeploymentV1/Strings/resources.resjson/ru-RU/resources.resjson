@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "[Устарело] Развертывание базы данных Azure для MySQL",
+  "loc.friendlyName": "[Устарело] Развертывание Azure MySQL",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Не рекомендуется: используйте задачу AzureMysqlDeployment@2. V2 предназначена для Azure Database for MySQL Flexible Server.",
+  "loc.description": "Не рекомендуется: эта задача больше не поддерживается. Используйте задачу AzureMysqlDeployment@2.",
   "loc.instanceNameFormat": "[Устарело] Выполнить Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Сведения о базе данных",
   "loc.group.displayName.taskDetails": "Пакет развертывания",

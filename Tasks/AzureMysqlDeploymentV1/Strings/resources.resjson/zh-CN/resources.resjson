@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[已弃用] Azure Database for MySQL 部署",
+  "loc.friendlyName": "[已弃用] Azure MySQL 部署",
   "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "已弃用: 请改用 AzureMysqlDeployment@2 任务。V2 针对 Azure Database for MySQL Flexible Server。",
-  "loc.instanceNameFormat": "[已弃用] 执行 Azure SQL: $(TaskNameSelector)",
+  "loc.description": "已弃用: 此任务不再维护。请改用 AzureMysqlDeployment@2 任务。",
+  "loc.instanceNameFormat": "[已弃用] 执行 Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 详细信息",
   "loc.group.displayName.taskDetails": "部署程序包",
   "loc.group.displayName.firewall": "防火墙",
