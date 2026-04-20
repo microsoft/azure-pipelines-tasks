@@ -23,9 +23,9 @@ stages:
       persistCredentials: true
 
     - task: NodeTool@0
-      displayName: Use node 20.20.0
+      displayName: Use node 20.20.2
       inputs:
-        versionSpec: "20.20.0"
+        versionSpec: "20.20.2"
       
     - powershell: |
         $sprintInfo = Invoke-WebRequest https://whatsprintis.it -UseBasicParsing -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
