@@ -50,7 +50,7 @@
   "loc.messages.GetTagsError": "Unerwarteter Fehler beim Abrufen von Tags.",
   "loc.messages.GetReleasesError": "Unerwarteter Fehler beim Abrufen von Releases.",
   "loc.messages.CreateReleaseError": "Unerwarteter Fehler beim Erstellen der Release.",
-  "loc.messages.CreateReleaseFailed": "Failed to create the release due to: %s",
+  "loc.messages.CreateReleaseFailed": "Fehler beim Erstellen des Release aufgrund von: %s",
   "loc.messages.EditReleaseError": "Unerwarteter Fehler beim Bearbeiten des Release.",
   "loc.messages.DeleteReleaseError": "Unerwarteter Fehler beim Löschen des Release.",
   "loc.messages.CreatingRelease": "Release für Tag wird erstellt: %s",
