@@ -79,6 +79,7 @@
   "loc.messages.LocationRequired": "Location is required",
   "loc.messages.TemplateFileRequired": "Template file is required",
   "loc.messages.UnsupportedTemplateFile": "Unsupported template file type: %s",
+  "loc.messages.ParametersFileNotFound": "Parameters file not found: %s",
   "loc.messages.UnsupportedParametersFile": "Unsupported parameters file type: %s",
   "loc.messages.FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
   "loc.messages.FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
