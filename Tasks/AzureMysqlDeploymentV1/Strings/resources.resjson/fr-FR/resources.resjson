@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Déprécié] Déploiement d'Azure MySQL",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Déprécié : cette tâche n'est plus maintenue. Utilisez la tâche AzureMysqlDeployment@2 à la place.",
+  "loc.description": "Déprécié : Cette tâche n'est plus maintenue. Utilisez la tâche AzureMysqlDeployment@2 à la place.",
   "loc.instanceNameFormat": "[Déprécié] Exécuter Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "Détails de DB",
   "loc.group.displayName.taskDetails": "Package de déploiement",

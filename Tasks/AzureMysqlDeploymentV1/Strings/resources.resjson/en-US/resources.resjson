@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Deprecated: this task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
+  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
   "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB Details",
   "loc.group.displayName.taskDetails": "Deployment Package",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[En desuso] Implementación de Azure MySQL",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "En desuso: esta tarea ya no recibe mantenimiento. Use la tarea AzureMysqlDeployment@2 en su lugar.",
+  "loc.description": "En desuso: Esta tarea ya no recibe mantenimiento. Use la tarea AzureMysqlDeployment@2 en su lugar.",
   "loc.instanceNameFormat": "[En desuso] Ejecutar Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Detalles de BD",
   "loc.group.displayName.taskDetails": "Paquete de implementación",

@@ -2,7 +2,7 @@
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
   "friendlyName": "[Deprecated] Azure MySQL deploy",
-  "description": "Deprecated: this task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
+  "description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
   "category": "Deploy",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 273,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
