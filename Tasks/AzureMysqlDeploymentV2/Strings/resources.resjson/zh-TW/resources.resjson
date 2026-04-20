@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "找不到具有指定模式的套件。",
   "loc.messages.FirewallRuleNameCannotBeNull": "防火牆規則名稱不能為 Null。",
   "loc.messages.SqlFileNotFound": "在路徑中找不到 SQL 檔案: %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "資料庫名稱 '%s' 無效。僅允許使用英數字元、底線、連字號和錢幣符號。"
 }

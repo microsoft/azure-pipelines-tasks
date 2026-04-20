@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターンのパッケージが見つかりませんでした。",
   "loc.messages.FirewallRuleNameCannotBeNull": "ファイアウォール ルール名を Null にすることはできません。",
   "loc.messages.SqlFileNotFound": "SQL ファイルがパスに見つかりません: %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "データベース名 '%s' が無効です。使用できるのは英数字、アンダースコア、ハイフン、ドル記号のみです。"
 }

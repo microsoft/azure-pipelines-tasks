@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No se encontró ningún paquete con el patrón especificado.",
   "loc.messages.FirewallRuleNameCannotBeNull": "El nombre de la regla de firewall no puede ser nulo.",
   "loc.messages.SqlFileNotFound": "No se encontró el archivo SQL en la ruta de acceso: %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "Nombre de base de datos no válido '%s'. Solo se permiten caracteres alfanuméricos, guiones bajos, guiones y signos de dólar."
 }

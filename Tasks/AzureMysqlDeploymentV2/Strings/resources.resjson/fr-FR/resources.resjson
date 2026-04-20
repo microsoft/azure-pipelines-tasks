@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Aucun package trouvé avec le modèle spécifié.",
   "loc.messages.FirewallRuleNameCannotBeNull": "Le nom de la règle de pare-feu ne peut pas être nul.",
   "loc.messages.SqlFileNotFound": "Fichier SQL introuvable dans le chemin d'accès : %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "Nom de base de données non valide '%s'. Seuls les caractères alphanumériques, les traits de soulignement, les tirets et les signes dollar sont autorisés."
 }

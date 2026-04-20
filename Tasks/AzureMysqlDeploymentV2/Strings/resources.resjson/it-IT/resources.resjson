@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Nessun pacchetto trovato con il modello specificato.",
   "loc.messages.FirewallRuleNameCannotBeNull": "Il nome della regola del firewall non può essere Null.",
   "loc.messages.SqlFileNotFound": "File SQL non trovato nel percorso: %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "Nome di database non valido '%s'. Sono consentiti solo caratteri alfanumerici, caratteri di sottolineatura, trattini e segni di dollaro."
 }

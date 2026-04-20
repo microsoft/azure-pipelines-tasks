@@ -68,5 +68,5 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "지정된 패턴에 해당하는 패키지를 찾을 수 없습니다.",
   "loc.messages.FirewallRuleNameCannotBeNull": "방화벽 규칙 이름은 null일 수 없습니다.",
   "loc.messages.SqlFileNotFound": "경로에서 SQL 파일을 찾을 수 없습니다: %s",
-  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+  "loc.messages.InvalidDatabaseName": "잘못된 데이터베이스 이름 '%s'입니다. 영숫자, 밑줄, 하이픈 및 달러 기호만 허용됩니다."
 }
