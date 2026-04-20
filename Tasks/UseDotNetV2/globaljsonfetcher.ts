@@ -51,10 +51,11 @@ export class globalJsonFetcher {
                             channelSpec = resolvedSpec;
                         }
                     }
-                    tl.debug(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, matchingSpec || channelSpec));
+                    console.log(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, matchingSpec || channelSpec));
                 }
 
                 var versionInfo = await versionFetcher.getVersionInfo(channelSpec, null, "sdk", false, matchingSpec);
+                console.log(tl.loc("ResolvedVersionFromGlobalJson", versionInfo.getVersion(), entry.version, entry.rollForward || "disable"));
                 versionInformation.push(versionInfo);
             }
         }
@@ -71,7 +72,7 @@ export class globalJsonFetcher {
         return filePathsToGlobalJson.map(path => {
             var content = this.readGlobalJson(path);
             if (content != null) {
-                tl.loc("GlobalJsonSdkVersion", content.sdk.version, path);
+                console.log(tl.loc("GlobalJsonSdkVersion", content.sdk.version, path));
                 return {
                     version: content.sdk.version,
                     rollForward: content.sdk.rollForward
@@ -85,13 +86,13 @@ export class globalJsonFetcher {
 
     private readGlobalJson(path: string): GlobalJson | null {
         let globalJson: GlobalJson | null = null;
-        tl.loc("GlobalJsonFound", path);
+        console.log(tl.loc("GlobalJsonFound", path));
         try {
             let fileContent = fileSystem.readFileSync(path);
             // Since here is a buffer, we need to check length property to determine if it is empty.
             if (!fileContent.length) {
             // do not throw if globa.json is empty, task need not install any version in such case.
-                tl.loc("GlobalJsonIsEmpty", path);
+                tl.warning(tl.loc("GlobalJsonIsEmpty", path));
                 return null;
             }
 
@@ -102,7 +103,7 @@ export class globalJsonFetcher {
         }
 
         if (globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null) {
-            tl.loc("FailedToReadGlobalJson", path);
+            tl.warning(tl.loc("FailedToReadGlobalJson", path));
             return null;
         }
 
