@@ -55,6 +55,8 @@ export const errorMessageConfig: ErrorMessageConfig = {
     failedToDetermineScope: tl.loc('FailedToDetermineScope'),
     
     // File errors
+    parametersFileNotFound: (parametersFile: string) =>
+        tl.loc('ParametersFileNotFound', parametersFile),
     unsupportedParametersFile: (parametersFile: string) => 
         tl.loc('UnsupportedParametersFile', parametersFile),
     unsupportedTemplateFile: (templateFile: string) => 
