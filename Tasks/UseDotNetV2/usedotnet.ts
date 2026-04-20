@@ -135,6 +135,7 @@ async function installDotNet(
         let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
         for (let index = 0; index < versionsToInstall.length; index++) {
             const version = versionsToInstall[index];
+            console.log(tl.loc("InstallingFromGlobalJson", version.getVersion()));
             let url = versionFetcher.getDownloadUrl(version);
             if (!dotNetCoreInstaller.isVersionInstalled(version.getVersion())) {
                 await dotNetCoreInstaller.downloadAndInstall(version, url);
