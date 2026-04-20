@@ -19,12 +19,14 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 272,
+    "Minor": 273,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
+  "deprecated": true,
+  "deprecationMessage": "AzureCLI@1 is deprecated. Use AzureCLI@2 (or newer) instead.",
   "groups": [
     {
       "name": "advanced",
