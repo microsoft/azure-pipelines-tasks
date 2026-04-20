@@ -21,6 +21,11 @@ stages:
 
     - checkout: self
       persistCredentials: true
+
+    - task: NodeTool@0
+      displayName: Use node 20.20.2
+      inputs:
+        versionSpec: "20.20.2"
       
     - powershell: |
         $sprintInfo = Invoke-WebRequest https://whatsprintis.it -UseBasicParsing -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
@@ -69,7 +74,7 @@ stages:
       displayName: 'Publish an artifact'
 
     - powershell: |
-        npm install
+        npm ci
         node Localize/bump-versions.js
         
         git add -A
