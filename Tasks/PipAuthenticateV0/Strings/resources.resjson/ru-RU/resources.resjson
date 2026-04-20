@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "Выберите веб-каналы для проверки подлинности, присутствующие в этой организации",
   "loc.input.label.externalSources": "Веб-каналы из внешних организаций",
   "loc.input.help.externalSources": "Выберите конечные точки для проверки подлинности за пределами этой организации.",
+  "loc.messages.TaskDeprecationNotice": "The PipAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using PipAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Добавление сведений о проверке подлинности для внутренних веб-каналов (%s).",
   "loc.messages.Info_AddingExternalFeeds": "Добавление сведений о проверке подлинности для внешней конечной точки %s.",
   "loc.messages.Info_SuccessAddingAuth": "Проверка подлинности успешно добавлена для внутренних веб-каналов (%s) и внешней конечной точки (%s).",

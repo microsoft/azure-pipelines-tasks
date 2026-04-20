@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "Seleccione los puntos de conexión para autenticarse fuera de esta organización. Asegúrese de que tienen permisos de carga de paquetes.",
   "loc.input.label.publishPackageMetadata": "Publicar los metadatos de canalización",
   "loc.input.help.publishPackageMetadata": "Asocie los metadatos de esta canalización de compilación o versión (n.º de ejecución, información del código fuente) con el paquete al cargar en Mis fuentes.",
+  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Agregando información de autenticación para las fuentes internas %s.",
   "loc.messages.Info_AddingExternalFeeds": "Agregando información de autenticación para el punto de conexión externo %s.",
   "loc.messages.Info_AddingAuthForRegistry": "Agregando autenticación a la configuración del registro %s",
