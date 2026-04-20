@@ -65,5 +65,6 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンを取得できませんでした。状態コード: %s。状態メッセージ: %s",
   "loc.messages.NotAbleToCreateFirewallRule": "Azure MySQL Flexible Server にファイアウォール ルールを追加中にエラーが発生しました。エラー: %s",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンを取得できませんでした。使用されているサービス プリンシパルが有効で期限切れでないことを確認してください。",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターンのパッケージが見つかりませんでした。",  "loc.messages.SqlFileNotFound": "SQL ファイルが見つかりません: %s",  "loc.messages.FirewallRuleNameCannotBeNull": "ファイアウォール ルール名を Null にすることはできません。"
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターンのパッケージが見つかりませんでした。",
+  "loc.messages.FirewallRuleNameCannotBeNull": "ファイアウォール ルール名を Null にすることはできません。"
 }

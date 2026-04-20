@@ -44,7 +44,7 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()), { env: this._getPasswordEnv(), silent: false } as any);
+        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()));
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -59,19 +59,10 @@ export class MysqlClient implements ISqlClient {
     /**
      * Get the connection argument for mysql
      * Note: Flexible Server uses username without @servername suffix
-     * Password is passed via MYSQL_PWD env var to avoid exposure in process args.
      */
     private _getArgumentString(): string{
-        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " --ssl-mode=REQUIRED";
+        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword() + " --ssl-mode=REQUIRED";
         return argumentString;
-    }
-
-    /**
-     * Returns an env object with MYSQL_PWD set so the password
-     * is never visible in the process argument list.
-     */
-    private _getPasswordEnv(): { [key: string]: string | undefined } {
-        return Object.assign({}, process.env, { MYSQL_PWD: this._azureMysqlTaskParameter.getSqlPassword() });
     }
 
     /**
@@ -123,7 +114,7 @@ export class MysqlClient implements ISqlClient {
     private async _executeSqlScript(argument: string): Promise<number> {
         let defer = Q.defer<number>();
         task.debug('Started execution of mysql script');
-        task.exec(this._toolPath, Utility.argStringToArray(argument), { env: this._getPasswordEnv() } as any).then((resultCode)=>{
+        task.exec(this._toolPath, Utility.argStringToArray(argument)).then((resultCode)=>{
             task.debug('Script execution on mysql server result: '+ resultCode);
             if(resultCode === 0){
                 defer.resolve(resultCode);
@@ -147,12 +138,8 @@ export class MysqlClient implements ISqlClient {
         task.debug('Started execution of mysql script from file via stdin');
         const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
         task.debug('  ' + sqlFilePath);
-        if (!fs.existsSync(sqlFilePath)) {
-            defer.reject(new Error(task.loc("SqlFileNotFound", sqlFilePath)));
-            return defer.promise;
-        }
         const args = Utility.argStringToArray(argument);
-        const mysqlProcess = child_process.spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'], env: this._getPasswordEnv() });
+        const mysqlProcess = child_process.spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
         mysqlProcess.on('error', (err) => {
             if (!settled) {
                 settled = true;

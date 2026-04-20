@@ -27,7 +27,7 @@ export class MysqlClientTests  {
                 "/usr/local/bin/mysql": true
             },
             "exec": {
-                "/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME --ssl-mode=REQUIRED" : {
+                "/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD --ssl-mode=REQUIRED" : {
                     "code": 1,
                     "stderr": "ERROR 9000 (HY000): Client with IP address '250.250.250.250' is not allowed to connect to this MySQL server."
                 }

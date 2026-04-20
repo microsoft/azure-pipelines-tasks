@@ -232,7 +232,6 @@
     "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
-    "SqlFileNotFound": "ms-resource:loc.messages.SqlFileNotFound",
     "FirewallRuleNameCannotBeNull": "ms-resource:loc.messages.FirewallRuleNameCannotBeNull"
   }
 }
