@@ -5,16 +5,18 @@ import { Utility } from '../operations/MysqlUtility';
 import * as telemetry from '../telemetry';
 import task = require("azure-pipelines-task-lib/task");
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
-import Q = require('q');
 import * as fs from 'fs';
 import * as child_process from 'child_process';
+
+export type SpawnFn = typeof child_process.spawn;
 
 export class MysqlClient implements ISqlClient {
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
     private _hostName: string;
     private _toolPath: string;
+    private _spawn: SpawnFn;
 
-    constructor(azureMysqlTaskParameter: AzureMysqlTaskParameter, serverName: string, toolPath: string) {
+    constructor(azureMysqlTaskParameter: AzureMysqlTaskParameter, serverName: string, toolPath: string, spawnFn?: SpawnFn) {
         if (!azureMysqlTaskParameter) {
             throw new Error(task.loc("AzureMysqlTaskParameterCannotBeEmpty"));
         }
@@ -28,6 +30,7 @@ export class MysqlClient implements ISqlClient {
         this._azureMysqlTaskParameter = azureMysqlTaskParameter;
         this._hostName = serverName;
         this._toolPath = toolPath;
+        this._spawn = spawnFn || child_process.spawn;
 
         // Ensure the password is masked in pipeline logs even when
         // using child_process.spawn (which bypasses task-lib exec).
@@ -57,44 +60,42 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Get the connection argument for mysql
-     * Note: Flexible Server uses username without @servername suffix
+     * Get the connection argument for mysql.
+     * Note: Flexible Server uses username without @servername suffix.
+     * Appends --ssl-mode=REQUIRED unless the user already specified --ssl-mode
+     * in SqlAdditionalArguments.
      */
     private _getArgumentString(): string{
-        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword() + " --ssl-mode=REQUIRED";
+        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword();
+        if (!this._hasSslModeInAdditionalArgs()) {
+            argumentString += " --ssl-mode=REQUIRED";
+        }
         return argumentString;
+    }
+
+    /**
+     * Check if the user already specified --ssl-mode in SqlAdditionalArguments.
+     */
+    private _hasSslModeInAdditionalArgs(): boolean {
+        const additional = this._azureMysqlTaskParameter.getSqlAdditionalArguments();
+        return !!additional && /--ssl-mode/i.test(additional);
     }
 
     /**
      * Execute Mysql script
      */
     public async executeSqlCommand() : Promise<number> {
-        let defer = Q.defer<number>();
         let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
         let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
         telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry); 
         if(this._azureMysqlTaskParameter.getDatabaseName()){
-            // Creating databse if it doesn't exist 
-            this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist()).then((resultCode)=>{
-                argument += " -D" + this._azureMysqlTaskParameter.getDatabaseName();
-                // Running sql script passed by user
-                this._runUserScript(argument).then((resultCode) => {
-                    defer.resolve(resultCode);
-                }, (error) => {
-                    defer.reject(error);
-                });
-            }).catch((error) => {
-                defer.reject(error);
-            });
+            // Creating database if it doesn't exist 
+            await this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist());
+            argument += " -D" + this._azureMysqlTaskParameter.getDatabaseName();
+            return this._runUserScript(argument);
         }else{
-            this._runUserScript(argument).then((resultCode) => {
-                defer.resolve(resultCode);
-            }, (error) => {
-                defer.reject(error);
-            });
+            return this._runUserScript(argument);
         }
-
-        return defer.promise;
     }
 
     private _createDatabaseScriptIfItDoesnotExist() : string {
@@ -112,64 +113,60 @@ export class MysqlClient implements ISqlClient {
     }
 
     private async _executeSqlScript(argument: string): Promise<number> {
-        let defer = Q.defer<number>();
         task.debug('Started execution of mysql script');
-        task.exec(this._toolPath, Utility.argStringToArray(argument)).then((resultCode)=>{
-            task.debug('Script execution on mysql server result: '+ resultCode);
-            if(resultCode === 0){
-                defer.resolve(resultCode);
-            }else{
-                defer.reject(new Error(task.loc("SqlExecutionException", resultCode)));
-            }
-        },(error) => {
-            defer.reject(error);
-        });
-
-        return defer.promise;
+        const resultCode = await task.exec(this._toolPath, Utility.argStringToArray(argument));
+        task.debug('Script execution on mysql server result: '+ resultCode);
+        if(resultCode === 0){
+            return resultCode;
+        }
+        throw new Error(task.loc("SqlExecutionException", resultCode));
     }
 
     /**
-     * Execute SQL script from file by piping file content via stdin
-     * This avoids the 'source' command which only works in interactive MySQL CLI
+     * Execute SQL script from file by piping file content via stdin.
+     * Uses this._spawn (injectable for testing).
      */
-    private async _executeSqlScriptFromFile(argument: string): Promise<number> {
-        let defer = Q.defer<number>();
-        let settled = false;
-        task.debug('Started execution of mysql script from file via stdin');
-        const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
-        task.debug('  ' + sqlFilePath);
-        const args = Utility.argStringToArray(argument);
-        const mysqlProcess = child_process.spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
-        mysqlProcess.on('error', (err) => {
-            if (!settled) {
+    private _executeSqlScriptFromFile(argument: string): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            let settled = false;
+            task.debug('Started execution of mysql script from file via stdin');
+            const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
+            task.debug('  ' + sqlFilePath);
+            if (!fs.existsSync(sqlFilePath)) {
+                reject(new Error(task.loc("SqlFileNotFound", sqlFilePath)));
+                return;
+            }
+            const args = Utility.argStringToArray(argument);
+            const mysqlProcess = this._spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
+            mysqlProcess.on('error', (err) => {
+                if (!settled) {
+                    settled = true;
+                    reject(new Error(task.loc("SqlExecutionException", err.message)));
+                }
+            });
+            mysqlProcess.stdin.on('error', (err) => {
+                task.debug('stdin error: ' + err.message);
+            });
+            const fileStream = fs.createReadStream(sqlFilePath);
+            fileStream.pipe(mysqlProcess.stdin);
+            fileStream.on('error', (err) => {
+                mysqlProcess.stdin.destroy();
+                if (!settled) {
+                    settled = true;
+                    reject(new Error(task.loc("SqlExecutionException", err.message)));
+                }
+            });
+            mysqlProcess.on('close', (code) => {
+                task.debug('Script execution on mysql server result: ' + code);
+                if (settled) return;
                 settled = true;
-                defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
-            }
+                if (code === 0) {
+                    resolve(code);
+                } else {
+                    reject(new Error(task.loc("SqlExecutionException", code)));
+                }
+            });
         });
-        mysqlProcess.stdin.on('error', (err) => {
-            task.debug('stdin error: ' + err.message);
-        });
-        const fileStream = fs.createReadStream(sqlFilePath);
-        fileStream.pipe(mysqlProcess.stdin);
-        fileStream.on('error', (err) => {
-            mysqlProcess.stdin.destroy();
-            if (!settled) {
-                settled = true;
-                defer.reject(new Error(task.loc("SqlExecutionException", err.message)));
-            }
-        });
-        mysqlProcess.on('close', (code) => {
-            task.debug('Script execution on mysql server result: ' + code);
-            if (settled) return;
-            settled = true;
-            if (code === 0) {
-                defer.resolve(code);
-            } else {
-                defer.reject(new Error(task.loc("SqlExecutionException", code)));
-            }
-        });
-
-        return defer.promise;
     }
 
     /**
