@@ -21,10 +21,6 @@ stages:
 
     - checkout: self
       persistCredentials: true
-
-    - powershell: |
-        npm install
-      displayName: 'npm install'
       
     - powershell: |
         $sprintInfo = Invoke-WebRequest https://whatsprintis.it -UseBasicParsing -Headers @{"Accept"= "application/json"} | ConvertFrom-Json
@@ -73,6 +69,7 @@ stages:
       displayName: 'Publish an artifact'
 
     - powershell: |
+        npm install
         node Localize/bump-versions.js
         
         git add -A
