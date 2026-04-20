@@ -3,8 +3,9 @@
   "name": "AzureMysqlDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-mysql-deployment-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -15,14 +16,12 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 273,
     "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
-  "deprecated": true,
-  "deprecationMessage": "The AzureMysqlDeployment@1 task is deprecated. Use AzureMysqlDeployment@2 which targets Azure Database for MySQL Flexible Server.",
   "groups": [
     {
       "name": "target",
@@ -184,7 +183,7 @@
     {
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlServers",
+      "dataSourceName": "AzureMysqlFlexibleServers",
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
@@ -193,9 +192,6 @@
     "Node16": {
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
-    },
-    "Node10": {
-      "target": "azuremysqldeploy.js"
     },
     "Node20_1": {
       "target": "azuremysqldeploy.js",
@@ -235,6 +231,7 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "FirewallRuleNameCannotBeNull": "ms-resource:loc.messages.FirewallRuleNameCannotBeNull"
   }
 }

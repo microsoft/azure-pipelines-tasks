@@ -1,10 +1,11 @@
 {
   "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
   "name": "AzureMysqlDeployment",
-  "friendlyName": "[Deprecated] Azure MySQL deploy",
-  "description": "Deprecated: use the AzureMysqlDeployment@2 task instead. V2 targets Azure Database for MySQL Flexible Server.",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
+  "friendlyName": "Azure Database for MySQL deployment",
+  "description": "Run your scripts and make changes to your Azure Database for MySQL Flexible Server",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-mysql-deployment-v2",
+  "helpMarkDown": "[Learn more about this task](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMysqlDeploymentV2/README.md)",
+  "releaseNotes": "What's new in Version 2.0:\n- Azure Database for MySQL Flexible Server support (replaces retiring Single Server).\n- New custom ARM client targeting Microsoft.DBforMySQL/flexibleServers (API 2021-12-01-preview).\n- Native MySQL authentication — no @servername suffix required for username.\n- Reliable SQL file execution via stdin piping (replaces broken 'source' command).\n- Async firewall rule creation with exponential-backoff polling (handles 202 responses).\n- Server list pagination support via nextLink.\n- Migration: Update pipeline to AzureMysqlDeployment@2, use Flexible Server FQDN, and remove @servername from SqlUsername.",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -15,14 +16,12 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 273,
     "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
-  "deprecated": true,
-  "deprecationMessage": "The AzureMysqlDeployment@1 task is deprecated. Use AzureMysqlDeployment@2 which targets Azure Database for MySQL Flexible Server.",
   "groups": [
     {
       "name": "target",
@@ -59,7 +58,7 @@
       "required": true,
       "defaultValue": "",
       "groupName": "target",
-      "helpMarkDown": "Server name of 'Azure Database for MySQL'.Example: fabrikam.mysql.database.azure.com. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
+      "helpMarkDown": "Server name of 'Azure Database for MySQL Flexible Server'. Example: fabrikam.mysql.database.azure.com. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'.",
       "properties": {
         "EditableOptions": "True"
       }
@@ -80,7 +79,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam. When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."
+      "helpMarkDown": "Azure Database for MySQL Flexible Server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example: bbo1. When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."
     },
     {
       "name": "SqlPassword",
@@ -89,7 +88,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
+      "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don't recall the password you can change the password from [Azure portal](https://learn.microsoft.com/azure/mysql/flexible-server/how-to-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
     },
     {
       "name": "TaskNameSelector",
@@ -148,7 +147,7 @@
         "AutoDetect": "AutoDetect",
         "IPAddressRange": "IPAddressRange"
       },
-      "helpMarkDown": "For successful execution of the task, we need to enable administrators to access the Azure Database for MySQL Server from the IP Address of the automation agent.<br>By selecting auto-detect you can automatically add firewall exception for range of possible IP Address of automation agent ​or else you can specify the range explicitly."
+      "helpMarkDown": "For successful execution of the task, we need to enable administrators to access the Azure Database for MySQL Flexible Server from the IP Address of the automation agent.<br>By selecting auto-detect you can automatically add firewall exception for range of possible IP Address of automation agent ​or else you can specify the range explicitly."
     },
     {
       "name": "StartIpAddress",
@@ -184,18 +183,15 @@
     {
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlServers",
+      "dataSourceName": "AzureMysqlFlexibleServers",
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
-  "instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
+  "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
   "execution": {
     "Node16": {
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
-    },
-    "Node10": {
-      "target": "azuremysqldeploy.js"
     },
     "Node20_1": {
       "target": "azuremysqldeploy.js",
@@ -211,11 +207,11 @@
     "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
     "MysqlFullyQualifiedServerNameCannotBeEmpty": "The MySQL server fully qualified name cannot be null.",
     "ResourceGroupCannotBeEmpty": "The resource group name cannot be null.",
-    "NotAbleToAddFirewallRule": "An error occurred while adding the firewall rule to the MySQL server. Error: %s .",
-    "NotAbleToDeleteFirewallRule": "An error occurred while deleting the firewall rule from the MySQL server. Error: %s .",
+    "NotAbleToAddFirewallRule": "An error occurred while adding the firewall rule to the MySQL Flexible Server. Error: %s .",
+    "NotAbleToDeleteFirewallRule": "An error occurred while deleting the firewall rule from the MySQL Flexible Server. Error: %s .",
     "AgentIpAddressIsMissingInAddedFirewallRule": "The agent IP address is missing in the manually added firewall rule.",
-    "NotAbleToGetAllServers": "Failed to retrieve all MySQL servers of a subscription. Error: %s .",
-    "EmptyOrNullServerList": "The MySQL server list is empty. The MySQL server host name is invalid.",
+    "NotAbleToGetAllServers": "Failed to retrieve all MySQL Flexible Servers of a subscription. Error: %s .",
+    "EmptyOrNullServerList": "The MySQL Flexible Server list is empty. The MySQL server host name is invalid.",
     "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
     "UnableToFindResourceGroupDueToInvalidId": "Unable to find the resource group due to an invalid ID.",
     "NotAbleToGetInstalledLocationOfMysqlFromPath": "The MySQL client is missing on the agent machine.",
@@ -233,8 +229,9 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "Could not retrieve an access token for Azure. Status code: %s. Status message: %s",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
     "CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
-    "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+    "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure MySQL Flexible Server. Error: %s",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+    "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null."
   }
 }
