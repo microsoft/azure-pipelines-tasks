@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 272,
-    "Patch": 2
+    "Minor": 273,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

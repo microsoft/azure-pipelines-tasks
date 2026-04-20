@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "runsOn": [
@@ -20,6 +20,8 @@
     "npm"
   ],
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "deprecationMessage": "The DownloadGithubNpmPackage@1 (Download Github Npm Package) task has been deprecated and will soon be retired. Use the Npm@1 task instead.",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
