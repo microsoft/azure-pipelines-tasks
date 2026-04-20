@@ -173,6 +173,11 @@ function performNpmAudit(taskPath) {
         return;
     }
 
+    if (!fs.existsSync(path.join(taskPath, "package.json"))) {
+        console.log(`\x1b[A\x1b[K⏭️  Skipping npm audit because no package.json found in the build task at "${taskPath}".`);
+        return;
+    }
+
     try {
         const auditResult = ncp.spawnSync('npm', ['audit', '--prefix', taskPath, '--audit-level=high'], {
             stdio: 'pipe',

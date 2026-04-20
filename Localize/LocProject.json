@@ -226,6 +226,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\BicepDeployV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\BicepDeployV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\CacheBetaV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\CacheBetaV1\\Strings\\resources.resjson"
@@ -901,6 +907,12 @@
             "SourceFile": "Tasks\\UniversalPackagesV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\UniversalPackagesV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\UniversalPackagesV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\UniversalPackagesV1\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",

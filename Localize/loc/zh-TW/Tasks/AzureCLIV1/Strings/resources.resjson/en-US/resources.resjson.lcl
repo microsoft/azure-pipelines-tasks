@@ -245,10 +245,13 @@
       </Item>
       <Item ItemId=";loc.messages.ExpiredServicePrincipalMessageWithLink" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+          <Val><![CDATA[Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[秘密已過期，請在 %s 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無秘密服務連線。]]></Val>
+            <Val><![CDATA[祕密已過期，請於 %s 更新服務連線。若要深入了解轉換至無祕密服務連線，請參閱 https://aka.ms/azdo-rm-workload-identity-conversion。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
