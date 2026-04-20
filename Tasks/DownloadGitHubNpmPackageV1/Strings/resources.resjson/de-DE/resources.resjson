@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "GitHub-npm-Paket herunterladen",
+  "loc.friendlyName": "[Deprecated] GitHub-npm-Paket herunterladen",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613746) oder [npm-Dokumentation anzeigen](https://docs.npmjs.com/)",
-  "loc.description": "Hiermit werden npm-Pakete aus GitHub installiert.",
-  "loc.instanceNameFormat": "GitHub-npm-Paket herunterladen",
+  "loc.description": "Veraltet: Dieser Task wird nicht mehr gewartet. Verwenden Sie stattdessen den Task Npm@1.",
+  "loc.instanceNameFormat": "[Deprecated] GitHub-npm-Paket herunterladen",
   "loc.group.displayName.customRegistries": "Benutzerdefinierte Registrierungen und Authentifizierung",
   "loc.input.label.packageName": "Paketname",
   "loc.input.help.packageName": "Name des Pakets, das aus GitHub heruntergeladen werden soll",
