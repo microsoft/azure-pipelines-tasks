@@ -233,6 +233,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "FirewallRuleNameCannotBeNull": "ms-resource:loc.messages.FirewallRuleNameCannotBeNull",
-    "SqlFileNotFound": "ms-resource:loc.messages.SqlFileNotFound"
+    "SqlFileNotFound": "ms-resource:loc.messages.SqlFileNotFound",
+    "InvalidDatabaseName": "ms-resource:loc.messages.InvalidDatabaseName"
   }
 }

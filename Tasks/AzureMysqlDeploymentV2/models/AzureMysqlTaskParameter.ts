@@ -21,6 +21,9 @@ export class AzureMysqlTaskParameter {
             this.connectedServiceName = tl.getInput('ConnectedServiceName', true);
             this.serverName = tl.getInput('ServerName', true);
             this.databaseName = tl.getInput('DatabaseName', false);
+            if (this.databaseName && !/^[a-zA-Z0-9_\-$]+$/.test(this.databaseName)) {
+                throw new Error(tl.loc("InvalidDatabaseName", this.databaseName));
+            }
             this.sqlUserName = tl.getInput('SqlUsername', true);
             this.sqlPassword = tl.getInput('SqlPassword', true);
             this.taskNameSelector = tl.getInput('TaskNameSelector', true);

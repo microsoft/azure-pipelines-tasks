@@ -67,5 +67,6 @@
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Überprüfen Sie, ob der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Es wurde kein Paket mit dem angegebenen Muster gefunden.",
   "loc.messages.FirewallRuleNameCannotBeNull": "Der Name der Firewallregel darf nicht NULL sein.",
-  "loc.messages.SqlFileNotFound": "SQL-Datei wurde im Pfad nicht gefunden: %s"
+  "loc.messages.SqlFileNotFound": "SQL-Datei wurde im Pfad nicht gefunden: %s",
+  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
 }

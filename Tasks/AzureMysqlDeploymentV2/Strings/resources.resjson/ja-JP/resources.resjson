@@ -67,5 +67,6 @@
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンを取得できませんでした。使用されているサービス プリンシパルが有効で期限切れでないことを確認してください。",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "指定されたパターンのパッケージが見つかりませんでした。",
   "loc.messages.FirewallRuleNameCannotBeNull": "ファイアウォール ルール名を Null にすることはできません。",
-  "loc.messages.SqlFileNotFound": "SQL ファイルがパスに見つかりません: %s"
+  "loc.messages.SqlFileNotFound": "SQL ファイルがパスに見つかりません: %s",
+  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
 }

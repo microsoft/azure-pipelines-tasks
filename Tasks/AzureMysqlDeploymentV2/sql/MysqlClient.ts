@@ -180,6 +180,7 @@ export class MysqlClient implements ISqlClient {
      * Get connection argument for inline SQL execution
      */
     private _getFileSourceArgument() : string {
-        return " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
+        const escaped = this._azureMysqlTaskParameter.getSqlInline().replace(/"/g, '\\"');
+        return " -e" + '"' + escaped + '"';
     }
 }

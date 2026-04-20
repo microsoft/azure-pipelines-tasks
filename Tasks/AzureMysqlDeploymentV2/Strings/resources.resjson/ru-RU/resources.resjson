@@ -67,5 +67,6 @@
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым и не просрочен.",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Пакет с указанным шаблоном не найден.",
   "loc.messages.FirewallRuleNameCannotBeNull": "Имя правила брандмауэра не может быть пустым.",
-  "loc.messages.SqlFileNotFound": "SQL-файл не найден по пути: %s"
+  "loc.messages.SqlFileNotFound": "SQL-файл не найден по пути: %s",
+  "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
 }

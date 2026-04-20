@@ -233,6 +233,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
     "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null.",
-    "SqlFileNotFound": "SQL file not found at path: %s"
+    "SqlFileNotFound": "SQL file not found at path: %s",
+    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
   }
 }
