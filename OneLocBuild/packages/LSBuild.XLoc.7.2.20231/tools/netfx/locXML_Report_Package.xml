@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<!-- To Do: uncomment following line to set elements as none-localizable by default -->
+	<!-- <_locDefault _loc="locNone"/> -->
+	<!-- To Do: uncomment following line to set all attributes to localizable by default -->
+	<!-- <_locDefaultAttr _loc="locData"/> -->
+
+	<!-- To Do: uncomment following line to set tag test to none-localizable 
+		and its attributes size and type to localizable -->
+	<!-- <_locTag _loc="locNone" _locAttrData="size,type">test</_locTag> -->
+  <_locTag _loc="locData" _locIDAttr="Id">String</_locTag>
+	<!-- To Do: uncomment following line to set tag bold to fully-localizable  -->
+	<!-- <_locTag _loc="locFull">bold</_locTag> -->
+  <_locTag _loc="locData" _locIDAttr="Id">Description</_locTag> 
+  <_locTag _loc="locData" _locIDAttr="Id">Long</_locTag>
+  <_locTag _loc="locNone" _locAttrData="name">Issue</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Key">RegistryCheck</_locTag>	
+ 
+</_locDefinition>
+

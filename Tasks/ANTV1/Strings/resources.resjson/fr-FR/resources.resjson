@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "Chemin du kit JDK",
   "loc.input.help.jdkUserInputPath": "Définissez JAVA_HOME sur le chemin d'accès indiqué.",
   "loc.input.label.jdkArchitecture": "Architecture du kit JDK",
-  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK.",
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64, arm64) of the JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 et JDK 10 ne sont plus pris en charge. Passez à une version plus récente de votre projet et de votre pipeline. Tentative de génération avec JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du kit JDK. Vérifiez que la version spécifiée du kit JDK est installée sur l'agent, que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement d'un kit JDK correspondant. Sinon, utilisez la tâche [Programme d'installation de l'outil Java](https://go.microsoft.com/fwlink/?linkid=875287) pour installer le kit JDK souhaité.",

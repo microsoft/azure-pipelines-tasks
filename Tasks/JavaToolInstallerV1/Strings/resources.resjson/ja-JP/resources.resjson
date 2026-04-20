@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.CorrelationIdForARM": "ARM API 呼び出しの応答からの関連付け ID: %s",
   "loc.messages.JavaNotPreinstalled": "Java %s はこのエージェントにプレインストールされていません",
+  "loc.messages.JavaHomeArm64NotFound": "%s is not defined. Searching for aarch64 variant.",
+  "loc.messages.JavaHomeResolvedFrom": "Resolved Java home from %s: %s",
   "loc.messages.UsePreinstalledJava": "%s からプレインストールされた JDK を使用します",
   "loc.messages.WrongArchiveStructure": "JDK ファイルが有効ではありません。JDK ファイルに 'bin' が含まれるルート フォルダーが 1 つだけ含まれているかどうかを確認してください。",
   "loc.messages.WrongArchiveFile": "アーカイブ ファイルが正しくありません。JDK を含むフォルダーがありません",

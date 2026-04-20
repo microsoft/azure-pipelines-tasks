@@ -1,8 +1,8 @@
 {
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
-    "friendlyName": "Visual Studio Test",
-    "description": "Run tests with Visual Studio test runner",
+    "friendlyName": "[Deprecated] Visual Studio Test",
+    "description": "[Deprecated] Run tests with Visual Studio test runner",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
     "category": "Test",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 244,
+        "Minor": 273,
         "Patch": 0
     },
     "demands": [

@@ -8,6 +8,7 @@
   "loc.input.label.command": "npm 命令",
   "loc.input.label.arguments": "参数",
   "loc.input.help.arguments": "传递给 npm 的其他参数。",
+  "loc.messages.TaskDeprecationNotice": "The NpmV0 task is scheduled for deprecation in June 2026. Please switch to using NpmAuthenticate and script tasks, or NpmV1.",
   "loc.messages.InvalidCommand": "对 npm 仅使用一个命令。对其他参数使用“参数”输入。",
   "loc.messages.NpmReturnCode": "Npm 已退出，返回代码为: %d",
   "loc.messages.NpmFailed": "Npm 失败，出现错误: %s",
