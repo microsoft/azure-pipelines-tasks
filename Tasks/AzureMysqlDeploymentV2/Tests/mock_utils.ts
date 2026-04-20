@@ -76,7 +76,7 @@ export function getMockFirewallRules(){
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
             "content-type": "application/json; charset=utf-8"
         }
-    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/flexibleServers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2021-12-01-preview").reply(201, {
+    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/flexibleServers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID_12345?api-version=2021-12-01-preview").reply(201, {
         "id": "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/flexibleServers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCKID",
         "name": "rule1",
         "type": "Microsoft.DBforMySQL/flexibleServers/firewallRules",
@@ -92,7 +92,7 @@ export function getMockFirewallRules(){
             "content-type": "application/json; charset=utf-8"
         }
     })
-    .delete("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/flexibleServers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2021-12-01-preview")
+    .delete("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/flexibleServers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID_12345?api-version=2021-12-01-preview")
     .reply(200).persist();
 
 }

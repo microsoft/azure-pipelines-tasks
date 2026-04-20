@@ -6,7 +6,6 @@ import { MysqlServer } from '../models/MysqlServer';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { ISqlClient } from '../sql/ISqlClient';
-import Q = require('q');
 
 export class FirewallOperations {
 
@@ -25,17 +24,17 @@ export class FirewallOperations {
      * 
      * @returns operation is success or failure
      */
-    public async addFirewallRule(serverName: string, firewallRule: FirewallRule, resourceGroupName: string): Promise<void> {
-        let defer = Q.defer<void>();
-        this._azureMysqManagementClient.firewallRules.createOrUpdate(resourceGroupName, serverName, firewallRule.getName(), firewallRule, (error, result, request, response) => {
-            if(error){
-                task.debug("Getting error during adding firewall rule: "+ error);
-                defer.reject(new Error(task.loc("NotAbleToAddFirewallRule", error)));
-            }else{
-                defer.resolve();
-            }
+    public addFirewallRule(serverName: string, firewallRule: FirewallRule, resourceGroupName: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._azureMysqManagementClient.firewallRules.createOrUpdate(resourceGroupName, serverName, firewallRule.getName(), firewallRule, (error, result, request, response) => {
+                if(error){
+                    task.debug("Getting error during adding firewall rule: "+ error);
+                    reject(new Error(task.loc("NotAbleToAddFirewallRule", error)));
+                }else{
+                    resolve();
+                }
+            });
         });
-        return defer.promise;
     }
 
     /**
@@ -45,17 +44,17 @@ export class FirewallOperations {
      * 
      * @returns operation is success or failure
      */
-    public async deleteFirewallRule(serverName: string, resourceGroupName: string): Promise<void> {
-        let defer = Q.defer<void>();
-        this._azureMysqManagementClient.firewallRules.delete(resourceGroupName, serverName, this._firewallName, (error, result, request, response) => {
-            if(error){
-                task.debug("Getting error during deleting firewall rule: "+ error);
-                defer.reject(new Error(task.loc("NotAbleToDeleteFirewallRule", error)));
-            }else{
-                defer.resolve();
-            }
+    public deleteFirewallRule(serverName: string, resourceGroupName: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._azureMysqManagementClient.firewallRules.delete(resourceGroupName, serverName, this._firewallName, (error, result, request, response) => {
+                if(error){
+                    task.debug("Getting error during deleting firewall rule: "+ error);
+                    reject(new Error(task.loc("NotAbleToDeleteFirewallRule", error)));
+                }else{
+                    resolve();
+                }
+            });
         });
-        return defer.promise;
     }
 
     /**
@@ -67,59 +66,41 @@ export class FirewallOperations {
      * @returns                          firewall rule added or not 
      */
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, mysqlServer: MysqlServer) : Promise<boolean> {
-        var defer = Q.defer<boolean>();
         if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
-            this._preparefirewallRule(mysqlServer.getName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), mysqlServer.getResourceGroupName(), "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
-                let firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
-                task.debug(" firewall conf " +JSON.stringify(firewallConfiguration));
+            await this._preparefirewallRule(mysqlServer.getName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), mysqlServer.getResourceGroupName(), "IPAddressRange_" + this._getFirewallRuleName());
+            const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
+            task.debug(" firewall conf " +JSON.stringify(firewallConfiguration));
 
-                if(!firewallConfiguration.isIpAdressAlreadyAdded()){
-                    task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
-                    defer.reject(new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule")));
-                }else{
-                    defer.resolve(true);
-                }
-            },(error) =>{
-                task.debug("Error during adding firewall rule for IPAddressRange: "+ error);
-                defer.reject(error);
-            });
+            if(!firewallConfiguration.isIpAdressAlreadyAdded()){
+                task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
+                throw new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule"));
+            }
+            return true;
         }else {
             const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded()){
-                this._preparefirewallRule(mysqlServer.getName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), mysqlServer.getResourceGroupName(), "AutoDetect_" + this._getFirewallRuleName()).then(() =>{
-                    defer.resolve(true);
-                },(error) =>{
-                    task.debug("Error during adding firewall rule for IPAddressRange: "+ error);
-                    defer.reject(error);
-                });
-            }else{
-                defer.resolve(false);
+                await this._preparefirewallRule(mysqlServer.getName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), mysqlServer.getResourceGroupName(), "AutoDetect_" + this._getFirewallRuleName());
+                return true;
             }
+            return false;
         }
-        return defer.promise;
     }
 
     /**
      * Prepare firewall rule for mysql flexible server
      */
     private async _preparefirewallRule(serverName: string, startIpAddress: string, endIpAddress: string, resourceGroupName: string, ruleName: string): Promise<void> {
-        var defer = Q.defer<void>();
         this._firewallName = ruleName;
         const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(startIpAddress, endIpAddress);
         const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
-        this.addFirewallRule(serverName, firewallRule, resourceGroupName).then(() =>{
-                task.debug('Firewall configuration name added : ' + this._firewallName);
-                defer.resolve();
-            },(error) => {
-                defer.reject(error)
-            });
-        return defer.promise;
+        await this.addFirewallRule(serverName, firewallRule, resourceGroupName);
+        task.debug('Firewall configuration name added : ' + this._firewallName);
     }
 
     private _getFirewallRuleName(): string {
         let buildId = task.getVariable('build.buildId');
         let releaseId = task.getVariable('release.releaseId');
-        let firewallRuleName: string = (releaseId ? releaseId : buildId) + Date.now().toString();
+        let firewallRuleName: string = (releaseId ? releaseId : buildId) + "_" + Date.now().toString();
         return firewallRuleName;
     }
 }

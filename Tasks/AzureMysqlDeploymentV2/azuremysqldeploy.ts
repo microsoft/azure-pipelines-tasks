@@ -1,5 +1,4 @@
 import task = require('azure-pipelines-task-lib/task');
-import Q = require('q');
 import path = require('path');
 import { FirewallRule, FirewallAddressRange } from './models/Firewall';
 import { MysqlServer } from './models/MysqlServer';

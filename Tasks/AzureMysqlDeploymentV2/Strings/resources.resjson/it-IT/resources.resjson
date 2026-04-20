@@ -66,5 +66,6 @@
   "loc.messages.NotAbleToCreateFirewallRule": "Errore durante l'aggiunta di una regola del firewall ad Azure MySQL Flexible Server. Errore: %s",
   "loc.messages.ExpiredServicePrincipal": "Non è stato possibile ottenere il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non scaduta.",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Nessun pacchetto trovato con il modello specificato.",
-  "loc.messages.FirewallRuleNameCannotBeNull": "Il nome della regola del firewall non può essere Null."
+  "loc.messages.FirewallRuleNameCannotBeNull": "Il nome della regola del firewall non può essere Null.",
+  "loc.messages.SqlFileNotFound": "File SQL non trovato nel percorso: %s"
 }

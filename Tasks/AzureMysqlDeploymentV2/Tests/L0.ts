@@ -43,4 +43,14 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should have passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should have passed.');
     });
 
+    it('AzureMySqlDeployment MysqlClientFileExec', async () => {
+        let tp = path.join(__dirname, 'MysqlClientFileExecTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.stdOutContained('fileExecSuccess passed.'), 'Should have printed: fileExecSuccess passed.');
+        assert(tr.stdOutContained('fileExecNonZeroExit passed.'), 'Should have printed: fileExecNonZeroExit passed.');
+        assert(tr.stdOutContained('fileExecFileNotFound passed.'), 'Should have printed: fileExecFileNotFound passed.');
+        assert(tr.stdOutContained('fileExecSpawnError passed.'), 'Should have printed: fileExecSpawnError passed.');
+    });
+
 });
