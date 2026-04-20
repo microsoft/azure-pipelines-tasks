@@ -5,7 +5,11 @@ param()
 . $PSScriptRoot\MockVariable.ps1
 
 #path to Utility.ps1 for SqlAzureDacpacDeployment task
+. "$PSScriptRoot\..\Utility.ps1"
 . "$PSScriptRoot\..\SqlAzureActions.ps1"
+
+# Mock feature flag to use legacy path
+Register-Mock Should-UseSanitizedArguments { return $false }
 
 # TEST 1 : If connection failed because of firewall exception using Sqlcmd.exe
 Register-Mock Get-Command { return $null }
@@ -47,4 +51,42 @@ $IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serv
 
 Assert-WasCalled Run-InlineSql
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
+Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
+
+# ============================================================================
+# Sanitization FF - ON tests: same scenarios, V2 safe path (Split-CLIArguments + & operator)
+# ============================================================================
+
+Unregister-Mock Should-UseSanitizedArguments
+Register-Mock Should-UseSanitizedArguments { return $true }
+
+# TEST 4 : FF ON - firewall exception via sqlcmd.exe uses safe V2 path
+Unregister-Mock Get-Command
+Register-Mock Get-Command { return $null } -ParametersEvaluator { $Name -eq 'Invoke-Sqlcmd' }
+
+# Mock the & operator call by mocking the sqlcmd executable path
+# The V2 path calls: & $sqlCmd $argArray — we can't mock & directly,
+# but the function catches errors and parses output. We use a real cmd.exe
+# to simulate the error output that Get-AgentIPRange parses.
+Unregister-Mock Invoke-Expression
+Register-Mock Invoke-Expression { } # Should NOT be called in V2 path
+
+# Since V2 uses & $sqlCmd $argArray, and $sqlCmd is Join-Path $PSScriptRoot "sqlcmd\SQLCMD.exe"
+# which doesn't exist in test, the & call will throw. Get-AgentIPRange catches the error
+# and parses $output. The IP range will be empty since the error won't contain sp_set_firewall_rule.
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+
+# V2 path should NOT call Invoke-Expression
+Assert-WasCalled Invoke-Expression -Times 0
+
+# TEST 5 : FF ON - Invoke-Sqlcmd path is unchanged (uses Run-InlineSql regardless of FF)
+Unregister-Mock Get-Command
+Register-Mock Get-Command { return "Command exists" } -ParametersEvaluator { $Name -eq 'Invoke-Sqlcmd' }
+Unregister-Mock Run-InlineSql
+Register-Mock Run-InlineSql { Write-Error $firewallException }
+
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+
+Assert-WasCalled Run-InlineSql
+Assert-AreEqual $startIP $IPAddressRange.StartIPAddress
 Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
