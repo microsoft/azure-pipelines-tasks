@@ -66,5 +66,6 @@
   "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen einer Firewallregel zum Azure MySQL Flexible Server. Fehler: %s",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Überprüfen Sie, ob der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Es wurde kein Paket mit dem angegebenen Muster gefunden.",
+  "loc.messages.SqlFileNotFound": "SQL-Datei nicht gefunden: %s",
   "loc.messages.FirewallRuleNameCannotBeNull": "Der Name der Firewallregel darf nicht NULL sein."
 }

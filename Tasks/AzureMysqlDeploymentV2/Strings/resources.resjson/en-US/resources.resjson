@@ -66,5 +66,6 @@
   "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure MySQL Flexible Server. Error: %s",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+  "loc.messages.SqlFileNotFound": "SQL file not found: %s",
   "loc.messages.FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null."
 }

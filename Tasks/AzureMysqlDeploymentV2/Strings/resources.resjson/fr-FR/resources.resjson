@@ -65,6 +65,5 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Impossible de récupérer un jeton d'accès pour le principal de service managé. Code d'état : %s. Message d'état : %s",
   "loc.messages.NotAbleToCreateFirewallRule": "Erreur lors de l'ajout d'une règle de pare-feu à Azure MySQL Flexible Server. Erreur : %s",
   "loc.messages.ExpiredServicePrincipal": "Impossible d'obtenir le jeton d'accès pour Azure. Vérifiez que le principal de service utilisé est valide et n'a pas expiré.",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "Aucun package trouvé avec le modèle spécifié.",
-  "loc.messages.FirewallRuleNameCannotBeNull": "Le nom de la règle de pare-feu ne peut pas être nul."
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "Aucun package trouvé avec le modèle spécifié.",  "loc.messages.SqlFileNotFound": "Fichier SQL introuvable : %s",  "loc.messages.FirewallRuleNameCannotBeNull": "Le nom de la règle de pare-feu ne peut pas être nul."
 }

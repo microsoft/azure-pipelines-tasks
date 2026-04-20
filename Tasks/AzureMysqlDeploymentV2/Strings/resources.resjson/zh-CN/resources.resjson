@@ -66,5 +66,6 @@
   "loc.messages.NotAbleToCreateFirewallRule": "向 Azure MySQL Flexible Server 添加防火墙规则时出错。错误: %s",
   "loc.messages.ExpiredServicePrincipal": "无法获取 Azure 的访问令牌。请验证使用的服务主体是否有效且未过期。",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "未找到具有指定模式的包。",
+  "loc.messages.SqlFileNotFound": "未找到 SQL 文件: %s",
   "loc.messages.FirewallRuleNameCannotBeNull": "防火墙规则名称不能为 null。"
 }

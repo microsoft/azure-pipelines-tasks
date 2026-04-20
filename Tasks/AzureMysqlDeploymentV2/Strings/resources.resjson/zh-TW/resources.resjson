@@ -65,6 +65,5 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s。狀態訊息: %s",
   "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure MySQL Flexible Server 時發生錯誤。錯誤: %s",
   "loc.messages.ExpiredServicePrincipal": "無法取得 Azure 的存取權杖。請確認使用的服務主體是否有效且未過期。",
-  "loc.messages.Nopackagefoundwithspecifiedpattern": "找不到具有指定模式的套件。",
-  "loc.messages.FirewallRuleNameCannotBeNull": "防火牆規則名稱不能為 Null。"
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "找不到具有指定模式的套件。",  "loc.messages.SqlFileNotFound": "找不到 SQL 檔案: %s",  "loc.messages.FirewallRuleNameCannotBeNull": "防火牆規則名稱不能為 Null。"
 }
