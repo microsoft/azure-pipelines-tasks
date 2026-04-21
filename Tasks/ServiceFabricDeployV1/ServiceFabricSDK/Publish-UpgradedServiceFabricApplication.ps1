@@ -1,3 +1,83 @@
+function ConvertTo-ServiceTypeHealthPolicyMap
+{
+    <#
+    .SYNOPSIS
+    Safely parses a ServiceTypeHealthPolicyMap string into a hashtable without using Invoke-Expression.
+
+    .DESCRIPTION
+    Parses a string in the format @{ "ServiceTypeName" = "MaxPercentUnhealthyPartitionsPerService,MaxPercentUnhealthyReplicasPerPartition,MaxPercentUnhealthyServices" }
+    into a PowerShell hashtable. Only string operations are used — no code evaluation occurs.
+
+    .PARAMETER PolicyMapString
+    The string to parse. Expected format: @{ "TypeName1" = "N,N,N"; "TypeName2" = "N,N,N" }
+    #>
+
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string]$PolicyMapString
+    )
+
+    $result = @{}
+
+    # Remove leading/trailing whitespace
+    $trimmed = $PolicyMapString.Trim()
+
+    # Strip the @{ } wrapper
+    if ($trimmed -match '^\s*@\s*\{(?<inner>.*)\}\s*$')
+    {
+        $inner = $Matches['inner'].Trim()
+    }
+    else
+    {
+        throw "Invalid ServiceTypeHealthPolicyMap format. Expected format: @{ `"ServiceTypeName`" = `"MaxPercentUnhealthyPartitionsPerService,MaxPercentUnhealthyReplicasPerPartition,MaxPercentUnhealthyServices`" }"
+    }
+
+    # Empty hashtable is valid
+    if ([string]::IsNullOrWhiteSpace($inner))
+    {
+        return $result
+    }
+
+    # Split entries by semicolons
+    $entries = $inner -split '\s*;\s*'
+
+    foreach ($entry in $entries)
+    {
+        $entry = $entry.Trim()
+        if ([string]::IsNullOrWhiteSpace($entry))
+        {
+            continue
+        }
+
+        # Match: "key" = "value" or 'key' = 'value' or key = "value" (with flexible quoting)
+        if ($entry -match '^\s*(?:"(?<key>[^"]+)"|''(?<key>[^'']+)''|(?<key>[^\s=]+))\s*=\s*(?:"(?<val>[^"]+)"|''(?<val>[^'']+)''|(?<val>[^\s;]+))\s*$')
+        {
+            $key = $Matches['key']
+            $val = $Matches['val']
+
+            # Validate the key contains only valid service type name characters
+            if ($key -notmatch '^[a-zA-Z0-9._\-]+$')
+            {
+                throw "Invalid service type name '$key'. Service type names may only contain letters, digits, dots, hyphens, and underscores."
+            }
+
+            # Validate the value is three comma-separated integers (0-100)
+            if ($val -notmatch '^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$')
+            {
+                throw "Invalid health policy value '$val' for service type '$key'. Expected format: MaxPercentUnhealthyPartitionsPerService,MaxPercentUnhealthyReplicasPerPartition,MaxPercentUnhealthyServices (e.g., '5,10,15')"
+            }
+
+            $result[$key] = $val
+        }
+        else
+        {
+            throw "Invalid entry '$entry' in ServiceTypeHealthPolicyMap. Expected format: `"ServiceTypeName`" = `"N,N,N`""
+        }
+    }
+
+    return $result
+}
+
 function Publish-UpgradedServiceFabricApplication
 {
     <#
@@ -310,7 +390,15 @@ function Publish-UpgradedServiceFabricApplication
             $serviceTypeHealthPolicyMap = $UpgradeParameters["ServiceTypeHealthPolicyMap"]
             if ($serviceTypeHealthPolicyMap -and $serviceTypeHealthPolicyMap -is [string])
             {
-                $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                $useSafeParser = Get-VstsPipelineFeature -FeatureName 'SfSafeParser'
+                if (-not $useSafeParser)
+                {
+                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                }
+                else
+                {
+                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
+                }
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
