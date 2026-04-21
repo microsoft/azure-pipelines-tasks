@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMysqlDeploymentV2/README.md)",
   "loc.description": "スクリプトを実行し、Azure Database for MySQL Flexible Server に変更を加えます。",
   "loc.instanceNameFormat": "Azure MySQL を実行します : $(TaskNameSelector)",
-  "loc.releaseNotes": "バージョン 2.0 の新機能:\n- Azure Database for MySQL Flexible Server のサポート (廃止される Single Server を置き換え)。\n- Microsoft.DBforMySQL/flexibleServers を対象とする新しいカスタム ARM クライアント (API 2021-12-01-preview)。\n- ネイティブ MySQL 認証 — ユーザー名に @servername サフィックスは不要。\n- stdin パイプによる信頼性の高い SQL ファイル実行 (壊れた 'source' コマンドを置き換え)。\n- 指数バックオフ ポーリングによる非同期ファイアウォール ルール作成 (202 応答を処理)。\n- nextLink によるサーバー リスト ページネーションのサポート。\n- 移行: パイプラインを AzureMysqlDeployment@2 に更新し、Flexible Server の FQDN を使用し、SqlUsername から @servername を削除してください。",
+  "loc.releaseNotes": "バージョン 2.0 の新機能:\n- Azure Database for MySQL Flexible Server のサポート (廃止される Single Server を置き換え)。\n- Microsoft.DBforMySQL/flexibleServers を対象とする新しいカスタム ARM クライアント (API 2024-12-30)。\n- ネイティブ MySQL 認証 — ユーザー名に @servername サフィックスは不要。\n- stdin パイプによる信頼性の高い SQL ファイル実行 (壊れた 'source' コマンドを置き換え)。\n- 指数バックオフ ポーリングによる非同期ファイアウォール ルール作成 (202 応答を処理)。\n- nextLink によるサーバー リスト ページネーションのサポート。\n- 移行: パイプラインを AzureMysqlDeployment@2 に更新し、Flexible Server の FQDN を使用し、SqlUsername から @servername を削除してください。",
   "loc.group.displayName.target": "DB の詳細",
   "loc.group.displayName.taskDetails": "デプロイ パッケージ",
   "loc.group.displayName.firewall": "ファイアウォール",

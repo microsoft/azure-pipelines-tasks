@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[深入了解此工作](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMysqlDeploymentV2/README.md)",
   "loc.description": "執行您的指令碼，並對適用於 MySQL 的 Azure 資料庫 Flexible Server 進行變更。",
   "loc.instanceNameFormat": "執行 Azure MySQL: $(TaskNameSelector)",
-  "loc.releaseNotes": "版本 2.0 的新功能:\n- 支援 Azure Database for MySQL Flexible Server (取代即將停用的 Single Server)。\n- 以 Microsoft.DBforMySQL/flexibleServers 為目標的新自訂 ARM 用戶端 (API 2021-12-01-preview)。\n- 原生 MySQL 驗證 — 使用者名稱不需要 @servername 尾碼。\n- 透過 stdin 管線可靠地執行 SQL 檔案 (取代損壞的 'source' 命令)。\n- 使用指數退避輪詢非同步建立防火牆規則 (處理 202 回應)。\n- 透過 nextLink 支援伺服器清單分頁。\n- 移轉: 將管線更新為 AzureMysqlDeployment@2，使用 Flexible Server FQDN，並從 SqlUsername 移除 @servername。",
+  "loc.releaseNotes": "版本 2.0 的新功能:\n- 支援 Azure Database for MySQL Flexible Server (取代即將停用的 Single Server)。\n- 以 Microsoft.DBforMySQL/flexibleServers 為目標的新自訂 ARM 用戶端 (API 2024-12-30)。\n- 原生 MySQL 驗證 — 使用者名稱不需要 @servername 尾碼。\n- 透過 stdin 管線可靠地執行 SQL 檔案 (取代損壞的 'source' 命令)。\n- 使用指數退避輪詢非同步建立防火牆規則 (處理 202 回應)。\n- 透過 nextLink 支援伺服器清單分頁。\n- 移轉: 將管線更新為 AzureMysqlDeployment@2，使用 Flexible Server FQDN，並從 SqlUsername 移除 @servername。",
   "loc.group.displayName.target": "資料庫詳細資料",
   "loc.group.displayName.taskDetails": "部署套件",
   "loc.group.displayName.firewall": "防火牆",

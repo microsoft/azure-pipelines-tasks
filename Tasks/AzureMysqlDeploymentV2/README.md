@@ -84,7 +84,7 @@ Azure Database for MySQL Single Server is on the retirement path. **Flexible Ser
 
 | File                                     | Change Type  | Description                                                                     |
 |------------------------------------------|--------------|---------------------------------------------------------------------------------|
-| `azure-arm-mysql-flexible.ts`            | **New**      | Custom ARM client for Flexible Server API (`2021-12-01-preview`)                |
+| `azure-arm-mysql-flexible.ts`            | **New**      | Custom ARM client for Flexible Server API (`2024-12-30`)                |
 | `task.json`                              | **Modified** | Version bump to 2.x, Flexible Server strings, data source, Node10 removed      |
 | `task.loc.json`                          | **Modified** | Localization template updated to match `task.json`                              |
 | `operations/MysqlServerOperations.ts`    | **Modified** | Swapped management client import to Flexible Server client                      |
@@ -95,7 +95,7 @@ Azure Database for MySQL Single Server is on the retirement path. **Flexible Ser
 | `operations/MysqlUtility.ts`              | Minor        | Trailing newline fix only                                                       |
 | `make.json`                              | Minor        | Trailing newline fix only                                                       |
 | `Tests/L0.ts`                            | **Modified** | Suite name updated to V2; refactored to async/await, removed try/catch wrappers |
-| `Tests/mock_utils.ts`                    | **Modified** | API paths updated to `flexibleServers` and `2021-12-01-preview`                 |
+| `Tests/mock_utils.ts`                    | **Modified** | API paths updated to `flexibleServers` and `2024-12-30`                 |
 | `Tests/package.json`                     | **Modified** | Name and description updated for V2                                             |
 | `Tests/ToolPathOperationsL0Tests.ts`     | Minor        | Trailing newline fix only                                                       |
 | `models/AzureMysqlTaskParameter.ts`      | Identical    | No changes                                                                      |
@@ -121,7 +121,7 @@ Custom Azure ARM client targeting the MySQL Flexible Server management API. Repl
 
 | Class                                       | Purpose                                                                                      |
 |---------------------------------------------|----------------------------------------------------------------------------------------------|
-| `AzureMysqlFlexibleServerManagementClient`  | Extends `ServiceClient`. Sets API version to `2021-12-01-preview`. Exposes sub-clients below.|
+| `AzureMysqlFlexibleServerManagementClient`  | Extends `ServiceClient`. Sets API version to `2024-12-30`. Exposes sub-clients below.|
 | `FlexibleServerFirewallRules`               | `createOrUpdate`, `delete`, `get` for firewall rules. Async polling for HTTP 202 with retry. |
 | `FlexibleMysqlServers`                      | `list` — enumerates all Flexible Servers in a subscription with `nextLink` pagination.       |
 

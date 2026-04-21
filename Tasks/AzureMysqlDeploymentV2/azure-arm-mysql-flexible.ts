@@ -5,7 +5,7 @@ import { ToError, ApiResult, ApiCallback } from 'azure-pipelines-tasks-azure-arm
 import { WebRequest } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-common';
 
-const flexibleServerApiVersion = '2021-12-01-preview';
+const flexibleServerApiVersion = '2024-12-30';
 
 export class AzureMysqlFlexibleServerManagementClient extends ServiceClient {
     public firewallRules: FlexibleServerFirewallRules;

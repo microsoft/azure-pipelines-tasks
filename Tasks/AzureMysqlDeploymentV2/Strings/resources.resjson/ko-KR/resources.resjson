@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMysqlDeploymentV2/README.md)",
   "loc.description": "스크립트를 실행하고 Azure Database for MySQL Flexible Server를 변경합니다.",
   "loc.instanceNameFormat": "Azure MySQL 실행: $(TaskNameSelector)",
-  "loc.releaseNotes": "버전 2.0의 새로운 기능:\n- Azure Database for MySQL Flexible Server 지원(사용 중지되는 Single Server 대체).\n- Microsoft.DBforMySQL/flexibleServers를 대상으로 하는 새로운 사용자 지정 ARM 클라이언트(API 2021-12-01-preview).\n- 네이티브 MySQL 인증 — 사용자 이름에 @servername 접미사 불필요.\n- stdin 파이프를 통한 안정적인 SQL 파일 실행(손상된 'source' 명령 대체).\n- 지수 백오프 폴링을 사용한 비동기 방화벽 규칙 생성(202 응답 처리).\n- nextLink를 통한 서버 목록 페이지 매김 지원.\n- 마이그레이션: 파이프라인을 AzureMysqlDeployment@2로 업데이트하고, Flexible Server FQDN을 사용하고, SqlUsername에서 @servername을 제거하세요.",
+  "loc.releaseNotes": "버전 2.0의 새로운 기능:\n- Azure Database for MySQL Flexible Server 지원(사용 중지되는 Single Server 대체).\n- Microsoft.DBforMySQL/flexibleServers를 대상으로 하는 새로운 사용자 지정 ARM 클라이언트(API 2024-12-30).\n- 네이티브 MySQL 인증 — 사용자 이름에 @servername 접미사 불필요.\n- stdin 파이프를 통한 안정적인 SQL 파일 실행(손상된 'source' 명령 대체).\n- 지수 백오프 폴링을 사용한 비동기 방화벽 규칙 생성(202 응답 처리).\n- nextLink를 통한 서버 목록 페이지 매김 지원.\n- 마이그레이션: 파이프라인을 AzureMysqlDeployment@2로 업데이트하고, Flexible Server FQDN을 사용하고, SqlUsername에서 @servername을 제거하세요.",
   "loc.group.displayName.target": "DB 세부 정보",
   "loc.group.displayName.taskDetails": "배포 패키지",
   "loc.group.displayName.firewall": "방화벽",
