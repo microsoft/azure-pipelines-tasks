@@ -1,6 +1,7 @@
 
 export class TestString {
     public static readonly createReleaseSuccessKeyword: string = "CreateReleaseSuccess";
+    public static readonly createReleaseGenerateNotesKeyword: string = "L0Test: create release action called with generateReleaseNotes=true";
     public static readonly editReleaseSuccessKeyword: string = "EditReleaseSuccess";
     public static readonly deleteReleaseSuccessKeyword: string = "DeleteReleaseSuccess";
     public static readonly getChangeLogKeyword: string = "getChangeLog method should work properly";
@@ -16,6 +17,7 @@ export class TestString {
     public static readonly getReleaseIdForTagKeyword: string = "getReleaseIdForTag method should work properly";
     public static readonly InvalidActionKeyword: string = "Invalid action input";
     public static readonly getReleaseNoteKeyword: string = "getReleaseNote method should work properly";
+    public static readonly getReleaseNoteGenerateModeKeyword: string = "getReleaseNote generate mode should work properly";
     public static readonly validBranchNameKeyword: string = "normalizeBranchName method should return tag name when branch = refs/tags/tagname";
     public static readonly invalidBranchNameKeyword: string = "normalizeBranchName method should return undefined when branch = refs/heads/tagname";
     public static readonly parseHTTPHeaderLinkKeyword: string = "parseHTTPHeaderLink method should work properly";
