@@ -28,6 +28,7 @@ export interface TestConfigurations {
     vsTestLocationMethod: string;
     vsTestVersion: string;
     vsTestLocation: string;
+    vstestArchitecture: string;
     vsTestVersionDetails: version.VSTestVersion;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;

@@ -316,6 +316,20 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "vstestArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vstestArchitecture",
+      "defaultValue": "x64",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestArchitecture",
+      "groupName": "executionOptions",
+      "options": {
+        "x86": "x86",
+        "x64": "x64",
+        "arm64": "arm64"
+      }
+    },
+    {
       "name": "distributionBatchType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.distributionBatchType",
@@ -618,6 +632,7 @@
     "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime",
     "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime",
     "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
+    "Arm64VstestNotFound": "ms-resource:loc.messages.Arm64VstestNotFound",
     "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
     "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
     "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
