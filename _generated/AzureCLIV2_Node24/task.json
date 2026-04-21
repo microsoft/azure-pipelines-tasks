@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 273,
-    "Patch": 3
+    "Minor": 274,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -234,7 +234,7 @@
     "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
   },
   "_buildConfigMapping": {
-    "Default": "2.273.2",
-    "Node24_1": "2.273.3"
+    "Default": "2.274.0",
+    "Node24_1": "2.274.1"
   }
 }
