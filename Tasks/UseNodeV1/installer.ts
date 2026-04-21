@@ -261,6 +261,6 @@ export function normalizeMirrorUrl(nodejsMirror: string): string {
     } catch {
       throw new Error(taskLib.loc('InvalidNodejsMirror', nodejsMirror));
     }
-    url.pathname = url.pathname.replace(/\/+$/, '/');
+    url.pathname = url.pathname.replace(/\/+$/, '') + '/';
     return url.toString();
 }

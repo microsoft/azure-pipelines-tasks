@@ -19,5 +19,6 @@
   "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
   "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
   "loc.messages.UnexpectedOS": "Unexpected OS %s",
-  "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
+  "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
+  "loc.messages.InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'"
 }

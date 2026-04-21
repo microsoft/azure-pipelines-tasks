@@ -102,6 +102,7 @@
     "TryRosetta": "ms-resource:loc.messages.TryRosetta",
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
-    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet",
+    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror"
   }
 }

@@ -21,7 +21,7 @@ async function run() {
         //
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         const version = taskLib.getInput('version', false);
-        const nodejsMirror = taskLib.getInput('nodejsMirror', false);
+        const nodejsMirror = taskLib.getInput('nodejsMirror', false) || 'https://nodejs.org/dist/';
         const retryCountOnDownloadFails = taskLib.getInput('retryCountOnDownloadFails', false) || "5";
         const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
         if (version) {
