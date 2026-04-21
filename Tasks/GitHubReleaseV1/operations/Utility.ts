@@ -87,6 +87,10 @@ export class Utility {
                 releaseNote = fs.readFileSync(releaseNotesFile).toString();
             }
         }
+        else if (releaseNotesSource === ReleaseNotesSelectionMode.githubGenerated) {
+            // GitHub will auto-generate the release notes; no manual note content needed
+            releaseNote = "";
+        }
         else {
             releaseNote = releaseNoteInput;
         }
@@ -218,7 +222,7 @@ export class Utility {
     }
 
     public static validateReleaseNotesSource(releaseNotesSource: string) {
-        if (releaseNotesSource !== ReleaseNotesSelectionMode.filePath && releaseNotesSource !== ReleaseNotesSelectionMode.inline) {
+        if (releaseNotesSource !== ReleaseNotesSelectionMode.filePath && releaseNotesSource !== ReleaseNotesSelectionMode.inline && releaseNotesSource !== ReleaseNotesSelectionMode.githubGenerated) {
             throw new Error(tl.loc("InvalidReleaseNotesSource", releaseNotesSource));
         }
     }
@@ -292,9 +296,10 @@ export class ChangeLogType{
     public static readonly issueBased = "issueBased";
     public static readonly commitBased = "commitBased";
 }
-class ReleaseNotesSelectionMode {
+export class ReleaseNotesSelectionMode {
     public static readonly inline = "inline";
     public static readonly filePath = "filePath";
+    public static readonly githubGenerated = "githubGenerated";
 }
 
 export class GitHubIssueState{

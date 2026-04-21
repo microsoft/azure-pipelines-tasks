@@ -26,4 +26,5 @@ export class TestString {
     public static readonly allIssuesChangeLog: string = "getChangeLog should generate All Issues ChangeLog";
     public static readonly issueBasedChangeLog: string = "getChangeLog should generate Issue Based ChangeLog";
     public static readonly noCategoryChangeLog: string = "ChangeLog generated should be a flatlist of issues.";
+    public static readonly createActionGitHubGeneratedKeyWord: string = "L0Test: create release action with githubGenerated notes should be called";
 }

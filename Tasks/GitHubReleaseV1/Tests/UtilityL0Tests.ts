@@ -21,6 +21,12 @@ export class UtilityL0Tests {
         if (releaseNote === (releaseNoteInput + changeLog)) {
             console.log(TestString.getReleaseNoteKeyword);
         }
+
+        // Validate that githubGenerated source returns only the changelog
+        let releaseNoteGitHubGenerated = Utility.getReleaseNote("githubGenerated", null, null, changeLog);
+        if (releaseNoteGitHubGenerated === changeLog) {
+            console.log("getReleaseNote with githubGenerated source works properly");
+        }
     }
 
     public static validateNormalizeBranchName() {
