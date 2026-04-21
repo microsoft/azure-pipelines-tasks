@@ -414,17 +414,21 @@ export class azureclitask {
                 if (!extensionInstalled) {
                     console.log("Azure DevOps extension not found in working environment. Attempting installation.");
 
-                    try {
-                        Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                    } catch (error) {
-                        console.log("Standard installation of azure-devops extension failed.");
+                    if (tl.getPipelineFeature('AzureCliV3EnableWhlFallback')) {
+                        try {
+                            Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                        } catch (error) {
+                            console.log("Standard installation of azure-devops extension failed.");
 
-                        const whlUrl = "https://aka.ms/azure-devops-extension-whl";
-                        const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
-                        const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
-                        
-                        Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                        console.log("Azure DevOps CLI extension installed successfully from wheel.");
+                            const whlUrl = "https://aka.ms/azure-devops-extension-whl";
+                            const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
+                            const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
+                            
+                            Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                            console.log("Azure DevOps CLI extension installed successfully from wheel.");
+                        }
+                    } else {
+                        Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
                     }
                 } else {
                     console.log("Azure DevOps extension is already installed, skipping installation.");
