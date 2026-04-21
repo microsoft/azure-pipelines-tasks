@@ -14,12 +14,12 @@ export class ToolPathOperationsL0Tests  {
             const mysqlPath: string = await ToolPathOperationsL0Tests.toolPathOperations.getInstalledPathOfMysqlForLinux();
             console.log(" mysql path"+ mysqlPath);
             if(mysqlPath && mysqlPath == '/bin/mysql'){
-                tl.setResult(tl.TaskResult.Succeeded, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should has passed.');
+                tl.setResult(tl.TaskResult.Succeeded, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should have passed.');
             }else{
-                tl.setResult(tl.TaskResult.Failed, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should has passed but failed.');  
+                tl.setResult(tl.TaskResult.Failed, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should have passed but failed.');  
             }
         }catch(error){
-            tl.setResult(tl.TaskResult.Failed, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should has passed but failed due to error.');
+            tl.setResult(tl.TaskResult.Failed, 'ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should have passed but failed due to error.');
         }
     }
 

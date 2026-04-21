@@ -41,6 +41,7 @@ process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 process.env['AGENT_WORKFOLDER'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
+process.env['DISTRIBUTEDTASK_TASKS_AZURECLIV3ENABLEWHLFALLBACK'] = 'true';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
 process.env['UseAzVersion'] = 'false';
 
