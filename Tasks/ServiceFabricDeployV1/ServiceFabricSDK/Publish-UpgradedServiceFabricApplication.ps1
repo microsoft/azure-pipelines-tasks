@@ -67,6 +67,15 @@ function ConvertTo-ServiceTypeHealthPolicyMap
                 throw "Invalid health policy value '$val' for service type '$key'. Expected format: MaxPercentUnhealthyPartitionsPerService,MaxPercentUnhealthyReplicasPerPartition,MaxPercentUnhealthyServices (e.g., '5,10,15')"
             }
 
+            $nums = @([int]$Matches[1], [int]$Matches[2], [int]$Matches[3])
+            foreach ($n in $nums)
+            {
+                if ($n -lt 0 -or $n -gt 100)
+                {
+                    throw "Invalid health policy value '$val' for service type '$key'. Each percentage must be between 0 and 100."
+                }
+            }
+
             $result[$key] = $val
         }
         else

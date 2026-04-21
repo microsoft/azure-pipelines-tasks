@@ -66,6 +66,20 @@ Assert-Throws {
     ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '@{ "Svc" = "notanumber" }'
 } "*Invalid health policy value*"
 
+# Test 12a: Out-of-range percentage (>100) should throw
+Assert-Throws {
+    ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '@{ "Svc" = "5,101,15" }'
+} "*Each percentage must be between 0 and 100*"
+
+# Test 12b: Out-of-range percentage (999) should throw
+Assert-Throws {
+    ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '@{ "Svc" = "999,0,0" }'
+} "*Each percentage must be between 0 and 100*"
+
+# Test 12c: Boundary value 100 should succeed
+$result_boundary = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '@{ "Svc" = "0,100,50" }'
+Assert-AreEqual "0,100,50" $result_boundary["Svc"] "Boundary value 100 should be accepted"
+
 # Test 13: Missing @{ } wrapper should throw
 Assert-Throws {
     ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '"Svc" = "5,10,5"'
