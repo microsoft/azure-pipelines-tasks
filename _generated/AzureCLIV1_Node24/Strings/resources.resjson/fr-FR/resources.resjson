@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure CLI",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](http://go.microsoft.com/fwlink/?LinkID=827160) ou [consultez la documentation d'Azure CLI](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Exécutez des commandes Azure CLI sur un abonnement Azure via un script d'interpréteur de commandes sur un agent Linux, ou un script de commandes par lot sur un agent Windows.",
-  "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.description": "Déprécié : cette tâche n'est plus maintenue. Utilisez la tâche AzureCLI@2 à la place.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Nouveautés de la version 1.0 :\n- Prend en charge la nouvelle interface Azure CLI 2.0 basée sur Python\n- Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)\n- Pour utiliser l'interface Azure CLI 1.0 (basée sur node.js), passez à la tâche version 0.0\n- Limitations :\n - Aucune prise en charge pour les abonnements Azure Classic. Azure CLI 2.0 prend en charge uniquement les abonnements ARM (Azure Resource Manager).",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.connectedServiceNameARM": "Abonnement Azure",
