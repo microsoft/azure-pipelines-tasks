@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 271,
+    "Minor": 273,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -386,11 +386,13 @@
     "LocationRequired": "ms-resource:loc.messages.LocationRequired",
     "TemplateFileRequired": "ms-resource:loc.messages.TemplateFileRequired",
     "UnsupportedTemplateFile": "ms-resource:loc.messages.UnsupportedTemplateFile",
+    "ParametersFileNotFound": "ms-resource:loc.messages.ParametersFileNotFound",
     "UnsupportedParametersFile": "ms-resource:loc.messages.UnsupportedParametersFile",
     "FailedToDetermineScope": "ms-resource:loc.messages.FailedToDetermineScope",
     "FailedToResolveBicepVersion": "ms-resource:loc.messages.FailedToResolveBicepVersion",
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "ValidationFailed": "ms-resource:loc.messages.ValidationFailed",
+    "WhatIfFailed": "ms-resource:loc.messages.WhatIfFailed",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
     "RequestFailedCorrelation": "ms-resource:loc.messages.RequestFailedCorrelation",
     "InvalidChangeType": "ms-resource:loc.messages.InvalidChangeType",
