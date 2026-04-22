@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Testergebnisse veröffentlichen",
+  "loc.friendlyName": "[Deprecated] Publish test results",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Hiermit werden Testergebnisse in Azure Pipelines veröffentlicht.",
+  "loc.description": "[Deprecated] Publish test results to Azure Pipelines",
   "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.testRunner": "Testergebnisformat",

@@ -8,6 +8,7 @@
   "loc.input.label.command": "comando npm",
   "loc.input.label.arguments": "argumentos",
   "loc.input.help.arguments": "Argumentos adicionales pasados a npm.",
+  "loc.messages.TaskDeprecationNotice": "The NpmV0 task is scheduled for deprecation in June 2026. Please switch to using NpmAuthenticate and script tasks, or NpmV1.",
   "loc.messages.InvalidCommand": "Solo debe usarse un comando para npm. Use la entrada \"Argumentos\" si necesita argumentos adicionales.",
   "loc.messages.NpmReturnCode": "npm se cerró con el código de retorno: %d",
   "loc.messages.NpmFailed": "Error de npm: %s",
