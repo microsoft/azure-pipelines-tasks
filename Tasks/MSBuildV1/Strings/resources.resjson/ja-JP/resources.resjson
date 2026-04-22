@@ -10,7 +10,7 @@
   "loc.input.label.msbuildVersion": "MSBuild のバージョン",
   "loc.input.help.msbuildVersion": "優先するバージョンが見つからない場合は、見つかった最新のバージョンが代わりに使用されます。macOS エージェントでは、バージョンが 15.0 より前の場合は xbuild (Mono) が使用されます。",
   "loc.input.label.msbuildArchitecture": "MSBuild アーキテクチャ",
-  "loc.input.help.msbuildArchitecture": "必要に応じて、実行する MSBuild のアーキテクチャ (x86、x64) を指定します。",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64, arm64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "MSBuild へのパス",
   "loc.input.help.msbuildLocation": "(省略可能) MSBuild へのパスを指定します。",
   "loc.input.label.platform": "プラットフォーム",
