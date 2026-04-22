@@ -8,7 +8,6 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('version', '5.10.1');
 tmr.setInput('checkLatest', 'false');
-tmr.setInput('nodejsMirror', 'https://nodejs.org/dist/');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {

@@ -10,7 +10,6 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'usenode.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('nodejsMirror', 'https://nodejasdfs.org/dist/');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
