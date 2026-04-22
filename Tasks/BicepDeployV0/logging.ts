@@ -34,6 +34,7 @@ export const errorMessageConfig: ErrorMessageConfig = {
     // Handler errors
     createFailed: tl.loc('CreateFailed'),
     validationFailed: tl.loc('ValidationFailed'),
+    whatIfFailed: tl.loc('WhatIfFailed'),
     operationFailed: tl.loc('OperationFailed'),
     requestFailedCorrelation: (correlationId: string) => 
         tl.loc('RequestFailedCorrelation', correlationId),
@@ -55,6 +56,8 @@ export const errorMessageConfig: ErrorMessageConfig = {
     failedToDetermineScope: tl.loc('FailedToDetermineScope'),
     
     // File errors
+    parametersFileNotFound: (parametersFile: string) =>
+        tl.loc('ParametersFileNotFound', parametersFile),
     unsupportedParametersFile: (parametersFile: string) => 
         tl.loc('UnsupportedParametersFile', parametersFile),
     unsupportedTemplateFile: (templateFile: string) => 
