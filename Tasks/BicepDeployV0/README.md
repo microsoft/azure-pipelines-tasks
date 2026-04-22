@@ -178,12 +178,13 @@ For detailed guidance, refer to the [Bicep Outputs documentation](https://learn.
 
 **How Outputs Become Available**
 
-After the deployment completes successfully, all outputs are automatically converted to Azure Pipelines variables with the same names as defined in your Bicep template. These variables are created at the pipeline level and can be directly referenced in subsequent tasks using the standard variable syntax: `$(outputName)`.
+After the deployment completes successfully, all outputs are set as output variables for the task step. To reference them in subsequent tasks, give the BicepDeploy step a `name` and use the syntax `$(stepName.outputName)`.
 
 ### Accessing Outputs in PowerShell
 
 ```yaml
 - task: BicepDeploy@0
+  name: deploy
   displayName: 'Deploy Infrastructure'
   inputs:
     azureResourceManagerConnection: 'Azure-Connection'
@@ -196,14 +197,15 @@ After the deployment completes successfully, all outputs are automatically conve
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host "Storage Account Name: $(storageAccountName)"
-      Write-Host "Web App URL: $(webAppUrl)"
+      Write-Host "Storage Account Name: $(deploy.storageAccountName)"
+      Write-Host "Web App URL: $(deploy.webAppUrl)"
 ```
 
 ### Accessing Outputs in Bash
 
 ```yaml
 - task: BicepDeploy@0
+  name: deploy
   displayName: 'Deploy Infrastructure'
   inputs:
     azureResourceManagerConnection: 'Azure-Connection'
@@ -216,8 +218,8 @@ After the deployment completes successfully, all outputs are automatically conve
   inputs:
     targetType: 'inline'
     script: |
-      echo "Storage Account Name: $(storageAccountName)"
-      echo "Web App URL: $(webAppUrl)"
+      echo "Storage Account Name: $(deploy.storageAccountName)"
+      echo "Web App URL: $(deploy.webAppUrl)"
 ```
 
 ## Feedback and Support
