@@ -133,6 +133,16 @@ describe("deployments tests", function() {
       { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
     ], this.test!.title);
   });
+
+  it("runs create with no parameters file", async function() {
+    let tp: string = path.join(__dirname, "deploymentsCreateNoParamFile.js");
+
+    let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assertSucceeded(tr, this.test!.title);
+  });
 });
 
 describe("stacks tests", function() {
