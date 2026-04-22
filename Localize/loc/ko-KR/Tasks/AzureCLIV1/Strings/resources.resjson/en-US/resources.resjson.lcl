@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Linux 에이전트에서 실행하는 경우 셸 스크립트에서, Windows 에이전트에서 실행하는 경우 배치 스크립트에서 Azure 구독에 대해 Azure CLI 명령을 실행합니다.]]></Val>
+            <Val><![CDATA[사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 AzureCLI@2 작업을 사용하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure CLI]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure CLI]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure CLI]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; Azure CLI]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure CLI]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -209,10 +215,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure CLI $(scriptPath)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; Azure CLI $(scriptPath)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -245,12 +254,12 @@
       </Item>
       <Item ItemId=";loc.messages.ExpiredServicePrincipalMessageWithLink" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+          <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[비밀이 만료되었습니다. %s에서 서비스 연결을 업데이트하세요. 비밀 없는 서비스 연결로의 변환에 대한 자세한 정보는 https://aka.ms/azdo-rm-workload-identity-conversion을 참조하세요.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+            <Val><![CDATA[Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

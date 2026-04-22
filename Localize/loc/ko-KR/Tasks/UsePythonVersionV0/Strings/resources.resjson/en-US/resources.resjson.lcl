@@ -65,10 +65,13 @@
       </Item>
       <Item ItemId=";loc.input.help.architecture" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The target architecture (x86, x64) of the Python interpreter.]]></Val>
+          <Val><![CDATA[The target architecture (x86, x64, arm64) of the Python interpreter.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Python 인터프리터의 대상 아키텍처(x86, x64)입니다.]]></Val>
+            <Val><![CDATA[Python 인터프리터의 대상 아키텍처(x86, x64, arm64)입니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The target architecture (x86, x64) of the Python interpreter.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

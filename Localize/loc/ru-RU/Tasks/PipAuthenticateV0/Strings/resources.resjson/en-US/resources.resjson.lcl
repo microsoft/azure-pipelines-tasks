@@ -171,6 +171,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.TaskDeprecationNotice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The PipAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using PipAuthenticateV1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Задача PipAuthenticateV0 запланирована к переводу в нерекомендуемую категорию в июне 2026 года. Переключитесь на использование PipAuthenticateV1.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warn_TooManyFeedEntries" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Too many feed entries for auth. Please reduce the number of repositories in the task.]]></Val>
