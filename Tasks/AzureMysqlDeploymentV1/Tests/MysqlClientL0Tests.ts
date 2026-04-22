@@ -18,12 +18,12 @@ export class MysqlClientL0Tests  {
         try{
             const firewallConfiguration: FirewallConfiguration = await MysqlClientL0Tests.sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded() && firewallConfiguration.getIpAddress() == '250.250.250.250'){
-                tl.setResult(tl.TaskResult.Succeeded, 'MysqlClientL0Tests.getFirewallConfiguration should has passed.');
+                tl.setResult(tl.TaskResult.Succeeded, 'MysqlClientL0Tests.getFirewallConfiguration should have passed.');
             }else{
-                tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.getFirewallConfiguration should has passed but failed.');  
+                tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.getFirewallConfiguration should have passed but failed.');  
             }
         }catch(error){
-            tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.getFirewallConfiguration should has passed but failed due to error.');
+            tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.getFirewallConfiguration should have passed but failed due to error.');
         }
     }
     
@@ -31,12 +31,12 @@ export class MysqlClientL0Tests  {
         try{
             const response: number = await MysqlClientL0Tests.sqlClient.executeSqlCommand();
             if(response == 0){
-                tl.setResult(tl.TaskResult.Succeeded, 'MysqlClientL0Tests.executeSqlCommand should has passed.');
+                tl.setResult(tl.TaskResult.Succeeded, 'MysqlClientL0Tests.executeSqlCommand should have passed.');
             }else{
-                tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.executeSqlCommand should has passed but failed.');
+                tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.executeSqlCommand should have passed but failed.');
             }
         }catch(error){
-            tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.executeSqlCommand should has passed but failed due to error.');
+            tl.setResult(tl.TaskResult.Failed, 'MysqlClientL0Tests.executeSqlCommand should have passed but failed due to error.');
         }
     }
 
