@@ -32,6 +32,7 @@
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "AzureFunctionV1",
+        "AzureFunctionV2",
         "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
@@ -58,6 +59,7 @@
         "AzureVmssDeploymentV1",
         "BashV3",
         "BatchScriptV1",
+        "BicepDeployV0",
         "CacheBetaV0",
         "CacheBetaV1",
         "CacheV2",
@@ -254,7 +256,9 @@
     "Node24_8": [],
     "Node24_9": [],
     "Node24_10": [],
-    "Node24_overwrite": [],
+    "Node24_overwrite": [
+        "AppCenterDistributeV3"
+    ],
     "wif_242": [
         "PipAuthenticateV1",
         "CargoAuthenticateV0",
