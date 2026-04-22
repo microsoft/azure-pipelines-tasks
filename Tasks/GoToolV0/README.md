@@ -30,5 +30,9 @@ This task can run on Windows, Linux, or Mac machines.
 
 * **Go download URL:** URL for downloading Go binaries. Leave empty to use the default (https://go.dev/dl). Supported URLs:
   - `https://go.dev/dl` - [Official Go distribution](https://go.dev/dl/). (default)
-  - `https://aka.ms/golang/release/latest` - the [Microsoft build of Go](https://github.com/microsoft/go), a fork of the official Go distribution. See [the Migration Guide](https://github.com/microsoft/go/blob/microsoft/main/eng/doc/MigrationGuide.md) for an introduction to the Microsoft build of Go.
+  - `https://aka.ms/golang/release/latest` - the [Microsoft build of Go](https://github.com/microsoft/go) prefix, a fork of the official Go distribution. See [the Migration Guide](https://github.com/microsoft/go/blob/microsoft/main/eng/doc/MigrationGuide.md) for an introduction to the Microsoft build of Go.
+
+### Environment Variables
+
+* **GOTOOL_GODOWNLOADURL:** Optional. Specify the download URL for Go binaries. If both the **Go download URL** task parameter and this environment variable are set, the task parameter takes precedence.
 
