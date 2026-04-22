@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 271,
+    "Minor": 273,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -383,11 +383,13 @@
     "LocationRequired": "Location is required",
     "TemplateFileRequired": "Template file is required",
     "UnsupportedTemplateFile": "Unsupported template file type: %s",
+    "ParametersFileNotFound": "Parameters file not found: %s",
     "UnsupportedParametersFile": "Unsupported parameters file type: %s",
     "FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
     "FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
     "CreateFailed": "Create failed",
     "ValidationFailed": "Validation failed",
+    "WhatIfFailed": "What-if failed",
     "OperationFailed": "Operation failed",
     "RequestFailedCorrelation": "Request failed. CorrelationId: %s",
     "InvalidChangeType": "Invalid change type: %s",
