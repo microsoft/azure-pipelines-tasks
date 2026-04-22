@@ -243,6 +243,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.TaskDeprecationNotice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[TwineAuthenticateV0 任务计划于 2026 年 6 月弃用。请改用 TwineAuthenticateV1。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.VariableSetForPypirc" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Environment variable for .pypirc at %s is set.]]></Val>

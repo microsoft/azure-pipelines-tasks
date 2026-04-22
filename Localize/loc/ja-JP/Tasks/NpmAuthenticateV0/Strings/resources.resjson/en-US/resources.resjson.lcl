@@ -171,6 +171,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Debug_EndpointProbeFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[isEndpointInternal check failed: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[isEndpointInternal チェックに失敗しました: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Debug_EndpointProbeTimedOut" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[isEndpointInternal timed out after %dms.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[isEndpointInternal が %d ミリ秒後にタイムアウトしました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.DuplicateCredentials" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Auth for the registry '%s' was previously set. Overwriting with new configuration.]]></Val>
@@ -180,20 +198,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_UnableToGetPackagingUris" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to retrieve packaging service URLs.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パッケージ サービスの URL を取得できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_UnsupportedAuthScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サービス接続でサポートされていない認証スキーム '%s' です。サポートされているスキームは 'Token' および 'UsernamePassword' です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[サービス接続からフェデレーション資格情報を取得できません: %s。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.ForcePackagingUrl" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Packaging collection URL forced to: %s]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[コレクション URL を %s に強制してパッケージ化しています]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -246,11 +273,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Info_ApplyingWifToAllRegistries" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[feedUrl が指定されていません。.npmrc 内のすべての %d レジストリに WIF 資格情報を適用しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[フィード %s の認証が正常に追加されました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidRegistryUrl" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because it is not a valid URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストリ '%s' は有効な URL ではないため、スキップしています。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -264,15 +309,6 @@
           <Prev Cat="Text">
             <Val><![CDATA[Both feed url and service connection need to be set and cannot be empty.]]></Val>
           </Prev>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.messages.NoBuildCredentials" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not find build credentials]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ビルドの資格情報が見つかりませんでした]]></Val>
-          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -348,15 +384,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.SkippingParsingNpmrc" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Skipping parsing npmrc]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[npmrc の解析をスキップしています]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";loc.messages.SuccessfulAppend" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Successfully appended .npmrc]]></Val>
@@ -366,11 +393,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.SuccessfulPush" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.Warning_NpmrcFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully pushed .npmrc]]></Val>
+          <Val><![CDATA[npmrc file not found: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[.npmrc が正常にプッシュされました]]></Val>
+            <Val><![CDATA[npmrc ファイルが見つかりません: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -240,6 +240,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.ApplyingRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Applying rollForward policy '%s' to version '%s', resolved version spec: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[버전 '%s'에 rollForward 정책 '%s'을(를) 적용합니다. 확인된 버전 사양: '%s']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CachingTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Caching this installed tool.]]></Val>
@@ -587,6 +596,15 @@
           <Val><![CDATA[Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[개체를 채널로 사용할 수 없습니다. channel-version, releases.json 등의 필수 속성이 누락되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[경로 '%s'의 global.json에 잘못된 rollForward 정책 '%s'이(가) 있습니다. 지원되는 값은 disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor입니다. rollForward 정책은 무시됩니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

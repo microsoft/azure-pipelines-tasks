@@ -498,6 +498,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_ArtifactToolPathNotSet" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact tool path was not set by pre-job execution.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le chemin d’accès de l’outil d’artefact n’a pas été défini par l’exécution préalable au travail.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_AuthNotSupported" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Authentication using username/password not supported for Universal Packages. Please use personal access tokens.]]></Val>
@@ -638,6 +647,15 @@
           <Val><![CDATA[Artifact tool path: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Chemin de l'outil d'artefact : %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Info_ArtifactToolPathResolvedFromCache" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact tool already available, skipping download.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Outil d’artefact déjà disponible, téléchargement ignoré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

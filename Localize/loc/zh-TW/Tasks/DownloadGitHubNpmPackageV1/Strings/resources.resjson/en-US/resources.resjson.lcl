@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Install npm packages from GitHub.]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the Npm@1 task with GitHub service connections instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[從 GitHub 安裝 npm 套件。]]></Val>
+            <Val><![CDATA[已棄用: 已不再維護此工作。請改為使用 Npm@1 工作搭配 GitHub 服務連線。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Install npm packages from GitHub.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download Github Npm Package]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download Github Npm Package]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[下載 Github Npm 套件]]></Val>
+            <Val><![CDATA[[已棄用]5D; 下載 GitHub NuGet 套件]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download Github Npm Package]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -119,10 +125,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download GitHub Npm Package]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download Github Npm Package]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[下載 GitHub Npm 套件]]></Val>
+            <Val><![CDATA[[已棄用]5D; 下載 GitHub NuGet 套件]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download GitHub Npm Package]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

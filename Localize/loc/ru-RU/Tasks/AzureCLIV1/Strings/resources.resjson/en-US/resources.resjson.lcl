@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Выполнение команд Azure CLI для подписки Azure в скрипте оболочки при использовании агента Linux или пакетном скрипте при использовании агента Windows.]]></Val>
+            <Val><![CDATA[Не рекомендуется: эта задача больше не поддерживается. Используйте задачу AzureCLI@2.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure CLI]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure CLI]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure CLI]]></Val>
+            <Val><![CDATA[[Не рекомендуется]5D; Azure CLI]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure CLI]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -209,10 +215,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure CLI $(scriptPath)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+            <Val><![CDATA[[Не рекомендуется]5D; Azure CLI $(scriptPath)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure CLI $(scriptPath)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -245,12 +254,12 @@
       </Item>
       <Item ItemId=";loc.messages.ExpiredServicePrincipalMessageWithLink" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+          <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Срок действия секрета истек, обновите подключение службы по адресу %s. Подробнее о преобразовании в подключения служб без секретов см. по ссылке https://aka.ms/azdo-rm-workload-identity-conversion.]]></Val>
+            <Val><![CDATA[Срок действия секрета истек. Обновите подключение службы по адресу %s. Подробнее о преобразовании в подключения служб без секретов см. по ссылке https://aka.ms/azdo-rm-workload-identity-conversion.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+            <Val><![CDATA[Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

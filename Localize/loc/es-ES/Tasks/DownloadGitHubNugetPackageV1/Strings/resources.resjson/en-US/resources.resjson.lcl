@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Restore your nuget packages using dotnet CLI]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Restaure los paquetes NuGet con la CLI de dotnet]]></Val>
+            <Val><![CDATA[En desuso: esta tarea ya no se mantiene. En su lugar, use la tarea NuGetCommand@2 o DotNetCoreCLI@2 con conexiones de servicio de GitHub.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Restore your nuget packages using dotnet CLI]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download GitHub Nuget Packages]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download GitHub NuGet]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Descargar paquetes NuGet de GitHub]]></Val>
+            <Val><![CDATA[[En desuso]5D; Descargar NuGet de GitHub]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download GitHub Nuget Packages]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -128,10 +134,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[dotnet restore]]></Val>
+          <Val><![CDATA[[Deprecated]5D; dotnet restore]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[dotnet restore]]></Val>
+            <Val><![CDATA[[En desuso]5D; dotnet restore]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[dotnet restore]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

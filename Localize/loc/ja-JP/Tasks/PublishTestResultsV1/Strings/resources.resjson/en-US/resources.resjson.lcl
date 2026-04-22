@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish test results to Azure Pipelines]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Publish test results to Azure Pipelines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[テスト結果を Azure Pipelines に公開する]]></Val>
+            <Val><![CDATA[[非推奨]5D; テスト結果を Azure Pipelines に公開する]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish test results to Azure Pipelines]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish test results]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Publish test results]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[テスト結果の発行]]></Val>
+            <Val><![CDATA[[非推奨]5D; テスト結果の発行]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish test results]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

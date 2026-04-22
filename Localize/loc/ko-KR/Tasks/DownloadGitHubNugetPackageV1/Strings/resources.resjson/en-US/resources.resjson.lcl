@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Restore your nuget packages using dotnet CLI]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[dotnet CLI를 사용하여 nuget 패키지 복원]]></Val>
+            <Val><![CDATA[사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 GitHub 서비스 연결과 함께 NuGetCommand@2 또는 DotNetCoreCLI@2 작업을 사용하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Restore your nuget packages using dotnet CLI]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download GitHub Nuget Packages]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download GitHub NuGet]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[GitHub Nuget 패키지 다운로드]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; GitHub NuGet 다운로드]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download GitHub Nuget Packages]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -128,10 +134,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[dotnet restore]]></Val>
+          <Val><![CDATA[[Deprecated]5D; dotnet restore]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[dotnet restore]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; dotnet restore]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[dotnet restore]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

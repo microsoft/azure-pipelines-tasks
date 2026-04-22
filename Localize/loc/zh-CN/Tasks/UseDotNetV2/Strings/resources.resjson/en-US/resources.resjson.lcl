@@ -240,6 +240,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.ApplyingRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Applying rollForward policy '%s' to version '%s', resolved version spec: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在将 rollForward 策略“%s”应用于版本“%s”，已解析版本规范:“%s”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CachingTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Caching this installed tool.]]></Val>
@@ -587,6 +596,15 @@
           <Val><![CDATA[Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[对象不能用作通道，缺少必需的属性，如 channel-version、releases.json。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[路径“%s”下的 global.json 中的 rollForward 策略“%s”无效。支持的值为: disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor。将忽略 rollForward 策略。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

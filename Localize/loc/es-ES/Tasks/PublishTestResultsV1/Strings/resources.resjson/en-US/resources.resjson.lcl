@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish test results to Azure Pipelines]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Publish test results to Azure Pipelines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Publicar resultados de pruebas en Azure Pipelines]]></Val>
+            <Val><![CDATA[[En desuso]5D; Publicar resultados de pruebas en Azure Pipelines]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish test results to Azure Pipelines]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish test results]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Publish test results]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Publicar resultados de la prueba]]></Val>
+            <Val><![CDATA[[En desuso]5D; Publicar resultados de pruebas]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish test results]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
