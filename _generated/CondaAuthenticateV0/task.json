@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 270,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -28,6 +28,10 @@
     "Node20_1": {
       "target": "condaauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -38,8 +42,8 @@
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
   },
   "_buildConfigMapping": {
-    "Default": "0.247.1",
+    "Default": "0.270.2",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.247.2"
+    "wif_242": "0.270.3"
   }
 }

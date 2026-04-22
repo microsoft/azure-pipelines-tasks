@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "下載 GitHub Nuget 套件",
+  "loc.friendlyName": "[Deprecated] Download GitHub NuGet",
   "loc.helpMarkDown": "[請參閱 .NET Core 文件](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "使用 dotnet CLI 還原您的 nuget 套件",
-  "loc.instanceNameFormat": "dotnet restore",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
+  "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "摘要與驗證",
   "loc.group.displayName.restoreAdvanced": "進階",
   "loc.input.label.packageName": "套件名稱",

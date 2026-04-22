@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Interfaccia della riga di comando di Azure",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](http://go.microsoft.com/fwlink/?LinkID=827160). In alternativa [vedere la documentazione dell'interfaccia della riga di comando di Azure](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Consente di eseguire i comandi dell'interfaccia della riga di comando di Azure su una sottoscrizione di Azure in uno script della shell quando viene eseguito in un agente Linux oppure in uno script batch quando viene eseguito in un agente Windows.",
-  "loc.instanceNameFormat": "Interfaccia della riga di comando di Azure $(scriptPath)",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Novità della versione 1.0:\n- Supporta la nuova interfaccia della riga di comando di Azure 2.0 che è basata su Python\n- È compatibile con agenti multipiattaforma (Linux, macOS o Windows)\n- Per l'uso con l'interfaccia della riga di comando di Azure 1.0 (basata su node.js), passare alla versione 0.0 dell'attività\n- Limitazioni:\n - Non prevede il supporto per le sottoscrizioni di Azure classico. L'interfaccia della riga di comando di Azure 2.0 supporta solo le sottoscrizioni Azure Resource Manager (ARM)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.connectedServiceNameARM": "Sottoscrizione di Azure",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Impostazione della variabile di ambiente AZURE_CONFIG_DIR su: %s",
   "loc.messages.SettingAzureCloud": "Impostazione del cloud attivo su: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Se la versione dell'agente è inferiore a quella 2.115.0, è possibile usare solo la configurazione globale dell'interfaccia della riga di comando di Azure",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Segreto scaduto. Aggiornare la connessione al servizio in %s Per altre informazioni sulla conversione a connessioni al servizio senza segreto, vedere https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

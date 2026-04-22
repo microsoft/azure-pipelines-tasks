@@ -21,8 +21,8 @@
   "dependencies": {
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4",
-    "azure-pipelines-tasks-packaging-common": "3.266.0",
-    "azure-pipelines-tasks-utility-common": "3.258.0",
+    "azure-pipelines-tasks-packaging-common": "^3.270.0",
+    "azure-pipelines-tasks-utility-common": "^3.270.0",
     "xmlreader": "^0.2.3"
   },
   "devDependencies": {

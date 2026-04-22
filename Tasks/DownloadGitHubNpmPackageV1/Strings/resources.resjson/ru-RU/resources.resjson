@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Скачать пакет npm GitHub",
+  "loc.friendlyName": "[Deprecated] Download Github Npm Package",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613746) или [документацию по npm](https://docs.npmjs.com/)",
-  "loc.description": "Установка пакетов npm из GitHub.",
-  "loc.instanceNameFormat": "Скачать пакет npm GitHub",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the Npm@1 task with GitHub service connections instead.",
+  "loc.instanceNameFormat": "[Deprecated] Download Github Npm Package",
   "loc.group.displayName.customRegistries": "Пользовательские реестры и проверка подлинности",
   "loc.input.label.packageName": "Имя пакета",
   "loc.input.help.packageName": "Имя пакета для скачивания из GitHub",

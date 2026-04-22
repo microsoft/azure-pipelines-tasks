@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure CLI",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](http://go.microsoft.com/fwlink/?LinkID=827160) oder [Azure CLI-Dokumentation anzeigen](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Hiermit werden Azure CLI-Befehle für ein Azure-Abonnement in einem Shell-Skript (bei Ausführung für einen Linux-Agent) oder einem Batchskript (bei Ausführung für einen Windows-Agent) ausgeführt.",
-  "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Neuigkeiten in Version 1.0:\n– Unterstützung der neuen Python-basierten Azure CLI 2.0\n– Funktioniert mit plattformübergreifenden Agents (Linux, macOS oder Windows)\n– Die Verwendung mit Azure CLI 1.0 (node.js-basiert) erfordert einen Wechsel zu Aufgabenversion 0.0\n– Einschränkungen:\n– Keine Unterstützung für klassische Azure-Abonnements. Azure CLI 2.0 unterstützt nur Azure Resource Manager-Abonnements (ARM).",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "AZURE_CONFIG_DIR-Umgebungsvariable wird festgelegt auf: %s",
   "loc.messages.SettingAzureCloud": "Aktive Cloud wird festgelegt auf: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

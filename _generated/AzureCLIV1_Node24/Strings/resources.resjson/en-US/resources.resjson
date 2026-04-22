@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure CLI",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.",
-  "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with cross-platform agents (Linux, macOS, or Windows)\n- For working with Azure CLI 1.0 (node.js-based), switch to task version 0.0\n- Limitations:\n - No support for Azure Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectedServiceNameARM": "Azure subscription",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
   "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s. See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

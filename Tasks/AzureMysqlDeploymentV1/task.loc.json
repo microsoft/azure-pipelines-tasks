@@ -16,11 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
-    "Patch": 0
+    "Minor": 273,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
+  "deprecated": true,
+  "deprecationMessage": "AzureMysqlDeployment@1 is deprecated. Use AzureMysqlDeployment@2 (or newer) instead.",
   "groups": [
     {
       "name": "target",

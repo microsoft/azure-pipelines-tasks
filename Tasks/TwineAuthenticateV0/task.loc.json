@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "runsOn": [
@@ -92,9 +92,14 @@
     "Node20_1": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
+    "TaskDeprecationNotice": "ms-resource:loc.messages.TaskDeprecationNotice",
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
     "Info_AddingAuthForRegistry": "ms-resource:loc.messages.Info_AddingAuthForRegistry",
@@ -123,6 +128,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }

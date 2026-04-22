@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
   "loc.messages.CorrelationIdForARM": "ID de corrélation de la réponse à l'appel d'API ARM : %s",
   "loc.messages.JavaNotPreinstalled": "Java %s n'est pas préinstallé sur cet agent",
+  "loc.messages.JavaHomeArm64NotFound": "%s is not defined. Searching for aarch64 variant.",
+  "loc.messages.JavaHomeResolvedFrom": "Resolved Java home from %s: %s",
   "loc.messages.UsePreinstalledJava": "Utiliser le kit JDK préinstallé à partir de %s",
   "loc.messages.WrongArchiveStructure": "Le fichier JDK n'est pas valide. Vérifiez si le fichier JDK comporte bien un seul dossier racine contenant 'bin'.",
   "loc.messages.WrongArchiveFile": "Le fichier d’archive est incorrect. Aucun dossier ne contient de JDK",

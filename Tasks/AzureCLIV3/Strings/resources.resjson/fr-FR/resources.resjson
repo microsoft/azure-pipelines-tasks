@@ -57,7 +57,7 @@
   "loc.messages.JS_InvalidErrorActionPreference": "Préférence d'action d'erreur non valide '%s'. La valeur doit être l'une des suivantes : « Stop », « Continuer » ou « SilentlyContinue »",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Pour les versions d'agent antérieures à 2.115.0, seule la configuration globale d'Azure CLI peut être utilisée",
   "loc.messages.UnacceptedScriptLocationValue": "%s n’est pas une valeur valide pour l’entrée de tâche « Emplacement du script » (scriptLocation dans YAML). La valeur peut être 'inlineScript' ou 'scriptPath'",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expiré, mettez à jour la connexion de service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret.",
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.",
   "loc.messages.ProxyConfig": "l’outil az est configuré pour utiliser %s comme serveur proxy",
   "loc.messages.FailedToRefreshAzSession": "L’erreur suivante s’est produite lors de la tentative d’actualisation de la session az-cli : %s",
   "loc.messages.RefreshingAzSession": "Tentative d’actualisation de la session az-cli... Merci de patienter.",

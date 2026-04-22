@@ -100,5 +100,9 @@
   "loc.messages.VersionNumberHasTheWrongFormat": "バージョン番号 %s の形式が正しくありません。バージョンは次の形式で指定できます: 2.x => 指定されたメジャー バージョンの最新版をインストールします。2.2.x => 指定されたメジャーおよびマイナー バージョンの最新版をインストールします。2.2.104 => 厳密に指定されたバージョンをインストールします。releases.json ファイルに含まれる SDK/ランタイム インストール用の `version` 値を検索してください。この major.minor バージョンの releases.json に対するリンクは、[**releases-index ファイル**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)内にあります。たとえば、2.2 バージョンの releases.json へのリンクは https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json です。",
   "loc.messages.OnlyExplicitVersionAllowed": "2.2.301 など、明示的なバージョンのみが許可されます。バージョン %s は有効ではありません。",
   "loc.messages.SupportPhaseNotPresentInChannel": "サポート フェーズがチャネル バージョン %s のチャネルにありません。",
-  "loc.messages.DepricatedVersionNetCore": "指定された %s の .NET Core バージョンはサポートが終了しており、ホストされているエージェントからまもなく削除される予定です。.NET サポート ポリシーの詳細については、https://aka.ms/dotnet-core-support を参照してください。"
+  "loc.messages.DepricatedVersionNetCore": "指定された %s の .NET Core バージョンはサポートが終了しており、ホストされているエージェントからまもなく削除される予定です。.NET サポート ポリシーの詳細については、https://aka.ms/dotnet-core-support を参照してください。",
+  "loc.messages.ApplyingRollForwardPolicy": "Applying rollForward policy '%s' to version '%s', resolved version spec: '%s'",
+  "loc.messages.InvalidRollForwardPolicy": "Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.",
+  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
 }

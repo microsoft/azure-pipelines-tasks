@@ -10,7 +10,7 @@
   "loc.input.label.msbuildVersion": "Versión de MSBuild",
   "loc.input.help.msbuildVersion": "Si no se encuentra la versión preferida, se usa la versión más reciente que se encuentre. En un agente de macOS, se usa xbuild (Mono) si la versión es anterior a la 15.0.",
   "loc.input.label.msbuildArchitecture": "Arquitectura MSBuild",
-  "loc.input.help.msbuildArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de MSBuild que se va a ejecutar.",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64, arm64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "Ruta de acceso de MSBuild",
   "loc.input.help.msbuildLocation": "Indique opcionalmente la ruta de acceso a MSBuild.",
   "loc.input.label.platform": "Plataforma",
