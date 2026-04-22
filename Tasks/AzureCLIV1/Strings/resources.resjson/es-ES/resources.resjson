@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] CLI de Azure",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](http://go.microsoft.com/fwlink/?LinkID=827160) o [consultar la documentación de la CLI de Azure](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "En desuso: esta tarea ya no recibe mantenimiento. Use la tarea AzureCLI@2 en su lugar.",
-  "loc.instanceNameFormat": "[Deprecated] CLI de Azure $(scriptPath)",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Novedades de la versión 1.0:\n- Admite la nueva CLI de Azure 2.0 basada en Python\n- Funciona con agentes multiplataforma (Linux, macOS o Windows)\n- Para trabajar con la CLI de Azure 1.0 (basada en node.js), cambie a la versión de tarea 0.0\n- Limitaciones:\n - No admite suscripciones de Azure clásico. La CLI de Azure 2.0 solo admite suscripciones de Azure Resource Manager (ARM).",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.connectedServiceNameARM": "Suscripción de Azure",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Estableciendo la variable de entorno AZURE_CONFIG_DIR en %s",
   "loc.messages.SettingAzureCloud": "Estableciendo la nube activa en %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Para la versión del agente < 2.115.0, solo se puede usar la configuración global de la CLI de Azure.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "El secreto expiró. Actualice la conexión de servicio en %s Consulte https://aka.ms/azdo-rm-workload-identity-conversion para obtener más información sobre la conversión a conexiones de servicio sin secretos."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

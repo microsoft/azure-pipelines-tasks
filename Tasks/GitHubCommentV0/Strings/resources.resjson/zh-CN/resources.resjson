@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub 注释",
+  "loc.helpMarkDown": "",
   "loc.description": "向 Github 实体(即问题或拉取请求[PR])写入注释",
   "loc.instanceNameFormat": "正在写入 GitHub 注释",
   "loc.input.label.gitHubConnection": "GitHub 连接(OAuth 或 PAT)",

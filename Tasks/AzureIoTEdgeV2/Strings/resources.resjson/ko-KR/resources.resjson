@@ -64,7 +64,7 @@
   "loc.messages.InvalidContainerRegistry": "컨테이너 레지스트리 인증 토큰을 가져오지 못했습니다. 빌드 작업의 컨테이너 레지스트리 설정을 확인하세요. 컨테이너 레지스트리의 사용자 이름이 %s입니다.",
   "loc.messages.DeploymentFileNotFound": "배포 파일을 찾을 수 없습니다. 배포 파일의 경로가 작업에 올바르게 설정되었는지 확인하세요.",
   "loc.messages.ValidDeploymentFileNotFound": "유효한 배포 파일을 찾을 수 없습니다. 배포 파일의 경로가 작업에 올바르게 설정되었는지 확인하세요.",
-  "loc.messages.AzureSdkNotFound": "Azure SDK를 찾을 수 없습니다.",
+  "loc.messages.AzureSdkNotFound": "Azure SDK를 찾을 수 없음",
   "loc.messages.RootPathNotExist": "루트 경로 %s이(가) 없습니다.",
   "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION이 true로 설정되었습니다. 모듈 이미지 유효성 검사를 건너뜁니다.",
   "loc.messages.InvalidRegistryCredentialWarning": "지정된 자격 증명으로 %s을(를) 로그인하지 못했습니다. %s",

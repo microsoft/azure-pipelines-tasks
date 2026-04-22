@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Der Pfad zur Projektmappe, zur Datei \"packages.config\" oder zur Datei \"project.json\", die auf die wiederherzustellenden Pakete verweist.",
   "loc.input.label.selectOrConfig": "Zu verwendende Feeds",
   "loc.input.help.selectOrConfig": "Sie können hier entweder einen Feed aus Azure Artifacts und/oder NuGet.org auswählen oder einen Commit für eine nuget.config-Datei in Ihrem Quellcoderepository durchführen und hier den zugehörigen Pfad festlegen.",
-  "loc.input.label.feedRestore": "Pakete aus diesem Azure Artifacts-/TFS-Feed verwenden",
+  "loc.input.label.feedRestore": "Pakete aus diesem Azure Artifacts-/TFS-Feed verwenden. Wählen Sie aus der Dropdownliste aus, oder geben Sie den [Projektnamen/]Feednamen ein.",
   "loc.input.help.feedRestore": "Schließen Sie den ausgewählten Feed in die generierte Datei \"NuGet.config\" ein. Azure Artifacts muss installiert und lizenziert sein, damit Sie hier einen Feed auswählen können.",
   "loc.input.label.includeNuGetOrg": "Pakete aus \"NuGet.org\" verwenden",
   "loc.input.help.includeNuGetOrg": "\"NuGet.org\" in die erstellte Datei \"NuGet.config\" einbeziehen.",
@@ -135,5 +135,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird von %s auf %s aktualisiert. NuGet-Updates auf eine neue Version können zu Änderungen im Verhalten oder Breaking Changes führen. Falls dies nicht gewünscht ist, deaktivieren Sie die Option \"Auf aktuelle Version überprüfen\" in der Aufgabe.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\".",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg ist derzeit für diese Aufgabe aktiviert. Um diese Warnung zu beheben, bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Die ausführbare Datei „%s“ konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Dateipfad existiert oder ob sich die Datei in einem Verzeichnis befindet, das in der PATH-Umgebungsvariable angegeben ist. Prüfen Sie außerdem die Dateiberechtigungen, um sicherzustellen, dass die Datei ausführbar ist.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Die Aufgabe ist fehlgeschlagen, weil Ubuntu 24.04 oder höher ohne Mono verwendet wird. Weitere Informationen finden Sie unter https://aka.ms/nuget-task-mono."
 }

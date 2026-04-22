@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "选择要在此组织外部进行身份验证的终结点。确保这些终结点具有包上传权限。",
   "loc.input.label.publishPackageMetadata": "发布管道元数据",
   "loc.input.help.publishPackageMetadata": "在上传到我的源时，将此生成/发布管道的元数据(运行 #、源代码信息)与包关联。",
+  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "正在为 %s 内部源添加身份验证信息。",
   "loc.messages.Info_AddingExternalFeeds": "正在为 %s 外部终结点添加身份验证信息。",
   "loc.messages.Info_AddingAuthForRegistry": "正在向注册表 %s 的配置添加身份验证",

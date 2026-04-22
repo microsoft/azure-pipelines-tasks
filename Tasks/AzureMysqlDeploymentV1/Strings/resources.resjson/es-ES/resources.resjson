@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[En desuso] Implementación de Azure MySQL",
+  "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "En desuso: Esta tarea ya no recibe mantenimiento. Use la tarea AzureMysqlDeployment@2 en su lugar.",
-  "loc.instanceNameFormat": "[En desuso] Ejecutar Azure MySQL: $(TaskNameSelector)",
+  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "Detalles de BD",
   "loc.group.displayName.taskDetails": "Paquete de implementación",
   "loc.group.displayName.firewall": "Firewall",

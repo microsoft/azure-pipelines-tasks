@@ -27,9 +27,9 @@
   "loc.input.label.SlotName": "Emplacement",
   "loc.input.help.SlotName": "Entrez ou sélectionnez un emplacement existant autre que l'emplacement de production.",
   "loc.input.label.DockerNamespace": "Registre ou espace de noms",
-  "loc.input.help.DockerNamespace": "Nom de domaine de premier niveau de type identificateur global unique pour votre registre ou espace de noms spécifique.<br/> Remarque : Le nom d'image complet est au format : '<b><registre ou espace de noms></b>/<dépôt>:<étiquette>'. Exemple : '<b>myregistry.azurecr.io</b>/nginx:latest'.",
+  "loc.input.help.DockerNamespace": "Nom de domaine de niveau supérieur global unique pour votre registre ou espace de noms spécifique.<br/> Remarque : le nom complet de l’image sera au format : '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. Exemple : '<b>myregistry.azurecr.io</b>/nginx:latest'.",
   "loc.input.label.DockerRepository": "Image",
-  "loc.input.help.DockerRepository": "Nom du dépôt où sont stockés les images conteneurs.<br/> Remarque : Le nom d'image complet est au format : '<registre ou espace de noms>/<b><dépôt></b>:<étiquette>'. Exemple : 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
+  "loc.input.help.DockerRepository": "Nom du référentiel dans lequel les images conteneur sont stockées.<br/> Remarque : le nom complet de l’image sera au format :'`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. Exemple : 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
   "loc.input.label.DockerImageTag": "Étiquette",
   "loc.input.help.DockerImageTag": "Les étiquettes sont facultatives. Il s'agit du mécanisme utilisé par les registres pour donner une version aux images Docker.<br/> Remarque : Le nom d'image complet est au format suivant : '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. Exemple : 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.VirtualApplication": "Application virtuelle",
@@ -69,7 +69,7 @@
   "loc.input.label.RenameFilesFlag": "Renommer les fichiers verrouillés",
   "loc.input.help.RenameFilesFlag": "Sélectionnez l'option permettant d'activer l'indicateur msdeploy MSDEPLOY_RENAME_LOCKED_FILES=1 dans les paramètres d'application Azure App Service. Si cette option est définie, elle permet à msdeploy de renommer les fichiers verrouillés durant le déploiement de l'application",
   "loc.input.label.XmlTransformation": "Transformation XML",
-  "loc.input.help.XmlTransformation": "Les transformations de configuration sont exécutées pour '*Release.config' et '*.<nom_environnement>.config' sur le fichier '*.config'.<br/> Elles sont exécutées avant la substitution de variable.<br/>Les transformations XML sont prises en charge uniquement pour la plateforme Windows.",
+  "loc.input.help.XmlTransformation": "Les transformations de configuration seront exécutées pour `*.Release.config` et `*.<EnvironmentName>.config` sur le fichier `*.config`.<br/> Les transformations de configuration sont exécutées avant la substitution de variable.<br/>Les transformations XML sont prises en charge uniquement pour la plateforme Windows.",
   "loc.input.label.XmlVariableSubstitution": "Substitution de variable XML",
   "loc.input.help.XmlVariableSubstitution": "Les variables définies dans le pipeline de build ou le pipeline de mise en production sont mappées aux entrées 'key' ou 'name' dans les sections appSettings, connectionStrings et applicationSettings d'un fichier config et d'un fichier parameters.xml. La substitution de variable est exécutée après les transformations de configuration. <br/><br/> Remarque : Si les mêmes variables sont définies dans le pipeline de mise en production et dans l'environnement, les variables d'environnement remplacent les variables de pipeline de mise en production.<br/>",
   "loc.input.label.JSONFiles": "Substitution de variable JSON",
@@ -154,7 +154,7 @@
   "loc.messages.PollingForFileTimeOut": "Impossible de récupérer (fetch) l'état du script en raison du délai d'expiration. Vous pouvez augmenter la limite du délai d'expiration en affectant le nombre de minutes nécessaires à la variable 'appservicedeploy.retrytimeout'.",
   "loc.messages.InvalidPollOption": "Option d'interrogation non valide fournie : %s.",
   "loc.messages.MissingAppTypeWebConfigParameters": "Il manque l'attribut '-appType' dans les paramètres de Web.config. Les valeurs valides pour '-appType' sont : 'python_Bottle', 'python_Django', 'python_Flask', 'node' et 'Go'.<br />Exemple : '-appType python_Bottle' (sans guillemets) dans le cas d'un framework Python Bottle.",
-  "loc.messages.AutoDetectDjangoSettingsFailed": "Impossible de détecter le chemin du fichier 'settings.py' pour DJANGO_SETTINGS_MODULE. Vérifiez que le fichier 'settings.py' existe, ou indiquez le chemin approprié dans l'entrée de paramètre de Web.config au format suivant : '-DJANGO_SETTINGS_MODULE <nom_dossier>.settings'",
+  "loc.messages.AutoDetectDjangoSettingsFailed": "Impossible de détecter le chemin du fichier « settings.py » pour DJANGO_SETTINGS_MODULE. Vérifiez que le fichier « settings.py » existe, ou indiquez le chemin approprié dans l'entrée de paramètre de Web.config au format suivant : '-DJANGO_SETTINGS_MODULE <nom_dossier>.settings'",
   "loc.messages.FailedToApplyTransformation": "Impossible d'appliquer la transformation pour le package donné. Vérifiez ce qui suit.",
   "loc.messages.FailedToApplyTransformationReason1": "1. La transformation est-elle déjà appliquée pour le package MSBuild généré durant la build ? Si la réponse est oui, supprimez la balise <DependentUpon> pour chaque configuration dans le fichier csproj, puis effectuez une regénération. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Vérifiez que le fichier config et les fichiers de transformation sont présents dans le même dossier à l'intérieur du package.",
@@ -225,5 +225,7 @@
   "loc.messages.FailedToGetResourceID": "Échec de l'obtention de l'ID de ressource pour le type de ressource '%s' et le nom de ressource '%s'. Erreur : %s",
   "loc.messages.JarPathNotPresent": "Le chemin du fichier jar Java n'est pas présent",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Passez de Web Deploy à l'exécution à partir d'un package, ce qui permet d'éviter l'erreur FILE_IN_USE. Notez que l'exécution à partir d'un package ne prend pas en charge le type de package msBuild. Changez le format de votre package pour utiliser cette méthode de déploiement."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Passez de Web Deploy à l'exécution à partir d'un package, ce qui permet d'éviter l'erreur FILE_IN_USE. Notez que l'exécution à partir d'un package ne prend pas en charge le type de package msBuild. Changez le format de votre package pour utiliser cette méthode de déploiement.",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service est configuré pour ne pas utiliser l’authentification de base. Cette opération nécessite Web Deploy msdeploy.exe version 7.1.7225 ou ultérieure. Vous avez besoin d’une version de Visual Studio qui inclut une version mise à jour de msdeploy.exe. Pour plus d’informations, visitez https://aka.ms/azdo-webapp-msdeploy.",
+  "loc.messages.BasicAuthNotSupported": "App Service est configuré pour ne pas utiliser l’authentification basique et n’a pas réussi à utiliser l’authentification par jeton MSDeploy."
 }

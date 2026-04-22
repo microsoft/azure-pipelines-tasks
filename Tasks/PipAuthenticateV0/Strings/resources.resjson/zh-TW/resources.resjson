@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "選取此組織內要驗證的摘要",
   "loc.input.label.externalSources": "來自外部組織的摘要",
   "loc.input.help.externalSources": "選取此組織外要驗證的端點。",
+  "loc.messages.TaskDeprecationNotice": "The PipAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using PipAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "正在新增 %s 個內部摘要的驗證資訊。",
   "loc.messages.Info_AddingExternalFeeds": "正在新增 %s 外部端點的驗證資訊。",
   "loc.messages.Info_SuccessAddingAuth": "已成功為 %s 內部摘要和 %s 外部端點新增驗證。",

@@ -19,7 +19,7 @@
   "loc.input.label.package": "Pacchetto o cartella",
   "loc.input.help.package": "Percorso file del pacchetto o di una cartella che include il contenuto del servizio app generato da MSBuild oppure un file WAR o ZIP compresso.<br />Variabili ( [Compilazione](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Versione](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)). I caratteri jolly sono supportati. <br/> Ad esempio, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip o $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war.",
   "loc.input.label.customDeployFolder": "Cartella di distribuzione personalizzata",
-  "loc.input.help.customDeployFolder": "Consente di specificare il nome della cartella personalizzata in cui eseguire la distribuzione. <br/>Se il campo è vuoto, il pacchetto viene distribuito in <nome_app>.azurewebsites.net/<nome_pacchetto_war><br/> Se si immette ROOT, il pacchetto viene distribuito in <nome_app>.azurewebsited.net<br/>In caso contrario, viene distribuito in <nome_app>.azurewebsited.net/<nome_war_personalizzato>",
+  "loc.input.help.customDeployFolder": "Consente di specificare il nome della cartella personalizzata in cui eseguire la distribuzione. <br/>Se il campo è vuoto, il pacchetto viene distribuito in <appname>.azurewebsites.net/<warpackagename><br/> Se si immette ROOT, il pacchetto viene distribuito in <appname>.azurewebsited.net <br/>In caso contrario, viene distribuito in <appname>.azurewebsited.net/<customWarName>",
   "loc.input.label.runtimeStack": "Stack di runtime",
   "loc.input.label.startUpCommand": "Comando di avvio ",
   "loc.input.help.startUpCommand": "Immettere il comando di avvio, ad esempio<br/>dotnet exec filename.dll<br/>dotnet filename.dll",
@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "Consente di modificare le impostazioni di configurazione dell'app Web successive al valore -key della sintassi. Il valore che contiene spazi deve essere racchiuso tra virgolette.<br /> Esempio: -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "Metodo di distribuzione",
   "loc.input.help.deploymentMethod": "Consente di scegliere il metodo di distribuzione per l'app.",
+  "loc.input.label.siteContainersConfig": "Configurazione contenitori sito",
+  "loc.input.help.siteContainersConfig": "Fornire il file JSON siteContainers-config per le distribuzioni di SiteContainers.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Il percorso specificato per il pacchetto o la cartella del servizio app non è valido: %s",
   "loc.messages.SetParamFilenotfound0": "Il file dei parametri del set non è stato trovato: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "Le trasformazioni XML sono state applicate",
@@ -111,7 +113,7 @@
   "loc.messages.PollingForFileTimeOut": "Non è possibile recuperare lo stato dello script a causa del timeout. È possibile aumentare il limite di timeout impostando la variabile 'appservicedeploy.retrytimeout' sul numero di minuti necessari.",
   "loc.messages.InvalidPollOption": "L'opzione di polling specificata %s non è valida.",
   "loc.messages.MissingAppTypeWebConfigParameters": "Nei parametri di Web.config manca l'attributo '-appType'. I valori validi per '-appType' sono: 'python_Bottle', 'python_Django', 'python_Flask', 'node' e 'Go'.<br />Esempio: '-appType python_Bottle' (senza virgolette) nel caso del framework Python Bottle.",
-  "loc.messages.AutoDetectDjangoSettingsFailed": "Il percorso del file 'settings.py' di DJANGO_SETTINGS_MODULE non è stato rilevato. Assicurarsi che il file 'settings.py' sia esistente oppure specificare il percorso corretto nel campo di input del parametro di Web.config nel formato seguente: '-DJANGO_SETTINGS_MODULE <nome_cartella>.settings'",
+  "loc.messages.AutoDetectDjangoSettingsFailed": "Non è possibile rilevare il percorso del file 'settings.py' di DJANGO_SETTINGS_MODULE. Assicurarsi che esista il file 'settings.py' oppure specificare il percorso corretto nel campo di input del parametro di Web.config nel formato seguente: '-DJANGO_SETTINGS_MODULE <nome_cartella>.settings'",
   "loc.messages.FailedToApplyTransformation": "Non è possibile applicare la trasformazione per il pacchetto specificato. Eseguire le verifiche seguenti.",
   "loc.messages.FailedToApplyTransformationReason1": "1. Verificare se la trasformazione è già stata applicata per il pacchetto generato da MSBuild durante la compilazione. In caso affermativo, rimuovere il tag <DependentUpon> per ogni file config nel file csproj e ricompilare. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Il percorso del file jar Java non è presente",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Non è stato possibile aggiornare la risorsa '%s' di Application Insights. Errore: %s",
   "loc.messages.InvalidDockerImageName": "Il nome dell'immagine di Docker Hub specificato non è valido.",
-  "loc.messages.MsBuildPackageNotSupported": "La distribuzione del pacchetto generato da msBuild non è supportata. Modificare il formato del pacchetto oppure usare l'attività Distribuzione Servizio app di Azure."
+  "loc.messages.MsBuildPackageNotSupported": "La distribuzione del pacchetto generato da msBuild non è supportata. Modificare il formato del pacchetto oppure usare l'attività Distribuzione Servizio app di Azure.",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "I contenitori sito non sono supportati con l'autenticazione tramite profilo di pubblicazione. Usare l'autenticazione tramite connessione al servizio.",
+  "loc.messages.StartedUpdatingSiteContainers": "L'aggiornamento dei contenitori sito è stato avviato.",
+  "loc.messages.UpdatingSiteContainer": "È in corso l'aggiornamento del contenitore sito: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Aggiornamento dei contenitori sito completato."
 }
