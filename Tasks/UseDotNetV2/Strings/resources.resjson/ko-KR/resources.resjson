@@ -100,5 +100,9 @@
   "loc.messages.VersionNumberHasTheWrongFormat": "버전 번호: %s의 형식이 올바르지 않습니다. 버전은 다음 형식으로 지정할 수 있습니다: 2.x => 최신 메이저 버전 설치 2.2.x => 주 버전과 부 버전에서 최신 버전을 설치합니다. 2.2.104 => 정확한 버전을 설치합니다. SDK/런타임 설치를 위한 version 값은 releases.json에서 찾으세요. 해당 주.부 버전의 releases.json 링크는 [**releases-index file.**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json)에서 찾을 수 있습니다. 예를 들어 2.2 버전의 releases.json 링크는 https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json 입니다.",
   "loc.messages.OnlyExplicitVersionAllowed": "명시적 버전(예: 2.2.301)만 허용됩니다. 버전 %s은(는) 잘못되었습니다.",
   "loc.messages.SupportPhaseNotPresentInChannel": "채널 버전이 %s인 채널에 지원 단계가 없습니다.",
-  "loc.messages.DepricatedVersionNetCore": "%s을(를) 지정한 NET Core 버전이 지원되지 않으며 곧 호스트된 에이전트에서 제거될 예정입니다. .NET 지원 정책에 대한 자세한 내용은 https://aka.ms/dotnet-core-support를 참조하세요."
+  "loc.messages.DepricatedVersionNetCore": "%s을(를) 지정한 NET Core 버전이 지원되지 않으며 곧 호스트된 에이전트에서 제거될 예정입니다. .NET 지원 정책에 대한 자세한 내용은 https://aka.ms/dotnet-core-support를 참조하세요.",
+  "loc.messages.ApplyingRollForwardPolicy": "Applying rollForward policy '%s' to version '%s', resolved version spec: '%s'",
+  "loc.messages.InvalidRollForwardPolicy": "Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.",
+  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
 }
