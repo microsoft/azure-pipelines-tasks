@@ -34,6 +34,7 @@ export const errorMessageConfig: ErrorMessageConfig = {
     // Handler errors
     createFailed: tl.loc('CreateFailed'),
     validationFailed: tl.loc('ValidationFailed'),
+    whatIfFailed: tl.loc('WhatIfFailed'),
     operationFailed: tl.loc('OperationFailed'),
     requestFailedCorrelation: (correlationId: string) => 
         tl.loc('RequestFailedCorrelation', correlationId),

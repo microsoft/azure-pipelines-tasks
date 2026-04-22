@@ -85,6 +85,7 @@
   "loc.messages.FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
   "loc.messages.CreateFailed": "Create failed",
   "loc.messages.ValidationFailed": "Validation failed",
+  "loc.messages.WhatIfFailed": "What-if failed",
   "loc.messages.OperationFailed": "Operation failed",
   "loc.messages.RequestFailedCorrelation": "Request failed. CorrelationId: %s",
   "loc.messages.InvalidChangeType": "Invalid change type: %s",

@@ -389,6 +389,7 @@
     "FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
     "CreateFailed": "Create failed",
     "ValidationFailed": "Validation failed",
+    "WhatIfFailed": "What-if failed",
     "OperationFailed": "Operation failed",
     "RequestFailedCorrelation": "Request failed. CorrelationId: %s",
     "InvalidChangeType": "Invalid change type: %s",
