@@ -11,7 +11,7 @@
   "loc.input.help.externalSources": "Selezionare gli endpoint da autenticare all'esterno di questa organizzazione. Assicurarsi che agli endpoint siano assegnate le autorizzazioni per il caricamento di pacchetti.",
   "loc.input.label.publishPackageMetadata": "Pubblica i metadati della pipeline",
   "loc.input.help.publishPackageMetadata": "Consente di associare i metadati della pipeline di compilazione/versione (numero di esecuzione, informazioni sul codice sorgente) al pacchetto durante il caricamento nei feed personali.",
-  "loc.messages.TaskDeprecationNotice": "The TwineAuthenticateV0 task is scheduled for deprecation in June 2026. Please switch to using TwineAuthenticateV1.",
+  "loc.messages.TaskDeprecationNotice": "La deprecazione dell'attività TwineAuthenticateV0 è pianificata a giugno 2026. Passare all'uso di TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Aggiunta delle informazioni di autenticazione per i feed interni di %s.",
   "loc.messages.Info_AddingExternalFeeds": "Aggiunta delle informazioni di autenticazione per l'endpoint esterno di %s.",
   "loc.messages.Info_AddingAuthForRegistry": "Aggiunta dell'autenticazione alla configurazione per registro di sistema %s",

@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
+  "loc.friendlyName": "[Veraltet] Azure MySQL-Bereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
-  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
+  "loc.description": "Veraltet: Diese Aufgabe wird nicht mehr verwaltet. Verwenden Sie stattdessen die Aufgabe AzureMysqlDeployment@2.",
+  "loc.instanceNameFormat": "[Veraltet] Azure MySQL ausführen: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB-Details",
   "loc.group.displayName.taskDetails": "Bereitstellungspaket",
   "loc.group.displayName.firewall": "Firewall",

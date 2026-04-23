@@ -32,13 +32,13 @@
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "L'autenticazione per il feed %s è stata aggiunta.",
   "loc.messages.FailedToGetServiceConnectionAuth": "Non è possibile ottenere le credenziali federate dalla connessione al servizio: %s.",
   "loc.messages.MissingFeedUrlOrServiceConnection": "Se viene specificato l'URL del feed, la connessione al servizio 'Azure DevOps' deve essere specificata e non può essere vuota.",
-  "loc.messages.InvalidRegistryUrl": "Skipping registry '%s' because it is not a valid URL.",
+  "loc.messages.InvalidRegistryUrl": "Il registro '%s' verrà ignorato perché non è un URL valido.",
   "loc.messages.DuplicateCredentials": "L'autenticazione per il '%s' del Registro di sistema è stata impostata in precedenza. Sovrascrittura con nuova configurazione.",
   "loc.messages.FoundEndpointCredentials": "Trovate credenziali impostate per la connessione al servizio '%s'.",
-  "loc.messages.Error_UnableToGetPackagingUris": "Unable to retrieve packaging service URLs.",
-  "loc.messages.Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
-  "loc.messages.Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
-  "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s",
-  "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
-  "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
+  "loc.messages.Error_UnableToGetPackagingUris": "Non è possibile recuperare gli URL del servizio di creazione di pacchetti.",
+  "loc.messages.Info_ApplyingWifToAllRegistries": "Nessun feedUrl specificato. Applicazione delle credenziali WIF a tutti i registri %d in .npmrc.",
+  "loc.messages.Error_UnsupportedAuthScheme": "Schema di autenticazione '%s' non supportato per la connessione al servizio. Gli schemi supportati sono 'Token' e 'UsernamePassword'.",
+  "loc.messages.Warning_NpmrcFileNotFound": "File npmrc non trovato: %s",
+  "loc.messages.Debug_EndpointProbeTimedOut": "Timeout di isEndpointInternal dopo %dms.",
+  "loc.messages.Debug_EndpointProbeFailed": "Controllo di isEndpointInternal non riuscito: %s"
 }
