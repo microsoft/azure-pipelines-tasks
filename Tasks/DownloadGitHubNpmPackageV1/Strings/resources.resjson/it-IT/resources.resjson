@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecata] Scarica pacchetto Npm di GitHub",
+  "loc.friendlyName": "[Deprecated] Scarica pacchetto npm di GitHub",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613746). In alternativa, [vedere la documentazione di npm](https://docs.npmjs.com/)",
-  "loc.description": "Deprecata: questa attività non viene più mantenuta. Usare invece l'attività Npm@1 con le connessioni al servizio GitHub.",
-  "loc.instanceNameFormat": "[Deprecata] Scarica pacchetto Npm di GitHub",
+  "loc.description": "Deprecato: questa attività non è più gestita. Usare l'attività Npm@1.",
+  "loc.instanceNameFormat": "[Deprecated] Scarica pacchetto npm di GitHub",
   "loc.group.displayName.customRegistries": "Registri personalizzati e autenticazione",
   "loc.input.label.packageName": "Nome del pacchetto",
   "loc.input.help.packageName": "Nome del pacchetto da scaricare da GitHub",
