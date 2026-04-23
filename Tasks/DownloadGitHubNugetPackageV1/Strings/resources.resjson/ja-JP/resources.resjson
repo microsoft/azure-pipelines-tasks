@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "GitHub NuGet パッケージのダウンロード",
+  "loc.friendlyName": "[Deprecated] Download GitHub NuGet",
   "loc.helpMarkDown": "[.NET Core のドキュメントを参照](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "dotnet CLI を使用して NuGet パッケージを復元します",
-  "loc.instanceNameFormat": "dotnet restore",
+  "loc.description": "Deprecated: this task is no longer maintained. Use the NuGetCommand@2 or DotNetCoreCLI@2 task with GitHub service connections instead.",
+  "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "フィードと認証",
   "loc.group.displayName.restoreAdvanced": "詳細設定",
   "loc.input.label.packageName": "パッケージ名",
