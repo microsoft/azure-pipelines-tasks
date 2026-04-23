@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
+  "loc.friendlyName": "[Не рекомендуется к использованию] Развертывание Azure MySQL",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
-  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
+  "loc.description": "Не рекомендуется к использованию: эта задача больше не поддерживается. Используйте вместо нее задачу AzureMysqlDeployment@2.",
+  "loc.instanceNameFormat": "[Не рекомендуется к использованию] Выполнить Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Сведения о базе данных",
   "loc.group.displayName.taskDetails": "Пакет развертывания",
   "loc.group.displayName.firewall": "Брандмауэр",
