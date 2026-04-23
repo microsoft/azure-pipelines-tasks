@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
   "loc.input.help.restoreNugetPackages": "Diese Option ist veraltet. Um NuGet-Pakete wiederherzustellen, fügen Sie vor der Builderstellung die Aufgabe [Installer für NuGet-Tools](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) hinzu.",
   "loc.input.label.msbuildArchitecture": "MSBuild-Architektur",
-  "loc.input.help.msbuildArchitecture": "Geben Sie optional die auszuführende MSBuild-Architektur an (x86, x64).",
+  "loc.input.help.msbuildArchitecture": "Geben Sie optional die auszuführende MSBuild-Architektur an (x86, x64, arm64).",
   "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen",
   "loc.input.help.logProjectEvents": "Optional Zeitachsendetails für jedes Projekt aufzeichnen.",
   "loc.input.label.createLogFile": "Protokolldatei erstellen",

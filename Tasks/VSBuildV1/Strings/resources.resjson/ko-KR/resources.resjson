@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "NuGet 패키지 복원",
   "loc.input.help.restoreNugetPackages": "이 옵션은 사용되지 않습니다. NuGet 패키지를 복원하려면 빌드 앞에 [NuGet 도구 설치 관리자](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) 작업을 추가하세요.",
   "loc.input.label.msbuildArchitecture": "MSBuild 아키텍처",
-  "loc.input.help.msbuildArchitecture": "원하는 경우 실행할 MSBuild의 아키텍처(x86, x64)를 제공하세요.",
+  "loc.input.help.msbuildArchitecture": "원하는 경우 실행할 MSBuild의 아키텍처(x86, x64, arm64)를 제공하세요.",
   "loc.input.label.logProjectEvents": "프로젝트 정보 기록",
   "loc.input.help.logProjectEvents": "선택적으로 각 프로젝트의 타임라인 세부 정보를 기록합니다.",
   "loc.input.label.createLogFile": "로그 파일 만들기",
