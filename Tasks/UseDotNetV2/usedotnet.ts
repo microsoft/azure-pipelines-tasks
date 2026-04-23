@@ -2,10 +2,11 @@
 import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as semver from 'semver';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";
-import { Constants } from "./versionutilities";
+import { applyRollForwardPolicy, Constants } from "./versionutilities";
 import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 
@@ -81,6 +82,20 @@ async function isCompatibleDotnetVersionInstalled(versionSpec: string, vsVersion
             return false;
         }
 
+        // For "latest*" rollForward policies (latestPatch, latestFeature, etc.),
+        // the intent is to always use the latest available version, so we must
+        // resolve to the actual latest and check for that exact version.
+        // For non-latest policies (disable, patch, feature, minor, major), any
+        // installed version within the acceptable range is sufficient.
+        const hasLatestPolicy = entries.some(e => e.rollForward && e.rollForward.startsWith("latest"));
+
+        if (hasLatestPolicy) {
+            // Resolve to the actual latest versions and check for exact matches
+            let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
+            return checkVersionInDotnetCLI(versionsToInstall, packageType);
+        }
+
+        // Non-latest policies: check if any installed version satisfies the range
         const installedVersions = getInstalledVersions(packageType);
 
         for (const entry of entries) {
