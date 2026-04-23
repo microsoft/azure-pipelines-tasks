@@ -14,6 +14,7 @@ const shell = require('shelljs');
 
 const makeOptions = require('./make-options.json');
 const downloadUtils = require('./build-scripts/download-utils.js');
+const { cleanNodeDistribution } = require('./build-scripts/node-dist-utils.js');
 
 const args = minimist(process.argv.slice(2));
 
@@ -443,15 +444,21 @@ var installNodeAsync = async function (nodeVersion) {
     switch (platform) {
         case 'darwin':
             var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
-            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            var nodeDirDarwin = path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64');
+            cleanNodeDistribution(nodeDirDarwin);
+            addPath(path.join(nodeDirDarwin, 'bin'));
             break;
         case 'linux':
             var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
-            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            var nodeDirLinux = path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64');
+            cleanNodeDistribution(nodeDirLinux);
+            addPath(path.join(nodeDirLinux, 'bin'));
             break;
         case 'win32':
             var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-win-x64.zip');
-            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-win-x64'));
+            var nodeDirWin = path.join(nodeArchivePath, 'node-' + nodeVersion + '-win-x64');
+            cleanNodeDistribution(nodeDirWin);
+            addPath(nodeDirWin);
             break;
     }
 }
