@@ -8,7 +8,7 @@
   "loc.input.label.command": "comando npm",
   "loc.input.label.arguments": "argomenti",
   "loc.input.help.arguments": "Argomenti aggiuntivi passati a npm.",
-  "loc.messages.TaskDeprecationNotice": "The NpmV0 task is scheduled for deprecation in June 2026. Please switch to using NpmAuthenticate and script tasks, or NpmV1.",
+  "loc.messages.TaskDeprecationNotice": "La deprecazione dell'attività NpmV0 è pianificata a giugno 2026. Passare all'uso di NpmAuthenticate e delle attività script oppure a NpmV1.",
   "loc.messages.InvalidCommand": "Per npm è necessario usare un solo comando. Usare l'input 'argomenti' per gli argomenti aggiuntivi.",
   "loc.messages.NpmReturnCode": "npm terminato. Codice restituito: %d",
   "loc.messages.NpmFailed": "npm non riuscito. Errore: %s",

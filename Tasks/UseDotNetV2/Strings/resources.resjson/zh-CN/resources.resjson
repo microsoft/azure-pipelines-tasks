@@ -103,6 +103,6 @@
   "loc.messages.DepricatedVersionNetCore": "你指定的 NET Core 版本 %s 不受支持，并且即将从托管代理中删除。有关 .NET 支持策略的详细信息，请参阅 https://aka.ms/dotnet-core-support。",
   "loc.messages.ApplyingRollForwardPolicy": "正在将 rollForward 策略“%s”应用于版本“%s”，已解析版本规范:“%s”",
   "loc.messages.InvalidRollForwardPolicy": "路径“%s”下的 global.json 中的 rollForward 策略“%s”无效。支持的值为: disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor。将忽略 rollForward 策略。",
-  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+  "loc.messages.ResolvedVersionFromGlobalJson": "已从 global.json 解析 SDK 版本“%s”(原始版本:“%s”，rollForward:“%s”)",
+  "loc.messages.InstallingFromGlobalJson": "正在安装从 global.json 解析的 .NET Core SDK 版本 %s"
 }

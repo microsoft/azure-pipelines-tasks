@@ -1,6 +1,5 @@
 'use strict';
 
-import * as url from "url";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as ImageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
@@ -35,8 +34,10 @@ export class DockerConnection {
     }
 
     private getHostName(registryUrl: string) {
-        const uri = url.parse(registryUrl);
-        const host = !uri.slashes ? uri.href : uri.host;
-        return host;
+        try {
+            return new URL(registryUrl,"https://placeholder").host;
+        } catch {
+            return registryUrl;
+        }
     }
 }

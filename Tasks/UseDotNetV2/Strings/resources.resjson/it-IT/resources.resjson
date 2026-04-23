@@ -101,8 +101,8 @@
   "loc.messages.OnlyExplicitVersionAllowed": "Sono accettate solo versioni esplicite, ad esempio 2.2.301. La versione %s non è valida.",
   "loc.messages.SupportPhaseNotPresentInChannel": "support-phase non è presente nel canale con channel-version %s.",
   "loc.messages.DepricatedVersionNetCore": "La versione NET Core specificata %s non è supportata e verrà rimossa a breve dagli agenti ospitati. Per altre informazioni sui criteri di supporto .NET, vedere https://aka.ms/dotnet-core-support.",
-  "loc.messages.ApplyingRollForwardPolicy": "Applying rollForward policy '%s' to version '%s', resolved version spec: '%s'",
-  "loc.messages.InvalidRollForwardPolicy": "Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.",
+  "loc.messages.ApplyingRollForwardPolicy": "Applicazione del criterio rollForward '%s' alla versione '%s', specifica della versione risolta: '%s'",
+  "loc.messages.InvalidRollForwardPolicy": "Criterio rollForward non valido '%s' in global.json nel percorso: '%s'. I valori supportati sono: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Il criterio rollForward verrà ignorato.",
   "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
   "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
 }

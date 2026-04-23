@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
+  "loc.friendlyName": "[已棄用] Azure MySQL 部署",
   "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
-  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
+  "loc.description": "已棄用: 已不再維護此工作。請改為使用 AzureMysqlDeployment@2 工作。",
+  "loc.instanceNameFormat": "[已棄用] 執行 Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 詳細資料",
   "loc.group.displayName.taskDetails": "部署套件",
   "loc.group.displayName.firewall": "防火牆",
