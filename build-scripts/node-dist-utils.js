@@ -5,10 +5,6 @@ const path = require('path');
 const { rm } = require('shelljs');
 
 function cleanNodeDistribution(nodeDir) {
-    if (!nodeDir || !fs.existsSync(nodeDir)) {
-        return;
-    }
-
     console.log(`Removing unused components (npm, corepack, headers, docs) from downloaded Node.js distribution.`);
 
     const pathsToRemove = process.platform === 'win32'
