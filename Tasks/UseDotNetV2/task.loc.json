@@ -219,6 +219,8 @@
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore",
     "ApplyingRollForwardPolicy": "ms-resource:loc.messages.ApplyingRollForwardPolicy",
-    "InvalidRollForwardPolicy": "ms-resource:loc.messages.InvalidRollForwardPolicy"
+    "InvalidRollForwardPolicy": "ms-resource:loc.messages.InvalidRollForwardPolicy",
+    "ResolvedVersionFromGlobalJson": "ms-resource:loc.messages.ResolvedVersionFromGlobalJson",
+    "InstallingFromGlobalJson": "ms-resource:loc.messages.InstallingFromGlobalJson"
   }
 }
