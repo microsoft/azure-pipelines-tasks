@@ -412,7 +412,7 @@ function Publish-UpgradedServiceFabricApplication
                     }
                     catch
                     {
-                        Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorMessage $_.Exception.Message
+                        Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorData $_
                         throw
                     }
                 }
