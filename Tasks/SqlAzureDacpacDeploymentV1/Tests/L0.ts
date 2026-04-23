@@ -63,6 +63,10 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
         it ('Validate helper methods', (done) => {
             psr.run(path.join(__dirname, 'L0SqlAzureActionsUtilityTests.ps1'), done);
         });
+
+        it ('Validate Get-EffectiveOutputPath with feature flag and user /OutputPath', (done) => {
+            psr.run(path.join(__dirname, 'L0GetEffectiveOutputPath.ps1'), done);
+        });
     }
 });
 
@@ -123,6 +127,30 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
             psr.run(path.join(__dirname, 'L0FindSqlPackagePathSelectHighestVersion.ps1'), done);
+        });
+    }
+});
+
+describe('SqlAzureDacpacDeployment - Security Functions Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+        done();
+    });
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
+    });
+
+    if (psm.testSupported()) {
+        it('Validate security functions (FF dispatch, V2 methods, injection prevention)', (done) => {
+            psr.run(path.join(__dirname, 'L0SecurityFunctions.ps1'), done);
         });
     }
 });

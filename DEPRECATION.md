@@ -1,6 +1,6 @@
 # Introduction
 Creation: 18-05-2023
-Last Update: 2025-10-09
+Last Update: 2026-04-16
 
 This page lists the Azure DevOps tasks that are no longer supported or maintained and are marked as deprecated. These tasks were found under https://github.com/microsoft/azure-pipelines-tasks.
 
@@ -17,6 +17,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | AppCenterDistribute V1 | [PR #17086](https://github.com/microsoft/azure-pipelines-tasks/pull/17086) | 2022-11-14 |
 | AppCenterDistribute V2 | [PR #17087](https://github.com/microsoft/azure-pipelines-tasks/pull/17087) | 2022-11-14 |
 | AutomatedAnalysis V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
+| AzureCLI V1 | [PR #21950](https://github.com/microsoft/azure-pipelines-tasks/pull/21950) | 2026-04-16 |
 | AzureCloudPowerShellDeployment V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureCloudPowerShellDeployment V2 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureContainerApps V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
@@ -26,6 +27,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | AzureFunctionOnKubernetes V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureKeyVault V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureMonitor V0 | [PR #12841](https://github.com/microsoft/azure-pipelines-tasks/pull/12841) | 2020-07-08 |
+| AzureMysqlDeployment V1 | [PR #21951](https://github.com/microsoft/azure-pipelines-tasks/pull/21951) | 2026-04-01 |
 | AzureNLBManagement V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzurePowerShell V2 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | AzurePowerShell V3 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
@@ -34,11 +36,14 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | Chef V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | ChefKnife V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | CloudLoadTest V1 | N/A | N/A |
+| CondaEnvironment V0 | [PR #21675](https://github.com/microsoft/azure-pipelines-tasks/pull/21675) | 2026-01-07 |
 | CondaEnvironment V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | Docker V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DockerCompose V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DotNetCoreInstaller V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DotNetCoreInstaller V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
+| DownloadGitHubNpmPackage V1 | [PR #21950](https://github.com/microsoft/azure-pipelines-tasks/pull/21950) | 2026-04-16 |
+| DownloadGitHubNugetPackage V1 | [PR #21950](https://github.com/microsoft/azure-pipelines-tasks/pull/21950) | 2026-04-16 |
 | DownloadPackage V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | DownloadPipelineArtifact V0 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | DuffleInstaller V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
@@ -53,6 +58,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | Maven V2 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | Maven V3 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | MysqlDeploymentOnMachineGroup V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
+| NodeTool V0 | [PR #21902](https://github.com/microsoft/azure-pipelines-tasks/pull/21902) | 2026-03-20 |
 | NuGet V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetAuthenticate V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetInstaller V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
