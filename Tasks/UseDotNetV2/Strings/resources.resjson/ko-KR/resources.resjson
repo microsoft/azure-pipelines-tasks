@@ -103,6 +103,6 @@
   "loc.messages.DepricatedVersionNetCore": "%s을(를) 지정한 NET Core 버전이 지원되지 않으며 곧 호스트된 에이전트에서 제거될 예정입니다. .NET 지원 정책에 대한 자세한 내용은 https://aka.ms/dotnet-core-support를 참조하세요.",
   "loc.messages.ApplyingRollForwardPolicy": "버전 '%s'에 rollForward 정책 '%s'을(를) 적용합니다. 확인된 버전 사양: '%s'",
   "loc.messages.InvalidRollForwardPolicy": "경로 '%s'의 global.json에 잘못된 rollForward 정책 '%s'이(가) 있습니다. 지원되는 값은 disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor입니다. rollForward 정책은 무시됩니다.",
-  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+  "loc.messages.ResolvedVersionFromGlobalJson": "global.json SDK 버전 '%s'이(가) 확인되었습니다(원래 버전: '%s', rollForward: '%s').",
+  "loc.messages.InstallingFromGlobalJson": ".NET Core SDK 버전 설치 %s global.json"
 }

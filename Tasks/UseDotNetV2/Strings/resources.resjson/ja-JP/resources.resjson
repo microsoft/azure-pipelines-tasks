@@ -103,6 +103,6 @@
   "loc.messages.DepricatedVersionNetCore": "指定された %s の .NET Core バージョンはサポートが終了しており、ホストされているエージェントからまもなく削除される予定です。.NET サポート ポリシーの詳細については、https://aka.ms/dotnet-core-support を参照してください。",
   "loc.messages.ApplyingRollForwardPolicy": "rollForward ポリシー '%s' をバージョン '%s' に適用しています。解決されたバージョン仕様: '%s'",
   "loc.messages.InvalidRollForwardPolicy": "パス '%s' の global.json の rollForward ポリシー '%s' が無効です。サポートされている値は disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor です。rollForward ポリシーは無視されます。",
-  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+  "loc.messages.ResolvedVersionFromGlobalJson": "global.json から SDK バージョン '%s' が解決されました (元のバージョン: '%s'、rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "global.json から解決された .NET Core SDKバージョン %s をインストールしています"
 }

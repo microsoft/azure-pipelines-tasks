@@ -103,6 +103,6 @@
   "loc.messages.DepricatedVersionNetCore": "Указанная вами версия NET Core %s не поддерживается и скоро будет удалена из размещенных агентов. Дополнительные сведения о политике поддержки .NET см. по адресу https://aka.ms/dotnet-core-support.",
   "loc.messages.ApplyingRollForwardPolicy": "Применение политики rollForward \"%s\" к версии \"%s\", разрешенная спецификация версии: \"%s\"",
   "loc.messages.InvalidRollForwardPolicy": "Недопустимая политика rollForward \"%s\" в файле global.json по пути: \"%s\". Поддерживаемые значения: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Политика rollForward будет проигнорирована.",
-  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+  "loc.messages.ResolvedVersionFromGlobalJson": "Определена версия пакета SDK для .NET Core \"%s\" из global.json (исходная версия: \"%s\", rollForward: \"%s\")",
+  "loc.messages.InstallingFromGlobalJson": "Устанавливается версия пакета SDK для .NET Core %s, определенной на основе global.json"
 }
