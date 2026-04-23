@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[Veraltet] Azure MySQL-Bereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Veraltet: Dieser Task wird nicht mehr gewartet. Verwenden Sie stattdessen den Task AzureMysqlDeployment@2.",
+  "loc.description": "Veraltet: Diese Aufgabe wird nicht mehr verwaltet. Verwenden Sie stattdessen die Aufgabe AzureMysqlDeployment@2.",
   "loc.instanceNameFormat": "[Veraltet] Azure MySQL ausführen: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB-Details",
   "loc.group.displayName.taskDetails": "Bereitstellungspaket",
