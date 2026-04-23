@@ -27,6 +27,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | AzureFunctionOnKubernetes V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureKeyVault V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzureMonitor V0 | [PR #12841](https://github.com/microsoft/azure-pipelines-tasks/pull/12841) | 2020-07-08 |
+| AzureMysqlDeployment V1 | [PR #21951](https://github.com/microsoft/azure-pipelines-tasks/pull/21951) | 2026-04-01 |
 | AzureNLBManagement V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | AzurePowerShell V2 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | AzurePowerShell V3 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |

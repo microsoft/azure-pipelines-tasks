@@ -156,6 +156,24 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
+    it('Should not attempt wheel fallback when feature flag is off', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsExtensionInstallFailureNoFF.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(!tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should not log standard installation failure message');
+            assert(!tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should not attempt wheel download');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
     it('Should fall back to wheel installation when standard extension install fails', function (done) {
         this.timeout(timeout);
 
