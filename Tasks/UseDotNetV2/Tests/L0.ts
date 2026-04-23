@@ -640,13 +640,23 @@ describe('UseDotNet', function () {
         }, tr);
     });
 
-    it("[usedotnet] checkForExistingVersion with useGlobalJson should skip install when latestFeature range is satisfied", async () => {
-        process.env["__case__"] = "globaljson_latestfeature_satisfied";
+    it("[usedotnet] checkForExistingVersion with useGlobalJson should skip install when latestPatch resolves to an already-installed version", async () => {
+        process.env["__case__"] = "globaljson_latestpatch_latest_installed";
         const tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetCheckExistingGlobalJsonTests.js"));
         await tr.runAsync();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));
-            assert(tr.stdout.indexOf("DownloadAndInstallCalled") == -1, "Should NOT have called DownloadAndInstall because 10.0.202 satisfies 10.0.x range from latestFeature.");
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") == -1, "Should NOT have called DownloadAndInstall because the resolved latest version 10.0.202 is already installed.");
+        }, tr);
+    });
+
+    it("[usedotnet] checkForExistingVersion with useGlobalJson should install when latestPatch resolves to a version not installed", async () => {
+        process.env["__case__"] = "globaljson_latestpatch_latest_not_installed";
+        const tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetCheckExistingGlobalJsonTests.js"));
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") > -1, "Should have called DownloadAndInstall because latestPatch resolved to 10.0.203 which is not installed.");
         }, tr);
     });
 });
