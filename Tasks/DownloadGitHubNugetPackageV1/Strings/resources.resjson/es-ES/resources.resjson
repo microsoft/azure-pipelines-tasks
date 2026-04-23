@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[En desuso] Descargar NuGet de GitHub",
-  "loc.helpMarkDown": "[Consultar la documentación de .NET Core](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "En desuso: esta tarea ya no se mantiene. En su lugar, use la tarea NuGetCommand@2 o DotNetCoreCLI@2 con conexiones de servicio de GitHub.",
-  "loc.instanceNameFormat": "[En desuso] dotnet restore",
+  "loc.friendlyName": "[Deprecated] Descargar paquetes NuGet de GitHub",
+  "loc.helpMarkDown": "[Consultar la documentación de .NET Core](https://docs.microsoft.com/dotnet/core/)",
+  "loc.description": "En desuso: esta tarea ya no recibe mantenimiento. Use la tarea NuGetCommand@2 o DotNetCoreCLI@2 en su lugar.",
+  "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "Fuentes y autenticación",
   "loc.group.displayName.restoreAdvanced": "Avanzado",
   "loc.input.label.packageName": "Nombre del paquete",
