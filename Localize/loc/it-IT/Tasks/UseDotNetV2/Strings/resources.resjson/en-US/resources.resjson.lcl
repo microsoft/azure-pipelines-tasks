@@ -240,6 +240,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.ApplyingRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Applying rollForward policy '%s' to version '%s', resolved version spec: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Applicazione del criterio rollForward '%s' alla versione '%s', specifica della versione risolta: '%s']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CachingTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Caching this installed tool.]]></Val>
@@ -573,6 +582,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InstallingFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Installing .NET Core SDK version %s resolved from global.json]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InstallingNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing NuGet version %s]]></Val>
@@ -587,6 +602,15 @@
           <Val><![CDATA[Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Non è possibile usare l'oggetto come canale. Mancano proprietà obbligatorie, come channel-version in releases.json.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidRollForwardPolicy" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Criterio rollForward non valido '%s' in global.json nel percorso: '%s'. I valori supportati sono: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Il criterio rollForward verrà ignorato.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -714,6 +738,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ricerca del canale %s per la versione %s]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ResolvedVersionFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

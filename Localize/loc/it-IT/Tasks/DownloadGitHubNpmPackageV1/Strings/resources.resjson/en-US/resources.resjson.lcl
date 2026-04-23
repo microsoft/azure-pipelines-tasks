@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Install npm packages from GitHub.]]></Val>
+          <Val><![CDATA[Deprecated: this task is no longer maintained. Use the Npm@1 task with GitHub service connections instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Installa i pacchetti npm da GitHub.]]></Val>
+            <Val><![CDATA[Deprecata: questa attività non viene più mantenuta. Usare invece l'attività Npm@1 con le connessioni al servizio GitHub.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Install npm packages from GitHub.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download Github Npm Package]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download Github Npm Package]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Scarica pacchetto npm di GitHub]]></Val>
+            <Val><![CDATA[[Deprecata]5D; Scarica pacchetto Npm di GitHub]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download Github Npm Package]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -119,10 +125,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Download GitHub Npm Package]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Download Github Npm Package]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Scarica pacchetto npm di GitHub]]></Val>
+            <Val><![CDATA[[Deprecata]5D; Scarica pacchetto Npm di GitHub]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Download GitHub Npm Package]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
