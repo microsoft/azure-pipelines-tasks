@@ -10,6 +10,6 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^5.0.1-preview.0"
+    "azure-pipelines-task-lib": "^5.0.1-preview.0" 
   }
 }
