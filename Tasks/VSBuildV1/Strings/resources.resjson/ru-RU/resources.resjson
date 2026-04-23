@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
   "loc.input.help.restoreNugetPackages": "Этот параметр является нерекомендуемым. Чтобы восстановить пакеты NuGet, добавьте задачу [установщика средств NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) перед сборкой.",
   "loc.input.label.msbuildArchitecture": "Архитектура MSBuild",
-  "loc.input.help.msbuildArchitecture": "При необходимости укажите архитектуру используемого средства MSBuild (x86, x64).",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64, arm64) of MSBuild to run.",
   "loc.input.label.logProjectEvents": "Записать сведения о проекте",
   "loc.input.help.logProjectEvents": "Запись данных о хронологии для каждого проекта (необязательно).",
   "loc.input.label.createLogFile": "Создать файл журнала",
