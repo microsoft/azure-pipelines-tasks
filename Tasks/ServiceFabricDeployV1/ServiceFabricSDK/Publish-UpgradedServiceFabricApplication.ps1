@@ -23,7 +23,7 @@ function ConvertTo-ServiceTypeHealthPolicyMap
     $trimmed = $PolicyMapString.Trim()
 
     # Strip the @{ } wrapper
-    if ($trimmed -match '^\s*@\s*\{(?<inner>.*)\}\s*$')
+    if ($trimmed -match '^\s*@\s*\{(?<inner>[\s\S]*)\}\s*$')
     {
         $inner = $Matches['inner'].Trim()
     }
@@ -38,8 +38,8 @@ function ConvertTo-ServiceTypeHealthPolicyMap
         return $result
     }
 
-    # Split entries by semicolons
-    $entries = $inner -split '\s*;\s*'
+    # Split entries by semicolons or newlines
+    $entries = $inner -split '\s*[;\r\n]+\s*'
 
     foreach ($entry in $entries)
     {

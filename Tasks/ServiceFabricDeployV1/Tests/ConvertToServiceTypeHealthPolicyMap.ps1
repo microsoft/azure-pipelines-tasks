@@ -51,6 +51,30 @@ $input9 = '@{ "Svc" = "5, 10, 15" }'
 $result9 = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $input9
 Assert-AreEqual "5, 10, 15" $result9["Svc"] "Spaces around commas should be preserved"
 
+# Test 9a: Newline-separated entries (multi-line YAML input)
+$input9a = "@{`n`"ServiceType1`" = `"5,10,15`"`n`"ServiceType2`" = `"1,2,3`"`n}"
+$result9a = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $input9a
+Assert-AreEqual "5,10,15" $result9a["ServiceType1"] "Newline-separated key1 failed"
+Assert-AreEqual "1,2,3" $result9a["ServiceType2"] "Newline-separated key2 failed"
+
+# Test 9b: Newline-separated with indentation (YAML | block style)
+$input9b = "@{`n  `"WebFrontEnd`" = `"5,10,15`"`n  `"BackEnd`" = `"0,5,10`"`n}"
+$result9b = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $input9b
+Assert-AreEqual "5,10,15" $result9b["WebFrontEnd"] "YAML block key1 failed"
+Assert-AreEqual "0,5,10" $result9b["BackEnd"] "YAML block key2 failed"
+
+# Test 9c: Mixed semicolons and newlines
+$input9c = "@{`n`"Svc1`" = `"1,2,3`"; `"Svc2`" = `"4,5,6`"`n`"Svc3`" = `"7,8,9`"`n}"
+$result9c = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $input9c
+Assert-AreEqual "1,2,3" $result9c["Svc1"] "Mixed separators key1 failed"
+Assert-AreEqual "4,5,6" $result9c["Svc2"] "Mixed separators key2 failed"
+Assert-AreEqual "7,8,9" $result9c["Svc3"] "Mixed separators key3 failed"
+
+# Test 9d: Unquoted integer values (bare-word value)
+$input9d = '@{ "Svc" = 5,10,15 }'
+$result9d = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $input9d
+Assert-AreEqual "5,10,15" $result9d["Svc"] "Unquoted integer value parsing failed"
+
 # Test 10: Command injection attempt should throw
 Assert-Throws {
     ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString '@{}; Write-Host "RCE: $(whoami)"; $token = $env:SYSTEM_ACCESSTOKEN'
