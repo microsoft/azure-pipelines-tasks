@@ -15,3 +15,4 @@ export const proxyUserName = 'agent.proxyusername';
 export const proxyPassword = 'agent.proxypassword';
 export const proxyByPassHosts = 'agent.proxybypasslist';
 export const failTaskOnFailureToPublishResults = 'failTaskOnFailureToPublishResults';
+export const allowPtrToDetectTestRunRetryFiles = 'allowPtrToDetectTestRunRetryFiles';

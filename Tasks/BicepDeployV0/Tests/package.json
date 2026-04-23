@@ -1,0 +1,27 @@
+{
+  "name": "bicepdeploy",
+  "description": "Azure Pipelines Bicep Deploy V0 Task Tests",
+  "main": "L0.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.10.1",
+    "@types/sinon": "^17.0.4",
+    "mocha": "^10.0.0",
+    "mockery": "^2.1.0",
+    "rewiremock": "^3.14.6",
+    "sinon": "^19.0.5"
+  }
+}

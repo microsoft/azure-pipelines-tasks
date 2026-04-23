@@ -17,10 +17,12 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 268,
-    "Patch": 0
+    "Minor": 273,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "deprecationMessage": "The DownloadGitHubNugetPackage@1 (Download GitHub NuGet Packages) task has been deprecated and will soon be retired. Use the NuGetCommand@2 or DotNetCoreCLI@2 task instead.",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
