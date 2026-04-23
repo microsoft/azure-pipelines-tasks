@@ -100,5 +100,9 @@
   "loc.messages.VersionNumberHasTheWrongFormat": "Номер версии: %s имеет неправильный формат. Версии могут быть указаны в следующих форматах: 2.x => установить последнюю основную версию. 2.2.x => установить последнюю основную и дополнительную версию. 2.2.104 => установить точную версию. Найдите значение \"version\" для установки SDK/Runtime из releases.json. Ссылку на releases.json этой основной и дополнительной версии можно найти в [**файле releases-index.**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json). Например, ссылка на releases.json для версии 2.2 — https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
   "loc.messages.OnlyExplicitVersionAllowed": "Принимаются только явные версии, например: 2.2.301. Недопустимая версия: %s.",
   "loc.messages.SupportPhaseNotPresentInChannel": "этап поддержки отсутствует в канале с версией %s.",
-  "loc.messages.DepricatedVersionNetCore": "Указанная вами версия NET Core %s не поддерживается и скоро будет удалена из размещенных агентов. Дополнительные сведения о политике поддержки .NET см. по адресу https://aka.ms/dotnet-core-support."
+  "loc.messages.DepricatedVersionNetCore": "Указанная вами версия NET Core %s не поддерживается и скоро будет удалена из размещенных агентов. Дополнительные сведения о политике поддержки .NET см. по адресу https://aka.ms/dotnet-core-support.",
+  "loc.messages.ApplyingRollForwardPolicy": "Применение политики rollForward \"%s\" к версии \"%s\", разрешенная спецификация версии: \"%s\"",
+  "loc.messages.InvalidRollForwardPolicy": "Недопустимая политика rollForward \"%s\" в файле global.json по пути: \"%s\". Поддерживаемые значения: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Политика rollForward будет проигнорирована.",
+  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
 }

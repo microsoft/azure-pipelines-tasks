@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.CorrelationIdForARM": "Korrelations-ID aus ARM-API-Aufrufantwort: %s",
   "loc.messages.JavaNotPreinstalled": "Java %s ist für diesen Agent nicht vorinstalliert.",
+  "loc.messages.JavaHomeArm64NotFound": "„%s“ ist nicht definiert. Suche nach aarch64-Variante.",
+  "loc.messages.JavaHomeResolvedFrom": "Java-Startverzeichnis aufgelöst von %s: %s",
   "loc.messages.UsePreinstalledJava": "Vorinstalliertes JDK aus \"%s\" verwenden",
   "loc.messages.WrongArchiveStructure": "Die JDK-Datei ist ungültig. Stellen Sie sicher, dass die JDK-Datei nur einen Stammordner mit \"bin\" enthält.",
   "loc.messages.WrongArchiveFile": "Die Archivdatei ist falsch. Es ist kein Ordner vorhanden, der JDK enthält.",

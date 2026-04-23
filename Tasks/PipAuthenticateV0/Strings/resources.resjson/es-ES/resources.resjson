@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "Seleccionar las fuentes para autenticar presentes en esta organización",
   "loc.input.label.externalSources": "Fuentes de organizaciones externas",
   "loc.input.help.externalSources": "Seleccione los puntos de conexión para autenticarse fuera de esta organización.",
+  "loc.messages.TaskDeprecationNotice": "La tarea PipAuthenticateV0 está programada para desuso en junio de 2026. Cambie al uso de PipAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Agregando información de autenticación para las fuentes internas %s.",
   "loc.messages.Info_AddingExternalFeeds": "Agregando información de autenticación para el punto de conexión externo %s.",
   "loc.messages.Info_SuccessAddingAuth": "La autenticación para las fuentes internas %s y el punto de conexión externo %s se ha agregado correctamente.",

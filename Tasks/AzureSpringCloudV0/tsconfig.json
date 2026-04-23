@@ -4,6 +4,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "lib": ["esnext.asynciterable"],
+        "skipLibCheck": true
     },
     "exclude": ["node_modules", "**/*.d.ts"]
 }

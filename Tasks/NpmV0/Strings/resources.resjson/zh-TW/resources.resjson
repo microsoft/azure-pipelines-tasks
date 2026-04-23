@@ -8,6 +8,7 @@
   "loc.input.label.command": "npm 命令",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞給 npm 的其他引數。",
+  "loc.messages.TaskDeprecationNotice": "NpmV0 工作已排定於 2026 年 6 月停用。請切換為使用 NpmAuthenticate 和指令碼工作，或 NpmV1。",
   "loc.messages.InvalidCommand": "npm 只應使用一個命令。如需其他引數，請使用 [引數] 輸入。",
   "loc.messages.NpmReturnCode": "npm 已結束，傳回碼為: %d",
   "loc.messages.NpmFailed": "npm 失敗，發生錯誤: %s",

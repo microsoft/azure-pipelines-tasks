@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
   "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s",
   "loc.messages.JavaNotPreinstalled": "Java %s no está preinstalado en este agente.",
+  "loc.messages.JavaHomeArm64NotFound": "%s no está definido. Buscando la variante aarch64.",
+  "loc.messages.JavaHomeResolvedFrom": "Se resolvió la página principal de Java de %s: %s",
   "loc.messages.UsePreinstalledJava": "Usar JDK preinstalado desde %s",
   "loc.messages.WrongArchiveStructure": "El archivo JDK no es válido. Compruebe si dicho archivo contiene solo una carpeta raíz con \"bin\" incluido.",
   "loc.messages.WrongArchiveFile": "El archivo de almacenamiento es incorrecto. No hay ninguna carpeta que contenga JDK",

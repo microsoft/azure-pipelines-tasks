@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK-Pfad",
   "loc.input.help.jdkUserInputPath": "Legt JAVA_HOME auf den angegebenen Pfad fest.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
-  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64, arm64).",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 und JDK 10 werden nicht unterstützt. Wechseln Sie in Ihrem Projekt und Ihrer Pipeline zu einer neueren Version. Es wird versucht, die Erstellung mit JDK 11 durchzuführen...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Die angegebene JDK-Version wurde nicht gefunden. Stellen Sie sicher, dass die angegebene JDK-Version auf dem Agent installiert und die Umgebungsvariable \"%s\" vorhanden und auf den Speicherort eines entsprechenden JDK festgelegt ist. Sie können auch die Aufgabe [Installer für Java-Tools](https://go.microsoft.com/fwlink/?linkid=875287) verwenden, um das gewünschte JDK zu installieren.",

@@ -35,6 +35,7 @@ process.env['SYSTEM_HOSTTYPE'] = 'build';
 process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 
 process.env['AZP_AZURECLIV2_SETUP_PROXY_ENV'] = 'false';
+process.env['DISTRIBUTEDTASK_TASKS_AZURECLIV3ENABLEWHLFALLBACK'] = 'true';
 process.env['ShowWarningOnOlderAzureModules'] = 'false';
 process.env['UseAzVersion'] = 'false';
 
@@ -63,6 +64,10 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "az extension add -n azure-devops -y": {
             "code": 1,
             "stdout": "Failed to install extension: permission denied"
+        },
+        "az extension add --source \"/mock/path/azure_devops-1.0.2-py2.py3-none-any.whl\" -y": {
+            "code": 1,
+            "stdout": "Failed to install extension from wheel"
         },
         "bash*": {
             "code": 0,
@@ -93,6 +98,13 @@ tmr.registerMock('azure-devops-node-api', {
 
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
+});
+
+tmr.registerMock('azure-pipelines-tool-lib', {
+    downloadToolWithRetries: function(url: string, fileName: string) {
+        console.log('Mock downloadToolWithRetries called');
+        return Promise.resolve('/mock/path/' + fileName);
+    }
 });
 
 tmr.registerMock('./src/Utility', {

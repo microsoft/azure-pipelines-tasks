@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure CLI",
+  "loc.friendlyName": "[Не рекомендуется] Azure CLI",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](http://go.microsoft.com/fwlink/?LinkID=827160) или [документацию по Azure CLI](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Выполнение команд Azure CLI для подписки Azure в скрипте оболочки при использовании агента Linux или пакетном скрипте при использовании агента Windows.",
-  "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.description": "Не рекомендуется: эта задача больше не поддерживается. Используйте задачу AzureCLI@2.",
+  "loc.instanceNameFormat": "[Не рекомендуется] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Новые возможности в версии 1.0:\n- поддержка нового Azure CLI 2.0 на основе Python;\n- поддержка кроссплатформенных агентов (Linux, macOS или Windows);\n- для работы с Azure CLI 1.0 (на основе Node.js) вернитесь к версии задачи 0.0.\n- Ограничения:\n- классические подписки Azure не поддерживаются. Azure CLI 2.0 поддерживает только подписки Azure Resource Manager (ARM).",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.connectedServiceNameARM": "Подписка Azure",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Задание переменной среды AZURE_CONFIG_DIR: %s",
   "loc.messages.SettingAzureCloud": "Задание активного облака: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы по адресу %s. Подробнее о преобразовании в подключения служб без секретов см. по ссылке https://aka.ms/azdo-rm-workload-identity-conversion."
 }

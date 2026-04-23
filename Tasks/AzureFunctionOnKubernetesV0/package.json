@@ -24,10 +24,10 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
-    "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-docker-common": "^2.242.0",
-    "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
-    "js-yaml": "3.13.1"
+    "azure-pipelines-task-lib": "^5.2.8",
+    "azure-pipelines-tasks-docker-common": "^2.273.0",
+    "azure-pipelines-tasks-kubernetes-common": "^2.272.0",
+    "js-yaml": "3.14.2"
   },
   "overrides": {
     "form-data": "^4.0.4"
