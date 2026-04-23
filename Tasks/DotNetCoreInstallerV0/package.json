@@ -30,7 +30,7 @@
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tool-lib": "^2.0.10",
-    "typed-rest-client": "1.8.9"
+    "typed-rest-client": "2.3.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
