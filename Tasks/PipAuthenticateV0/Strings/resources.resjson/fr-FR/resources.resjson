@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "Sélectionner les flux d'authentification dans cette organisation",
   "loc.input.label.externalSources": "Flux d'organisations externes",
   "loc.input.help.externalSources": "Sélectionnez des points de terminaison pour permettre l'authentification en dehors de cette organisation.",
+  "loc.messages.TaskDeprecationNotice": "La tâche PipAuthenticateV0 est prévue pour être supprimée en juin 2026. Veuillez passer à l’utilisation de PipAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Ajout d'informations d'authentification pour le ou les flux internes %s.",
   "loc.messages.Info_AddingExternalFeeds": "Ajout d'informations d'authentification pour le point de terminaison externe %s.",
   "loc.messages.Info_SuccessAddingAuth": "Ajout réussi de l'authentification pour les flux internes %s et le point de terminaison externe %s.",

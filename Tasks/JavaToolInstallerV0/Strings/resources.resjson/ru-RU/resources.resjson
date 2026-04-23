@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
   "loc.messages.CorrelationIdForARM": "Идентификатор корреляции из ответа на вызов API ARM: %s",
   "loc.messages.JavaNotPreinstalled": "ПО Java %s не предустановлено на этом агенте.",
+  "loc.messages.JavaHomeArm64NotFound": "%s не определено. Выполняется поиск варианта aarch64.",
+  "loc.messages.JavaHomeResolvedFrom": "Разрешена корневая папка Java из %s: %s",
   "loc.messages.UsePreinstalledJava": "Использовать предварительно установленное ПО JDK из %s.",
   "loc.messages.WrongArchiveStructure": "Недопустимый файл JDK. Убедитесь, что файл JDK содержит только одну корневую папку с \"bin\".",
   "loc.messages.WrongArchiveFile": "Неверный файл архива. Папки, содержащей JDK, не существует",
