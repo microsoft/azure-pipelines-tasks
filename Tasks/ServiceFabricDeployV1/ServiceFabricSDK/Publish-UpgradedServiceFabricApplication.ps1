@@ -406,7 +406,15 @@ function Publish-UpgradedServiceFabricApplication
                 }
                 else
                 {
-                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
+                    try
+                    {
+                        $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
+                    }
+                    catch
+                    {
+                        Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorMessage $_.Exception.Message
+                        throw
+                    }
                 }
             }
 
