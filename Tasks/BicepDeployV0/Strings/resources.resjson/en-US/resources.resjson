@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Bicep Deploy (Test)",
+  "loc.friendlyName": "Bicep Deploy",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/bicepdeploytaskreadme)",
   "loc.description": "Deploy and Manage Azure Resources using Bicep Files",
   "loc.instanceNameFormat": "Bicep $(operation) $(name)",
