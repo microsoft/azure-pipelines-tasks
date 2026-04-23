@@ -63,7 +63,7 @@ export class globalJsonFetcher {
         return Array.from(new Set(versionInformation)); // this remove all not unique values.
     }
 
-    private getGlobalJsonVersions(): Array<GlobalJsonVersion | null> {
+    public getGlobalJsonVersions(): Array<GlobalJsonVersion | null> {
         let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
             throw tl.loc("FailedToFindGlobalJson", this.workingDirectory);

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 273,
+    "Minor": 274,
     "Patch": 0
   },
   "satisfies": [
@@ -221,6 +221,7 @@
     "ApplyingRollForwardPolicy": "ms-resource:loc.messages.ApplyingRollForwardPolicy",
     "InvalidRollForwardPolicy": "ms-resource:loc.messages.InvalidRollForwardPolicy",
     "ResolvedVersionFromGlobalJson": "ms-resource:loc.messages.ResolvedVersionFromGlobalJson",
-    "InstallingFromGlobalJson": "ms-resource:loc.messages.InstallingFromGlobalJson"
+    "InstallingFromGlobalJson": "ms-resource:loc.messages.InstallingFromGlobalJson",
+    "VersionSatisfiedByInstalledVersion": "ms-resource:loc.messages.VersionSatisfiedByInstalledVersion"
   }
 }
