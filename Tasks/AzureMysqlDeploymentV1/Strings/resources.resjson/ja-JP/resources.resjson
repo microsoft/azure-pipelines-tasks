@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Azure Database for MySQL のデプロイ",
+  "loc.friendlyName": "[Deprecated] Azure MySQL deploy",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "スクリプトを実行し、Azure Database for MySQL に変更を加えます",
-  "loc.instanceNameFormat": "Azure MySQL を実行します : $(TaskNameSelector)",
+  "loc.description": "Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.",
+  "loc.instanceNameFormat": "[Deprecated] Execute Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB の詳細",
   "loc.group.displayName.taskDetails": "配置パッケージ",
   "loc.group.displayName.firewall": "ファイアウォール",

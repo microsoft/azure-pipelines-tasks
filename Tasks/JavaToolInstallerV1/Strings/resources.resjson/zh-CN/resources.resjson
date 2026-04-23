@@ -57,6 +57,8 @@
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
   "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s",
   "loc.messages.JavaNotPreinstalled": "在此代理上未预安装 Java %s",
+  "loc.messages.JavaHomeArm64NotFound": "未定义 %s。正在搜索 aarch64 变体。",
+  "loc.messages.JavaHomeResolvedFrom": "从 %s 解析的 Java 主目录: %s",
   "loc.messages.UsePreinstalledJava": "使用 %s 中的预安装 JDK",
   "loc.messages.WrongArchiveStructure": "JDK 文件无效。验证 JDK 文件中是否只有一个根文件夹，其中包含 'bin' 文件夹。",
   "loc.messages.WrongArchiveFile": "存档文件错误。没有任何包含 JDK 的文件夹",

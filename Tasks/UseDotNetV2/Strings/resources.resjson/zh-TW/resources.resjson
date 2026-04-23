@@ -100,5 +100,9 @@
   "loc.messages.VersionNumberHasTheWrongFormat": "版本號碼: %s 格式不正確。版本可使用以下格式: 2.x => 安裝主要版本的最新版本。2.2.x => 安裝主要及次要版本的最新版本。2.2.104 => 安裝指定版本。請從 releases.json 中查找用於安裝 SDK/執行階段的 `version` 值。該 major.minor 版本的 releases.json 連結可在 [**releases-index 檔案。**](https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json) 找到。例如，2.2 版本的 releases.json 連結為 https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
   "loc.messages.OnlyExplicitVersionAllowed": "僅接受明確的版本，例如: 2.2.301。版本 %s 無效。",
   "loc.messages.SupportPhaseNotPresentInChannel": "channel-version 為 %s 的通道中沒有 support-phase。",
-  "loc.messages.DepricatedVersionNetCore": "您指定的 NET Core 版本 %s 不受支援，即將從代管代理程式中移除。如需 .NET 支援原則的詳細資訊，請參閱 https://aka.ms/dotnet-core-support。"
+  "loc.messages.DepricatedVersionNetCore": "您指定的 NET Core 版本 %s 不受支援，即將從代管代理程式中移除。如需 .NET 支援原則的詳細資訊，請參閱 https://aka.ms/dotnet-core-support。",
+  "loc.messages.ApplyingRollForwardPolicy": "正在將 rollForward 原則 '%s' 套用至版本 '%s'，解析後的版本規格為: '%s'",
+  "loc.messages.InvalidRollForwardPolicy": "global.json 中的 rollForward 原則 '%s' 無效，路徑為: '%s'。支援的值包括: disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor。將忽略此 rollForward 原則。",
+  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
 }
