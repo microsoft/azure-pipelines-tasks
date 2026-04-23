@@ -582,6 +582,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InstallingFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Installing .NET Core SDK version %s resolved from global.json]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在安裝從 global.json 解析出的 .NET Core SDK 版本 %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InstallingNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing NuGet version %s]]></Val>
@@ -731,6 +740,15 @@
           <Val><![CDATA[Finding channel %s for version %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[正在尋找以下版本的通道 %s: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ResolvedVersionFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已從 global.json 解析出 SDK 版本 '%s' (原始版本: '%s'，rollForward: '%s')]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

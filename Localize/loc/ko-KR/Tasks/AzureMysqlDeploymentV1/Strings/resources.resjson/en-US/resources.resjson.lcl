@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run your scripts and make changes to your Azure Database for MySQL]]></Val>
+          <Val><![CDATA[Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[스크립트를 실행하고 Azure Database for MySQL을 변경합니다.]]></Val>
+            <Val><![CDATA[사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 AzureMysqlDeployment@2 작업을 사용합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run your scripts and make changes to your Azure Database for MySQL]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Database for MySQL deployment]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure MySQL deploy]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Database for MySQL 배포]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; Azure MySQL 배포]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Database for MySQL deployment]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -299,10 +305,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Execute Azure MySQL : $(TaskNameSelector)]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Execute Azure MySQL : $(TaskNameSelector)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure MySQL 실행: $(TaskNameSelector)]]></Val>
+            <Val><![CDATA[[사용되지 않음]5D; Azure MySQL 실행 : $(TaskNameSelector)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Execute Azure MySQL : $(TaskNameSelector)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

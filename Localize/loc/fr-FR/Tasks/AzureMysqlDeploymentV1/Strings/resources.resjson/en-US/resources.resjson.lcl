@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Run your scripts and make changes to your Azure Database for MySQL]]></Val>
+          <Val><![CDATA[Deprecated: This task is no longer maintained. Use the AzureMysqlDeployment@2 task instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Exécuter des scripts et apporter des changements au service Azure Database pour MySQL]]></Val>
+            <Val><![CDATA[Déconseillé : cette tâche n’est plus mise à jour. Utilisez plutôt la tâche AzureMysqlDeployment@2.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Run your scripts and make changes to your Azure Database for MySQL]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Database for MySQL deployment]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Azure MySQL deploy]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Déploiement d'Azure Database pour MySQL]]></Val>
+            <Val><![CDATA[[Déconseillé]5D; Déploiement Azure MySQL]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Database for MySQL deployment]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -299,10 +305,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Execute Azure MySQL : $(TaskNameSelector)]]></Val>
+          <Val><![CDATA[[Deprecated]5D; Execute Azure MySQL : $(TaskNameSelector)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Exécuter Azure MySQL : $(TaskNameSelector)]]></Val>
+            <Val><![CDATA[[Déconseillé]5D; Exécuter Azure MySQL : $(TaskNameSelector)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Execute Azure MySQL : $(TaskNameSelector)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

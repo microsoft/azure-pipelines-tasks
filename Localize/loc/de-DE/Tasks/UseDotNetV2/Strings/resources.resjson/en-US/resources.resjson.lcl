@@ -582,6 +582,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InstallingFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Installing .NET Core SDK version %s resolved from global.json]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Installieren .NET Core SDK Version %s, die von global.json aufgelöst wurde]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InstallingNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing NuGet version %s]]></Val>
@@ -731,6 +740,15 @@
           <Val><![CDATA[Finding channel %s for version %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Der Kanal "%s" für Version %s wird gesucht.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ResolvedVersionFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die SDK-Version „%s“ wurde aus global.json aufgelöst (Originalversion: „%s“, rollForward: „%s“)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -582,6 +582,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InstallingFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Installing .NET Core SDK version %s resolved from global.json]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[global.json から解決された .NET Core SDKバージョン %s をインストールしています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InstallingNuGetVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installing NuGet version %s]]></Val>
@@ -731,6 +740,15 @@
           <Val><![CDATA[Finding channel %s for version %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[バージョン %s のチャネル %s を検索しています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ResolvedVersionFromGlobalJson" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[global.json から SDK バージョン '%s' が解決されました (元のバージョン: '%s'、rollForward: '%s')]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
