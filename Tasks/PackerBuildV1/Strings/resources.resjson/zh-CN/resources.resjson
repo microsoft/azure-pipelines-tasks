@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "指定用于部署包的 powershell 脚本(对于 Windows)或 shell 脚本(对于 Linux)的相对路径。此脚本应包含在上面选择的包路径中。支持 minimatch 模式。示例路径: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "部署脚本参数",
   "loc.input.help.deployScriptArguments": "指定要传递给部署脚本的参数。",
+  "loc.input.label.canDeleteTempFolder": "删除临时文件夹",
+  "loc.input.help.canDeleteTempFolder": "此选项允许你删除临时文件夹",
   "loc.input.label.additionalBuilderParameters": "更多生成器参数",
   "loc.input.help.additionalBuilderParameters": "在自动生成的 Packer 模板模式下，任务将通过 Azure 生成器创建 Packer 模板。此生成器用于生成计算机映像。可将密钥添加到 Azure 生成器，以自定义生成的 Packer 模板。例如，如果使用 CentOS 基本映像且需要拥有 tty 来运行 sudo，则设置 ssh_tty=true。<br/>若要查看/编辑网格中的其他参数，请单击文本框旁边的“…”。",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "在取消预配过程中跳过临时文件清理",

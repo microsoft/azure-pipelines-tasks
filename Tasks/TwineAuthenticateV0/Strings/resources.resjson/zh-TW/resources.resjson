@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "選取此組織外要驗證的端點。請確定端點具有套件上傳權限。",
   "loc.input.label.publishPackageMetadata": "發佈管線中繼資料",
   "loc.input.help.publishPackageMetadata": "在上傳至我的摘要時，將此建置/發行管線的中繼資料 (執行數，原始程式碼資訊) 與套件建立關聯。",
+  "loc.messages.TaskDeprecationNotice": "TwineAuthenticateV0 工作排定在 2026 年 6 月棄用。請切換到使用 TwineAuthenticateV1。",
   "loc.messages.Info_AddingInternalFeeds": "正在新增 %s 個內部摘要的驗證資訊。",
   "loc.messages.Info_AddingExternalFeeds": "正在新增 %s 外部端點的驗證資訊。",
   "loc.messages.Info_AddingAuthForRegistry": "正在新增登錄 %s 的組態驗證",

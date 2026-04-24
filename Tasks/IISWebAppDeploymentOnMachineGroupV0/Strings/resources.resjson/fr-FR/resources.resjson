@@ -22,7 +22,7 @@
   "loc.input.label.AdditionalArguments": "Arguments supplémentaires",
   "loc.input.help.AdditionalArguments": "Arguments Web Deploy supplémentaires appliqués au moment du déploiement de l'application web Azure, par exemple -disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.XmlTransformation": "Transformation XML",
-  "loc.input.help.XmlTransformation": "Les transformations de configuration sont exécutées pour '*Release.config' et '*.<nom_environnement>.config' sur le fichier '*.config'.<br/> Elles sont exécutées avant la substitution de variable.<br/>Les transformations XML sont prises en charge uniquement pour la plateforme Windows.",
+  "loc.input.help.XmlTransformation": "Les transformations de configuration seront exécutées pour `*.Release.config` et `*.<EnvironmentName>.config` sur le fichier `*.config`.<br/> Les transformations de configuration sont exécutées avant la substitution de variable.<br/>Les transformations XML sont prises en charge uniquement pour la plateforme Windows.",
   "loc.input.label.XmlVariableSubstitution": "Substitution de variable XML",
   "loc.input.help.XmlVariableSubstitution": "Les variables définies dans le pipeline de build ou de mise en production sont mappées aux entrées 'key' ou 'name' dans les sections appSettings, connectionStrings et applicationSettings d'un fichier config et d'un fichier parameters.xml. La substitution de variable est exécutée après les transformations de configuration. <br/><br/> Remarque : Si les mêmes variables sont définies dans le pipeline de mise en production et dans l'environnement, les variables d'environnement remplacent les variables de pipeline de mise en production.<br/>",
   "loc.input.label.JSONFiles": "Substitution de variable JSON",

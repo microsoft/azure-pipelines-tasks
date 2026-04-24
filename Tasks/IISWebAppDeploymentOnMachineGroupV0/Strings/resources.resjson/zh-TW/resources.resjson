@@ -22,7 +22,7 @@
   "loc.input.label.AdditionalArguments": "其他引數",
   "loc.input.help.AdditionalArguments": "部署 -disableLink:AppPoolExtension -disableLink:ContentExtension 這類 AzureRM Web 應用程式時，會再套用其他 Web Deploy 引數。",
   "loc.input.label.XmlTransformation": "XML 轉換",
-  "loc.input.help.XmlTransformation": "將為 `*.config file` 上 `*.Release.config` 及 `*.<環境名稱>.config` 執行的組態轉換。<br/>將會在變數替代前執行組態轉換。<br/>只有在 Windows 平台上才支援 XML 轉換。",
+  "loc.input.help.XmlTransformation": "將為 `*.config file` 上的 `*.Release.config` 和 `*.<EnvironmentName>.config` 執行設定轉換。<br/>會在變數替代前執行設定轉換。<br/>只有 Windows 平台支援 XML 轉換。",
   "loc.input.label.XmlVariableSubstitution": "XML 變數替代",
   "loc.input.help.XmlVariableSubstitution": "組建或發行管線中定義的變數，會與組態檔及 parameters.xml 中 appSettings、applicationSettings 及 connectionStrings 的 'key' 或 'name' 項目進行比對。變數替代會在組態轉換後執行。<br/> <br/> 注意: 若發行管線與環境所定義的變數相同，則環境變數會取代發行管線變數。<br/>",
   "loc.input.label.JSONFiles": "JSON 變數替代",

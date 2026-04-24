@@ -7,7 +7,7 @@
   "loc.input.label.function": "Azure 函数 URL",
   "loc.input.help.function": "需要调用的 Azure 函数的 URL。示例:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "功能键",
-  "loc.input.help.key": "用于访问此函数的功能键或主机键。为了确保键安全，请定义机密变量，并在此处使用。示例: - $(myFunctionKey)，其中 myFunctionKey 是机密管道变量，具有机密密钥值，如 \"ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==\"",
+  "loc.input.help.key": "用于访问此函数的函数密钥或主机密钥。为了保证密钥安全，请创建变量组，添加机密变量，并在此处使用。确保在“控制选项”部分链接该变量组。示例: $(myFunctionKey)，其中 myFunctionKey 是包含密钥的机密变量，例如 `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "选择调用该函数须使用的 HTTP 方法。",
   "loc.input.label.headers": "标题",
