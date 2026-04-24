@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 273,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Bicep $(operation) $(name)",
@@ -395,7 +395,12 @@
     "InvalidChangeType": "Invalid change type: %s",
     "UnknownPropertyChangeType": "Unknown property change type: %s.",
     "InvalidJsonValue": "Invalid JSON value: %s",
-    "FailedToLogout": "The following error occurred while logging out: %s"
+    "FailedToLogout": "The following error occurred while logging out: %s",
+    "SettingAzureCloud": "Setting active cloud to: %s",
+    "LoginFailed": "Azure login failed",
+    "MSILoginFailed": "Azure login failed using Managed Service Identity",
+    "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+    "ErrorInSettingUpSubscription": "Error in setting up subscription"
   },
   "execution": {
     "Node24": {
