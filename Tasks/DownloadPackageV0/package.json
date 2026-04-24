@@ -29,5 +29,10 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "mocha": {
+      "minimatch": "^5.1.8"
+    }
   }
 }
