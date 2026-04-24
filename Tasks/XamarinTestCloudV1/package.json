@@ -26,5 +26,6 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
-  }
+  },
+  "overrides": {}
 }

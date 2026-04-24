@@ -34,6 +34,7 @@
   },
   "overrides": {
     "serialize-javascript": "^7.0.4",
-    "picomatch": "^2.3.2"
+    "picomatch": "^2.3.2",
+    "minimatch": "^3.1.4"
   }
 }
