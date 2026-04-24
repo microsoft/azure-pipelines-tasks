@@ -1,6 +1,8 @@
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
+import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
@@ -9,6 +11,14 @@ describe('AzureCLIV3 Suite', function () {
     });
 
     after(() => {
+    });
+
+    describe('Script args sanitizer (AZP_75787_*)', () => {
+        runValidateScriptArgsTests();
+    });
+
+    describe('Args validation feature flag (EnableAzureCliArgsValidation)', () => {
+        runTryValidateScriptArgsTests();
     });
 
     it('Should handle Azure DevOps connection with Workload Identity Federation', function (done) {
@@ -25,7 +35,7 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
             assert(tr.stdout.indexOf('Azure DevOps CLI extension installed') >= 0, 'should install Azure DevOps extension');
             assert(tr.stdout.indexOf('organization configured') >= 0, 'should configure organization');
-            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project'); 
+            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project');
             done();
         }).catch((err) => {
             done(err);

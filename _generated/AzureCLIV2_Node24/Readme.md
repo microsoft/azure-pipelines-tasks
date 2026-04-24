@@ -30,7 +30,7 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 
 * **Azure Subscription**\*: Select the Azure Subscription where the Azure CLI commands have to be executed. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
 
-* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows) 
+* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows)
 
 * **Script Location**\*: Select the mode of providing the script. Task supports two modes: one as a Script Path to a linked artifact and another as an inline script, default selection being the "Script Path"
 
@@ -41,6 +41,38 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 * **Script Arguments**: Specify arguments to pass to the script.
 
 * **Working folder**: Specify the working directory in which you want to run the script. If you leave it empty, the working directory is the folder where the script is located.
+
+## Security
+
+### Command injection through `scriptArguments`
+
+Values substituted into the **Script Arguments** input (also exposed as the YAML alias `arguments`) are appended to the shell invocation that runs your script. If a YAML template parameter spliced into `scriptArguments` contains shell metacharacters, those characters are interpreted by the shell.
+
+### Argument sanitization (work item 75787)
+
+To mitigate this class of issue the task can sanitize `scriptArguments` **before** `az login` and **before** the script tool is spawned, using the same sanitizer that the BashV3 and PowerShell tasks use (work item [#75787](https://aka.ms/ado/75787)). Validation is gated by two layers:
+
+#### Outer gate (per-pipeline)
+
+| Pipeline feature | Default | Behavior |
+| --- | --- | --- |
+| `EnableAzureCliArgsValidation` | off | When false, the sanitizer is **not invoked at all**. When true, the sanitizer runs and the `AZP_75787_*` flags below decide its mode. |
+
+#### Inner mode flags (org/agent-wide)
+
+| Feature flag | Default | Behavior |
+| --- | --- | --- |
+| `AZP_75787_ENABLE_NEW_LOGIC` | off | If sanitization removes any character, the task fails with `ScriptArgsSanitized`. |
+| `AZP_75787_ENABLE_NEW_LOGIC_LOG` | off | Audit-only mode. The task emits a warning with `ScriptArgsSanitized` and continues. |
+| `AZP_75787_ENABLE_COLLECT` | off | Telemetry only. No warning, no failure. |
+
+When `EnableAzureCliArgsValidation` is on but all three `AZP_75787_*` flags are off, the sanitizer short-circuits and does nothing.
+
+The sanitizer uses an **allowlist**: only `a-zA-Z0-9 \ _ ' " - = / : . * + %` are accepted. Any other character (e.g. `` ` ``, `$`, `;`, `&`, `|`, `<`, `>`, parentheses, braces, newline) is treated as a violation.
+
+For `scriptType: bash`, the task also expands `$VAR` / `${VAR}` references inside `scriptArguments` *before* sanitization, so a value-injected secret like `VAR=";rm -rf /"` is also caught. Other script types (`pscore`, `ps`, `batch`) sanitize the literal `scriptArguments` as written.
+
+`inlineScript` is *not* validated — inline scripts are arbitrary code that the pipeline author intentionally wrote. `scriptPath` and `cwd` are also not validated; they are path inputs, not shell-spliced.
 
 * **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
 
