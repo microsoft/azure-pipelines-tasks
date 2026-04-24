@@ -2,6 +2,7 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
+import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
@@ -14,6 +15,10 @@ describe('AzureCLIV3 Suite', function () {
 
     describe('Script args sanitizer (AZP_75787_*)', () => {
         runValidateScriptArgsTests();
+    });
+
+    describe('Args validation feature flag (EnableAzureCliArgsValidation)', () => {
+        runTryValidateScriptArgsTests();
     });
 
     it('Should handle Azure DevOps connection with Workload Identity Federation', function (done) {

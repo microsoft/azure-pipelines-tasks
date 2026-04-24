@@ -18,6 +18,36 @@ export class ArgsSanitizingError extends Error {
     }
 }
 
+// Outer gate (`EnableAzureCliArgsValidation`, default OFF) decides whether the
+// sanitizer runs at all. ArgsSanitizingError signals an intentional block and
+// is rethrown; any other unexpected exception is reported as
+// `ArgsValidationFailure` telemetry and swallowed so a sanitizer bug never
+// breaks an otherwise valid pipeline run.
+export function tryValidateScriptArgs(
+    inputArguments: string,
+    scriptType: string,
+    validator: (args: string, type: string) => void = validateScriptArgs
+): void {
+    if (!tl.getPipelineFeature('EnableAzureCliArgsValidation')) {
+        return;
+    }
+    try {
+        validator(inputArguments, scriptType);
+    } catch (err) {
+        const e = err as { name?: string; message?: string };
+        tl.debug(`validateScriptArgs threw an unexpected error: ${e?.message ?? err}`);
+        try {
+            emitTelemetry('TaskHub', 'AzureCLIV3', {
+                event: 'ArgsValidationFailure',
+                errorName: e?.name ?? 'Unknown',
+                errorMessage: e?.message ?? String(err)
+            });
+        } catch (telemetryErr) {
+            tl.debug(`Failed to emit ArgsValidationFailure telemetry: ${telemetryErr}`);
+        }
+    }
+}
+
 type BashEnvTelemetry = {
     foundPrefixes: number,
     quottedBlocks: number,
