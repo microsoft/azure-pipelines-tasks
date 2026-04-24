@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 271,
-    "Patch": 1
+    "Minor": 273,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -50,6 +50,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nodejsMirror",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
     },
     {
       "name": "retryCountOnDownloadFails",
@@ -93,6 +102,7 @@
     "TryRosetta": "ms-resource:loc.messages.TryRosetta",
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
-    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet",
+    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror"
   }
 }
