@@ -25,5 +25,6 @@ $SF_Operations = @{
     RemoveComposeDeployment           = 'RemoveComposeDeployment';
     GetComposeDeploymentUpgradeStatus = 'GetComposeDeploymentUpgradeStatus';
     StartComposeDeploymentUpgrade     = 'StartComposeDeploymentUpgrade';
-    CreateNewComposeDeployment        = 'CreateNewComposeDeployment'
+    CreateNewComposeDeployment        = 'CreateNewComposeDeployment';
+    SfSafeParserFailure               = 'SfSafeParserFailure';
 }
