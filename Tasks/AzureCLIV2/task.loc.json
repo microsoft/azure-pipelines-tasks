@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 273,
+    "Minor": 274,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -227,6 +227,7 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

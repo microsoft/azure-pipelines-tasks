@@ -10,6 +10,7 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { downloadToolWithRetries } from "azure-pipelines-tool-lib";
+import { validateScriptArgs } from "./src/argsSanitizer";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -41,6 +42,7 @@ export class azureclitask {
         }
 
         try{
+            validateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
             var scriptType: ScriptType = ScriptTypeFactory.getScriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
@@ -63,7 +65,7 @@ export class azureclitask {
                     tl.debug("az version failed, falling back to 'az --version'");
                     azVersionResult = tl.execSync("az", "--version");
                 }
-            } 
+            }
             else {
                 // Default case: always run with "--version"
                 azVersionResult = tl.execSync("az", "--version");
@@ -75,7 +77,7 @@ export class azureclitask {
 
             // set az cli config dir
             this.setConfigDirectory();
-            
+
             connectionType = tl.getInput("connectionType", false) || "azureRM";
             var connectedService: string;
             var authorizationScheme: string;
@@ -194,7 +196,7 @@ export class azureclitask {
                     toolExecutionError.errors.forEach((error) => {
                         tl.error(error.message, tl.IssueSource.TaskInternal);
                     });
-                    
+
                     // fail with main message
                     tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
                 } else {
@@ -210,8 +212,14 @@ export class azureclitask {
             }
 
             //Logout of Azure if logged in
+            let cleanupError: string = null;
             if (this.isLoggedIn) {
-                this.logoutAzure();
+                try {
+                    this.logoutAzure();
+                } catch (err) {
+                    cleanupError = (err && err.message) ? err.message : String(err);
+                    tl.debug(`logoutAzure threw during cleanup: ${cleanupError}`);
+                }
             }
 
             // Clean up Azure DevOps CLI configuration if it was set
@@ -224,6 +232,16 @@ export class azureclitask {
                 process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
                 process.env.AZURESUBSCRIPTION_CLIENT_ID = '';
                 process.env.AZURESUBSCRIPTION_TENANT_ID = '';
+            }
+
+            try {
+                emitTelemetry('TaskHub', 'AzureCLIV3', {
+                    event: 'TokenCleanup',
+                    loggedOut: this.isLoggedIn,
+                    cleanupError: cleanupError
+                });
+            } catch (e) {
+                tl.debug(`Failed to emit token-cleanup telemetry: ${e}`);
             }
         }
     }
@@ -238,11 +256,11 @@ export class azureclitask {
 
     private static formatExecError(err: any): string {
         if (!err) return 'Unknown error';
-        
+
         const code = err.code ?? err.exitCode;
         const stderr = typeof err.stderr === 'string' ? err.stderr.trim() : '';
         const stdout = typeof err.stdout === 'string' ? err.stdout.trim() : '';
-        
+
         if (stderr || stdout || code !== undefined) {
             const parts = [];
             if (code !== undefined) parts.push(`code=${code}`);
@@ -250,7 +268,7 @@ export class azureclitask {
             if (stdout) parts.push(`stdout=${stdout}`);
             return parts.join(' | ');
         }
-        
+
         if (err instanceof Error) return err.message;
         return JSON.stringify(err, Object.getOwnPropertyNames(err));
     }
@@ -267,7 +285,7 @@ export class azureclitask {
             }
 
             if (!versionMatch || versionMatch.length < 2) {
-                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
+                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);
                 return false;
             }
 
@@ -295,7 +313,7 @@ export class azureclitask {
     private static isAzureDevOpsExtensionInstalled(): boolean {
         tl.debug("Checking if Azure DevOps extension is installed...");
         try {
-            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", { 
+            const result: IExecSyncResult = tl.execSync("az", "extension show --name azure-devops", {
                 silent: true
             });
             if (result.code === 0) {
@@ -338,7 +356,7 @@ export class azureclitask {
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
         const allowNoSubscriptions: boolean = tl.getBoolInput("allowNoSubscriptions", false);
-        const EMPTY_GUID: string = "00000000-0000-0000-0000-000000000000"; 
+        const EMPTY_GUID: string = "00000000-0000-0000-0000-000000000000";
 
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
             await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
@@ -386,7 +404,7 @@ export class azureclitask {
             }
             else {
                 Utility.throwIfError(tl.execSync("az", "login --identity --output none"), tl.loc("MSILoginFailed"));
-            }            
+            }
         }
         else {
             throw tl.loc('AuthSchemeNotSupportedForAzureRM', authScheme);
@@ -407,7 +425,7 @@ export class azureclitask {
         try {
             var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
             var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
-            
+
             if (authScheme.toLowerCase() == "workloadidentityfederation") {
                 // Install Azure DevOps extension if not already installed
                 const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
@@ -423,7 +441,7 @@ export class azureclitask {
                             const whlUrl = "https://aka.ms/azure-devops-extension-whl";
                             const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
                             const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
-                            
+
                             Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
                             console.log("Azure DevOps CLI extension installed successfully from wheel.");
                         }

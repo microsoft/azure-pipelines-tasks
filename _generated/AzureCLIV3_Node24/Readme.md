@@ -37,7 +37,7 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 
 * **Azure DevOps Service Connection**\*: Select an Azure DevOps service connection. This field is visible when Connection Type is set to 'Azure DevOps'.
 
-* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows) 
+* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows)
 
 * **Script Location**\*: Select the mode of providing the script. Task supports two modes: one as a Script Path to a linked artifact and another as an inline script, default selection being the "Script Path"
 
@@ -48,6 +48,30 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 * **Script Arguments**: Specify arguments to pass to the script.
 
 * **Working folder**: Specify the working directory in which you want to run the script. If you leave it empty, the working directory is the folder where the script is located.
+
+## Security
+
+### Command injection through `scriptArguments`
+
+Values substituted into the **Script Arguments** input (also exposed as the YAML alias `arguments`) are appended to the shell invocation that runs your script. If a YAML template parameter spliced into `scriptArguments` contains shell metacharacters, those characters are interpreted by the shell.
+
+### Argument sanitization (work item 75787)
+
+To mitigate this class of issue the task can sanitize `scriptArguments` **before** `az login` and **before** the script tool is spawned, using the same sanitizer that the BashV3 and PowerShell tasks use (work item [#75787](https://aka.ms/ado/75787)). The behavior is controlled by three pipeline feature flags:
+
+| Feature flag | Default | Behavior |
+| --- | --- | --- |
+| `AZP_75787_ENABLE_NEW_LOGIC` | off | If sanitization removes any character, the task fails with `ScriptArgsSanitized`. |
+| `AZP_75787_ENABLE_NEW_LOGIC_LOG` | off | Audit-only mode. The task emits a warning with `ScriptArgsSanitized` and continues. |
+| `AZP_75787_ENABLE_COLLECT` | off | Telemetry only. No warning, no failure. |
+
+When all three flags are off, no sanitization runs (current default).
+
+The sanitizer uses an **allowlist**: only `a-zA-Z0-9 \ _ ' " - = / : . * + %` are accepted. Any other character (e.g. `` ` ``, `$`, `;`, `&`, `|`, `<`, `>`, parentheses, braces, newline) is treated as a violation.
+
+For `scriptType: bash`, the task also expands `$VAR` / `${VAR}` references inside `scriptArguments` *before* sanitization, so a value-injected secret like `VAR=";rm -rf /"` is also caught. Other script types (`pscore`, `ps`, `batch`) sanitize the literal `scriptArguments` as written.
+
+`inlineScript` is *not* validated — inline scripts are arbitrary code that the pipeline author intentionally wrote. `scriptPath` and `cwd` are also not validated; they are path inputs, not shell-spliced.
 
 * **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
 
@@ -61,12 +85,11 @@ Syntax to access environment variables based on script type.\
 * **ErrorActionPreference**: Select this checkbox if you want the task to fail when any errors are written to the StandardError stream. If you leave it unchecked, standard errors will be ignored and only exit codes will be used to determine the status.
 
 * **Use global Azure CLI configuration**: If this is unchecked, the task will use its own separate Azure CLI configuration directory. This allows Azure CLI tasks to run in parallel during releases.
- 
+
 * **Working Directory**: Current working directory where the script is run. If left blank, this input is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).
- 
+
 * **LASTEXITCODE**: If this input is false, the line if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE } is appended to the end of your script. This will propagate the last exit code from an external command as the exit code of PowerShell. Otherwise, the line is not appended to the end of your script.
- 
+
 * **az login output visibility**: If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output.
- 
+
 * **Keep Azure CLI session active**: When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.
- 

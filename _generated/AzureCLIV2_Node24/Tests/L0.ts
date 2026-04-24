@@ -2,9 +2,14 @@ import assert = require('assert');
 import path = require('path');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
 
 describe('AzureCLIV2 Suite', function () {
     this.timeout(30000);
+
+    describe('Script args sanitizer (AZP_75787_*)', () => {
+        runValidateScriptArgsTests();
+    });
 
     it('LateBoundIdToken: Feature Flag ON, Token Present -> Uses Token, Emits Telemetry', async () => {
         let tp = path.join(__dirname, 'LateBoundIdToken_FeatureFlagOn_TokenPresent.js');

@@ -54,5 +54,6 @@
   "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server",
   "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
   "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }
