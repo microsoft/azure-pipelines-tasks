@@ -57,7 +57,15 @@ Values substituted into the **Script Arguments** input (also exposed as the YAML
 
 ### Argument sanitization (work item 75787)
 
-To mitigate this class of issue the task can sanitize `scriptArguments` **before** `az login` and **before** the script tool is spawned, using the same sanitizer that the BashV3 and PowerShell tasks use (work item [#75787](https://aka.ms/ado/75787)). The behavior is controlled by three pipeline feature flags:
+To mitigate this class of issue the task can sanitize `scriptArguments` **before** `az login` and **before** the script tool is spawned, using the same sanitizer that the BashV3 and PowerShell tasks use (work item [#75787](https://aka.ms/ado/75787)). Validation is gated by two layers:
+
+#### Outer gate (per-pipeline)
+
+| Pipeline feature | Default | Behavior |
+| --- | --- | --- |
+| `EnableAzureCliArgsValidation` | off | When false, the sanitizer is **not invoked at all**. When true, the sanitizer runs and the `AZP_75787_*` flags below decide its mode. |
+
+#### Inner mode flags (org/agent-wide)
 
 | Feature flag | Default | Behavior |
 | --- | --- | --- |
@@ -65,7 +73,7 @@ To mitigate this class of issue the task can sanitize `scriptArguments` **before
 | `AZP_75787_ENABLE_NEW_LOGIC_LOG` | off | Audit-only mode. The task emits a warning with `ScriptArgsSanitized` and continues. |
 | `AZP_75787_ENABLE_COLLECT` | off | Telemetry only. No warning, no failure. |
 
-When all three flags are off, no sanitization runs (current default).
+When `EnableAzureCliArgsValidation` is on but all three `AZP_75787_*` flags are off, the sanitizer short-circuits and does nothing.
 
 The sanitizer uses an **allowlist**: only `a-zA-Z0-9 \ _ ' " - = / : . * + %` are accepted. Any other character (e.g. `` ` ``, `$`, `;`, `&`, `|`, `<`, `>`, parentheses, braces, newline) is treated as a violation.
 

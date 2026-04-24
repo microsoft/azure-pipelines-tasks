@@ -10,7 +10,7 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { downloadToolWithRetries } from "azure-pipelines-tool-lib";
-import { validateScriptArgs } from "./src/argsSanitizer";
+import { tryValidateScriptArgs } from "./src/argsSanitizer";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -42,7 +42,7 @@ export class azureclitask {
         }
 
         try{
-            validateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
+            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
             var scriptType: ScriptType = ScriptTypeFactory.getScriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
