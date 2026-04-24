@@ -629,4 +629,17 @@ describe('DotNetCoreExe Suite', function () {
         assert.strictEqual(tr.errorIssues.length, 0);
     });
 
+    it('test command adds --solution flag for .slnx file in VSTest mode', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithSlnxVSTest.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test --solution c:\\agent\\home\\directory\\solution.slnx'), 'it should have run dotnet test with --solution flag');
+        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
 });
