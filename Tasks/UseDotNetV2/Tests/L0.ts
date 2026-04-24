@@ -580,6 +580,26 @@ describe('UseDotNet', function () {
         }, tr);
     });
 
+    it("[globaljsonfetcher] non-latest rollForward 'patch' should prefer exact version when available.", async () => {
+        process.env["__case__"] = "rollForwardPatchExactFound";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
+        }, tr);
+    });
+
+    it("[globaljsonfetcher] non-latest rollForward 'patch' should fall back to range when exact version is missing.", async () => {
+        process.env["__case__"] = "rollForwardPatchExactMissing";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
+        }, tr);
+    });
+
     it("[VersionUtilities] applyRollForwardPolicy should return correct version specs for all policies", async () => {
         process.env["__case__"] = "returnsCorrectSpecs";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionUtilityApplyRollForwardTests.js"));

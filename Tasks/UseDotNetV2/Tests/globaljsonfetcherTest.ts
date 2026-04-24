@@ -25,6 +25,12 @@ const pathToRollForwardLatestPatchDir = workingDir + "rollforward-latestpatch/";
 const pathToRollForwardLatestPatchGlobalJson = pathToRollForwardLatestPatchDir + "global.json";
 const pathToInvalidRollForwardDir = workingDir + "invalidrollforward/";
 const pathToInvalidRollForwardGlobalJson = pathToInvalidRollForwardDir + "global.json";
+const pathToRollForwardPatchDir = workingDir + "rollforward-patch/";
+const pathToRollForwardPatchGlobalJson = pathToRollForwardPatchDir + "global.json";
+const pathToRollForwardPatchMissingDir = workingDir + "rollforward-patch-missing/";
+const pathToRollForwardPatchMissingGlobalJson = pathToRollForwardPatchMissingDir + "global.json";
+const patchVersionNumber = "10.0.202";
+const patchMissingVersionNumber = "10.0.999";
 
 //setup mocks
 mockery.enable({
@@ -59,6 +65,12 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
         }
         if (path == pathToInvalidRollForwardDir) {
             return [pathToInvalidRollForwardGlobalJson];
+        }
+        if (path == pathToRollForwardPatchDir) {
+            return [pathToRollForwardPatchGlobalJson];
+        }
+        if (path == pathToRollForwardPatchMissingDir) {
+            return [pathToRollForwardPatchMissingGlobalJson];
         }
         return [];
     },
@@ -116,6 +128,22 @@ mockery.registerMock('fs', {
                 }
             }));
         }
+        if (path == pathToRollForwardPatchGlobalJson) {
+            return Buffer.from(JSON.stringify({
+                sdk: {
+                    version: patchVersionNumber,
+                    rollForward: "patch"
+                }
+            }));
+        }
+        if (path == pathToRollForwardPatchMissingGlobalJson) {
+            return Buffer.from(JSON.stringify({
+                sdk: {
+                    version: patchMissingVersionNumber,
+                    rollForward: "patch"
+                }
+            }));
+        }
         return Buffer.from(null);
     }
 });
@@ -124,6 +152,11 @@ mockery.registerMock('./versionfetcher', {
     DotNetCoreVersionFetcher: function (explicitVersioning: boolean = false) {
         return {
             getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean, matchingVersionSpec?: string): Promise<VersionInfo> {
+                // For non-latest rollForward tests: when the explicit fetcher requests
+                // a version that doesn't exist, throw to simulate "not found"
+                if (explicitVersioning && versionSpec === patchMissingVersionNumber) {
+                    throw new Error("Version not found: " + versionSpec);
+                }
                 const resultVersion = matchingVersionSpec || versionSpec;
                 return Promise<VersionInfo>((resolve, reject) => {
                     resolve(new VersionInfo({
@@ -155,6 +188,18 @@ mockery.registerMock("./versionutilities", {
             switch (rollForward) {
                 case "latestFeature": return "8.0.x";
                 case "latestPatch": return ">=8.0.100 <8.0.200";
+                default: return version;
+            }
+        }
+        if (version === patchVersionNumber) { // "10.0.202"
+            switch (rollForward) {
+                case "patch": return ">=10.0.200 <10.0.300";
+                default: return version;
+            }
+        }
+        if (version === patchMissingVersionNumber) { // "10.0.999"
+            switch (rollForward) {
+                case "patch": return ">=10.0.900 <10.1.0";
                 default: return version;
             }
         }
@@ -270,5 +315,38 @@ if (process.env["__case__"] == "invalidRollForward") {
         }
     }, err => {
         throw "GetVersions shouldn't throw for invalid rollForward policy (should warn and ignore): " + err;
+    });
+}
+
+if (process.env["__case__"] == "rollForwardPatchExactFound") {
+    let fetcher = new globalJsonFetcher(pathToRollForwardPatchDir);
+    fetcher.GetVersions().then(versionInfos => {
+        if (versionInfos == null || versionInfos.length != 1) {
+            throw "GetVersions should return one result for global.json with rollForward patch.";
+        }
+        // With non-latest policy 'patch' and version 10.0.202 available in releases,
+        // GetVersions should return the exact specified version, not the latest in the range.
+        if (versionInfos[0].getVersion() != patchVersionNumber) {
+            throw `Expected exact version '${patchVersionNumber}' for patch rollForward (exact found), but got '${versionInfos[0].getVersion()}'`;
+        }
+    }, err => {
+        throw "GetVersions shouldn't throw for valid rollForward policy: " + err;
+    });
+}
+
+if (process.env["__case__"] == "rollForwardPatchExactMissing") {
+    let fetcher = new globalJsonFetcher(pathToRollForwardPatchMissingDir);
+    fetcher.GetVersions().then(versionInfos => {
+        if (versionInfos == null || versionInfos.length != 1) {
+            throw "GetVersions should return one result for global.json with rollForward patch (fallback).";
+        }
+        // With non-latest policy 'patch' and version 10.0.999 NOT in releases,
+        // GetVersions should fall back to range-based resolution (>=10.0.900 <10.1.0)
+        // The mock returns the matchingVersionSpec as the version, so we expect the range.
+        if (versionInfos[0].getVersion() != ">=10.0.900 <10.1.0") {
+            throw `Expected range-based fallback '>=10.0.900 <10.1.0' for patch rollForward (exact missing), but got '${versionInfos[0].getVersion()}'`;
+        }
+    }, err => {
+        throw "GetVersions shouldn't throw for valid rollForward policy with fallback: " + err;
     });
 }

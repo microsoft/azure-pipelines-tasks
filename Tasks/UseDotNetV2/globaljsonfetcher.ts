@@ -36,10 +36,28 @@ export class globalJsonFetcher {
                 let channelSpec = entry.version;
                 let matchingSpec: string | undefined;
                 let versionFetcher = explicitFetcher;
+                const isLatestPolicy = entry.rollForward && entry.rollForward.startsWith("latest");
 
                 if (entry.rollForward) {
                     const resolvedSpec = applyRollForwardPolicy(entry.version, entry.rollForward);
                     if (resolvedSpec !== entry.version) {
+                        // For non-latest policies (patch, feature, minor, major), the .NET SDK
+                        // semantics are "use the specified version; if not found, roll forward."
+                        // Try the exact version first before widening to the range.
+                        if (!isLatestPolicy) {
+                            try {
+                                var exactVersionInfo = await explicitFetcher.getVersionInfo(entry.version, null, "sdk", false);
+                                if (exactVersionInfo) {
+                                    console.log(tl.loc("ResolvedVersionFromGlobalJson", exactVersionInfo.getVersion(), entry.version, entry.rollForward || "disable"));
+                                    versionInformation.push(exactVersionInfo);
+                                    continue;
+                                }
+                            } catch (ex) {
+                                // Exact version not found in releases, fall through to range-based resolution
+                                tl.debug(`Exact version ${entry.version} not found, rolling forward with policy '${entry.rollForward}'`);
+                            }
+                        }
+
                         versionFetcher = nonExplicitFetcher;
                         // Range specs (e.g., ">=8.0.100 <8.0.200" from patch/latestPatch)
                         // need a separate channel-compatible spec for VersionParts lookup
