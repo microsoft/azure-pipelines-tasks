@@ -34,6 +34,9 @@
     "typescript": "5.1.6"
   },
   "overrides": {
-    "form-data": "^3.0.4"
+    "form-data": "^3.0.4",
+    "mocha": {
+      "minimatch": "^5.1.8"
+    }
   }
 }
