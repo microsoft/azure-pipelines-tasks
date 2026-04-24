@@ -12,7 +12,6 @@
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
     "agent-base": "6.0.2",
-    "Agent.Tasks": "file:../..",
     "azure-pipelines-task-lib": "^5.2.8",
     "azure-pipelines-tasks-azure-arm-rest": "^3.272.1",
     "azure-pipelines-tasks-utility-common": "3.272.0"

@@ -10,7 +10,6 @@
     "@types/node": "^24.10.0",
     "@types/q": "1.0.7",
     "agent-base": "^6.0.2",
-    "Agent.Tasks": "file:../..",
     "artifact-engine": "^1.5.5",
     "azp-tasks-az-blobstorage-provider": "^3.272.1",
     "azure-pipelines-task-lib": "^5.2.8",
