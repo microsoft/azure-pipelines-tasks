@@ -29,9 +29,13 @@ jobs:
   pool:
     vmImage: ubuntu-20.04
   steps:
+  - task: NpmAuthenticate@0
+    inputs:
+      workingFile: ci/ci-test-tasks/.npmrc
   - script: |
-      npm i axios
-    displayName: npm i axios
+      cd ci/ci-test-tasks
+      npm ci --ignore-scripts
+    displayName: npm ci (axios)
   - script: |
       echo $(tasks)
       node ./ci/ci-test-tasks/run-main-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)

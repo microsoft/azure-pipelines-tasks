@@ -13,13 +13,17 @@ export class TaskLogger implements Logger {
     logError = (message: string) => logErrorRaw(colorize(message, Color.Red));
 }
 
-export const loggingMessageConfig: LoggingMessageConfig = {
+// NOTE: These are factory functions (not module-scoped consts) so that tl.loc()
+// is invoked only after main.ts calls tl.setResourcePath(). Building these objects
+// at import time would resolve every key before resources are loaded, producing
+// "Resource file haven't been set, can't find loc string for key: ..." warnings.
+export const createLoggingMessageConfig = (): LoggingMessageConfig => ({
     diagnosticsReturned: tl.loc('DiagnosticsReturned'),
     bicepCacheHit: (version: string, path: string) =>
         tl.loc('BicepCacheHit', version, path),
     bicepDownloading: (version: string) =>
         tl.loc('BicepDownloading', version),
-    requestFailedCorrelation: (correlationId: string | null) => 
+    requestFailedCorrelation: (correlationId: string | null) =>
         tl.loc('RequestFailedCorrelation', correlationId),
     filesIgnoredForDelete: tl.loc('FilesIgnoredForDelete'),
     startingOperation: (type: string, operation: string, scope: string, scopedId: string, name: string) =>
@@ -28,9 +32,9 @@ export const loggingMessageConfig: LoggingMessageConfig = {
         tl.loc('UsingTemplateFile', templateFile),
     usingParametersFile: (parametersFile: string) =>
         tl.loc('UsingParametersFile', parametersFile),
-};
+});
 
-export const errorMessageConfig: ErrorMessageConfig = {
+export const createErrorMessageConfig = (): ErrorMessageConfig => ({
     // Handler errors
     createFailed: tl.loc('CreateFailed'),
     validationFailed: tl.loc('ValidationFailed'),
@@ -73,6 +77,6 @@ export const errorMessageConfig: ErrorMessageConfig = {
         tl.loc('InvalidChangeType', changeType),
     unknownPropertyChangeType: (propertyChangeType: string) => 
         tl.loc('UnknownPropertyChangeType', propertyChangeType),
-    invalidJsonValue: (value: unknown) => 
+    invalidJsonValue: (value: unknown) =>
         tl.loc('InvalidJsonValue', value),
-};
+});

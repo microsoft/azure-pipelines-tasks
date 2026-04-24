@@ -98,4 +98,20 @@ describe('NodeTool Suite', function () {
             assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
         }, tr);
     });
+
+    it('Uses custom nodejsMirror for index.json and download', async () => {
+      this.timeout(5000);
+
+      let tp: string = path.join(__dirname, 'L0CustomMirror.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.succeeded, 'NodeTool should have succeeded.');
+        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        assert(tr.stdout.indexOf('REST_GET https://mymirror.example.com/node/index.json') > -1, 'Should fetch index.json from the custom mirror');
+        assert(tr.stdout.indexOf('DOWNLOAD https://mymirror.example.com/node/v10.15.1/') > -1, 'Should download from the custom mirror base');
+      }, tr);
+    });
 });
