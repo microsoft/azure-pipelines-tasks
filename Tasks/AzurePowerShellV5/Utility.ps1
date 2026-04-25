@@ -352,6 +352,6 @@ function Initialize-ModuleVersionValidation {
             }       
         }
     } catch {
-        Write-Verbose "Error while validating Az version: $($_.Exception.Message)"
+        Write-Host "Error while validating Az version: $($_.Exception.Message). Hence skipping the version validation."
     }
 }
