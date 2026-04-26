@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.goDownloadUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[URL for downloading Go binaries. Only https://go.dev/dl (official) and https://aka.ms/golang/release/latest (Microsoft build) are supported. If omitted, the official Go download URL (https://go.dev/dl) will be used. This parameter takes priority over the GOTOOL_GODOWNLOADURL environment variable if both are set.]]></Val>
+          <Val><![CDATA[URL for downloading Go binaries. Only https://go.dev/dl (official) and https://aka.ms/golang/release/latest (Microsoft build prefix) are supported. If omitted, the official Go download URL (https://go.dev/dl) will be used. You can also set the 'GOTOOL_GODOWNLOADURL' environment variable to specify the download URL. The parameter takes priority over the environment variable if both are set.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[URL pour télécharger les fichiers binaires Go. Seules https://go.dev/dl (officiel) et https://aka.ms/golang/release/latest (version Microsoft) sont prises en charge. Si ce paramètre est omis, l’URL officielle de téléchargement Go (https://go.dev/dl) sera utilisée. Ce paramètre prévaut sur la variable d’environnement GOTOOL_GODOWNLOADURL si les deux sont définis.]]></Val>
+            <Val><![CDATA[URL pour télécharger les fichiers binaires Go. Seules https://go.dev/dl (officiel) et https://aka.ms/golang/release/latest (Préfixe de build Microsoft) sont prises en charge. Si ce paramètre est omis, l’URL officielle de téléchargement Go (https://go.dev/dl) sera utilisée. Vous pouvez aussi définir la variable d’environnement « GOTOOL_GODOWNLOADURL » pour spécifier l’URL de téléchargement. Le paramètre a la priorité sur la variable d’environnement si les deux sont définis.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[URL for downloading Go binaries. Only https://go.dev/dl (official) and https://aka.ms/golang/release/latest (Microsoft build) are supported. If omitted, the official Go download URL (https://go.dev/dl) will be used. This parameter takes priority over the GOTOOL_GODOWNLOADURL environment variable if both are set.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
