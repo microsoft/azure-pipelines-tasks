@@ -9,7 +9,7 @@ import { newAutomatedTestsFlow } from '../Automated Flow/automatedFlow';
 describe('AzureTestPlan Suite', function () {
     this.timeout(30000);
 
-    const originalGetInput= tl.getInput;
+    const originalGetInput = tl.getInput;
     const originalGetBoolInput = tl.getBoolInput;
 
     beforeEach(() => {
@@ -22,7 +22,7 @@ describe('AzureTestPlan Suite', function () {
         tl.getBoolInput = originalGetBoolInput;
     });
 
-    it('Check if runs fine', function (done: Mocha.Done) {
+    it('Check if runs fine', (done: Mocha.Done) => {
         this.timeout(30000);
 
         let tp: string = path.join(__dirname, 'L0SampleTest.js');
