@@ -21,11 +21,12 @@ async function run() {
         //
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         const version = taskLib.getInput('version', false);
+        const nodejsMirror = taskLib.getInput('nodejsMirror', false) || 'https://nodejs.org/dist/';
         const retryCountOnDownloadFails = taskLib.getInput('retryCountOnDownloadFails', false) || "5";
         const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
         if (version) {
             const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-            await installer.getNode(version, checkLatest, parseInt(retryCountOnDownloadFails), parseInt(delayBetweenRetries));
+            await installer.getNode(version, checkLatest, installer.normalizeMirrorUrl(nodejsMirror), parseInt(retryCountOnDownloadFails), parseInt(delayBetweenRetries));
         }
 
         const proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();
