@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] Azure CLI",
+  "loc.friendlyName": "[已弃用] Azure CLI",
   "loc.helpMarkDown": "[详细了解此任务](http://go.microsoft.com/fwlink/?LinkID=827160)或[参阅 Azure CLI 文档](https://docs.microsoft.com/cli/azure/)",
   "loc.description": "已弃用: 此任务不再维护。请改用 AzureCLI@2 任务。",
-  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
+  "loc.instanceNameFormat": "[已弃用] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "版本 1.0 中的新增功能:\n- 支持基于 Python 的新 Azure CLI 2.0\n- 适用于跨平台代理(Linux、macOS 或 Windows)\n- 若要使用 Azure CLI 1.0 (基于 node.js)，请切换到任务版本 0.0\n- 局限:\n - 不支持 Azure 经典订阅。Azure CLI 2.0 仅支持 Azure 资源管理器(ARM)订阅。",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.connectedServiceNameARM": "Azure 订阅",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "将 AZURE_CONFIG_DIR 环境变量设置为 %s",
   "loc.messages.SettingAzureCloud": "将活动云设置为 %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "对于低于 2.115.0 的代理版本，只能使用全局 Azure CLI 配置",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 %s 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。"
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 %s 更新服务连接。若要详细了解如何转换为无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。"
 }

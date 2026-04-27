@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Docker 레지스트리 서비스 연결을 선택합니다. 레지스트리를 사용하여 인증해야 하는 명령에 필요합니다.",
   "loc.input.label.rolloutStatusTimeout": "롤아웃 상태의 시간 제한",
   "loc.input.help.rolloutStatusTimeout": "롤아웃 상태에 대한 조사를 끝내기 전까지 대기하는 시간(초)",
+  "loc.input.label.resourceType": "리소스 종류",
+  "loc.input.help.resourceType": "리소스 종류(플릿, 관리형 클러스터)",
   "loc.messages.DownloadPathForStableTxt": "stable.txt의 다운로드 경로: %s",
   "loc.messages.DownloadKubeCtlFailed": "%s 버전의 Kubectl 클라이언트를 다운로드할 수 없습니다. https://github.com/kubernetes/kubernetes/releases에서 버전이 올바른지 확인하세요.",
   "loc.messages.DownloadStableVersionFailed": "%s에서 안정적인 버전의 Kubernetes 파일을 다운로드할 수 없습니다. %s(으)로 대체합니다.",

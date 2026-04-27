@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] 下載 Github Npm 套件",
+  "loc.friendlyName": "[已棄用] 下載 GitHub NuGet 套件",
   "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613746)或[參閱 npm 文件](https://docs.npmjs.com/)",
-  "loc.description": "已淘汰: 此工作已不再維護。請改用 Npm@1 工作。",
-  "loc.instanceNameFormat": "[Deprecated] 下載 GitHub Npm 套件",
+  "loc.description": "已棄用: 已不再維護此工作。請改為使用 Npm@1 工作搭配 GitHub 服務連線。",
+  "loc.instanceNameFormat": "[已棄用] 下載 GitHub NuGet 套件",
   "loc.group.displayName.customRegistries": "自訂登錄與驗證",
   "loc.input.label.packageName": "套件名稱",
   "loc.input.help.packageName": "要從 github 下載的套件名稱",

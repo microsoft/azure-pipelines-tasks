@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "認証スキーム %s はサポートされていません",
   "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定中にエラーが発生しました: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" が失敗しました。エラー: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません"
 }
