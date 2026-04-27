@@ -103,6 +103,6 @@
   "loc.messages.DepricatedVersionNetCore": "La versione NET Core specificata %s non è supportata e verrà rimossa a breve dagli agenti ospitati. Per altre informazioni sui criteri di supporto .NET, vedere https://aka.ms/dotnet-core-support.",
   "loc.messages.ApplyingRollForwardPolicy": "Applicazione del criterio rollForward '%s' alla versione '%s', specifica della versione risolta: '%s'",
   "loc.messages.InvalidRollForwardPolicy": "Criterio rollForward non valido '%s' in global.json nel percorso: '%s'. I valori supportati sono: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Il criterio rollForward verrà ignorato.",
-  "loc.messages.ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-  "loc.messages.InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+  "loc.messages.ResolvedVersionFromGlobalJson": "Versione SDK '%s' risolta da global.json (versione originale: '%s', rollForward: '%s')",
+  "loc.messages.InstallingFromGlobalJson": "Installazione della versione .NET Core SDK %s risolta da global.json"
 }
