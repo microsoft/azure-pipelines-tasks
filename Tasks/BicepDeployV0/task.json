@@ -10,8 +10,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 271,
-    "Patch": 0
+    "Minor": 273,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Bicep $(operation) $(name)",
@@ -383,17 +383,24 @@
     "LocationRequired": "Location is required",
     "TemplateFileRequired": "Template file is required",
     "UnsupportedTemplateFile": "Unsupported template file type: %s",
+    "ParametersFileNotFound": "Parameters file not found: %s",
     "UnsupportedParametersFile": "Unsupported parameters file type: %s",
     "FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
     "FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
     "CreateFailed": "Create failed",
     "ValidationFailed": "Validation failed",
+    "WhatIfFailed": "What-if failed",
     "OperationFailed": "Operation failed",
     "RequestFailedCorrelation": "Request failed. CorrelationId: %s",
     "InvalidChangeType": "Invalid change type: %s",
     "UnknownPropertyChangeType": "Unknown property change type: %s.",
     "InvalidJsonValue": "Invalid JSON value: %s",
-    "FailedToLogout": "The following error occurred while logging out: %s"
+    "FailedToLogout": "The following error occurred while logging out: %s",
+    "SettingAzureCloud": "Setting active cloud to: %s",
+    "LoginFailed": "Azure login failed",
+    "MSILoginFailed": "Azure login failed using Managed Service Identity",
+    "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+    "ErrorInSettingUpSubscription": "Error in setting up subscription"
   },
   "execution": {
     "Node24": {

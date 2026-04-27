@@ -5,6 +5,10 @@ export class TaskInputReader implements InputReader {
     getInput(inputName: string): string | undefined {
         return tl.getInput(inputName, false);
     }
+
+    isFilePathSupplied(inputName: string): boolean {
+        return tl.filePathSupplied(inputName);
+    }
 }
 
 export class TaskOutputSetter implements OutputSetter {

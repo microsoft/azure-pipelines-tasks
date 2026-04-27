@@ -13,7 +13,7 @@
     "azure-pipelines-tasks-azure-arm-rest": "3.271.2",
     "azure-pipelines-tasks-docker-common": "^2.271.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.271.1",
-    "azure-pipelines-tasks-securefiles-common": "^2.270.0",
+    "azure-pipelines-tasks-securefiles-common": "^2.272.0",
     "azure-pipelines-tasks-utility-common": "3.271.0",
     "del": "4.1.1",
     "moment": "^2.29.4"

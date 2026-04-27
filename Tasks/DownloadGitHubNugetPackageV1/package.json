@@ -23,13 +23,17 @@
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.1.0",
-    "azure-pipelines-tasks-packaging-common": "^3.214.0",
+    "azure-pipelines-task-lib": "^5.2.8",
+    "azure-pipelines-tasks-packaging-common": "^3.273.0",
+    "azure-pipelines-tasks-utility-common": "3.271.0",
     "q": "^1.4.1",
-    "typed-rest-client": "^1.8.9",
-    "azure-pipelines-tasks-utility-common": "3.267.0"
+    "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.0.4",
+    "picomatch": "^2.3.2"
   }
 }

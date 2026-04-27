@@ -257,7 +257,11 @@ function Run-SqlFiles {
         Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
     }
 
-    Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+    if (Should-UseSanitizedArguments) {
+        Run-SqlCmdV2 -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+    } else {
+        Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+    }
 }
 
 function Run-InlineSql {
@@ -280,7 +284,11 @@ function Run-InlineSql {
     Write-Host (Get-VstsLocString -Key "SAD_TemporaryInlineSqlFile" -ArgumentList $sqlInlineFilePath)
 
     try {
-        Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+        if (Should-UseSanitizedArguments) {
+            Run-SqlCmdV2 -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+        } else {
+            Run-SqlCmd -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -token $token
+        }
     }
     finally {
         if (Test-Path -Path $sqlInlineFilePath) {
@@ -317,7 +325,7 @@ function Run-SqlCmd {
         $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
         $commandToLog = $scriptArgument + " -Password ****** "
 
-        # Increase Timeout to 120 seconds in case its not provided by User
+        # Increase Timeout to 120 seconds in case its not provided by User, since some sql scripts can take longer time to execute and sqlcmd.exe has default timeout of 30 seconds which can cause timeout issue.
         if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
             # Add Timeout of 120 Seconds
             $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
@@ -362,6 +370,83 @@ function Run-SqlCmd {
     }
 }
 
+# V2: Safe execution using AST Parser + splat (no Invoke-Expression)
+# Called when both feature flags are enabled in Should-UseSanitizedArguments
+function Run-SqlCmdV2 {
+    [CmdletBinding()]
+    param (
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $authenticationType,
+        [string] $ConnectionString,
+        [string] $sqlFilePath,
+        [string] $sqlcmdAdditionalArguments,
+        [string] $token
+    )
+
+    $splatArgs = @{
+        InputFile = $sqlFilePath
+    }
+
+    if ($authenticationType -eq "server") {
+        $splatArgs['ServerInstance'] = $serverName
+        $splatArgs['Database'] = $databaseName
+        $formattedUsername = $sqlUsername
+        if ($sqlUsername) {
+            $formattedUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+        }
+        $splatArgs['Username'] = $formattedUsername
+        $splatArgs['Password'] = $sqlPassword
+
+        # Increase Timeout to 120 seconds in case its not provided by User, since some sql scripts can take longer time to execute and sqlcmd.exe has default timeout of 30 seconds which can cause timeout issue.
+        if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout"))) {
+            $splatArgs['ConnectionTimeout'] = 120
+        }
+    }
+    elseif ($authenticationType -eq "connectionString") {
+        Check-ConnectionString
+        $splatArgs['ConnectionString'] = $connectionString
+    }
+    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
+        Check-connectionString
+        $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+        $splatArgs['ConnectionString'] = $connectionString
+    }
+    elseif ($authenticationType -eq "servicePrincipal") {
+        $splatArgs['AccessToken'] = $token
+        $splatArgs['ServerInstance'] = $serverName
+        $splatArgs['Database'] = $databaseName
+    }
+
+    # Build log-safe representation
+    $commandToLog = "Invoke-Sqlcmd"
+    foreach ($key in $splatArgs.Keys) {
+        if ($key -eq 'Password' -or $key -eq 'AccessToken' -or $key -eq 'ConnectionString') {
+            $commandToLog += " -$key `"**********`""
+        } else {
+            $commandToLog += " -$key `"$($splatArgs[$key])`""
+        }
+    }
+    $commandToLog += " $sqlcmdAdditionalArguments"
+    Write-Host $commandToLog
+
+    Merge-AdditionalSqlArguments -SplatHashtable $splatArgs -AdditionalArguments $sqlcmdAdditionalArguments
+    
+    # Execute
+    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
+        $ErrorActionPreference = 'Continue'
+        (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
+        if ($errors.Count -gt 0) {
+            throw "SQL command execution failed with errors."
+        }
+        $ErrorActionPreference = 'Stop'
+    } else {
+        Invoke-SqlCmd @splatArgs
+    }
+}
+
 function Check-ConnectionString {
     if (-not (CmdletHasMember -cmdlet Invoke-SQlCmd -memberName "connectionString")) {
         throw (Get-VstsLocString -Key "SAD_InvokeSQLCmdNotSupportingConnectionString")
@@ -384,7 +469,7 @@ function Get-AgentIPRange {
     if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue) {
         try {
             Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
-            Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline `"select getdate()`" -connectionString $connectionString -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
+            Write-Verbose "Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword ****** -sqlInline `"select getdate()`" -connectionString ********** -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
 
             $output = Run-InlineSql -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -token $token -ErrorVariable errors | Out-String
         }
@@ -402,9 +487,17 @@ function Get-AgentIPRange {
 
         $ErrorActionPreference = 'Continue'
 
-        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        if (Should-UseSanitizedArguments) {
+            $argArray = Split-CLIArguments $sqlCmdArgs
+            $output = (& $sqlCmd $argArray 2>&1) | Out-String
+        } else {
+            $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        }
 
         $ErrorActionPreference = 'Stop'
+
+        # Clear password from environment variable
+        $env:SQLCMDPASSWORD = $null
     }
 
     if ($errors.Count -gt 0) {
@@ -513,5 +606,9 @@ function Execute-SqlPackage {
     $sqlPackagePath = Get-SqlPackageOnTargetMachine
     Write-Host "`"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
 
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
+    if (Should-UseSanitizedArguments) {
+        Execute-CommandV2 -FileName $sqlPackagePath -Arguments $sqlpackageArguments
+    } else {
+        Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
+    }
 }
