@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const run = require('../ci/ci-util').run;
 const semver = require('semver');
 
@@ -125,17 +125,30 @@ function syncGeneratedTasks(tasksPaths) {
         return;
     }
 
-    const taskList = taskNames.join(',');
-    console.log(`Running 'node make.js build --task ${taskList}' to sync _generated/ and en-US resjson.`);
+    const taskPattern = taskNames.length === 1
+        ? taskNames[0]
+        : `{${taskNames.join(',')}}`;
+    console.log(`Running 'node make.js build --task ${taskPattern}' to sync _generated/ and en-US resjson.`);
 
     const childEnv = { ...process.env };
     delete childEnv.TF_BUILD;
 
-    execSync(`node make.js build --task ${taskList}`, {
-        cwd: repoRoot,
-        stdio: 'inherit',
-        env: childEnv
-    });
+    // Use spawnSync without a shell so the brace pattern is passed as a
+    // single argv to node (avoids bash brace-expansion). make.js' --task
+    // uses minimatch, which understands brace expansion natively.
+    const result = spawnSync(
+        process.execPath,
+        ['make.js', 'build', '--task', taskPattern],
+        {
+            cwd: repoRoot,
+            stdio: 'inherit',
+            env: childEnv
+        }
+    );
+
+    if (result.status !== 0) {
+        throw new Error(`make.js build failed with exit code ${result.status}`);
+    }
 }
 
 function main() {
