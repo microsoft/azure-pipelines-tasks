@@ -35,7 +35,7 @@ export function tryValidateScriptArgs(
         validator(inputArguments, scriptType);
     } catch (err) {
         const e = err as { name?: string; message?: string };
-        tl.debug(`validateScriptArgs threw an unexpected error: ${e?.message ?? err}`);
+        tl.debug(`validateScriptArgs threw: ${e?.message ?? err}`);
         try {
             emitTelemetry('TaskHub', 'AzureCLIV3', {
                 event: 'ArgsValidationFailure',
@@ -45,6 +45,7 @@ export function tryValidateScriptArgs(
         } catch (telemetryErr) {
             tl.debug(`Failed to emit ArgsValidationFailure telemetry: ${telemetryErr}`);
         }
+        throw err;
     }
 }
 

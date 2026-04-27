@@ -58,6 +58,8 @@ To mitigate this class of issue the task can sanitize `scriptArguments` **before
 | --- | --- | --- |
 | `EnableAzureCliArgsValidation` | off | When false, the sanitizer is **not invoked at all**. When true, the sanitizer runs and the `AZP_75787_*` flags below decide its mode. |
 
+The wrapper around the sanitizer emits an `ArgsValidationFailure` telemetry event on every exception (intentional `ArgsSanitizingError` block or unexpected error) with the error name and message, then rethrows so the task fails. To bypass validation entirely if a sanitizer regression is discovered, disable the outer `EnableAzureCliArgsValidation` flag.
+
 #### Inner mode flags (org/agent-wide)
 
 | Feature flag | Default | Behavior |

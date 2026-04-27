@@ -46,31 +46,40 @@ export const runTryValidateScriptArgsTests = () => {
         assert.deepStrictEqual(seen, [['arg1 arg2', 'pscore']]);
     });
 
-    it('Flag ON, validator throws ArgsSanitizingError: rethrows, no telemetry', () => {
+    it('Flag ON, validator throws ArgsSanitizingError: rethrows AND emits telemetry', () => {
         process.env[FEATURE_ENV] = 'true';
         startCapture();
         try {
             assert.throws(
                 () => tryValidateScriptArgs('test; whoami', 'bash', () => {
-                    throw new ArgsSanitizingError('blocked');
+                    throw new ArgsSanitizingError('blocked-msg');
                 }),
                 ArgsSanitizingError
             );
         } finally {
             stopCapture();
         }
-        assert.strictEqual(captured.indexOf('telemetry.publish'), -1);
+        const idx = captured.indexOf('##vso[telemetry.publish');
+        assert.notStrictEqual(idx, -1, 'should emit telemetry');
+        const line = captured.substring(idx);
+        assert.ok(line.indexOf('feature=AzureCLIV3') >= 0, 'feature should be AzureCLIV3');
+        assert.ok(line.indexOf('"event":"ArgsValidationFailure"') >= 0);
+        assert.ok(line.indexOf('"errorName":"Error"') >= 0);
+        assert.ok(line.indexOf('"errorMessage":"blocked-msg"') >= 0);
     });
 
-    it('Flag ON, validator throws generic Error: swallows and emits ArgsValidationFailure telemetry', () => {
+    it('Flag ON, validator throws generic Error: rethrows AND emits telemetry', () => {
         process.env[FEATURE_ENV] = 'true';
         startCapture();
         try {
-            assert.doesNotThrow(() => tryValidateScriptArgs('args', 'bash', () => {
-                const err = new Error('boom');
-                err.name = 'CustomError';
-                throw err;
-            }));
+            assert.throws(
+                () => tryValidateScriptArgs('args', 'bash', () => {
+                    const err = new Error('boom');
+                    err.name = 'CustomError';
+                    throw err;
+                }),
+                /boom/
+            );
         } finally {
             stopCapture();
         }
@@ -83,14 +92,17 @@ export const runTryValidateScriptArgsTests = () => {
         assert.ok(line.indexOf('"errorMessage":"boom"') >= 0);
     });
 
-    it('Flag ON, generic error + telemetry path itself no-ops: still does not rethrow', () => {
+    it('Flag ON, telemetry no-op (low agent version): still rethrows', () => {
         process.env[FEATURE_ENV] = 'true';
         process.env[AGENT_VERSION_ENV] = '0.0.1';
         startCapture();
         try {
-            assert.doesNotThrow(() => tryValidateScriptArgs('args', 'bash', () => {
-                throw new Error('inner');
-            }));
+            assert.throws(
+                () => tryValidateScriptArgs('args', 'bash', () => {
+                    throw new Error('inner');
+                }),
+                /inner/
+            );
         } finally {
             stopCapture();
         }
