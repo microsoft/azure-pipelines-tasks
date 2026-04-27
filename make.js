@@ -831,7 +831,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
 
 CLI.testLegacy = async function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     ensureTool('tsc', '--version', 'Version 4.0.2');
-    ensureTool('mocha', '--version', '11.7.2');
+    ensureTool('mocha', '--version', '11.7.5');
 
     if (argv.suite) {
         fail('The "suite" parameter has been deprecated. Use the "task" parameter instead.');
