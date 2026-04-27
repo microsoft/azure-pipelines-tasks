@@ -19,10 +19,10 @@ export class ArgsSanitizingError extends Error {
 }
 
 // Outer gate (`EnableAzureCliArgsValidation`, default OFF) decides whether the
-// sanitizer runs at all. ArgsSanitizingError signals an intentional block and
-// is rethrown; any other unexpected exception is reported as
-// `ArgsValidationFailure` telemetry and swallowed so a sanitizer bug never
-// breaks an otherwise valid pipeline run.
+// sanitizer runs at all. When it runs, every exception thrown by the validator
+// (intentional `ArgsSanitizingError` blocks as well as unexpected errors) is
+// reported as an `ArgsValidationFailure` telemetry event and then rethrown so
+// the task fails.
 export function tryValidateScriptArgs(
     inputArguments: string,
     scriptType: string,
