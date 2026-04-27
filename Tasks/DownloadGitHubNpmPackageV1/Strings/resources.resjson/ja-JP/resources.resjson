@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "GitHub npm パッケージのダウンロード",
+  "loc.friendlyName": "[Deprecated] GitHub npm パッケージのダウンロード",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613746)、または [npm のドキュメントを参照](https://docs.npmjs.com/)",
-  "loc.description": "GitHub から npm パッケージをインストールします。",
-  "loc.instanceNameFormat": "GitHub npm パッケージのダウンロード",
+  "loc.description": "非推奨: このタスクはメンテナンスされなくなりました。代わりに Npm@1 タスクを使用してください。",
+  "loc.instanceNameFormat": "[Deprecated] GitHub npm パッケージのダウンロード",
   "loc.group.displayName.customRegistries": "カスタム レジストリと認証",
   "loc.input.label.packageName": "パッケージ名",
   "loc.input.help.packageName": "GitHub からダウンロードするパッケージの名前",

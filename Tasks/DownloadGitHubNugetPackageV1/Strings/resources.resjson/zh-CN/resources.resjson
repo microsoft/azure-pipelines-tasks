@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "下载 GitHub Nuget 包",
+  "loc.friendlyName": "[Deprecated] 下载 GitHub Nuget 包",
   "loc.helpMarkDown": "[请参阅 .NET Core 文档](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "使用 dotnet CLI 还原 nuget 包",
-  "loc.instanceNameFormat": "dotnet 还原",
+  "loc.description": "已弃用: 此任务不再维护。请改用 NuGetCommand@2 或 DotNetCoreCLI@2 任务。",
+  "loc.instanceNameFormat": "[Deprecated] dotnet 还原",
   "loc.group.displayName.restoreAuth": "源和身份验证",
   "loc.group.displayName.restoreAdvanced": "高级",
   "loc.input.label.packageName": "包名称",
