@@ -686,7 +686,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
 CLI.test = async function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '20';
     ensureTool('tsc', '--version', 'Version 4.0.2');
-    ensureTool('mocha', '--version', '11.7.2');
+    ensureTool('mocha', '--version', '11.7.5');
 
     process.env['SYSTEM_DEBUG'] = 'true';
 
