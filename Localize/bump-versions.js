@@ -1,9 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 const run = require('../ci/ci-util').run;
 const semver = require('semver');
 
 const currentSprint = parseInt(process.env['SPRINT']);
+const repoRoot = path.join(__dirname, '..');
 
 function getChangedFilesList() {
     return run('git --no-pager diff --name-only origin/master..Localization').split('\n');
@@ -92,6 +94,37 @@ function bumpPackageVersion(packPath, minor) {
     fs.writeFileSync(packageLocJsonPath, JSON.stringify(packageLocJson, null, 2));
 }
 
+function regenerateBuildConfigs(tasksPaths) {
+    const generatedDir = path.join(repoRoot, '_generated');
+    if (!fs.existsSync(generatedDir)) {
+        console.log('No _generated directory found; skipping BuildConfigGen.');
+        return;
+    }
+
+    const generatedEntries = fs.readdirSync(generatedDir);
+
+    const taskNames = tasksPaths
+        .map(p => p.replace(/^Tasks\//, ''))
+        .filter(name => {
+            if (generatedEntries.includes(name)) return true;
+            if (generatedEntries.includes(`${name}.versionmap.txt`)) return true;
+            return generatedEntries.some(e => e.startsWith(`${name}_`));
+        });
+
+    if (taskNames.length === 0) {
+        console.log('No tasks require _generated regeneration.');
+        return;
+    }
+
+    const taskList = taskNames.join(',');
+    console.log(`Regenerating _generated for: ${taskList}`);
+
+    execSync(
+        `dotnet run --no-launch-profile --project BuildConfigGen/BuildConfigGen.csproj -- --task ${taskList} --write-updates`,
+        { cwd: repoRoot, stdio: 'inherit' }
+    );
+}
+
 function main() {
     if (!currentSprint) {
         throw new Error('SPRINT variable is not set!')
@@ -109,6 +142,11 @@ function main() {
     commonPackages.forEach(packagePath => {
         bumpPackageVersion(packagePath, currentSprint);
     });
+
+    // Sync _generated/ mirrors for any bumped task that has generated configs.
+    // Must run after bumpTaskVersion so BuildConfigGen sees the new versions
+    // in Tasks/<X>/task.json and propagates them into _generated/.
+    regenerateBuildConfigs(tasksPaths);
 }
 
 main();
