@@ -1,5 +1,6 @@
 import assert = require("assert");
 import path = require("path");
+import * as cp from "child_process";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 
 // Uncomment to improve traces while testing
@@ -212,5 +213,26 @@ describe("stacks tests", function() {
       { name: 'intOutput', value: '42' },
       { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
     ], this.test!.title);
+  });
+});
+
+// Verifies that nothing in the task graph calls tl.loc() at module-import time
+// (before tl.setResourcePath() runs). The mock-test harness stubs both
+// setResourcePath and loc to no-ops, so this regression is invisible to the
+// MockTestRunner-based tests above. Instead, we spawn a child node process
+// that requires the real (non-mocked) task-lib via ../logging and inspect
+// stdout for task-lib's "Resource file haven't been set" warning.
+describe("resource file loading", function() {
+  this.timeout(15000);
+
+  it("does not localize at import time", function() {
+    const probe = path.join(__dirname, "resourceFileProbe.js");
+    const result = cp.spawnSync(process.execPath, [probe], { encoding: "utf8" });
+
+    assert.strictEqual(result.status, 0, `probe exited non-zero: ${result.stderr}`);
+    assert(
+      !result.stdout.includes("Resource file haven't been set"),
+      `tl.setResourcePath() must run before any tl.loc() call.\nProbe stdout:\n${result.stdout}\nProbe stderr:\n${result.stderr}`,
+    );
   });
 });
