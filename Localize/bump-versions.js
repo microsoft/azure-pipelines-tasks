@@ -1,9 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 const run = require('../ci/ci-util').run;
 const semver = require('semver');
 
 const currentSprint = parseInt(process.env['SPRINT']);
+const repoRoot = path.join(__dirname, '..');
 
 function getChangedFilesList() {
     return run('git --no-pager diff --name-only origin/master..Localization').split('\n');
@@ -92,6 +94,50 @@ function bumpPackageVersion(packPath, minor) {
     fs.writeFileSync(packageLocJsonPath, JSON.stringify(packageLocJson, null, 2));
 }
 
+/**
+ * After bumping Tasks/<X>/task.json, run `node make.js build --task <list>`
+ * for tasks with _generated/ mirrors. This invokes BuildConfigGen
+ * (--write-updates) and regenerates en-US resjson, keeping _generated/ and
+ * Strings/ in sync with the bumped task.json.
+ *
+ * TF_BUILD is unset because CLI.build refuses to run in CI; the pipeline's
+ * build job still runs serverBuild with full validation.
+ */
+function syncGeneratedTasks(tasksPaths) {
+    const generatedDir = path.join(repoRoot, '_generated');
+    if (!fs.existsSync(generatedDir)) {
+        console.log('No _generated directory found; skipping rebuild.');
+        return;
+    }
+
+    const generatedEntries = fs.readdirSync(generatedDir);
+
+    const taskNames = tasksPaths
+        .map(p => p.replace(/^Tasks\//, ''))
+        .filter(name => {
+            if (generatedEntries.includes(name)) return true;
+            if (generatedEntries.includes(`${name}.versionmap.txt`)) return true;
+            return generatedEntries.some(e => e.startsWith(`${name}_`));
+        });
+
+    if (taskNames.length === 0) {
+        console.log('No tasks with _generated/ mirrors require rebuild.');
+        return;
+    }
+
+    const taskList = taskNames.join(',');
+    console.log(`Running 'node make.js build --task ${taskList}' to sync _generated/ and en-US resjson.`);
+
+    const childEnv = { ...process.env };
+    delete childEnv.TF_BUILD;
+
+    execSync(`node make.js build --task ${taskList}`, {
+        cwd: repoRoot,
+        stdio: 'inherit',
+        env: childEnv
+    });
+}
+
 function main() {
     if (!currentSprint) {
         throw new Error('SPRINT variable is not set!')
@@ -109,6 +155,9 @@ function main() {
     commonPackages.forEach(packagePath => {
         bumpPackageVersion(packagePath, currentSprint);
     });
+
+    // Sync _generated/ and en-US resjson with the bumped task.json.
+    syncGeneratedTasks(tasksPaths);
 }
 
 main();
