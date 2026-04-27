@@ -9,6 +9,8 @@
   "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
   "loc.input.label.force32bit": "Use 32 bit version on x64 agents",
   "loc.input.help.force32bit": "Installs the x86 version of Node regardless of the CPU architecture of the agent.",
+  "loc.input.label.nodejsMirror": "Set source for Node.js binaries",
+  "loc.input.help.nodejsMirror": "Use an alternative installation mirror when sourcing the Node.js binaries.",
   "loc.input.label.retryCountOnDownloadFails": "Set retry count when nodes downloads failed",
   "loc.input.help.retryCountOnDownloadFails": "Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times.",
   "loc.input.label.delayBetweenRetries": "Set delay between retries",
@@ -17,5 +19,6 @@
   "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
   "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
   "loc.messages.UnexpectedOS": "Unexpected OS %s",
-  "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
+  "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
+  "loc.messages.InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'"
 }
