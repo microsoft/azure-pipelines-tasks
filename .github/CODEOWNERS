@@ -82,6 +82,8 @@ Tasks/AzureMonitorV1/      @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureMysqlDeploymentV1/  @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/AzureMysqlDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/AzureNLBManagementV1/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzurePolicyV0/   @microsoft/release-management-task-team @manolerazvan 
