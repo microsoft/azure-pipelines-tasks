@@ -266,6 +266,7 @@
     "FailedToLoginAzureDevOpsCLI": "ms-resource:loc.messages.FailedToLoginAzureDevOpsCLI",
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
     "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
-    "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext"
+    "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

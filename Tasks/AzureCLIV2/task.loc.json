@@ -227,6 +227,7 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }
