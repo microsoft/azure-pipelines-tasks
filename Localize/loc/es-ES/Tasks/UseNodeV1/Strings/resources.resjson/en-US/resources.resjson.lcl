@@ -60,6 +60,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use an alternative installation mirror when sourcing the Node.js binaries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Use un reflejo de instalación alternativo al obtener los archivos binarios de Node.js.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.retryCountOnDownloadFails" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times.]]></Val>
@@ -105,6 +114,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set source for Node.js binaries]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Establecimiento del origen de los archivos binarios de Node.js]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.retryCountOnDownloadFails" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set retry count when nodes downloads failed]]></Val>
@@ -137,6 +155,15 @@
           <Val><![CDATA[Expected Agent.TempDirectory to be set.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Se esperaba que Agent.TempDirectory estuviera establecido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidNodejsMirror" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The provided Node.js mirror URL is invalid: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La dirección URL del reflejo de Node.js proporcionada no es válida: "%s"]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
