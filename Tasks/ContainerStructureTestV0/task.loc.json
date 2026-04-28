@@ -13,10 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 268,
+    "Minor": 274,
     "Patch": 0
   },
   "preview": true,
+  "deprecated": true,
+  "deprecationMessage": "The ContainerStructureTest@0 task is deprecated, please use the latest version of the ContainerStructureTest task",
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "groups": [
