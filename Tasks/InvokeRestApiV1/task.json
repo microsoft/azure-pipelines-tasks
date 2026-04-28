@@ -17,8 +17,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 220,
-        "Patch": 0
+        "Minor": 274,
+        "Patch": 1
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [
@@ -41,7 +41,8 @@
             "defaultValue": "connectedServiceName",
             "options": {
                 "connectedServiceName": "Generic",
-                "connectedServiceNameARM": "Azure Resource Manager"
+                "connectedServiceNameARM": "Azure Resource Manager",
+                "connectedServiceNameAzureDevOps": "Azure DevOps"
             }
         },
         {
@@ -69,6 +70,18 @@
             "required": true,
             "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
             "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
+        },
+        {
+            "name": "connectedServiceNameAzureDevOps",
+            "aliases": [
+                "azureDevOpsServiceConnection"
+            ],
+            "type": "connectedService:WorkloadIdentityUser",
+            "label": "Azure DevOps service connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select an Azure DevOps service connection to use for invoking Azure DevOps REST APIs. The service connection URL is used as the baseURL.",
+            "visibleRule": "connectedServiceNameSelector = connectedServiceNameAzureDevOps"
         },
         {
             "name": "method",
