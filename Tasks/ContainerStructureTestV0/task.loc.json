@@ -18,7 +18,7 @@
   },
   "preview": true,
   "deprecated": true,
-  "deprecationMessage": "The ContainerStructureTest@0 task is deprecated, please use the latest version of the ContainerStructureTest task",
+  "deprecationMessage": "The ContainerStructureTest@0 task is deprecated.",
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "groups": [
