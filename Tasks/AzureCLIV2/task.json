@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 273,
+    "Minor": 274,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -227,6 +227,7 @@
     "ProxyConfig": "az tool is configured to use %s as proxy server",
     "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
     "RefreshingAzSession": "Attempting to refresh az-cli session...",
-    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   }
 }

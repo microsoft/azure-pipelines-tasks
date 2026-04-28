@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 273,
-    "Patch": 6
+    "Minor": 274,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -266,6 +266,7 @@
     "FailedToLoginAzureDevOpsCLI": "Failed to login to Azure DevOps CLI",
     "FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
     "FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project",
-    "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value"
+    "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   }
 }
