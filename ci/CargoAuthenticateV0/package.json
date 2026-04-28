@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "Agent.Tasks": "file:../.."
+  }
+}

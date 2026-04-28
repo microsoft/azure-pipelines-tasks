@@ -20,8 +20,8 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "azure-pipelines-task-lib": "^5.2.4",
-    "azure-pipelines-tasks-packaging-common": "^3.270.0",
-    "azure-pipelines-tasks-utility-common": "^3.270.0",
+    "azure-pipelines-tasks-packaging-common": "^3.273.0",
+    "azure-pipelines-tasks-utility-common": "^3.272.0",
     "@types/node": "^24.10.0"
   },
   "devDependencies": {
