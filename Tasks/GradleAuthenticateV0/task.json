@@ -1,0 +1,118 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "74983ddf-9889-4b8b-bac1-9e1255a36ff9",
+  "name": "GradleAuthenticate",
+  "friendlyName": "Gradle Authenticate",
+  "description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or a user-provided access token.",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/gradle-authenticate)",
+  "helpUrl": "https://aka.ms/gradle-authenticate",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 274,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Gradle Authenticate",
+  "inputs": [
+    {
+      "name": "buildFiles",
+      "type": "multiLine",
+      "label": "Build files",
+      "required": false,
+      "helpMarkDown": "Newline-separated list of Gradle build files to scan for pkgs.dev.azure.com URLs. Should include settings.gradle for plugin version discovery.",
+      "properties": {
+        "resizable": "true",
+        "rows": "5"
+      }
+    },
+    {
+      "name": "repositoryUrl",
+      "type": "string",
+      "label": "Repository URL",
+      "required": false,
+      "helpMarkDown": "Explicit Azure Artifacts repository URL to authenticate, in addition to any discovered from build files. Supports both dependency feeds and plugin repositories."
+    },
+    {
+      "name": "adoServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "label": "Service connection",
+      "required": false,
+      "helpMarkDown": "Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the user must provide an access token via the ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable."
+    },
+    {
+      "name": "pluginToolVersion",
+      "type": "string",
+      "label": "Plugin tool version",
+      "required": false,
+      "helpMarkDown": "Override the credprovider plugin version used for the local JAR layout and init script. Use when settings.gradle does not declare the plugin or when version resolution fails."
+    },
+    {
+      "name": "gradleUserHome",
+      "type": "string",
+      "label": "Gradle user home",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Override the Gradle user home directory. Defaults to ~/.gradle. The init script is written to <gradleUserHome>/init.d/."
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "src/main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "src/main.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node16": {
+      "target": "src/postexecution.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "src/postexecution.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Error_NoBuildFilesOrRepoUrls": "At least one of buildFiles or repositoryUrl must be provided. buildFiles should list Gradle build files containing pkgs.dev.azure.com URLs. repositoryUrl should be an explicit Azure Artifacts repository URL.",
+    "Error_CouldNotResolveCiJar": "Could not resolve the CI credprovider JAR.",
+    "Error_CouldNotDetermineVersion": "Could not determine the credprovider plugin version. Either declare the plugin in settings.gradle and include it in buildFiles, or set the pluginToolVersion input.",
+    "Info_CiJarResolved": "CI JAR resolved: %s",
+    "Info_MavenRepoLaidOut": "Maven repo laid out at: %s (versions: %s)",
+    "Info_AuthConfigWritten": "Auth config written: %s",
+    "Info_InitScriptWritten": "Init script written: %s",
+    "Info_DiscoveredFeed": "Discovered feed: %s (from %s)",
+    "Info_PluginVersionFromInput": "Plugin version from pluginToolVersion input: %s",
+    "Info_PluginVersionBundled": "No plugin version in build files; using bundled JAR version: %s",
+    "Info_FeedResourceTenant": "Feed %s resource tenant: %s",
+    "Info_EnvVarSet": "%s = %s",
+    "Info_SuccessResult": "GradleAuthenticate configured %s feed(s) with plugin version(s) %s",
+    "Warning_NoFeedsFound": "No Azure Artifacts feed URLs (pkgs.dev.azure.com) found in the provided build files or repository URLs.",
+    "Warning_NoServiceConnection": "No service connection configured. The credential provider will use the SYSTEM_ACCESSTOKEN or ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable for authentication. Set one of these variables in your pipeline or provide a service connection for Workload Identity Federation.",
+    "Warning_CouldNotDetermineResourceTenant": "Could not determine resource tenant for %s",
+    "Warning_BuildFileNotFound": "Build file not found: %s",
+    "Warning_MissingSystemVariable": "System variable %s is not set; WIF authentication may not work.",
+    "Info_PluginVersionFromFile": "Plugin version from %s: %s",
+    "Info_DynamicVersionDetected": "Dynamic plugin version \"%s\" detected; will resolve via maven-metadata.xml",
+    "Info_SynthesizedVersion": "Synthesized version \"%s\" from dynamic pattern \"%s\"",
+    "Info_CiJarFromHome": "Using CI JAR from GRADLE_CREDPROVIDER_HOME: %s",
+    "Info_CiJarFromBundled": "Using bundled CI JAR: %s",
+    "Error_NoCiJarFound": "No CI JAR found. Ensure GRADLE_CREDPROVIDER_HOME is set (provided automatically on Microsoft-hosted agents) or that the task package includes a bundled credprovider JAR.",
+    "Info_PostExecDeletedInitScript": "Deleted init script: %s",
+    "Info_PostExecDeletedTempDir": "Deleted temp directory: %s",
+    "Info_PostExecUnsetVars": "Unset ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO and ARTIFACTS_GRADLE_AUTH_CONFIG",
+    "Warning_PostExecCleanupFailed": "Post-step cleanup failed: %s",
+    "Warning_CorruptAuthConfig": "Existing auth config at %s is corrupt and will be overwritten.",
+    "Info_NoFeedsNothingToConfigure": "No Azure Artifacts feeds found. Nothing to configure.",
+    "Warning_RepositoryUrlNotAzureArtifacts": "The provided repositoryUrl (%s) does not appear to be an Azure Artifacts URL (expected pkgs.dev.azure.com). Authentication may not work correctly.",
+    "Info_AutoDiscoveredBuildFiles": "No buildFiles input provided; auto-discovered Gradle files in working directory: %s"
+  }
+}
