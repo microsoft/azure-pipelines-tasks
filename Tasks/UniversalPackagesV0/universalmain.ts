@@ -1,15 +1,17 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib";
+import { getArtifactToolPath } from './artifacttoolresolver';
 import * as universalDownload from "./universaldownload";
 import * as universalPublish from "./universalpublish";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
-    
-    // The preexecution step should have downloaded artifacttool and set the path
-    const artifactToolPath = tl.getTaskVariable("UPACK_ARTIFACTTOOL_PATH");
-    if (!artifactToolPath) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", tl.loc("Error_ArtifactToolPathNotSet")));
+
+    let artifactToolPath: string;
+    try {
+        artifactToolPath = await getArtifactToolPath();
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", error.message));
         return;
     }
     
