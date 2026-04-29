@@ -162,6 +162,9 @@
       <Item ItemId=";loc.messages.InvalidNodejsMirror" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The provided Node.js mirror URL is invalid: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定された Node.js ミラー URL は無効です: '%s']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
