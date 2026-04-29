@@ -4,7 +4,6 @@ import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 import { ArgsSanitizingError } from './utils/errors';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
-
 type BashEnvTelemetry = {
     foundPrefixes: number,
     quottedBlocks: number,

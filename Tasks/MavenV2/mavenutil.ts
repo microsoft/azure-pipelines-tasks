@@ -31,7 +31,6 @@ async function convertXmlStringToJson(xmlContent: string): Promise<any> {
     return Q.nfcall<any>(xml2js.parseString, stripbom(xmlContent));
 }
 
-
 function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string): Q.Promise<void> {
     let builder = new xml2js.Builder({
         pretty: true,
