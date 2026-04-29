@@ -36,5 +36,8 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "qs": "^6.15.1"
   }
 }
