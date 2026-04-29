@@ -1,5 +1,7 @@
 // parse command line options
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+    boolean: ['fast-build', 'fb']
+});
 
 if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
     argv.includeLocalPackagesBuildConfig=true;
@@ -65,6 +67,8 @@ var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
+
+const isFastBuildEnabled = argv['fast-build'] || argv['fb'];
 
 var CLI = {};
 
@@ -227,8 +231,7 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = async function(/** @type {{ task: string }} */ argv)
-{
+CLI.build = async function(/** @type {{ task: string }} */ argv){
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
@@ -243,6 +246,8 @@ CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
 }
 
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
+    console.time('Total build time');
+
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -362,7 +367,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     console.log(`✅ Successful:    ${buildResults.successful}`);
     console.log(`❌ Failed:        ${buildResults.failed}`);
     console.log(`⏭️  Skipped:       ${buildResults.skipped}`);
-    
+
     if (buildResults.failures.length > 0) {
         console.log('\n❌ FAILED TASKS:');
         buildResults.failures.forEach((failure, index) => {
@@ -402,6 +407,12 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
                 buildResults.skipped++;
             }
         }
+    }
+
+    console.timeEnd('Total build time');
+
+    if (!isFastBuildEnabled) {
+        console.log('🚀 \x1b[91mUse --fast-build or --fb flag to enable fast builds. This can significantly reduce build times, especially for tasks with large node_modules folders.\x1b[0m');
     }
 }
 
@@ -606,24 +617,48 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         });
         fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
     }
-    
-    // copy default resources and any additional resources defined in the task's make.json
-    console.log();
-    console.log('> copying task resources');
-    copyTaskResources(taskMake, taskPath, outDir);
 
-    const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+    if (isFastBuildEnabled) {
+        // Move node_modules to build output instead of copy+delete.
+        // This avoids a slow recursive deep-copy of thousands of small files via shelljs.
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+        const outNodeModulesPath = path.join(outDir, 'node_modules');
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> moving node_modules to build output');
+            fs.renameSync(taskNodeModulesPath, outNodeModulesPath);
+        }
 
-    if (fs.existsSync(taskNodeModulesPath)) {
-        console.log('\n> removing node modules');
-        rm('-Rf', taskNodeModulesPath);
-    }
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        const outTestsNodeModulesPath = path.join(outDir, 'Tests', 'node_modules');
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> moving Tests/node_modules to build output');
+            mkdir('-p', path.join(outDir, 'Tests'));
+            fs.renameSync(taskTestsNodeModulesPath, outTestsNodeModulesPath);
+        }
 
-    const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        // Copy remaining task resources (node_modules already moved, will be skipped by matchCopy)
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
+    } else {
+        // copy default resources and any additional resources defined in the task's make.json
+        console.log();
+        console.log('> copying task resources');
+        copyTaskResources(taskMake, taskPath, outDir);
 
-    if (fs.existsSync(taskTestsNodeModulesPath)) {
-        console.log('\n> removing task tests node modules');
-        rm('-Rf', taskTestsNodeModulesPath);
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> removing node modules');
+            rm('-Rf', taskNodeModulesPath);
+        }
+
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> removing task tests node modules');
+            rm('-Rf', taskTestsNodeModulesPath);
+        }
     }
 
     // remove duplicated task libs node modules from build tasks.

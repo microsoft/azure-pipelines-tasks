@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 270,
-    "Patch": 1
+    "Minor": 272,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -407,6 +407,20 @@
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
+  "prejobexecution": {
+    "Node16": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "PreJobExecutionUniversalPackages.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node10": {
       "target": "universalmain.js",
@@ -457,8 +471,10 @@
     "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
     "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
     "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
+    "Info_ArtifactToolPathResolvedFromCache": "ms-resource:loc.messages.Info_ArtifactToolPathResolvedFromCache",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
+    "Error_ArtifactToolPathNotSet": "ms-resource:loc.messages.Error_ArtifactToolPathNotSet",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",

@@ -6,6 +6,9 @@ import { TEST_CONSTANTS, getDefaultEnvVars } from './testConstants';
 // Set resource path to enable localization in tests
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
+// Import pre-job installer tests
+import './L0.ArtifactToolInstaller';
+
 describe('UniversalPackages Suite', function () {
     describe('Download Operations', function () {
         this.timeout(10000);
@@ -190,6 +193,17 @@ describe('UniversalPackages Suite', function () {
             });
             
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_UniversalPackagesNotSupportedOnPrem'));
+        });
+
+        it('fails when artifact tool path is not set by pre-job', async function() {
+            const envVars = getDefaultEnvVars();
+            delete envVars['VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH'];
+            const tr = await runTestWithEnv('./testRunner.js', {
+                ...envVars,
+                'INPUT_COMMAND': 'download',
+            });
+
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_FailedToGetArtifactTool', tl.loc('Error_ArtifactToolPathNotSet')));
         });
     });
 

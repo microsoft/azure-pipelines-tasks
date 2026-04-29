@@ -5,6 +5,7 @@ $global:__vstsNoOverrideVerbose = $true
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
     Import-Module -Name "$PSScriptRoot\ps_modules\RemoteDeployer\RemoteDeployer.psm1"
+    Import-Module $PSScriptRoot\ps_modules\Sanitizer
     
     . "$PSScriptRoot\Utility.ps1"
 

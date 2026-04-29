@@ -4,7 +4,6 @@ export const TestEnvVars = {
     npmrcPath: '__npmauth_npmrcPath__',
     npmrcShouldExist: '__npmauth_npmrcShouldExist__',   // 'false' to simulate missing file
     npmrcRegistries: '__npmauth_npmrcRegistries__',      // semicolon-separated registry URLs
-    localRegistries: '__npmauth_localRegistries__',      // JSON array of {url, auth} objects
     customEndpoint: '__npmauth_customEndpoint__',
     externalRegistryUrl: '__npmauth_externalRegistryUrl__',
     externalRegistryToken: '__npmauth_externalRegistryToken__',
@@ -22,7 +21,15 @@ export const TestEnvVars = {
     cleanupIndexShouldExist: '__npmcleanup_indexShouldExist__',
     cleanupNpmrcShouldExist: '__npmcleanup_npmrcShouldExist__',
     cleanupTempDirectory: '__npmcleanup_tempDirectory__',
-    cleanupTempDirExists: '__npmcleanup_tempDirExists__'
+    cleanupTempDirExists: '__npmcleanup_tempDirExists__',
+
+    // Endpoint credential tests
+    endpointAuthScheme: '__npmauth_endpointAuthScheme__',    // 'Token' or 'UsernamePassword'
+    endpointUsername: '__npmauth_endpointUsername__',
+    endpointPassword: '__npmauth_endpointPassword__',
+    isInternalEndpoint: '__npmauth_isInternalEndpoint__',
+    packagingLocationShouldFail: '__npmauth_packagingLocationShouldFail__',
+    httpProbeShouldFail: '__npmauth_httpProbeShouldFail__'
 };
 
 // Test data constants
@@ -45,6 +52,5 @@ export const TestData = {
     collectionUri: 'https://dev.azure.com/testorg/',
 
     // Log prefixes used in stdout assertions
-    appendPrefix: 'APPEND_TO_NPMRC:',
     telemetryPrefix: 'TELEMETRY:'
 };

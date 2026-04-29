@@ -17,11 +17,35 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
         return;
     }
 
-    const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
-    const wmicTool = tl.tool('wmic');
-    const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
-    wmicTool.arg(wmicArgs);
-    let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    // Use PowerShell Get-ItemProperty instead of deprecated wmic
+    const escapedPath = vstestexeLocation.replace(/'/g, "''");
+    let output = '';
+    try {
+        const powershellTool = tl.tool('powershell');
+        const powershellScript = `(Get-ItemProperty -LiteralPath '${escapedPath}' -ErrorAction Stop).VersionInfo.FileVersion`;
+        powershellTool.arg(['-Command', powershellScript]);
+        output = powershellTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    } catch (err) {
+        tl.debug('Get-ItemProperty failed: ' + err);
+    }
+
+    if (utils.Helper.isNullOrWhitespace(output)) {
+        tl.debug('Get-ItemProperty returned empty, trying legacy wmic fallback');
+        try {
+            const wmicTool = tl.tool('wmic');
+            const wmicEscapedPath = vstestexeLocation.replace(/\\/g, '\\\\');
+            wmicTool.arg(['datafile', 'where', 'name=\''.concat(wmicEscapedPath, '\''), 'get', 'Version', '/Value']);
+            const wmicOutput = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+            if (!utils.Helper.isNullOrWhitespace(wmicOutput)) {
+                const verSplitArray = wmicOutput.trim().split('=');
+                if (verSplitArray.length === 2) {
+                    output = verSplitArray[1];
+                }
+            }
+        } catch (err) {
+            tl.debug('Legacy wmic fallback failed: ' + err);
+        }
+    }
 
     if (utils.Helper.isNullOrWhitespace(output)) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
@@ -29,28 +53,18 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     }
     output = output.trim();
     tl.debug('VSTest Version information: ' + output);
-    const verSplitArray = output.split('=');
-    if (verSplitArray.length !== 2) {
-        tl.error(tl.loc('ErrorReadingVstestVersion'));
-        throw new Error(tl.loc('ErrorReadingVstestVersion'));
-    }
 
-    const versionArray = verSplitArray[1].split('.');
-    if (versionArray.length !== 4) {
+    const versionMatch = output.match(/(\d+)\.(\d+)\.(\d+)/);
+    if (!versionMatch) {
         tl.warning(tl.loc('UnexpectedVersionString', output));
         throw new Error(tl.loc('UnexpectedVersionString', output));
     }
 
-    const majorVersion = parseInt(versionArray[0]);
-    const minorVersion = parseInt(versionArray[1]);
-    const patchNumber = parseInt(versionArray[2]);
+    const majorVersion = parseInt(versionMatch[1]);
+    const minorVersion = parseInt(versionMatch[2]);
+    const patchNumber = parseInt(versionMatch[3]);
 
     ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
-
-    if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
-        tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-        throw new Error(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-    }
 
     switch (majorVersion) {
         case 14:

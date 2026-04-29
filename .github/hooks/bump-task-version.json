@@ -3,7 +3,7 @@
     "PreToolUse": [
       {
         "type": "command",
-        "command": ".github/hooks/bump-task-version.sh",
+        "command": "bash .github/hooks/bump-task-version.sh",
         "timeout": 10
       }
     ]
