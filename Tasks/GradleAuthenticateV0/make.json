@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/GradleCredProvider/0.1.0/credprovider.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/GradleCredProviderCI/0.0.0/artifacts-gradle-credprovider-ci.zip",
                 "dest": "./GradleCredProvider/"
             }
         ]
