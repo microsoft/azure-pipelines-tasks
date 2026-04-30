@@ -42,7 +42,7 @@
     "js-yaml": "^3.13.1",
     "minimatch": "3.1.5",
     "minimist": "^1.2.8",
-    "mocha": "11.7.5",
+    "mocha": "^11.7.5",
     "node-fetch": "2.6.11",
     "node-uuid": "1.4.6",
     "nodejs-file-downloader": "^4.11.1",
