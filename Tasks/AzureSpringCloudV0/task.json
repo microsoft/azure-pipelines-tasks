@@ -18,8 +18,8 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 266,
-    "Patch": 0
+    "Minor": 273,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -312,6 +312,10 @@
       "target": "azurespringappsdeployment.js"
     },
     "Node20_1": {
+      "target": "azurespringappsdeployment.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "azurespringappsdeployment.js",
       "argumentFormat": ""
     }

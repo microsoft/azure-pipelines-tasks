@@ -19,12 +19,14 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 4
+    "Minor": 273,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
+  "deprecated": true,
+  "deprecationMessage": "AzureCLI@1 is deprecated. Use AzureCLI@2 (or newer) instead.",
   "groups": [
     {
       "name": "advanced",
@@ -169,7 +171,7 @@
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.3",
-    "Node24_1": "1.270.4"
+    "Default": "1.273.0",
+    "Node24_1": "1.273.1"
   }
 }

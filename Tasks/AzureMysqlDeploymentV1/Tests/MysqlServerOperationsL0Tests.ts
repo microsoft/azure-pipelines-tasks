@@ -20,7 +20,7 @@ export class MysqlServerOperationsL0Tests  {
     public static async testForCorrectId(){
         try{
             const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("testserver.test-vm1.onebox.xdb.mscds.com");
-            tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should has passed.');
+            tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should have passed.');
         }catch(error){
             tl.setResult(tl.TaskResult.Failed, 'MysqlServerOperationsTests.MysqlServerFromServerName should have passed but failed.');
         }

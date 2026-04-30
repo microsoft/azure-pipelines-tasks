@@ -1,15 +1,15 @@
 {
   "id": "97411e3d-0241-4b1f-9607-2d2c04b4df51",
   "name": "DownloadGithubNpmPackage",
-  "friendlyName": "Download Github Npm Package",
-  "description": "Install npm packages from GitHub.",
+  "friendlyName": "[Deprecated] Download Github Npm Package",
+  "description": "Deprecated: this task is no longer maintained. Use the Npm@1 task with GitHub service connections instead.",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 268,
+    "Minor": 273,
     "Patch": 0
   },
   "runsOn": [
@@ -20,7 +20,9 @@
     "npm"
   ],
   "minimumAgentVersion": "2.144.0",
-  "instanceNameFormat": "Download GitHub Npm Package",
+  "deprecated": true,
+  "deprecationMessage": "The DownloadGithubNpmPackage@1 (Download Github Npm Package) task has been deprecated and will soon be retired. Use the Npm@1 task instead.",
+  "instanceNameFormat": "[Deprecated] Download Github Npm Package",
   "groups": [
     {
       "displayName": "Custom registries and authentication",

@@ -1,8 +1,8 @@
 {
   "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
   "name": "AzureCLI",
-  "friendlyName": "Azure CLI",
-  "description": "Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.",
+  "friendlyName": "[Deprecated] Azure CLI",
+  "description": "Deprecated: this task is no longer maintained. Use the AzureCLI@2 task instead.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
@@ -19,12 +19,14 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 3
+    "Minor": 273,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
-  "instanceNameFormat": "Azure CLI $(scriptPath)",
+  "instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "showEnvironmentVariables": true,
+  "deprecated": true,
+  "deprecationMessage": "AzureCLI@1 is deprecated. Use AzureCLI@2 (or newer) instead.",
   "groups": [
     {
       "name": "advanced",

@@ -3,6 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as ssh2 from 'ssh2';
 import * as SftpClient from 'ssh2-sftp-client';
+import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
@@ -225,7 +226,7 @@ export interface ScpConfig {
 */
 export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client, remoteCmdOptions: RemoteCommandOptions, remoteInputFilePath: string): Promise<string> {
     const remoteOutputFilePath = `${remoteInputFilePath}._unix`;
-    const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteInputFilePath}> ${remoteOutputFilePath}`;
+    const removeLineEndingsCmd = `tr -d \'\\015\' <${shellQuote(remoteInputFilePath)}> ${shellQuote(remoteOutputFilePath)}`;
 
     console.log(removeLineEndingsCmd);
 

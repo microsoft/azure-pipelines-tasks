@@ -1,8 +1,8 @@
 {
   "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
   "name": "PublishTestResults",
-  "friendlyName": "Publish test results",
-  "description": "Publish test results to Azure Pipelines",
+  "friendlyName": "[Deprecated] Publish test results",
+  "description": "[Deprecated] Publish test results to Azure Pipelines",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
@@ -13,9 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 262,
+    "Minor": 271,
     "Patch": 0
   },
+  "deprecated": true,
+  "deprecationMessage": "The PublishTestResults@1 task is deprecated. Please use the latest version of the PublishTestResults task (PublishTestResults@2 or later).",
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "groups": [

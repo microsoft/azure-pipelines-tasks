@@ -3,6 +3,9 @@ import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import tl = require('azure-pipelines-task-lib');
 
+// Import Kudu warmup tests
+import './KuduWarmupTests';
+
 const tmpDir = path.join(__dirname, 'temp');
 
 describe('AzureWebApp Suite', function() {

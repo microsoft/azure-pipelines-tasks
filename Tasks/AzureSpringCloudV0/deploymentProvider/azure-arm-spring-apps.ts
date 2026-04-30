@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import jsonPath = require('JSONPath');
+import { JSONPath } from 'jsonpath-plus';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient';
@@ -372,7 +372,7 @@ export class AzureSpringApps {
      */
     public async getInactiveDeploymentName(appName: string): Promise<string> {
         const allDeploymentsData = await this.getAllDeploymentInfo(appName);
-        const inactiveDeploymentName = jsonPath.eval(allDeploymentsData, '$.value[?(@.properties.active == false)].name')[0];
+        const inactiveDeploymentName = JSONPath({ json: allDeploymentsData, path: '$.value[?(@.properties.active == false)].name' })[0];
         tl.debug(`Inactive deployment name: ${inactiveDeploymentName}`);
         return inactiveDeploymentName;
     }
@@ -383,7 +383,7 @@ export class AzureSpringApps {
      */
     public async getAllDeploymentNames(appName: string): Promise<string[]> {
         const allDeploymentsData = await this.getAllDeploymentInfo(appName);
-        const deploymentNames = jsonPath.eval(allDeploymentsData, '$.value[*].name')
+        const deploymentNames = JSONPath({ json: allDeploymentsData, path: '$.value[*].name' })
         tl.debug('Found deployment names: ' + deploymentNames);
         return deploymentNames;
     }
@@ -411,8 +411,7 @@ export class AzureSpringApps {
      */
     public async getServiceSkuTier(): Promise<String> {
         const serviceInfo = await this.getServiceInfo();
-
-        const getServiceSkuTier = jsonPath.eval(serviceInfo, '$.sku.tier');
+        const getServiceSkuTier = JSONPath({ json: serviceInfo, path: '$.sku.tier' });
         tl.debug("Service sku obtained");
         return getServiceSkuTier;
     }

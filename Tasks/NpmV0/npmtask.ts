@@ -16,6 +16,7 @@ tl.setResourcePath(path.join( __dirname, 'task.json'));
 executeTask();
 
 async function executeTask() {
+    tl.warning(tl.loc("TaskDeprecationNotice"));
     var cwd = tl.getPathInput('cwd', true, false);
     tl.mkdirP(cwd);
     tl.cd(cwd);

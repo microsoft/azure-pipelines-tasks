@@ -34,15 +34,13 @@ export class DeploymentCustomImageToStagingSucceeds {
         DeploymentCustomImageToStagingSucceeds.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'DeploymentCustomImageToStagingSucceedsL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert.deepEqual(mockTestRunner.errorIssues, [], 'No error output expected in a successful deployment');
             assert(mockTestRunner.succeeded);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             console.error(error);
             done(error);
-        }
+        });
     };
 }

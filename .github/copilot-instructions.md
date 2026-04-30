@@ -296,6 +296,22 @@ Commands:
 6. **Test cross-platform** if task supports multiple OS
 7. **Document task inputs/outputs** in task.json descriptions
 
+## Specialized Workflows
+
+### Component Governance (CG) Bug Fixes
+
+For fixing Component Governance security alerts, use the specialized workflow documented in [.github/copilot/skills/fix-cg-bug.md](.github/copilot/skills/fix-cg-bug.md).
+
+**Quick Reference:**
+- Retrieve work item details using Azure CLI or CG API
+- Identify affected tasks via Component Governance API
+- Update package dependencies to fix versions
+- Bump task versions following sprint rules
+- Create feature branch: `CopilotSkill/CGFix/<WorkItemID>`
+- Create PR with `AB#<WorkItemID>` for automatic Azure Boards linking
+
+See the skill documentation for the complete 10-step workflow with examples.
+
 ## Resources
 
 - [Azure Pipelines Task Documentation](https://docs.microsoft.com/azure/devops/pipelines/tasks/)
