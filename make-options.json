@@ -234,9 +234,6 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node24": [
-        "PublishSymbolsV2"
-    ],
     "Node24_1": [
         "AzureCLIV1",
         "AzureCLIV2",
@@ -246,7 +243,8 @@
         "AzureKeyVaultV2",
         "AzureFileCopyV4",
         "AzureFileCopyV5",
-        "AzureFileCopyV6"
+        "AzureFileCopyV6",
+        "PublishSymbolsV2"
     ],
     "Node24_3": [],
     "Node24_4": [],
