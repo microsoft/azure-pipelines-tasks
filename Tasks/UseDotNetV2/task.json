@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 273,
+    "Minor": 274,
     "Patch": 0
   },
   "satisfies": [
@@ -221,6 +221,7 @@
     "ApplyingRollForwardPolicy": "Applying rollForward policy '%s' to version '%s', resolved version spec: '%s'",
     "InvalidRollForwardPolicy": "Invalid rollForward policy '%s' in global.json at path: '%s'. Supported values are: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. The rollForward policy will be ignored.",
     "ResolvedVersionFromGlobalJson": "Resolved SDK version '%s' from global.json (original version: '%s', rollForward: '%s')",
-    "InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json"
+    "InstallingFromGlobalJson": "Installing .NET Core SDK version %s resolved from global.json",
+    "VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
   }
 }

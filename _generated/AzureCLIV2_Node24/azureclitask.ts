@@ -9,6 +9,7 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
+import { tryValidateScriptArgs } from "./src/argsSanitizer";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -39,6 +40,7 @@ export class azureclitask {
         }
 
         try{
+            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
@@ -61,7 +63,7 @@ export class azureclitask {
                     tl.debug("az version failed, falling back to 'az --version'");
                     azVersionResult = tl.execSync("az", "--version");
                 }
-            } 
+            }
             else {
                 // Default case: always run with "--version"
                 azVersionResult = tl.execSync("az", "--version");
@@ -76,7 +78,7 @@ export class azureclitask {
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
             const authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
-            
+
             await this.loginAzureRM(connectedService);
 
             var keepAzSessionActive: boolean = tl.getBoolInput('keepAzSessionActive', false);
@@ -178,7 +180,7 @@ export class azureclitask {
                     toolExecutionError.errors.forEach((error) => {
                         tl.error(error.message, tl.IssueSource.TaskInternal);
                     });
-                    
+
                     // fail with main message
                     tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
                 } else {
@@ -227,7 +229,7 @@ export class azureclitask {
             }
 
             if (!versionMatch || versionMatch.length < 2) {
-                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);                
+                tl.error(`Can't parse az version from: ${azVersionResultOutput}`);
                 return false;
             }
 
@@ -255,7 +257,7 @@ export class azureclitask {
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-        var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);        
+        var visibleAzLogin: boolean = tl.getBoolInput("visibleAzLogin", true);
 
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -322,7 +324,7 @@ export class azureclitask {
             }
             else {
                 Utility.throwIfError(tl.execSync("az", "login --identity --output none"), tl.loc("MSILoginFailed"));
-            }            
+            }
         }
         else {
             throw tl.loc('AuthSchemeNotSupported', authScheme);
