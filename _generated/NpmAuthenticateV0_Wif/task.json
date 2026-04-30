@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
-    "Patch": 0
+    "Minor": 273,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -127,6 +127,6 @@
   "_buildConfigMapping": {
     "Default": "0.273.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.274.0"
+    "wif_242": "0.273.1"
   }
 }
