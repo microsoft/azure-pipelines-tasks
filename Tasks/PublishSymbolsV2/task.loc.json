@@ -206,7 +206,7 @@
       "target": "PreJobExecutionPublishSymbols.js",
       "argumentFormat": ""
     },
-    "Node24_1": {
+    "Node24": {
       "target": "PreJobExecutionPublishSymbols.js",
       "argumentFormat": ""
     }
@@ -229,7 +229,7 @@
       "target": "clienttoolmain.js",
       "argumentFormat": ""
     },
-    "Node24_1": {
+    "Node24": {
       "target": "clienttoolmain.js",
       "argumentFormat": ""
     }
