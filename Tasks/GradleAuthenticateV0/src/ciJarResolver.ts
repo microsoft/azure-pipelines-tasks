@@ -6,12 +6,12 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
- * Resolve the CI JAR from available sources (priority order):
- * 1. GRADLE_CREDPROVIDER_HOME env var (Microsoft-hosted agents via CIPlat.Externals)
- * 2. Bundled JAR shipped with the task (downloaded at build time from externals)
+ * Resolve the CI JAR:
+ * 1. GRADLE_CREDPROVIDER_HOME env var — optional override (usually unset)
+ * 2. Bundled JAR shipped with the task (primary source, downloaded at build time from externals)
  */
 export function resolveCiJar(): string | null {
-    // Priority 1: GRADLE_CREDPROVIDER_HOME
+    // Check override first
     const credproviderHome = process.env['GRADLE_CREDPROVIDER_HOME'];
     if (credproviderHome) {
         const jar = findJarInDir(credproviderHome);
@@ -21,7 +21,7 @@ export function resolveCiJar(): string | null {
         }
     }
 
-    // Priority 2: Bundled JAR (downloaded via make.json externals at build time)
+    // Primary: Bundled JAR (downloaded via make.json externals at build time)
     const bundledDir = path.join(__dirname, '..', 'GradleCredProvider');
     const jar = findJarInDir(bundledDir);
     if (jar) {

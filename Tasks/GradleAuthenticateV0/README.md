@@ -75,7 +75,7 @@ At least one of `buildFiles` or `repositoryUrl` must be provided.
 ## How it works
 
 1. **Feed discovery** — Scans the provided build files for `pkgs.dev.azure.com` URLs and merges them with any explicit `repositoryUrl`.
-2. **CI JAR resolution** — Locates the Azure Artifacts Gradle credential provider JAR from `GRADLE_CREDPROVIDER_HOME` (set automatically on Microsoft-hosted agents) or from the bundled JAR shipped with the task.
+2. **CI JAR resolution** — Locates the Azure Artifacts Gradle credential provider JAR from the bundled externals shipped with the task. Set `GRADLE_CREDPROVIDER_HOME` to override the JAR location.
 3. **Version resolution** — Determines the plugin version from build files, the `pluginToolVersion` input, or the JAR filename.
 4. **Maven repo layout** — Creates a local Maven repository containing the credential provider JAR so Gradle can resolve the plugin without network access.
 5. **Auth config** — Writes a JSON auth config file with feed credentials (WIF or access token).
