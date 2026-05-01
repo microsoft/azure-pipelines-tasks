@@ -7,7 +7,7 @@
  * 2. Applies the plugin at the Gradle level
  * 3. Injects the local repo into pluginManagement.repositories via beforeSettings
  *
- * @param version The credprovider plugin version (must match settings.gradle)
+ * @param version The credprovider plugin version, or '+' to resolve the latest from the local repo.
  */
 export function generateInitScript(version: string): string {
     return `// azure-artifacts-auth.gradle — written by GradleAuthenticate@0.

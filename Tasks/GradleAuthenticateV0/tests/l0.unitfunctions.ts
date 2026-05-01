@@ -42,6 +42,12 @@ describe('Unit Tests - Pure Functions', function () {
                 'Script should contain the versioned classpath');
         });
 
+        it('should use + as dynamic version when no specific version is provided', () => {
+            const script = generateInitScript('+');
+            assert.ok(script.includes("classpath 'com.microsoft.azure:artifacts-gradle-credprovider:+'"),
+                'Script should contain the dynamic + classpath');
+        });
+
         it('should reference ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO env var', () => {
             const script = generateInitScript('1.0.0');
             assert.ok(script.includes('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO'),

@@ -12,6 +12,7 @@ import { layoutMavenRepo } from './mavenLayout';
 import { generateInitScript } from './initScript';
 import { resolveVersions } from './versionResolver';
 import { emitTelemetry } from './telemetry';
+import { isAzureArtifactsUrl } from './constants';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -53,7 +54,7 @@ async function run(): Promise<void> {
         const existingRepoDir = tl.getVariable('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO');
         const tempDir = existingRepoDir && fs.existsSync(existingRepoDir)
             ? existingRepoDir
-            : path.join(os.tmpdir(), `gradle-auth-${Date.now()}`);
+            : path.join(os.tmpdir(), 'gradle-auth');
         fs.mkdirSync(tempDir, { recursive: true });
 
         layoutMavenRepo(tempDir, ciJarPath, versions);
@@ -75,11 +76,8 @@ async function run(): Promise<void> {
 
         exportEnvironmentVariables(tempDir, authConfigPath);
 
-        // versions[0] is used for the initscript classpath. This is safe because
-        // every version directory contains the same JAR content — the classpath
-        // version only affects which directory Gradle reads from. Multi-run
-        // overwrites of this init script are similarly safe for the same reason.
-        const initScriptPath = writeInitScript(inputs.gradleUserHome, versions[0]);
+        const classpathVersion = inputs.pluginToolVersion || '+';
+        const initScriptPath = writeInitScript(inputs.gradleUserHome, classpathVersion);
         console.log(tl.loc('Info_InitScriptWritten', initScriptPath));
 
         tl.setVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH', initScriptPath, false, false);
@@ -132,7 +130,7 @@ function readInputs(): TaskInputs | null {
         return null;
     }
 
-    if (repositoryUrl && !repositoryUrl.includes('pkgs.dev.azure.com')) {
+    if (repositoryUrl && !isAzureArtifactsUrl(repositoryUrl)) {
         tl.warning(tl.loc('Warning_RepositoryUrlNotAzureArtifacts', repositoryUrl));
     }
 

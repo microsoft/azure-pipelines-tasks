@@ -90,6 +90,10 @@ export async function buildAuthEntries(
     feeds: { url: string }[],
     adoServiceConnection: string
 ): Promise<FeedAuthEntry[]> {
+    if (!adoServiceConnection) {
+        return feeds.map(feed => ({ url: feed.url, auth: 'sat' as const, ciSystem: 'ado' as const }));
+    }
+
     const tenantIds = await Promise.all(feeds.map(feed => probeFeedTenantId(feed.url)));
 
     const entries: FeedAuthEntry[] = [];
@@ -103,11 +107,7 @@ export async function buildAuthEntries(
             tl.warning(tl.loc('Warning_CouldNotDetermineResourceTenant', feed.url));
         }
 
-        if (adoServiceConnection) {
-            entries.push(buildWifEntry(feed.url, adoServiceConnection, feedTenantId));
-        } else {
-            entries.push({ url: feed.url, auth: 'sat' as const, ciSystem: 'ado' as const });
-        }
+        entries.push(buildWifEntry(feed.url, adoServiceConnection, feedTenantId));
     }
 
     return entries;

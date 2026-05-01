@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl } from './constants';
+import { normalizeUrl, AZURE_ARTIFACTS_URL_PATTERN } from './constants';
 
 /**
  * Feed URL entry discovered from build files or task inputs.
@@ -14,7 +14,6 @@ export interface FeedUrl {
     source: string; // which file or input it came from
 }
 
-const AZURE_ARTIFACTS_URL_PATTERN = /https?:\/\/pkgs\.dev\.azure\.com\/[^\s'")<>]+/gi;
 
 /**
  * Scan the listed build files for Azure Artifacts feed URLs and merge with
