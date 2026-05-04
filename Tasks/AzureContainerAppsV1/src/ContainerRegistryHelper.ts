@@ -43,11 +43,10 @@ export class ContainerRegistryHelper {
             const accessToken = JSON.parse(tokenJson).accessToken;
 
             child.execFileSync('docker', [
-                'login',
-                `${acrName}.azurecr.io`,
-                '-u', '00000000-0000-0000-0000-000000000000',
-                '-p', accessToken
-            ], { stdio: 'pipe' });
+                'login', '--password-stdin',
+                '--username', '00000000-0000-0000-0000-000000000000',
+                `${acrName}.azurecr.io`
+            ], { input: accessToken, stdio: 'pipe' });
         } catch (err) {
             tl.error(tl.loc('AcrAccessTokenAuthFailed', acrName));
             throw err;
