@@ -22,8 +22,13 @@ if [[ -z "$TASK_NAME" ]]; then
   exit 0
 fi
 
-# Fetch current sprint info
-SPRINT_JSON=$(curl -sf --max-time 5 "https://whatsprintis.it/?json") || exit 0
+# Fetch current sprint info (try cache first, then network)
+SPRINT_CACHE="$HOME/.copilot-cache/sprint-data.json"
+if [[ -f "$SPRINT_CACHE" ]] && SPRINT_JSON=$(cat "$SPRINT_CACHE") && echo "$SPRINT_JSON" | jq -e '.sprint' >/dev/null 2>&1; then
+  : # cache is valid
+else
+  SPRINT_JSON=$(curl -sf --max-time 5 "https://whatsprintis.it/?json") || exit 0
+fi
 SPRINT=$(echo "$SPRINT_JSON" | jq -r '.sprint')
 WEEK=$(echo "$SPRINT_JSON" | jq -r '.week')
 

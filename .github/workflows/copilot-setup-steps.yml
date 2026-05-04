@@ -25,9 +25,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+
+      # Configure npm auth for the ADO feed BEFORE the firewall is enabled.
+      # The repo .npmrc points to the ADO PipelineTools_PublicPackages feed
+      # which requires authentication (always-auth=true).
+      # We write auth to the user-level ~/.npmrc to avoid leaking tokens into the repo.
+      - name: Configure npm auth for ADO feed
+        run: |
+          ADO_REGISTRY="//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/"
+          echo "${ADO_REGISTRY}:username=AzureDevOps" >> ~/.npmrc
+          echo "${ADO_REGISTRY}:_password=$(echo -n '${{ secrets.ADO_NPM_TOKEN }}' | base64)" >> ~/.npmrc
+          echo "${ADO_REGISTRY}:email=copilot@github.com" >> ~/.npmrc
+          echo "Configured npm auth for ADO feed"
+
+      # Pre-fetch sprint data before the firewall blocks whatsprintis.it
+      # The hook and agent instructions need this for version bumping
+      - name: Cache sprint data
+        run: |
+          SPRINT_JSON=$(curl -sf --max-time 10 "https://whatsprintis.it/?json" || echo '{}')
+          echo "$SPRINT_JSON" > /tmp/sprint-data.json
+          mkdir -p "$HOME/.copilot-cache"
+          echo "$SPRINT_JSON" > "$HOME/.copilot-cache/sprint-data.json"
+          echo "Sprint data cached: $SPRINT_JSON"
+
+      # Install root dependencies while network is unrestricted
+      - name: Install root dependencies
+        run: npm ci --ignore-scripts || echo "Root npm ci failed — non-blocking"
 
       - name: Verify setup
         run: |
           echo "Node.js: $(node --version)"
           echo "npm: $(npm --version)"
+          echo "npm config registry: $(npm config get registry)"
+          echo "Sprint cache: $(cat $HOME/.copilot-cache/sprint-data.json 2>/dev/null || echo 'not cached')"

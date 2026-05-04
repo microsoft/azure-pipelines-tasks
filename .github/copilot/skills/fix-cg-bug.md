@@ -1,19 +1,7 @@
 # Fix CG (Component Governance) Bug
 
-This skill helps fix Component Governance security alerts reported as Azure DevOps work items for the azure-pipelines-tasks repository.
-
-## When to Use
-
-Use this skill when asked to fix a CG bug, CG alert, or Component Governance vulnerability. The user will provide either:
-- An ADO work item URL (e.g., `https://dev.azure.com/mseng/AzureDevOps/_workitems/edit/XXXXXX`)
-- A CG alert URL (e.g., `https://dev.azure.com/mseng/{projectId}/_componentGovernance/{registrationId}?alertId=XXXXX`)
-- A package name and target version directly
-
-## Prerequisites
-
-- `az` CLI must be installed and logged in (`az login`)
-- `az devops` extension must be installed (`az extension add --name azure-devops`)
-- The ADO organization is `mseng` and the project is `AzureDevOps`
+> **This skill has been superseded by the custom agent at [.github/agents/fix-cg-bug.agent.md](../../agents/fix-cg-bug.agent.md).**
+> All instructions and updates are maintained there. This file is kept for backward compatibility only.
 
 ## Step-by-Step Process
 
