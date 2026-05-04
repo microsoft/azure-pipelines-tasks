@@ -300,7 +300,7 @@ Commands:
 
 ### Component Governance (CG) Bug Fixes
 
-For fixing Component Governance security alerts, use the specialized workflow documented in [.github/copilot/skills/fix-cg-bug.md](.github/copilot/skills/fix-cg-bug.md).
+For fixing Component Governance security alerts, use the specialized **fix-cg-bug** custom agent documented in [.github/agents/fix-cg-bug.agent.md](.github/agents/fix-cg-bug.agent.md).
 
 **Quick Reference:**
 - Retrieve work item details using Azure CLI or CG API
@@ -309,8 +309,6 @@ For fixing Component Governance security alerts, use the specialized workflow do
 - Bump task versions following sprint rules
 - Create feature branch: `CopilotSkill/CGFix/<WorkItemID>`
 - Create PR with `AB#<WorkItemID>` for automatic Azure Boards linking
-
-See the skill documentation for the complete 10-step workflow with examples.
 
 ## Resources
 
