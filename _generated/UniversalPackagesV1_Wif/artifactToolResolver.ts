@@ -1,4 +1,4 @@
-import * as tl from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";

@@ -1,4 +1,4 @@
-import * as tl from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 
