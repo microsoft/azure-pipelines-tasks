@@ -687,7 +687,7 @@ export class ChangeLog {
 
     // https://github.com/moby/moby/commit/df23a1e675c7e3cbad617374d85c48103541ee14?short_path=6206c94#diff-6206c94cde21ec0a5563c8369b71e609
     // Supported format for GitHub issues: #26 GH-26 repositoryName#26 repositoryNameGH-26, where GH is case in-sensitive.
-    private readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
+    private readonly _issueRegex = new RegExp("(?<!\/)(?:^|[^A-Za-z0-9_/])([a-z0-9_]+\/[a-zA-Z0-9\-_.]+)?(?:#|[Gg][Hh]-)([0-9]+)(?=[^A-Za-z0-9_]|$)", "gm");
     private readonly _changeLogTitle: string = tl.loc("ChangeLogTitle");
     private readonly _seeMoreText: string = tl.loc("SeeMoreText");
     private readonly _noStateSpecified: string = "none";
