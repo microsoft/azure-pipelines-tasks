@@ -26,17 +26,13 @@ jobs:
         with:
           node-version: "20"
 
-      # Configure npm auth for the ADO feed BEFORE the firewall is enabled.
-      # The repo .npmrc points to the ADO PipelineTools_PublicPackages feed
-      # which requires authentication (always-auth=true).
-      # We write auth to the user-level ~/.npmrc to avoid leaking tokens into the repo.
-      - name: Configure npm auth for ADO feed
+      # Override the ADO feed registry with public npmjs.org for the agent.
+      # The repo .npmrc points to an ADO feed that gets blocked by the firewall.
+      # Since all packages are public npm packages, we use npmjs.org directly.
+      - name: Configure npm for public registry
         run: |
-          ADO_REGISTRY="//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/"
-          echo "${ADO_REGISTRY}:username=AzureDevOps" >> ~/.npmrc
-          echo "${ADO_REGISTRY}:_password=$(echo -n '${{ secrets.ADO_NPM_TOKEN }}' | base64)" >> ~/.npmrc
-          echo "${ADO_REGISTRY}:email=copilot@github.com" >> ~/.npmrc
-          echo "Configured npm auth for ADO feed"
+          echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+          echo "Configured npm to use public registry (bypasses ADO feed)"
 
       # Pre-fetch sprint data before the firewall blocks whatsprintis.it
       # The hook and agent instructions need this for version bumping
