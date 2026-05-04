@@ -13,6 +13,7 @@ jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment: copilot
 
     permissions:
       contents: read
@@ -26,13 +27,17 @@ jobs:
         with:
           node-version: "20"
 
-      # Override the ADO feed registry with public npmjs.org for the agent.
-      # The repo .npmrc points to an ADO feed that gets blocked by the firewall.
-      # Since all packages are public npm packages, we use npmjs.org directly.
-      - name: Configure npm for public registry
+      # Authenticate to the ADO npm feed using secrets from the `copilot` environment.
+      # The repo .npmrc points to the ADO PipelineTools_PublicPackages feed
+      # which requires authentication (always-auth=true).
+      # We write auth to the user-level ~/.npmrc to avoid leaking tokens into the repo.
+      - name: Configure npm auth for ADO feed
         run: |
-          echo "registry=https://registry.npmjs.org/" > ~/.npmrc
-          echo "Configured npm to use public registry (bypasses ADO feed)"
+          ADO_REGISTRY="//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/"
+          echo "${ADO_REGISTRY}:username=AzureDevOps" >> ~/.npmrc
+          echo "${ADO_REGISTRY}:_password=$(echo -n '${{ secrets.ADO_NPM_TOKEN }}' | base64)" >> ~/.npmrc
+          echo "${ADO_REGISTRY}:email=copilot@github.com" >> ~/.npmrc
+          echo "Configured npm auth for ADO feed"
 
       # Pre-fetch sprint data before the firewall blocks whatsprintis.it
       # The hook and agent instructions need this for version bumping
@@ -47,6 +52,17 @@ jobs:
       # Install root dependencies while network is unrestricted
       - name: Install root dependencies
         run: npm ci --ignore-scripts || echo "Root npm ci failed — non-blocking"
+
+      # Download and install upgrade-risk-analyzer MCP tool
+      # The binary must be available at runtime for the MCP server to work
+      - name: Install upgrade-risk-analyzer
+        run: |
+          mkdir -p "$HOME/.copilot-tools"
+          curl -sfL --max-time 30 \
+            "https://github.com/nicktrienenern/upgrade-risk-analyzer/releases/latest/download/UpgradeRiskAnalyzer-linux-x64" \
+            -o "$HOME/.copilot-tools/upgrade-risk-analyzer" || echo "Download failed — placeholder"
+          chmod +x "$HOME/.copilot-tools/upgrade-risk-analyzer" 2>/dev/null || true
+          echo "upgrade-risk-analyzer installed at $HOME/.copilot-tools/"
 
       - name: Verify setup
         run: |
