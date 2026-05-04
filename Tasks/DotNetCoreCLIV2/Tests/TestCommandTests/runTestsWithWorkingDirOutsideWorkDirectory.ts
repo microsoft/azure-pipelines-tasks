@@ -1,42 +1,47 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import os = require('os');
 import util = require('../DotnetMockHelper');
 
-// Simulate multi-repo checkout scenario (issue #21989):
-//   Build.SourcesDirectory         = <buildDir>/s          (default, stays in multi-repo)
-//   System.DefaultWorkingDirectory = <buildDir>/s          (same in multi-repo)
-//   Agent.BuildDirectory           = <buildDir>
-//   workingDirectory               = <buildDir>/repository (custom checkout path)
+// Simulate AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES=true scenario:
+//   Agent.WorkFolder    = <workDir>           (e.g., _work/)
+//   Agent.BuildDirectory = <workDir>/1        (e.g., _work/1)
+//   workingDirectory     = <workDir>/shared   (checkout with path: ../shared)
 //
-// global.json with MTP config is at <buildDir>/repository/global.json
-// The fix uses Agent.BuildDirectory as boundary directly — workingDirectory is inside it.
+// The repo is checked out outside Agent.BuildDirectory but inside Agent.WorkFolder.
+// With the knob enabled, boundary widens to Agent.WorkFolder and global.json is found.
 
-// Use platform-appropriate absolute paths so path.resolve() is a no-op on all platforms.
-const isWin = process.platform === 'win32';
-const buildDir = isWin ? 'c:\\agent\\work\\1' : '/tmp/agent/work/1';
-const sourcesDir = path.join(buildDir, 's');
-const repoDir = path.join(buildDir, 'repository');
+// Use a real temp directory as the work folder base so the task-lib vault can initialize.
+const workDir = path.join(os.tmpdir(), 'agent-work-test');
+const buildDir = path.join(workDir, '1');
+const sharedDir = path.join(workDir, 'shared');
 const dotnetPath = path.join('path', 'dotnet');
 
-const projectPath = path.join(repoDir, 'MySolution.slnx');
-const globalJsonPath = path.join(repoDir, 'global.json');
+const projectPath = path.join(sharedDir, 'MySolution.slnx');
+const globalJsonPath = path.join(sharedDir, 'global.json');
+
+// Ensure the work directory exists for vault initialization
+const fs = require('fs');
+if (!fs.existsSync(workDir)) { fs.mkdirSync(workDir, { recursive: true }); }
 
 const taskPath = path.join(__dirname, '../..', 'dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
-// Override env vars to simulate multi-repo checkout (after DotnetMockHelper)
-process.env['BUILD_SOURCESDIRECTORY'] = sourcesDir;
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = sourcesDir;
+// Simulate the knob and directory layout
+process.env['AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES'] = 'true';
+process.env['AGENT_WORKFOLDER'] = workDir;
 process.env['AGENT_BUILDDIRECTORY'] = buildDir;
+process.env['BUILD_SOURCESDIRECTORY'] = path.join(buildDir, 's');
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = path.join(buildDir, 's');
 
 nmh.setNugetVersionInputDefault();
 
 tmr.setInput('command', 'test');
 tmr.setInput('projects', projectPath);
 tmr.setInput('publishTestResults', 'false');
-tmr.setInput('workingDirectory', repoDir);
+tmr.setInput('workingDirectory', sharedDir);
 
 const answers: ma.TaskLibAnswers = {
     osType: {},
@@ -69,7 +74,6 @@ nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
 
-const fs = require('fs');
 const fsClone = { ...fs };
 
 fsClone.readFileSync = function (filePath: string) {
