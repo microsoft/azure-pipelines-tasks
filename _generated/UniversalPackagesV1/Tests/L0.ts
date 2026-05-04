@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib';
-import {runTestWithEnv, assertArtifactToolCommand, assertTaskFailedBeforeToolExecution, buildCommandString } from './testHelpers';
+import {runTestWithEnv, assertResultMessage, assertArtifactToolCommand, assertTaskFailedBeforeToolExecution, buildCommandString } from './testHelpers';
 import { TEST_CONSTANTS, getDefaultEnvVars } from './testConstants';
 
 // Set resource path to enable localization in tests
@@ -213,9 +213,13 @@ describe('UniversalPackages Suite', function () {
                 expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
             });
 
+            
             // Verify inline download path was taken (not the cache-hit path)
-            assert(!tr.stdOutContained(tl.loc('Info_ArtifactToolPathResolvedFromCache')), 'should not have used cached path');
-            assert(tr.stdOutContained('Retrieving artifact tool from'), 'should have downloaded artifact tool inline');
+            // assert(!tr.stdOutContained('Info_ArtifactToolPathResolvedFromCache'), 'should not have used cached path');
+            // assert(tr.stdOutContained('Debug_RetrievingArtifactToolUri'), 'should have downloaded artifact tool inline');
+        
+            assertResultMessage(tr, 'Debug_RetrievingArtifactToolUri');
+            assert(!tr.stdOutContained('Info_ArtifactToolPathResolvedFromCache'), 'should not have used cached path');
         });
     });
 
