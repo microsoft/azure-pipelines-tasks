@@ -92,9 +92,9 @@
   "loc.messages.UnknownPropertyChangeType": "Type de modification de propriété inconnu : %s.",
   "loc.messages.InvalidJsonValue": "Valeur JSON non valide : %s",
   "loc.messages.FailedToLogout": "L'erreur suivante s'est produite lors de la déconnexion. : %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity",
-  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.SettingAzureCloud": "Définition du cloud actif sur : %s",
+  "loc.messages.LoginFailed": "La connexion Azure a échoué",
+  "loc.messages.MSILoginFailed": "Échec de la connexion Azure à l'aide de l'identité du service géré",
+  "loc.messages.AuthSchemeNotSupported": "Le schéma d'authentification %s n'est pas pris en charge",
+  "loc.messages.ErrorInSettingUpSubscription": "Erreur lors de la configuration de l'abonnement"
 }

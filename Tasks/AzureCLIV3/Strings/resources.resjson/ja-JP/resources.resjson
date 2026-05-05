@@ -66,5 +66,6 @@
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Azure DevOps CLI にログインできませんでした",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Azure DevOps 組織を設定できませんでした",
   "loc.messages.FailedToSetAzureDevOpsProject": "Azure DevOps プロジェクトを設定できませんでした",
-  "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 入力または空の GUID 値に基づき、サブスクリプション コンテキストをスキップしています"
+  "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 入力または空の GUID 値に基づき、サブスクリプション コンテキストをスキップしています",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

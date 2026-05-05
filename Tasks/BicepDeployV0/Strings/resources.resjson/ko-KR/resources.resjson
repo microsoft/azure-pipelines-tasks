@@ -92,9 +92,9 @@
   "loc.messages.UnknownPropertyChangeType": "알 수 없는 속성 변경 유형: %s.",
   "loc.messages.InvalidJsonValue": "잘못된 JSON 값: %s",
   "loc.messages.FailedToLogout": "로그아웃하는 동안 다음 오류가 발생했습니다. %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity",
-  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.SettingAzureCloud": "활성 클라우드를 %s(으)로 설정하는 중",
+  "loc.messages.LoginFailed": "Azure에 로그인하지 못했습니다.",
+  "loc.messages.MSILoginFailed": "관리되는 서비스 ID를 사용한 Azure 로그인에 실패했습니다.",
+  "loc.messages.AuthSchemeNotSupported": "인증 체계 %s은(는) 지원되지 않습니다.",
+  "loc.messages.ErrorInSettingUpSubscription": "구독을 설정하는 중 오류가 발생했습니다."
 }

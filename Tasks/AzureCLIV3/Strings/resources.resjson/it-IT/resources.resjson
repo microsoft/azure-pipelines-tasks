@@ -66,5 +66,6 @@
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Accesso all'interfaccia della riga di comando di Azure DevOps non riuscito",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Non è possibile creare l'organizzazione di Azure DevOps",
   "loc.messages.FailedToSetAzureDevOpsProject": "Impostazione del progetto Azure DevOps non riuscita",
-  "loc.messages.SkippingSubscriptionContext": "Esclusione del contesto della sottoscrizione in base all'input 'allowNoSubscriptions' o al valore GUID vuoto in corso..."
+  "loc.messages.SkippingSubscriptionContext": "Esclusione del contesto della sottoscrizione in base all'input 'allowNoSubscriptions' o al valore GUID vuoto in corso...",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }
