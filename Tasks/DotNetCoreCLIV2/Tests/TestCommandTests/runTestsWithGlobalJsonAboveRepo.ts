@@ -17,8 +17,11 @@ const taskPath = path.join(__dirname,'../..','dotnetcore.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 const nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
-// Prevent CI environment's AGENT_BUILDDIRECTORY from leaking into the
-// fallback chain inside findGlobalJsonFile.
+// Prevent CI environment's AGENT_BUILDDIRECTORY from leaking in.
+// This test does NOT set Agent.BuildDirectory, so findGlobalJsonFile()
+// should fall back to process.cwd() as the boundary. Without this delete,
+// a real AGENT_BUILDDIRECTORY from the CI agent could widen the boundary
+// and cause the test to incorrectly find global.json above the repo root.
 delete process.env['AGENT_BUILDDIRECTORY'];
 
 nmh.setNugetVersionInputDefault();
