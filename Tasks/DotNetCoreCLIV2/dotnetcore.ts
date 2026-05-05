@@ -155,7 +155,7 @@ export class dotNetExe {
         let boundary: string;
 
         if (allowWorkDirRepos) {
-            boundary = path.resolve(tl.getVariable('Agent.WorkFolder') || tl.getVariable('Agent.BuildDirectory') || process.cwd());
+            boundary = path.resolve(tl.getVariable('Agent.WorkFolder') || process.cwd());
             tl.debug(`AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled. Using Agent.WorkFolder '${boundary}' as search boundary.`);
         } else {
             boundary = path.resolve(tl.getVariable('Agent.BuildDirectory') || process.cwd());
