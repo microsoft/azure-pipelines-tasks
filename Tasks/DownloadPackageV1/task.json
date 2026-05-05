@@ -9,7 +9,9 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 273,
+
+    "Minor": 274,
+
     "Patch": 0
   },
   "demands": [],
