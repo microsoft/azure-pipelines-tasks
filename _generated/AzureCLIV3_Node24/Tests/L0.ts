@@ -1,6 +1,8 @@
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
+import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
@@ -9,6 +11,14 @@ describe('AzureCLIV3 Suite', function () {
     });
 
     after(() => {
+    });
+
+    describe('Script args sanitizer (AZP_75787_*)', () => {
+        runValidateScriptArgsTests();
+    });
+
+    describe('Args validation feature flag (EnableAzureCliArgsValidation)', () => {
+        runTryValidateScriptArgsTests();
     });
 
     it('Should handle Azure DevOps connection with Workload Identity Federation', function (done) {
@@ -25,7 +35,7 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
             assert(tr.stdout.indexOf('Azure DevOps CLI extension installed') >= 0, 'should install Azure DevOps extension');
             assert(tr.stdout.indexOf('organization configured') >= 0, 'should configure organization');
-            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project'); 
+            assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project');
             done();
         }).catch((err) => {
             done(err);
@@ -147,7 +157,49 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.failed, 'should have failed');
             assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should log standard installation failure');
+            assert(tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should attempt wheel download as fallback');
             assert(tr.stdout.indexOf('loc_mock_FailedToInstallAzureDevOpsCLI') >= 0, 'Should fail with extension installation error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should not attempt wheel fallback when feature flag is off', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsExtensionInstallFailureNoFF.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.failed, 'should have failed');
+            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(!tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should not log standard installation failure message');
+            assert(!tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should not attempt wheel download');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Should fall back to wheel installation when standard extension install fails', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'L0AzureDevOpsExtensionWheelFallback.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'should have succeeded');
+            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt standard installation first');
+            assert(tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should log standard installation failure');
+            assert(tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should download wheel as fallback');
+            assert(tr.stdout.includes('Azure DevOps CLI extension installed successfully from wheel'), 'Should install from wheel successfully');
+            assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
+            assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure organization');
+            assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure project');
             done();
         }).catch((err) => {
             done(err);

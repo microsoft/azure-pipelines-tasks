@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 272,
+    "Minor": 274,
     "Patch": 5
   },
   "minimumAgentVersion": "2.0.0",
@@ -231,10 +231,11 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "2.272.4",
-    "Node24_1": "2.272.5"
+    "Default": "2.274.4",
+    "Node24_1": "2.274.5"
   }
 }

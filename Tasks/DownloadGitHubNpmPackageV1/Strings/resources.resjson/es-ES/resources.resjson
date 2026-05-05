@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Descargar paquete npm de GitHub",
+  "loc.friendlyName": "[Deprecated] Descargar paquete npm de GitHub",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613746) o [consultar la documentación de npm](https://docs.npmjs.com/)",
-  "loc.description": "Instala paquetes npm desde GitHub.",
-  "loc.instanceNameFormat": "Descargar el paquete npm de GitHub",
+  "loc.description": "En desuso: esta tarea ya no recibe mantenimiento. Use la tarea Npm@1 en su lugar.",
+  "loc.instanceNameFormat": "[Deprecated] Descargar el paquete npm de GitHub",
   "loc.group.displayName.customRegistries": "Registros personalizados y autenticación",
   "loc.input.label.packageName": "Nombre del paquete",
   "loc.input.help.packageName": "Nombre del paquete que se va a descargar de GitHub",

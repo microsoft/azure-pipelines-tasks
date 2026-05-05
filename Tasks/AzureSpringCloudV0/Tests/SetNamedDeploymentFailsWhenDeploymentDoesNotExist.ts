@@ -29,33 +29,29 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
         let taskPath = path.join(__dirname, 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mockTaskInputParameters('nonexistingDeployment');
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist nonexistingDeployment';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             done(error);
-        }
+        });
     };
 
     public static mochaTestTargetDeploymentAlreadyProduction = (done: mocha.Done) => {
         let taskPath = path.join(__dirname, 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mockTaskInputParameters('alreadyProduction');
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert(mockTestRunner.failed);
             let expectedError = 'loc_mock_StagingDeploymentWithNameDoesntExist alreadyProduction';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             done(error);
-        }
+        });
     };
 }
