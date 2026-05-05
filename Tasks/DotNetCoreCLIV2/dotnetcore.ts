@@ -172,7 +172,7 @@ export class dotNetExe {
         };
 
         if (!isInside(searchDir, boundary)) {
-            tl.debug(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
+            console.log(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
             return null;
         }
 
