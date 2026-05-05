@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
+    "Minor": 273,
     "Patch": 1
   },
   "runsOn": [
@@ -125,8 +125,8 @@
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.274.0",
+    "Default": "0.273.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.274.1"
+    "wif_242": "0.273.1"
   }
 }
