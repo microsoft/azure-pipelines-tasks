@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecata] Scarica il pacchetto NuGet di GitHub",
-  "loc.helpMarkDown": "[Vedere la documentazione di .NET Core](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "Deprecata: questa attività non viene più mantenuta. Usare invece l'attività NuGetCommand@2 o DotNetCoreCLI@2 con le connessioni al servizio GitHub.",
-  "loc.instanceNameFormat": "[Deprecata] dotnet restore",
+  "loc.friendlyName": "[Deprecated] Scarica pacchetti NuGet di GitHub",
+  "loc.helpMarkDown": "[Vedere la documentazione di .NET Core] (https://docs.microsoft.com/dotnet/core/)",
+  "loc.description": "Deprecato: questa attività non è più gestita. Usare l'attività NuGetCommand@2 o DotNetCoreCLI@2.",
+  "loc.instanceNameFormat": "[Deprecated] dotnet restore",
   "loc.group.displayName.restoreAuth": "Feed e autenticazione",
   "loc.group.displayName.restoreAdvanced": "Avanzate",
   "loc.input.label.packageName": "Nome del pacchetto",
