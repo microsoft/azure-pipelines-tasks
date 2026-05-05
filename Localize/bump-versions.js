@@ -53,9 +53,23 @@ function bumpTaskVersion(taskPath, minor) {
     if (typeof taskJson.version.Patch != 'number') {
         throw new Error(`Error processing '${taskJsonPath}'. version.Patch should be a number.`);
     }
+
+    // Tasks that have a _generated/ mirror always carry at least one variant
+    // (e.g. <Task>_Node24) whose patch sits one above the source's Default.
+    // A naive +1 bump on the source therefore collides with the variant slot
+    // and BuildConfigGen aborts with
+    //   "inputVersion ... must not be less or equal to maxVersion ...".
+    // Bumping by +2 in that case leaves room for BuildConfigGen to roll the
+    // map forward (Default -> source, variant -> source+1).
+    const taskName = taskPath.replace(/^Tasks\//, '');
+    const hasGeneratedMirror = fs.existsSync(
+        path.join(__dirname, '..', '_generated', `${taskName}.versionmap.txt`)
+    );
+    const patchIncrement = hasGeneratedMirror ? 2 : 1;
+
     if (taskJson.version.Minor === minor) {
-        taskJson.version.Patch = taskJson.version.Patch + 1;
-        taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
+        taskJson.version.Patch = taskJson.version.Patch + patchIncrement;
+        taskLocJson.version.Patch = taskLocJson.version.Patch + patchIncrement;
     } else {
         taskJson.version.Patch = 0;
         taskLocJson.version.Patch = 0;
