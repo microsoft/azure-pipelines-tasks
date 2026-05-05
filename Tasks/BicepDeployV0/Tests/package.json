@@ -23,5 +23,8 @@
     "mockery": "^2.1.0",
     "rewiremock": "^3.14.6",
     "sinon": "^19.0.5"
+  },
+  "overrides": {
+    "minimatch": "5.1.9"
   }
 }
