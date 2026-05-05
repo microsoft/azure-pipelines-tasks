@@ -66,5 +66,6 @@
   "loc.messages.FailedToLoginAzureDevOpsCLI": "登录 Azure DevOps CLI 失败",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "未能设置 Azure DevOps 组织",
   "loc.messages.FailedToSetAzureDevOpsProject": "未能设置 Azure DevOps 项目",
-  "loc.messages.SkippingSubscriptionContext": "根据 \"allowNoSubscriptions\" 输入或空 GUID 值跳过订阅上下文"
+  "loc.messages.SkippingSubscriptionContext": "根据 \"allowNoSubscriptions\" 输入或空 GUID 值跳过订阅上下文",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

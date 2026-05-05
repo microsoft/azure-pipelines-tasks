@@ -104,5 +104,6 @@
   "loc.messages.ApplyingRollForwardPolicy": "Aplicando la directiva rollForward “%s” a la versión “%s”, especificación de versión resuelta: “%s”",
   "loc.messages.InvalidRollForwardPolicy": "Directiva rollForward “%s” no válida en global.json en la ruta: “%s”. Los valores admitidos son: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Se ignorará la directiva rollForward.",
   "loc.messages.ResolvedVersionFromGlobalJson": "Se resolvió la versión del SDK \"%s\" de global.json (versión original: ''%s\", rollForward: ''%s\")",
-  "loc.messages.InstallingFromGlobalJson": "Instalación de SDK de .NET Core versión %s resuelta desde global.json"
+  "loc.messages.InstallingFromGlobalJson": "Instalación de SDK de .NET Core versión %s resuelta desde global.json",
+  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
 }

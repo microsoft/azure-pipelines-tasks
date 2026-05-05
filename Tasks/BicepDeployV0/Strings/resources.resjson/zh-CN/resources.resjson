@@ -92,9 +92,9 @@
   "loc.messages.UnknownPropertyChangeType": "未知属性更改类型: %s。",
   "loc.messages.InvalidJsonValue": "JSON 值无效: %s",
   "loc.messages.FailedToLogout": "注销时出现以下错误: %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity",
-  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.SettingAzureCloud": "将活动云设置为 %s",
+  "loc.messages.LoginFailed": "Azure 登录失败",
+  "loc.messages.MSILoginFailed": "使用托管服务标识进行 Azure 登录失败",
+  "loc.messages.AuthSchemeNotSupported": "不支持身份验证方案 %s",
+  "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错"
 }

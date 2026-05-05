@@ -54,5 +54,6 @@
   "loc.messages.ProxyConfig": "az 工具已設定為使用 %s 做為 Proxy 伺服器",
   "loc.messages.FailedToRefreshAzSession": "嘗試重新整理 az-cli 工作階段時發生下列錯誤: %s",
   "loc.messages.RefreshingAzSession": "正在嘗試重新整理 az-cli 工作階段...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 輸入只能用於工作負載識別身分同盟 ARM 服務連線。參考的服務端點驗證配置非預期: %s。變更配置或移除 'keepAzSessionActive' 輸入。"
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 輸入只能用於工作負載識別身分同盟 ARM 服務連線。參考的服務端點驗證配置非預期: %s。變更配置或移除 'keepAzSessionActive' 輸入。",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

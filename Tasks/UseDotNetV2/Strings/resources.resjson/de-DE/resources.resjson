@@ -104,5 +104,6 @@
   "loc.messages.ApplyingRollForwardPolicy": "RollForward-Richtlinie „%s“ wird auf Version „%s“ angewendet, aufgelöste Versionsspezifikation: „%s“",
   "loc.messages.InvalidRollForwardPolicy": "Ungültige RollForward-Richtlinie „%s“ in global.json am Pfad: „%s“. Unterstützte Werte sind: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Die RollForward-Richtlinie wird ignoriert.",
   "loc.messages.ResolvedVersionFromGlobalJson": "Die SDK-Version „%s“ wurde aus global.json aufgelöst (Originalversion: „%s“, rollForward: „%s“)",
-  "loc.messages.InstallingFromGlobalJson": "Installieren .NET Core SDK Version %s, die von global.json aufgelöst wurde"
+  "loc.messages.InstallingFromGlobalJson": "Installieren .NET Core SDK Version %s, die von global.json aufgelöst wurde",
+  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
 }
