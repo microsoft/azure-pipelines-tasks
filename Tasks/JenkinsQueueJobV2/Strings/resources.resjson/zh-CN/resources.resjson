@@ -19,7 +19,7 @@
   "loc.input.label.parameterizedJob": "参数化的作业",
   "loc.input.help.parameterizedJob": "选择 Jenkins 作业是否接受参数。即使要使用所有默认参数值且实际未指定任何参数，也应选择此选项。",
   "loc.input.label.jobParameters": "作业参数",
-  "loc.input.help.jobParameters": "以 \"<parameterName>=<parameterValue>\"<b></b> 的形式指定作业参数(每行一个)<p>若要将参数设置为空值(用于替代默认值)，可以不使用参数值。例如，指定 \"<parameterName>=\"<b></b><p>支持使用变量。例如，若要将 \"commitId\"<b></b> 参数值设置为生成的 Git commit ID，请使用: \"commitId=$(Build.SourceVersion)\"<b></b>。请参阅 [有关变量的文档](https://go.microsoft.com/fwlink/?linkid=875288)了解更多详细信息。<p>支持的 Jenkins 参数类型包括: <ul>\"Boolean\"<li></li>、\"Choice\"<li></li>、\"Password\"<li></li>、\"String\"<li></li></ul>",
+  "loc.input.help.jobParameters": "以 <b>`<parameterName>=<parameterValue>`</b> 的形式指定作业参数(每行一个)<p>若要将参数设置为空值(用于替代默认值)，可以不使用参数值。<p>例如，指定 <b>`<parameterName>=`</b>。例如，若要将 <b>`commitId`</b> 参数值设置为生成的 Git 提交 ID，请使用: <b>`commitId=$(Build.SourceVersion)`</b>。请参阅[有关变量的文档](https://go.microsoft.com/fwlink/?linkid=875288)了解更多详细信息。<p>支持的 Jenkins 参数类型包括: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
   "loc.input.label.failOnUnstableResult": "出现不稳定结果时失败",
   "loc.input.help.failOnUnstableResult": "指定成功定义的严格性: 是否将不稳定视为失败。非严格为 false，严格版本则为 true。",
   "loc.input.label.retryCount": "连接失败的重试次数",

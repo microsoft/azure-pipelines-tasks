@@ -14,7 +14,7 @@
   "loc.input.help.solution": "解決方案、packages.config 或 project.json 檔案的路徑，其參考要還原的檔案。",
   "loc.input.label.selectOrConfig": "要使用的摘要",
   "loc.input.help.selectOrConfig": "您可以在這裡從 Azure Artifacts 和 (或) NuGet.org 選取摘要，也可以將 nuget.config 檔案認可至您的原始程式碼存放庫，並在這裡設定其路徑。",
-  "loc.input.label.feedRestore": "使用此 Azure Artifacts/TFS 摘要中的套件",
+  "loc.input.label.feedRestore": "使用此 Azure Artifacts/TFS 摘要中的套件。從下拉式清單中選取，或輸入 [專案名稱/]摘要名稱。",
   "loc.input.help.feedRestore": "在產生的 NuGet.config 中包含選取的摘要。您必須安裝 Azure Artifacts 且經過授權，才能於此處選取摘要。",
   "loc.input.label.includeNuGetOrg": "使用 NuGet.org 中的套件",
   "loc.input.help.includeNuGetOrg": "在產生的 NuGet.config 中包含 NuGet.org。",
@@ -135,5 +135,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本從 %s 更新至 %s。NuGet 更新至新版本時，可能發生行為變更或重大變更。若不要更新，請取消選取工作中的 [查看最新版本] 選項。",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失敗，結束代碼: (%s)，錯誤: (%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "目前已為此工作啟用 IncludeNugetOrg。若要解决此警告，請編輯建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。"
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服務連線並非使用支援的驗證方法。請使用個人存取權杖型驗證的服務連線。",
+  "loc.messages.LIB_WhichNotFound_Linux": "找不到可執行檔: '%s'。請驗證檔案路徑是否存在，或可以在 PATH 環境變數所指定的目錄中找到檔案。同時檢查檔案模式以驗證檔案是否可執行。",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "工作失敗，因為您使用的是 Ubuntu24.04 或更新版本，且未安裝 Mono。如需詳細資訊，請參閱 https://aka.ms/nuget-task-mono。"
 }

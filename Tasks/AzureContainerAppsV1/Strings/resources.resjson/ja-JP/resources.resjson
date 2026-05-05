@@ -30,6 +30,8 @@
   "loc.input.help.containerAppEnvironment": "アプリケーションで使用する Azure Container App 環境の名前です。指定しない場合は、コンテナー アプリのリソース グループ内の既存の環境が使用されます。それ以外の場合は、`<container-app-name>-env` の形式で環境が作成されます。",
   "loc.input.label.runtimeStack": "アプリケーション ランタイム スタック",
   "loc.input.help.runtimeStack": "Azure Container App にデプロイされるときにアプリケーションが実行されるプラットフォーム バージョン スタック。これは、`<platform>:<version>` の形式で提供する必要があります。指定しない場合、この値は、指定されたアプリケーションの内容に基づいて Oryx によって決定されます。Oryx でサポートされているランタイム スタックの詳細については、次のドキュメントを参照してください: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md",
+  "loc.input.label.kind": "コンテナー アプリの種類",
+  "loc.input.help.kind": "`functionapp` に設定すると、組み込みのサポートと自動スケーリングにより、Azure Container アプリで Azure Functions が実行されます。",
   "loc.input.label.targetPort": "アプリケーション ターゲット ポート",
   "loc.input.help.targetPort": "アプリケーションを実行するために指定されたポートです。値が指定されておらず、ビルダーを使用して実行可能なアプリケーション イメージをビルドする場合、ターゲット ポートは Python アプリケーションでは 80、他のすべてのプラットフォーム アプリケーションでは 8080 に設定されます。コンテナー アプリの作成時に値が指定されない場合、ターゲット ポートの既定値は 80 になります。注: このタスクを使用してコンテナー アプリを更新する場合、イングレス プロパティの変更に基づいてターゲット ポートが指定されていない場合は、ターゲット ポートが更新される可能性があります。",
   "loc.input.label.location": "コンテナー アプリの場所",
