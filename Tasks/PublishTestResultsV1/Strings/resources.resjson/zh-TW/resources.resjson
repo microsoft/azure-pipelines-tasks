@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "發佈測試結果",
+  "loc.friendlyName": "[已棄用] 發佈測試結果",
   "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "將測試結果發佈至 Azure Pipelines",
+  "loc.description": "[已棄用] 發佈測試結果至 Azure Pipelines",
   "loc.instanceNameFormat": "發行測試結果 $(testResultsFiles)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.testRunner": "測試結果格式",

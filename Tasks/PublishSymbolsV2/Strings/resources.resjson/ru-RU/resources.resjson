@@ -4,12 +4,14 @@
   "loc.description": "Индексация исходного кода и публикация символов в общей папке или на сервере символов Azure Artifacts",
   "loc.instanceNameFormat": "Путь публикации символов",
   "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.ConnectedServiceName": "Подключение к Azure Resource Manager",
+  "loc.input.help.ConnectedServiceName": "Имя подключения к службе Azure Resource Manager. Федерация удостоверений рабочий нагрузки — единственный поддерживаемый в настоящее время тип проверки подлинности.",
   "loc.input.label.SymbolsFolder": "Путь к папке символов",
   "loc.input.help.SymbolsFolder": "Путь к папке, в которой ищутся файлы символов. По умолчанию используется папка $(Build.SourcesDirectory). В противном случае можно указать корневой путь, (например, $(Build.BinariesDirectory)/MyProject).",
   "loc.input.label.SearchPattern": "Шаблон поиска",
   "loc.input.help.SearchPattern": "Шаблон, используемый для обнаружения файлов PDB для публикации.",
-  "loc.input.label.Manifest": "",
-  "loc.input.help.Manifest": "",
+  "loc.input.label.Manifest": "Манифест",
+  "loc.input.help.Manifest": "Путь к файлу, содержащему дополнительные клиентские ключи символов для публикации.",
   "loc.input.label.IndexSources": "Индексация источников",
   "loc.input.help.IndexSources": "Указывает, следует ли внедрять сведения об исходном сервере в PDB-файлы. Этот параметр поддерживается только в агентах Windows.",
   "loc.input.label.PublishSymbols": "Публикация символов",
@@ -74,5 +76,5 @@
   "loc.messages.UnsupportedSourceProvider0": "Неподдерживаемый поставщик источника \"{0}\" для индексации источника.",
   "loc.messages.Win32Error0FromMethod1": "Произошла ошибка Win32 \"{0}\" из метода \"{1}\".",
   "loc.messages.NodeVersionSupport": "Начиная с 31.08.2024, Node v{0} больше не поддерживается. Обновите агент конвейера до последней версии для Node 16 или более поздней версии.",
-  "loc.messages.ManifestFileNotFound": ""
+  "loc.messages.ManifestFileNotFound": "Файл манифеста не найден в \"{0}\"."
 }

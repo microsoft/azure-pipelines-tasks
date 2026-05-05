@@ -101,5 +101,6 @@
   "loc.messages.AuthSchemeNotSupported": "不支持身份验证方案 %s",
   "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错: %s",
   "loc.messages.BicepParamBuildFailed": "“az bicep build-param”失败。错误: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本应 >= 2.47.0 以使用 .bicepparam 文件"
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本应 >= 2.47.0 以使用 .bicepparam 文件",
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "提供的元数据文件 \"%s\" 缺少参数 \"%s\" 的元数据"
 }
