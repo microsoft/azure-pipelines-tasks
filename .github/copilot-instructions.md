@@ -1,5 +1,13 @@
 # Azure Pipelines Tasks - Copilot Instructions
 
+## Agent Routing (MANDATORY)
+
+When fixing Component Governance (CG) vulnerabilities, security alerts, or any CVE-related issues,
+you MUST follow the instructions in `.github/agents/fix-cg-bug.agent.md`.
+Read that file completely before taking any action. Do not deviate from its workflow.
+
+---
+
 This repository contains the in-the-box tasks for Azure Pipelines and Team Foundation Server. These instructions will help you understand how to build, test, and deploy tasks effectively.
 
 ## Repository Overview
