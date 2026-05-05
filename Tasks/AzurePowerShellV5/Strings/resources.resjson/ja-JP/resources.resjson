@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "PowerShell がコード '%s' で終了しました。",
   "loc.messages.JS_Stderr": "PowerShell が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
-  "loc.messages.PS_ExitCode": "PowerShell がコード '{0}' で終了しました。"
+  "loc.messages.PS_ExitCode": "PowerShell がコード '{0}' で終了しました。",
+  "loc.messages.Az_LowerVersionWarning": "指定された {0} バージョン {1} は古くなっています。最新のバージョンは {2}です"
 }

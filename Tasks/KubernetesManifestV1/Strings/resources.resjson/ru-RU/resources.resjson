@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "Выберите подключение к службе реестра Docker. Это требуется командам, для выполнения которых необходимо пройти проверку подлинности в реестре.",
   "loc.input.label.rolloutStatusTimeout": "Время ожидания для состояния выпуска",
   "loc.input.help.rolloutStatusTimeout": "Интервал времени ожидания (в секундах) до завершения отслеживания состояния выпуска.",
+  "loc.input.label.resourceType": "Тип ресурса",
+  "loc.input.help.resourceType": "Тип ресурса (парк, управляемый кластер)",
   "loc.messages.DownloadPathForStableTxt": "Путь для скачивания stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Невозможно скачать клиент kubectl версии %s. Проверьте, верна ли версия: https://github.com/kubernetes/kubernetes/releases.",
   "loc.messages.DownloadStableVersionFailed": "Невозможно скачать файл стабильной версии Kubernetes из %s. Выполняется возврат к %s",

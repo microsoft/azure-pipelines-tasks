@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Percorso del file di soluzione, packages.config o project.json che fa riferimento ai pacchetti da ripristinare.",
   "loc.input.label.selectOrConfig": "Feed da usare",
   "loc.input.help.selectOrConfig": "È possibile selezionare un feed da Azure Artifacts e/o NuGet.org oppure eseguire il commit di un file nuget.config nel repository del codice sorgente e impostarne qui il percorso.",
-  "loc.input.label.feedRestore": "Usa pacchetti da questo feed Azure Artifacts/TFS",
+  "loc.input.label.feedRestore": "Usare pacchetti da questo feed Azure Artifacts/TFS. Selezionare una voce dall'elenco a discesa o immettere [nome progetto/]nome feed.",
   "loc.input.help.feedRestore": "Includere il feed selezionato nel file NuGet.config generato. Per selezionare un feed qui, è necessario aver installato Azure Artifacts e disporre della relativa licenza.",
   "loc.input.label.includeNuGetOrg": "Usa pacchetti da NuGet.org",
   "loc.input.help.includeNuGetOrg": "Include NuGet.org nel file NuGet.config generato.",
@@ -135,5 +135,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche funzionali o modifiche che causano un'interruzione. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Il comando NuGet non è riuscito. Codice di uscita: %s. Errore: %s",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg è attualmente abilitato per questa attività. Per risolvere questo avviso, modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Non è possibile individuare il file eseguibile: '%s'. Verificare che il percorso del file esista o che il file sia presente in una directory specificata dalla variabile di ambiente PATH. Controllare anche la modalità del file per assicurarsi che sia eseguibile.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "L'attività non è riuscita perché si utilizza Ubuntu 24.04 o versioni successive senza mono installato. Per altre informazioni, vedere https://aka.ms/nuget-task-mono."
 }
