@@ -13,8 +13,6 @@ jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment: copilot
-
     permissions:
       contents: read
 
@@ -27,17 +25,13 @@ jobs:
         with:
           node-version: "20"
 
-      # Authenticate to the ADO npm feed using secrets from the `copilot` environment.
-      # The repo .npmrc points to the ADO PipelineTools_PublicPackages feed
-      # which requires authentication (always-auth=true).
-      # We write auth to the user-level ~/.npmrc to avoid leaking tokens into the repo.
-      - name: Configure npm auth for ADO feed
+      # The repo .npmrc has always-auth=true (needed for CI with NpmAuthenticate).
+      # For the cloud agent, the feed is public so we override at user-level to skip auth.
+      - name: Override always-auth for public feed
         run: |
-          ADO_REGISTRY="//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/"
-          echo "${ADO_REGISTRY}:username=AzureDevOps" >> ~/.npmrc
-          echo "${ADO_REGISTRY}:_password=$(echo -n '${{ secrets.ADO_NPM_TOKEN }}' | base64)" >> ~/.npmrc
-          echo "${ADO_REGISTRY}:email=copilot@github.com" >> ~/.npmrc
-          echo "Configured npm auth for ADO feed"
+          echo "//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/:always-auth=false" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/:always-auth=false" >> ~/.npmrc
+          echo "Disabled always-auth for public ADO feed"
 
       # Pre-fetch sprint data before the firewall blocks whatsprintis.it
       # The hook and agent instructions need this for version bumping
