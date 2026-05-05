@@ -104,5 +104,6 @@
   "loc.messages.ApplyingRollForwardPolicy": "버전 '%s'에 rollForward 정책 '%s'을(를) 적용합니다. 확인된 버전 사양: '%s'",
   "loc.messages.InvalidRollForwardPolicy": "경로 '%s'의 global.json에 잘못된 rollForward 정책 '%s'이(가) 있습니다. 지원되는 값은 disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor입니다. rollForward 정책은 무시됩니다.",
   "loc.messages.ResolvedVersionFromGlobalJson": "global.json SDK 버전 '%s'이(가) 확인되었습니다(원래 버전: '%s', rollForward: '%s').",
-  "loc.messages.InstallingFromGlobalJson": ".NET Core SDK 버전 설치 %s global.json"
+  "loc.messages.InstallingFromGlobalJson": ".NET Core SDK 버전 설치 %s global.json",
+  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
 }

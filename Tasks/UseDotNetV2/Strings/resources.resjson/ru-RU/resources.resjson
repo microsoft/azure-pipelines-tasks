@@ -104,5 +104,6 @@
   "loc.messages.ApplyingRollForwardPolicy": "Применение политики rollForward \"%s\" к версии \"%s\", разрешенная спецификация версии: \"%s\"",
   "loc.messages.InvalidRollForwardPolicy": "Недопустимая политика rollForward \"%s\" в файле global.json по пути: \"%s\". Поддерживаемые значения: disable, patch, feature, minor, major, latestPatch, latestFeature, latestMinor, latestMajor. Политика rollForward будет проигнорирована.",
   "loc.messages.ResolvedVersionFromGlobalJson": "Определена версия пакета SDK для .NET Core \"%s\" из global.json (исходная версия: \"%s\", rollForward: \"%s\")",
-  "loc.messages.InstallingFromGlobalJson": "Устанавливается версия пакета SDK для .NET Core %s, определенной на основе global.json"
+  "loc.messages.InstallingFromGlobalJson": "Устанавливается версия пакета SDK для .NET Core %s, определенной на основе global.json",
+  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
 }

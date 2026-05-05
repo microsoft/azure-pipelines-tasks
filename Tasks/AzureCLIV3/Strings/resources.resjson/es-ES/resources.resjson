@@ -66,5 +66,6 @@
   "loc.messages.FailedToLoginAzureDevOpsCLI": "No se pudo iniciar sesión en Azure DevOps CLI",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "No se pudo establecer Azure DevOps organización",
   "loc.messages.FailedToSetAzureDevOpsProject": "No se pudo establecer Azure DevOps proyecto",
-  "loc.messages.SkippingSubscriptionContext": "Omitiendo el contexto de suscripción por entrada \"allowNoSubscriptions\" o valor GUID vacío"
+  "loc.messages.SkippingSubscriptionContext": "Omitiendo el contexto de suscripción por entrada \"allowNoSubscriptions\" o valor GUID vacío",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

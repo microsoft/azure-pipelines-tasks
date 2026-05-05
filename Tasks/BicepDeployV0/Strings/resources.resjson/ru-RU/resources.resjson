@@ -92,9 +92,9 @@
   "loc.messages.UnknownPropertyChangeType": "Неизвестный тип изменения свойства: %s.",
   "loc.messages.InvalidJsonValue": "Недопустимое значение JSON: %s",
   "loc.messages.FailedToLogout": "Во время выхода из системы произошла следующая ошибка: %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity",
-  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.SettingAzureCloud": "Настройка активного облака: %s",
+  "loc.messages.LoginFailed": "Не удалось войти в Azure",
+  "loc.messages.MSILoginFailed": "Сбой входа Azure с использованием Управляемого удостоверения службы",
+  "loc.messages.AuthSchemeNotSupported": "Схема проверки подлинности %s не поддерживается",
+  "loc.messages.ErrorInSettingUpSubscription": "Ошибка при настройке подписки"
 }

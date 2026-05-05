@@ -54,5 +54,6 @@
   "loc.messages.ProxyConfig": "az ツールは、%s をプロキシ サーバーとして使用するように構成されています",
   "loc.messages.FailedToRefreshAzSession": "az-cli セッションの更新中に次のエラーが発生しました: %s",
   "loc.messages.RefreshingAzSession": "az-cli セッションを更新しようとしています...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。"
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

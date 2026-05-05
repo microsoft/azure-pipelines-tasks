@@ -54,5 +54,6 @@
   "loc.messages.ProxyConfig": "l’outil az est configuré pour utiliser %s comme serveur proxy",
   "loc.messages.FailedToRefreshAzSession": "L’erreur suivante s’est produite lors de la tentative d’actualisation de la session az-cli : %s",
   "loc.messages.RefreshingAzSession": "Tentative d’actualisation de la session az-cli... Merci de patienter.",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "L’entrée « keepAzSessionActive » est susceptible d’être uniquement utilisée pour la connexion du service ARM de fédération des identités de charge de travail. Le schéma d’authentification du point de terminaison de service référencé était inattendu : %s. Modifiez le schéma ou supprimez l’entrée « keepAzSessionActive »."
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "L’entrée « keepAzSessionActive » est susceptible d’être uniquement utilisée pour la connexion du service ARM de fédération des identités de charge de travail. Le schéma d’authentification du point de terminaison de service référencé était inattendu : %s. Modifiez le schéma ou supprimez l’entrée « keepAzSessionActive ».",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

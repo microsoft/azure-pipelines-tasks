@@ -66,5 +66,6 @@
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Azure DevOps CLI에 로그인하지 못했습니다.",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Azure DevOps 조직을 설정하지 못했습니다.",
   "loc.messages.FailedToSetAzureDevOpsProject": "Azure DevOps 프로젝트를 설정하지 못했습니다.",
-  "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 입력 또는 빈 GUID 값당 구독 컨텍스트 건너뛰기"
+  "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 입력 또는 빈 GUID 값당 구독 컨텍스트 건너뛰기",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }
