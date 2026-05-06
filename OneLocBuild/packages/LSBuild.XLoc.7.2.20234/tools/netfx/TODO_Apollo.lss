@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<LS_SETTINGS_FILE>
+	<LS_SETTINGS_DESCRIPTION>
+		<![CDATA[]]>
+	</LS_SETTINGS_DESCRIPTION>
+	<optionSet id="Placeholder Rule Placeholder 08" displayName="Placeholder Rule Placeholder 08" helpText="Use these settings to create additional instances of the Placeholder rule.">
+								<option id="\LocRuleAgent\PlaceholderRule\PlaceholderRule08\PlaceholderType" displayName="Placeholder Type" helpText="Select the type of enforcement on the placeholder. To enforce the same number of placeholders in the source and target, select Traditional. To enforce the same order and number of placeholders, select Positional. To enforce the same positions, but not the number of placeholders, select Indexed.">
+									<pick defaultValue="2" currentValue="0">
+										<defaultList>
+											<item string="Traditional" itemID="0"/>
+											<item string="Positional" itemID="1"/>
+											<item string="Indexed" itemID="2"/>
+										</defaultList>
+										<currentList>
+											<item string="Traditional" itemID="0"/>
+											<item string="Positional" itemID="1"/>
+											<item string="Indexed" itemID="2"/>
+										</currentList>
+									</pick>
+								</option>
+								<option id="\LocRuleAgent\PlaceholderRule\PlaceholderRule08\EquivInstruction" displayName="Equivalent Instruction" helpText="If you are creating a new version of a rule using a placeholder, enter a short name for the rule. This name will display in localization tools outside of LocStudio, such as LCXAdmin. Otherwise, do not change this setting.">
+									<string defaultValue="" currentValue="FixedPlaceholder"/>
+								</option>
+								<option id="\LocRuleAgent\PlaceholderRule\PlaceholderRule08\RegEx" displayName="RegEx" helpText="If you are creating a new version of a rule using a placeholder, enter a regular expression to identify information or characters in the string. Otherwise, do not change this setting.">
+									<string defaultValue="" currentValue="TODO( :?)"/>
+								</option>
+								<option id="\LocRuleAgent\PlaceholderRule\PlaceholderRule08\Enabled" displayName="Enabled" helpText="To validate strings per this rule, select On. To stop validation with this rule, select Off.">
+									<boolean defaultValue="0" currentValue="1"/>
+								</option>
+								<option id="\LocRuleAgent\PlaceholderRule\PlaceholderRule08\Description" displayName="Description" helpText="If you are creating a new version of a rule using a placeholder, enter a short description of your new rule. Otherwise, do not change this setting.">
+									<string defaultValue="Placeholder for more instances of the Placeholder rule" currentValue="Detects TODO Keyword"/>
+								</option>
+							</optionSet>
+</LS_SETTINGS_FILE>

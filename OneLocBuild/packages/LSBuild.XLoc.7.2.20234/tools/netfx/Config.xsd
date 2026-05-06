@@ -1,0 +1,1253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>This schema defines the allowable content within LOOM Config xml files</xs:documentation>
+        <xs:documentation>Version 0.1</xs:documentation>
+    </xs:annotation>
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence minOccurs="1">
+                <xs:element name="html" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>All items parsed as HTML are defined under this element</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="localizable">
+                                <xs:annotation>
+                                    <xs:documentation>Localizable HTML items (tags, attributes and properties) are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="tags" />
+                                        <xs:element ref="attributes" />
+                                        <xs:element ref="properties" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="known">
+                                <xs:annotation>
+                                    <xs:documentation>Known HTML tags are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="tags" type="knownHTMLTags"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="locked">
+                                <xs:annotation>
+                                    <xs:documentation>Locked HTML tags are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="tags" type="conditionalTags" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="xml" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>All items parsed as XML are defined under this element</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="localizable">
+                                <xs:annotation>
+                                    <xs:documentation>Localizable XML items (tags and attributes) are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="tags" />
+                                        <xs:element ref="attributes" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="known">
+                                <xs:annotation>
+                                    <xs:documentation>Known XML (tags, attributes and entities) are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="tags" type="knownXMLTags" />
+                                        <xs:element name="attributes" type="knownAttributes" />
+                                        <xs:element ref="entities" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="locked">
+                                <xs:annotation>
+                                    <xs:documentation>Locked XML tags are defined under this element</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="tags" type="conditionalTags" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="options">
+                    <xs:annotation>
+                        <xs:documentation>All LOOM options are defined under this element</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="general">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:annotation>
+                                            <xs:documentation>General LOOM options, each attribute has to be present and contain the defined type</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:element name="option" maxOccurs="14">
+                                            <xs:complexType>
+                                                <xs:attribute name="AllowUnderscoresInCSSIdentifiers" type="xs:boolean" default="false" />
+                                                <xs:attribute name="AttributeExtractionLevel" type="extractionLevelType" default="ExtractLocalizableItems" />
+                                                <xs:attribute name="ContentLocking" type="xs:boolean" default="false" />
+                                                <xs:attribute name="CustomValidationDLLs" type="xs:string" default="" />
+                                                <xs:attribute name="DisableMessagesForNonLocCSSProperties" type="xs:boolean" default="true" />
+                                                <xs:attribute name="DisableXMLValidation" type="xs:boolean" default="false" />
+                                                <xs:attribute name="ExtractOnlyTermsWithRealResIds" type="xs:boolean" default="false" />
+                                                <xs:attribute name="ExtractScripting" type="xs:boolean" default="true" />
+                                                <xs:attribute name="IncludeHiddenAttrValues" type="xs:boolean" default="false" />
+                                                <xs:attribute name="LOOMConfigLastModifiedDateTime" type="xs:dateTime" default="0001-01-01T00:00:00" />
+                                                <xs:attribute name="PropertyExtractionLevel" type="extractionLevelType" default="ExtractLocalizableItems" />
+                                                <xs:attribute name="ReverseLocking" type="xs:boolean" default="false" />
+                                                <xs:attribute name="ScriptingResourceModel" type="xs:boolean" default="true" />
+                                                <xs:attribute name="ServerSideScripting" type="xs:boolean" default="true" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="disabledMessages" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:annotation>
+                                            <xs:documentation>Information and Warning messages which are disabled</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:element name="disabledMessage" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="description" type="xs:string" />
+                                                </xs:sequence>
+                                                <xs:attribute name="id" type="messageIdType" use="required" />
+                                                <xs:attribute name="type" type="messageTypeType" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="fileExtensions">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:annotation>
+                                            <xs:documentation>File extensions recognised and the corresponding types, max 12 recognised types</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:element name="fileExtension" minOccurs="0" maxOccurs="12">
+                                            <xs:complexType>
+                                                <xs:attribute name="name" type="fileType" use="required" />
+                                                <xs:attribute name="extensions" type="extensionsType" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="update">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:annotation>
+                                            <xs:documentation>Update specific options, each attribute has to be present and contain the defined type</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:element name="option" maxOccurs="5">
+                                            <xs:complexType>
+                                                <xs:attribute name="AdditionCost" type="updateOptionPositivePercentageType" default="3" />
+                                                <xs:attribute name="DeletionCost" type="updateOptionPositivePercentageType" default="1" />
+                                                <xs:attribute name="MaxFormattingWeight" type="updateOptionPercentageType" default="20" />
+                                                <xs:attribute name="MinSimilarity" type="updateOptionPositivePercentageType" default="50" />
+                                                <xs:attribute name="MoveCost" type="updateOptionPositivePercentageType" default="2" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="tags">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:token" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="conditionalTags">
+        <xs:sequence>
+            <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="condition" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:token" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="knownHTMLTags">
+        <xs:sequence>
+            <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="locVerRules" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:token" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="knownXMLTags">
+        <xs:sequence>
+            <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="contents" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="content" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:simpleContent>
+                                                <xs:extension base="xs:string">
+                                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                                </xs:extension>
+                                            </xs:simpleContent>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="locVerRules" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:token" use="required" />
+                    <xs:attribute name="canBeEmpty" type="xs:boolean" use="optional" default="true" />
+                    <xs:attribute name="tagType" type="xmlKnownTagType" use="optional" default="Optional" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="attributes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="condition" type="xs:string" minOccurs="0" />
+                                        <xs:element name="locVerRules" type="xs:string" minOccurs="0" />
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="xs:token" use="required" />
+                                    <xs:attribute name="category" type="categoryType" use="required" />
+                                    <xs:attribute name="lock" type="xs:boolean" use="optional" default="false" />
+                                    <xs:attribute name="type" type="enumerationType" use="optional" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:token" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="knownAttributes">
+        <xs:sequence>
+            <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="values" minOccurs="0">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="value" minOccurs="0" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:simpleContent>
+                                                            <xs:extension base="xs:string">
+                                                                <xs:attribute name="name" type="xs:token" use="required" />
+                                                            </xs:extension>
+                                                        </xs:simpleContent>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                            <xs:attribute name="default" type="xs:string" default="" />
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="name" type="xs:token" use="required" />
+                                <xs:attribute name="type" type="enumerationType" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:token" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="properties">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="property" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="locVerRules" type="xs:string" minOccurs="0" />
+                        </xs:sequence>
+                        <xs:attribute name="name" type="propertyType" use="required" />
+                        <xs:attribute name="category" type="categoryType" use="required" />
+                        <xs:attribute name="lock" type="xs:boolean" use="optional" default="false" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="entities">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="entity" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:token" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="xmlKnownTagType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Optional" />
+            <xs:enumeration value="Important" />
+            <xs:enumeration value="Required" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="updateOptionPercentageType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="-1" />
+            <xs:maxInclusive value="100" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="updateOptionPositivePercentageType">
+        <xs:restriction base="xs:nonNegativeInteger">
+            <xs:maxInclusive value="100" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="messageIdType">
+        <xs:annotation>
+            <xs:documentation>Message ids range from 1000 to 9998</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:minInclusive value="1000" />
+            <xs:maxExclusive value="9999" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="messageTypeType">
+        <xs:annotation>
+            <xs:documentation>Message types, only information and warning messages can be disabled</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Information" />
+            <xs:enumeration value="Warning" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="extensionsType">
+        <xs:list itemType="xs:string" />
+    </xs:simpleType>
+    <xs:simpleType name="enumerationType">
+        <xs:annotation>
+            <xs:documentation>List of recognised content types for known attributes</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="enumeration" />
+            <xs:enumeration value="string" />
+            <xs:enumeration value="notation" />
+            <xs:enumeration value="id" />
+            <xs:enumeration value="parentID" />
+            <xs:enumeration value="version" />
+            <xs:enumeration value="idref" />
+            <xs:enumeration value="idrefs" />
+            <xs:enumeration value="entity" />
+            <xs:enumeration value="entities" />
+            <xs:enumeration value="nmtoken" />
+            <xs:enumeration value="nmtokens" />
+            <xs:enumeration value="boolean" />
+            <xs:enumeration value="char" />
+            <xs:enumeration value="int" />
+            <xs:enumeration value="uri" />
+            <xs:enumeration value="bin.base64" />
+            <xs:enumeration value="bin.hex" />
+            <xs:enumeration value="date" />
+            <xs:enumeration value="dateTime" />
+            <xs:enumeration value="dateTime.tz" />
+            <xs:enumeration value="fixed.14.4" />
+            <xs:enumeration value="float" />
+            <xs:enumeration value="number" />
+            <xs:enumeration value="time" />
+            <xs:enumeration value="time.tz" />
+            <xs:enumeration value="i1" />
+            <xs:enumeration value="i2" />
+            <xs:enumeration value="i4" />
+            <xs:enumeration value="i8" />
+            <xs:enumeration value="r4" />
+            <xs:enumeration value="r8" />
+            <xs:enumeration value="ui1" />
+            <xs:enumeration value="ui2" />
+            <xs:enumeration value="ui4" />
+            <xs:enumeration value="ui8" />
+            <xs:enumeration value="uuid" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="extractionLevelType">
+        <xs:annotation>
+            <xs:documentation>Extraction level for attributes and properties</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ExtractLocalizableItems" />
+            <xs:enumeration value="ExtractNonLocalizableItems" />
+            <xs:enumeration value="ExtractAllItems" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="fileType">
+        <xs:annotation>
+            <xs:documentation>Recognised file types</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="HTML Files" />
+            <xs:enumeration value="CSS Style Sheet Files" />
+            <xs:enumeration value="JavaScript Files" />
+            <xs:enumeration value="Visual Basic Script Files" />
+            <xs:enumeration value="HTML Help Table of Contents Files" />
+            <xs:enumeration value="HTML Help Index Files" />
+            <xs:enumeration value="Java Files" />
+            <xs:enumeration value="XML Files" />
+            <xs:enumeration value="XML Stylesheet Files" />
+            <xs:enumeration value="RAW Files" />
+            <xs:enumeration value="CeX Files" />
+            <xs:enumeration value="REG or DEF Files" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="categoryType">
+        <xs:annotation>
+            <xs:documentation>LocStudio categories for attributes</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Accelerator" />
+            <xs:enumeration value="Address" />
+            <xs:enumeration value="Alternative Text" />
+            <xs:enumeration value="AppData" />
+            <xs:enumeration value="Argument Name" />
+            <xs:enumeration value="Argument" />
+            <xs:enumeration value="Billboards" />
+            <xs:enumeration value="Button" />
+            <xs:enumeration value="Check Box" />
+            <xs:enumeration value="Combo Box" />
+            <xs:enumeration value="Command" />
+            <xs:enumeration value="Comment" />
+            <xs:enumeration value="ComponentID" />
+            <xs:enumeration value="Custom Control" />
+            <xs:enumeration value="Description" />
+            <xs:enumeration value="Dialog Item" />
+            <xs:enumeration value="Dialog Title" />
+            <xs:enumeration value="Documentation" />
+            <xs:enumeration value="Drive Control" />
+            <xs:enumeration value="Edit Box" />
+            <xs:enumeration value="Error Message" />
+            <xs:enumeration value="Feature Description" />
+            <xs:enumeration value="Feature Title" />
+            <xs:enumeration value="File Language" />
+            <xs:enumeration value="File Name" />
+            <xs:enumeration value="File Size" />
+            <xs:enumeration value="File version" />
+            <xs:enumeration value="Folder Control" />
+            <xs:enumeration value="Folder Name" />
+            <xs:enumeration value="Font Name" />
+            <xs:enumeration value="Function Name" />
+            <xs:enumeration value="General" />
+            <xs:enumeration value="Group Box Title" />
+            <xs:enumeration value="Group Box" />
+            <xs:enumeration value="HTML Text" />
+            <xs:enumeration value="HTML Title" />
+            <xs:enumeration value="INI File Key" />
+            <xs:enumeration value="INI File Name" />
+            <xs:enumeration value="INI File Section" />
+            <xs:enumeration value="INI File Value" />
+            <xs:enumeration value="Java Text" />
+            <xs:enumeration value="Key Name" />
+            <xs:enumeration value="Keyword" />
+            <xs:enumeration value="List Box" />
+            <xs:enumeration value="Macro Action" />
+            <xs:enumeration value="Menu Item" />
+            <xs:enumeration value="Message" />
+            <xs:enumeration value="Number" />
+            <xs:enumeration value="Option Button" />
+            <xs:enumeration value="Page Information" />
+            <xs:enumeration value="Page Title" />
+            <xs:enumeration value="Progress Bar" />
+            <xs:enumeration value="Property" />
+            <xs:enumeration value="Radio Button" />
+            <xs:enumeration value="Registry Value" />
+            <xs:enumeration value="Resource Data" />
+            <xs:enumeration value="Scroll Bar" />
+            <xs:enumeration value="Shortcut Argument" />
+            <xs:enumeration value="Shortcut Description" />
+            <xs:enumeration value="Shortcut HotKey" />
+            <xs:enumeration value="Shortcut Name" />
+            <xs:enumeration value="Slider Bar" />
+            <xs:enumeration value="Static Text" />
+            <xs:enumeration value="Status Bar" />
+            <xs:enumeration value="Style" />
+            <xs:enumeration value="Tab Control" />
+            <xs:enumeration value="Text" />
+            <xs:enumeration value="Tool Tip" />
+            <xs:enumeration value="Topic Title" />
+            <xs:enumeration value="Translation Record" />
+            <xs:enumeration value="Unknown" />
+            <xs:enumeration value="VB Script Text" />
+            <xs:enumeration value="Verb" />
+            <xs:enumeration value="Version" />
+            <xs:enumeration value="Culture" />
+            <xs:enumeration value="Font Size" />
+            <xs:enumeration value="Font Style" />
+            <xs:enumeration value="Legal" />
+            <xs:enumeration value="URI" />
+            <xs:enumeration value="Size" />
+            <xs:enumeration value="Code" />
+            <xs:enumeration value="Adaptation" />
+            <xs:enumeration value="Color" />
+            <xs:enumeration value="Layout" />
+            <xs:enumeration value="Code Page" />
+            <xs:enumeration value="Ribbon" />
+            <xs:enumeration value="Globalization Data"/>
+            <xs:enumeration value="Right to Left order data" />
+            <xs:enumeration value="List" />
+            <xs:enumeration value="Record" />
+            <xs:enumeration value="File Filter" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="propertyType">
+        <xs:annotation>
+            <xs:documentation>Recognised CSS properties</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="accelerator" />
+            <xs:enumeration value="all-space-treatment" />
+            <xs:enumeration value="animation" />
+            <xs:enumeration value="animation-delay" />
+            <xs:enumeration value="animation-direction" />
+            <xs:enumeration value="animation-duration" />
+            <xs:enumeration value="animation-iteration-count" />
+            <xs:enumeration value="animation-name" />
+            <xs:enumeration value="animation-play-state" />
+            <xs:enumeration value="animation-timing-function" />
+            <xs:enumeration value="appearance" />
+            <xs:enumeration value="background" />
+            <xs:enumeration value="background-attachment" />
+            <xs:enumeration value="background-break" />
+            <xs:enumeration value="background-clip" />
+            <xs:enumeration value="background-color" />
+            <xs:enumeration value="background-image" />
+            <xs:enumeration value="background-origin" />
+            <xs:enumeration value="background-position" />
+            <xs:enumeration value="background-position-x" />
+            <xs:enumeration value="background-position-y" />
+            <xs:enumeration value="background-repeat" />
+            <xs:enumeration value="background-size" />
+            <xs:enumeration value="behavior" />
+            <xs:enumeration value="block-progression" />
+            <xs:enumeration value="border" />
+            <xs:enumeration value="border-bottom" />
+            <xs:enumeration value="border-bottom-color" />
+            <xs:enumeration value="border-bottom-style" />
+            <xs:enumeration value="border-bottom-width" />
+            <xs:enumeration value="border-break" />
+            <xs:enumeration value="border-collapse" />
+            <xs:enumeration value="border-color" />
+            <xs:enumeration value="border-image" />
+            <xs:enumeration value="border-left" />
+            <xs:enumeration value="border-left-color" />
+            <xs:enumeration value="border-left-style" />
+            <xs:enumeration value="border-left-width" />
+            <xs:enumeration value="border-radius" />
+            <xs:enumeration value="border-right" />
+            <xs:enumeration value="border-right-color" />
+            <xs:enumeration value="border-right-style" />
+            <xs:enumeration value="border-right-width" />
+            <xs:enumeration value="border-style" />
+            <xs:enumeration value="border-top" />
+            <xs:enumeration value="border-top-color" />
+            <xs:enumeration value="border-top-style" />
+            <xs:enumeration value="border-top-width" />
+            <xs:enumeration value="border-width" />
+            <xs:enumeration value="bottom" />
+            <xs:enumeration value="box-align" />
+            <xs:enumeration value="box-direction" />
+            <xs:enumeration value="box-line-progression" />
+            <xs:enumeration value="box-pack" />
+            <xs:enumeration value="box-shadow" />
+            <xs:enumeration value="box-sizing" />
+            <xs:enumeration value="break-after" />
+            <xs:enumeration value="break-before" />
+            <xs:enumeration value="break-inside" />
+            <xs:enumeration value="clear" />
+            <xs:enumeration value="clip" />
+            <xs:enumeration value="clipBottom" />
+            <xs:enumeration value="clipLeft" />
+            <xs:enumeration value="clipRight" />
+            <xs:enumeration value="clipTop" />
+            <xs:enumeration value="color" />
+            <xs:enumeration value="column-count" />
+            <xs:enumeration value="column-gap" />
+            <xs:enumeration value="column-fill" />
+            <xs:enumeration value="column-rule" />
+            <xs:enumeration value="column-rule-color" />
+            <xs:enumeration value="column-rule-style" />
+            <xs:enumeration value="column-rule-width" />
+            <xs:enumeration value="column-span" />
+            <xs:enumeration value="column-width" />
+            <xs:enumeration value="columns" />
+            <xs:enumeration value="content" />
+            <xs:enumeration value="cursor" />
+            <xs:enumeration value="data-repeat" />
+            <xs:enumeration value="dir" />
+            <xs:enumeration value="direction" />
+            <xs:enumeration value="display" />
+            <xs:enumeration value="filter" />
+            <xs:enumeration value="float" />
+            <xs:enumeration value="font" />
+            <xs:enumeration value="font-emphasize" />
+            <xs:enumeration value="font-emphasize-position" />
+            <xs:enumeration value="font-emphasize-style" />
+            <xs:enumeration value="font-family" />
+            <xs:enumeration value="font-size" />
+            <xs:enumeration value="font-style" />
+            <xs:enumeration value="font-variant" />
+            <xs:enumeration value="font-weight" />
+            <xs:enumeration value="glyph-orientation-vertical" />
+            <xs:enumeration value="glyph-orientation-horizontal" />
+            <xs:enumeration value="hanging-punctuation" />
+            <xs:enumeration value="height" />
+            <xs:enumeration value="horiz-align" />
+            <xs:enumeration value="icon" />
+            <xs:enumeration value="ime-mode" />
+            <xs:enumeration value="kerning-mode" />
+            <xs:enumeration value="kerning-pair-threshold" />
+            <xs:enumeration value="language" />
+            <xs:enumeration value="layout" />
+            <xs:enumeration value="layout-flow" />
+            <xs:enumeration value="layout-grid" />
+            <xs:enumeration value="layout-grid-char" />
+            <xs:enumeration value="layout-grid-char-spacing" />
+            <xs:enumeration value="layout-grid-line" />
+            <xs:enumeration value="layout-grid-mode" />
+            <xs:enumeration value="layout-grid-type" />
+            <xs:enumeration value="left" />
+            <xs:enumeration value="letter-spacing" />
+            <xs:enumeration value="line-break" />
+            <xs:enumeration value="line-grid" />
+            <xs:enumeration value="line-grid-mode" />
+            <xs:enumeration value="line-grid-progression" />
+            <xs:enumeration value="line-height" />
+            <xs:enumeration value="linefeed-treatment" />
+            <xs:enumeration value="list-image-1" />
+            <xs:enumeration value="list-image-2" />
+            <xs:enumeration value="list-image-3" />
+            <xs:enumeration value="list-style" />
+            <xs:enumeration value="list-style-image" />
+            <xs:enumeration value="list-style-position" />
+            <xs:enumeration value="list-style-type" />
+            <xs:enumeration value="margin" />
+            <xs:enumeration value="margin-bottom" />
+            <xs:enumeration value="margin-left" />
+            <xs:enumeration value="margin-right" />
+            <xs:enumeration value="margin-top" />
+            <xs:enumeration value="min-font-size" />
+            <xs:enumeration value="max-font-size" />
+            <xs:enumeration value="mso-ansi-font-size" />
+            <xs:enumeration value="mso-ansi-language" />
+            <xs:enumeration value="mso-arabic-font-family" />
+            <xs:enumeration value="mso-armenian-font-family" />
+            <xs:enumeration value="mso-ascii-font-family" />
+            <xs:enumeration value="mso-asciisym-font-family" />
+            <xs:enumeration value="mso-background" />
+            <xs:enumeration value="mso-background-source" />
+            <xs:enumeration value="mso-baseline-position" />
+            <xs:enumeration value="mso-bengali-font-family" />
+            <xs:enumeration value="mso-bidi-font-family" />
+            <xs:enumeration value="mso-bidi-font-size" />
+            <xs:enumeration value="mso-bidi-font-style" />
+            <xs:enumeration value="mso-bidi-font-weight" />
+            <xs:enumeration value="mso-bidi-language" />
+            <xs:enumeration value="mso-bookmark" />
+            <xs:enumeration value="mso-bopomofo-font-family" />
+            <xs:enumeration value="mso-border-alt" />
+            <xs:enumeration value="mso-border-between" />
+            <xs:enumeration value="mso-border-between-color" />
+            <xs:enumeration value="mso-border-between-style" />
+            <xs:enumeration value="mso-border-between-width" />
+            <xs:enumeration value="mso-border-bottom-alt" />
+            <xs:enumeration value="mso-border-bottom-color-alt" />
+            <xs:enumeration value="mso-border-bottom-source" />
+            <xs:enumeration value="mso-border-bottom-style-alt" />
+            <xs:enumeration value="mso-border-bottom-width-alt" />
+            <xs:enumeration value="mso-border-color-alt" />
+            <xs:enumeration value="mso-border-effect" />
+            <xs:enumeration value="mso-border-insideh" />
+            <xs:enumeration value="mso-border-insidev" />
+            <xs:enumeration value="mso-border-left-alt" />
+            <xs:enumeration value="mso-border-left-color-alt" />
+            <xs:enumeration value="mso-border-left-source" />
+            <xs:enumeration value="mso-border-left-style-alt" />
+            <xs:enumeration value="mso-border-left-width-alt" />
+            <xs:enumeration value="mso-border-right-alt" />
+            <xs:enumeration value="mso-border-right-color-alt" />
+            <xs:enumeration value="mso-border-right-source" />
+            <xs:enumeration value="mso-border-right-style-alt" />
+            <xs:enumeration value="mso-border-right-width-alt" />
+            <xs:enumeration value="mso-border-shadow" />
+            <xs:enumeration value="mso-border-source" />
+            <xs:enumeration value="mso-border-style-alt" />
+            <xs:enumeration value="mso-border-top-alt" />
+            <xs:enumeration value="mso-border-top-color-alt" />
+            <xs:enumeration value="mso-border-top-source" />
+            <xs:enumeration value="mso-border-top-style-alt" />
+            <xs:enumeration value="mso-border-top-width-alt" />
+            <xs:enumeration value="mso-border-width-alt" />
+            <xs:enumeration value="mso-braille-font-family" />
+            <xs:enumeration value="mso-break-type" />
+            <xs:enumeration value="mso-canadianabor-font-family" />
+            <xs:enumeration value="mso-cell-special" />
+            <xs:enumeration value="mso-char-indent" />
+            <xs:enumeration value="mso-char-indent-count" />
+            <xs:enumeration value="mso-char-indent-size" />
+            <xs:enumeration value="mso-char-tracking" />
+            <xs:enumeration value="mso-char-type" />
+            <xs:enumeration value="mso-char-wrap" />
+            <xs:enumeration value="mso-cherokee-font-family" />
+            <xs:enumeration value="mso-color-alt" />
+            <xs:enumeration value="mso-color-index" />
+            <xs:enumeration value="mso-color-source" />
+            <xs:enumeration value="mso-column-break-before" />
+            <xs:enumeration value="mso-column-separator" />
+            <xs:enumeration value="mso-columns" />
+            <xs:enumeration value="mso-comment-author" />
+            <xs:enumeration value="mso-comment-continuation" />
+            <xs:enumeration value="mso-comment-id" />
+            <xs:enumeration value="mso-comment-reference" />
+            <xs:enumeration value="mso-currency-font-family" />
+            <xs:enumeration value="mso-cyrillic-font-family" />
+            <xs:enumeration value="mso-data-placement" />
+            <xs:enumeration value="mso-default-font-family" />
+            <xs:enumeration value="mso-default-height" />
+            <xs:enumeration value="mso-default-width" />
+            <xs:enumeration value="mso-devanagari-font-family" />
+            <xs:enumeration value="mso-diagonal-down" />
+            <xs:enumeration value="mso-diagonal-down-color" />
+            <xs:enumeration value="mso-diagonal-down-source" />
+            <xs:enumeration value="mso-diagonal-down-style" />
+            <xs:enumeration value="mso-diagonal-down-width" />
+            <xs:enumeration value="mso-diagonal-up" />
+            <xs:enumeration value="mso-diagonal-up-color" />
+            <xs:enumeration value="mso-diagonal-up-source" />
+            <xs:enumeration value="mso-diagonal-up-style" />
+            <xs:enumeration value="mso-diagonal-up-width" />
+            <xs:enumeration value="mso-displayed-decimal-separator" />
+            <xs:enumeration value="mso-displayed-thousand-separator" />
+            <xs:enumeration value="mso-element" />
+            <xs:enumeration value="mso-element-anchor-horizontal" />
+            <xs:enumeration value="mso-element-anchor-lock" />
+            <xs:enumeration value="mso-element-anchor-vertical" />
+            <xs:enumeration value="mso-element-frame-height" />
+            <xs:enumeration value="mso-element-frame-hspace" />
+            <xs:enumeration value="mso-element-frame-vspace" />
+            <xs:enumeration value="mso-element-frame-width" />
+            <xs:enumeration value="mso-element-left" />
+            <xs:enumeration value="mso-element-linespan" />
+            <xs:enumeration value="mso-element-top" />
+            <xs:enumeration value="mso-element-wrap" />
+            <xs:enumeration value="mso-endnote-continuation-notice" />
+            <xs:enumeration value="mso-endnote-continuation-notice-id" />
+            <xs:enumeration value="mso-endnote-continuation-notice-src" />
+            <xs:enumeration value="mso-endnote-continuation-separator" />
+            <xs:enumeration value="mso-endnote-continuation-separator-id" />
+            <xs:enumeration value="mso-endnote-continuation-separator-src" />
+            <xs:enumeration value="mso-endnote-display" />
+            <xs:enumeration value="mso-endnote-id" />
+            <xs:enumeration value="mso-endnote-numbering" />
+            <xs:enumeration value="mso-endnote-numbering-restart" />
+            <xs:enumeration value="mso-endnote-numbering-start" />
+            <xs:enumeration value="mso-endnote-numbering-style" />
+            <xs:enumeration value="mso-endnote-position" />
+            <xs:enumeration value="mso-endnote-separator" />
+            <xs:enumeration value="mso-endnote-separator-id" />
+            <xs:enumeration value="mso-endnote-separator-src" />
+            <xs:enumeration value="mso-ethiopic-font-family" />
+            <xs:enumeration value="mso-eudc-font-family" />
+            <xs:enumeration value="mso-even-footer" />
+            <xs:enumeration value="mso-even-footer-id" />
+            <xs:enumeration value="mso-even-footer-src" />
+            <xs:enumeration value="mso-even-header" />
+            <xs:enumeration value="mso-even-header-id" />
+            <xs:enumeration value="mso-even-header-src" />
+            <xs:enumeration value="mso-facing-pages" />
+            <xs:enumeration value="mso-fareast-font-family" />
+            <xs:enumeration value="mso-fareast-language" />
+            <xs:enumeration value="mso-field-change" />
+            <xs:enumeration value="mso-field-change-author" />
+            <xs:enumeration value="mso-field-change-time" />
+            <xs:enumeration value="mso-field-change-value" />
+            <xs:enumeration value="mso-field-code" />
+            <xs:enumeration value="mso-field-lock" />
+            <xs:enumeration value="mso-fills-color" />
+            <xs:enumeration value="mso-first-footer" />
+            <xs:enumeration value="mso-first-footer-id" />
+            <xs:enumeration value="mso-first-footer-src" />
+            <xs:enumeration value="mso-first-header" />
+            <xs:enumeration value="mso-first-header-id" />
+            <xs:enumeration value="mso-first-header-src" />
+            <xs:enumeration value="mso-font-alt" />
+            <xs:enumeration value="mso-font-charset" />
+            <xs:enumeration value="mso-font-format" />
+            <xs:enumeration value="mso-font-info" />
+            <xs:enumeration value="mso-font-info-charset" />
+            <xs:enumeration value="mso-font-info-type" />
+            <xs:enumeration value="mso-font-kerning" />
+            <xs:enumeration value="mso-font-pitch" />
+            <xs:enumeration value="mso-font-signature" />
+            <xs:enumeration value="mso-font-signature-csb-one" />
+            <xs:enumeration value="mso-font-signature-csb-two" />
+            <xs:enumeration value="mso-font-signature-usb-four" />
+            <xs:enumeration value="mso-font-signature-usb-one" />
+            <xs:enumeration value="mso-font-signature-usb-three" />
+            <xs:enumeration value="mso-font-signature-usb-two" />
+            <xs:enumeration value="mso-font-src" />
+            <xs:enumeration value="mso-font-width" />
+            <xs:enumeration value="mso-footer" />
+            <xs:enumeration value="mso-footer-data" />
+            <xs:enumeration value="mso-footer-id" />
+            <xs:enumeration value="mso-footer-margin" />
+            <xs:enumeration value="mso-footer-src" />
+            <xs:enumeration value="mso-footnote-continuation-notice" />
+            <xs:enumeration value="mso-footnote-continuation-notice-id" />
+            <xs:enumeration value="mso-footnote-continuation-notice-src" />
+            <xs:enumeration value="mso-footnote-continuation-separator" />
+            <xs:enumeration value="mso-footnote-continuation-separator-id" />
+            <xs:enumeration value="mso-footnote-continuation-separator-src" />
+            <xs:enumeration value="mso-footnote-id" />
+            <xs:enumeration value="mso-footnote-numbering" />
+            <xs:enumeration value="mso-footnote-numbering-restart" />
+            <xs:enumeration value="mso-footnote-numbering-start" />
+            <xs:enumeration value="mso-footnote-numbering-style" />
+            <xs:enumeration value="mso-footnote-position" />
+            <xs:enumeration value="mso-footnote-separator" />
+            <xs:enumeration value="mso-footnote-separator-id" />
+            <xs:enumeration value="mso-footnote-separator-src" />
+            <xs:enumeration value="mso-foreground" />
+            <xs:enumeration value="mso-forms-protection" />
+            <xs:enumeration value="mso-generic-font-family" />
+            <xs:enumeration value="mso-georgian-font-family" />
+            <xs:enumeration value="mso-greek-font-family" />
+            <xs:enumeration value="mso-grid-bottom" />
+            <xs:enumeration value="mso-grid-bottom-count" />
+            <xs:enumeration value="mso-grid-left" />
+            <xs:enumeration value="mso-grid-left-count" />
+            <xs:enumeration value="mso-grid-right" />
+            <xs:enumeration value="mso-grid-right-count" />
+            <xs:enumeration value="mso-grid-top" />
+            <xs:enumeration value="mso-grid-top-count" />
+            <xs:enumeration value="mso-gujarati-font-family" />
+            <xs:enumeration value="mso-gurmukhi-font-family" />
+            <xs:enumeration value="mso-gutter-direction" />
+            <xs:enumeration value="mso-gutter-margin" />
+            <xs:enumeration value="mso-gutter-position" />
+            <xs:enumeration value="mso-halfwidthkana-font-family" />
+            <xs:enumeration value="mso-han-font-family" />
+            <xs:enumeration value="mso-hangul-font-family" />
+            <xs:enumeration value="mso-hansi-font-family" />
+            <xs:enumeration value="mso-hansurrogate-font-family" />
+            <xs:enumeration value="mso-header" />
+            <xs:enumeration value="mso-header-data" />
+            <xs:enumeration value="mso-header-id" />
+            <xs:enumeration value="mso-header-margin" />
+            <xs:enumeration value="mso-header-src" />
+            <xs:enumeration value="mso-hebrew-font-family" />
+            <xs:enumeration value="mso-height-alt" />
+            <xs:enumeration value="mso-height-rule" />
+            <xs:enumeration value="mso-height-source" />
+            <xs:enumeration value="mso-hide" />
+            <xs:enumeration value="mso-highlight" />
+            <xs:enumeration value="mso-horizontal-page-align" />
+            <xs:enumeration value="mso-hyphenate" />
+            <xs:enumeration value="mso-ignore" />
+            <xs:enumeration value="mso-kana-font-family" />
+            <xs:enumeration value="mso-kannada-font-family" />
+            <xs:enumeration value="mso-khmer-font-family" />
+            <xs:enumeration value="mso-kinsoku-overflow" />
+            <xs:enumeration value="mso-lao-font-family" />
+            <xs:enumeration value="mso-latin-font-family" />
+            <xs:enumeration value="mso-latinext-font-family" />
+            <xs:enumeration value="mso-layout-flow" />
+            <xs:enumeration value="mso-layout-grid-align" />
+            <xs:enumeration value="mso-layout-grid-char-alt" />
+            <xs:enumeration value="mso-layout-grid-origin" />
+            <xs:enumeration value="mso-level-font-family" />
+            <xs:enumeration value="mso-level-number-format" />
+            <xs:enumeration value="mso-level-number-position" />
+            <xs:enumeration value="mso-level-numbering" />
+            <xs:enumeration value="mso-level-start-at" />
+            <xs:enumeration value="mso-level-suffix" />
+            <xs:enumeration value="mso-level-tab-stop" />
+            <xs:enumeration value="mso-level-text" />
+            <xs:enumeration value="mso-line-break-override" />
+            <xs:enumeration value="mso-line-grid" />
+            <xs:enumeration value="mso-line-height-alt" />
+            <xs:enumeration value="mso-line-height-rule" />
+            <xs:enumeration value="mso-line-numbers-count-by" />
+            <xs:enumeration value="mso-line-numbers-distance" />
+            <xs:enumeration value="mso-line-numbers-restart" />
+            <xs:enumeration value="mso-line-numbers-start" />
+            <xs:enumeration value="mso-line-spacing" />
+            <xs:enumeration value="mso-linked-frame" />
+            <xs:enumeration value="mso-list" />
+            <xs:enumeration value="mso-list-change" />
+            <xs:enumeration value="mso-list-change-author" />
+            <xs:enumeration value="mso-list-change-time" />
+            <xs:enumeration value="mso-list-change-values" />
+            <xs:enumeration value="mso-list-id" />
+            <xs:enumeration value="mso-list-ins" />
+            <xs:enumeration value="mso-list-ins-author" />
+            <xs:enumeration value="mso-list-ins-time" />
+            <xs:enumeration value="mso-list-template-id" />
+            <xs:enumeration value="mso-list-type" />
+            <xs:enumeration value="mso-malayalam-font-family" />
+            <xs:enumeration value="mso-margin-bottom-alt" />
+            <xs:enumeration value="mso-margin-top-alt" />
+            <xs:enumeration value="mso-mirror-margins" />
+            <xs:enumeration value="mso-mongolian-font-family" />
+            <xs:enumeration value="mso-myanmar-font-family" />
+            <xs:enumeration value="mso-negative-indent-tab" />
+            <xs:enumeration value="mso-no-proof" />
+            <xs:enumeration value="mso-nonhansurrogate-font-family" />
+            <xs:enumeration value="mso-number-format" />
+            <xs:enumeration value="mso-ogham-font-family" />
+            <xs:enumeration value="mso-oriya-font-family" />
+            <xs:enumeration value="mso-outline-level" />
+            <xs:enumeration value="mso-outline-parent" />
+            <xs:enumeration value="mso-outline-parent-col" />
+            <xs:enumeration value="mso-outline-parent-row" />
+            <xs:enumeration value="mso-outline-parent-visibility" />
+            <xs:enumeration value="mso-outline-style" />
+            <xs:enumeration value="mso-padding-alt" />
+            <xs:enumeration value="mso-padding-between" />
+            <xs:enumeration value="mso-padding-bottom-alt" />
+            <xs:enumeration value="mso-padding-left-alt" />
+            <xs:enumeration value="mso-padding-right-alt" />
+            <xs:enumeration value="mso-padding-top-alt" />
+            <xs:enumeration value="mso-page-border-aligned" />
+            <xs:enumeration value="mso-page-border-art" />
+            <xs:enumeration value="mso-page-border-bottom-art" />
+            <xs:enumeration value="mso-page-border-display" />
+            <xs:enumeration value="mso-page-border-left-art" />
+            <xs:enumeration value="mso-page-border-offset-from" />
+            <xs:enumeration value="mso-page-border-right-art" />
+            <xs:enumeration value="mso-page-border-surround-footer" />
+            <xs:enumeration value="mso-page-border-surround-header" />
+            <xs:enumeration value="mso-page-border-top-art" />
+            <xs:enumeration value="mso-page-border-z-order" />
+            <xs:enumeration value="mso-page-numbers" />
+            <xs:enumeration value="mso-page-numbers-chapter-separator" />
+            <xs:enumeration value="mso-page-numbers-chapter-style" />
+            <xs:enumeration value="mso-page-numbers-start" />
+            <xs:enumeration value="mso-page-numbers-style" />
+            <xs:enumeration value="mso-page-orientation" />
+            <xs:enumeration value="mso-page-scale" />
+            <xs:enumeration value="mso-pagination" />
+            <xs:enumeration value="mso-panose-arm-style" />
+            <xs:enumeration value="mso-panose-contrast" />
+            <xs:enumeration value="mso-panose-family-type" />
+            <xs:enumeration value="mso-panose-letterform" />
+            <xs:enumeration value="mso-panose-midline" />
+            <xs:enumeration value="mso-panose-proportion" />
+            <xs:enumeration value="mso-panose-serif-style" />
+            <xs:enumeration value="mso-panose-stroke-variation" />
+            <xs:enumeration value="mso-panose-weight" />
+            <xs:enumeration value="mso-panose-x-height" />
+            <xs:enumeration value="mso-paper-source" />
+            <xs:enumeration value="mso-paper-source-first-page" />
+            <xs:enumeration value="mso-paper-source-other-pages" />
+            <xs:enumeration value="mso-pattern" />
+            <xs:enumeration value="mso-pattern-color" />
+            <xs:enumeration value="mso-pattern-style" />
+            <xs:enumeration value="mso-print-area" />
+            <xs:enumeration value="mso-print-color" />
+            <xs:enumeration value="mso-print-gridlines" />
+            <xs:enumeration value="mso-print-headings" />
+            <xs:enumeration value="mso-print-resolution" />
+            <xs:enumeration value="mso-print-sheet-order" />
+            <xs:enumeration value="mso-print-title-column" />
+            <xs:enumeration value="mso-print-title-row" />
+            <xs:enumeration value="mso-prop-change" />
+            <xs:enumeration value="mso-prop-change-author" />
+            <xs:enumeration value="mso-prop-change-time" />
+            <xs:enumeration value="mso-protection" />
+            <xs:enumeration value="mso-rotate" />
+            <xs:enumeration value="mso-row-margin-left" />
+            <xs:enumeration value="mso-row-margin-right" />
+            <xs:enumeration value="mso-ruby-merge" />
+            <xs:enumeration value="mso-ruby-visibility" />
+            <xs:enumeration value="mso-runic-font-family" />
+            <xs:enumeration value="mso-scheme-fill-color" />
+            <xs:enumeration value="mso-scheme-shadow-color" />
+            <xs:enumeration value="mso-shading" />
+            <xs:enumeration value="mso-shadow-color" />
+            <xs:enumeration value="mso-sinhala-font-family" />
+            <xs:enumeration value="mso-space-above" />
+            <xs:enumeration value="mso-space-below" />
+            <xs:enumeration value="mso-spacerun" />
+            <xs:enumeration value="mso-special-character" />
+            <xs:enumeration value="mso-special-format" />
+            <xs:enumeration value="mso-style-id" />
+            <xs:enumeration value="mso-style-link" />
+            <xs:enumeration value="mso-style-name" />
+            <xs:enumeration value="mso-style-next" />
+            <xs:enumeration value="mso-style-noshow" />
+            <xs:enumeration value="mso-style-parent" />
+            <xs:enumeration value="mso-style-type" />
+            <xs:enumeration value="mso-style-update" />
+            <xs:enumeration value="mso-subdocument" />
+            <xs:enumeration value="mso-symbol-font-family" />
+            <xs:enumeration value="mso-syriac-font-family" />
+            <xs:enumeration value="mso-tab-count" />
+            <xs:enumeration value="mso-table-anchor-horizontal" />
+            <xs:enumeration value="mso-table-anchor-vertical" />
+            <xs:enumeration value="mso-table-bspace" />
+            <xs:enumeration value="mso-table-dir" />
+            <xs:enumeration value="mso-table-layout-alt" />
+            <xs:enumeration value="mso-table-left" />
+            <xs:enumeration value="mso-table-lspace" />
+            <xs:enumeration value="mso-table-overlap" />
+            <xs:enumeration value="mso-table-rspace" />
+            <xs:enumeration value="mso-table-top" />
+            <xs:enumeration value="mso-table-tspace" />
+            <xs:enumeration value="mso-table-wrap" />
+            <xs:enumeration value="mso-tamil-font-family" />
+            <xs:enumeration value="mso-telugu-font-family" />
+            <xs:enumeration value="mso-text-animation" />
+            <xs:enumeration value="mso-text-combine-brackets" />
+            <xs:enumeration value="mso-text-combine-id" />
+            <xs:enumeration value="mso-text-control" />
+            <xs:enumeration value="mso-text-fit-id" />
+            <xs:enumeration value="mso-text-orientation" />
+            <xs:enumeration value="mso-text-raise" />
+            <xs:enumeration value="mso-thaana-font-family" />
+            <xs:enumeration value="mso-thai-font-family" />
+            <xs:enumeration value="mso-tibetan-font-family" />
+            <xs:enumeration value="mso-title-page" />
+            <xs:enumeration value="mso-tny-compress" />
+            <xs:enumeration value="mso-unsynced" />
+            <xs:enumeration value="mso-vertical-align-alt" />
+            <xs:enumeration value="mso-vertical-page-align" />
+            <xs:enumeration value="mso-width-alt" />
+            <xs:enumeration value="mso-width-source" />
+            <xs:enumeration value="mso-word-wrap" />
+            <xs:enumeration value="mso-xlrowspan" />
+            <xs:enumeration value="mso-yfti-irow" />
+            <xs:enumeration value="mso-yfti-lastrow" />
+            <xs:enumeration value="mso-yfti-tbllook" />
+            <xs:enumeration value="mso-yi-font-family" />
+            <xs:enumeration value="nav-banner-image" />
+            <xs:enumeration value="nav-down" />            
+            <xs:enumeration value="nav-index" />
+            <xs:enumeration value="nav-left" />
+            <xs:enumeration value="nav-right" />            
+            <xs:enumeration value="nav-up" />
+            <xs:enumeration value="navbutton_background_color" />
+            <xs:enumeration value="navbutton_home_hovered" />
+            <xs:enumeration value="navbutton_home_normal" />
+            <xs:enumeration value="navbutton_home_pushed" />
+            <xs:enumeration value="navbutton_horiz_hovered" />
+            <xs:enumeration value="navbutton_horiz_normal" />
+            <xs:enumeration value="navbutton_horiz_pushed" />
+            <xs:enumeration value="navbutton_next_hovered" />
+            <xs:enumeration value="navbutton_next_normal" />
+            <xs:enumeration value="navbutton_next_pushed" />
+            <xs:enumeration value="navbutton_prev_hovered" />
+            <xs:enumeration value="navbutton_prev_normal" />
+            <xs:enumeration value="navbutton_prev_pushed" />
+            <xs:enumeration value="navbutton_up_hovered" />
+            <xs:enumeration value="navbutton_up_normal" />
+            <xs:enumeration value="navbutton_up_pushed" />
+            <xs:enumeration value="navbutton_vert_hovered" />
+            <xs:enumeration value="navbutton_vert_normal" />
+            <xs:enumeration value="navbutton_vert_pushed" />
+            <xs:enumeration value="opacity" />
+            <xs:enumeration value="outline" />
+            <xs:enumeration value="outline-color" />
+            <xs:enumeration value="outline-offset" />
+            <xs:enumeration value="outline-style" />            
+            <xs:enumeration value="outline-width" />
+            <xs:enumeration value="overflow" />
+            <xs:enumeration value="overflow-x" />
+            <xs:enumeration value="overflow-y" />
+            <xs:enumeration value="padding" />
+            <xs:enumeration value="padding-bottom" />
+            <xs:enumeration value="padding-left" />
+            <xs:enumeration value="padding-right" />
+            <xs:enumeration value="padding-top" />
+            <xs:enumeration value="page" />
+            <xs:enumeration value="page-break-after" />
+            <xs:enumeration value="page-break-before" />
+            <xs:enumeration value="page-break-inside" />
+            <xs:enumeration value="panose-1" />
+            <xs:enumeration value="perspective" />
+            <xs:enumeration value="perspective-origin" />
+            <xs:enumeration value="position" />
+            <xs:enumeration value="punctuation-trim" />
+            <xs:enumeration value="punctuation-wrap" />
+            <xs:enumeration value="resize" />
+            <xs:enumeration value="right" />
+            <xs:enumeration value="rotation" />
+            <xs:enumeration value="row-span" />
+            <xs:enumeration value="ruby-align" />
+            <xs:enumeration value="ruby-overhang" />
+            <xs:enumeration value="ruby-position" />
+            <xs:enumeration value="scrollbar-3d-light-color" />
+            <xs:enumeration value="scrollbar-arrow-color" />
+            <xs:enumeration value="scrollbar-base-color" />
+            <xs:enumeration value="scrollbar-dark-shadow-color" />
+            <xs:enumeration value="scrollbar-face-color" />
+            <xs:enumeration value="scrollbar-highlight-color" />
+            <xs:enumeration value="scrollbar-shadow-color" />
+            <xs:enumeration value="separator-image" />
+            <xs:enumeration value="tab-interval" />
+            <xs:enumeration value="tab-stops" />
+            <xs:enumeration value="tabindex" />
+            <xs:enumeration value="table-border-color-dark" />
+            <xs:enumeration value="table-border-color-light" />
+            <xs:enumeration value="table-layout" />
+            <xs:enumeration value="text-align" />
+            <xs:enumeration value="text-align-last" />
+            <xs:enumeration value="text-autospace" />
+            <xs:enumeration value="text-blink" />
+            <xs:enumeration value="text-combine" />
+            <xs:enumeration value="text-decoration" />
+            <xs:enumeration value="text-effect" />
+            <xs:enumeration value="text-fit" />
+            <xs:enumeration value="text-indent" />
+            <xs:enumeration value="text-justify" />
+            <xs:enumeration value="text-justify-trim" />
+            <xs:enumeration value="text-kashida" />
+            <xs:enumeration value="text-kashida-space" />
+            <xs:enumeration value="text-line-through" />
+            <xs:enumeration value="text-line-through-color" />
+            <xs:enumeration value="text-line-through-mode" />
+            <xs:enumeration value="text-line-through-style" />
+            <xs:enumeration value="text-line-through-width" />
+            <xs:enumeration value="text-overflow" />
+            <xs:enumeration value="text-overflow-ellipsis" />
+            <xs:enumeration value="text-overflow-mode" />
+            <xs:enumeration value="text-overline" />
+            <xs:enumeration value="text-overline-color" />
+            <xs:enumeration value="text-overline-mode" />
+            <xs:enumeration value="text-overline-style" />
+            <xs:enumeration value="text-overline-width" />
+            <xs:enumeration value="text-shadow" />
+            <xs:enumeration value="text-transform" />
+            <xs:enumeration value="text-underline" />
+            <xs:enumeration value="text-underline-color" />
+            <xs:enumeration value="text-underline-mode" />
+            <xs:enumeration value="text-underline-position" />
+            <xs:enumeration value="text-underline-style" />
+            <xs:enumeration value="text-underline-width" />
+            <xs:enumeration value="top" />
+            <xs:enumeration value="top-bar-button" />
+            <xs:enumeration value="transform" />
+            <xs:enumeration value="transform-origin" />
+            <xs:enumeration value="transform-style" />
+            <xs:enumeration value="transition" />
+            <xs:enumeration value="transition-delay" />
+            <xs:enumeration value="transition-duration" />
+            <xs:enumeration value="transition-property" />
+            <xs:enumeration value="transition-timing-function" />
+            <xs:enumeration value="unicode-bidi" />
+            <xs:enumeration value="v-text-anchor" />
+            <xs:enumeration value="v-text-spacing" />
+            <xs:enumeration value="v-text-spacing-mode" />
+            <xs:enumeration value="version" />
+            <xs:enumeration value="vert-align" />
+            <xs:enumeration value="vertical-align" />
+            <xs:enumeration value="visibility" />
+            <xs:enumeration value="white-space" />
+            <xs:enumeration value="white-space-treatment" />
+            <xs:enumeration value="width" />
+            <xs:enumeration value="word-break" />
+            <xs:enumeration value="word-spacing" />
+            <xs:enumeration value="word-wrap" />
+            <xs:enumeration value="wrap-option" />
+            <xs:enumeration value="writing-mode" />
+            <xs:enumeration value="z-index" />
+            <xs:enumeration value="zindex" />
+            <xs:enumeration value="zoom" />
+            <xs:enumeration value="-ms-animation-name" />
+            <xs:enumeration value="-ms-animation-direction" />
+            <xs:enumeration value="-ms-animation-duration" />
+            <xs:enumeration value="-ms-animation-delay" />
+            <xs:enumeration value="-ms-animation-iteration-count" />
+            <xs:enumeration value="-ms-animation-play-state" />
+            <xs:enumeration value="-ms-animation-timing-function" />
+            <xs:enumeration value="-ms-animation" />
+            <xs:enumeration value="-ms-box-align" />
+            <xs:enumeration value="-ms-box-direction" />
+            <xs:enumeration value="-ms-box-line-progression" />
+            <xs:enumeration value="-ms-box-pack" />
+            <xs:enumeration value="-ms-grid-columns" />
+            <xs:enumeration value="-ms-grid-rows" />
+            <xs:enumeration value="-ms-grid-row-align" />
+            <xs:enumeration value="-ms-transition-property" />
+            <xs:enumeration value="-ms-transition-duration" />
+            <xs:enumeration value="-ms-transition-delay" />
+            <xs:enumeration value="-ms-transition-timing-function" />
+            <xs:enumeration value="-ms-transition" />
+            <xs:enumeration value="-ms-transform" />
+            <xs:enumeration value="-ms-transform-origin" />
+            <xs:enumeration value="-ms-transform-style" />
+            <xs:enumeration value="-ms-perspective-origin" />
+            <xs:enumeration value="-ms-perspective" />
+            <xs:enumeration value="-ms-range-progress" />
+            <xs:enumeration value="-webkit-animation-name" />
+            <xs:enumeration value="-webkit-animation-direction" />
+            <xs:enumeration value="-webkit-animation-duration" />
+            <xs:enumeration value="-webkit-animation-delay" />
+            <xs:enumeration value="-webkit-animation-iteration-count" />
+            <xs:enumeration value="-webkit-animation-play-state" />
+            <xs:enumeration value="-webkit-animation-timing-function" />
+            <xs:enumeration value="-webkit-animation" />
+            <xs:enumeration value="-webkit-transition-property" />
+            <xs:enumeration value="-webkit-transition-duration" />
+            <xs:enumeration value="-webkit-transition-delay" />
+            <xs:enumeration value="-webkit-transition-timing-function" />
+            <xs:enumeration value="-webkit-transition" />
+            <xs:enumeration value="-webkit-transform" />
+            <xs:enumeration value="-webkit-transform-origin" />
+            <xs:enumeration value="-webkit-transform-style" />
+            <xs:enumeration value="-webkit-perspective-origin" />
+            <xs:enumeration value="-webkit-perspective" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
