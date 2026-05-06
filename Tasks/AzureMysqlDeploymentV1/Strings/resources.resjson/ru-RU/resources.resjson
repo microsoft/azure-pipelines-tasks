@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Не рекомендуется к использованию] Развертывание Azure MySQL",
+  "loc.friendlyName": "[Устарело] Развертывание Azure MySQL",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Не рекомендуется к использованию: эта задача больше не поддерживается. Используйте вместо нее задачу AzureMysqlDeployment@2.",
-  "loc.instanceNameFormat": "[Не рекомендуется к использованию] Выполнить Azure MySQL: $(TaskNameSelector)",
+  "loc.description": "Не рекомендуется: Эта задача больше не поддерживается. Используйте задачу AzureMysqlDeployment@2.",
+  "loc.instanceNameFormat": "[Устарело] Выполнить Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "Сведения о базе данных",
   "loc.group.displayName.taskDetails": "Пакет развертывания",
   "loc.group.displayName.firewall": "Брандмауэр",

@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Déconseillé] Azure CLI",
+  "loc.friendlyName": "[Deprecated] Azure CLI",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](http://go.microsoft.com/fwlink/?LinkID=827160) ou [consultez la documentation d'Azure CLI](https://docs.microsoft.com/cli/azure/)",
-  "loc.description": "Déconseillé : cette tâche n’est plus mise à jour. Utilisez plutôt la tâche AzureCLI@2.",
-  "loc.instanceNameFormat": "[Déconseillé] Azure CLI $(scriptPath)",
+  "loc.description": "Déprécié : cette tâche n'est plus maintenue. Utilisez la tâche AzureCLI@2 à la place.",
+  "loc.instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Nouveautés de la version 1.0 :\n- Prend en charge la nouvelle interface Azure CLI 2.0 basée sur Python\n- Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)\n- Pour utiliser l'interface Azure CLI 1.0 (basée sur node.js), passez à la tâche version 0.0\n- Limitations :\n - Aucune prise en charge pour les abonnements Azure Classic. Azure CLI 2.0 prend en charge uniquement les abonnements ARM (Azure Resource Manager).",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.connectedServiceNameARM": "Abonnement Azure",
@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Affectation de %s à la variable d'environnement AZURE_CONFIG_DIR",
   "loc.messages.SettingAzureCloud": "Affectation de %s au cloud actif",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Pour une version d'agent < 2.115.0, seule la configuration Azure CLI globale peut être utilisée",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Le secret a expiré, mettez à jour la connexion au service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion vers des connexions au service sans secret."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expiré, mettez à jour la connexion de service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret."
 }
