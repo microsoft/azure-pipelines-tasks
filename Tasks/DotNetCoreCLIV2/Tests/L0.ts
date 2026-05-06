@@ -433,6 +433,18 @@ describe('DotNetCoreExe Suite', function () {
         assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
     });
 
+    it('pushes successfully to internal hosted feed with --skip-duplicate', async () => {
+        let tp = path.join(__dirname, './PushTests/internalFeedWithSkipDuplicate.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key VSTS --skip-duplicate'), 'it should have run dotnet with --skip-duplicate');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+    });
+
     it('test command with publish test results should call trx logger and publish test results', async () => {
         let tp = path.join(__dirname, './TestCommandTests/publishtests.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

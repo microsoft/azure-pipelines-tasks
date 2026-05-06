@@ -161,10 +161,13 @@ export async function run(): Promise<void> {
         }
         // Setting creds in the temp NuGet.config if needed
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
+
+        // Retrieving if 429 conflicts should not return an error
+        const allowPackageConflicts = tl.getBoolInput('allowPackageConflicts', false);
         const dotnetPath = tl.which('dotnet', true);
         try {
             for (const packageFile of filesList) {
-                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory);
+                await dotNetNuGetPushAsync(dotnetPath, packageFile, feedUri, apiKey, configFile, tempNuGetConfigDirectory, allowPackageConflicts);
             }
         } finally {
             credCleanup();
@@ -183,7 +186,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, configFile: string, workingDirectory: string): Q.Promise<number> {
+function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: string, apiKey: string, configFile: string, workingDirectory: string, skipDuplicate: boolean): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
 
     dotnet.arg('nuget');
@@ -196,6 +199,10 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
 
     dotnet.arg('--api-key');
     dotnet.arg(apiKey);
+
+    if (skipDuplicate) {
+        dotnet.arg('--skip-duplicate');
+    }
 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
