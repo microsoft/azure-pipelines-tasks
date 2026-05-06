@@ -67,5 +67,5 @@
   "loc.messages.FailedToSetAzureDevOpsOrganization": "未能设置 Azure DevOps 组织",
   "loc.messages.FailedToSetAzureDevOpsProject": "未能设置 Azure DevOps 项目",
   "loc.messages.SkippingSubscriptionContext": "根据 \"allowNoSubscriptions\" 输入或空 GUID 值跳过订阅上下文",
-  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反斜杠 (\\) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
 }
