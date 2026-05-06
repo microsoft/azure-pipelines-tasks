@@ -77,7 +77,7 @@ function bumpTaskVersion(taskPath, minor) {
         taskLocJson.version.Minor = minor;
     }
 
-    fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+    fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
     fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 }
 
@@ -104,7 +104,7 @@ function bumpPackageVersion(packPath, minor) {
     packageJson.version = version.format();
     packageLocJson.version = version.format();
 
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4));
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     fs.writeFileSync(packageLocJsonPath, JSON.stringify(packageLocJson, null, 2));
 }
 
