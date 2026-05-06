@@ -67,5 +67,5 @@
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Échec de la configuration de l'organisation Azure DevOps",
   "loc.messages.FailedToSetAzureDevOpsProject": "Échec de la configuration du projet Azure DevOps",
   "loc.messages.SkippingSubscriptionContext": "Ignorer le contexte d'abonnement en cas d'entrée « allowNoSubscriptions » ou de valeur GUID vide",
-  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant une barre oblique inverse (\\). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
 }

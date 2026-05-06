@@ -55,5 +55,5 @@
   "loc.messages.FailedToRefreshAzSession": "az-cli セッションの更新中に次のエラーが発生しました: %s",
   "loc.messages.RefreshingAzSession": "az-cli セッションを更新しようとしています...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。",
-  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
 }

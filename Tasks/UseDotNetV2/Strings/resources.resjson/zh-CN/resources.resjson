@@ -105,5 +105,5 @@
   "loc.messages.InvalidRollForwardPolicy": "路径“%s”下的 global.json 中的 rollForward 策略“%s”无效。支持的值为: disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor。将忽略 rollForward 策略。",
   "loc.messages.ResolvedVersionFromGlobalJson": "已从 global.json 解析 SDK 版本“%s”(原始版本:“%s”，rollForward:“%s”)",
   "loc.messages.InstallingFromGlobalJson": "正在安装从 global.json 解析的 .NET Core SDK 版本 %s",
-  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
+  "loc.messages.VersionSatisfiedByInstalledVersion": "已安装的版本满足版本规范“%s”。跳过安装。"
 }
