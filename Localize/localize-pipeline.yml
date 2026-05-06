@@ -77,6 +77,10 @@ stages:
         npm ci
         node Localize/bump-versions.js
         
+        # Renormalize line endings: OneLocBuild writes CRLF on Windows but
+        # .gitattributes declares *.resjson as text (LF in repo). Without this,
+        # the Linux PR-check CI detects the CRLF/LF mismatch and fails.
+        git add --renormalize .
         git add -A
         git commit -m 'Bumped versions'
       displayName: Bump tasks' and packages' versions
