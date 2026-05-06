@@ -918,6 +918,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.VersionSatisfiedByInstalledVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An installed version satisfies the version spec '%s'. Skipping installation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[설치된 버전이 버전 사양 '%s'을(를) 충족합니다. 설치를 건너뛰겠습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.VersionsCanNotBeCompared" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Versions %s and %s cannot be compared. Both versions should be explicit.]]></Val>

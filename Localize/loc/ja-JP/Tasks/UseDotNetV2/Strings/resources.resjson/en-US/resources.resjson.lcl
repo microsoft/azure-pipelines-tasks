@@ -918,6 +918,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.VersionSatisfiedByInstalledVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An installed version satisfies the version spec '%s'. Skipping installation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インストールされているバージョンは、バージョン仕様 '%s' を満たします。インストールをスキップします。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.VersionsCanNotBeCompared" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Versions %s and %s cannot be compared. Both versions should be explicit.]]></Val>
