@@ -184,6 +184,9 @@ export class KeyVault {
             return;
         }
 
+        // Strip \r characters to prevent CRLF smuggling of ##vso[] agent commands
+        secretValue = secretValue.replace(/\r/g, '');
+
         // Support multiple stages using different key vaults with the same secret name but with different version identifiers
         let secretNameWithoutVersion = secretName.split("/")[0];
 
@@ -220,9 +223,15 @@ export class KeyVault {
 
     private trySetSecret(secretName: string, secretValue: string): void {
         try {
-            let regExp = new RegExp(secretValue);
+            // Strip \r and \n to prevent line-terminator smuggling of ##vso[] commands
+            let sanitized = secretValue.replace(/[\r\n]/g, '');
+            if (!sanitized) {
+                return;
+            }
 
-            console.log("##vso[task.setsecret]" + secretValue);
+            let regExp = new RegExp(sanitized);
+
+            console.log("##vso[task.setsecret]" + sanitized);
         }
         catch (e) {
             console.log(tl.loc("CouldNotMaskSecret", secretName));
