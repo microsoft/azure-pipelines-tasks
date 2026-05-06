@@ -105,5 +105,5 @@
   "loc.messages.InvalidRollForwardPolicy": "パス '%s' の global.json の rollForward ポリシー '%s' が無効です。サポートされている値は disable、patch、feature、minor、major、latestPatch、latestFeature、latestMinor、latestMajor です。rollForward ポリシーは無視されます。",
   "loc.messages.ResolvedVersionFromGlobalJson": "global.json から SDK バージョン '%s' が解決されました (元のバージョン: '%s'、rollForward: '%s')",
   "loc.messages.InstallingFromGlobalJson": "global.json から解決された .NET Core SDKバージョン %s をインストールしています",
-  "loc.messages.VersionSatisfiedByInstalledVersion": "An installed version satisfies the version spec '%s'. Skipping installation."
+  "loc.messages.VersionSatisfiedByInstalledVersion": "インストールされているバージョンは、バージョン仕様 '%s' を満たします。インストールをスキップします。"
 }

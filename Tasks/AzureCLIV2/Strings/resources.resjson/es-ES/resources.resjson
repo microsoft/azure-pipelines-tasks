@@ -55,5 +55,5 @@
   "loc.messages.FailedToRefreshAzSession": "Error al intentar actualizar la sesión de az-cli: %s",
   "loc.messages.RefreshingAzSession": "Intentando actualizar la sesión de az-cli...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "La entrada \"keepAzSessionActive\" solo se puede usar para la conexión del servicio ARM de federación de identidades de carga de trabajo. No se esperaba el esquema de autenticación del punto de conexión de servicio al que se hace referencia: %s. Cambie el esquema o quite la entrada \"keepAzSessionActive\".",
-  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\\). Puede obtener más información aquí: https://aka.ms/ado/75787"
 }
