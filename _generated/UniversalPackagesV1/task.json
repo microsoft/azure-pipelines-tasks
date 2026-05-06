@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 273,
     "Patch": 0
   },
   "runsOn": [
@@ -189,8 +189,8 @@
     "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection '%s'"
   },
   "_buildConfigMapping": {
-    "Default": "1.274.0",
+    "Default": "1.273.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.274.1"
+    "wif_242": "1.273.1"
   }
 }
