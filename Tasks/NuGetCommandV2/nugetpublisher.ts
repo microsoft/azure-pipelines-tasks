@@ -11,11 +11,12 @@ import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
+import { RequestOptions } from "azure-pipelines-tasks-packaging-common/universal/RequestUtilities";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
-import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { WebRequest, WebRequestOptions, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 
 class PublishOptions implements INuGetCommandOptions {
@@ -46,7 +47,14 @@ interface EndpointCredentials {
 export async function run(nuGetPath: string): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+        const timeout: number = getRequestTimeout();
+        const webApiOptions: RequestOptions = {
+            socketTimeout: timeout,
+            globalAgentOptions: {
+                timeout,
+            },
+        };
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet, webApiOptions);
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         logError(error);
@@ -112,7 +120,8 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        accessToken = await getAccessToken(isInternalFeed, urlPrefixes);
+        const timeout: number = getRequestTimeout();
+        accessToken = await getAccessToken(isInternalFeed, urlPrefixes, timeout);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -417,7 +426,18 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
+function getRequestTimeout(): number {
+    let timeout = 60_000 * 5;
+    const inputValue: string = tl.getInput("requestTimeout", false);
+    if (!(Number.isNaN(Number(inputValue)))) {
+        const maxTimeout = 60_000 * 10;
+        timeout = Math.min(parseInt(inputValue, 10), maxTimeout);
+    }
+
+    return timeout;
+}
+
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout: number): Promise<string> {
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
 
@@ -451,7 +471,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
                 for (const e of endpointsArray.endpointCredentials) {
                     for (const prefix of uriPrefixes) {
                         if (e.endpoint.toUpperCase().startsWith(prefix.toUpperCase())) {
-                            let isServiceConnectionValid = await tryServiceConnection(e, feed);
+                            let isServiceConnectionValid = await tryServiceConnection(e, feed, timeout);
                             if (isServiceConnectionValid) {
                                 matchingEndpoint = e;
                                 break;
@@ -474,7 +494,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
     return accessToken;
 }
 
-async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): Promise<boolean> {
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, timeout: number): Promise<boolean> {
     // Create request
     const request = new WebRequest();
     const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
@@ -485,7 +505,22 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): P
         "Authorization": "Basic " + token64
     };
 
-    const response = await sendRequest(request);
+    const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
+    const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+
+    const options: WebRequestOptions = {
+        retryCount: 3,
+        retryIntervalInSeconds: 5,
+        retriableErrorCodes,
+        retriableStatusCodes,
+        retryRequestTimedout: true,
+        socketTimeout: timeout,
+        httpGlobalAgentOptions: {
+            timeout,
+        },
+    };
+
+    const response = await sendRequest(request, options);
 
     if (response.statusCode == 200) {
         if (response.body) {

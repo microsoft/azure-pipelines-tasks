@@ -194,6 +194,17 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
+    it('push uses request timeout for publish HTTP calls', async () => {
+        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetRequestTimeout.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.stdOutContained('validated packaging request timeout'), 'it should pass timeout to getPackagingUris');
+        assert(tr.stdOutContained('validated service connection request timeout'), 'it should pass timeout to sendRequest');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
     it('pushes successfully to internal feed using VstsNuGetPush.exe', async () => {
         const tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPush.js')
         const tr = new ttm.MockTestRunner(tp);
