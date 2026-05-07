@@ -54,5 +54,6 @@ export function getDefaultPreJobEnvVars(): { [key: string]: string } {
         'SYSTEM_DEFAULTWORKINGDIRECTORY': 'c:\\agent\\home\\directory',
         'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': TEST_CONSTANTS.SERVICE_URL,
         'SYSTEM_SERVERTYPE': 'hosted',
+        'SYSTEM_DEBUG': 'true',
     };
 }
