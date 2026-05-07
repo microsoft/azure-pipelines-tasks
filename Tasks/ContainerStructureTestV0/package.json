@@ -24,7 +24,7 @@
     "@types/q": "^1.0.7",
     "@types/uuid": "^8.3.0",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^5.2.10",
+    "azure-pipelines-task-lib": "^4.1.0",
     "azure-pipelines-tasks-docker-common": "^2.268.0",
     "azure-pipelines-tasks-utility-common": "3.272.0",
     "azure-pipelines-tool-lib": "^2.0.12",
@@ -32,5 +32,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+	  "minimatch": "3.1.5"
   }
 }
