@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 274,
-    "Patch": 3
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -84,10 +84,6 @@
     "Node20_1": {
       "target": "runprejob.js",
       "argumentFormat": ""
-    },
-    "Node24": {
-      "target": "runprejob.js",
-      "argumentFormat": ""
     }
   },
   "execution": {
@@ -99,10 +95,6 @@
       "target": "run.js"
     },
     "Node20_1": {
-      "target": "run.js",
-      "argumentFormat": ""
-    },
-    "Node24": {
       "target": "run.js",
       "argumentFormat": ""
     }
