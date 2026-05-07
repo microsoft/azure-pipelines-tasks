@@ -205,6 +205,17 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
+    it('push without request timeout preserves previous HTTP behavior', async () => {
+        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetNoRequestTimeout.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.stdOutContained('validated packaging request uses default behavior'), 'it should not pass timeout to getPackagingUris');
+        assert(tr.stdOutContained('validated service connection request uses default behavior'), 'it should not pass timeout to sendRequest');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
     it('pushes successfully to internal feed using VstsNuGetPush.exe', async () => {
         const tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPush.js')
         const tr = new ttm.MockTestRunner(tp);

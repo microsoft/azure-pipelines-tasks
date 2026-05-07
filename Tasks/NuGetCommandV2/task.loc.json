@@ -253,7 +253,6 @@
       "name": "requestTimeout",
       "type": "int",
       "label": "ms-resource:loc.input.label.requestTimeout",
-      "defaultValue": 300000,
       "required": false,
       "groupName": "pushAdvanced",
       "helpMarkDown": "ms-resource:loc.input.help.requestTimeout",

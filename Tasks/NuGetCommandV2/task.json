@@ -253,10 +253,9 @@
       "name": "requestTimeout",
       "type": "int",
       "label": "Set timeout for package publish request",
-      "defaultValue": 300000,
       "required": false,
       "groupName": "pushAdvanced",
-      "helpMarkDown": "Provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. Default is 300000 milliseconds (5 minutes). Cannot be more than 600000 milliseconds (10 minutes).",
+      "helpMarkDown": "Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).",
       "visibleRule": "command = push"
     },
     {

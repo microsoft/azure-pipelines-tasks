@@ -47,8 +47,8 @@ interface EndpointCredentials {
 export async function run(nuGetPath: string): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        const timeout: number = getRequestTimeout();
-        const webApiOptions: RequestOptions = {
+        const timeout = getRequestTimeout();
+        const webApiOptions: RequestOptions | undefined = timeout === undefined ? undefined : {
             socketTimeout: timeout,
             globalAgentOptions: {
                 timeout,
@@ -120,7 +120,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        const timeout: number = getRequestTimeout();
+        const timeout = getRequestTimeout();
         accessToken = await getAccessToken(isInternalFeed, urlPrefixes, timeout);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -426,18 +426,17 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-function getRequestTimeout(): number {
-    let timeout = 60_000 * 5;
+function getRequestTimeout(): number | undefined {
     const inputValue: string = tl.getInput("requestTimeout", false);
-    if (!(Number.isNaN(Number(inputValue)))) {
+    if (inputValue && !(Number.isNaN(Number(inputValue)))) {
         const maxTimeout = 60_000 * 10;
-        timeout = Math.min(parseInt(inputValue, 10), maxTimeout);
+        return Math.min(parseInt(inputValue, 10), maxTimeout);
     }
 
-    return timeout;
+    return undefined;
 }
 
-async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout: number): Promise<string> {
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout?: number): Promise<string> {
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
 
@@ -494,7 +493,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout
     return accessToken;
 }
 
-async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, timeout: number): Promise<boolean> {
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, timeout?: number): Promise<boolean> {
     // Create request
     const request = new WebRequest();
     const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
@@ -505,22 +504,27 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, ti
         "Authorization": "Basic " + token64
     };
 
-    const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
-    const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+    let response: WebResponse;
+    if (timeout === undefined) {
+        response = await sendRequest(request);
+    } else {
+        const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
+        const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
 
-    const options: WebRequestOptions = {
-        retryCount: 3,
-        retryIntervalInSeconds: 5,
-        retriableErrorCodes,
-        retriableStatusCodes,
-        retryRequestTimedout: true,
-        socketTimeout: timeout,
-        httpGlobalAgentOptions: {
-            timeout,
-        },
-    };
+        const options: WebRequestOptions = {
+            retryCount: 3,
+            retryIntervalInSeconds: 5,
+            retriableErrorCodes,
+            retriableStatusCodes,
+            retryRequestTimedout: true,
+            socketTimeout: timeout,
+            httpGlobalAgentOptions: {
+                timeout,
+            },
+        };
 
-    const response = await sendRequest(request, options);
+        response = await sendRequest(request, options);
+    }
 
     if (response.statusCode == 200) {
         if (response.body) {
