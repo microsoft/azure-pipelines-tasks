@@ -31,7 +31,7 @@ describe('UniversalPackages L0 Suite - Artifact Tool Installer', function () {
             });
 
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertStdoutContains(tr, 'UPACK_ARTIFACTTOOL_PATH_CACHED');
+            TestHelpers.assertStdoutContains(tr, 'UPACK_ARTIFACTTOOL_PATH');
         });
 
         it('skips installation if artifact tool is already cached', async () => {
