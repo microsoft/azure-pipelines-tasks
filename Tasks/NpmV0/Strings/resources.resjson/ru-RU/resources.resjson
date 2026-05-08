@@ -8,6 +8,7 @@
   "loc.input.label.command": "команда npm",
   "loc.input.label.arguments": "аргументы",
   "loc.input.help.arguments": "В npm переданы дополнительные аргументы.",
+  "loc.messages.TaskDeprecationNotice": "Задача NpmV0 запланирована к переводу в нерекомендуемую категорию в июне 2026 года. Переключитесь на использование NpmAuthenticate и задач сценариев или NpmV1.",
   "loc.messages.InvalidCommand": "Для npm следует использовать только одну команду. Для дополнительных аргументов воспользуйтесь полем \"Аргументы\".",
   "loc.messages.NpmReturnCode": "npm завершила работу с кодом возврата: %d",
   "loc.messages.NpmFailed": "Сбой npm с ошибкой %s",

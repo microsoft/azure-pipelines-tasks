@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "還原 NuGet 套件",
   "loc.input.help.restoreNugetPackages": "此選項已淘汰。若要還原 NuGet 套件，請在組建前新增 [NuGet 工具安裝程式](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) 工作。",
   "loc.input.label.msbuildArchitecture": "MSBuild 架構",
-  "loc.input.help.msbuildArchitecture": "選擇性地提供 MSBuild 的架構 (x86、x64) 以執行。",
+  "loc.input.help.msbuildArchitecture": "選擇性地提供 MSBuild 的架構 (x86、x64、arm64) 以執行。",
   "loc.input.label.logProjectEvents": "記錄專案詳細資料",
   "loc.input.help.logProjectEvents": "選擇性地記錄各專案的時間軸詳細資料。",
   "loc.input.label.createLogFile": "建立記錄檔",

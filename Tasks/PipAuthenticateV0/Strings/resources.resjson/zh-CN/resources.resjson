@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "选择要在此组织中进行身份验证的源",
   "loc.input.label.externalSources": "来自外部组织的源",
   "loc.input.help.externalSources": "选择要在此组织外部进行身份验证的终结点。",
+  "loc.messages.TaskDeprecationNotice": "PipAuthenticateV0 任务计划于 2026 年 6 月弃用。请改用 PipAuthenticateV1。",
   "loc.messages.Info_AddingInternalFeeds": "正在为 %s 内部源添加身份验证信息。",
   "loc.messages.Info_AddingExternalFeeds": "正在为 %s 外部终结点添加身份验证信息。",
   "loc.messages.Info_SuccessAddingAuth": "已成功添加对 %s 内部源和 %s 外部终结点的身份验证。",
