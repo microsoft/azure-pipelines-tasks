@@ -35,6 +35,6 @@
   },
   "overrides": {
     "form-data": "^3.0.4",
-    "qs": "^6.15.1"
+    "minimatch": "^5.1.7"    
   }
 }
