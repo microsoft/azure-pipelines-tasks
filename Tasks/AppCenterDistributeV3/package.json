@@ -32,7 +32,6 @@
   },
   "overrides": {
     "form-data": "^4.0.4",
-    "basic-ftp": "5.3.0",
-    "qs": "^6.15.1"
+    "basic-ftp": "5.3.0"
   }
 }

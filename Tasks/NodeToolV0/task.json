@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 274,
-    "Patch": 1
+    "Patch": 0
   },
   "deprecated": true,
   "deprecationMessage": "This task is deprecated and will no longer receive updates. Please use UseNodeV1 as a replacement.",

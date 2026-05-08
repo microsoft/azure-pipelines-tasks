@@ -17,14 +17,13 @@
     "azure-pipelines-task-lib": "^4.16.0",
     "azure-pipelines-tasks-codeanalysis-common": "2.242.0",
     "azure-pipelines-tasks-codecoverage-tools": "^3.242.0",
-    "azure-pipelines-tasks-java-common": "2.264.0"
+    "azure-pipelines-tasks-java-common": "2.272.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
   },
   "overrides": {
     "form-data": "^4.0.4",
-    "qs": "^6.15.1",
     "minimatch": "^5.1.7"
   }
 }
