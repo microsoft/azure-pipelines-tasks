@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub 설명",
+  "loc.helpMarkDown": "",
   "loc.description": "Github 엔터티에 설명, 즉 문제 또는 PR(끌어오기 요청)을 씁니다.",
   "loc.instanceNameFormat": "GitHub 설명을 쓰는 중",
   "loc.input.label.gitHubConnection": "GitHub 연결(OAuth 또는 PAT)",

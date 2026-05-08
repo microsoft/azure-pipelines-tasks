@@ -407,7 +407,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
-  "prejobexecution" : {
+  "prejobexecution": {
     "Node16": {
       "target": "PreJobExecutionUniversalPackages.js",
       "argumentFormat": ""
