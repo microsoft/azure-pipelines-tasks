@@ -256,7 +256,7 @@
       "required": false,
       "groupName": "pushAdvanced",
       "helpMarkDown": "ms-resource:loc.input.help.requestTimeout",
-      "visibleRule": "command = push"
+      "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {
       "name": "externalEndpoint",

@@ -256,7 +256,7 @@
       "required": false,
       "groupName": "pushAdvanced",
       "helpMarkDown": "Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).",
-      "visibleRule": "command = push"
+      "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {
       "name": "externalEndpoint",
