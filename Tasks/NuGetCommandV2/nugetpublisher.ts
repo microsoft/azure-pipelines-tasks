@@ -45,9 +45,9 @@ interface EndpointCredentials {
 }
 
 export async function run(nuGetPath: string): Promise<void> {
+    const timeout = getRequestTimeout();
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        const timeout = getRequestTimeout();
         const webApiOptions: RequestOptions | undefined = timeout === undefined ? undefined : {
             socketTimeout: timeout,
             globalAgentOptions: {
@@ -64,9 +64,6 @@ export async function run(nuGetPath: string): Promise<void> {
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
     try {
-
-
-
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
@@ -120,7 +117,6 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        const timeout = getRequestTimeout();
         accessToken = await getAccessToken(isInternalFeed, urlPrefixes, timeout);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -429,6 +425,12 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
 function getRequestTimeout(): number | undefined {
     const inputValue: string = tl.getInput("requestTimeout", false);
     if (inputValue && !(Number.isNaN(Number(inputValue)))) {
+        const parsedTimeout = Number(inputValue);
+        if (parsedTimeout < 0) {
+            tl.warning(tl.loc("Warning_NegativeRequestTimeoutIgnored", inputValue));
+            return undefined;
+        }
+
         const maxTimeout = 60_000 * 10;
         return Math.min(parseInt(inputValue, 10), maxTimeout);
     }
