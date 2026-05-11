@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "74983ddf-9889-4b8b-bac1-9e1255a36ff9",
-  "name": "GradleAuthenticate",
+  "name": "GradleAuthenticateTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -10,8 +10,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
-    "Patch": 0
+    "Minor": 1,
+    "Patch": 28
   },
   "runsOn": [
     "Agent",

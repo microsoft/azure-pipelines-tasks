@@ -4,7 +4,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { discoverPluginVersions } from './buildFileScanner';
 import { getJarVersion } from './ciJarResolver';
-import { DEFAULT_DUMMY_VERSION } from './constants';
+import { DEFAULT_VERSION } from './constants';
 
 interface VersionInputs {
     buildFiles: string[];
@@ -14,7 +14,7 @@ interface VersionInputs {
 
 export interface VersionResult {
     versions: string[];
-    source: 'buildfiles' | 'input' | 'jar';
+    source: 'buildfiles' | 'input' | 'jar' | 'fallback';
 }
 
 /**
@@ -24,8 +24,8 @@ export interface VersionResult {
  * 1. Versions declared in build files (pinned or dynamic-synthesized)
  * 2. Explicit pluginToolVersion input
  * 3. Version extracted from the resolved CI JAR filename
- *
- * Returns null (and sets TaskResult.Failed) when no version can be determined.
+ * 4. Default dummy version (the version is only used for the local file://
+ *    Maven repo layout — any value works)
  */
 export function resolveVersions(inputs: VersionInputs): VersionResult | null {
     const versions = discoverPluginVersions(inputs.buildFiles);
@@ -42,12 +42,15 @@ export function resolveVersions(inputs: VersionInputs): VersionResult | null {
 
     if (inputs.ciJarPath) {
         const jarVer = getJarVersion(inputs.ciJarPath);
-        if (jarVer && jarVer !== DEFAULT_DUMMY_VERSION) {
+        if (jarVer) {
             console.log(tl.loc('Info_PluginVersionBundled', jarVer));
             return { versions: [jarVer], source: 'jar' };
         }
     }
 
-    tl.setResult(tl.TaskResult.Failed, tl.loc('Error_CouldNotDetermineVersion'));
-    return null;
+    // Last resort: use a dummy version for the local Maven layout.
+    // The version is cosmetic — the init script resolves the JAR from
+    // the local file:// repo regardless of the version string.
+    console.log(tl.loc('Info_PluginVersionBundled', DEFAULT_VERSION));
+    return { versions: [DEFAULT_VERSION], source: 'fallback' };
 }

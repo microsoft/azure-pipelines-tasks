@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
-export const DEFAULT_DUMMY_VERSION = '0.0.0';
+export const DEFAULT_VERSION = '1.0.0';
 
 /**
  * Regex matching Azure Artifacts feed URLs across all known domains.
