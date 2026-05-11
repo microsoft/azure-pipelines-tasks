@@ -32,5 +32,6 @@
   "loc.messages.InvalidScriptArguments0": "스크립트 인수 '{0}'이(가) 잘못되었습니다. 줄 바꿈은 허용되지 않습니다.",
   "loc.messages.InvalidScriptPath0": "스크립트 경로 '{0}'이(가) 잘못되었습니다. 잘못된 경로 문자를 지정했습니다.",
   "loc.messages.InvalidAzurePsVersion": "지정한 Azure PowerShell 버전 '{0}'의 형식이 잘못되었습니다. 형식을 확인하세요. 올바른 형식의 예는 1.0.1입니다.",
-  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell 버전 '{0}'은(는) 호스트된 에이전트에 사용할 수 없습니다. '{1}' 버전으로 재정의하세요. 선택한 버전을 변경하는 것이 좋습니다."
+  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell 버전 '{0}'은(는) 호스트된 에이전트에 사용할 수 없습니다. '{1}' 버전으로 재정의하세요. 선택한 버전을 변경하는 것이 좋습니다.",
+  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백틱(`)을 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요."
 }

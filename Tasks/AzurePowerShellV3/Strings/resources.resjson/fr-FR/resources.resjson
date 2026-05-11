@@ -32,5 +32,6 @@
   "loc.messages.InvalidScriptArguments0": "Arguments de script '{0}' non valides. Les sauts de ligne ne sont pas autorisés.",
   "loc.messages.InvalidScriptPath0": "Chemin de script '{0}' non valide. Caractères non valides spécifiés dans le chemin.",
   "loc.messages.InvalidAzurePsVersion": "La version '{0}' spécifiée pour Azure PowerShell n'est pas au format approprié. Vérifiez le format. Exemple de format correct : 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell '{0}' n'est pas une version prise en charge pour l'agent hébergé. Remplacement par la version '{1}'. Changez la version sélectionnée."
+  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell '{0}' n'est pas une version prise en charge pour l'agent hébergé. Remplacement par la version '{1}'. Changez la version sélectionnée.",
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant le backtick (`). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
 }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 274,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -200,6 +200,7 @@
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
-    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion"
+    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }
