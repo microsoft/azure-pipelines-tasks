@@ -629,4 +629,60 @@ describe('DotNetCoreExe Suite', function () {
         assert.strictEqual(tr.errorIssues.length, 0);
     });
 
+    it('finds global.json when workingDirectory is outside Build.SourcesDirectory but inside Agent.BuildDirectory (issue #21989)', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithWorkingDirOutsideSourcesDir.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when global.json found via Agent.BuildDirectory boundary');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Verify Agent.BuildDirectory was used as boundary
+        assert(
+            tr.stdout.indexOf('Using Agent.BuildDirectory') >= 0,
+            'should log that Agent.BuildDirectory is used as search boundary'
+        );
+
+        // Verify global.json was found
+        assert(
+            tr.stdout.indexOf('Found global.json') >= 0,
+            'should discover global.json within Agent.BuildDirectory boundary'
+        );
+
+        // Verify --solution flag was added (MTP detected)
+        assert(
+            tr.stdout.indexOf('--solution') >= 0,
+            'should add --solution flag when MTP is detected'
+        );
+    });
+
+    it('finds global.json when workingDirectory is outside Agent.BuildDirectory but inside Agent.WorkFolder (AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES)', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithWorkingDirOutsideWorkDirectory.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when global.json found via Agent.WorkFolder boundary');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Verify Agent.WorkFolder was used as boundary
+        assert(
+            tr.stdout.indexOf('AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled') >= 0,
+            'should log that AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled'
+        );
+
+        // Verify global.json was found
+        assert(
+            tr.stdout.indexOf('Found global.json') >= 0,
+            'should discover global.json within Agent.WorkFolder boundary'
+        );
+
+        // Verify --solution flag was added (MTP detected)
+        assert(
+            tr.stdout.indexOf('--solution') >= 0,
+            'should add --solution flag when MTP is detected via WorkFolder boundary'
+        );
+    });
+
 });
