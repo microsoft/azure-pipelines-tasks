@@ -15,5 +15,6 @@
   "loc.input.help.ScriptArguments": "PowerShell に渡す追加のパラメーター。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。",
   "loc.messages.CertNotPresentInLocalStoreWarningMsg": "サムプリント {0} を持つ証明書がローカル証明書ストアに存在しません。これによりエラーが発生する可能性があります。リリースまたはビルドが失敗する場合、再試行するか、同じマシンで同じサービス エンドポイントを同時に使用して複数のエージェントによってビルドやリリースが実行されていないことをご確認ください。",
   "loc.messages.InvalidScriptArguments0": "スクリプトの引数 '{0}' が無効です。改行は使用できません。",
-  "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。"
+  "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。",
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。バックティック (`) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
 }

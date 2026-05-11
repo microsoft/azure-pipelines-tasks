@@ -11,6 +11,10 @@
         {
             "module": "../Common/PowershellHelpers",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
         }
     ],
     "externals": {

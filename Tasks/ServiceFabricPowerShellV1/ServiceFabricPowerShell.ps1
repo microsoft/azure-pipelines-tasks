@@ -3,6 +3,15 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+function Publish-SanitizerTelemetry($telemetry) {
+    $area = 'TaskHub'
+    $feature = 'ServiceFabricPowerShellV1'
+    $telemetryJson = $telemetry | ConvertTo-Json -Compress
+    Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
+}
+
 # Get inputs.
 $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
 $scriptType = Get-VstsInput -Name ScriptType -Require
@@ -26,6 +35,30 @@ else {
 if ($scriptArguments -match '[\r\n]')
 {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
+}
+
+# Sanitize script arguments to prevent PowerShell command injection.
+# Gated by the AZP_75787_* feature flags (Activate / Log / Collect). When all
+# flags are unset (default) Protect-ScriptArguments is effectively a no-op, so
+# existing pipelines are unaffected. See https://aka.ms/ado/75787 and the
+# matching pattern in Tasks/PowerShellV2/powershell.ps1.
+if ($scriptType -ne "InlineScript") {
+    try {
+        $null = Protect-ScriptArguments -InputArgs $scriptArguments -TaskName "ServiceFabricPowerShellV1"
+    }
+    catch {
+        $message = $_.Exception.Message
+
+        if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
+            throw $message;
+        }
+
+        $telemetry = @{
+            'UnexpectedError' = $message
+            'ErrorStackTrace' = $_.Exception.StackTrace
+        }
+        Publish-SanitizerTelemetry $telemetry
+    }
 }
 
 $certificate = $null

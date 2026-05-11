@@ -15,5 +15,6 @@
   "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre.",
   "loc.messages.CertNotPresentInLocalStoreWarningMsg": "El certificado con la huella digital {0} no está presente en el almacén de certificados local, lo cual puede causar errores. Si se produce un error de versión o compilación, vuelva a intentarlo o asegúrese de que no haya varios agentes que ejecuten compilaciones o versiones que usan el mismo punto de conexión de servicio simultáneamente en la misma máquina.",
   "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",
-  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos."
+  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos.",
+  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de los caracteres especiales mediante el acento grave ('). Puede encontrar más información aquí: https://aka.ms/ado/75787"
 }
