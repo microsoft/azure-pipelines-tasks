@@ -326,6 +326,9 @@ export class azureclitask {
         }
     }
 
+    // Installs the azure-devops CLI extension with pip dependency resolution disabled.
+    // In network-restricted agent environments, pip may fail to resolve transitive dependencies
+    // during `az extension add`. Setting PIP_NO_DEPS=1 skips dependency resolution
     private static async installAzureDevOpsExtensionNoDeps(): Promise<void> {
         const noDepsEnv = {
             ...process.env,
