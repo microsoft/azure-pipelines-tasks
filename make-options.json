@@ -246,7 +246,6 @@
         "AzureFileCopyV5",
         "AzureFileCopyV6"
     ],
-    "Node24_2": [],
     "Node24_3": [],
     "Node24_4": [],
     "Node24_5": [],
@@ -256,7 +255,8 @@
     "Node24_9": [],
     "Node24_10": [],
     "Node24_overwrite": [
-        "AppCenterDistributeV3"
+        "AppCenterDistributeV3",
+        "PublishSymbolsV2"
     ],
     "wif_242": [
         "PipAuthenticateV1",

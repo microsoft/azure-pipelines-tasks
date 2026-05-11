@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 270,
+    "Minor": 274,
     "Patch": 1
   },
   "runsOn": [
@@ -247,6 +247,15 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail. This option will not work and publish will fail if you are within a proxy environment.",
+      "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "Set timeout for package publish request",
+      "required": false,
+      "groupName": "pushAdvanced",
+      "helpMarkDown": "Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).",
       "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {
@@ -520,6 +529,7 @@
     "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Azure Pipelines. If NuGet.exe encounters a conflict, the task will fail.",
     "Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
+    "Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
     "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",

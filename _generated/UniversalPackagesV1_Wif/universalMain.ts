@@ -3,6 +3,7 @@ import * as tl from "azure-pipelines-task-lib";
 import * as universalDownload from "./universalDownload";
 import * as universalPublish from "./universalPublish";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
+import { getArtifactToolPath } from "./artifactToolResolver";
 import * as helpers from "./universalPackageHelpers";
 
 async function main(): Promise<void> {
@@ -23,10 +24,12 @@ async function main(): Promise<void> {
     // Parse feed input
     helpers.setFeed(context);
 
-    // The pre-execution step should have downloaded artifacttool and set the path
-    const artifactToolPath = tl.getTaskVariable("UPACK_ARTIFACTTOOL_PATH");
-    if (!artifactToolPath) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc("Error_FailedToGetArtifactTool", tl.loc("Error_ArtifactToolPathNotSet")));
+    // Resolve artifact tool path from pre-job cache or download inline
+    let artifactToolPath: string;
+    try {
+        artifactToolPath = await getArtifactToolPath();
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc("Error_FailedToGetArtifactTool", error?.message ?? String(error)));
         return;
     }
     context.artifactToolPath = artifactToolPath;
