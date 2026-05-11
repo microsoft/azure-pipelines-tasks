@@ -14,6 +14,7 @@ process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessTok
 process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+process.env['SYSTEM_DEBUG'] = 'true';
 
 // Set server type from env (defaults to hosted)
 const serverType = process.env[testConstants.TestEnvVars.serverType] || 'hosted';
@@ -22,9 +23,9 @@ process.env['SYSTEM_SERVERTYPE'] = serverType;
 // Set cached path if provided (simulates another pre-job having already resolved the path)
 const cachedPath = process.env[testConstants.TestEnvVars.cachedArtifactToolPath];
 if (cachedPath) {
-    process.env['UPACK_ARTIFACTTOOL_PATH_CACHED'] = cachedPath;
+    process.env['UPACK_ARTIFACTTOOL_PATH'] = cachedPath;
 } else {
-    delete process.env['UPACK_ARTIFACTTOOL_PATH_CACHED'];
+    delete process.env['UPACK_ARTIFACTTOOL_PATH'];
 }
 
 // Set verbosity input (needed by telemetry)

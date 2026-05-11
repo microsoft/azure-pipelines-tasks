@@ -30,7 +30,7 @@ if (command === 'download') {
 
 // Mock the ArtifactTool command execution result if exit code env var is set
 const mockExitCode = process.env[testConstants.TestEnvVars.mockExitCode];
-if (mockExitCode !== undefined && artifactToolPath) {
+if (mockExitCode !== undefined) {
     const feed = process.env[testConstants.TestEnvVars.feedListDownload] || testConstants.TestData.defaultFeed;
     const pkg = process.env[testConstants.TestEnvVars.packageListDownload] || testConstants.TestData.defaultPackage;
     const version = process.env[testConstants.TestEnvVars.versionListDownload] || testConstants.TestData.defaultVersion;
