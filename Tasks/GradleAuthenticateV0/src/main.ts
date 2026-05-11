@@ -30,7 +30,7 @@ async function run(): Promise<void> {
 
         isWifServiceConnection = !!inputs.adoServiceConnection;
 
-        const feeds = discoverFeedUrls(inputs.buildFiles, inputs.repositoryUrl);
+        const feeds = discoverFeedUrls(inputs.buildFiles, inputs.repositoryUrls);
         feedCount = feeds.length;
         logFeeds(feeds);
 
@@ -110,7 +110,7 @@ async function run(): Promise<void> {
 
 interface TaskInputs {
     buildFiles: string[];
-    repositoryUrl: string;
+    repositoryUrls: string[];
     adoServiceConnection: string;
     pluginToolVersion: string;
     gradleUserHome: string;
@@ -118,25 +118,27 @@ interface TaskInputs {
 
 function readInputs(): TaskInputs | null {
     let buildFiles = splitLines(tl.getInput('buildFiles', false) || '');
-    const repositoryUrl = (tl.getInput('repositoryUrl', false) || '').trim();
+    const repositoryUrls = [...new Set(splitLines(tl.getInput('repositoryUrl', false) || ''))];
 
     // Auto-discover Gradle build files in the working directory when not explicitly provided
     if (buildFiles.length === 0) {
         buildFiles = discoverBuildFiles();
     }
 
-    if (buildFiles.length === 0 && !repositoryUrl) {
+    if (buildFiles.length === 0 && repositoryUrls.length === 0) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('Error_NoBuildFilesOrRepoUrls'));
         return null;
     }
 
-    if (repositoryUrl && !isAzureArtifactsUrl(repositoryUrl)) {
-        tl.warning(tl.loc('Warning_RepositoryUrlNotAzureArtifacts', repositoryUrl));
+    for (const url of repositoryUrls) {
+        if (!isAzureArtifactsUrl(url)) {
+            tl.warning(tl.loc('Warning_RepositoryUrlNotAzureArtifacts', url));
+        }
     }
 
     return {
         buildFiles,
-        repositoryUrl,
+        repositoryUrls,
         adoServiceConnection: tl.getInput('adoServiceConnection', false) || '',
         pluginToolVersion: tl.getInput('pluginToolVersion', false) || '',
         gradleUserHome: tl.getInput('gradleUserHome', false) || getDefaultGradleUserHome(),

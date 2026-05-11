@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "74983ddf-9889-4b8b-bac1-9e1255a36ff9",
-  "name": "GradleAuthenticateTest",
-  "friendlyName": "Gradle Authenticate (Test)",
+  "name": "GradleAuthenticate",
+  "friendlyName": "Gradle Authenticate",
   "description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or a user-provided access token.",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/gradle-authenticate)",
   "helpUrl": "https://aka.ms/gradle-authenticate",
@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 28
+    "Patch": 29
   },
   "runsOn": [
     "Agent",
@@ -33,10 +33,14 @@
     },
     {
       "name": "repositoryUrl",
-      "type": "string",
-      "label": "Repository URL",
+      "type": "multiLine",
+      "label": "Repository URL(s)",
       "required": false,
-      "helpMarkDown": "Explicit Azure Artifacts repository URL to authenticate, in addition to any discovered from build files. Supports both dependency feeds and plugin repositories."
+      "helpMarkDown": "Newline-separated list of explicit Azure Artifacts repository URLs to authenticate, in addition to any discovered from build files. Supports both dependency feeds and plugin repositories.",
+      "properties": {
+        "resizable": "true",
+        "rows": "3"
+      }
     },
     {
       "name": "adoServiceConnection",

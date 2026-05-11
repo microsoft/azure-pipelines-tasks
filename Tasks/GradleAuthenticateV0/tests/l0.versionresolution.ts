@@ -37,16 +37,16 @@ describe('GradleAuthenticate L0 - Version Resolution', function () {
         TestHelpers.assertOutputContains(tr, 'Info_PluginVersionBundled');
     });
 
-    it('should fail when only bundled dummy JAR is available and no version source exists', async () => {
+    it('should use dummy version as fallback when no version source exists', async () => {
         const tp = path.join(__dirname, 'testsetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[TestEnvVars.repositoryUrl] = 'https://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1';
-        // Remove env var — falls back to bundled JAR which has dummy version 0.0.0
+        // Remove env var — falls back to dummy version for local Maven layout
         delete process.env['GRADLE_CREDPROVIDER_HOME'];
 
         await tr.runAsync();
 
-        TestHelpers.assertFailure(tr);
-        TestHelpers.assertOutputContains(tr, 'Error_CouldNotDetermineVersion');
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'Info_PluginVersionBundled');
     });
 });

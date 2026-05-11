@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "74983ddf-9889-4b8b-bac1-9e1255a36ff9",
-  "name": "GradleAuthenticateTest",
+  "name": "GradleAuthenticate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 28
+    "Patch": 29
   },
   "runsOn": [
     "Agent",
@@ -33,10 +33,14 @@
     },
     {
       "name": "repositoryUrl",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.repositoryUrl",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.repositoryUrl"
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryUrl",
+      "properties": {
+        "resizable": "true",
+        "rows": "3"
+      }
     },
     {
       "name": "adoServiceConnection",

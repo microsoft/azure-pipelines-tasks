@@ -135,7 +135,7 @@ dependencyResolutionManagement {
     }
 }
 `);
-            const feeds = discoverFeedUrls([filePath], '');
+            const feeds = discoverFeedUrls([filePath], []);
             assert.strictEqual(feeds.length, 1);
             assert.strictEqual(feeds[0].url, 'https://pkgs.dev.azure.com/myorg/myproject/_packaging/myfeed/maven/v1');
             assert.strictEqual(feeds[0].source, filePath);
@@ -149,7 +149,7 @@ repositories {
     maven { url 'https://pkgs.dev.azure.com/org/proj/_packaging/feed2/maven/v1' }
 }
 `);
-            const feeds = discoverFeedUrls([filePath], '');
+            const feeds = discoverFeedUrls([filePath], []);
             assert.strictEqual(feeds.length, 2);
         });
 
@@ -163,7 +163,7 @@ pluginManagement {
 }
 `);
             const repoUrl = 'https://pkgs.dev.azure.com/org/proj/_packaging/feed2/maven/v1';
-            const feeds = discoverFeedUrls([filePath], repoUrl);
+            const feeds = discoverFeedUrls([filePath], [repoUrl]);
             assert.strictEqual(feeds.length, 1, 'Should only have the repositoryUrl feed');
             assert.strictEqual(feeds[0].url, repoUrl);
             assert.strictEqual(feeds[0].source, 'repositoryUrl input');
@@ -176,7 +176,7 @@ pluginManagement {
             fs.writeFileSync(settingsFile, `maven { url '${feedUrl}' }`);
             fs.writeFileSync(buildFile, `maven { url '${feedUrl}' }`);
 
-            const feeds = discoverFeedUrls([settingsFile, buildFile], '');
+            const feeds = discoverFeedUrls([settingsFile, buildFile], []);
             assert.strictEqual(feeds.length, 1, 'Same URL in multiple build files should be deduplicated');
         });
 
@@ -184,18 +184,18 @@ pluginManagement {
             const filePath = path.join(tempDir, 'settings.gradle');
             fs.writeFileSync(filePath, `plugins { id 'java' }`);
 
-            const feeds = discoverFeedUrls([filePath], '');
+            const feeds = discoverFeedUrls([filePath], []);
             assert.strictEqual(feeds.length, 0);
         });
 
         it('should skip and warn on missing build files', () => {
-            const feeds = discoverFeedUrls([path.join(tempDir, 'missing.gradle')], '');
+            const feeds = discoverFeedUrls([path.join(tempDir, 'missing.gradle')], []);
             assert.strictEqual(feeds.length, 0);
         });
 
         it('should work with repositoryUrl only (no build files)', () => {
             const repoUrl = 'https://pkgs.dev.azure.com/org/proj/_packaging/feed/maven/v1';
-            const feeds = discoverFeedUrls([], repoUrl);
+            const feeds = discoverFeedUrls([], [repoUrl]);
             assert.strictEqual(feeds.length, 1);
             assert.strictEqual(feeds[0].url, repoUrl);
             assert.strictEqual(feeds[0].source, 'repositoryUrl input');

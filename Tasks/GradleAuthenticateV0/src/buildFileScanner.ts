@@ -19,12 +19,12 @@ export interface FeedUrl {
  * Scan the listed build files for Azure Artifacts feed URLs and merge with
  * explicitly provided repository URLs. Returns deduplicated feed URLs.
  */
-export function discoverFeedUrls(buildFiles: string[], repositoryUrl: string): FeedUrl[] {
-    // When an explicit repository URL is provided, use only that feed.
+export function discoverFeedUrls(buildFiles: string[], repositoryUrls: string[]): FeedUrl[] {
+    // When explicit repository URLs are provided, use only those feeds.
     // Build files are still used for plugin version discovery but not for
-    // feed URL scanning — the user has explicitly specified which feed to auth.
-    if (repositoryUrl) {
-        return [{ url: repositoryUrl, source: 'repositoryUrl input' }];
+    // feed URL scanning — the user has explicitly specified which feeds to auth.
+    if (repositoryUrls.length > 0) {
+        return repositoryUrls.map(url => ({ url, source: 'repositoryUrl input' }));
     }
 
     const seen = new Set<string>();
