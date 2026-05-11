@@ -23,5 +23,6 @@
   "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
   "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi.",
   "loc.messages.InvalidAzurePsVersion": "Il formato della versione di Azure PowerShell '{0}' specificata non è corretto. Controllare il formato. Un esempio di formato corretto è 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "La versione '{0}' di Azure PowerShell non è supportata per l'agente ospitato e verrà sostituita con la versione '{1}'. Provare a cambiare la versione selezionata."
+  "loc.messages.OverrideAzurePowerShellVersion": "La versione '{0}' di Azure PowerShell non è supportata per l'agente ospitato e verrà sostituita con la versione '{1}'. Provare a cambiare la versione selezionata.",
+  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
 }
