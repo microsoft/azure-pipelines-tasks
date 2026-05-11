@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 274,
-    "Patch": 2
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -212,6 +212,7 @@
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 274,
-    "Patch": 3
+    "Patch": 5
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -216,11 +216,12 @@
     "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
     "JS_ExitCode": "PowerShell exited with code '%s'.",
     "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "4.274.2",
+    "Default": "4.274.4",
     "LocalPackages": "4.249.4",
-    "Node24_1": "4.274.3"
+    "Node24_1": "4.274.5"
   }
 }

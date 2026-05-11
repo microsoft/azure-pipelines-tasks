@@ -39,5 +39,6 @@
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本“{0}”格式不正确。请检查格式。正确格式的示例为 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell 已退出，代码为“%s”。",
   "loc.messages.JS_Stderr": "PowerShell 向标准错误流写入一个或多个行。",
-  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
+  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反引号斜杠 (`) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
 }
