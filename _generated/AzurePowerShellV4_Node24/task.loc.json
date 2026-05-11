@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 274,
-    "Patch": 5
+    "Patch": 7
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -220,8 +220,8 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "4.274.4",
+    "Default": "4.274.6",
     "LocalPackages": "4.249.4",
-    "Node24_1": "4.274.5"
+    "Node24_1": "4.274.7"
   }
 }
