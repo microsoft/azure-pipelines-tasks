@@ -3,13 +3,6 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
-function Publish-Telemetry($telemetry) {
-    $area = 'TaskHub'
-    $feature = 'AzurePowerShellV5'
-    $telemetryJson = $telemetry | ConvertTo-Json -Compress
-    Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
-}
-
 # Get inputs.
 $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
@@ -40,27 +33,14 @@ if ($scriptArguments -match '[\r\n]') {
 }
 
 # Sanitize script arguments to prevent PowerShell command injection.
-# Gated by the AZP_75787_* feature flags (Activate / Log / Collect). When all
-# flags are unset (default) Protect-ScriptArguments is effectively a no-op, so
-# existing pipelines are unaffected. See https://aka.ms/ado/75787 and the
-# matching pattern in Tasks/PowerShellV2/powershell.ps1.
+# No-op unless BOTH the org-level "Enable shell tasks arguments validation"
+# toggle and the per-task pipeline feature flag are enabled.
+# See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
 if ($scriptType -ne "InlineScript") {
-    try {
-        $null = Protect-ScriptArguments -InputArgs $scriptArguments -TaskName "AzurePowerShellV5"
-    }
-    catch {
-        $message = $_.Exception.Message
-
-        if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
-            throw $message;
-        }
-
-        $telemetry = @{
-            'UnexpectedError' = $message
-            'ErrorStackTrace' = $_.Exception.StackTrace
-        }
-        Publish-Telemetry $telemetry
-    }
+    Invoke-ScriptArgumentSanitization `
+        -InputArgs $scriptArguments `
+        -TaskName 'AzurePowerShellV5' `
+        -PipelineFeatureFlagName 'EnableAzurePowerShellArgumentsSanitization'
 }
 
 # string constants
