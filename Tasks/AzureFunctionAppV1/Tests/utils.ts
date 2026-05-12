@@ -34,7 +34,7 @@ export function mockTaskArgument(): ma.TaskLibAnswers {
             }
         },
         "osType": {
-            "osType": "Linux"
+            "osType": "Windows_NT"
         },
         "checkPath": {
             "cmd": true,

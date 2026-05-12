@@ -2,8 +2,8 @@ import * as assert from 'assert';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 process.env['AGENT_TEMPDIRECTORY'] = process.env['AGENT_TEMPDIRECTORY'] || process.cwd();
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || process.cwd();
 
+// Require after env setup because azure-arm-rest reads agent temp path at module load time.
 const DeploymentFactory = require('../deploymentProvider/DeploymentFactory').DeploymentFactory;
 const DeploymentType = require('../taskparameters').DeploymentType;
 
