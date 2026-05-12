@@ -108,22 +108,39 @@ function Invoke-ScriptArgumentSanitization {
         return
     }
 
+    # Fail closed: ANY exception from Protect-ScriptArguments means the
+    # sanitization gate did not pass cleanly, so abort the task.
+    #
+    # We deliberately do NOT compare $_.Exception.Message to a localized
+    # 'ScriptArgsSanitized' value to distinguish "rejection" from
+    # "unexpected crash":
+    #   * The Sanitizer module throws Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
+    #     while the task resjson uses key 'ScriptArgsSanitized'. Translators
+    #     localized the two strings independently (e.g. fr-FR uses "coche" in
+    #     one and "backtick" in the other), so -eq is unreliable in any locale
+    #     where the strings diverge, which would let a sanitizer rejection
+    #     slip into a "swallow into telemetry" branch and bypass the gate.
+    #   * Even if the sanitizer crashed with an unrelated error, executing
+    #     the un-vetted arguments is exactly the vulnerability we are guarding
+    #     against. Failing closed is the safer default.
+    $sanitizerThrew = $false
+    $caughtMessage  = $null
+    $caughtStack    = $null
     try {
         $null = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName
     }
     catch {
-        $message = $_.Exception.Message
+        $sanitizerThrew = $true
+        $caughtMessage  = $_.Exception.Message
+        $caughtStack    = $_.Exception.StackTrace
+    }
 
-        # When the sanitizer rejects the input it throws the localized
-        # 'ScriptArgsSanitized' message - re-throw verbatim so the calling
-        # task fails with the same customer-facing text as PowerShellV2.
-        if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
-            throw $message
-        }
-
+    if ($sanitizerThrew) {
         Publish-SanitizerErrorTelemetry -TaskName $TaskName -Telemetry @{
-            'UnexpectedError' = $message
-            'ErrorStackTrace' = $_.Exception.StackTrace
+            sanitizerThrew  = $true
+            errorMessage    = $caughtMessage
+            errorStackTrace = $caughtStack
         }
+        throw (Get-VstsLocString -Key 'ScriptArgsSanitized')
     }
 }
