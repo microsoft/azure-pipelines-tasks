@@ -189,7 +189,83 @@ git checkout -b CopilotSkill/CGFix/2362243
 
 This ensures your changes are isolated and can be reviewed via pull request before merging to the main branch.
 
-### Step 5: Determine the Fix Strategy
+### Step 5: Analyze Upgrade Risk
+
+**Before making any code changes**, run the upgrade-risk-analyzer to determine whether the CG-recommended target version is safe to adopt. This step acts as a **gate** — if genuine risks are found, do NOT proceed with the upgrade.
+
+#### Step 5a: Gather Usage Context
+
+Determine how the vulnerable package is used in the affected tasks:
+
+1. **Dependency depth and chain** — run `npm ls <PACKAGE_NAME>` in a representative task directory to get the full chain (e.g., `task → packageA → mocha → vulnerable-pkg`).
+2. **Direct vs. transitive** — is the task code importing/requiring the package directly, or is it buried in the dependency tree?
+3. **What the package does in context** — based on the chain, describe its role (e.g., "glob-matching library used by test runner mocha for file discovery").
+4. **Whether the task code interacts with it** — check for direct imports:
+   ```bash
+   grep -r "require.*<PACKAGE_NAME>\|from.*<PACKAGE_NAME>" Tasks/<TaskName>/ --include="*.ts" --include="*.js" | grep -v node_modules | grep -v package
+   ```
+
+**Build a usage summary string.** Examples:
+- *Direct dependency*: `"minimatch is a direct dependency used for glob pattern matching in file selection logic within the task."`
+- *Deep transitive*: `"minimatch 5.1.6 is a deep transitive dependency (3 levels deep) via azure-pipelines-tasks-packaging-common → mocha → minimatch. The task code never imports or calls minimatch 5.x directly. It is only used internally by mocha (test runner) for glob matching during test file discovery."`
+
+#### Step 5b: Run the Upgrade Risk Analyzer
+
+**Always use the usage-context variant** (`mcp_upgrade-risk-_analyze_package_upgrade_risks_with_usage_conte`) since you have usage context from Step 5a:
+
+- **packageName**: The vulnerable package name (e.g., `minimatch`)
+- **currentVersion**: The current vulnerable version (e.g., `5.1.6`)
+- **targetVersion**: The safe/fix version from the CG alert (e.g., `5.1.8`)
+- **packageSource**: `npm`
+- **howPackageIsUsed**: The usage summary string from Step 5a
+
+**Fallback:** If usage context is unclear, use the basic `mcp_upgrade-risk-_analyze_package_upgrade_risks` tool — but then you must manually evaluate which risks apply.
+
+#### Step 5c: Interpret Results and Decide Whether to Proceed
+
+The tool scans **all GitHub issues across all versions** of the package, not just the specific version range you're upgrading. This means it often flags risks from major version jumps (e.g., 5.x → 10.x) that are irrelevant to a patch update (e.g., 5.1.6 → 5.1.8).
+
+**You MUST contextualize the results by producing a per-risk relevance table.** For each of the tool's top risks, determine:
+- What version introduced the breaking change (check the evidence/source links)
+- Whether it applies to your specific version range
+- Why or why not it's relevant
+
+**Per-risk relevance table format:**
+
+```markdown
+| # | Risk | Tool Severity | Applies? | Reason |
+|---|------|--------------|----------|--------|
+| 1 | <risk title> | Critical | ❌ | <why not — e.g., "Only in v10.x, not 5.x"> |
+| 2 | <risk title> | High | ✅ | <why — e.g., "API changed in 5.1.7, affects our usage"> |
+| ... | ... | ... | ... | ... |
+```
+
+#### Decision Logic:
+
+**✅ PROCEED with the upgrade if:**
+- All flagged risks are from versions outside your upgrade range (e.g., risks from v10.x when upgrading 5.1.6 → 5.1.8)
+- The tool's "Recommendations Based on Your Usage" section confirms no impact
+- The upgrade is a patch-level update within the same major.minor line
+- The package is a deep transitive dependency that the task code never imports directly
+
+**🛑 STOP and inform the user if:**
+- Any risk genuinely applies to the target version range AND the task code is affected
+- The tool's "Your Code Impact Assessment" identifies features/APIs used by the task
+- The upgrade crosses a major version boundary with confirmed breaking changes
+- The risk analyzer's usage-context sections flag specific code patterns that match the task's usage
+
+**When stopping, inform the user:**
+> ⚠️ **Upgrade risk detected**: The upgrade-risk-analyzer found risks that genuinely apply to upgrading `<PACKAGE_NAME>` from `<currentVersion>` to `<targetVersion>`:
+>
+> | Risk | Severity | Impact |
+> |------|----------|--------|
+> | <risk> | <severity> | <how it affects this code> |
+>
+> **Recommended action**: Consider upgrading to an intermediate safe version, or evaluate whether the risk is acceptable for this specific usage.
+
+**Save the per-risk table** — it will be included in the PR's **Risk Assessment** section in Step 11.
+
+### Step 6: Determine the Fix Strategy
 
 Based on the dependency type, apply the appropriate fix:
 
@@ -277,7 +353,7 @@ If the vulnerable package is a transitive dependency through a third-party npm p
    
    **Note**: `npm install` may fail locally due to authentication issues with the private Azure DevOps npm registry. This is expected and acceptable - the CI/CD pipeline will properly authenticate and validate the changes. If you cannot run `npm install` locally, you can skip this step and let CI handle it, but still include `package-lock.json` files in your commit if they were updated.
 
-### Step 6: Verify the Fix
+### Step 7: Verify the Fix
 
 For each affected task:
 
@@ -293,7 +369,7 @@ npm ls <PACKAGE_NAME>
 # The output should show the safe version, not the vulnerable one
 ```
 
-### Step 7: Bump Task Version
+### Step 8: Bump Task Version
 
 **Critical**: After fixing dependencies, you **MUST** bump the task version in both `task.json` and `task.loc.json`.
 
@@ -366,7 +442,7 @@ If you need to bump the version manually, follow these sprint-based rules:
 - See [task version bumping guide](https://github.com/microsoft/azure-pipelines-tasks/tree/master/docs/taskversionbumping.md) for more details
 
 
-### Step 8: Build and Test
+### Step 9: Build and Test
 
 Build the affected task to ensure the dependency update doesn't break anything:
 
@@ -397,7 +473,7 @@ node make.js test --task ExtractFilesV1 --suite L0
 
 **Note**: The CI/CD pipeline will build all configs with proper authentication. Local builds may fail due to private npm registry authentication, but that's expected.
 
-### Step 9: Create a Commit and Push
+### Step 10: Create a Commit and Push
 
 Create a commit with a clear message on your feature branch:
 
@@ -430,7 +506,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 git push origin CopilotSkill/CGFix/2362243
 ```
 
-## Step 10: Create Pull Request
+## Step 11: Create Pull Request
 
 After pushing the branch, create a pull request to merge your changes. The PR must follow the repository's pull request template.
 
@@ -451,7 +527,7 @@ Use the `mcp_github_create_pull_request` tool to create a PR programmatically:
 **Key PR Details to Include:**
 - **Title**: `Fix CG alert: update <package> to <version> in <TaskNames>`
 - **Context Section**: Use `AB#<WORK_ITEM_ID>` format (e.g., `AB#2362243`) for automatic Azure Boards linking, include CVE ID, severity, vulnerability type
-- **Risk Assessment**: Low for minor dependency updates
+- **Risk Assessment**: **Must include the contextualized per-risk table from Step 5c.** Do not just say "Low" — include the table showing each flagged risk, the tool's severity, whether it applies (✅/❌), and why. This proves the upgrade was validated before applying changes.
 - **Change Behind Feature Flag**: No (dependency updates don't use feature flags)
 - **Documentation Changes**: No (for internal dependency updates)
 - **Unit Tests**: No new tests needed (existing tests validate functionality)
