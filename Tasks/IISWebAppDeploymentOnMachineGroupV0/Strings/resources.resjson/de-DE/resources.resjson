@@ -22,7 +22,7 @@
   "loc.input.label.AdditionalArguments": "Zusätzliche Argumente",
   "loc.input.help.AdditionalArguments": "Weitere Web Deploy-Argumente, die angewendet werden, wenn die Azure-Web-App bereitgestellt wird, z. B. \"-disableLink:AppPoolExtension -disableLink:ContentExtension\".",
   "loc.input.label.XmlTransformation": "XML-Transformation",
-  "loc.input.help.XmlTransformation": "Die Konfigurationstransformationen werden für \"*.Release.config\" und \"*.<Umgebungsname>.config\" in der Datei \"*.config\" ausgeführt.<br/> Konfigurationstransformationen werden vor der Variablenersetzung ausgeführt.<br/>XML-Transformationen werden nur für Windows-Plattformen unterstützt.",
+  "loc.input.help.XmlTransformation": "Die Konfigurationstransformationen werden für „*.Release.config“ und „*.<Umgebungsname>.config“ in der „*.config-Datei“ ausgeführt.<br/> Konfigurationstransformationen werden vor der Variablenersetzung ausgeführt. <br/>XML-Transformationen werden nur für die Windows-Plattform unterstützt.",
   "loc.input.label.XmlVariableSubstitution": "XML-Variablenersetzung",
   "loc.input.help.XmlVariableSubstitution": "In der Build- oder Releasepipeline definierte Variablen werden mit den Einträgen \"key\" oder \"name\" in den appSettings-, applicationSettings- und connectionStrings-Abschnitten jeder Konfigurationsdatei und der Datei \"parameters.xml\" abgeglichen. Die Variablenersetzung erfolgt nach den Konfigurationstransformationen. <br/><br/> Hinweis: Wenn in der Releasepipeline und der Umgebung dieselben Variablen definiert wurden, haben die Umgebungsvariablen Vorrang vor den Variablen der Releasepipeline.<br/>",
   "loc.input.label.JSONFiles": "JSON-Variablenersetzung",

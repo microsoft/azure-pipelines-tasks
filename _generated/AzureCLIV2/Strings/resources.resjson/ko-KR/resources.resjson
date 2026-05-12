@@ -54,5 +54,6 @@
   "loc.messages.ProxyConfig": "az 도구가 %s을(를) 프록시 서버로 사용하도록 구성되어 있습니다.",
   "loc.messages.FailedToRefreshAzSession": "az-cli 세션을 새로 고치는 동안 %s 오류가 발생했습니다.",
   "loc.messages.RefreshingAzSession": "az-cli 세션을 새로 고치는 중...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 입력은 워크로드 ID 페더레이션 ARM 서비스 연결에만 사용할 수 있습니다. 참조된 서비스 엔드포인트 인증 체계가 예기치 않았습니다: %s. 스키마를 변경하거나 'keepAzSessionActive' 입력을 제거하세요."
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 입력은 워크로드 ID 페더레이션 ARM 서비스 연결에만 사용할 수 있습니다. 참조된 서비스 엔드포인트 인증 체계가 예기치 않았습니다: %s. 스키마를 변경하거나 'keepAzSessionActive' 입력을 제거하세요.",
+  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백슬래시(\\)를 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요."
 }

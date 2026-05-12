@@ -8,6 +8,7 @@
   "loc.input.label.command": "npm-Befehl",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "Weitere Argumente, die an npm übergeben werden.",
+  "loc.messages.TaskDeprecationNotice": "Die NpmV0-Aufgabe wird im Juni 2026 eingestellt. Wechseln Sie zur Verwendung von NpmAuthenticate- und Skripttasks oder NpmV1.",
   "loc.messages.InvalidCommand": "Für npm sollte nur ein Befehl verwendet werden. Verwenden Sie die Eingabe \"Argumente\" für zusätzliche Argumente.",
   "loc.messages.NpmReturnCode": "Npm wurde mit dem folgenden Rückgabecode beendet: %d",
   "loc.messages.NpmFailed": "Npm-Fehler: %s",

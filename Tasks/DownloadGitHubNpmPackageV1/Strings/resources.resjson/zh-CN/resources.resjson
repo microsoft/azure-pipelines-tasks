@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] 下载 Github Npm 包",
+  "loc.friendlyName": "[已弃用] 下载 Github Npm 包",
   "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613746)或[参阅 npm 文档](https://docs.npmjs.com/)",
-  "loc.description": "已弃用: 此任务不再维护。请改用 Npm@1 任务。",
-  "loc.instanceNameFormat": "[Deprecated] 下载 GitHub Npm 包",
+  "loc.description": "已弃用: 此任务不再维护。请结合 GitHub 服务连接改用 Npm@1 任务。",
+  "loc.instanceNameFormat": "[已弃用] 下载 Github Npm 包",
   "loc.group.displayName.customRegistries": "自定义注册表和身份验证",
   "loc.input.label.packageName": "包名称",
   "loc.input.help.packageName": "要从 github 下载的包的名称",
