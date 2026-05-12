@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "이 조직 외부에 있는, 인증할 엔드포인트를 선택합니다. 엔드포인트에 패키지 업로드 권한이 있는지 확인합니다.",
   "loc.input.label.publishPackageMetadata": "파이프라인 메타데이터 게시",
   "loc.input.help.publishPackageMetadata": "내 피드에 업로드할 때 이 빌드/릴리스 파이프라인의 메타데이터(실행 번호, 소스 코드 정보)를 패키지에 연결합니다.",
+  "loc.messages.TaskDeprecationNotice": "TwineAuthenticateV0 작업은 2026년 6월에 사용 중단될 예정입니다. TwineAuthenticateV1 사용으로 전환하세요.",
   "loc.messages.Info_AddingInternalFeeds": "%s 내부 피드의 인증 정보를 추가하는 중입니다.",
   "loc.messages.Info_AddingExternalFeeds": "%s 외부 엔드포인트의 인증 정보를 추가하는 중입니다.",
   "loc.messages.Info_AddingAuthForRegistry": "레지스트리 %s 구성에 인증을 추가하는 중",
