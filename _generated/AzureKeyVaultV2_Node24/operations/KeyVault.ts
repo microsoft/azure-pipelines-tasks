@@ -194,7 +194,7 @@ export class KeyVault {
             return;
         }
 
-        if (secretValue.indexOf('\n') < 0) {
+        if (secretValue.indexOf('\n') < 0 && secretValue.indexOf('\r') < 0) {
             // single-line case
             tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
@@ -208,8 +208,8 @@ export class KeyVault {
                 tl.setVariable(secretName, strVal, true);
             }
             else {
-                let lines = secretValue.split('\n');
-                lines.forEach((line: string, index: number) => {
+                let lines = secretValue.split(/\r\n|\r|\n/);
+                lines.forEach((line: string) => {
                     this.trySetSecret(secretName, line);
                 });
                 tl.setVariable(secretNameWithoutVersion, secretValue, true);
@@ -220,7 +220,9 @@ export class KeyVault {
 
     private trySetSecret(secretName: string, secretValue: string): void {
         try {
-            let regExp = new RegExp(secretValue);
+            if (!secretValue) {
+                return;
+            }
 
             console.log("##vso[task.setsecret]" + secretValue);
         }

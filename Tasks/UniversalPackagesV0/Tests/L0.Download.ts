@@ -78,15 +78,19 @@ describe('UniversalPackages L0 Suite - Internal Download', function () {
     });
 
     describe('Download Error Handling', function () {
-        it('fails when artifact tool path is not set by pre-job', async () => {
+        it('downloads artifact tool inline when pre-job did not cache it', async () => {
             const tr = await TestHelpers.runTest({
-                // Intentionally not setting artifactToolPath
+                // Intentionally not setting artifactToolPath - resolver downloads inline
                 [testConstants.TestEnvVars.command]: 'download',
+                [testConstants.TestEnvVars.downloadDirectory]: testConstants.TestData.defaultDownloadDir,
+                [testConstants.TestEnvVars.feedListDownload]: testConstants.TestData.defaultFeed,
+                [testConstants.TestEnvVars.packageListDownload]: testConstants.TestData.defaultPackage,
+                [testConstants.TestEnvVars.versionListDownload]: testConstants.TestData.defaultVersion,
+                [testConstants.TestEnvVars.mockExitCode]: '0',
             });
 
-            TestHelpers.assertFailure(tr);
-            TestHelpers.assertStdoutContains(tr, testConstants.TestData.failedToGetArtifactTool);
-            TestHelpers.assertStdoutContains(tr, testConstants.TestData.artifactToolPathNotSet);
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertToolInvocationCount(tr, 1);
         });
 
         it('fails when download returns non-zero exit code', async () => {

@@ -21,7 +21,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "^4.16.0",
+    "azure-pipelines-task-lib": "^5.2.8",
     "ftp": "0.3.10",
     "minimatch": "^3.0.4"
   },
