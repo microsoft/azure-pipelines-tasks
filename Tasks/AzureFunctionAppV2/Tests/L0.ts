@@ -2,6 +2,7 @@ import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 
 import './DeploymentFactoryTests';
+import './ArchiveFolderSymlinkTests';
 
 describe('AzureFunctionAppV2 Suite', function () {
     this.timeout(180000);
