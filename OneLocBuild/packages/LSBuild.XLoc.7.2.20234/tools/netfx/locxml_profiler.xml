@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<!-- To Do: uncomment following line to set elements as none-localizable by default -->
+
+	<_locDefault _loc="locNone"/>
+
+	<!-- To Do: uncomment following line to set all attributes to localizable by default -->
+	<!-- <_locDefaultAttr _loc="locData"/> -->
+
+	<!-- To Do: uncomment following line to set tag test to none-localizable 		and its attributes size and type to localizable.
+	        The _locIDAttr is optional and defines the id-attribute as the 
+		resource id to use in place of a _locID attribute. 
+		For eg: the value of the 'name' attribute of the 'test' tag will be 
+		treated as the id for all the localizable content of the 'test' tag.
+		-->
+	<!-- <_locTag _loc="locNone" _locIDAttr="name" _locAttrData="size,type">test</_locTag> -->
+
+	<!-- To Do: uncomment following line to set tag bold to fully-localizable  -->
+	<!-- <_locTag _loc="locFull">bold</_locTag> -->
+
+	<_locTag _loc="locData">Title</_locTag>
+	<_locTag _loc="locData">Category</_locTag>
+  	<_locTag _loc="locData">GuidanceMessage</_locTag>
+
+</_locDefinition>
+

@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "",
   "loc.description": "Conda 用戶端的驗證工作",
   "loc.instanceNameFormat": "Conda 驗證",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' 服務連線",
+  "loc.input.help.workloadIdentityServiceConnection": "如果設定此項目，它會使用服務連線而非建置管線身分識別來產生認證。",
   "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
   "loc.messages.AddingAuthChannel": "正在新增權杖 %s 的驗證",
   "loc.messages.Info_AddingFederatedFeedAuth": "正在新增來自服務連線 %s 的驗證資訊",
