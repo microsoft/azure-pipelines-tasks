@@ -23,6 +23,5 @@
   "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",
   "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos.",
   "loc.messages.InvalidAzurePsVersion": "La versión de Azure PowerShell \"{0}\" especificada no tiene el formato correcto. Compruebe el formato. Ejemplo de formato correcto: 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "La versión \"{0}\" de Azure PowerShell no se admite para el agente hospedado. Reemplácela por la versión \"{1}\". Considere la posibilidad de cambiar la versión seleccionada.",
-  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de los caracteres especiales mediante el acento grave ('). Puede encontrar más información aquí: https://aka.ms/ado/75787"
+  "loc.messages.OverrideAzurePowerShellVersion": "La versión \"{0}\" de Azure PowerShell no se admite para el agente hospedado. Reemplácela por la versión \"{1}\". Considere la posibilidad de cambiar la versión seleccionada."
 }

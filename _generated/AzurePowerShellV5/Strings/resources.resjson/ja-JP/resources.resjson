@@ -39,6 +39,5 @@
   "loc.messages.JS_Stderr": "PowerShell が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.PS_ExitCode": "PowerShell がコード '{0}' で終了しました。",
-  "loc.messages.Az_LowerVersionWarning": "指定された {0} バージョン {1} は古くなっています。最新のバージョンは {2}です",
-  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。バックティック (`) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
+  "loc.messages.Az_LowerVersionWarning": "指定された {0} バージョン {1} は古くなっています。最新のバージョンは {2}です"
 }

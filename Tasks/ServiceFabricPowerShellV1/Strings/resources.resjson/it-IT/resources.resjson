@@ -15,6 +15,5 @@
   "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare a PowerShell. Possono essere ordinali o denominati.",
   "loc.messages.CertNotPresentInLocalStoreWarningMsg": "Il certificato con identificazione personale {0} non è presente nell'archivio certificati locale. Questa condizione potrebbe causare errori. Se la versione/compilazione non riesce, riprovare oppure verificare che più agenti non eseguano compilazioni/versioni usando contemporaneamente lo stesso endpoint servizio nello stesso computer.",
   "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
-  "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi.",
-  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
+  "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi."
 }

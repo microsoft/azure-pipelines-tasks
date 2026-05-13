@@ -39,6 +39,5 @@
   "loc.messages.JS_Stderr": "PowerShell이 표준 오류 스트림에 하나 이상의 줄을 썼습니다.",
   "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.PS_ExitCode": "PowerShell이 코드 '{0}'(으)로 종료되었습니다.",
-  "loc.messages.Az_LowerVersionWarning": "지정한 {0} 버전 {1}이(가) 만료되었습니다. 최신 버전은 {2}입니다.",
-  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백틱(`)을 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요."
+  "loc.messages.Az_LowerVersionWarning": "지정한 {0} 버전 {1}이(가) 만료되었습니다. 최신 버전은 {2}입니다."
 }

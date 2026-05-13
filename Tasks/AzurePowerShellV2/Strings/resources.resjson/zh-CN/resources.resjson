@@ -23,6 +23,5 @@
   "loc.messages.InvalidScriptArguments0": "脚本参数“{0}”无效。不允许换行。",
   "loc.messages.InvalidScriptPath0": "脚本路径“{0}”无效。指定的路径字符无效。",
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本“{0}”格式不正确。请检查格式。正确格式的示例为 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell 版本“{0}”不受托管代理支持。将其替代为版本“{1}”。请考虑更改选定的版本。",
-  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反引号斜杠 (`) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
+  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell 版本“{0}”不受托管代理支持。将其替代为版本“{1}”。请考虑更改选定的版本。"
 }

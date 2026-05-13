@@ -206,8 +206,7 @@
     "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "PS_ExitCode": "PowerShell exited with code '{0}'.",
-    "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}",
-    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
+    "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
   },
   "_buildConfigMapping": {
     "Default": "5.274.6",

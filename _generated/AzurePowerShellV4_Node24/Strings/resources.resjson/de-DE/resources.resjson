@@ -39,6 +39,5 @@
   "loc.messages.InvalidAzurePsVersion": "Die angegebene Azure PowerShell-Version \"{0}\" weist nicht das richtige Format auf. Überprüfen Sie das Format. Ein Beispiel für das richtige Format ist etwa 1.0.1.",
   "loc.messages.JS_ExitCode": "PowerShell wurde beendet mit dem Code \"%s\".",
   "loc.messages.JS_Stderr": "PowerShell hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
-  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
-  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen Backtick (`), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

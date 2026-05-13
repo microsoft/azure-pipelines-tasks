@@ -39,6 +39,5 @@
   "loc.messages.InvalidAzurePsVersion": "Il formato della versione di Azure PowerShell '{0}' specificata non è corretto. Controllare il formato. Un esempio di formato corretto è 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell terminato con codice '%s'.",
   "loc.messages.JS_Stderr": "PowerShell ha scritto una o più righe nel flusso di errore standard.",
-  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta.",
-  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

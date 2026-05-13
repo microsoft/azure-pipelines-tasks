@@ -32,6 +32,5 @@
   "loc.messages.InvalidScriptArguments0": "Ungültige Skriptargumente \"{0}\". Zeilenumbrüche sind unzulässig.",
   "loc.messages.InvalidScriptPath0": "Ungültiger Skriptpfad \"{0}\". Es wurden ungültige Pfadzeichen angegeben.",
   "loc.messages.InvalidAzurePsVersion": "Die angegebene Azure PowerShell-Version \"{0}\" weist nicht das richtige Format auf. Überprüfen Sie das Format. Ein Beispiel für das richtige Format ist etwa 1.0.1.",
-  "loc.messages.OverrideAzurePowerShellVersion": "Die Azure PowerShell-Version {0} wird für den gehosteten Agent nicht unterstützt. Überschreiben Sie die Version mit Version {1}. Erwägen Sie eine Änderung der ausgewählten Version.",
-  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen Backtick (`), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
+  "loc.messages.OverrideAzurePowerShellVersion": "Die Azure PowerShell-Version {0} wird für den gehosteten Agent nicht unterstützt. Überschreiben Sie die Version mit Version {1}. Erwägen Sie eine Änderung der ausgewählten Version."
 }

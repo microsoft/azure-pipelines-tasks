@@ -39,6 +39,5 @@
   "loc.messages.JS_Stderr": "PowerShell ha scritto una o più righe nel flusso di errore standard.",
   "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta.",
   "loc.messages.PS_ExitCode": "PowerShell terminato con codice '{0}'.",
-  "loc.messages.Az_LowerVersionWarning": "La versione {0} di {1} specificata è obsoleta, la versione più recente è {2}",
-  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
+  "loc.messages.Az_LowerVersionWarning": "La versione {0} di {1} specificata è obsoleta, la versione più recente è {2}"
 }

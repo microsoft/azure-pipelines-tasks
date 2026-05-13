@@ -39,6 +39,5 @@
   "loc.messages.JS_Stderr": "PowerShell escribió una o varias líneas en la secuencia de error estándar.",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
   "loc.messages.PS_ExitCode": "PowerShell se cerró con el código \"{0}\".",
-  "loc.messages.Az_LowerVersionWarning": "La versión {0} especificada {1} está desactualizada, la versión más reciente es {2}",
-  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de los caracteres especiales mediante el acento grave ('). Puede encontrar más información aquí: https://aka.ms/ado/75787"
+  "loc.messages.Az_LowerVersionWarning": "La versión {0} especificada {1} está desactualizada, la versión más reciente es {2}"
 }

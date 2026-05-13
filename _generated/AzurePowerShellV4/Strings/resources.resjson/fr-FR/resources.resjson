@@ -39,6 +39,5 @@
   "loc.messages.InvalidAzurePsVersion": "La version '{0}' spécifiée pour Azure PowerShell n'est pas au format approprié. Vérifiez le format. Exemple de format correct : 1.0.1",
   "loc.messages.JS_ExitCode": "Arrêt de PowerShell. Code de sortie : '%s'.",
   "loc.messages.JS_Stderr": "PowerShell a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
-  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
-  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant le backtick (`). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
 }

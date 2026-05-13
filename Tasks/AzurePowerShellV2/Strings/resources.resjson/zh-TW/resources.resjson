@@ -23,6 +23,5 @@
   "loc.messages.InvalidScriptArguments0": "指令碼引數 '{0}' 無效。不允許分行符號。",
   "loc.messages.InvalidScriptPath0": "指令碼路徑 '{0}' 無效。指定的路徑字元無效。",
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本 '{0}' 格式不正確。請檢查格式。正確格式的範例為 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "裝載的代理程式不支援 Azure PowerShell '{0}' 版。正在以 '{1}' 版予以覆寫。請考慮變更選取的版本。",
-  "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
+  "loc.messages.OverrideAzurePowerShellVersion": "裝載的代理程式不支援 Azure PowerShell '{0}' 版。正在以 '{1}' 版予以覆寫。請考慮變更選取的版本。"
 }

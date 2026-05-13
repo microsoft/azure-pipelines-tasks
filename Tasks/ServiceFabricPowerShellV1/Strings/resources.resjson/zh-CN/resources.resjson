@@ -15,6 +15,5 @@
   "loc.input.help.ScriptArguments": "要传递给 PowerShell 的其他参数。可以是序号或命名参数。",
   "loc.messages.CertNotPresentInLocalStoreWarningMsg": "具有指纹 {0} 的证书在本地证书存储中不存在。这可能会导致错误。如果发布/生成失败，请重试此操作，或确保多个代理未在同一计算机上同时使用同一服务终结点运行生成/发布。",
   "loc.messages.InvalidScriptArguments0": "脚本参数“{0}”无效。不允许换行。",
-  "loc.messages.InvalidScriptPath0": "脚本路径“{0}”无效。指定的路径字符无效。",
-  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反引号斜杠 (`) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
+  "loc.messages.InvalidScriptPath0": "脚本路径“{0}”无效。指定的路径字符无效。"
 }
