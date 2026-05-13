@@ -100,10 +100,10 @@ Invoke-ScriptArgumentSanitization -InputArgs $cleanArgs -TaskName $taskName -Pip
 Assert-WasCalled Protect-ScriptArguments -Times 1
 
 # --- Gates on + dirty args => Protect-ScriptArguments throws => dispatcher fails closed
-#     with the task-localized 'ScriptArgsSanitized' message regardless of the
+#     with the module-localized 'PS_ScriptArgsSanitized' message regardless of the
 #     message the underlying sanitizer produced. ---
 # Initialize-Test.ps1 mocks Get-VstsLocString to return the key, so the localized
-# message is 'ScriptArgsSanitized'.
+# message is 'PS_ScriptArgsSanitized'.
 Reset-AllMocks
 Register-Mock Get-SanitizerCallStatus { return $true }
 Register-Mock Get-Command { return $true } -ParametersEvaluator { $Name -eq 'Get-VstsPipelineFeature' }
@@ -112,10 +112,10 @@ Register-Mock Protect-ScriptArguments { throw 'PS_ScriptArgsSanitized' }   # wha
 
 Assert-Throws {
     Invoke-ScriptArgumentSanitization -InputArgs $dirtyArgs -TaskName $taskName -PipelineFeatureFlagName $pipelineFlag
-} -MessagePattern 'ScriptArgsSanitized'
+} -MessagePattern 'PS_ScriptArgsSanitized'
 
 # --- Locale-drift hardening: even if the underlying sanitizer throws a
-#     localized message that does NOT match the task's 'ScriptArgsSanitized'
+#     localized message that does NOT match the module's 'PS_ScriptArgsSanitized'
 #     value (e.g. fr-FR "coche" vs "backtick" wording), the dispatcher must
 #     still fail closed. This guards against the original bug where -eq
 #     against Get-VstsLocString silently let injection through in non-en
@@ -128,10 +128,10 @@ Register-Mock Protect-ScriptArguments { throw "Caracteres detectes dans les argu
 
 Assert-Throws {
     Invoke-ScriptArgumentSanitization -InputArgs $dirtyArgs -TaskName $taskName -PipelineFeatureFlagName $pipelineFlag
-} -MessagePattern 'ScriptArgsSanitized'
+} -MessagePattern 'PS_ScriptArgsSanitized'
 
 # --- Fail-closed semantics: an unexpected sanitizer crash must NOT silently
-#     let the task continue with un-vetted args. Re-thrown as ScriptArgsSanitized. ---
+#     let the task continue with un-vetted args. Re-thrown as PS_ScriptArgsSanitized. ---
 Reset-AllMocks
 Register-Mock Get-SanitizerCallStatus { return $true }
 Register-Mock Get-Command { return $true } -ParametersEvaluator { $Name -eq 'Get-VstsPipelineFeature' }
@@ -140,7 +140,7 @@ Register-Mock Protect-ScriptArguments { throw 'Unexpected internal error' }
 
 Assert-Throws {
     Invoke-ScriptArgumentSanitization -InputArgs $dirtyArgs -TaskName $taskName -PipelineFeatureFlagName $pipelineFlag
-} -MessagePattern 'ScriptArgsSanitized'
+} -MessagePattern 'PS_ScriptArgsSanitized'
 
 # --- Empty input is allowed (parameter has [AllowEmptyString()]) ---
 Reset-AllMocks
