@@ -111,22 +111,20 @@ function Invoke-ScriptArgumentSanitization {
     # Fail closed: ANY exception from Protect-ScriptArguments means the
     # sanitization gate did not pass cleanly, so abort the task.
     #
-    # We deliberately do NOT compare $_.Exception.Message to a localized
+    # We deliberately do NOT compare the exception message to a localized
     # value to distinguish "rejection" from "unexpected crash":
-    #   * Translators localize 'PS_ScriptArgsSanitized' (this module) and
-    #     'ScriptArgsSanitized' (task task.json) independently. fr-FR already
-    #     diverges today ("coche" vs "backtick"). A -eq comparison on any
-    #     locale where strings drift would let a sanitizer rejection slip
-    #     into a "swallow into telemetry" branch and bypass the gate.
+    #   * Translators localize the module-level key (PS_ prefix) and the
+    #     task-level key independently. fr-FR already diverges today
+    #     ("coche" vs "backtick"). A string equality check on any locale
+    #     where strings drift would let a sanitizer rejection slip into a
+    #     "swallow into telemetry" branch and bypass the gate.
     #   * Even if the sanitizer crashed with an unrelated error, executing
     #     the un-vetted arguments is exactly the vulnerability we are guarding
     #     against. Failing closed is the safer default.
     #
-    # The throw uses this module's own 'PS_ScriptArgsSanitized' key so all
-    # Get-VstsLocString references in this file resolve from the module's
-    # module.json (enforced by Tests/L0/loc-resource-keys). The customer-
-    # facing en-US text is identical to the task-level 'ScriptArgsSanitized'
-    # string, so behavior is unchanged.
+    # The throw uses this module's own PS_ScriptArgsSanitized key so all
+    # loc resource references in this file resolve from the module's
+    # module.json (enforced by Tests/L0 General Suite).
     $sanitizerThrew = $false
     $caughtMessage  = $null
     $caughtStack    = $null
