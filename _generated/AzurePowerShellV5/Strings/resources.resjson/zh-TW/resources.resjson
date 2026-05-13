@@ -39,7 +39,6 @@
   "loc.messages.JS_Stderr": "PowerShell 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
   "loc.messages.PS_ExitCode": "PowerShell 已結束，代碼為 '{0}'。",
-  "loc.messages.Az_LowerVersionWarning": "指定的 {0} 版本 {1} 已過時，最新版本為 {2}"
-,
+  "loc.messages.Az_LowerVersionWarning": "指定的 {0} 版本 {1} 已過時，最新版本為 {2}",
   "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
 }

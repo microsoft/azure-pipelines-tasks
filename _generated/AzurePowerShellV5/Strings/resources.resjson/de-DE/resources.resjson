@@ -39,7 +39,6 @@
   "loc.messages.JS_Stderr": "PowerShell hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.PS_ExitCode": "PowerShell wurde beendet mit dem Code \"{0}\".",
-  "loc.messages.Az_LowerVersionWarning": "Die angegebene {0} Version {1} ist veraltet, die neueste Version ist {2}"
-,
+  "loc.messages.Az_LowerVersionWarning": "Die angegebene {0} Version {1} ist veraltet, die neueste Version ist {2}",
   "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen Backtick (`), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
 }
