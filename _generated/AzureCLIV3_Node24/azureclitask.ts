@@ -9,7 +9,6 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { downloadToolWithRetries } from "azure-pipelines-tool-lib";
 import { tryValidateScriptArgs } from "./src/argsSanitizer";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -327,6 +326,24 @@ export class azureclitask {
         }
     }
 
+    // Installs the azure-devops CLI extension with pip dependency resolution disabled.
+    // In network-restricted agent environments, pip may fail to resolve transitive dependencies
+    // during `az extension add`. Setting PIP_NO_DEPS=1 skips dependency resolution
+    private static async installAzureDevOpsExtensionNoDeps(): Promise<void> {
+        const noDepsEnv = {
+            ...process.env,
+            PIP_NO_DEPS: "1",
+            PIP_DISABLE_PIP_VERSION_CHECK: "1"
+        };
+
+        Utility.throwIfError(
+            tl.execSync("az", "extension add --name azure-devops -y", { env: noDepsEnv } as any),
+            tl.loc("FailedToInstallAzureDevOpsCLI")
+        );
+
+        console.log(tl.loc("AzureDevOpsExtensionInstalledNoDeps"));
+    }
+
     private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
@@ -430,26 +447,22 @@ export class azureclitask {
                 // Install Azure DevOps extension if not already installed
                 const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
                 if (!extensionInstalled) {
-                    console.log("Azure DevOps extension not found in working environment. Attempting installation.");
+                    console.log(tl.loc("AzureDevOpsExtensionNotFound"));
 
                     if (tl.getPipelineFeature('AzureCliV3EnableWhlFallback')) {
                         try {
                             Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                         } catch (error) {
-                            console.log("Standard installation of azure-devops extension failed.");
-
-                            const whlUrl = "https://aka.ms/azure-devops-extension-whl";
-                            const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
-                            const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
-
-                            Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                            console.log("Azure DevOps CLI extension installed successfully from wheel.");
+                            console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
+                            await this.installAzureDevOpsExtensionNoDeps();
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                        console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                     }
                 } else {
-                    console.log("Azure DevOps extension is already installed, skipping installation.");
+                    console.log(tl.loc("AzureDevOpsExtensionAlreadyInstalled"));
                 }
 
                 await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
