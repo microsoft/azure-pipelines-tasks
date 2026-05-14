@@ -51,7 +51,12 @@ describe('archiveFolder symlink handling', function () {
             fs.rmSync(extractDir, { recursive: true, force: true });
         }
 
-        execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`);
+        if (process.platform === 'win32') {
+            execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`);
+        } else {
+            fs.mkdirSync(extractDir, { recursive: true });
+            execSync(`unzip -o "${zipPath}" -d "${extractDir}"`);
+        }
 
         const extractedSymlink = path.join(extractDir, 'node_modules', 'symlinked-module');
         const extractedIndex = path.join(extractedSymlink, 'index.js');
