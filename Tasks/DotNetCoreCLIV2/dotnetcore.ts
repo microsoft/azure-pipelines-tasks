@@ -147,20 +147,32 @@ export class dotNetExe {
     }
 
     private findGlobalJsonFile(): string | null {
-        const repoRoot =
-            path.resolve(
-                tl.getVariable('Build.SourcesDirectory') ||
-                tl.getVariable('System.DefaultWorkingDirectory') ||
-                process.cwd()
-            );
+        // Determine the search boundary mirroring the agent's own logic:
+        // - Default: Agent.BuildDirectory (_work/1)
+        // - If AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES=true: widen to Agent.WorkFolder (_work/)
+        // See: RepositoryPlugin.cs:156-166 and BuildDirectoryManager.cs:197-210
+        const allowWorkDirRepos = (tl.getVariable('AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES') || '').toLowerCase() === 'true';
+        let boundary: string;
+
+        if (allowWorkDirRepos) {
+            boundary = path.resolve(tl.getVariable('Agent.WorkFolder') || process.cwd());
+            tl.debug(`AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled. Using Agent.WorkFolder '${boundary}' as search boundary.`);
+        } else {
+            boundary = path.resolve(tl.getVariable('Agent.BuildDirectory') || process.cwd());
+            tl.debug(`Using Agent.BuildDirectory '${boundary}' as search boundary.`);
+        }
 
         let searchDir = path.resolve(this.workingDirectory || process.cwd());
 
-        tl.debug(`Searching for global.json starting in '${searchDir}' and ending at '${repoRoot}'.`);
+        tl.debug(`Searching for global.json starting in '${searchDir}' up to boundary '${boundary}'.`);
 
-        const relStart = path.relative(repoRoot, searchDir);
-        if (relStart.startsWith('..') || path.isAbsolute(relStart)) {
-            tl.debug(`Working directory '${searchDir}' is outside repo root '${repoRoot}'. Skipping search.`);
+        const isInside = (dir: string, root: string): boolean => {
+            const rel = path.relative(root, dir);
+            return !rel.startsWith('..') && !path.isAbsolute(rel);
+        };
+
+        if (!isInside(searchDir, boundary)) {
+            console.log(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
             return null;
         }
 
@@ -178,7 +190,7 @@ export class dotNetExe {
                 break;
             }
 
-            const rel = path.relative(repoRoot, parentDir);
+            const rel = path.relative(boundary, parentDir);
             if (rel.startsWith('..') || path.isAbsolute(rel)) {
                 break;
             }

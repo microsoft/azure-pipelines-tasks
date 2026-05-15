@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "[Deprecated] Github Npm 패키지 다운로드",
+  "loc.friendlyName": "[사용되지 않음] GitHub Npm 패키지 다운로드",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613746) 또는 [npm 설명서 참조](https://docs.npmjs.com/)",
-  "loc.description": "사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 Npm@1 작업을 사용하세요.",
-  "loc.instanceNameFormat": "[Deprecated] GitHub Npm 패키지 다운로드",
+  "loc.description": "사용되지 않음: 이 작업은 더 이상 유지 관리되지 않습니다. 대신 GitHub 서비스 연결과 함께 Npm@1 작업을 사용하세요.",
+  "loc.instanceNameFormat": "[사용되지 않음] GitHub Npm 패키지 다운로드",
   "loc.group.displayName.customRegistries": "사용자 지정 레지스트리 및 인증",
   "loc.input.label.packageName": "패키지 이름",
   "loc.input.help.packageName": "Github에서 다운로드할 패키지의 이름",

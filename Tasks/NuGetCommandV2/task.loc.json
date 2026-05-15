@@ -10,7 +10,7 @@
   "version": {
     "Major": 2,
     "Minor": 274,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -247,6 +247,15 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.allowPackageConflicts",
+      "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "required": false,
+      "groupName": "pushAdvanced",
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout",
       "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {
@@ -520,6 +529,7 @@
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
     "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
+    "Warning_NegativeRequestTimeoutIgnored": "ms-resource:loc.messages.Warning_NegativeRequestTimeoutIgnored",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",

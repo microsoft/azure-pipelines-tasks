@@ -10,6 +10,8 @@
   "loc.input.help.connectedServiceName": "选择应用于选择 URL 的通用服务连接，并为 http 请求构造授权标头。",
   "loc.input.label.connectedServiceNameARM": "Azure 订阅",
   "loc.input.help.connectedServiceNameARM": "选择用于调用管理 API 的 Azure 资源管理器订阅。云的 \"ManagementPortalUrl\" 用作 baseURL",
+  "loc.input.label.connectedServiceNameAzureDevOps": "Azure DevOps service connection",
+  "loc.input.help.connectedServiceNameAzureDevOps": "Select an Azure DevOps service connection to use for invoking Azure DevOps REST APIs. The service connection URL is used as the baseURL.",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "选择应用于调用 API 的 HTTP 方法。",
   "loc.input.label.headers": "标题",

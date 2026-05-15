@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Commento GitHub",
+  "loc.helpMarkDown": "",
   "loc.description": "Consente di scrivere un commento relativo all'entità GitHub, ad esempio per un commento o una richiesta pull",
   "loc.instanceNameFormat": "Scrittura del commento GitHub",
   "loc.input.label.gitHubConnection": "Connessione a GitHub (OAuth o token di accesso personale)",
