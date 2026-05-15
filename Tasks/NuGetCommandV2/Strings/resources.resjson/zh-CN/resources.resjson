@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "目前仅 Azure Pipelines 提供“允许跳过重复项”选项。如果 NuGet.exe 遇到冲突，任务将失败。",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "目前只能在 Windows 代理中使用“允许跳过重复项”选项。如果 NuGet.exe 遇到冲突，任务将失败。",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "无法识别命令 %s。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支持使用加密 API 密钥。",
   "loc.messages.Error_ExpectedConfigurationElement": "xml 无效。元素名应为“配置”。",

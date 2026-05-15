@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "Actualmente, la opción \"Permitir omisión de duplicados\" solo está disponible en Azure Pipelines. Si NuGet.exe encuentra un conflicto, la tarea dará error.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "Actualmente, la opción \"Permitir omisión de duplicados\" solo está disponible en agentes de Windows. Si NuGet.exe encuentra un conflicto, la tarea dará error.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "No se reconoce el comando %s.",
   "loc.messages.Error_ApiKeyNotSupported": "Actualmente, DotNetCore no admite el uso de una clave de API cifrada.",
   "loc.messages.Error_ExpectedConfigurationElement": "XML no válido. Se esperaba un elemento denominado \"configuration\".",

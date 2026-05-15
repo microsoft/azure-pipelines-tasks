@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
-    "Patch": 2
+    "Minor": 275,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -530,6 +530,7 @@
     "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Azure Pipelines. If NuGet.exe encounters a conflict, the task will fail.",
     "Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
     "Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+    "Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
     "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",

@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "Die Option \"Überspringen von Duplikaten zulassen\" ist zurzeit nur für Azure Pipelines verfügbar. Wenn \"NuGet.exe\" einen Konflikt feststellt, tritt bei der Aufgabe ein Fehler auf.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "Die Option \"Überspringen von Duplikaten zulassen\" ist zurzeit nur auf Windows-Agents verfügbar. Wenn NuGet.exe einen Konflikt feststellt, tritt bei der Aufgabe ein Fehler auf.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "Der Befehl %s wurde nicht erkannt.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore unterstützt die Verwendung eines verschlüsselten API-Schlüssels derzeit nicht.",
   "loc.messages.Error_ExpectedConfigurationElement": "Ungültiges XML. Es wurde ein Element mit dem Namen \"configuration\" erwartet.",

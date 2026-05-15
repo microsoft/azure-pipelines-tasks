@@ -27,7 +27,8 @@ class PublishOptions implements INuGetCommandOptions {
         public configFile: string,
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
-        public environment: ngToolRunner.NuGetEnvironmentSettings) { }
+    public environment: ngToolRunner.NuGetEnvironmentSettings,
+    public requestTimeoutInMs?: number) { }
 }
 
 interface IVstsNuGetPushOptions {
@@ -231,6 +232,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 const vstsNuGetPushSettings: vstsNuGetPushToolRunner.VstsNuGetPushSettings =
                 {
                     continueOnConflict,
+                    timeoutInMs: timeout,
                 };
 
                 const publishOptions: IVstsNuGetPushOptions = {
@@ -254,7 +256,8 @@ export async function run(nuGetPath: string): Promise<void> {
                     configFile,
                     verbosity,
                     authInfo,
-                    environmentSettings);
+                    environmentSettings,
+                    timeout);
 
                 for (const packageFile of filesList) {
                     await publishPackageNuGet(packageFile, publishOptions, authInfo, continueOnConflict);
@@ -295,6 +298,9 @@ async function publishPackageNuGet(
     nugetTool.arg(["-Source", options.feedUri]);
 
     nugetTool.argIf(options.apiKey, ["-ApiKey", options.apiKey]);
+
+    const publishTimeoutInSeconds = getPublishTimeoutInSeconds(options.requestTimeoutInMs);
+    nugetTool.argIf(publishTimeoutInSeconds !== undefined, ["-Timeout", publishTimeoutInSeconds.toString()]);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
@@ -436,6 +442,14 @@ function getRequestTimeout(): number | undefined {
     }
 
     return undefined;
+}
+
+function getPublishTimeoutInSeconds(timeoutInMs: number | undefined): number | undefined {
+    if (timeoutInMs === undefined) {
+        return undefined;
+    }
+
+    return Math.max(1, Math.ceil(timeoutInMs / 1000));
 }
 
 async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout?: number): Promise<string> {

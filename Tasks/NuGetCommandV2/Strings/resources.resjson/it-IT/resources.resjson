@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "L'opzione 'Consenti di ignorare i duplicati' è attualmente disponibile solo in Azure Pipelines. Se NuGet.exe rileva un conflitto, l'attività non riuscirà.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "L'opzione 'Consenti di ignorare i duplicati' è attualmente disponibile solo negli agenti Windows. Se NuGet.exe rileva un conflitto, l'attività non riuscirà.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "Il comando %s non è stato riconosciuto.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore non supporta attualmente una chiave API crittografata.",
   "loc.messages.Error_ExpectedConfigurationElement": "XML non valido. È previsto un elemento denominato 'configuration'.",

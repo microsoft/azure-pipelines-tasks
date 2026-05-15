@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "'중복을 건너뛸 수 있음' 옵션은 현재 Azure Pipelines에서만 사용할 수 있습니다. NuGet.exe에서 충돌이 발생하는 경우 작업이 실패합니다.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "'중복을 건너뛸 수 있음' 옵션은 현재 Windows 에이전트에서만 사용할 수 있습니다. NuGet.exe에서 충돌이 발생하는 경우 작업이 실패합니다.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "%s 명령을 인식할 수 없습니다.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore는 현재 암호화된 API 키 사용을 지원하지 않습니다.",
   "loc.messages.Error_ExpectedConfigurationElement": "잘못된 XML입니다. 'configuration' 요소가 필요합니다.",

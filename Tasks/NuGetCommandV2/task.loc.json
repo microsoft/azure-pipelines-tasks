@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
-    "Patch": 2
+    "Minor": 275,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -530,6 +530,7 @@
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
     "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
     "Warning_NegativeRequestTimeoutIgnored": "ms-resource:loc.messages.Warning_NegativeRequestTimeoutIgnored",
+    "Error_PublishRequestTimedOut": "ms-resource:loc.messages.Error_PublishRequestTimedOut",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",

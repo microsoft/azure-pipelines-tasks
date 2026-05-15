@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Azure Pipelines. If NuGet.exe encounters a conflict, the task will fail.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
   "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",

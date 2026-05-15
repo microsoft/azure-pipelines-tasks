@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "[重複のスキップを許可する] オプションは、現在、Azure Pipelines 上でのみ利用できます。NuGet.exe で競合が発生すると、タスクは失敗します。",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "[重複のスキップを許可する] オプションは、現在、Windows エージェント上でのみ利用できます。NuGet.exe で競合が発生すると、タスクは失敗します。",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "コマンド %s を認識できませんでした。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore は、現在、暗号化された API キーの使用をサポートしていません。",
   "loc.messages.Error_ExpectedConfigurationElement": "無効な xml です。'configuration' という要素が必要です。",

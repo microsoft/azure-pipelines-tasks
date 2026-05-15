@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "目前僅在 Azure Pipelines 提供 [允許跳過重複項] 選項。如果 NuGet.exe 遇到衝突，工作會失敗。",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "目前僅在 Windows 代理程式提供 [允許跳過重複項] 選項。如果 NuGet.exe 遇到衝突，工作會失敗。",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "無法辨認命令 %s。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支援使用加密的 API 金鑰。",
   "loc.messages.Error_ExpectedConfigurationElement": "XML 無效。應有名為 'configuration' 的元素。",
