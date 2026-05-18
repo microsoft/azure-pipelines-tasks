@@ -1,4 +1,6 @@
 import assert = require('assert');
+import path = require('path');
+import tl = require('azure-pipelines-task-lib/task');
 import { validateScriptArgs, ArgsSanitizingError } from '../src/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
@@ -6,6 +8,10 @@ import { validateScriptArgs, ArgsSanitizingError } from '../src/argsSanitizer';
 // before sanitization; pscore/ps/batch sanitize the literal scriptArguments.
 
 export const runValidateScriptArgsTests = () => {
+    before(() => {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
     const setEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName, envValue] = envVariable.split('=');

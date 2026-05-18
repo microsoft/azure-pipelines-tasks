@@ -1,8 +1,14 @@
 import assert = require('assert');
+import path = require('path');
+import tl = require('azure-pipelines-task-lib/task');
 import { validateFileArgs } from '../helpers';
 import { ArgsSanitizingError } from '../errors';
 
 export const runValidateFileArgsTests = () => {
+    before(() => {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
     const notThrowTestSuites: [string, string, string[]][] = [
         [
             "Handles empty line",
