@@ -66,7 +66,8 @@ export class azureclitask {
                 }
             }
             else {
-                // Default case: always run with "--version"
+                // Default case: always run with "--version".
+
                 azVersionResult = tl.execSync("az", "--version");
             }
 

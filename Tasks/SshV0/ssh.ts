@@ -10,7 +10,8 @@ import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 /**
- * By default configuration, SSH runs on port 22.
+ * By default configuration, SSH runs on port 22..
+ * 
  * @constant {number}
  * @default
 */

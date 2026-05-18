@@ -54,7 +54,8 @@ async function run() {
         }
         const input_runScriptInSeparateScope = tl.getBoolInput('runScriptInSeparateScope');
 
-        // Generate the script contents.
+        // Generate the script contents..
+
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         if (input_errorActionPreference.toUpperCase() != 'DEFAULT') {
