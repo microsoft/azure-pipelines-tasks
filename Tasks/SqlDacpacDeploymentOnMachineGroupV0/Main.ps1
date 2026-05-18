@@ -94,6 +94,18 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# Dot-source TaskModuleSqlUtility's helper scripts: the module only exports
+# Invoke-DacpacDeployment / Invoke-SqlQueryDeployment, so V2 functions in Utility.ps1 need these in task scope.
+$sqlPackageHelpersPath = "$PSScriptRoot\ps_modules\TaskModuleSqlUtility\SqlPackageOnTargetMachines.ps1"
+$sqlQueryHelpersPath = "$PSScriptRoot\ps_modules\TaskModuleSqlUtility\SqlQueryOnTargetMachines.ps1"
+if (Test-Path $sqlPackageHelpersPath) {
+    . $sqlPackageHelpersPath
+}
+if (Test-Path $sqlQueryHelpersPath) {
+    . $sqlQueryHelpersPath
+}
+
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Pubblica risultati dei test",
+  "loc.friendlyName": "[Deprecato] Pubblica risultati dei test",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Pubblica i risultati dei test in Azure Pipelines",
+  "loc.description": "[Deprecato] Pubblica i risultati dei test in Azure Pipelines",
   "loc.instanceNameFormat": "Pubblica risultati del test $(testResultsFiles)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.testRunner": "Formato dei risultati test",
