@@ -33,7 +33,7 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
             assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure Azure DevOps organization');
             assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure Azure DevOps project');
-            assert(tr.stdout.indexOf('Azure DevOps CLI extension installed') >= 0, 'should install Azure DevOps extension');
+            assert(tr.stdout.indexOf('loc_mock_AzureDevOpsExtensionInstalled') >= 0, 'should install Azure DevOps extension');
             assert(tr.stdout.indexOf('organization configured') >= 0, 'should configure organization');
             assert(tr.stdout.indexOf('project configured') >= 0, 'should configure project');
             done();
@@ -104,7 +104,7 @@ describe('AzureCLIV3 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.runAsync().then(() => {
-            assert(tr.stdout.includes('Azure DevOps extension is already installed, skipping installation'), 'Should check if extension is installed and skip installation');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionAlreadyInstalled'), 'Should check if extension is installed and skip installation');
             assert(!tr.stdout.includes('az extension add -n azure-devops'), 'Should NOT install Azure DevOps extension');
             assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
             assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure Azure DevOps organization');
@@ -155,10 +155,9 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             assert(tr.failed, 'should have failed');
-            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
-            assert(tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should log standard installation failure');
-            assert(tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should attempt wheel download as fallback');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
             assert(tr.stdout.indexOf('loc_mock_FailedToInstallAzureDevOpsCLI') >= 0, 'Should fail with extension installation error');
             done();
         }).catch((err) => {
@@ -166,7 +165,7 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
-    it('Should not attempt wheel fallback when feature flag is off', function (done) {
+    it('Should not attempt no-deps fallback when feature flag is off', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0AzureDevOpsExtensionInstallFailureNoFF.js');
@@ -174,17 +173,17 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             assert(tr.failed, 'should have failed');
-            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
-            assert(!tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should not log standard installation failure message');
-            assert(!tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should not attempt wheel download');
+            assert(!tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should not log standard installation failure message');
+            assert(!tr.stdout.includes('az extension add --name azure-devops'), 'Should not attempt no-deps install');
             done();
         }).catch((err) => {
             done(err);
         });
     });
 
-    it('Should fall back to wheel installation when standard extension install fails', function (done) {
+    it('Should fall back to no-deps installation when standard extension install fails', function (done) {
         this.timeout(timeout);
 
         let tp = path.join(__dirname, 'L0AzureDevOpsExtensionWheelFallback.js');
@@ -192,11 +191,11 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             assert(tr.succeeded, 'should have succeeded');
-            assert(tr.stdout.includes('Azure DevOps extension not found in working environment'), 'Should check if extension is installed');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt standard installation first');
-            assert(tr.stdout.includes('Standard installation of azure-devops extension failed'), 'Should log standard installation failure');
-            assert(tr.stdout.includes('Mock downloadToolWithRetries called'), 'Should download wheel as fallback');
-            assert(tr.stdout.includes('Azure DevOps CLI extension installed successfully from wheel'), 'Should install from wheel successfully');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
+            assert(tr.stdout.includes('az extension add --name azure-devops'), 'Should attempt no-deps installation as fallback');
+            assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionInstalledNoDeps'), 'Should install with no-deps successfully');
             assert(tr.stdout.includes('az login --service-principal'), 'Should login with service principal');
             assert(tr.stdout.includes('az devops configure --defaults organization'), 'Should configure organization');
             assert(tr.stdout.includes('az devops configure --defaults project'), 'Should configure project');
@@ -313,49 +312,52 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
-    it('LateBoundIdToken: Feature Flag ON, Token Present -> Uses Token, Emits Telemetry', async () => {
+    it('LateBoundIdToken: Feature Flag ON, Token Present -> Uses Token, Emits Telemetry', function (done) {
+        this.timeout(timeout);
+
         let tp = path.join(__dirname, 'LateBoundIdToken_FeatureFlagOn_TokenPresent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
 
-        if (!tr.succeeded) {
-            console.log('STDOUT:', tr.stdout);
-            console.log('STDERR:', tr.stderr);
-        }
-
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken, {"connectedService":"AzureRM","idTokenPresent":"true"}') >= 0, 'should emit telemetry with idTokenPresent=true');
-        assert(tr.stdout.indexOf('Using bound idToken from service endpoint.') >= 0, 'should log that it is using bound idToken');
-        assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') === -1, 'should NOT call createOidcToken');
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken, {"connectedService":"AzureRM","idTokenPresent":"true"}') >= 0, 'should emit telemetry with idTokenPresent=true');
+            assert(tr.stdout.indexOf('Using bound idToken from service endpoint.') >= 0, 'should log that it is using bound idToken');
+            assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') === -1, 'should NOT call createOidcToken');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
     });
 
-    it('LateBoundIdToken: Feature Flag ON, Token Missing -> Calls API, Emits Telemetry', async () => {
+    it('LateBoundIdToken: Feature Flag ON, Token Missing -> Calls API, Emits Telemetry', function (done) {
+        this.timeout(timeout);
+
         let tp = path.join(__dirname, 'LateBoundIdToken_FeatureFlagOn_TokenMissing.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
 
-        if (!tr.succeeded) {
-            console.log('STDOUT:', tr.stdout);
-            console.log('STDERR:', tr.stderr);
-        }
-
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken, {"connectedService":"AzureRM","idTokenPresent":"false"}') >= 0, 'should emit telemetry with idTokenPresent=false');
-        assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') >= 0, 'should call createOidcToken');
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken, {"connectedService":"AzureRM","idTokenPresent":"false"}') >= 0, 'should emit telemetry with idTokenPresent=false');
+            assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') >= 0, 'should call createOidcToken');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
     });
 
-    it('LateBoundIdToken: Feature Flag OFF -> Calls API, No Telemetry', async () => {
+    it('LateBoundIdToken: Feature Flag OFF -> Calls API, No Telemetry', function (done) {
+        this.timeout(timeout);
+
         let tp = path.join(__dirname, 'LateBoundIdToken_FeatureFlagOff.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
 
-        if (!tr.succeeded) {
-            console.log('STDOUT:', tr.stdout);
-            console.log('STDERR:', tr.stderr);
-        }
-
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken') === -1, 'should NOT emit LateBoundIdToken telemetry');
-        assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') >= 0, 'should call createOidcToken');
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, LateBoundIdToken') === -1, 'should NOT emit LateBoundIdToken telemetry');
+            assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') >= 0, 'should call createOidcToken');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
     });
 });

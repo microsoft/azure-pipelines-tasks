@@ -15,7 +15,7 @@
   "loc.input.label.addToPath": "Aggiungi a PATH",
   "loc.input.help.addToPath": "Indica se anteporre la versione di Python recuperata alla variabile di ambiente PATH per renderla disponibile in attività o script successivi senza usare la variabile di output.",
   "loc.input.label.architecture": "Architettura",
-  "loc.input.help.architecture": "Architettura di destinazione (x86, x64) dell'interprete Python.",
+  "loc.input.help.architecture": "Architettura di destinazione (x86, x64, arm64) dell'interprete Python.",
   "loc.messages.ListAvailableVersions": "Versioni in %s:",
   "loc.messages.PlatformNotRecognized": "Piattaforma non riconosciuta",
   "loc.messages.PrependPath": "Alla variabile di ambiente PATH verrà anteposta la directory %s",
