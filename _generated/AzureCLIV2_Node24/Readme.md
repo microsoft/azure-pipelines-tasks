@@ -70,9 +70,17 @@ The wrapper around the sanitizer emits an `ArgsValidationFailure` telemetry even
 
 When `EnableAzureCliArgsValidation` is on but all three `AZP_75787_*` flags are off, the sanitizer short-circuits and does nothing.
 
-The sanitizer uses an **allowlist**: only `a-zA-Z0-9 \ _ ' " - = / : . * + %` are accepted. Any other character (e.g. `` ` ``, `$`, `;`, `&`, `|`, `<`, `>`, parentheses, braces, newline) is treated as a violation.
+The sanitizer uses a per-`scriptType` **allowlist** and, where applicable, pre-expands environment variables that the target shell would expand:
 
-For `scriptType: bash`, the task also expands `$VAR` / `${VAR}` references inside `scriptArguments` *before* sanitization, so a value-injected secret like `VAR=";rm -rf /"` is also caught. Other script types (`pscore`, `ps`, `batch`) sanitize the literal `scriptArguments` as written.
+| `scriptType` | Allowlist (everything else is treated as a violation) | Pre-expansion |
+| --- | --- | --- |
+| `bash` | `a-zA-Z0-9 \ _ ' " - = / : . * + %` | `$VAR` / `${VAR}` is resolved from the process env before sanitization, so a value-injected secret like `VAR=";rm -rf /"` is also caught. |
+| `pscore`, `ps` | `\w \ ` `` ` `` ` _ ' " - = / : . * , + ~ ? % \n #`, plus `` ` `` as the escape symbol and `$true` / `$false` (case-insensitive) | `$env:VAR` and `${env:VAR}` references are resolved from the process env before sanitization. PowerShell-native syntax such as `-AzureClientSecret $env:servicePrincipalKey`, `-MyBoolean $True`, multi-line `arguments: >` blocks, and backtick-escaped characters all pass. |
+| `batch` (and anything else) | `a-zA-Z0-9 \ _ ' " - = / : . * + %` | None — the literal `scriptArguments` is sanitized as written. |
+
+For `pscore` / `ps`, characters such as `@`, `(`, `)`, `{`, `}` are still flagged because they let the shell interpret subsequent text in ways that a static allowlist cannot reason about. If you legitimately need one of them, prefix it with a backtick (`` ` ``) to escape it, or move the value into an `env:` block on the task and reference it from inside your script.
+
+When a violation is detected, the error message lists the distinct offending characters (whitespace such as `\n`, `\r`, `\t` is omitted from the message but is still counted in telemetry).
 
 `inlineScript` is *not* validated — inline scripts are arbitrary code that the pipeline author intentionally wrote. `scriptPath` and `cwd` are also not validated; they are path inputs, not shell-spliced.
 
