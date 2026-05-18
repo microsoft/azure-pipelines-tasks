@@ -270,8 +270,7 @@ export class azureclitask {
             if(!visibleAzLogin ){
                 args += ` --output none`;
             }
-            //login using OpenID Connect federation.
-
+            //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
             this.servicePrincipalId = servicePrincipalId;
