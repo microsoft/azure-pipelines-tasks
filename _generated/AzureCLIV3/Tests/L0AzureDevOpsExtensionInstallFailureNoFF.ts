@@ -96,13 +96,6 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
     getSystemAccessToken: () => 'system-token'
 });
 
-tmr.registerMock('azure-pipelines-tool-lib', {
-    downloadToolWithRetries: function(url: string, fileName: string) {
-        console.log('Mock downloadToolWithRetries called');
-        return Promise.resolve('/mock/path/' + fileName);
-    }
-});
-
 tmr.registerMock('./src/Utility', {
     Utility: {
         checkIfAzurePythonSdkIsInstalled: function() {
