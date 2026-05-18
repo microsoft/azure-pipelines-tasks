@@ -22,7 +22,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     which: {},
     exec: {
-        'c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS': {
+        'c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS -Timeout 13': {
             code: 0,
             stdout: 'NuGet output here',
             stderr: '',

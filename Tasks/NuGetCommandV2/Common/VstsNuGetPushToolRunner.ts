@@ -1,12 +1,14 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import {IExecOptions, IExecSyncResult, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
+import Q = require("q");
 
 export interface VstsNuGetPushSettings {
     continueOnConflict: boolean;
+    timeoutInMs?: number;
 }
 
-function initializeExecutionOptions(options: IExecOptions, settings: VstsNuGetPushSettings): IExecOptions {
+function initializeExecutionOptions(options: IExecOptions | undefined, settings: VstsNuGetPushSettings): IExecOptions {
     options = options || <IExecOptions>{};
     if (settings.continueOnConflict)
     {
@@ -43,7 +45,38 @@ export class VstsNuGetPushToolRunner extends ToolRunner {
     public exec(options?: IExecOptions): Q.Promise<number> {
         options = initializeExecutionOptions(options, this.settings);
 
-        return super.exec(options);
+        const timeoutInMs = this.settings.timeoutInMs;
+        if (timeoutInMs === undefined) {
+            return super.exec(options);
+        }
+
+        const deferred = Q.defer<number>();
+        let timedOut = false;
+        const timeoutHandle = setTimeout(() => {
+            timedOut = true;
+            tl.debug(`VstsNuGetPush.exe timed out after ${timeoutInMs} ms. Terminating process.`);
+            this.killChildProcess();
+        }, timeoutInMs);
+
+        super.exec(options).then((result: number) => {
+            clearTimeout(timeoutHandle);
+            if (timedOut) {
+                deferred.reject(new Error(tl.loc("Error_PublishRequestTimedOut", timeoutInMs.toString())));
+                return;
+            }
+
+            deferred.resolve(result);
+        }, (error: Error) => {
+            clearTimeout(timeoutHandle);
+            if (timedOut) {
+                deferred.reject(new Error(tl.loc("Error_PublishRequestTimedOut", timeoutInMs.toString())));
+                return;
+            }
+
+            deferred.reject(error);
+        }).done();
+
+        return deferred.promise;
     }
 }
 

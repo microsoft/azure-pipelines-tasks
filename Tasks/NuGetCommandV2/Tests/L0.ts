@@ -199,6 +199,7 @@ describe('NuGetCommand Suite', function () {
         const tr = new ttm.MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS -Timeout 13'), 'it should pass timeout to nuget.exe push');
         assert(tr.stdOutContained('validated packaging request timeout'), 'it should pass timeout to getPackagingUris');
         assert(tr.stdOutContained('validated service connection request timeout'), 'it should pass timeout to sendRequest');
         assert(tr.succeeded, 'should have succeeded');
@@ -237,6 +238,15 @@ describe('NuGetCommand Suite', function () {
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/packagesource -AccessToken token -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('VstsNuGetPush output here'), 'should have VstsNuGetPush output');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('push uses request timeout for VstsNuGetPush execution', async () => {
+        const tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushRequestTimeout.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.stdOutContained('validated VstsNuGetPush timeout'), 'it should pass timeout to VstsNuGetPush settings');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });

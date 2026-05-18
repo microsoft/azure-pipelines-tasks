@@ -108,6 +108,7 @@
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "L'option Permettre d'ignorer les doublons est disponible uniquement sur Azure Pipelines. Si NuGet.exe détecte un conflit, l'exécution de la tâche se solde par un échec.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "L'option Permettre d'ignorer les doublons est disponible uniquement sur les agents Windows. Si NuGet.exe détecte un conflit, l'exécution de la tâche se solde par un échec.",
   "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+  "loc.messages.Error_PublishRequestTimedOut": "Package publish timed out after %s milliseconds.",
   "loc.messages.Error_CommandNotRecognized": "La commande %s n'a pas été reconnue.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.",
   "loc.messages.Error_ExpectedConfigurationElement": "Contenu xml non valide. L'élément nommé 'configuration' est attendu.",
