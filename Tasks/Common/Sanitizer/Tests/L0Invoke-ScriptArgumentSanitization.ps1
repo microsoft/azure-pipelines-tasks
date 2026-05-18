@@ -1,4 +1,4 @@
-# Unit tests for Invoke-ScriptArgumentSanitization dispatcher (added by MSRC 115118 / PR #22163).
+# Unit tests for Invoke-ScriptArgumentSanitization dispatcher (added by MSRC 115118 / PR #22171).
 #
 # Mirrors the precedent set by Tasks/SqlAzureDacpacDeploymentV1/Tests/L0SecurityFunctions.ps1
 # (PR #21947): each scenario configures Register-Mock for Get-SanitizerCallStatus,
