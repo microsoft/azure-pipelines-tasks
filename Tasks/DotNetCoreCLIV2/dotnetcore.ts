@@ -5,7 +5,6 @@ import fs = require("fs");
 import ltx = require("ltx");
 import * as JSON5 from 'json5';
 var archiver = require('archiver');
-var uuidV4 = require('uuid/v4');
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
     require("dns").setDefaultResultOrder("ipv4first");
