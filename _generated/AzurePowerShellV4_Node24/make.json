@@ -19,6 +19,10 @@
         {
             "module": "../Common/TlsHelper_",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
         }
     ],
     "externals": {
