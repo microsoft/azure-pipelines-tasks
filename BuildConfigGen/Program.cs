@@ -49,7 +49,7 @@ namespace BuildConfigGen
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
                 ["typescript"] = "^5.7.2",
-                ["azure-pipelines-task-lib"] = "^5.2.10",
+                ["azure-pipelines-task-lib"] = "^5.2.6",
                 ["azure-devops-node-api"] = "^15.1.3",
                 ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
                 ["azure-pipelines-tasks-azure-arm-rest"] = "^3.274.0",
