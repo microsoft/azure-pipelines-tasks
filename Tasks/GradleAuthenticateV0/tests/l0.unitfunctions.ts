@@ -7,7 +7,7 @@ import * as http from 'http';
 import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl } from '../src/constants';
+import { normalizeUrl } from '../src/urlUtils';
 import { generateInitScript } from '../src/initScript';
 import { extractPluginVersion, discoverFeedUrls } from '../src/buildFileScanner';
 import { probeFeedTenantId } from '../src/authConfig';

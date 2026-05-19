@@ -3,7 +3,7 @@
   "id": "74983ddf-9889-4b8b-bac1-9e1255a36ff9",
   "name": "GradleAuthenticate",
   "friendlyName": "Gradle Authenticate",
-  "description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or a user-provided access token.",
+  "description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or an access token.",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/gradle-authenticate)",
   "helpUrl": "https://aka.ms/gradle-authenticate",
   "category": "Package",
@@ -47,7 +47,7 @@
       "type": "connectedService:workloadidentityuser",
       "label": "Service connection",
       "required": false,
-      "helpMarkDown": "Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the user must provide an access token via the ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable."
+      "helpMarkDown": "Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the task uses the SYSTEM_ACCESSTOKEN or ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable for authentication."
     },
     {
       "name": "pluginToolVersion",

@@ -36,7 +36,7 @@ steps:
 steps:
 - task: GradleAuthenticate@0
   inputs:
-    repositoryUrl: 'https://pkgs.dev.azure.com/myorg/myproject/_packaging/myfeed/maven/v1'
+    repositoryUrl: https://pkgs.dev.azure.com/myorg/myproject/_packaging/myfeed/maven/v1
 ```
 
 ### Multiple feed URLs
@@ -75,9 +75,9 @@ steps:
 
 | Input | Required | Description |
 |---|---|---|
-| `buildFiles` | No | Newline-separated list of Gradle build files to scan for `pkgs.dev.azure.com` URLs. Should include `settings.gradle` for plugin version discovery. |
+| `buildFiles` | No | Newline-separated list of Gradle build files to scan for `pkgs.dev.azure.com` URLs. Paths are resolved relative to the working directory; globbing is not supported. Should include `settings.gradle` for plugin version discovery. |
 | `repositoryUrl` | No | Newline-separated list of explicit Azure Artifacts repository URLs to authenticate, in addition to any discovered from build files. |
-| `adoServiceConnection` | No | Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the task uses `SYSTEM_ACCESSTOKEN` or `ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN`. |
+| `adoServiceConnection` | No | Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the task uses the `SYSTEM_ACCESSTOKEN` or `ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN` environment variable for authentication. |
 | `pluginToolVersion` | No | Override the credprovider plugin version. Use when `settings.gradle` does not declare the plugin or when version resolution fails. |
 | `gradleUserHome` | No | Override the Gradle user home directory. Defaults to `~/.gradle`. The init script is written to `<gradleUserHome>/init.d/`. |
 

@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl, AZURE_ARTIFACTS_URL_PATTERN } from './constants';
+import { normalizeUrl, AZURE_ARTIFACTS_URL_PATTERN } from './urlUtils';
 
 /**
  * Feed URL entry discovered from build files or task inputs.

@@ -4,7 +4,8 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { discoverPluginVersions } from './buildFileScanner';
 import { getJarVersion } from './ciJarResolver';
-import { DEFAULT_VERSION } from './constants';
+
+const DEFAULT_VERSION = '1.0.0';
 
 interface VersionInputs {
     buildFiles: string[];

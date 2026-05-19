@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl } from './constants';
+import { normalizeUrl } from './urlUtils';
 
 /**
  * Auth config entry for one feed, written to azure-artifacts-auth-config.json.

@@ -12,11 +12,11 @@ import { layoutMavenRepo } from './mavenLayout';
 import { generateInitScript } from './initScript';
 import { resolveVersions } from './versionResolver';
 import { emitTelemetry } from './telemetry';
-import { isAzureArtifactsUrl } from './constants';
+import { isAzureArtifactsUrl } from './urlUtils';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-const INIT_SCRIPT_NAME = `azure-artifacts-auth-${process.pid}.gradle`;
+const INIT_SCRIPT_NAME = 'azure-artifacts-init.gradle';
 const AUTH_CONFIG_NAME = 'azure-artifacts-auth-config.json';
 
 async function run(): Promise<void> {
@@ -30,6 +30,8 @@ async function run(): Promise<void> {
 
         isWifServiceConnection = !!inputs.adoServiceConnection;
 
+        // Scan build files for Azure Artifacts feed URLs and merge with any
+        // explicit repositoryUrl inputs. Returns deduplicated feed entries.
         const feeds = discoverFeedUrls(inputs.buildFiles, inputs.repositoryUrls);
         feedCount = feeds.length;
         logFeeds(feeds);
@@ -130,15 +132,18 @@ function readInputs(): TaskInputs | null {
         return null;
     }
 
+    const validUrls: string[] = [];
     for (const url of repositoryUrls) {
         if (!isAzureArtifactsUrl(url)) {
             tl.warning(tl.loc('Warning_RepositoryUrlNotAzureArtifacts', url));
+        } else {
+            validUrls.push(url);
         }
     }
 
     return {
         buildFiles,
-        repositoryUrls,
+        repositoryUrls: validUrls,
         adoServiceConnection: tl.getInput('adoServiceConnection', false) || '',
         pluginToolVersion: tl.getInput('pluginToolVersion', false) || '',
         gradleUserHome: tl.getInput('gradleUserHome', false) || getDefaultGradleUserHome(),
