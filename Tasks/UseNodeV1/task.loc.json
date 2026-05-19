@@ -36,6 +36,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionFilePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionFilePath"
+    },
+    {
       "name": "checkLatest",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkLatest",
