@@ -10,7 +10,7 @@ const DEFAULT_VERSION = '1.0.0';
 interface VersionInputs {
     buildFiles: string[];
     pluginToolVersion: string;
-    ciJarPath: string | null;
+    ciJarPath: string;
 }
 
 export interface VersionResult {
@@ -28,7 +28,7 @@ export interface VersionResult {
  * 4. Default dummy version (the version is only used for the local file://
  *    Maven repo layout — any value works)
  */
-export function resolveVersions(inputs: VersionInputs): VersionResult | null {
+export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
     const versions = discoverPluginVersions(inputs.buildFiles);
 
     if (versions.length > 0) {

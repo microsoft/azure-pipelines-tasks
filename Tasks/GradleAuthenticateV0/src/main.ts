@@ -10,8 +10,8 @@ import { writeAuthConfig, buildAuthEntries } from './authConfig';
 import { resolveCiJar } from './ciJarResolver';
 import { layoutMavenRepo } from './mavenLayout';
 import { generateInitScript } from './initScript';
-import { resolveVersions } from './versionResolver';
-import { emitTelemetry } from './telemetry';
+import { resolvePluginVersions } from './versionResolver';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { isAzureArtifactsUrl } from './urlUtils';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -26,7 +26,6 @@ async function run(): Promise<void> {
 
     try {
         const inputs = readInputs();
-        if (!inputs) return;
 
         isWifServiceConnection = !!inputs.adoServiceConnection;
 
@@ -37,14 +36,9 @@ async function run(): Promise<void> {
         logFeeds(feeds);
 
         const ciJarPath = resolveCiJar();
-        if (!ciJarPath) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('Error_CouldNotResolveCiJar'));
-            return;
-        }
         console.log(tl.loc('Info_CiJarResolved', ciJarPath));
 
-        const versionResult = resolveVersions({ ...inputs, ciJarPath });
-        if (!versionResult) return;
+        const versionResult = resolvePluginVersions({ ...inputs, ciJarPath });
 
         const versions = versionResult.versions;
         versionSource = versionResult.source;
@@ -118,7 +112,7 @@ interface TaskInputs {
     gradleUserHome: string;
 }
 
-function readInputs(): TaskInputs | null {
+function readInputs(): TaskInputs {
     let buildFiles = splitLines(tl.getInput('buildFiles', false) || '');
     const repositoryUrls = [...new Set(splitLines(tl.getInput('repositoryUrl', false) || ''))];
 
@@ -128,8 +122,7 @@ function readInputs(): TaskInputs | null {
     }
 
     if (buildFiles.length === 0 && repositoryUrls.length === 0) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('Error_NoBuildFilesOrRepoUrls'));
-        return null;
+        throw new Error(tl.loc('Error_NoBuildFilesOrRepoUrls'));
     }
 
     const validUrls: string[] = [];

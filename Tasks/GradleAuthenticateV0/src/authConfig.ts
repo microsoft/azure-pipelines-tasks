@@ -7,6 +7,8 @@ import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { normalizeUrl } from './urlUtils';
 
+const RESOURCE_TENANT_HEADER = 'x-vss-resourcetenant';
+
 /**
  * Auth config entry for one feed, written to azure-artifacts-auth-config.json.
  */
@@ -63,22 +65,25 @@ export function writeAuthConfig(configPath: string, newEntries: FeedAuthEntry[])
  * header, which contains the tenant ID that owns the feed. This may differ
  * from the service connection's tenant in cross-org scenarios.
  */
-export function probeFeedTenantId(feedUrl: string): Promise<string | null> {
-    return new Promise((resolve) => {
-        const mod = feedUrl.startsWith('https') ? https : http;
-        const req = mod.get(feedUrl, { timeout: 10_000 }, (res) => {
-            const tenantHeader = res.headers['x-vss-resourcetenant'];
-            if (tenantHeader) {
-                const value = Array.isArray(tenantHeader) ? tenantHeader[0] : tenantHeader;
-                resolve(value || null);
-            } else {
-                resolve(null);
-            }
-            res.resume();
+export async function probeFeedTenantId(feedUrl: string): Promise<string | null> {
+    const mod = feedUrl.startsWith('https') ? https : http;
+    try {
+        const tenantHeader = await new Promise<string | string[] | undefined>((resolve, reject) => {
+            const req = mod.get(feedUrl, { timeout: 10_000 }, (res) => {
+                resolve(res.headers[RESOURCE_TENANT_HEADER]);
+                res.resume();
+            });
+            req.on('error', reject);
+            req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
         });
-        req.on('error', () => resolve(null));
-        req.on('timeout', () => { req.destroy(); resolve(null); });
-    });
+        if (tenantHeader) {
+            const value = Array.isArray(tenantHeader) ? tenantHeader[0] : tenantHeader;
+            return value || null;
+        }
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 /**

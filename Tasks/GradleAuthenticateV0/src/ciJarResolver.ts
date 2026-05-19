@@ -10,7 +10,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
  * 1. GRADLE_CREDPROVIDER_HOME env var — optional override (usually unset)
  * 2. Bundled JAR shipped with the task (primary source, downloaded at build time from externals)
  */
-export function resolveCiJar(): string | null {
+export function resolveCiJar(): string {
     // Check override first
     const credproviderHome = process.env['GRADLE_CREDPROVIDER_HOME'];
     if (credproviderHome) {
@@ -29,8 +29,7 @@ export function resolveCiJar(): string | null {
         return jar;
     }
 
-    tl.error(tl.loc('Error_NoCiJarFound'));
-    return null;
+    throw new Error(tl.loc('Error_NoCiJarFound'));
 }
 
 /**
