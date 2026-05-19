@@ -36,6 +36,13 @@
       "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
     },
     {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "Version File Path",
+      "required": false,
+      "helpMarkDown": "File path to get version.  Example: src/.nvmrc"
+    },
+    {
       "name": "checkLatest",
       "type": "boolean",
       "label": "Check for Latest Version",
