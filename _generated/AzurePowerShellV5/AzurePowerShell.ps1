@@ -1,6 +1,8 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
 # Get inputs.
 $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
@@ -28,6 +30,17 @@ if ($scriptType -eq "FilePath") {
 
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
+}
+
+# Sanitize script arguments to prevent PowerShell command injection.
+# No-op unless BOTH the org-level "Enable shell tasks arguments validation"
+# toggle and the per-task pipeline feature flag are enabled.
+# See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
+if ($scriptType -ne "InlineScript") {
+    Invoke-ScriptArgumentSanitization `
+        -InputArgs $scriptArguments `
+        -TaskName 'AzurePowerShellV5' `
+        -PipelineFeatureFlagName 'EnableAzurePowerShellArgumentsSanitization'
 }
 
 # string constants
