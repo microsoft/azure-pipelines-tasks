@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Use Node $(versionSpec)",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0",
+  "loc.input.label.versionFilePath": "Version File Path",
+  "loc.input.help.versionFilePath": "File path to get version.  Example: src/.nvmrc",
   "loc.input.label.checkLatest": "Check for Latest Version",
   "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
   "loc.input.label.force32bit": "Use 32 bit version on x64 agents",
