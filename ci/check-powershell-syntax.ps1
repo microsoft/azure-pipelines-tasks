@@ -1,6 +1,14 @@
 # Description: Checks the PowerShell syntax of the script using PSScriptAnalyzer.
 param([String]$pathToBuiltTasks)
 
+$internalFeedUrl = "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/powershell-modules/nuget/v2"
+$internalRepoName = "AzDO-PSModules"
+
+# Register internal Azure Artifacts feed as PS repository (avoids external network calls to PSGallery)
+if (-Not (Get-PSRepository -Name $internalRepoName -ErrorAction SilentlyContinue)) {
+    Register-PSRepository -Name $internalRepoName -SourceLocation $internalFeedUrl -InstallationPolicy Trusted
+}
+
 function Get-AnalyzerSettings() {
   return @{
     Severity=@('Error', 'Warning', 'Information', 'ParseError', 'ParseWarning')
@@ -37,7 +45,7 @@ function Invoke-AnalyzerToTask() {
   $module = Get-Module -Name "PSScriptAnalyzer";
   if ($module -eq $null) {
     Write-Host "Installing PSScriptAnalyzer module..."
-    Install-Module -Name "PSScriptAnalyzer" -Scope CurrentUser -Force
+    Install-Module -Name "PSScriptAnalyzer" -Scope CurrentUser -Force -Repository $internalRepoName
   }
   
   Write-Host "Running PSScriptAnalyzer for $taskPath."
@@ -106,7 +114,7 @@ function main() {
   $module = Get-Module -Name "Newtonsoft.Json";
   if ($module -eq $null) {
     Write-Host "Installing Newtonsoft.Json module..."
-    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Force
+    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Force -Repository $internalRepoName
   }
 
   # Get the tasks which have a PowerShell handler.
