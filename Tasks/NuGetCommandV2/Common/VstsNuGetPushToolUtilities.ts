@@ -4,6 +4,7 @@ import * as commandHelper from "azure-pipelines-tasks-packaging-common/nuget/Com
 
 export function getBundledVstsNuGetPushLocation(): string {
     const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.19.0/tools"];
+    //const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.21.0/tools"];
 
     const toolPath = commandHelper.locateTool("VstsNuGetPush",
     <commandHelper.LocateOptions>{

@@ -13,7 +13,7 @@ tmr.setInput('searchPatternPush', 'foo.nupkg');
 tmr.setInput('nuGetFeedType', 'internal');
 tmr.setInput('feedPublish', 'FeedFooId');
 tmr.setInput('allowPackageConflicts', 'false');
-tmr.setInput('requestTimeout', '42');
+tmr.setInput('requestTimeout', '-1');
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     osType: {},
@@ -21,13 +21,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'c:\\agent\\home\\directory\\foo.nupkg': true,
     },
     which: {},
-    exec: {
-        'c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS -Timeout 42': {
-            code: 0,
-            stdout: 'NuGet output here',
-            stderr: '',
-        },
-    },
+    exec: {},
     exist: {},
     stats: {
         'c:\\agent\\home\\directory\\foo.nupkg': {

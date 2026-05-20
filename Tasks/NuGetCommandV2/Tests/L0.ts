@@ -194,39 +194,23 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
-    it('push uses request timeout for publish HTTP calls', async () => {
+    it('push passes -Timeout flag to nuget.exe when requestTimeout is set', async () => {
         const tp = path.join(__dirname, './PublishTests/internalFeedNuGetRequestTimeout.js')
         const tr = new ttm.MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.stdOutContained('validated packaging request timeout'), 'it should pass timeout to getPackagingUris');
-        assert(tr.stdOutContained('validated service connection request timeout'), 'it should pass timeout to sendRequest');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS -Timeout 42'), 'nuget.exe should have been called with -Timeout 42');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
-    it('push without request timeout preserves previous HTTP behavior', async () => {
-        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetNoRequestTimeout.js')
+    it('push fails with a clear error when requestTimeout is invalid', async () => {
+        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetInvalidRequestTimeout.js')
         const tr = new ttm.MockTestRunner(tp);
         await tr.runAsync();
-        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.stdOutContained('validated packaging request uses default behavior'), 'it should not pass timeout to getPackagingUris');
-        assert(tr.stdOutContained('validated service connection request uses default behavior'), 'it should not pass timeout to sendRequest');
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
-    });
-
-    it('push with negative request timeout warns and preserves previous HTTP behavior', async () => {
-        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetNegativeRequestTimeout.js')
-        const tr = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.stdOutContained('validated negative timeout uses default packaging behavior'), 'it should not pass timeout to getPackagingUris');
-        assert(tr.stdOutContained('validated negative timeout uses default service connection behavior'), 'it should not pass timeout to sendRequest');
-        assert.equal(tr.warningIssues.length, 1, 'should have one warning');
-        assert.equal(tr.warningIssues[0], 'loc_mock_Warning_NegativeRequestTimeoutIgnored -1', 'should warn that negative requestTimeout is ignored');
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+        assert(tr.failed, 'should have failed');
+        assert(tr.invokedToolCount == 0, 'should not have invoked nuget.exe');
+        assert(tr.stdout.indexOf('loc_mock_Error_InvalidRequestTimeout') >= 0, 'should report invalid requestTimeout');
     });
 
     it('pushes successfully to internal feed using VstsNuGetPush.exe', async () => {
