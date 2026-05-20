@@ -75,17 +75,17 @@ steps:
 
 | Input | Required | Description |
 |---|---|---|
-| `buildFiles` | No | Newline-separated list of Gradle build files to scan for `pkgs.dev.azure.com` URLs. Paths are resolved relative to the working directory; globbing is not supported. Should include `settings.gradle` for plugin version discovery. |
+| `buildFiles` | No | Newline-separated list of Gradle build files to scan for Azure Artifacts repository URLs (`pkgs.dev.azure.com` and legacy `<org>.pkgs.visualstudio.com`). Paths are resolved relative to the working directory; globbing is not supported. Should include `settings.gradle` for plugin version discovery. |
 | `repositoryUrl` | No | Newline-separated list of explicit Azure Artifacts repository URLs to authenticate, in addition to any discovered from build files. |
 | `adoServiceConnection` | No | Azure DevOps service connection for Workload Identity Federation (WIF). If omitted, the task uses the `SYSTEM_ACCESSTOKEN` or `ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN` environment variable for authentication. |
-| `pluginToolVersion` | No | Override the credprovider plugin version. Use when `settings.gradle` does not declare the plugin or when version resolution fails. |
+| `pluginToolVersion` | No | Override the credential provider plugin version. Use when `settings.gradle` does not declare the plugin or when version resolution fails. |
 | `gradleUserHome` | No | Override the Gradle user home directory. Defaults to `~/.gradle`. The init script is written to `<gradleUserHome>/init.d/`. |
 
 At least one of `buildFiles` or `repositoryUrl` must be provided.
 
 ## How it works
 
-1. **Feed discovery** — Scans the provided build files for `pkgs.dev.azure.com` URLs and merges them with any explicit `repositoryUrl`.
+1. **Feed discovery** — Scans the provided build files for Azure Artifacts repository URLs (`pkgs.dev.azure.com` and legacy `<org>.pkgs.visualstudio.com`) and merges them with any explicit `repositoryUrl`.
 2. **CI JAR resolution** — Locates the Azure Artifacts Gradle credential provider JAR from the bundled externals shipped with the task. Set `GRADLE_CREDPROVIDER_HOME` to override the JAR location.
 3. **Version resolution** — Determines the plugin version from build files, the `pluginToolVersion` input, or the JAR filename.
 4. **Maven repo layout** — Creates a local Maven repository containing the credential provider JAR so Gradle can resolve the plugin without network access.
