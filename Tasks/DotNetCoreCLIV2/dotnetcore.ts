@@ -178,10 +178,10 @@ export class dotNetExe {
 
         while (true) {
             const candidate = path.join(searchDir, 'global.json');
-            tl.debug(`Checking for global.json file at: ${candidate}`);
+            tl.debug(`Checking for global.json at: ${candidate}`);
 
             if (tl.exist(candidate)) {
-                tl.debug(`Found global.json file at: ${candidate}`);
+                tl.debug(`Found global.json at: ${candidate}`);
                 return candidate;
             }
 
