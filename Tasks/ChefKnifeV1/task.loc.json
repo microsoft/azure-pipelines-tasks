@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 235,
-    "Patch": 1
+    "Minor": 275,
+    "Patch": 8
   },
   "deprecated": true,
   "removalDate": "2024-01-31",

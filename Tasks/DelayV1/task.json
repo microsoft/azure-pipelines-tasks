@@ -15,10 +15,10 @@
         "Server"
     ],
     "version": {
-        "Major": 1,
-        "Minor": 241,
-        "Patch": 0
-    },
+    "Major": 1,
+    "Minor": 275,
+    "Patch": 8
+  },
     "inputs": [
         {
             "name": "delayForMinutes",
