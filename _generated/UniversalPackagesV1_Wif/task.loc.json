@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 3
+    "Minor": 275,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -212,8 +212,8 @@
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   },
   "_buildConfigMapping": {
-    "Default": "1.274.2",
+    "Default": "1.275.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.274.3"
+    "wif_242": "1.275.1"
   }
 }
