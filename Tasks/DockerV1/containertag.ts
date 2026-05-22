@@ -14,6 +14,13 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
     if (qualifySourceImageName) {
         sourceImage = connection.getQualifiedImageNameIfRequired(sourceImage);
     }
+
+    // Skip if source and target resolved to the same image
+    if (sourceImage === targetImage) {
+        tl.debug(`Skipping tag — source and target are identical: ${sourceImage}`);
+        return Q.resolve();
+    }
+
     command.arg(sourceImage);
     command.arg(targetImage);
 

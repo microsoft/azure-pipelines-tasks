@@ -233,10 +233,10 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.qualifySourceImageName] = "true";
         await tr.runAsync();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool since source and target are identical. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker tag should run");
+        assert(tr.stdout.indexOf(`Skipping tag`) != -1, "should log skip message when source and target are identical");
         console.log(tr.stderr);
     });
 
@@ -248,7 +248,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = 'test/test:v1';
         await tr.runAsync();
 
-        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time (skips self-tag). actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker tag test/test:latest test/test:v1`) != -1, "docker tag should run");
