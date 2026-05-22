@@ -13,7 +13,7 @@ tmr.setInput('searchPatternPush', 'foo.nupkg');
 tmr.setInput('nuGetFeedType', 'internal');
 tmr.setInput('feedPublish', 'FeedFooId');
 tmr.setInput('allowPackageConflicts', 'false');
-tmr.setInput('requestTimeout', '-1');
+tmr.setInput('requestTimeout', 'not-a-number');
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     osType: {},
