@@ -16,10 +16,10 @@
         "ServerGate"
     ],
     "version": {
-        "Major": 0,
-        "Minor": 241,
-        "Patch": 0
-    },
+    "Major": 0,
+    "Minor": 275,
+    "Patch": 8
+  },
     "instanceNameFormat": "Query Work Items",
     "groups": [
         {

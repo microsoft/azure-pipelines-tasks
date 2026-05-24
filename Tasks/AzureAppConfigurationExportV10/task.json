@@ -8,10 +8,10 @@
     "category": "Deploy",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 10,
-        "Minor": 275,
-        "Patch": 0
-    },
+    "Major": 10,
+    "Minor": 275,
+    "Patch": 8
+  },
     "instanceNameFormat": "Azure App Configuration",
     "minimumAgentVersion": "2.144.0",
     "inputs": [

@@ -19,10 +19,10 @@
         "ServerGate"
     ],
     "version": {
-        "Major": 0,
-        "Minor": 234,
-        "Patch": 0
-    },
+    "Major": 0,
+    "Minor": 275,
+    "Patch": 8
+  },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],
     "inputs": [

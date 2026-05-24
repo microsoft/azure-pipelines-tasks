@@ -8,10 +8,10 @@
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 242,
-        "Patch": 0
-    },
+    "Major": 1,
+    "Minor": 275,
+    "Patch": 8
+  },
     "groups": [],
     "demands": [],
     "preview": false,
