@@ -14,10 +14,10 @@
         "Server"
     ],
     "version": {
-    "Major": 8,
-    "Minor": 275,
-    "Patch": 8
-  },
+        "Major": 8,
+        "Minor": 241,
+        "Patch": 0
+    },
     "inputs": [
         {
             "name": "instructions",
