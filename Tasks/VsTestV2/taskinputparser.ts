@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as os from 'os';
 import * as models from './models';
 import * as utils from './helpers';
 import * as constants from './constants';
@@ -118,6 +119,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
 
+    const agentArch = os.arch();
+    testConfiguration.vstestArchitecture = tl.getInput('vstestArchitecture') || (agentArch === 'arm64' ? 'arm64' : 'x64');
+    console.log(tl.loc('vstestArchitectureInput', testConfiguration.vstestArchitecture));
+
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
 
@@ -177,6 +182,18 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     if (tl.getBoolInput('uiTests') && testConfiguration.runInParallel) {
         tl.warning(tl.loc('uitestsparallel'));
+    }
+
+    if (agentArch === 'arm64' && testConfiguration.vstestArchitecture !== 'arm64') {
+        tl.warning(tl.loc('arm64AgentWithX64Architecture', testConfiguration.vstestArchitecture));
+    }
+    if (testConfiguration.vstestArchitecture === 'arm64' &&
+        testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString &&
+        testConfiguration.vsTestVersion &&
+        testConfiguration.vsTestVersion.toLowerCase() !== 'latest' &&
+        testConfiguration.vsTestVersion.toLowerCase() !== 'toolsinstaller' &&
+        parseFloat(testConfiguration.vsTestVersion) < 17.0) {
+        tl.warning(tl.loc('arm64RequiresVS2022', testConfiguration.vsTestVersion));
     }
 
     testConfiguration.taskInstanceIdentifier = uuid.v1();

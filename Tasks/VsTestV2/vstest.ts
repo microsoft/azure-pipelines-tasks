@@ -152,6 +152,10 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         argsArray.push('/InIsolation');
     }
 
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture)) {
+        argsArray.push('/Platform:' + vstestConfig.vstestArchitecture);
+    }
+
     argsArray.push('/logger:trx');
     if (utils.Helper.isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (vstestConfig.testDropLocation && isTestAdapterPresent(vstestConfig.testDropLocation)) {

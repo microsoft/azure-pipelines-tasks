@@ -44,7 +44,8 @@ export interface TestConfigurations {
     rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
     proxyConfiguration: ProxyConfiguration;
-    diagnosticsConfiguration: DiagnosticsConfiguration
+    diagnosticsConfiguration: DiagnosticsConfiguration;
+    vstestArchitecture: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {

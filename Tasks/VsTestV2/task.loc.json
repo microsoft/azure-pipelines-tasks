@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
+    "Minor": 275,
     "Patch": 0
   },
   "demands": [
@@ -303,6 +303,20 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "vstestArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vstestArchitecture",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestArchitecture",
+      "groupName": "executionOptions",
+      "options": {
+        "x86": "x86",
+        "x64": "x64",
+        "arm64": "arm64"
+      }
     },
     {
       "name": "distributionBatchType",
@@ -663,6 +677,10 @@
     "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion",
     "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
-    "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
+    "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests",
+    "vstestArchitectureInput": "ms-resource:loc.messages.vstestArchitectureInput",
+    "Arm64VstestNotFound": "ms-resource:loc.messages.Arm64VstestNotFound",
+    "arm64AgentWithX64Architecture": "ms-resource:loc.messages.arm64AgentWithX64Architecture",
+    "arm64RequiresVS2022": "ms-resource:loc.messages.arm64RequiresVS2022"
   }
 }

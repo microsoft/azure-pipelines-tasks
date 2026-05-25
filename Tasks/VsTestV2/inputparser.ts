@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import * as os from 'os';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as ci from './cieventlogger';
@@ -391,6 +392,38 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     if (serverBasedRun && inputDataContract.ExecutionSettings.AdditionalConsoleParameters) {
         tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
         inputDataContract.ExecutionSettings.AdditionalConsoleParameters = null;
+    }
+
+    // Inject /Platform: into AdditionalConsoleParameters so the test host architecture
+    // is honoured in ALL execution modes (single-agent Hydra, multi-agent DTA, and rerun).
+    // This is appended AFTER the user's otherConsoleOptions are processed (and possibly
+    // cleared for server-based runs), so it is always present regardless of run mode.
+    const agentArch = os.arch();
+    const vstestArchitecture = tl.getInput('vstestArchitecture') || (agentArch === 'arm64' ? 'arm64' : 'x64');
+    console.log(tl.loc('vstestArchitectureInput', vstestArchitecture));
+    const platformFlag = '/Platform:' + vstestArchitecture;
+    inputDataContract.ExecutionSettings.AdditionalConsoleParameters =
+        inputDataContract.ExecutionSettings.AdditionalConsoleParameters
+            ? inputDataContract.ExecutionSettings.AdditionalConsoleParameters + ' ' + platformFlag
+            : platformFlag;
+
+    // Warn if the agent is ARM64 but the user explicitly overrode the architecture to a non-arm64 value.
+    if (agentArch === 'arm64' && vstestArchitecture !== 'arm64') {
+        tl.warning(tl.loc('arm64AgentWithX64Architecture', vstestArchitecture));
+    }
+
+    // Warn if arm64 is selected with a VS version that does not support it (pre-17.0).
+    if (vstestArchitecture === 'arm64') {
+        const vsTestLocationMethod = tl.getInput('vstestLocationMethod');
+        if (vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+            const vsTestVersion = tl.getInput('vsTestVersion');
+            if (!utils.Helper.isNullEmptyOrUndefined(vsTestVersion) &&
+                vsTestVersion.toLowerCase() !== 'latest' &&
+                vsTestVersion.toLowerCase() !== 'toolsinstaller' &&
+                parseFloat(vsTestVersion) < 17.0) {
+                tl.warning(tl.loc('arm64RequiresVS2022', vsTestVersion));
+            }
+        }
     }
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
