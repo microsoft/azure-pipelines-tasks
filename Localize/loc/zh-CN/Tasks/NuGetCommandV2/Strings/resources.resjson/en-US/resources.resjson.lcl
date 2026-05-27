@@ -263,10 +263,13 @@
       </Item>
       <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          <Val><![CDATA[Optionally provide a timeout, in seconds, for the package publish operation. Must be a non-negative integer. Capped at 600 seconds (10 minutes). If omitted, the default timeout is used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[(可选)为任务在发布包时发出的 HTTP 请求提供超时值。该值以毫秒为单位。如果省略或提供负值，任务将使用服务默认行为。不能超过 600000 毫秒(10 分钟)。]]></Val>
+            <Val><![CDATA[(可选)提供包发布操作的超时时间(秒)。必须为非负整数。上限为 600 秒(10 分钟)。如果省略，则使用默认超时时间。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -581,10 +584,13 @@
       </Item>
       <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Set timeout for package publish request]]></Val>
+          <Val><![CDATA[Timeout for package publish (seconds)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[设置包发布请求的超时时间]]></Val>
+            <Val><![CDATA[包发布超时时间(秒)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Set timeout for package publish request]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1227,6 +1233,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_InvalidRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid requestTimeout value '%s'. Provide a non-negative integer (seconds). NuGet's default timeout of 300 seconds will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[忽略无效的 requestTimeout 值“%s”。请提供非负整数(秒)。将使用 NuGet 默认的 300 秒超时时间。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_MoreThanOneVersionInBuildNumber" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.]]></Val>
@@ -1238,10 +1253,13 @@
       </Item>
       <Item ItemId=";loc.messages.Warning_NegativeRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
+          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. NuGet's default timeout of 300 seconds will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[忽略 requestTimeout 负值“%s”。任务将使用默认服务行为。]]></Val>
+            <Val><![CDATA[忽略 requestTimeout 负值“%s”。将使用 NuGet 默认的 300 秒超时时间。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
