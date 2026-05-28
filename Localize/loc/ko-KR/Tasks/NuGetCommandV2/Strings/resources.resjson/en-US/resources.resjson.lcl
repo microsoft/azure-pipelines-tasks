@@ -263,10 +263,13 @@
       </Item>
       <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          <Val><![CDATA[Optionally provide a timeout, in seconds, for the package publish operation. Must be a non-negative integer. Capped at 600 seconds (10 minutes). If omitted, the default timeout is used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[패키지를 게시하는 동안 작업이 수행하는 HTTP 요청에 대한 시간 제한 값을 선택적으로 지정합니다. 값은 밀리초 단위입니다. 생략하거나 음수 값을 지정하면 작업에서 서비스 기본 동작을 사용합니다. 600,000밀리초(10분)를 초과할 수 없습니다.]]></Val>
+            <Val><![CDATA[필요에 따라 패키지 게시 작업에 초단위 시간 제한을 사용할 수 있습니다. 음수가 아닌 정수여야 합니다. 최대 600초(10분)입니다. 생략하면 기본 시간 제한이 사용됩니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -581,10 +584,13 @@
       </Item>
       <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Set timeout for package publish request]]></Val>
+          <Val><![CDATA[Timeout for package publish (seconds)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[패키지 게시 요청에 대한 시간 제한 설정]]></Val>
+            <Val><![CDATA[패키지 게시 시간 제한(초)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Set timeout for package publish request]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1227,6 +1233,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_InvalidRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid requestTimeout value '%s'. Provide a non-negative integer (seconds). NuGet's default timeout of 300 seconds will be used.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[잘못된 requestTimeout 값 '%s'을(를) 무시합니다. 음수가 아닌 정수(초)를 입력하세요. NuGet의 기본 시간 제한 300초를 사용합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_MoreThanOneVersionInBuildNumber" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.]]></Val>
@@ -1238,10 +1253,13 @@
       </Item>
       <Item ItemId=";loc.messages.Warning_NegativeRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
+          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. NuGet's default timeout of 300 seconds will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[음수 requestTimeout 값 '%s'을(를) 무시하는 중입니다. 작업은 기본 서비스 동작을 사용합니다.]]></Val>
+            <Val><![CDATA[음수 requestTimeout 값 '%s'을(를) 무시합니다. NuGet의 기본 시간 제한 300초를 사용합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
