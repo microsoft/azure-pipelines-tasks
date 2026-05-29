@@ -24,16 +24,22 @@ import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
  * Creates a per-invocation, unpredictable AZURE_CONFIG_DIR under the
- * supplied agent temp directory. Returns the absolute path. The directory
- * has the form `${agentTempDir}/.azclitask-XXXXXX` where XXXXXX is six
+ * supplied agent temp directory and points process.env.AZURE_CONFIG_DIR
+ * at it. Returns the absolute path. The directory has the form
+ * `${agentTempDir}/.azclitask-XXXXXX` where XXXXXX is six
  * cryptographically-random alphanumeric characters chosen by libuv
- * (filesystem-safe on every supported OS).
+ * (filesystem-safe on every supported OS). Pairing the env-var set with
+ * the directory creation here (and the unset with cleanup in
+ * removePerInvocationAzureConfigDir) keeps the lifetime of the variable
+ * scoped to the lifetime of the directory.
  */
 export function createPerInvocationAzureConfigDir(agentTempDir: string): string {
     if (!agentTempDir) {
         throw new Error('agentTempDir is required');
     }
-    return fs.mkdtempSync(path.join(agentTempDir, '.azclitask-'));
+    const dir = fs.mkdtempSync(path.join(agentTempDir, '.azclitask-'));
+    process.env['AZURE_CONFIG_DIR'] = dir;
+    return dir;
 }
 
 /**

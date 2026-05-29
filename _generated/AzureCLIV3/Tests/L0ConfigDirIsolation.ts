@@ -15,6 +15,18 @@ export function runConfigDirIsolationTests() {
 
         afterEach(() => {
             try { fs.rmSync(agentTemp, { recursive: true, force: true }); } catch { /* ignore */ }
+            delete process.env['AZURE_CONFIG_DIR'];
+        });
+
+        it('sets process.env.AZURE_CONFIG_DIR to the new directory', () => {
+            delete process.env['AZURE_CONFIG_DIR'];
+            const dir = createPerInvocationAzureConfigDir(agentTemp);
+            try {
+                assert.strictEqual(process.env['AZURE_CONFIG_DIR'], dir,
+                    'helper must set the env var so az picks up the new dir');
+            } finally {
+                fs.rmSync(dir, { recursive: true, force: true });
+            }
         });
 
         it('creates a brand-new directory under the agent temp root', () => {
