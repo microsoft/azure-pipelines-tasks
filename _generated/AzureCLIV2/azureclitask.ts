@@ -160,11 +160,6 @@ export class azureclitask {
                 tl.rmRF(this.cliPasswordPath);
             }
 
-            if (this.azCliConfigPath) {
-                removePerInvocationAzureConfigDir(this.azCliConfigPath);
-                this.azCliConfigPath = null;
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if(toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
@@ -227,6 +222,14 @@ export class azureclitask {
                 process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
                 process.env.AZURESUBSCRIPTION_CLIENT_ID = '';
                 process.env.AZURESUBSCRIPTION_TENANT_ID = '';
+            }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`)
+            // so they still see the per-invocation profile. Removing it earlier would
+            // unset AZURE_CONFIG_DIR and cause `az` to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
             }
         }
     }

@@ -118,11 +118,6 @@ export class azureclitask {
                 tl.rmRF(this.cliPasswordPath);
             }
 
-            if (this.azCliConfigPath) {
-                removePerInvocationAzureConfigDir(this.azCliConfigPath);
-                this.azCliConfigPath = null;
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
                 let message = tl.loc('ScriptFailed', toolExecutionError);
@@ -160,6 +155,14 @@ export class azureclitask {
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
+            }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`)
+            // so they still see the per-invocation profile. Removing it earlier would
+            // unset AZURE_CONFIG_DIR and cause `az` to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
             }
         }
     }

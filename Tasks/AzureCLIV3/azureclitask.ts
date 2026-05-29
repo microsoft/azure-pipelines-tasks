@@ -175,11 +175,6 @@ export class azureclitask {
                 tl.rmRF(this.cliPasswordPath);
             }
 
-            if (this.azCliConfigPath) {
-                removePerInvocationAzureConfigDir(this.azCliConfigPath);
-                this.azCliConfigPath = null;
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if(toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
@@ -263,6 +258,15 @@ export class azureclitask {
                 });
             } catch (e) {
                 tl.debug(`Failed to emit token-cleanup telemetry: ${e}`);
+            }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`
+            // and `az devops configure --defaults`) so they still see the per-invocation
+            // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
+            // to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
             }
         }
     }
