@@ -30,7 +30,7 @@
     "jsonpath-plus": "^10.4.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.267.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.274.0",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.2.10",
     "moment": "^2.29.4",
     "nock": "^10.0.6",
     "q": "1.4.1",
