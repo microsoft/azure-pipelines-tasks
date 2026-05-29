@@ -631,7 +631,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     console.log();
     console.log('> copying task resources');
     copyTaskResources(taskMake, taskPath, outDir);
-``
+
     // remove duplicated task libs node modules from build tasks.
     var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
     var duplicateTaskLibPaths = [
