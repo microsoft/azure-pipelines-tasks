@@ -5,6 +5,8 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common/containerco
 import * as utils from "./utils";
 import * as Q from 'q';
 
+const useDockerSkipRedundantTagFeature = "UseDockerSkipRedundantTag";
+
 function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean): Q.Promise<void> {
     let command = connection.createCommand();
     command.arg("tag");
@@ -15,9 +17,11 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
         sourceImage = connection.getQualifiedImageNameIfRequired(sourceImage);
     }
 
-    // Skip if source and target resolved to the same image
-    if (sourceImage === targetImage) {
-        tl.debug(`Skipping tag — source and target are identical: ${sourceImage}`);
+    const shouldSkipRedundantTag = tl.getPipelineFeature(useDockerSkipRedundantTagFeature);
+
+    // Skip only when the feature flag is enabled and source/target are identical.
+    if (shouldSkipRedundantTag && sourceImage === targetImage) {
+        tl.debug(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sourceImage}`);
         return Q.resolve();
     }
 
