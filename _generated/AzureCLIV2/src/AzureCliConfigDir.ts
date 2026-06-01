@@ -37,7 +37,23 @@ export function createPerInvocationAzureConfigDir(agentTempDir: string): string 
     if (!agentTempDir) {
         throw new Error('agentTempDir is required');
     }
-    const dir = fs.mkdtempSync(path.join(agentTempDir, '.azclitask-'));
+    let dir: string;
+    try {
+        dir = fs.mkdtempSync(path.join(agentTempDir, '.azclitask-'));
+    } catch (mkErr) {
+        // Fail loudly. We deliberately do NOT fall back to the predictable
+        // $(Agent.TempDirectory)/.azclitask path (that is the very vulnerability
+        // this code closes) nor silently to the user's global ~/.azure profile
+        // (that would override the user's explicit useGlobalConfig=false choice
+        // and could mutate the agent identity's profile across pipeline runs).
+        // The caller's outer catch surfaces this as a task failure.
+        const msg = (mkErr && (mkErr as Error).message) || String(mkErr);
+        throw new Error(
+            `Failed to create an isolated AZURE_CONFIG_DIR under '${agentTempDir}': ${msg}. ` +
+            `Verify Agent.TempDirectory exists and is writable by the agent account. ` +
+            `If you intentionally want to use the global Azure CLI configuration (~/.azure), ` +
+            `set the task input 'useGlobalConfig: true'.`);
+    }
     process.env['AZURE_CONFIG_DIR'] = dir;
     return dir;
 }

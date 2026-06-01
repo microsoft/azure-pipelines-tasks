@@ -166,7 +166,7 @@ export class azureclitask {
                 try {
                     await scriptType.cleanUp();
                 } catch (cleanupErr) {
-                    tl.debug(`scriptType.cleanUp() threw: ${cleanupErr && cleanupErr.message || cleanupErr}`);
+                    tl.warning(`scriptType.cleanUp() threw: ${cleanupErr && cleanupErr.message || cleanupErr}`);
                 }
             }
 
