@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 271,
-    "Patch": 0
+    "Minor": 275,
+    "Patch": 1
   },
   "deprecated": true,
   "deprecationMessage": "The PublishTestResults@1 task is deprecated. Please use the latest version of the PublishTestResults task (PublishTestResults@2 or later).",

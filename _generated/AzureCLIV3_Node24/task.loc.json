@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 274,
-    "Patch": 5
+    "Minor": 275,
+    "Patch": 11
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -266,6 +266,11 @@
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
+    "AzureDevOpsExtensionNotFound": "ms-resource:loc.messages.AzureDevOpsExtensionNotFound",
+    "AzureDevOpsExtensionAlreadyInstalled": "ms-resource:loc.messages.AzureDevOpsExtensionAlreadyInstalled",
+    "AzureDevOpsExtensionInstalled": "ms-resource:loc.messages.AzureDevOpsExtensionInstalled",
+    "AzureDevOpsExtensionInstalledNoDeps": "ms-resource:loc.messages.AzureDevOpsExtensionInstalledNoDeps",
+    "AzureDevOpsExtensionStandardInstallFailed": "ms-resource:loc.messages.AzureDevOpsExtensionStandardInstallFailed",
     "FailedToInstallAzureDevOpsCLI": "ms-resource:loc.messages.FailedToInstallAzureDevOpsCLI",
     "FailedToLoginAzureDevOpsCLI": "ms-resource:loc.messages.FailedToLoginAzureDevOpsCLI",
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
@@ -274,7 +279,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.274.4",
-    "Node24_1": "3.274.5"
+    "Default": "3.275.10",
+    "Node24_1": "3.275.11"
   }
 }

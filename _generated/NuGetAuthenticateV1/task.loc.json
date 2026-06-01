@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 275,
     "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
@@ -68,8 +68,8 @@
     "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.2",
+    "Default": "1.275.2",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.270.3"
+    "wif_242": "1.275.3"
   }
 }
