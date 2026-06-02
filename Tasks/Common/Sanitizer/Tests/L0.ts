@@ -64,4 +64,10 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Expand-EnvVariables.ps1'), done);
         });
     }
+
+    if (psm.testSupported()) {
+        it('Invoke-ScriptArgumentSanitization dispatcher (FF gates, error handling, telemetry)', (done) => {
+            psr.run(path.join(__dirname, 'L0Invoke-ScriptArgumentSanitization.ps1'), done);
+        });
+    }
 });

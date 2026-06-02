@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
-    "Patch": 2
+    "Minor": 275,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -252,11 +252,11 @@
     {
       "name": "requestTimeout",
       "type": "int",
-      "label": "Set timeout for package publish request",
+      "label": "Timeout for package publish (seconds)",
       "required": false,
       "groupName": "pushAdvanced",
-      "helpMarkDown": "Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).",
-      "visibleRule": "command = push && nuGetFeedType = internal"
+      "helpMarkDown": "Optionally provide a timeout, in seconds, for the package publish operation. Must be a non-negative integer. Capped at 600 seconds (10 minutes). If omitted, the default timeout is used.",
+      "visibleRule": "command = push"
     },
     {
       "name": "externalEndpoint",
@@ -529,7 +529,8 @@
     "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Azure Pipelines. If NuGet.exe encounters a conflict, the task will fail.",
     "Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
-    "Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
+    "Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. NuGet's default timeout of 300 seconds will be used.",
+    "Warning_InvalidRequestTimeoutIgnored": "Ignoring invalid requestTimeout value '%s'. Provide a non-negative integer (seconds). NuGet's default timeout of 300 seconds will be used.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
     "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",

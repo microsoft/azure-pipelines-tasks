@@ -112,7 +112,7 @@ Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @menxiao
 
-Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @cjk7989 @jessieyyt @LongOddCode
 
 Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
 
