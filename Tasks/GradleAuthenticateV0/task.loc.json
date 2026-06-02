@@ -5,7 +5,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "helpUrl": "https://aka.ms/gradle-authenticate",
+  "helpUrl": "https://aka.ms/GradleAuthenticateTask",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {

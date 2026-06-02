@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gradle Authenticate",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/gradle-authenticate)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/GradleAuthenticateTask)",
   "loc.description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or an access token.",
   "loc.instanceNameFormat": "Gradle Authenticate",
   "loc.input.label.buildFiles": "Build files",

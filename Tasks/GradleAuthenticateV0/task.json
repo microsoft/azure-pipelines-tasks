@@ -4,8 +4,8 @@
   "name": "GradleAuthenticate",
   "friendlyName": "Gradle Authenticate",
   "description": "Authenticate Gradle builds against Azure Artifacts feeds using Workload Identity Federation or an access token.",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/gradle-authenticate)",
-  "helpUrl": "https://aka.ms/gradle-authenticate",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/GradleAuthenticateTask)",
+  "helpUrl": "https://aka.ms/GradleAuthenticateTask",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
