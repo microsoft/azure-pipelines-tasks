@@ -3,8 +3,9 @@
 
 /**
  * Known Azure Artifacts / Azure DevOps domain patterns.
+ * Requires 'pkgs' subdomain — e.g. pkgs.dev.azure.com or {org}.pkgs.visualstudio.com.
  */
-const AZURE_ARTIFACTS_DOMAINS = '(?:[\\w.-]+\\.)?(?:dev\\.azure\\.com|visualstudio\\.com|vsts\\.me|codedev\\.ms|devppe\\.azure\\.com|codeapp\\.ms)';
+const AZURE_ARTIFACTS_DOMAINS = '(?:[\\w.-]+\\.)*pkgs\\.(?:dev\\.azure\\.com|visualstudio\\.com|vsts\\.me|codedev\\.ms|devppe\\.azure\\.com|codeapp\\.ms)';
 
 /**
  * Regex matching Azure Artifacts feed URLs across all known domains.
@@ -18,7 +19,7 @@ export const AZURE_ARTIFACTS_URL_PATTERN = new RegExp(
  * Returns true when the URL belongs to a known Azure Artifacts domain.
  */
 export function isAzureArtifactsUrl(url: string): boolean {
-    return new RegExp(AZURE_ARTIFACTS_DOMAINS, 'i').test(url);
+    return url.match(AZURE_ARTIFACTS_URL_PATTERN) !== null;
 }
 
 /**
