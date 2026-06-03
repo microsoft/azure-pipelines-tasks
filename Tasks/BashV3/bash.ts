@@ -52,7 +52,7 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
 }
 
 /**
- * Set value for `BASH_ENV` environment variable
+ * Set value for `BASH_ENV` environment variable.
  * 
  * The pipeline task invokes bash as non-interactive shell. In this mode Bash looks only for `BASH_ENV` environment variable. 
  * The value of `BASH_ENV` is expanded and used as the name of a startup file to read before executing the script.
