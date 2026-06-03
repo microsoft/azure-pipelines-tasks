@@ -405,7 +405,7 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     const vstestArchitecture = agentOsArch === 'arm64' ? 'arm64'
         : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86'
         : 'x64';
-    console.log(tl.loc('vstestArchitectureInput', vstestArchitecture));
+    tl.debug(tl.loc('vstestArchitectureInput', vstestArchitecture));
     // Only inject /Platform: if the user has not already specified it in otherConsoleOptions.
     const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';
     if (!/\/Platform:/i.test(existingParams)) {

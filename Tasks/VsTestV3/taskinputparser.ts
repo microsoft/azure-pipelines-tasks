@@ -123,7 +123,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.vstestArchitecture = agentOsArch === 'arm64' ? 'arm64'
         : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86'
         : 'x64';
-    console.log(tl.loc('vstestArchitectureInput', testConfiguration.vstestArchitecture));
+    tl.debug(tl.loc('vstestArchitectureInput', testConfiguration.vstestArchitecture));
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
