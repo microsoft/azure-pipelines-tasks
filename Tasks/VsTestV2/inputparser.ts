@@ -399,7 +399,9 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     // This is appended AFTER the user's otherConsoleOptions are processed (and possibly
     // cleared for server-based runs), so it is always present regardless of run mode.
     const agentOsArch = (tl.getVariable('Agent.OSArchitecture') || os.arch()).toLowerCase();
-    const vstestArchitecture = agentOsArch === 'arm64' ? 'arm64' : 'x64';
+    const vstestArchitecture = agentOsArch === 'arm64' ? 'arm64'
+        : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86'
+        : 'x64';
     console.log(tl.loc('vstestArchitectureInput', vstestArchitecture));
     // Only inject /Platform: if the user has not already specified it in otherConsoleOptions.
     const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';

@@ -694,7 +694,6 @@
     "actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
     "minimumExpectedTests": "Minimum tests expected to be run: %d",
     "vstestArchitectureInput": "Test runner architecture : %s",
-    "Arm64VstestNotFound": "ARM64 vstest.console.exe not found at '%s'. Falling back to x64 variant.",
     "arm64RequiresVS2022": "arm64 test architecture requires Visual Studio 2022 (17.0+). The selected Visual Studio version '%s' may not support arm64."
   }
 }

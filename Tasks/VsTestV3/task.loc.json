@@ -695,7 +695,6 @@
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests",
     "vstestArchitectureInput": "ms-resource:loc.messages.vstestArchitectureInput",
-    "Arm64VstestNotFound": "ms-resource:loc.messages.Arm64VstestNotFound",
     "arm64RequiresVS2022": "ms-resource:loc.messages.arm64RequiresVS2022"
   }
 }
