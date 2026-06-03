@@ -4,12 +4,6 @@ steps:
 - checkout: self
   clean: true
 
-# Use node 20, npm 9
-- task: UseNode@1
-  displayName: Use node 20
-  inputs:
-    version: 20.20.x
-
 # Use NuGet 4
 - task: NuGetToolInstaller@0
   displayName: Use NuGet 6

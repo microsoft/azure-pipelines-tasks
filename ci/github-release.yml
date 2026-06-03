@@ -2,11 +2,6 @@ steps:
 - checkout: self
   clean: true
 
-- task: NodeTool@0
-  displayName: Use node 20
-  inputs:
-    versionSpec: 20.x
-
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
