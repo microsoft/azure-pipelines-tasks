@@ -10,6 +10,7 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { tryValidateScriptArgs, ArgsSanitizingError } from "./src/argsSanitizer";
+import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -162,7 +163,11 @@ export class azureclitask {
             }
 
             if (scriptType) {
-                await scriptType.cleanUp();
+                try {
+                    await scriptType.cleanUp();
+                } catch (cleanupErr) {
+                    tl.warning(`scriptType.cleanUp() threw: ${cleanupErr && cleanupErr.message || cleanupErr}`);
+                }
             }
 
             if (this.cliPasswordPath) {
@@ -254,11 +259,21 @@ export class azureclitask {
             } catch (e) {
                 tl.debug(`Failed to emit token-cleanup telemetry: ${e}`);
             }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`
+            // and `az devops configure --defaults`) so they still see the per-invocation
+            // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
+            // to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
+            }
         }
     }
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static azCliConfigPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
@@ -502,10 +517,13 @@ export class azureclitask {
             return;
         }
 
-        if (!!tl.getVariable('Agent.TempDirectory')) {
-            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
-            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        const agentTempDir = tl.getVariable('Agent.TempDirectory');
+        if (!!agentTempDir) {
+            // Security: create an unpredictable per-invocation
+            // directory so an earlier pipeline step cannot pre-seed a poisoned
+            // az config file at $(Agent.TempDirectory)/.azclitask/config.
+            this.azCliConfigPath = createPerInvocationAzureConfigDir(agentTempDir);
+            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
         } else {
             console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
         }
