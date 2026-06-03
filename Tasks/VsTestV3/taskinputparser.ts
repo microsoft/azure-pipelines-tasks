@@ -119,8 +119,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
 
-    const agentArch = os.arch();
-    testConfiguration.vstestArchitecture = tl.getInput('vstestArchitecture') || (agentArch === 'arm64' ? 'arm64' : 'x64');
+    const agentOsArch = (tl.getVariable('Agent.OSArchitecture') || os.arch()).toLowerCase();
+    testConfiguration.vstestArchitecture = agentOsArch === 'arm64' ? 'arm64' : 'x64';
     console.log(tl.loc('vstestArchitectureInput', testConfiguration.vstestArchitecture));
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
@@ -185,9 +185,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    if (agentArch === 'arm64' && testConfiguration.vstestArchitecture !== 'arm64') {
-        tl.warning(tl.loc('arm64AgentWithX64Architecture', testConfiguration.vstestArchitecture));
-    }
     if (testConfiguration.vstestArchitecture === 'arm64' &&
         testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString &&
         testConfiguration.vsTestVersion &&

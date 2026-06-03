@@ -304,19 +304,6 @@
       "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
       "groupName": "executionOptions"
     },
-    {      "name": "vstestArchitecture",
-      "type": "pickList",
-      "label": "Test runner architecture",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Optionally supply the architecture (x86, x64, arm64) of vstest.console.exe to run. Select arm64 to run tests natively on ARM64 Windows machines. Requires Visual Studio 2022 (17.0) or later.",
-      "groupName": "executionOptions",
-      "options": {
-        "x86": "x86",
-        "x64": "x64",
-        "arm64": "arm64"
-      }
-    },
     {      "name": "distributionBatchType",
       "type": "pickList",
       "label": "Batch tests",
@@ -678,7 +665,6 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d",
     "vstestArchitectureInput": "Test runner architecture : %s",
     "Arm64VstestNotFound": "ARM64 vstest.console.exe not found at '%s'. Falling back to x64 variant.",
-    "arm64AgentWithX64Architecture": "Agent is running on ARM64 but test architecture is set to '%s'. Consider selecting arm64 for native performance.",
     "arm64RequiresVS2022": "arm64 test architecture requires Visual Studio 2022 (17.0+). The selected Visual Studio version '%s' may not support arm64."
   }
 }

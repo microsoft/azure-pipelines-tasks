@@ -153,7 +153,8 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         argsArray.push('/InIsolation');
     }
 
-    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture)) {
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture) &&
+        !(/\/Platform:/i.test(vstestConfig.otherConsoleOptions || ''))) {
         argsArray.push('/Platform:' + vstestConfig.vstestArchitecture);
     }
 

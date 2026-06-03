@@ -398,18 +398,16 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     // is honoured in ALL execution modes (single-agent Hydra, multi-agent DTA, and rerun).
     // This is appended AFTER the user's otherConsoleOptions are processed (and possibly
     // cleared for server-based runs), so it is always present regardless of run mode.
-    const agentArch = os.arch();
-    const vstestArchitecture = tl.getInput('vstestArchitecture') || (agentArch === 'arm64' ? 'arm64' : 'x64');
+    const agentOsArch = (tl.getVariable('Agent.OSArchitecture') || os.arch()).toLowerCase();
+    const vstestArchitecture = agentOsArch === 'arm64' ? 'arm64' : 'x64';
     console.log(tl.loc('vstestArchitectureInput', vstestArchitecture));
-    const platformFlag = '/Platform:' + vstestArchitecture;
-    inputDataContract.ExecutionSettings.AdditionalConsoleParameters =
-        inputDataContract.ExecutionSettings.AdditionalConsoleParameters
-            ? inputDataContract.ExecutionSettings.AdditionalConsoleParameters + ' ' + platformFlag
+    // Only inject /Platform: if the user has not already specified it in otherConsoleOptions.
+    const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';
+    if (!/\/Platform:/i.test(existingParams)) {
+        const platformFlag = '/Platform:' + vstestArchitecture;
+        inputDataContract.ExecutionSettings.AdditionalConsoleParameters = existingParams
+            ? existingParams + ' ' + platformFlag
             : platformFlag;
-
-    // Warn if the agent is ARM64 but the user explicitly overrode the architecture to a non-arm64 value.
-    if (agentArch === 'arm64' && vstestArchitecture !== 'arm64') {
-        tl.warning(tl.loc('arm64AgentWithX64Architecture', vstestArchitecture));
     }
 
     // Warn if arm64 is selected with a VS version that does not support it (pre-17.0).
