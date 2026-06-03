@@ -114,6 +114,9 @@ a.exec[`docker tag test/test:latest test/test:latest`] = {
 a.exec[`docker tag test/test:latest test/test:v1`] = {
     "code": 0
 };
+a.exec[`docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:v1`] = {
+    "code": 0
+};
 a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };

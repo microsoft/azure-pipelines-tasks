@@ -259,6 +259,25 @@ describe('Docker Suite', function() {
         console.log(tr.stderr);
     });
 
+    it('Runs successfully for docker tag image with mixed mappings when feature flag is enabled', async () => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
+        process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
+        process.env[shared.TestEnvVars.qualifyImageName] = "true";
+        process.env[shared.TestEnvVars.qualifySourceImageName] = "true";
+        process.env[shared.TestEnvVars.arguments] = "test/test:v1";
+        process.env[shared.TestEnvVars.useDockerSkipRedundantTagFeatureFlag] = "true";
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time after skipping the redundant self-tag. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`Skipping tag`) != -1, "should log skip message for the redundant self-tag");
+        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:v1`) != -1, "docker tag should still run for later non-identical mappings");
+        console.log(tr.stderr);
+    });
+
     it('Runs successfully for docker tag command with arguments', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
