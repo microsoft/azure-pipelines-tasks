@@ -13,6 +13,7 @@
     "typescript": "^5.7.2"
   },
   "overrides": {
+    "serialize-javascript": "7.0.5",
     "form-data": "^4.0.4"
   }
 }
