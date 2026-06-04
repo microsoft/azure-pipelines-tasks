@@ -429,6 +429,11 @@ var installNodeAsync = async function (nodeVersion) {
         nodeVersion = 'v' + versions[nodeVersion];
     }
 
+    if (nodeVersion === run('node -v')) {
+        console.log('skipping node install for tests since correct version is running');
+        return;
+    }
+
     // determine the platform
     var platform = os.platform();
     if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
