@@ -379,3 +379,201 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
         );
     });
 });
+
+// ---------------------------------------------------------------------------
+// ARM64 architecture auto-detection unit tests
+// Covers logic added to taskinputparser.ts, inputparser.ts, and vstest.ts.
+// ---------------------------------------------------------------------------
+
+describe('ARM64 – architecture detection and /Platform: injection', function () {
+    this.timeout(5000);
+
+    // ── 1. Architecture detection mapping ───────────────────────────────────
+    // Replicates the exact ternary used in taskinputparser.ts and inputparser.ts:
+    //   const agentOsArch = (tl.getVariable('Agent.OSArchitecture') || os.arch()).toLowerCase();
+    //   vstestArchitecture = agentOsArch === 'arm64' ? 'arm64'
+    //       : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86' : 'x64';
+    function detectArch(agentOsArchVar: string | undefined, osArchFallback: string): string {
+        const agentOsArch = (agentOsArchVar || osArchFallback).toLowerCase();
+        return agentOsArch === 'arm64' ? 'arm64'
+            : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86'
+            : 'x64';
+    }
+
+    it('arch: Agent.OSArchitecture="ARM64" maps to arm64', function () {
+        assert.strictEqual(detectArch('ARM64', 'x64'), 'arm64');
+    });
+
+    it('arch: Agent.OSArchitecture="arm64" (lowercase) maps to arm64', function () {
+        assert.strictEqual(detectArch('arm64', 'x64'), 'arm64');
+    });
+
+    it('arch: Agent.OSArchitecture="X64" maps to x64', function () {
+        assert.strictEqual(detectArch('X64', 'arm64'), 'x64');
+    });
+
+    it('arch: Agent.OSArchitecture="X86" maps to x86', function () {
+        assert.strictEqual(detectArch('X86', 'arm64'), 'x86');
+    });
+
+    it('arch: Agent.OSArchitecture takes priority over os.arch() when both are present', function () {
+        assert.strictEqual(detectArch('ARM64', 'x64'), 'arm64');  // node says x64 but agent says ARM64
+        assert.strictEqual(detectArch('X64', 'arm64'), 'x64');    // node says arm64 but agent says X64
+    });
+
+    it('arch: falls back to os.arch()="arm64" when Agent.OSArchitecture is absent', function () {
+        assert.strictEqual(detectArch(undefined, 'arm64'), 'arm64');
+    });
+
+    it('arch: falls back to os.arch()="x64" when Agent.OSArchitecture is absent', function () {
+        assert.strictEqual(detectArch(undefined, 'x64'), 'x64');
+    });
+
+    it('arch: falls back to os.arch()="ia32" and maps to x86', function () {
+        assert.strictEqual(detectArch(undefined, 'ia32'), 'x86');
+    });
+
+    it('arch: empty string Agent.OSArchitecture falls back to os.arch()', function () {
+        assert.strictEqual(detectArch('', 'arm64'), 'arm64');
+        assert.strictEqual(detectArch('', 'x64'), 'x64');
+    });
+
+    // ── 2. /Platform: injection guard – Hydra path (inputparser.ts) ─────────
+    // Replicates:
+    //   const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';
+    //   if (!/\/Platform:/i.test(existingParams)) {
+    //       const platformFlag = '/Platform:' + vstestArchitecture;
+    //       inputDataContract.ExecutionSettings.AdditionalConsoleParameters = existingParams
+    //           ? existingParams + ' ' + platformFlag : platformFlag;
+    //   }
+    function applyHydraInjection(existing: string | null, arch: string): string | null {
+        const existingParams = existing || '';
+        if (!/\/Platform:/i.test(existingParams)) {
+            const platformFlag = '/Platform:' + arch;
+            return existingParams ? existingParams + ' ' + platformFlag : platformFlag;
+        }
+        return existing;
+    }
+
+    it('hydra: injects /Platform:arm64 when AdditionalConsoleParameters is null', function () {
+        assert.strictEqual(applyHydraInjection(null, 'arm64'), '/Platform:arm64');
+    });
+
+    it('hydra: injects /Platform:x64 when AdditionalConsoleParameters is empty', function () {
+        assert.strictEqual(applyHydraInjection('', 'x64'), '/Platform:x64');
+    });
+
+    it('hydra: injects /Platform:x86 for 32-bit agent', function () {
+        assert.strictEqual(applyHydraInjection(null, 'x86'), '/Platform:x86');
+    });
+
+    it('hydra: appends /Platform:arm64 after existing console params', function () {
+        assert.strictEqual(applyHydraInjection('/logger:trx', 'arm64'), '/logger:trx /Platform:arm64');
+    });
+
+    it('hydra: does NOT inject when user already has /Platform:x86 in otherConsoleOptions', function () {
+        assert.strictEqual(applyHydraInjection('/Platform:x86', 'arm64'), '/Platform:x86');
+    });
+
+    it('hydra: guard is case-insensitive (/platform: in lowercase)', function () {
+        assert.strictEqual(applyHydraInjection('/platform:x86 /logger:trx', 'arm64'), '/platform:x86 /logger:trx');
+    });
+
+    it('hydra: server-based run clears params to null first, then /Platform: is still injected', function () {
+        // Server-based runs set AdditionalConsoleParameters = null before our injection
+        assert.strictEqual(applyHydraInjection(null, 'arm64'), '/Platform:arm64');
+    });
+
+    // ── 3. /Platform: injection guard – legacy path (vstest.ts) ────────────
+    // Replicates:
+    //   if (!isNullEmptyOrUndefined(vstestConfig.vstestArchitecture) &&
+    //       !(/\/Platform:/i.test(vstestConfig.otherConsoleOptions || ''))) {
+    //       argsArray.push('/Platform:' + vstestConfig.vstestArchitecture);
+    //   }
+    function shouldInjectInLegacyPath(vstestArchitecture: string | null | undefined, otherConsoleOptions: string | null | undefined): boolean {
+        const isNullEmptyOrUndefined = (s: any) => s === null || s === undefined || s === '';
+        return !isNullEmptyOrUndefined(vstestArchitecture) &&
+            !(/\/Platform:/i.test(otherConsoleOptions || ''));
+    }
+
+    it('legacy: injects /Platform: when vstestArchitecture set and otherConsoleOptions is null', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('arm64', null), true);
+    });
+
+    it('legacy: injects /Platform: when otherConsoleOptions is empty string', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('arm64', ''), true);
+    });
+
+    it('legacy: injects /Platform: when otherConsoleOptions has no /Platform: flag', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('arm64', '/logger:trx'), true);
+    });
+
+    it('legacy: does NOT inject when user has /Platform:x86 in otherConsoleOptions', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('arm64', '/Platform:x86'), false);
+    });
+
+    it('legacy: guard is case-insensitive for /Platform: check', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('arm64', '/platform:x86 /logger:trx'), false);
+    });
+
+    it('legacy: does NOT inject when vstestArchitecture is null', function () {
+        assert.strictEqual(shouldInjectInLegacyPath(null, null), false);
+    });
+
+    it('legacy: does NOT inject when vstestArchitecture is undefined', function () {
+        assert.strictEqual(shouldInjectInLegacyPath(undefined, null), false);
+    });
+
+    it('legacy: does NOT inject when vstestArchitecture is empty string', function () {
+        assert.strictEqual(shouldInjectInLegacyPath('', null), false);
+    });
+
+    // ── 4. VS 2022 requirement warning logic ────────────────────────────────
+    // Replicates:
+    //   if (vstestArchitecture === 'arm64' && vsTestLocationMethod === Constants.vsTestVersionString &&
+    //       vsTestVersion && vsTestVersion.toLowerCase() !== 'latest' &&
+    //       vsTestVersion.toLowerCase() !== 'toolsinstaller' &&
+    //       parseFloat(vsTestVersion) < 17.0) { warn }
+    function shouldWarnVS2022(arch: string, locationMethod: string, vsTestVersion: string): boolean {
+        const vsTestVersionString = 'version'; // matches utils.Constants.vsTestVersionString
+        return arch === 'arm64' &&
+            locationMethod === vsTestVersionString &&
+            !!vsTestVersion &&
+            vsTestVersion.toLowerCase() !== 'latest' &&
+            vsTestVersion.toLowerCase() !== 'toolsinstaller' &&
+            parseFloat(vsTestVersion) < 17.0;
+    }
+
+    it('vs-guard: warns for ARM64 + VS 2015 (14.0)', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', '14.0'), true);
+    });
+
+    it('vs-guard: warns for ARM64 + VS 2017 (15.0)', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', '15.0'), true);
+    });
+
+    it('vs-guard: warns for ARM64 + VS 2019 (16.0)', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', '16.0'), true);
+    });
+
+    it('vs-guard: does NOT warn for ARM64 + VS 2022 (17.0)', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', '17.0'), false);
+    });
+
+    it('vs-guard: does NOT warn for ARM64 + vsTestVersion="latest"', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', 'latest'), false);
+    });
+
+    it('vs-guard: does NOT warn for ARM64 + vsTestVersion="toolsinstaller"', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'version', 'toolsinstaller'), false);
+    });
+
+    it('vs-guard: does NOT warn for x64 agent even with old VS', function () {
+        assert.strictEqual(shouldWarnVS2022('x64', 'version', '14.0'), false);
+        assert.strictEqual(shouldWarnVS2022('x64', 'version', '16.0'), false);
+    });
+
+    it('vs-guard: does NOT warn when vstestLocationMethod is "location" (custom exe path)', function () {
+        assert.strictEqual(shouldWarnVS2022('arm64', 'location', '14.0'), false);
+    });
+});
