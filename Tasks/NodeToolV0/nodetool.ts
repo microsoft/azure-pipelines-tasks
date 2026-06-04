@@ -30,7 +30,7 @@ async function run() {
 }
 
 //
-// Node versions interface
+// Node versions interface.
 // see https://nodejs.org/dist/index.json
 //
 interface INodeVersion {
