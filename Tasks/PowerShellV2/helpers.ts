@@ -164,7 +164,7 @@ function findEnclosingBraceIndex(input: string, targetIndex: number) {
     return 0
 }
 
-export function validateFileArgs(inputArguments: string): void {
+export function validateFileArgs(inputArguments: string): string {
     const featureFlags = {
         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
         activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
@@ -197,10 +197,12 @@ export function validateFileArgs(inputArguments: string): void {
                 if (featureFlags.activate) {
                     throw new ArgsSanitizingError(message);
                 }
-                if (featureFlags.audit) {
-                    tl.warning(message, IssueSource.TaskInternal, 1);
-                }
+                // Always warn when dangerous characters are detected
+                tl.warning(message, IssueSource.TaskInternal, 1);
+                return expandedArgs;
             }
         }
     }
+
+    return inputArguments;
 }

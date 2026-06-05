@@ -80,7 +80,7 @@ async function run() {
         if (input_targetType.toUpperCase() == 'FILEPATH') {
 
             try {
-                validateFileArgs(input_arguments);
+                input_arguments = validateFileArgs(input_arguments);
             }
             catch (error) {
                 if (error instanceof ArgsSanitizingError) {
