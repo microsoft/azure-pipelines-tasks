@@ -3,6 +3,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
 import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
+import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
@@ -19,6 +20,10 @@ describe('AzureCLIV3 Suite', function () {
 
     describe('Args validation feature flag (EnableAzureCliArgsValidation)', () => {
         runTryValidateScriptArgsTests();
+    });
+
+    describe('AZURE_CONFIG_DIR isolation', () => {
+        runConfigDirIsolationTests();
     });
 
     it('Should handle Azure DevOps connection with Workload Identity Federation', function (done) {
