@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 274,
-    "Patch": 4
+    "Minor": 276,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -262,6 +262,11 @@
     "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
     "RefreshingAzSession": "Attempting to refresh az-cli session...",
     "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
+    "AzureDevOpsExtensionNotFound": "Azure DevOps extension not found in working environment. Attempting installation.",
+    "AzureDevOpsExtensionAlreadyInstalled": "Azure DevOps extension is already installed, skipping installation.",
+    "AzureDevOpsExtensionInstalled": "Azure DevOps CLI extension installed successfully.",
+    "AzureDevOpsExtensionInstalledNoDeps": "Azure DevOps CLI extension installed successfully (no-deps mode).",
+    "AzureDevOpsExtensionStandardInstallFailed": "Standard installation of azure-devops extension failed. Falling back to no-deps install.",
     "FailedToInstallAzureDevOpsCLI": "Failed to install Azure DevOps CLI extension",
     "FailedToLoginAzureDevOpsCLI": "Failed to login to Azure DevOps CLI",
     "FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
@@ -270,7 +275,7 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "3.274.4",
-    "Node24_1": "3.274.5"
+    "Default": "3.276.0",
+    "Node24_1": "3.276.1"
   }
 }

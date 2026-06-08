@@ -6,12 +6,15 @@
   "preview": true,
   "helpMarkDown": "[Learn more about this task](https://aka.ms/bicepdeploytaskreadme)",
   "category": "Deploy",
-  "visibility": ["Build", "Release"],
+  "visibility": [
+    "Build",
+    "Release"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 273,
-    "Patch": 1
+    "Minor": 276,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Bicep $(operation) $(name)",
