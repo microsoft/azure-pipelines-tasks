@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 275,
+    "Minor": 276,
     "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
@@ -171,7 +171,7 @@
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "1.275.0",
-    "Node24_1": "1.275.1"
+    "Default": "1.276.0",
+    "Node24_1": "1.276.1"
   }
 }
