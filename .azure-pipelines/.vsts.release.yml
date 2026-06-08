@@ -89,7 +89,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
-      networkIsolationPolicy: PowerShellGallery
+      networkIsolationPolicy: Preferred,CFSClean,PowerShellGallery,GitHub
     featureFlags:
       autoBaseline: false
     sdl:
