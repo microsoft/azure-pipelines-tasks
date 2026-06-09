@@ -19,6 +19,7 @@ function getResourceGroupNameFromUri(resourceUri: string): string {
     return "";
 }
 
+
 async function run(): Promise<void> {
     let tempDirectory: string = tl.getVariable('Agent.TempDirectory');
     let fileName: string = Math.random().toString(36).replace('0.', '');
