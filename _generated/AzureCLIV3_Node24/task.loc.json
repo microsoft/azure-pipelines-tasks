@@ -20,7 +20,7 @@
   "version": {
     "Major": 3,
     "Minor": 275,
-    "Patch": 3
+    "Patch": 11
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -279,7 +279,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.275.2",
-    "Node24_1": "3.275.3"
+    "Default": "3.275.10",
+    "Node24_1": "3.275.11"
   }
 }

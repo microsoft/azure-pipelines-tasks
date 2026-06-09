@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/node": "^20.3.1",
     "agent-base": "6.0.2",
-    "azure-pipelines-task-lib": "^5.2.8",
+    "azure-pipelines-task-lib": "^5.2.10",
     "azure-pipelines-tasks-docker-common": "^2.273.0"
   },
   "devDependencies": {
