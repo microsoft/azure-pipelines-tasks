@@ -245,10 +245,25 @@ export class azureclitask {
 
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            let versionMatch = [];
+            let versionMatch = null;
             if (tl.getPipelineFeature('UseAzVersion')) {
-                // gets azure-cli version from both az version output which is in JSON format and az --version output text format
-                versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
+                // Strategy 1: Try JSON parse (az version )
+                try {
+                    const parsed = JSON.parse(azVersionResultOutput.trim());
+                    if (parsed["azure-cli"]) {
+                        versionMatch = [null, parsed["azure-cli"]];
+                    }
+                } catch {}
+
+                // Strategy 2: Same-line match for JSON-like or text format
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/i);
+                }
+
+                // Strategy 3: Table format — version is on the line after the separator (e.g. "Azure-cli\n---\n2.76.0")
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/azure-cli\b[^\n]*\n[-\s]+\n\s*(\d+\.\d+\.\d+)/i);
+                }
             }else{
                 // gets azure-cli version from az --version output text format
                 versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
