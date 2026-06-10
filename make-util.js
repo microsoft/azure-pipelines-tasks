@@ -466,7 +466,7 @@ var installNodeAsync = async function (nodeVersion) {
 }
 exports.installNodeAsync = installNodeAsync;
 
-var downloadFileAsync = async function (url) {
+var downloadFileAsync = async function (url, options) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -489,7 +489,7 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-    const downloader = new Downloader({
+    var downloaderConfig = {
         url: url,
         directory: path.join(downloadPath, 'file'),
         fileName: scrubbedUrl,
@@ -501,8 +501,13 @@ var downloadFileAsync = async function (url) {
                 console.log(`##vso[task.setprogress value=${percentage};]Downloading file: ${scrubbedUrl}`)
             }
         },
-    });
+    };
 
+    if (options && options.headers) {
+        downloaderConfig.headers = options.headers;
+    }
+
+    const downloader = new Downloader(downloaderConfig);
 
     const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
     fs.writeFileSync(marker, '');
@@ -510,9 +515,9 @@ var downloadFileAsync = async function (url) {
 }
 exports.downloadFileAsync = downloadFileAsync;
 
-var downloadArchiveAsync = async function (url, omitExtensionCheck) {
+var downloadArchiveAsync = async function (url, omitExtensionCheck, options) {
     if (args.enableConcurrentTaskBuild) {
-        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck, options);
     }
 
     // validate parameters
@@ -547,7 +552,7 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
-        var archivePath = await downloadFileAsync(url);
+        var archivePath = await downloadFileAsync(url, options);
         console.log('Extracting archive: ' + url);
 
         // delete any previously attempted extraction directory
@@ -780,8 +785,17 @@ var getExternalsAsync = async function (externals, destRoot) {
             assert(package.cp, 'package.cp.length');
 
             // download and extract the NuGet V2 package
-            var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
-            var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
+            var url;
+            var downloadOptions = {};
+            if (package.repository.includes('pkgs.dev.azure.com') || package.repository.includes('pkgs.visualstudio.com')) {
+                // Azure Artifacts feed: use NuGet V3 flat container format for direct download
+                // No auth headers — feed allows anonymous reads and cross-org tokens cause 401
+                var feedBase = package.repository.replace(/\/nuget\/v2\/?$/, '');
+                url = feedBase + '/nuget/v3/flat2/' + package.name + '/' + package.version + '/' + package.name + '.' + package.version + '.nupkg';
+            } else {
+                url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
+            }
+            var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true, downloadOptions);
 
             // If nuget doesn't find specific package version, it will download the latest.
             // We can't specify nuget to fail such request, so we need at least to check version post-factum.
