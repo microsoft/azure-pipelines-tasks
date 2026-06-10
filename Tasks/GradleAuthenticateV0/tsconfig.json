@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "types": ["mocha", "node"],
+        "forceConsistentCasingInFileNames": true
+    }
+}
