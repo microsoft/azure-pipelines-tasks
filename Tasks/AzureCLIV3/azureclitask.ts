@@ -303,7 +303,7 @@ export class azureclitask {
         try {
             let versionMatch = null;
             if (tl.getPipelineFeature('UseAzVersion')) {
-                // Strategy 1: Try JSON parse (az version --output json)
+                // Strategy 1: Try JSON parse (az version)
                 try {
                     const parsed = JSON.parse(azVersionResultOutput.trim());
                     if (parsed["azure-cli"]) {
