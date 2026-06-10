@@ -10,6 +10,7 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { tryValidateScriptArgs, ArgsSanitizingError } from "./src/argsSanitizer";
+import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -147,7 +148,11 @@ export class azureclitask {
             }
 
             if (scriptType) {
-                await scriptType.cleanUp();
+                try {
+                    await scriptType.cleanUp();
+                } catch (cleanupErr) {
+                    tl.warning(`scriptType.cleanUp() threw: ${cleanupErr && cleanupErr.message || cleanupErr}`);
+                }
             }
 
             if (this.cliPasswordPath) {
@@ -218,11 +223,20 @@ export class azureclitask {
                 process.env.AZURESUBSCRIPTION_CLIENT_ID = '';
                 process.env.AZURESUBSCRIPTION_TENANT_ID = '';
             }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`)
+            // so they still see the per-invocation profile. Removing it earlier would
+            // unset AZURE_CONFIG_DIR and cause `az` to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
+            }
         }
     }
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static azCliConfigPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
@@ -354,13 +368,19 @@ export class azureclitask {
             return;
         }
 
-        if (!!tl.getVariable('Agent.TempDirectory')) {
-            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
-            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
-        } else {
+        const tempDir = tl.getVariable('Agent.TempDirectory');
+        if (!tempDir) {
             console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
+            return;
         }
+
+        // Security: use a freshly-created, unpredictable per-invocation directory
+        // so that an earlier step cannot pre-seed $(Agent.TempDirectory)/.azclitask/config
+        // with a poisoned extension.index_url (security hardening).
+        // fs.mkdtempSync creates a brand-new directory; the random suffix prevents
+        // attacker pre-seeding and the tight perms come from the agent temp root.
+        this.azCliConfigPath = createPerInvocationAzureConfigDir(tempDir);
+        console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
     }
 
     private static setAzureCloudBasedOnServiceEndpoint(): void {

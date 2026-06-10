@@ -372,10 +372,9 @@ var run = function (cl, inheritStreams, noHeader, throwOnError) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        if(throwOnError)
-        {
+        if (throwOnError) {
             throw new Error('Failed to run: ' + cl + ' exit code: ' + err.status);
-        }else{
+        } else {
             process.exit(1);
         }
     }
@@ -429,7 +428,7 @@ var installNodeAsync = async function (nodeVersion) {
         nodeVersion = 'v' + versions[nodeVersion];
     }
 
-    if (nodeVersion === run('node -v')) {
+    if (nodeVersion === run('node -v') && !process.env['TF_BUILD']) {
         console.log('skipping node install for tests since correct version is running');
         return;
     }
@@ -467,7 +466,7 @@ var installNodeAsync = async function (nodeVersion) {
 }
 exports.installNodeAsync = installNodeAsync;
 
-var downloadFileAsync = async function (url) {
+var downloadFileAsync = async function (url, options) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -490,7 +489,7 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-    const downloader = new Downloader({
+    var downloaderConfig = {
         url: url,
         directory: path.join(downloadPath, 'file'),
         fileName: scrubbedUrl,
@@ -502,8 +501,13 @@ var downloadFileAsync = async function (url) {
                 console.log(`##vso[task.setprogress value=${percentage};]Downloading file: ${scrubbedUrl}`)
             }
         },
-    });
+    };
 
+    if (options && options.headers) {
+        downloaderConfig.headers = options.headers;
+    }
+
+    const downloader = new Downloader(downloaderConfig);
 
     const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
     fs.writeFileSync(marker, '');
@@ -511,9 +515,9 @@ var downloadFileAsync = async function (url) {
 }
 exports.downloadFileAsync = downloadFileAsync;
 
-var downloadArchiveAsync = async function (url, omitExtensionCheck) {
-    if(args.enableConcurrentTaskBuild) {
-        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck);
+var downloadArchiveAsync = async function (url, omitExtensionCheck, options) {
+    if (args.enableConcurrentTaskBuild) {
+        return downloadUtils.downloadArchiveConcurrentAsync(url, omitExtensionCheck, options);
     }
 
     // validate parameters
@@ -548,7 +552,7 @@ var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
-        var archivePath = await downloadFileAsync(url);
+        var archivePath = await downloadFileAsync(url, options);
         console.log('Extracting archive: ' + url);
 
         // delete any previously attempted extraction directory
@@ -781,8 +785,17 @@ var getExternalsAsync = async function (externals, destRoot) {
             assert(package.cp, 'package.cp.length');
 
             // download and extract the NuGet V2 package
-            var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
-            var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
+            var url;
+            var downloadOptions = {};
+            if (package.repository.includes('pkgs.dev.azure.com') || package.repository.includes('pkgs.visualstudio.com')) {
+                // Azure Artifacts feed: use NuGet V3 flat container format for direct download
+                // No auth headers — feed allows anonymous reads and cross-org tokens cause 401
+                var feedBase = package.repository.replace(/\/nuget\/v2\/?$/, '');
+                url = feedBase + '/nuget/v3/flat2/' + package.name + '/' + package.version + '/' + package.name + '.' + package.version + '.nupkg';
+            } else {
+                url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
+            }
+            var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true, downloadOptions);
 
             // If nuget doesn't find specific package version, it will download the latest.
             // We can't specify nuget to fail such request, so we need at least to check version post-factum.
@@ -990,7 +1003,7 @@ var createYamlSnippetFile = function (taskJson, docsDir, yamlOutputFilename) {
 }
 exports.createYamlSnippetFile = createYamlSnippetFile;
 
-var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
+var createMarkdownDocFile = function (taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
     var outFilePath = path.join(docsDir, taskJson.category.toLowerCase(), mdDocOutputFilename);
     if (!test('-e', path.dirname(outFilePath))) {
         fs.mkdirSync(path.dirname(outFilePath));
@@ -1010,14 +1023,14 @@ exports.createMarkdownDocFile = createMarkdownDocFile;
 // Returns a copy of the specified string with its first letter as a lowercase letter.
 // Example: 'NachoLibre' -> 'nachoLibre'
 function camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
         return index == 0 ? match.toLowerCase() : match.toUpperCase();
     });
 }
 
-var getAliasOrNameForInputName = function(inputs, inputName) {
+var getAliasOrNameForInputName = function (inputs, inputName) {
     var returnInputName = inputName;
-    inputs.forEach(function(input) {
+    inputs.forEach(function (input) {
         if (input.name == inputName) {
             if (input.aliases && input.aliases.length > 0) {
                 returnInputName = input.aliases[0];
@@ -1030,7 +1043,7 @@ var getAliasOrNameForInputName = function(inputs, inputName) {
     return camelize(returnInputName);
 };
 
-var getInputAliasOrName = function(input) {
+var getInputAliasOrName = function (input) {
     var returnInputName;
     if (input.aliases && input.aliases.length > 0) {
         returnInputName = input.aliases[0];
@@ -1041,7 +1054,7 @@ var getInputAliasOrName = function(input) {
     return camelize(returnInputName);
 };
 
-var cleanString = function(str) {
+var cleanString = function (str) {
     if (str) {
         return str
             .replace(/\r/g, '')
@@ -1053,7 +1066,7 @@ var cleanString = function(str) {
     }
 }
 
-var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
+var getTaskMarkdownDoc = function (taskJson, mdDocOutputFilename) {
     var taskMarkdown = '';
 
     taskMarkdown += '---' + os.EOL;
@@ -1066,8 +1079,8 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += 'ms.manager: ' + os.userInfo().username + os.EOL;
     taskMarkdown += 'ms.author: ' + os.userInfo().username + os.EOL;
     taskMarkdown += 'ms.date: ' +
-                    new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
-                    os.EOL;
+        new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()) +
+        os.EOL;
     taskMarkdown += 'monikerRange: \'vsts\'' + os.EOL;
     taskMarkdown += '---' + os.EOL + os.EOL;
 
@@ -1081,7 +1094,7 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
     taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
-    taskJson.inputs.forEach(function(input) {
+    taskJson.inputs.forEach(function (input) {
         var requiredOrNot = input.required ? 'Required' : 'Optional';
         var label = cleanString(input.label);
         var description = input.helpMarkDown; // Do not clean white space from descriptions
@@ -1098,7 +1111,7 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     return taskMarkdown;
 }
 
-var getTaskYaml = function(taskJson) {
+var getTaskYaml = function (taskJson) {
     var taskYaml = '';
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
@@ -1106,7 +1119,7 @@ var getTaskYaml = function(taskJson) {
     taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
     taskYaml += '  inputs:' + os.EOL;
 
-    taskJson.inputs.forEach(function(input) {
+    taskJson.inputs.forEach(function (input) {
         // Is the input required?
         var requiredOrNot = input.required ? '' : '# Optional';
         if (input.required && input.visibleRule && input.visibleRule.length > 0) {
@@ -1114,8 +1127,8 @@ var getTaskYaml = function(taskJson) {
             var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
             var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
             requiredOrNot += '# Required when ' + camelize(input.visibleRule)
-            .replace(/ = /g, ' == ')
-            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+                .replace(/ = /g, ' == ')
+                .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
         }
 
         // Does the input have a default value?
@@ -1151,7 +1164,7 @@ var getTaskYaml = function(taskJson) {
         // Append options?
         if (input.options) {
             var isFirstOption = true;
-            Object.keys(input.options).forEach(function(key) {
+            Object.keys(input.options).forEach(function (key) {
                 if (isFirstOption) {
                     taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
                     isFirstOption = false;
@@ -1608,9 +1621,8 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
     // Rename folders
     fs.readdirSync(pathWithLegacyFolders)
         .forEach(function (taskFolderName) {
-            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-3)
-                && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
-            {
+            if (taskFolderName.charAt(taskFolderName.length - 1) === taskFolderName.charAt(taskFolderName.length - 3)
+                && taskFolderName.charAt(taskFolderName.length - 2) === taskFolderName.charAt(taskFolderName.length - 4)) {
                 var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
                 var newPath = path.join(pathWithLegacyFolders, taskFolderName.substring(0, taskFolderName.length - 2));
 
@@ -1787,7 +1799,7 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
-const getTaskNodeVersion = function(buildPath, taskName) {
+const getTaskNodeVersion = function (buildPath, taskName) {
     const fallbackNode = 20;
     const nodes = new Set();
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
@@ -1828,13 +1840,13 @@ exports.getTaskNodeVersion = getTaskNodeVersion;
  * @param {String} taskName - Name of the task
  * @returns { Boolean } true if the task is a node task
  */
-var isNodeTask = function(buildPath, taskName) {
+var isNodeTask = function (buildPath, taskName) {
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) return false;
 
     const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     const taskJson = JSON.parse(taskJsonContents);
-    const execution = ['execution', 'prejobexecution','postjobexecution']
+    const execution = ['execution', 'prejobexecution', 'postjobexecution']
         .map(key => taskJson[key]);
 
     for (const executors of execution) {
@@ -1928,16 +1940,14 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
     }
 
     var writeUpdateArg = "";
-    if(writeUpdates)
-    {
+    if (writeUpdates) {
         writeUpdateArg += " --write-updates";
     }
 
-    if(bumpBaseTask) {
+    if (bumpBaseTask) {
         writeUpdateArg += " --bump-base-task";
     }
-    if(includeLocalPackagesBuildConfig)
-    {
+    if (includeLocalPackagesBuildConfig) {
         writeUpdateArg += " --include-local-packages-build-config";
     }
     if (useSemverBuildConfig === true || useSemverBuildConfig === 'true') {
@@ -1945,7 +1955,7 @@ var processGeneratedTasks = function (baseConfigToolPath, taskList, makeOptions,
     }
 
     var debugAgentDirArg = "";
-    if(debugAgentDir) {
+    if (debugAgentDir) {
         debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
     }
 
@@ -1959,7 +1969,7 @@ exports.processGeneratedTasks = processGeneratedTasks;
  * Function to merge all tasks under a build config into base tasks.
  * @param {String} buildConfig that selected to merge
  */
-var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
+var mergeBuildConfigIntoBaseTasks = function (buildConfig) {
     var makeOptionsPath = path.join(__dirname, 'make-options.json');
     var makeOptions = fileToJson(makeOptionsPath);
     if (!makeOptions) fail("makeOptions is not defined");
@@ -2046,7 +2056,7 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
     // If the task is building on the ci, we don't want to sync files
     if (callGenTaskDuringBuild === false) return originalFunction;
 
-    return async function(taskName, ...args) {
+    return async function (taskName, ...args) {
         await originalFunction.apply(this, [taskName, ...args]);
 
         var genTaskPath = path.join(basicGenTaskPath, taskName);
@@ -2056,11 +2066,11 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
         };
 
         // if it's not a generated task, we don't need to sync files
-        if (!fs.existsSync(genTaskPath)){
+        if (!fs.existsSync(genTaskPath)) {
             return;
         }
 
-        const [ baseTaskName, config ] = taskName.split("_");
+        const [baseTaskName, config] = taskName.split("_");
         const copyCandidates = shell.find(genTaskPath)
             .filter(function (item) {
                 // ignore node_modules
@@ -2076,9 +2086,9 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
 
             if (config) {
-                if(config==="LocalPackages"){
+                if (config === "LocalPackages") {
                     dest = path.join(__dirname, '_generated', '_buildConfigs', baseTaskName, config, relativePath);
-                }else{
+                } else {
                     dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
                 }
             }
@@ -2087,8 +2097,7 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
 
-            if(fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap)
-            {
+            if (fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap) {
                 const folderPath = path.dirname(dest);
                 if (!fs.existsSync(folderPath)) {
                     console.log(`Creating folder ${folderPath}`);

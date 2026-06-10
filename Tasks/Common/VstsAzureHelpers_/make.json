@@ -4,7 +4,7 @@
             {
                 "name": "Newtonsoft.Json",
                 "version": "10.0.3",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll",
@@ -19,7 +19,7 @@
             {
                 "name": "Newtonsoft.Json",
                 "version": "13.0.3",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll",
@@ -34,7 +34,7 @@
             {
                 "name": "Microsoft.AspNet.WebApi.Client",
                 "version": "5.2.7",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/System.Net.Http.Formatting.dll"
@@ -48,7 +48,7 @@
             {
                 "name": "Microsoft.TeamFoundationServer.Client",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net472/Microsoft.TeamFoundation.Core.WebApi.dll"
@@ -66,7 +66,7 @@
             {
                 "name": "Microsoft.TeamFoundation.DistributedTask.Common.Contracts",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -82,7 +82,7 @@
             {
                 "name": "Microsoft.TeamFoundation.DistributedTask.WebApi",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -104,7 +104,7 @@
             {
                 "name": "Microsoft.VisualStudio.Services.Client",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -134,7 +134,7 @@
             {
                 "name": "VstsTaskSdk",
                 "version": "0.21.0",
-                "repository": "https://www.powershellgallery.com/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
                 "cp": [
                     {
                         "source": [
