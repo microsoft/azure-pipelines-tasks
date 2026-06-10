@@ -263,12 +263,12 @@
       </Item>
       <Item ItemId=";loc.input.help.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Optionally provide a timeout, in seconds, for the package publish operation. Must be a non-negative integer. Capped at 600 seconds (10 minutes). If omitted, the default timeout is used.]]></Val>
+          <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Opcionalmente, proporcione un tiempo de espera, en segundos, para la operación de publicación del paquete. El valor debe ser un entero no negativo. Limitado a 600 segundos (10 minutos). Si se omite, se usa el tiempo de espera predeterminado.]]></Val>
+            <Val><![CDATA[De manera opcional, proporcione un valor de tiempo de espera para las solicitudes HTTP que la tarea realiza al publicar paquetes. El valor se expresa en milisegundos. Si se omite o se proporciona un valor negativo, la tarea usa el comportamiento predeterminado del servicio. No puede ser superior a 600 000 milisegundos (10 minutos).]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).]]></Val>
+            <Val><![CDATA[Optionally provide a timeout, in seconds, for the package publish operation. Must be a non-negative integer. Capped at 600 seconds (10 minutes). If omitted, the default timeout is used.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -584,12 +584,12 @@
       </Item>
       <Item ItemId=";loc.input.label.requestTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Timeout for package publish (seconds)]]></Val>
+          <Val><![CDATA[Set timeout for package publish request]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Tiempo de espera para la publicación del paquete (segundos)]]></Val>
+            <Val><![CDATA[Establecer el tiempo de espera para la solicitud de publicación del paquete]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Set timeout for package publish request]]></Val>
+            <Val><![CDATA[Timeout for package publish (seconds)]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -1233,15 +1233,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.Warning_InvalidRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Ignoring invalid requestTimeout value '%s'. Provide a non-negative integer (seconds). NuGet's default timeout of 300 seconds will be used.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se omitirá el valor de requestTimeout no válido "%s". Proporcione un entero no negativo (segundos). Se usará el tiempo de espera predeterminado de NuGet de 300 segundos.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";loc.messages.Warning_MoreThanOneVersionInBuildNumber" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.]]></Val>
@@ -1253,12 +1244,12 @@
       </Item>
       <Item ItemId=";loc.messages.Warning_NegativeRequestTimeoutIgnored" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. NuGet's default timeout of 300 seconds will be used.]]></Val>
+          <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se omitirá el valor negativo de requestTimeout “%s”. Se usará el tiempo de espera predeterminado de NuGet de 300 segundos.]]></Val>
+            <Val><![CDATA[Se omitirá el valor negativo de requestTimeout “%s”. La tarea usará el comportamiento predeterminado del servicio.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.]]></Val>
+            <Val><![CDATA[Ignoring negative requestTimeout value '%s'. NuGet's default timeout of 300 seconds will be used.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
