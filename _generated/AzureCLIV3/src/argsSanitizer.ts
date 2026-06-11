@@ -14,6 +14,12 @@
 //                     $env:VAR / ${env:VAR} expansion. This is what makes
 //                     PowerShell-native syntax like `$env:servicePrincipalKey`
 //                     or `-MyBoolean $True` pass.
+//                     The allowlist also accepts the PowerShell *data*
+//                     constructors `@ { } [ ]` (hashtable, splatting, array,
+//                     indexing) — they do not turn data into code in a
+//                     PowerShell argument list. The execution primitives that
+//                     do (`$( )`, `;`, `&`, `|`, `` ` `` outside the escape
+//                     position) remain blocked.
 //   * batch        -> Literal-only sanitization with the BashV3 allowlist
 //                     (no env expansion; cmd-specific allowlist is a TODO).
 
@@ -384,10 +390,13 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(expandedArgs, {
-            // PowerShellV2 allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % \n #
+            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % \n #
+            // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
             // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // Execution primitives $( ) ; & | remain blocked — those are the attack vectors
+            // when a template parameter substitutes into args.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%\\n#])(?!true|false)", 'ig')
+            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%\\n#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(expandedArgs, {
             // BashV3 allowlist (also used for batch and unknown scriptType).
