@@ -309,7 +309,9 @@ export class azureclitask {
                     if (parsed["azure-cli"]) {
                         versionMatch = [null, parsed["azure-cli"]];
                     }
-                } catch {}
+                } catch (e) {
+                    tl.warning(`Failed to parse az version JSON output: ${e}`);
+                }
 
                 // Strategy 2: Same-line match for JSON-like or text format
                 if (!versionMatch) {
