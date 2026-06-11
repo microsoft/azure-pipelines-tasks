@@ -100,5 +100,32 @@ describe('AzurePowerShell Suite', function () {
             assert(tr.stdout.indexOf('Cleanup failed with error message:') < 0,
                 'should NOT emit the old "Cleanup failed with error message:" Failed result');
         });
+
+        it('cleanup throws: task still succeeds with a warning and env vars are cleared', async () => {
+            // Regression for the env-clear gate: when await powershell.exec() rejects,
+            // cleanupExitCode stays 0 (never assigned) but cleanupOutcome becomes 'Threw'.
+            // The gate must key off cleanupOutcome, otherwise AZURESUBSCRIPTION_* would leak.
+            let tp = path.join(__dirname, 'L0Cleanup_CleanupThrowsWarnsButTaskSucceeds.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            if (!tr.succeeded) {
+                console.log('STDOUT:', tr.stdout);
+                console.log('STDERR:', tr.stderr);
+            }
+
+            assert(tr.succeeded, 'task should have succeeded since main script passed; cleanup throwing must not override the result');
+            assert(tr.stdout.indexOf('Azure context cleanup failed:') >= 0,
+                'should emit the catch-branch warning about cleanup throwing');
+            // Old setResult(Failed,...) marker must not be present
+            assert(tr.stdout.indexOf('Cleanup failed with error message:') < 0,
+                'should NOT emit the old "Cleanup failed with error message:" Failed result');
+            assert(tr.stdout.indexOf('Cleanup failed with exit code:') < 0,
+                'should NOT emit the old "Cleanup failed with exit code:" Failed result');
+            // The Threw branch must take the env-clear path (debug line covers all
+            // non-Success outcomes after the gate fix).
+            assert(tr.stdout.indexOf('Clearing service connection environment variables from agent process.') >= 0,
+                'env-clear gate must fire for the Threw branch (regression: was skipped when cleanupExitCode stayed 0)');
+        });
     });
 });

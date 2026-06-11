@@ -225,8 +225,12 @@ async function run() {
         }
 
         // Best-effort: clear service connection env vars from the agent process
-        // even if the PowerShell cleanup script failed.
-        if (cleanupExitCode !== 0 || !resolvedPwshPath) {
+        // whenever cleanup did not complete successfully. Keying off cleanupOutcome
+        // (rather than cleanupExitCode || !resolvedPwshPath) ensures the 'Threw'
+        // branch is also covered — when await powershell.exec() rejects (e.g. spawn
+        // ENOENT, EACCES, fd exhaustion), cleanupExitCode is still 0 from its
+        // initializer but the env vars must still be cleared.
+        if (cleanupOutcome !== 'Success') {
             tl.debug("Clearing service connection environment variables from agent process.");
             delete process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID;
             delete process.env.AZURESUBSCRIPTION_CLIENT_ID;
