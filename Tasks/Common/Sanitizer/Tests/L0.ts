@@ -54,6 +54,12 @@ describe('Security Suite', function () {
     }
 
     if (psm.testSupported()) {
+        it('Protect-ScriptArguments should allow PowerShell data constructors (@ { } [ ])', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.AllowsDataConstructors.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
         it('Protect-ScriptArguments should throw', (done) => {
             psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Throws.ps1'), done);
         });

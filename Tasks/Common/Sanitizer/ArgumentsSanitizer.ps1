@@ -76,9 +76,11 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
     ## ('?<!`') - checking if before character no backtick.
-    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#@{}\[\]]) - checking if character is allowed. Insead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
-    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    ## @ { } [ ] are PowerShell data constructors (hashtable, splatting, array index, type accelerator) -
+    ## they are not execution primitives, so they pass; $ ( ) ; & | and unescaped backtick remain blocked.
+    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;

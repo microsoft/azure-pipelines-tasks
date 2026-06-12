@@ -32,6 +32,28 @@ $testSuites = @(
         Name      = 'If inside args line not correct env syntax'
         Input     = 'test $venv:VAR1 test'
         Variables = @('VAR1=123')
+    },
+    # Attack primitives ($ ( ) ; & |) must remain blocked even when wrapped
+    # in otherwise-allowed PowerShell data constructors @ { } [ ].
+    @{
+        Name      = 'Hashtable value with $(subexpression) still blocked'
+        Input     = '-Tag @{ Cmd = "$(Get-Date)" }'
+    },
+    @{
+        Name      = '$(rm -rf /) subexpression still blocked'
+        Input     = '-Path $(rm -rf /)'
+    },
+    @{
+        Name      = '& call operator still blocked'
+        Input     = '-Cmd & evil.exe'
+    },
+    @{
+        Name      = 'Array literal @(...) still blocked (parens are execution-position)'
+        Input     = '-Items @("a","b","c")'
+    },
+    @{
+        Name      = 'Hashtable with semicolon separator still blocked'
+        Input     = '-Tag @{ a = 1; b = 2 }'
     }
 )
 
