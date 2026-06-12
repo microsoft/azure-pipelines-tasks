@@ -10,5 +10,8 @@
   "devDependencies": {
     "@types/mocha": "5.2.5",
     "azure-pipelines-task-lib": "^4.13.0"
+  },
+  "overrides": {
+    "minimatch": "5.1.8"
   }
 }
