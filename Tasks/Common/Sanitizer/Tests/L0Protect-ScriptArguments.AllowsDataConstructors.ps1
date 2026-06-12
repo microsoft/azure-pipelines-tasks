@@ -60,7 +60,7 @@ foreach ($test in $testSuites) {
         Protect-ScriptArguments $test.Input
     }
     catch {
-        throw "Error occured in '$($test.Name)' suite with input '$($test.Input)': $($_.Exception.Message)"
+        throw "Error occurred in '$($test.Name)' suite with input '$($test.Input)': $($_.Exception.Message)"
     }
     finally {
         $test.Variables | ForEach-Object {
