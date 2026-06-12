@@ -64,7 +64,39 @@ export const runValidateScriptArgsTests = () => {
         // pscore allows backtick-escaped otherwise-disallowed characters.
         ['pscore: backtick-escaped @ allowed',
             '-Items `@items', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']]
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // Regression #22173 (second break): PowerShell data constructors —
+        // hashtable, splatting, array literal, indexing, type accelerator —
+        // are NOT execution primitives in a PowerShell argument list. They
+        // must pass so customers can pass `-Tag @{...}` (the failing case in
+        // the issue) without redirecting through env vars.
+        //
+        // Note: `;` and `( )` remain blocked because they are execution primitives.
+        // Hashtables can use newline separators (which
+        // is the customer's exact case — YAML folded scalar produces \n).
+        // Array literals `@(...)` cannot be expressed without `( )` and stay
+        // blocked; callers can pass arrays via env vars or splatting.
+        ['pscore: hashtable literal @{ K = "v" } allowed (newline-separated)',
+            '-Tag @{ Solution = "RunnerImagesGeneration"\n      ManagedBy = "Platform-Team" }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: splatting @params allowed',
+            'Invoke-Build @params', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: type accelerator [string] allowed',
+            '-Cast [string]', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: literal index [0] allowed',
+            '-Index [0]', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: hashtable value containing @ (email) allowed',
+            '-Tag @{ Owner = "team@contoso.com" }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // Closest reproduction of feliasson's case from issue #22173: a
+        // YAML folded-scalar hashtable with $env:* references for the values
+        // that would otherwise be ADO macros.
+        ['pscore: issue #22173 hashtable literal (folded scalar) passes',
+            '-Tag @{\n      Solution            = "RunnerImagesGeneration"\n      ManagedBy           = "Platform-Team"\n      RequestedFor        = $env:requestedFor\n    }', 'pscore',
+            ['requestedFor=someone@contoso.com', 'AZP_75787_ENABLE_NEW_LOGIC=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {
@@ -100,8 +132,24 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: bare $ that is not $true/$false/$env',
             '-Name $other', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        ['pscore: hashtable @{} still flagged without backtick escape',
-            '-Tag @{ a = 1 }', 'pscore',
+        // Attack primitives must remain blocked even when wrapped
+        // in otherwise-allowed PowerShell data syntax. Hashtable values that
+        // contain $(subexpression) are the canonical command-injection vector
+        // when an attacker controls a template-parameter substitution.
+        ['pscore: hashtable value with $(subexpression) still blocked',
+            '-Tag @{ Cmd = "$(Get-Date)" }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: $(rm -rf /) subexpression in args still blocked',
+            '-Path $(rm -rf /)', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: & call operator still blocked',
+            '-Cmd & evil.exe', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: array literal @(...) still blocked (parens are execution-position)',
+            '-Items @("a","b","c")', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: hashtable with semicolon separator still blocked',
+            '-Tag @{ a = 1; b = 2 }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
