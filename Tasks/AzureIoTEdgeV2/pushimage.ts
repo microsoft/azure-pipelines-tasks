@@ -60,7 +60,7 @@ export async function run() {
    * However, "michaeljqzq" is not in the scope of a credential.
    * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
    */
-  tl.execSync(`docker`, ["login", "-u", authenticationToken.getUsername(), "-p", authenticationToken.getPassword(), authenticationToken.getLoginServerUrl()], Constants.execSyncSilentOption)
+  util.dockerLogin(authenticationToken.getLoginServerUrl(), authenticationToken.getUsername(), authenticationToken.getPassword());
 
   let envList = process.env;
   // Set bypass modules
@@ -79,7 +79,6 @@ export async function run() {
     let execOptions: IExecOptions = {
       cwd: tl.cwd(),
       env: envList,
-      shell: true,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
     await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
