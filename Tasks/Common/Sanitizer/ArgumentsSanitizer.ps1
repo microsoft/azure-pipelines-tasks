@@ -79,7 +79,7 @@ function Get-SanitizedArguments([string]$inputArgs) {
     ## ([^\w` _'"-=\/:\.*,+~?%\n#@{}\[\]]) - checking if character is allowed. Instead it is replaced with #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
     ## @ { } [ ] are PowerShell data constructors (hashtable, splatting, array index, type accelerator) -
-    ## they are not execution primitives, so they pass; $ ( ) ; & | and unescaped backtick remain blocked.
+    ## they are not execution primitives, so they pass; $ ( ) ; & | remain blocked (unless escaped), and ` is allowed as the escape character.
     $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
 
     # We're splitting by ``, removing all suspicious characters and then join
