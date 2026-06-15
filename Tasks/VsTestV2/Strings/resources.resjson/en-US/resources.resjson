@@ -51,6 +51,8 @@
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the test run.",
   "loc.input.label.otherConsoleOptions": "Other console options",
   "loc.input.help.otherConsoleOptions": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
+  "loc.input.label.vstestPlatform": "Override test platform architecture",
+  "loc.input.help.vstestPlatform": "Corresponds to the <code>/Platform:</code> argument of vstest.console.exe. Leave empty to let vstest automatically select the test host architecture based on the compiled target of the test assembly. Set explicitly (e.g. <code>x86</code>, <code>x64</code>, <code>arm64</code>) to force a specific architecture, exactly as you would when running vstest.console.exe directly from the command line.",
   "loc.input.label.distributionBatchType": "Batch tests",
   "loc.input.help.distributionBatchType": "A batch is a group of tests. A batch of tests runs its tests at the same time and results are published for the batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on the number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
   "loc.input.label.batchingBasedOnAgentsOption": "Batch options",
@@ -190,6 +192,5 @@
   "loc.messages.minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
   "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
   "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d",
-  "loc.messages.vstestArchitectureInput": "Test runner architecture : %s",
-  "loc.messages.arm64RequiresVS2022": "arm64 test architecture requires Visual Studio 2022 (17.0+). The selected Visual Studio version '%s' may not support arm64."
+  "loc.messages.vstestPlatformInput": "Override test platform architecture : %s"
 }

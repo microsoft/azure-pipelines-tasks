@@ -305,6 +305,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "vstestPlatform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstestPlatform",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestPlatform",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "distributionBatchType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.distributionBatchType",
@@ -664,7 +673,6 @@
     "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests",
-    "vstestArchitectureInput": "ms-resource:loc.messages.vstestArchitectureInput",
-    "arm64RequiresVS2022": "ms-resource:loc.messages.arm64RequiresVS2022"
+    "vstestPlatformInput": "ms-resource:loc.messages.vstestPlatformInput"
   }
 }

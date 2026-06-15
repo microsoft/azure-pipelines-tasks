@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
-import * as os from 'os';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as ci from './cieventlogger';
@@ -394,35 +393,18 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
         inputDataContract.ExecutionSettings.AdditionalConsoleParameters = null;
     }
 
-    // Inject /Platform: into AdditionalConsoleParameters so the test host architecture
-    // is honoured in ALL execution modes (single-agent Hydra, multi-agent DTA, and rerun).
-    // This is appended AFTER the user's otherConsoleOptions are processed (and possibly
-    // cleared for server-based runs), so it is always present regardless of run mode.
-    const agentOsArch = (tl.getVariable('Agent.OSArchitecture') || os.arch()).toLowerCase();
-    const vstestArchitecture = agentOsArch === 'arm64' ? 'arm64'
-        : (agentOsArch === 'x86' || agentOsArch === 'ia32') ? 'x86'
-        : 'x64';
-    tl.debug(tl.loc('vstestArchitectureInput', vstestArchitecture));
-    // Only inject /Platform: if the user has not already specified it in otherConsoleOptions.
-    const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';
-    if (!/\/Platform:/i.test(existingParams)) {
-        const platformFlag = '/Platform:' + vstestArchitecture;
-        inputDataContract.ExecutionSettings.AdditionalConsoleParameters = existingParams
-            ? existingParams + ' ' + platformFlag
-            : platformFlag;
-    }
-
-    // Warn if arm64 is selected with a VS version that does not support it (pre-17.0).
-    if (vstestArchitecture === 'arm64') {
-        const vsTestLocationMethod = tl.getInput('vstestLocationMethod');
-        if (vsTestLocationMethod === utils.Constants.vsTestVersionString) {
-            const vsTestVersion = tl.getInput('vsTestVersion');
-            if (!utils.Helper.isNullEmptyOrUndefined(vsTestVersion) &&
-                vsTestVersion.toLowerCase() !== 'latest' &&
-                vsTestVersion.toLowerCase() !== 'toolsinstaller' &&
-                parseFloat(vsTestVersion) < 17.0) {
-                tl.warning(tl.loc('arm64RequiresVS2022', vsTestVersion));
-            }
+    // Inject /Platform: only when the user has explicitly set the vstestPlatform input,
+    // leaving vstest.console.exe free to auto-select the host architecture from the
+    // test assembly's PE header when no override is provided.
+    const vstestPlatform = tl.getInput('vstestPlatform');
+    tl.debug(tl.loc('vstestPlatformInput', vstestPlatform));
+    if (vstestPlatform) {
+        const existingParams = inputDataContract.ExecutionSettings.AdditionalConsoleParameters || '';
+        if (!/\/Platform:/i.test(existingParams)) {
+            const platformFlag = '/Platform:' + vstestPlatform;
+            inputDataContract.ExecutionSettings.AdditionalConsoleParameters = existingParams
+                ? existingParams + ' ' + platformFlag
+                : platformFlag;
         }
     }
 

@@ -303,8 +303,15 @@
       "required": false,
       "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
       "groupName": "executionOptions"
-    },
-    {      "name": "distributionBatchType",
+    },    {
+      "name": "vstestPlatform",
+      "type": "string",
+      "label": "Override test platform architecture",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Corresponds to the <code>/Platform:</code> argument of vstest.console.exe. Leave empty to let vstest automatically select the test host architecture based on the compiled target of the test assembly. Set explicitly (e.g. <code>x86</code>, <code>x64</code>, <code>arm64</code>) to force a specific architecture, exactly as you would when running vstest.console.exe directly from the command line.",
+      "groupName": "executionOptions"
+    },    {      "name": "distributionBatchType",
       "type": "pickList",
       "label": "Batch tests",
       "defaultValue": "basedOnTestCases",
@@ -663,7 +670,6 @@
     "minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
     "actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
     "minimumExpectedTests": "Minimum tests expected to be run: %d",
-    "vstestArchitectureInput": "Test runner architecture : %s",
-    "arm64RequiresVS2022": "arm64 test architecture requires Visual Studio 2022 (17.0+). The selected Visual Studio version '%s' may not support arm64."
+    "vstestPlatformInput": "Override test platform architecture : %s"
   }
 }

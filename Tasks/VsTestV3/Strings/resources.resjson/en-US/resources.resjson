@@ -196,6 +196,5 @@
   "loc.messages.minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
   "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
   "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d",
-  "loc.messages.vstestArchitectureInput": "Test runner architecture : %s",
-  "loc.messages.arm64RequiresVS2022": "arm64 test architecture requires Visual Studio 2022 (17.0+). The selected Visual Studio version '%s' may not support arm64."
+  "loc.messages.vstestPlatformInput": "Override test platform architecture : %s"
 }
