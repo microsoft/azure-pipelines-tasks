@@ -60,7 +60,14 @@ export async function run() {
    * However, "michaeljqzq" is not in the scope of a credential.
    * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
    */
-  util.dockerLogin(authenticationToken.getLoginServerUrl(), authenticationToken.getUsername(), authenticationToken.getPassword());
+  const loginServerUrl = authenticationToken.getLoginServerUrl();
+  const loginResult = util.dockerLogin(loginServerUrl, authenticationToken.getUsername(), authenticationToken.getPassword());
+  // spawnSync does not throw on a non-zero exit code, so explicitly fail fast here.
+  // Unlike the deploy task (which validates multiple registries and warns-and-continues),
+  // push depends on this single login succeeding before `iotedgedev push` runs.
+  if (loginResult.status !== 0) {
+    throw new TaskError('Failed to login to container registry', tl.loc('InvalidRegistryCredentialWarning', loginServerUrl, loginResult.stderr));
+  }
 
   let envList = process.env;
   // Set bypass modules
