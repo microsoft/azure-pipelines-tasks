@@ -162,6 +162,8 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.failed, 'should have failed');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(tr.warningIssues.some(w => w.includes('Error Code: [1]')), 'Should warn with the standard install exit code');
+            assert(tr.warningIssues.some(w => w.includes('loc_mock_FailedToInstallAzureDevOpsCLI')), 'Should warn that the standard install failed');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
             assert(tr.stdout.indexOf('loc_mock_FailedToInstallAzureDevOpsCLI') >= 0, 'Should fail with extension installation error');
             done();
@@ -198,6 +200,8 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.succeeded, 'should have succeeded');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt standard installation first');
+            assert(tr.warningIssues.some(w => w.includes('Error Code: [1]')), 'Should warn with the standard install exit code');
+            assert(tr.warningIssues.some(w => w.includes('loc_mock_FailedToInstallAzureDevOpsCLI')), 'Should warn that the standard install failed before falling back');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
             assert(tr.stdout.includes('az extension add --name azure-devops'), 'Should attempt no-deps installation as fallback');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionInstalledNoDeps'), 'Should install with no-deps successfully');

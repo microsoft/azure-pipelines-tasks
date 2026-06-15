@@ -477,12 +477,14 @@ export class azureclitask {
                     console.log(tl.loc("AzureDevOpsExtensionNotFound"));
 
                     if (tl.getPipelineFeature('AzureCliV3EnableWhlFallback')) {
-                        try {
-                            Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
-                        } catch (error) {
+                        const standardInstallResult = tl.execSync("az", "extension add -n azure-devops -y");
+                        if (standardInstallResult.code !== 0) {
+                            tl.warning("Error Code: [" + standardInstallResult.code + "]");
+                            tl.warning(tl.loc("FailedToInstallAzureDevOpsCLI"));
                             console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
                             await this.installAzureDevOpsExtensionNoDeps();
+                        } else {
+                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
