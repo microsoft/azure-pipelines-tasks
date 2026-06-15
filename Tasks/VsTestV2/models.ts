@@ -76,6 +76,7 @@ export interface DtaEnvironment {
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
+    vstestArchitecture: string;
     publishRunAttachments: string;
     vstestDiagFile: string;
     responseFile: string;

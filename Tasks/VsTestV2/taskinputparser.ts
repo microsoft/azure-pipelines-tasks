@@ -72,7 +72,7 @@ export function getDtaInstanceId(): number {
     return taskInstanceId;
 }
 
-function initTestConfigurations(testConfiguration: models.TestConfigurations & { vstestArchitecture?: string }) {
+function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.testSelection = tl.getInput('testSelector');
     getTestSelectorBasedInputs(testConfiguration);
