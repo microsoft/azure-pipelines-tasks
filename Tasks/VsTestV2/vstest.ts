@@ -18,7 +18,7 @@ import * as process from 'process';
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
 
-let vstestConfig: models.VsTestConfigurations = undefined;
+let vstestConfig: models.VsTestConfigurations & { vstestArchitecture?: string } = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
 const workingDirectory = utils.Constants.systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
