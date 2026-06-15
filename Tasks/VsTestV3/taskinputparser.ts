@@ -118,8 +118,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
 
-    testConfiguration.vstestPlatform = tl.getInput('vstestPlatform');
-    tl.debug(tl.loc('vstestPlatformInput', testConfiguration.vstestPlatform));
+    testConfiguration.vstestArchitecture = tl.getInput('vstestPlatform');
+    tl.debug(tl.loc('vstestPlatformInput', testConfiguration.vstestArchitecture));
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));

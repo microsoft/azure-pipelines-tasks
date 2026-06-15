@@ -45,7 +45,7 @@ export interface TestConfigurations {
     toolsInstallerConfig: ToolsInstallerConfiguration;
     proxyConfiguration: ProxyConfiguration;
     diagnosticsConfiguration: DiagnosticsConfiguration;
-    vstestPlatform: string;
+    vstestArchitecture: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
