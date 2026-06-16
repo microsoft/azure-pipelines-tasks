@@ -133,7 +133,6 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded with JSON format az version output');
         assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
         assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
-        assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
     });
 
     it('Az Version Parsing: Handles table format output (UseAzVersion enabled)', async () => {
