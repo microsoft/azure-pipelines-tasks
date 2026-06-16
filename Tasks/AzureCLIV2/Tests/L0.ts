@@ -181,6 +181,36 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
     });
 
+    it('Az Version Parsing: Handles TSV format output (UseAzVersion enabled)', async () => {
+        let tp = path.join(__dirname, 'AzVersionParse_TsvFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with TSV format az version output');
+        assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+        assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+    });
+
+    it('Az Version Parsing: Handles YAML format output (UseAzVersion enabled)', async () => {
+        let tp = path.join(__dirname, 'AzVersionParse_YamlFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with YAML format az version output');
+        assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+        assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+    });
+
     it('Keep Azure Session Active: Refresh token for WIF with keepAzSessionActive enabled', async () => {
         let tp = path.join(__dirname, 'KeepAzSessionActive_WIF.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
