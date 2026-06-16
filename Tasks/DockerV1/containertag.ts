@@ -5,7 +5,9 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common/containerco
 import * as utils from "./utils";
 import * as Q from 'q';
 
-function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean): Q.Promise<void> {
+const useDockerSkipRedundantTagFeature = "UseDockerSkipRedundantTag";
+
+function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean, shouldSkipRedundantTag: boolean): Q.Promise<void> {
     let command = connection.createCommand();
     command.arg("tag");
     if (qualifyImageName) {
@@ -14,6 +16,13 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
     if (qualifySourceImageName) {
         sourceImage = connection.getQualifiedImageNameIfRequired(sourceImage);
     }
+
+    // Skip only when the feature flag is enabled and source/target are identical.
+    if (shouldSkipRedundantTag && sourceImage === targetImage) {
+        console.log(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sourceImage}`);
+        return Q.resolve();
+    }
+
     command.arg(sourceImage);
     command.arg(targetImage);
 
@@ -31,13 +40,14 @@ export function run(connection: ContainerConnection): Q.Promise<void> {
     }
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     const qualifySourceImageName = tl.getBoolInput("qualifySourceImageName");
+    const shouldSkipRedundantTag = tl.getPipelineFeature(useDockerSkipRedundantTagFeature);
     let additionalImageTags = tl.getDelimitedInput("arguments", "\n");
     let imageMappings = utils.getImageMappings(connection, imageNames, additionalImageTags);
 
     let firstMapping = imageMappings.shift();
-    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName);
+    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag);
     imageMappings.forEach(mapping => {
-        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName));
+        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag));
     });
 
     return promise;
