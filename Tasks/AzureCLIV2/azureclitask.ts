@@ -254,7 +254,7 @@ export class azureclitask {
                         versionMatch = [null, parsed["azure-cli"]];
                     }
                 } catch (e) {
-                    tl.warning(`Failed to parse az version JSON output: ${e}`);
+                    tl.debug(`az version output is not JSON, trying regex strategies: ${e}`);
                 }
 
                 // Strategy 2: Same-line match for JSON-like or text format
