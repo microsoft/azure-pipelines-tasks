@@ -381,12 +381,14 @@ describe('VsTestV2 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
 });
 
 // ---------------------------------------------------------------------------
-// vstestPlatform user-input tests
-// Covers the /Platform: injection logic in vstest.ts (legacy path) and
-// inputparser.ts (Hydra paths) when the user sets the vstestPlatform input.
+// vstestPlatform pickList tests
+// Covers /Platform: injection in vstest.ts (legacy path) and inputparser.ts
+// (Hydra path) for the current UI contract:
+//   - Default (blank)
+//   - arm64
 // ---------------------------------------------------------------------------
 
-describe('vstestPlatform user-input – /Platform: injection', function () {
+describe('vstestPlatform pickList (Default/arm64) - /Platform: injection', function () {
     this.timeout(5000);
 
     // ── Legacy path (vstest.ts) ──────────────────────────────────────────────
@@ -403,13 +405,9 @@ describe('vstestPlatform user-input – /Platform: injection', function () {
         assert.strictEqual(shouldInjectLegacy('arm64', undefined), true);
     });
 
-    it('legacy: injects /Platform:x64 when vstestPlatform="x64"', function () {
-        assert.strictEqual(shouldInjectLegacy('x64', ''), true);
-    });
-
-    it('legacy: injects /Platform:x86 when vstestPlatform="x86"', function () {
-        assert.strictEqual(shouldInjectLegacy('x86', '/logger:trx'), true);
-    });
+    function isDropdownValueSupported(vstestPlatform: string | undefined): boolean {
+        return vstestPlatform === undefined || vstestPlatform === '' || vstestPlatform === 'arm64';
+    }
 
     it('legacy: does NOT inject when vstestPlatform is empty', function () {
         assert.strictEqual(shouldInjectLegacy('', undefined), false);
@@ -417,6 +415,14 @@ describe('vstestPlatform user-input – /Platform: injection', function () {
 
     it('legacy: does NOT inject when vstestPlatform is undefined (default)', function () {
         assert.strictEqual(shouldInjectLegacy(undefined, undefined), false);
+    });
+
+    it('legacy: dropdown accepts only Default (blank) and arm64', function () {
+        assert.strictEqual(isDropdownValueSupported(undefined), true);
+        assert.strictEqual(isDropdownValueSupported(''), true);
+        assert.strictEqual(isDropdownValueSupported('arm64'), true);
+        assert.strictEqual(isDropdownValueSupported('x64'), false);
+        assert.strictEqual(isDropdownValueSupported('x86'), false);
     });
 
     it('legacy: does NOT inject when otherConsoleOptions already has /Platform:', function () {
@@ -450,10 +456,6 @@ describe('vstestPlatform user-input – /Platform: injection', function () {
 
     it('hydra: injects /Platform:arm64 when vstestPlatform="arm64" and params are null', function () {
         assert.strictEqual(applyHydraInjection('arm64', null), '/Platform:arm64');
-    });
-
-    it('hydra: injects /Platform:x64 when vstestPlatform="x64" and params are empty', function () {
-        assert.strictEqual(applyHydraInjection('x64', ''), '/Platform:x64');
     });
 
     it('hydra: appends /Platform:arm64 after existing params', function () {
