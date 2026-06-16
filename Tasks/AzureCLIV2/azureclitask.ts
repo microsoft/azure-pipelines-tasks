@@ -267,9 +267,9 @@ export class azureclitask {
                     versionMatch = azVersionResultOutput.match(/azure-cli\b[^\n]*\n[-\s]+\n\s*(\d+\.\d+\.\d+)/i);
                 }
 
-                // Strategy 4: TSV format — no headers, first column is azure-cli version (e.g. "2.85.0\t2.85.0\t1.1.0")
+                // Strategy 4: TSV format — requires at least two tab-separated version columns (e.g. "2.85.0\t2.85.0\t1.1.0")
                 if (!versionMatch) {
-                    versionMatch = azVersionResultOutput.trim().match(/^(\d+\.\d+\.\d+)(?:\t|$)/m);
+                    versionMatch = azVersionResultOutput.trim().match(/^(\d+\.\d+\.\d+)\t\d+\.\d+\.\d+/m);
                 }
             }else{
                 // gets azure-cli version from az --version output text format
