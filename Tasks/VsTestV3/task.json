@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 275,
+    "Minor": 276,
     "Patch": 0
   },
   "demands": [
@@ -316,12 +316,19 @@
       "groupName": "executionOptions"
     },    {
       "name": "vstestPlatform",
-      "type": "string",
+      "type": "pickList",
       "label": "Override test platform architecture",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Corresponds to the <code>/Platform:</code> argument of vstest.console.exe. Leave empty to let vstest automatically select the test host architecture based on the compiled target of the test assembly. Set explicitly (e.g. <code>x86</code>, <code>x64</code>, <code>arm64</code>) to force a specific architecture, exactly as you would when running vstest.console.exe directly from the command line.",
-      "groupName": "executionOptions"
+      "helpMarkDown": "Select the architecture for the test runner (vstest.console.exe). Choose <b>Default</b> to let vstest automatically select based on the compiled target of the test assembly. Choose <b>arm64</b> to force ARM64 (requires Visual Studio 2022 17.0+ or the Visual Studio Test Platform Installer with an arm64-capable runner).",
+      "groupName": "executionOptions",
+      "options": {
+        "": "Default",
+        "arm64": "arm64"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
     },    {      "name": "distributionBatchType",
       "type": "pickList",
       "label": "Batch tests",

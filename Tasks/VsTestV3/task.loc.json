@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 275,
+    "Minor": 276,
     "Patch": 0
   },
   "demands": [
@@ -314,6 +314,22 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "vstestPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vstestPlatform",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestPlatform",
+      "groupName": "executionOptions",
+      "options": {
+        "": "Default",
+        "arm64": "arm64"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
     },
     {
       "name": "distributionBatchType",
