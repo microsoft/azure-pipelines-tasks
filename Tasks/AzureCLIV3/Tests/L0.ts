@@ -330,6 +330,7 @@ describe('AzureCLIV3 Suite', function () {
         tr.runAsync().then(() => {
             assert(tr.succeeded, 'task should have succeeded with JSON format az version output');
             assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
             done();
         }).catch((err) => {
             done(err);
@@ -345,6 +346,7 @@ describe('AzureCLIV3 Suite', function () {
         tr.runAsync().then(() => {
             assert(tr.succeeded, 'task should have succeeded with table format az version output');
             assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
             done();
         }).catch((err) => {
             done(err);
@@ -359,6 +361,23 @@ describe('AzureCLIV3 Suite', function () {
 
         tr.runAsync().then(() => {
             assert(tr.succeeded, 'task should have succeeded with text format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Older version (< 2.66.0) is correctly parsed and compared', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_OlderVersion.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with older az version');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.50.0') >= 0, 'should correctly extract version 2.50.0');
             assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
             done();
         }).catch((err) => {
