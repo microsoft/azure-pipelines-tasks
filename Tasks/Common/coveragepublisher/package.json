@@ -8,12 +8,9 @@
   },
   "dependencies": {
     "azure-pipelines-task-lib": "5.2.10",
-    "@types/node": "24.10.0",
+    "@types/node": "^16.11.39",
     "os": "^0.1.1",
     "uuid": "^3.3.2"
-  },
-  "devDependencies": {
-    "typescript": "^5.7.2"
   },
   "main": "VSTS Tasks Code Coverage Tools",
   "scripts": {
