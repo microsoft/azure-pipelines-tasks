@@ -321,6 +321,102 @@ describe('AzureCLIV3 Suite', function () {
         });
     });
 
+    it('Az Version Parsing: Handles JSON format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_JsonFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with JSON format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles table format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TableFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with table format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles text format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TextFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with text format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Older version (< 2.66.0) is correctly parsed and compared', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_OlderVersion.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with older az version');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.50.0') >= 0, 'should correctly extract version 2.50.0');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles TSV format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TsvFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with TSV format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles YAML format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_YamlFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with YAML format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
     it('LateBoundIdToken: Feature Flag ON, Token Present -> Uses Token, Emits Telemetry', function (done) {
         this.timeout(timeout);
 
