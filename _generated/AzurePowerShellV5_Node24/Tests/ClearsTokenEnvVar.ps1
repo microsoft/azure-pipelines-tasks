@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Register-Mock Invoke-ScriptArgumentSanitization
 $targetAzurePs = "4.1.0"
+Register-Mock Get-VstsInput { "myArmConnection" } -- -Name ConnectedServiceNameARM -Require
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1" } -- -Name ScriptPath
 Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
@@ -15,7 +16,8 @@ Register-Mock Get-VstsInput { $true } -- -Name pwsh -AsBool -Default $false
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Get-Module
 Register-Mock Initialize-AzModule
-Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
+Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} } -- -Name myArmConnection -Require
+Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal"; parameters = @{ AccessToken = "eyJfakeTokenForTesting123456789" } }} } -- -Name SystemVssConnection -Require
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Assert-VstsPath

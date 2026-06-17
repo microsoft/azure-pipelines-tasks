@@ -118,6 +118,7 @@ try
         $CoreAzArgument += " -targetAzurePs $targetAzurePs"
     }
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
+    $contents += "`$env:__VSTS_ACCESS_TOKEN = `$null"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
