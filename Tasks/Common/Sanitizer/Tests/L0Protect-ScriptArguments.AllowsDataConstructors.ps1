@@ -15,6 +15,7 @@ $benignInputs = @(
     @{ Name = 'Hashtable string value';     Input = '@{ Owner = "user@contoso.com" }' },
     @{ Name = 'Named hashtable parameter';  Input = '-Tags @{ env = "prod" }' },
     @{ Name = 'Bare type literal';          Input = '[string]' },
+    @{ Name = 'Type literal parameter';     Input = '-Type [System.String]' },
     @{ Name = 'Index literal';              Input = '[0]' },
     @{ Name = 'Splatting variable';         Input = '@params' },
     @{ Name = 'Boolean';                    Input = '-Enabled $true' },

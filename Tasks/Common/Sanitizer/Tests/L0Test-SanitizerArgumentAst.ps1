@@ -20,6 +20,7 @@ $safe = @(
     '@params',
     '[string]',
     '[0]',
+    '-Type [System.String]',
     '$env:BUILD_REQUESTEDFOR',
     'value.txt',
     '-Path D:\my\path',
@@ -36,6 +37,9 @@ $unsafe = @(
     '@{ Tag = Get-Content C:\secret.txt }',                      # nested command
     '@{ k = $(whoami) }',                                        # sub-expression
     "@{ k = [adsi]'LDAP://x' }",                                 # type cast
+    "@{ k = 'C:\victim\file.ps1' -as [System.IO.StreamWriter] }",# -as conversion (type literal)
+    "@{ When = '2024-01-01' -as [datetime] }",                   # -as conversion (value type)
+    '@{ k = [System.IO.StreamWriter] }',                         # bare type reference
     '@{ k = [System.Net.Dns]::MachineName }',                    # property getter
     '@{ k = [System.IO.File]::WriteAllText("a","b") }',          # method call
     '@( New-Item C:\evil.txt )',                                 # command in array

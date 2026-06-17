@@ -18,6 +18,7 @@ $astOnlyInjections = @(
     @{ Name = 'Command as hashtable value';     Input = '@{ k = New-Item -Path C:\evil.txt -ItemType File -Force }' },
     @{ Name = 'Get-Content as hashtable value'; Input = '@{ Tag = Get-Content C:\secret.txt }' },
     @{ Name = 'Cast (adsi) as value';           Input = "@{ k = [adsi]'LDAP://attacker' }" },
+    @{ Name = '-as conversion as value';        Input = "@{ k = 'C:\victim\file.ps1' -as [System.IO.StreamWriter] }" },
     @{ Name = 'Property getter as value';       Input = '@{ k = [System.Net.Dns]::MachineName }' }
 )
 

@@ -149,7 +149,8 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
 # argument list of a command invocation - and rejects anything that is not a
 # plain data literal:
 #   * a parse error,
-#   * a script block, member access / method call, or type-cast expression,
+#   * a script block, member access / method call, type-cast, the -as conversion
+#     operator, or a bare type reference,
 #   * a nested command (more than the single placeholder CommandAst), which
 #     covers commands embedded in a hashtable value, array element, or a
 #     chained statement.
@@ -176,11 +177,23 @@ function Test-SanitizerArgumentAst([string]$inputArgs) {
 
     # InvokeMemberExpressionAst derives from MemberExpressionAst, so the single
     # MemberExpressionAst check covers both property getters and method calls.
+    # ConvertExpressionAst is the [type]$x / [type]'x' cast; the -as conversion
+    # operator (a BinaryExpressionAst with the 'As' operator) is the semantically
+    # equivalent form and likewise invokes the target type's constructor /
+    # type-converter at the sink - verified to execute with both a [type] literal
+    # and a string/variable right operand - so it must be rejected too. A bare
+    # TypeExpressionAst (a type reference used as a value inside a data constructor)
+    # is never needed in pure data and is blocked for good measure; top-level type
+    # literals passed as plain arguments do not parse as TypeExpressionAst and
+    # remain allowed.
     $dangerous = $ast.FindAll({
             param($node)
             ($node -is [System.Management.Automation.Language.ScriptBlockExpressionAst]) -or
             ($node -is [System.Management.Automation.Language.MemberExpressionAst]) -or
-            ($node -is [System.Management.Automation.Language.ConvertExpressionAst])
+            ($node -is [System.Management.Automation.Language.ConvertExpressionAst]) -or
+            ($node -is [System.Management.Automation.Language.TypeExpressionAst]) -or
+            (($node -is [System.Management.Automation.Language.BinaryExpressionAst]) -and
+             ($node.Operator -eq [System.Management.Automation.Language.TokenKind]::As))
         }, $true)
     if ($dangerous -and $dangerous.Count -gt 0) {
         return $false
