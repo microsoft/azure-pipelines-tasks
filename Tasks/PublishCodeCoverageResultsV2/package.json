@@ -7,7 +7,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.4",
-    "coveragepublisher": "file:../../_build/Tasks/Common/coveragepublisher-1.1.1.tgz"
+    "coveragepublisher": "file:../../_build/Tasks/Common/coveragepublisher-1.1.3.tgz"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
