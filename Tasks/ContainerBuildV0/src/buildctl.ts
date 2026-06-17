@@ -51,9 +51,10 @@ export async function buildctlBuildAndPush() {
     // Connect to any specified container registry
     var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";
     let connection = new ContainerConnection(!isPoolProviderContext);
-    connection.open(null, registryAuthenticationToken, true, false);
 
     try {
+        connection.open(null, registryAuthenticationToken, true, false);
+
         let repositoryName = tl.getInput("repository");
         if (!repositoryName) {
             tl.warning("No repository is specified. Nothing will be pushed.");
@@ -109,7 +110,7 @@ export async function buildctlBuildAndPush() {
             buildctlTool.arg('--exporter=image');
             buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
             buildctlTool.arg('--exporter-opt=push=true');
-            buildctlTool.exec().then(() => {}).catch((error) => {
+            await buildctlTool.exec().then(() => {}).catch((error) => {
                 throw new Error(error.message);
             });
         }
@@ -121,6 +122,6 @@ export async function buildctlBuildAndPush() {
         }
     }
     finally {
-        connection.close(true);
+        try { connection.close(true); } catch (e) { tl.debug(`connection cleanup failed: ${e}`); }
     }
 }

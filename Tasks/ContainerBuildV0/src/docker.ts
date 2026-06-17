@@ -12,9 +12,10 @@ export async function dockerBuildAndPush() {
 
     // Connect to any specified container registry
     let connection = new ContainerConnection();
-    connection.open(null, registryAuthenticationToken, true, false);
 
     try {
+        connection.open(null, registryAuthenticationToken, true, false);
+
         /* tslint:disable:no-var-requires */
         let commandImplementation = require("./dockerbuild");
         await commandImplementation.runBuild(connection).then(() => {}).catch((error) => {
@@ -29,6 +30,6 @@ export async function dockerBuildAndPush() {
         }
     }
     finally {
-        connection.close(true);
+        try { connection.close(true); } catch (e) { tl.debug(`connection cleanup failed: ${e}`); }
     }
 }
