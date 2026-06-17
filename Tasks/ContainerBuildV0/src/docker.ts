@@ -14,16 +14,21 @@ export async function dockerBuildAndPush() {
     let connection = new ContainerConnection();
     connection.open(null, registryAuthenticationToken, true, false);
 
-    /* tslint:disable:no-var-requires */
-    let commandImplementation = require("./dockerbuild");
-    await commandImplementation.runBuild(connection).then(() => {}).catch((error) => {
-        throw new Error(error.message);
-    });
-
-    if (endpointId) {
-        commandImplementation = require("./dockerpush")
-        await commandImplementation.run(connection).then(() => {}).catch((error) => {
+    try {
+        /* tslint:disable:no-var-requires */
+        let commandImplementation = require("./dockerbuild");
+        await commandImplementation.runBuild(connection).then(() => {}).catch((error) => {
             throw new Error(error.message);
         });
+
+        if (endpointId) {
+            commandImplementation = require("./dockerpush")
+            await commandImplementation.run(connection).then(() => {}).catch((error) => {
+                throw new Error(error.message);
+            });
+        }
+    }
+    finally {
+        connection.close(true);
     }
 }
