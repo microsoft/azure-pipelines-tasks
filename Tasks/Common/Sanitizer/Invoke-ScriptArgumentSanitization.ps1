@@ -129,7 +129,14 @@ function Invoke-ScriptArgumentSanitization {
     $caughtMessage  = $null
     $caughtStack    = $null
     try {
-        $null = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName
+        # The dispatcher is the opt-in entry point for the new per-task sanitizer
+        # consumers (AzurePowerShellV2-V5, ServiceFabricPowerShellV1). They run
+        # user FilePath scripts whose arguments legitimately include hashtables
+        # and arrays, so data constructors are permitted here; the AST backstop
+        # inside Protect-ScriptArguments blocks any that would execute. Legacy
+        # direct callers (AzureFileCopy, PowerShell, etc.) keep the strict
+        # character allow-list by not passing this switch.
+        $null = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName -AllowDataConstructors
     }
     catch {
         $sanitizerThrew = $true

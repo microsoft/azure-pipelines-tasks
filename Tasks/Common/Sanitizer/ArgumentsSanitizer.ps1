@@ -30,14 +30,26 @@ function Get-SanitizerActivateStatus {
 
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
-function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
+function Protect-ScriptArguments([string]$inputArgs, [string]$taskName, [switch]$AllowDataConstructors) {
     $script:taskName = $taskName
+
+    # When data constructors are permitted, run the structural AST backstop on the
+    # RAW arguments first. This module only validates - it does not rewrite what the
+    # task runs - so the raw string is exactly what PowerShell parses at the
+    # dot-source sink. The relaxed character allow-list intentionally permits
+    # @ { } [ ], which re-enables expressions that evaluate at bind time (a hashtable
+    # value, array element, cast or sub-expression). Test-SanitizerArgumentAst
+    # rejects those while still allowing pure data literals such as @{ Port = 8080 }.
+    $astSafe = $true
+    if ($AllowDataConstructors) {
+        $astSafe = Test-SanitizerArgumentAst $inputArgs
+    }
 
     $expandedArgs, $expandTelemetry = Expand-EnvVariables $inputArgs;
 
-    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs
+    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs -AllowDataConstructors:$AllowDataConstructors
 
-    if ($sanitizedArgs -eq $inputArgs) {
+    if (($sanitizedArgs -eq $inputArgs) -and $astSafe) {
         Write-Debug 'Arguments passed sanitization without change.'
     }
     else {
@@ -46,10 +58,16 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
             if ($null -ne $sanitizeTelemetry) {
                 $telemetry += $sanitizeTelemetry;
             }
+            if (-not $astSafe) {
+                if ($null -eq $telemetry) {
+                    $telemetry = @{}
+                }
+                $telemetry.astBackstopRejected = $true
+            }
             Publish-Telemetry $telemetry;
         }
 
-        if ($sanitizedArgs -ne $expandedArgs) {
+        if (($sanitizedArgs -ne $expandedArgs) -or (-not $astSafe)) {
             $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
             if ($featureFlags.activate) {
@@ -69,7 +87,7 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 # public functions - end
 
 # !ATTENTION: don't write any console output in this method, because it will break result
-function Get-SanitizedArguments([string]$inputArgs) {
+function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructors) {
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
@@ -78,7 +96,18 @@ function Get-SanitizedArguments([string]$inputArgs) {
     ## ('?<!`') - checking if before character no backtick.
     ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
-    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    ##
+    ## When -AllowDataConstructors is set (Group A tasks, via the dispatcher) the
+    ## data-constructor characters @ { } [ ] are additionally allowed so legitimate
+    ## hashtable / array arguments are not mangled (regression issue #22173). The
+    ## code execution those characters could otherwise re-enable (e.g. @{ k = cmd })
+    ## is blocked structurally by Test-SanitizerArgumentAst, not by this allow-list.
+    if ($AllowDataConstructors) {
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
+    }
+    else {
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    }
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
@@ -103,6 +132,72 @@ function Get-SanitizedArguments([string]$inputArgs) {
     }
 
     return $($resultArgs, $telemetry);
+}
+
+# Structural backstop for the relaxed (-AllowDataConstructors) path.
+#
+# A character allow-list alone cannot tell a data literal from code: once
+# @ { } [ ] are permitted, an argument such as @{ k = New-Item ... }, @( cmd ),
+# @{ k = $(...) } or @{ k = [type]::Member() } passes the regex yet is an
+# *evaluated expression* at the dot-source sink. This was verified empirically
+# against the real '. <script> <args>' / '& <script> <args>' sinks: a hashtable
+# value, array element, sub-expression or cast *inside* a data constructor runs,
+# whereas the same tokens at top-level argument position are inert literal
+# strings.
+#
+# This function parses the raw arguments exactly as the sink does - as the
+# argument list of a command invocation - and rejects anything that is not a
+# plain data literal:
+#   * a parse error,
+#   * a script block, member access / method call, or type-cast expression,
+#   * a nested command (more than the single placeholder CommandAst), which
+#     covers commands embedded in a hashtable value, array element, or a
+#     chained statement.
+# Pure data literals (@{ Port = 8080 }, @('a','b')), variables including
+# $env:VAR, quoted strings and numbers are accepted.
+#
+# Returns $true when the arguments are safe, $false when a dangerous construct
+# is present.
+function Test-SanitizerArgumentAst([string]$inputArgs) {
+    if ([string]::IsNullOrWhiteSpace($inputArgs)) {
+        return $true
+    }
+
+    $tokens = $null
+    $parseErrors = $null
+    # A literal placeholder command name keeps the parse focused on the argument
+    # expressions and mirrors how the arguments reach the sink.
+    $ast = [System.Management.Automation.Language.Parser]::ParseInput(
+        "& placeholder $inputArgs", [ref]$tokens, [ref]$parseErrors)
+
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        return $false
+    }
+
+    # InvokeMemberExpressionAst derives from MemberExpressionAst, so the single
+    # MemberExpressionAst check covers both property getters and method calls.
+    $dangerous = $ast.FindAll({
+            param($node)
+            ($node -is [System.Management.Automation.Language.ScriptBlockExpressionAst]) -or
+            ($node -is [System.Management.Automation.Language.MemberExpressionAst]) -or
+            ($node -is [System.Management.Automation.Language.ConvertExpressionAst])
+        }, $true)
+    if ($dangerous -and $dangerous.Count -gt 0) {
+        return $false
+    }
+
+    # Exactly one CommandAst is expected - our placeholder. Any additional
+    # CommandAst means a command nested inside a data constructor or a chained
+    # statement.
+    $commandAsts = $ast.FindAll({
+            param($node)
+            $node -is [System.Management.Automation.Language.CommandAst]
+        }, $true)
+    if ($commandAsts.Count -gt 1) {
+        return $false
+    }
+
+    return $true
 }
 
 function Publish-Telemetry($telemetry) {
