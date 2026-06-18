@@ -99,9 +99,10 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
     ##
     ## When -AllowDataConstructors is set (Group A tasks, via the dispatcher) the
     ## data-constructor characters @ { } [ ] are additionally allowed so legitimate
-    ## hashtable / array arguments are not mangled (regression issue #22173). The
-    ## code execution those characters could otherwise re-enable (e.g. @{ k = cmd })
-    ## is blocked structurally by Test-SanitizerArgumentAst, not by this allow-list.
+    ## hashtable arguments are not mangled (regression issue #22173). (@(...) array
+    ## literals stay blocked: the allow-list still rejects parentheses.) The code
+    ## execution those characters could otherwise re-enable (e.g. @{ k = cmd }) is
+    ## blocked structurally by Test-SanitizerArgumentAst, not by this allow-list.
     if ($AllowDataConstructors) {
         $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
     }
@@ -154,8 +155,10 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
 #   * a nested command (more than the single placeholder CommandAst), which
 #     covers commands embedded in a hashtable value, array element, or a
 #     chained statement.
-# Pure data literals (@{ Port = 8080 }, @('a','b')), variables including
-# $env:VAR, quoted strings and numbers are accepted.
+# Pure data literals (@{ Port = 8080 }), variables including $env:VAR, quoted
+# strings and numbers are accepted. (Array literals written @(...) pass this AST
+# check but are still rejected upstream by the character allow-list, which does
+# not permit parentheses.)
 #
 # Returns $true when the arguments are safe, $false when a dangerous construct
 # is present.
