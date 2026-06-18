@@ -113,11 +113,12 @@ try
         $contents += "`$VerbosePreference = 'continue'"
     }
 
-    $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken -isPSCore $" + "$input_pwsh"
+    $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken `$env:__VSTS_ACCESS_TOKEN -isPSCore $" + "$input_pwsh"
     if ($targetAzurePs) {
         $CoreAzArgument += " -targetAzurePs $targetAzurePs"
     }
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
+    $contents += "`$env:__VSTS_ACCESS_TOKEN = `$null"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
@@ -151,6 +152,9 @@ try
         'Arguments' = $arguments
         'WorkingDirectory' = $input_workingDirectory
     }
+
+    # Pass the access token via environment variable so it is not written to disk.
+    $env:__VSTS_ACCESS_TOKEN = $vstsAccessToken
 
     # Switch to "Continue".
     $global:ErrorActionPreference = 'Continue'
@@ -211,8 +215,11 @@ try
     }
 }
 finally {
-    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
-        Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
+    # Clear the access token from the environment.
+    $env:__VSTS_ACCESS_TOKEN = ""
+
+    if ($__vstsAzPSScriptPath -and (Test-Path -LiteralPath $__vstsAzPSScriptPath) ) {
+        Remove-Item -LiteralPath $__vstsAzPSScriptPath -ErrorAction 'SilentlyContinue'
     }
     . "$PSScriptRoot\Utility.ps1"
     Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
