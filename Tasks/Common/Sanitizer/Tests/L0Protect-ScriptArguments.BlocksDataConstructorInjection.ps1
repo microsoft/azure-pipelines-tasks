@@ -8,10 +8,10 @@ Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value 'true'
 
 $expectedMsg = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
 
-# MSRC regression lock. Each input below uses ONLY characters the relaxed
-# allow-list permits (@ { } [ ] plus letters / paths), so the character regex
-# leaves it unchanged - yet each is an expression that EXECUTES at the
-# dot-source sink (a hashtable value, array element, cast or property getter).
+# Regression lock for the relaxed validation mode. Each input below uses ONLY
+# characters the relaxed allow-list permits (@ { } [ ] plus letters / paths), so
+# the character regex leaves it unchanged - yet each is an expression that
+# EXECUTES at the dot-source sink (a hashtable value, cast or property getter).
 # The AST backstop is what blocks them. If Test-SanitizerArgumentAst is removed
 # or weakened these become remote code execution.
 $astOnlyInjections = @(
