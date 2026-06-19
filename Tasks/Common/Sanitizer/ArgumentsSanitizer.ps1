@@ -112,7 +112,7 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
 
     ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
     ## ('?<!`') - checking if before character no backtick.
-    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Instead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
     ##
     ## Two validation modes exist because there are two groups of tasks:
