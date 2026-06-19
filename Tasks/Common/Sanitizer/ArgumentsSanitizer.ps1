@@ -12,6 +12,24 @@ Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.tele
 
 $taskName = ""
 
+# AST node types that represent code execution (not pure data) and therefore
+# must never appear in a relaxed-mode argument. Kept in one module-level place so
+# the set is easy to audit and extend.
+#   ScriptBlockExpressionAst - { ... }
+#   MemberExpressionAst       - property / method access; its subclass
+#                               InvokeMemberExpressionAst (method calls) is covered too
+#   ConvertExpressionAst      - [type]$x / [type]'s' casts, incl. [ordered]@{} / [pscustomobject]@{}
+#   TypeExpressionAst         - a bare [type] reference (also the right side of -is / -isnot)
+# The -as conversion operator is handled separately in Test-SanitizerArgumentAst
+# because it is a BinaryExpressionAst distinguished by its operator, not a
+# dedicated node type.
+$script:DangerousAstNodeTypes = @(
+    [System.Management.Automation.Language.ScriptBlockExpressionAst],
+    [System.Management.Automation.Language.MemberExpressionAst],
+    [System.Management.Automation.Language.ConvertExpressionAst],
+    [System.Management.Automation.Language.TypeExpressionAst]
+)
+
 # public functions - start
 
 function Get-SanitizerFeatureFlags {
@@ -97,22 +115,22 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
     ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
     ##
-    ## Two validation modes exist because there are two groups of tasks:
-    ##   * Strict (default) - the regex below. Used by the long-standing direct
+    ## Two validation modes exist because there are two groups of tasks, built from
+    ## one shared base allow-list:
+    ##   * Strict (default) - base list only. Used by the long-standing direct
     ##     callers; their behavior must stay exactly the same.
-    ##   * Relaxed (-AllowDataConstructors) - additionally allows the data-
-    ##     constructor characters @ { } [ ] so legitimate hashtable params are not
-    ##     mangled. Any code execution those characters could re-enable (e.g.
-    ##     @{ k = cmd }) is blocked structurally by Test-SanitizerArgumentAst,
-    ##     not by this allow-list. (@(...) arrays stay blocked in both modes -
-    ##     parentheses are never allowed.)
+    ##   * Relaxed (-AllowDataConstructors) - base list PLUS the data-constructor
+    ##     characters @ { } [ ], so legitimate hashtable params are not mangled.
+    ##     Any code execution those characters could re-enable (e.g. @{ k = cmd })
+    ##     is blocked structurally by Test-SanitizerArgumentAst, not by this
+    ##     allow-list. (@(...) arrays stay blocked in both modes - parentheses are
+    ##     never allowed.)
     ## Long-term these two modes should be unified into one consistent validation.
+    $allowedChars = '\w\\` _''"\-=\/:\.*,+~?%\n#'
     if ($AllowDataConstructors) {
-        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
+        $allowedChars += '@{}\[\]'
     }
-    else {
-        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
-    }
+    $regex = '(?<!`)([^' + $allowedChars + '])(?!true|false)'
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
@@ -178,23 +196,22 @@ function Test-SanitizerArgumentAst([string]$inputArgs) {
         return $false
     }
 
-    # InvokeMemberExpressionAst derives from MemberExpressionAst, so the single
-    # MemberExpressionAst check covers both property getters and method calls.
-    # ConvertExpressionAst is the [type]$x / [type]'x' cast; the -as conversion
-    # operator (a BinaryExpressionAst with the 'As' operator) is the semantically
-    # equivalent form and likewise invokes the target type's constructor /
-    # type-converter at the sink - verified to execute with both a [type] literal
-    # and a string/variable right operand - so it must be rejected too. A bare
-    # TypeExpressionAst (a type reference used as a value inside a data constructor)
-    # is never needed in pure data and is blocked for good measure; top-level type
-    # literals passed as plain arguments do not parse as TypeExpressionAst and
-    # remain allowed.
+    # $script:DangerousAstNodeTypes lists the node types that execute code (see its
+    # definition for the rationale). InvokeMemberExpressionAst derives from
+    # MemberExpressionAst, so method calls are covered by that single entry. The -as
+    # conversion operator (a BinaryExpressionAst with the 'As' operator) is the
+    # semantically equivalent form of a [type] cast and likewise invokes the target
+    # type's constructor / type-converter at the sink - verified to execute with both
+    # a [type] literal and a string/variable right operand - so it is rejected here
+    # too. (Top-level type literals passed as plain arguments do not parse as
+    # TypeExpressionAst and remain allowed.)
     $dangerous = $ast.FindAll({
             param($node)
-            ($node -is [System.Management.Automation.Language.ScriptBlockExpressionAst]) -or
-            ($node -is [System.Management.Automation.Language.MemberExpressionAst]) -or
-            ($node -is [System.Management.Automation.Language.ConvertExpressionAst]) -or
-            ($node -is [System.Management.Automation.Language.TypeExpressionAst]) -or
+            $isDangerousType = $false
+            foreach ($t in $script:DangerousAstNodeTypes) {
+                if ($node -is $t) { $isDangerousType = $true; break }
+            }
+            $isDangerousType -or
             (($node -is [System.Management.Automation.Language.BinaryExpressionAst]) -and
              ($node.Operator -eq [System.Management.Automation.Language.TokenKind]::As))
         }, $true)
