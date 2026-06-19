@@ -146,7 +146,7 @@ describe('AzureContainerAppsV0 Suite', function () {
             assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV0 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should try to logout of Docker ACR at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should log Docker out of ACR at the end of the task.');
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV0 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV0 task should send telemetry logs at the end of the task.');
         }, tr);
@@ -202,7 +202,7 @@ describe('AzureContainerAppsV0 Suite', function () {
             assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV0 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should try to logout of Docker ACR at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should log Docker out of ACR at the end of the task.');
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV0 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV0 task should send telemetry logs at the end of the task.');
         }, tr);
@@ -352,7 +352,7 @@ describe('AzureContainerAppsV0 Suite', function () {
             assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV0 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should try to logout of Docker ACR at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should log Docker out of ACR at the end of the task.');
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV0 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV0 task should send telemetry logs at the end of the task.');
         }, tr);
@@ -445,7 +445,7 @@ describe('AzureContainerAppsV0 Suite', function () {
             assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV0 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should try to logout of Docker ACR at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should log Docker out of ACR at the end of the task.');
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV0 task should try to logout of Azure at the end of the task.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV0 task should send telemetry logs at the end of the task.');
         }, tr);
