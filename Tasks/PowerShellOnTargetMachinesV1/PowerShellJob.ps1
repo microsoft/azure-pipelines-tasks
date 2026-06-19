@@ -52,7 +52,24 @@ param (
     Write-Verbose "Initiating deployment on $fqdn"
     [String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath -SessionVariables `$parsedSessionVariables $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     [scriptblock]$psOnRemoteScriptBlock = [scriptblock]::Create($psOnRemoteScriptBlockString)
-    $deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock
+    # Capture and filter all output streams to strip ##vso[ commands from remote output
+    $deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock 6>&1 | ForEach-Object {
+        if ($_ -is [System.Management.Automation.InformationRecord]) {
+            $msg = $_.MessageData
+            if ($msg -is [System.Management.Automation.HostInformationMessage]) {
+                $text = $msg.Message
+            } else {
+                $text = "$msg"
+            }
+            if ($text -notmatch '^\s*##vso\[') {
+                Write-Host $text
+            }
+        } elseif ($_ -is [string] -and $_ -match '^\s*##vso\[') {
+            # Skip ##vso commands that come through output stream
+        } else {
+            $_
+        }
+    }
     
     # Telemetry data logic through ps session
     try{

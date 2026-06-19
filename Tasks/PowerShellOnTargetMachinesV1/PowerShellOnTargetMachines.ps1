@@ -29,6 +29,73 @@ Write-Verbose "sessionVariables = $sessionVariables"
 . $PSScriptRoot/PowerShellJob.ps1
 . $PSScriptRoot/Utility.ps1
 
+# Define a filtering TextWriter that strips ##vso[ commands from console output.
+# Must be installed BEFORE DTT modules are imported — they cache Console.Out at load time.
+Add-Type -TypeDefinition @"
+using System;
+using System.IO;
+using System.Text;
+
+public class VsoFilterTextWriter : TextWriter
+{
+    private TextWriter _inner;
+    private StringBuilder _buffer = new StringBuilder();
+
+    public VsoFilterTextWriter(TextWriter inner) { _inner = inner; }
+    public override Encoding Encoding { get { return _inner.Encoding; } }
+
+    public override void Write(char value)
+    {
+        if (value == '\n')
+        {
+            FlushLine();
+        }
+        else
+        {
+            _buffer.Append(value);
+        }
+    }
+
+    public override void Write(string value)
+    {
+        if (value == null) return;
+        foreach (char c in value) Write(c);
+    }
+
+    public override void WriteLine(string value)
+    {
+        if (value != null) _buffer.Append(value);
+        FlushLine();
+    }
+
+    public override void Flush()
+    {
+        if (_buffer.Length > 0) FlushLine();
+        _inner.Flush();
+    }
+
+    private void FlushLine()
+    {
+        string line = _buffer.ToString();
+        _buffer.Clear();
+        if (!line.TrimStart().StartsWith("##vso["))
+        {
+            _inner.WriteLine(line);
+        }
+    }
+
+    public void Restore()
+    {
+        Flush();
+        Console.SetOut(_inner);
+    }
+}
+"@ -Language CSharp
+
+# Install the filter BEFORE loading DTT modules so they use our filtered Console.Out
+$script:vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
+[Console]::SetOut($script:vsoFilter)
+
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
@@ -131,7 +198,18 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
-        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
+        # Install console-level output filter to catch ##vso[ commands from legacy DTT module
+        # which writes directly to Console.Out / PSHost, bypassing stream redirection.
+        $vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
+        [Console]::SetOut($vsoFilter)
+        try
+        {
+            $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
+        }
+        finally
+        {
+            $vsoFilter.Restore()
+        }
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
@@ -169,7 +247,16 @@ else
          {
              if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
              {
-                $output = Receive-Job -Id $job.Id
+                $vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
+                [Console]::SetOut($vsoFilter)
+                try
+                {
+                    $output = Receive-Job -Id $job.Id
+                }
+                finally
+                {
+                    $vsoFilter.Restore()
+                }
                 Remove-Job $Job
                 $status = $output.Status
                 $displayName = $Jobs.Item($job.Id).displayName

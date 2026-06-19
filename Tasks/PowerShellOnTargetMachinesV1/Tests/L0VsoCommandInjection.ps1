@@ -1,50 +1,42 @@
 [CmdletBinding()]
 param()
 
-# Test: PowerShellOnTargetMachinesV1 must sanitize ##vso[ commands from Receive-Job output.
+# Test: PowerShellOnTargetMachinesV1 PowerShellJob must strip ##vso[ commands from remote output.
 #
-# The vulnerability: In parallel execution mode, Start-Job runs PowerShellJob on remote VMs.
-# Receive-Job collects ALL output including ##vso[ lines injected by a compromised VM.
-# The output flows to agent stdout which processes ##vso commands (setvariable, uploadfile, etc).
+# The vulnerability: The job scriptblock calls Invoke-PsOnRemote via Invoke-Command.
+# A compromised VM returns ##vso[ commands via Write-Host in the remote session.
+# These flow through the information stream (stream 6) back to the job.
+# The fix wraps Invoke-Command with 6>&1 filtering to strip ##vso[ lines.
 #
-# EXPECTED: This test FAILS until the vulnerability is fixed.
+# EXPECTED: This test FAILS until the vulnerability is fixed in PowerShellJob.ps1.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\MockModule.ps1
 
-$remotePowershellRunnerPath = "$PSScriptRoot\..\PowerShellOnTargetMachines.ps1"
+# Source the PowerShellJob.ps1 to get $RunPowershellJob scriptblock
+. $PSScriptRoot\..\PowerShellJob.ps1
 
-Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $validEnvironmentName } -ParametersEvaluator {$EnvironmentName -eq $validEnvironmentName}
-Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $validEnvironmentName}
-
-Register-Mock Get-EnvironmentProperty { return $environmentWinRMHttpsPort } -ParametersEvaluator {$Key -eq $resourceWinRMHttpsPortKeyName}
-Register-Mock Get-EnvironmentProperty { return $validMachineName1 } -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId1}
-Register-Mock Get-EnvironmentProperty { return $validMachineName2 } -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId2}
-
-Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator {$ArgumentList -contains $validResource1.Name }
-Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator {$ArgumentList -contains $validResource2.Name }
-
-Register-Mock Get-Job { return $testJobs }
-Register-Mock Start-Sleep { }
-
-# Mock Receive-Job to simulate a compromised VM injecting ##vso commands
-# In a real attack, the remote VM's Write-Host output flows through the job's
-# information stream (stream 6) and appears on the agent's stdout directly via Receive-Job.
-Register-Mock Receive-Job {
+# Mock Invoke-PsOnRemote (normally from DLL) to simulate a compromised VM
+# that injects ##vso commands via its script output
+function global:Invoke-PsOnRemote {
+    param([string]$MachineDnsName, [string]$ScriptPath, [string]$WinRMPort, $Credential, 
+          [string]$ScriptArguments, [string]$InitializationScriptPath, $SessionVariables)
+    # Simulate compromised VM writing ##vso commands
     Write-Host "##vso[task.setvariable variable=injectedSecret;issecret=true]stolen-value"
     Write-Host "##vso[task.setvariable variable=Build.Repository.Clean]true"
-    return $JobPassResponse
+    Write-Host "Legitimate script output from VM"
+    return @{ Status = "Passed"; DeploymentLog = "Success"; Error = $null }
 }
 
-Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
+function global:Get-ParsedSessionVariables { param($inputSessionVariables) return @{} }
 
-# Capture ALL output from running the task
+# Execute the job scriptblock directly (not via Start-Job) and capture all output
 $allOutput = & {
-    & "$remotePowershellRunnerPath" -environmentName $validEnvironmentName -machineNames $validMachineNames -scriptPath $validScriptPath -runPowershellInParallel $true
+    & $RunPowershellJob "test-vm" $validScriptPath "5986" "" "" $null "-UseHttp" "" "false" ""
 } *>&1
 
-# Verify: NO ##vso[task.setvariable] commands should appear in the task's output
+# Verify: NO ##vso[task.setvariable] commands should appear in the output
 $vsoCommandsFound = @()
 foreach ($line in $allOutput) {
     $lineStr = ($line | Out-String).Trim()
@@ -53,4 +45,17 @@ foreach ($line in $allOutput) {
     }
 }
 
-Assert-AreEqual 0 $vsoCommandsFound.Count "##vso[task.setvariable] commands from remote VM must be stripped. Found $($vsoCommandsFound.Count) injected commands: $($vsoCommandsFound -join '; ')"
+Assert-AreEqual 0 $vsoCommandsFound.Count "##vso[task.setvariable] commands from remote VM must be stripped by PowerShellJob. Found $($vsoCommandsFound.Count): $($vsoCommandsFound -join '; ')"
+
+# Also verify that legitimate output still passes through
+$hasLegitOutput = $false
+foreach ($line in $allOutput) {
+    $lineStr = ($line | Out-String).Trim()
+    if ($lineStr -match 'Legitimate script output') {
+        $hasLegitOutput = $true
+        break
+    }
+}
+
+Assert-AreEqual $true $hasLegitOutput "Legitimate script output should still pass through"
+

@@ -159,10 +159,24 @@ function Set-TaskResult {
 
 $defaultErrorHandler = {
     Param($object, $computerName)
-    Write-Host ($object | Out-String)
+    $text = $object | Out-String
+    foreach ($line in $text -split "`r?`n") {
+        if ($line -match '^\s*##vso\[') {
+            Write-Verbose "Stripped ##vso command from remote error output on $computerName"
+        } else {
+            Write-Host $line
+        }
+    }
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
-    Write-Host ($object | Out-String)
+    $text = $object | Out-String
+    foreach ($line in $text -split "`r?`n") {
+        if ($line -match '^\s*##vso\[') {
+            Write-Verbose "Stripped ##vso command from remote output on $computerName"
+        } else {
+            Write-Host $line
+        }
+    }
 }
