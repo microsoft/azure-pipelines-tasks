@@ -680,6 +680,9 @@
     "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
     "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests",
-    "vstestPlatformInput": "ms-resource:loc.messages.vstestPlatformInput"
+    "vstestPlatformInput": "ms-resource:loc.messages.vstestPlatformInput",
+    "vstestPlatformOverrideApplied": "ms-resource:loc.messages.vstestPlatformOverrideApplied",
+    "vstestPlatformAlreadyPresent": "ms-resource:loc.messages.vstestPlatformAlreadyPresent",
+    "vstestPlatformDefaultUsed": "ms-resource:loc.messages.vstestPlatformDefaultUsed"
   }
 }
