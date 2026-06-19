@@ -115,22 +115,22 @@ function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructo
     ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
     ##
-    ## Two validation modes exist because there are two groups of tasks, built from
-    ## one shared base allow-list:
-    ##   * Strict (default) - base list only. Used by the long-standing direct
+    ## Two validation modes exist because there are two groups of tasks:
+    ##   * Strict (default) - the regex below. Used by the long-standing direct
     ##     callers; their behavior must stay exactly the same.
-    ##   * Relaxed (-AllowDataConstructors) - base list PLUS the data-constructor
-    ##     characters @ { } [ ], so legitimate hashtable params are not mangled.
-    ##     Any code execution those characters could re-enable (e.g. @{ k = cmd })
-    ##     is blocked structurally by Test-SanitizerArgumentAst, not by this
-    ##     allow-list. (@(...) arrays stay blocked in both modes - parentheses are
-    ##     never allowed.)
+    ##   * Relaxed (-AllowDataConstructors) - additionally allows the data-
+    ##     constructor characters @ { } [ ] so legitimate hashtable params are not
+    ##     mangled. Any code execution those characters could re-enable (e.g.
+    ##     @{ k = cmd }) is blocked structurally by Test-SanitizerArgumentAst,
+    ##     not by this allow-list. (@(...) arrays stay blocked in both modes -
+    ##     parentheses are never allowed.)
     ## Long-term these two modes should be unified into one consistent validation.
-    $allowedChars = '\w\\` _''"\-=\/:\.*,+~?%\n#'
     if ($AllowDataConstructors) {
-        $allowedChars += '@{}\[\]'
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
     }
-    $regex = '(?<!`)([^' + $allowedChars + '])(?!true|false)'
+    else {
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    }
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
