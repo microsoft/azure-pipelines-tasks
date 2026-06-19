@@ -409,8 +409,6 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
         } else {
             tl.debug(tl.loc('vstestPlatformAlreadyPresent', existingParams));
         }
-    } else {
-        tl.debug(tl.loc('vstestPlatformDefaultUsed'));
     }
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');

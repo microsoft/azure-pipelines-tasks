@@ -161,9 +161,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     } else if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture) &&
         hasPlatformOverrideInOptions) {
         tl.debug(tl.loc('vstestPlatformAlreadyPresent', vstestConfig.otherConsoleOptions));
-    } else {
-        tl.debug(tl.loc('vstestPlatformDefaultUsed'));
-    }
+    } 
 
     argsArray.push('/logger:trx');
     if (utils.Helper.isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
