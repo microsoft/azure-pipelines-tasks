@@ -39,6 +39,23 @@ export class Utility {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
         contents.push(`$ErrorView = 'NormalView'`);
+
+        // Bypass az.cmd to preserve special characters (e.g. ^ in passwords)
+        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+            const azPath = tl.which('az', false);
+            if (azPath) {
+                const pythonPath = path.join(path.dirname(path.dirname(azPath)), 'python.exe');
+                if (fs.existsSync(pythonPath)) {
+                    contents.push(`function az { $env:AZ_INSTALLER = 'MSI'; & '${pythonPath.replace(/'/g, "''")}' -IBm azure.cli @args }`);
+                    tl.debug('Injected PowerShell az function alias to bypass az.cmd.');
+                } else {
+                    tl.debug(`python.exe not found at '${pythonPath}'; skipping az function alias injection.`);
+                }
+            } else {
+                tl.debug('az not found on PATH; skipping az function alias injection.');
+            }
+        }
+
         let filePath: string = tl.getPathInput("scriptPath", false, false);
         if (scriptLocation.toLowerCase() === 'inlinescript') {
             let inlineScript: string = tl.getInput("inlineScript", true);

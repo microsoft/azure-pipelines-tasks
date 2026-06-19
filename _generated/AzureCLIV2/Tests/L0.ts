@@ -133,4 +133,49 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded with session refresh enabled');
         assert(tr.stdout.indexOf('IDTOKEN_ENV_VARIABLE_PRESENT') >= 0, 'should pass idToken to script environment');
     });
+
+    it('Windows PS/PSCore: File invocation with caret in password (AZP_AZURECLI_USE_FILE_INVOCATION flag)', async () => {
+        let tp = path.join(__dirname, 'L0FileInvocationWithCaretPassword.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with -File invocation and caret password preserved');
+        assert(tr.stdout.indexOf('Using -File invocation for PowerShell Core to avoid CMD metacharacter issues') >= 0, 'should log -File invocation usage');
+    });
+
+    it('Az function alias injection: injects function when FF on + az found + python.exe exists', async () => {
+        let tp = path.join(__dirname, 'L0AzFunctionAliasInjection.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('Injected PowerShell az function alias to bypass az.cmd.') >= 0, 'should log az function alias injection');
+        assert(tr.stdout.indexOf('function az {') >= 0, 'generated script should contain az function alias');
+        assert(tr.stdout.indexOf('python.exe') >= 0, 'generated script should reference python.exe');
+        assert(tr.stdout.indexOf('-IBm azure.cli') >= 0, 'generated script should invoke azure.cli module');
+    });
+
+    it('Az function alias injection: does NOT inject when FF is off', async () => {
+        let tp = path.join(__dirname, 'L0AzFunctionAliasNoInjection.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('function az {') === -1, 'generated script should NOT contain az function alias when FF is off');
+    });
 });
