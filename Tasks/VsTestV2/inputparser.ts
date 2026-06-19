@@ -405,7 +405,12 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
             inputDataContract.ExecutionSettings.AdditionalConsoleParameters = existingParams
                 ? existingParams + ' ' + platformFlag
                 : platformFlag;
+            tl.debug(tl.loc('vstestPlatformOverrideApplied', vstestPlatform));
+        } else {
+            tl.debug(tl.loc('vstestPlatformAlreadyPresent', existingParams));
         }
+    } else {
+        tl.debug(tl.loc('vstestPlatformDefaultUsed'));
     }
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');

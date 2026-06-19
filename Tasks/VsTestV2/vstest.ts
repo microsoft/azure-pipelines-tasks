@@ -152,9 +152,16 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         argsArray.push('/InIsolation');
     }
 
+    const hasPlatformOverrideInOptions = /\/Platform:/i.test(vstestConfig.otherConsoleOptions || '');
     if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture) &&
-        !(/\/Platform:/i.test(vstestConfig.otherConsoleOptions || ''))) {
+        !hasPlatformOverrideInOptions) {
         argsArray.push('/Platform:' + vstestConfig.vstestArchitecture);
+        tl.debug(tl.loc('vstestPlatformOverrideApplied', vstestConfig.vstestArchitecture));
+    } else if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.vstestArchitecture) &&
+        hasPlatformOverrideInOptions) {
+        tl.debug(tl.loc('vstestPlatformAlreadyPresent', vstestConfig.otherConsoleOptions));
+    } else {
+        tl.debug(tl.loc('vstestPlatformDefaultUsed'));
     }
 
     argsArray.push('/logger:trx');

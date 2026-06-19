@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 276,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "vstest"
@@ -325,8 +325,6 @@
       "groupName": "executionOptions",
       "options": {
         "": "Default",
-        "x64": "x64",
-        "x86": "x86",
         "arm64": "arm64"
       },
       "properties": {
