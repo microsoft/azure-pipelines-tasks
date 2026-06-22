@@ -22,6 +22,71 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 . $PSScriptRoot/PowerShellJob.ps1
 . $PSScriptRoot/Utility.ps1
 
+# Define a filtering TextWriter that escapes ##vso[ commands from console output.
+# The Deployment DLL may write directly to Console.Out / PSHost.UI, bypassing
+# PowerShell stream redirection. Must be installed before module imports.
+Add-Type -TypeDefinition @"
+using System;
+using System.IO;
+using System.Text;
+
+public class VsoFilterTextWriter : TextWriter
+{
+    private TextWriter _inner;
+    private StringBuilder _buffer = new StringBuilder();
+
+    public VsoFilterTextWriter(TextWriter inner) { _inner = inner; }
+    public override Encoding Encoding { get { return _inner.Encoding; } }
+
+    public override void Write(char value)
+    {
+        if (value == '\n') { FlushLine(); }
+        else { _buffer.Append(value); }
+    }
+
+    public override void Write(string value)
+    {
+        if (value == null) return;
+        foreach (char c in value) Write(c);
+    }
+
+    public override void WriteLine(string value)
+    {
+        if (value != null) _buffer.Append(value);
+        FlushLine();
+    }
+
+    public override void Flush()
+    {
+        if (_buffer.Length > 0) FlushLine();
+        _inner.Flush();
+    }
+
+    private void FlushLine()
+    {
+        string line = _buffer.ToString();
+        _buffer.Clear();
+        if (line.TrimStart().StartsWith("##vso["))
+        {
+            _inner.WriteLine(line.Replace("##vso[", "##_vso["));
+        }
+        else
+        {
+            _inner.WriteLine(line);
+        }
+    }
+
+    public void Restore()
+    {
+        Flush();
+        Console.SetOut(_inner);
+    }
+}
+"@ -Language CSharp
+
+$script:vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
+[Console]::SetOut($script:vsoFilter)
+
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"

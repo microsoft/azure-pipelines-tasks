@@ -49,6 +49,8 @@ param (
             } else {
                 Write-Host $text
             }
+        } elseif ($_ -is [string] -and $_ -match '^\s*##vso\[') {
+            $_ -replace '##vso\[', '##_vso['
         } else {
             $_
         }
