@@ -162,7 +162,7 @@ $defaultErrorHandler = {
     $text = $object | Out-String
     foreach ($line in $text -split "`r?`n") {
         if ($line -match '^\s*##vso\[') {
-            Write-Verbose "Stripped ##vso command from remote error output on $computerName"
+            Write-Host ($line -replace '##vso\[', '##_vso[')
         } else {
             Write-Host $line
         }
@@ -174,7 +174,7 @@ $defaultOutputHandler = {
     $text = $object | Out-String
     foreach ($line in $text -split "`r?`n") {
         if ($line -match '^\s*##vso\[') {
-            Write-Verbose "Stripped ##vso command from remote output on $computerName"
+            Write-Host ($line -replace '##vso\[', '##_vso[')
         } else {
             Write-Host $line
         }

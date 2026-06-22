@@ -1,14 +1,12 @@
 [CmdletBinding()]
 param()
 
-# Test: PowerShellOnTargetMachinesV1 PowerShellJob must strip ##vso[ commands from remote output.
+# Test: PowerShellOnTargetMachinesV1 PowerShellJob must escape ##vso[ commands from remote output.
 #
 # The vulnerability: The job scriptblock calls Invoke-PsOnRemote via Invoke-Command.
 # A compromised VM returns ##vso[ commands via Write-Host in the remote session.
 # These flow through the information stream (stream 6) back to the job.
-# The fix wraps Invoke-Command with 6>&1 filtering to strip ##vso[ lines.
-#
-# EXPECTED: This test FAILS until the vulnerability is fixed in PowerShellJob.ps1.
+# The fix wraps Invoke-Command with 6>&1 filtering to escape ##vso[ lines.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
@@ -45,7 +43,7 @@ foreach ($line in $allOutput) {
     }
 }
 
-Assert-AreEqual 0 $vsoCommandsFound.Count "##vso[task.setvariable] commands from remote VM must be stripped by PowerShellJob. Found $($vsoCommandsFound.Count): $($vsoCommandsFound -join '; ')"
+Assert-AreEqual 0 $vsoCommandsFound.Count "##vso[task.setvariable] commands from remote VM must be escaped by PowerShellJob. Found $($vsoCommandsFound.Count): $($vsoCommandsFound -join '; ')"
 
 # Also verify that legitimate output still passes through
 $hasLegitOutput = $false
@@ -58,4 +56,16 @@ foreach ($line in $allOutput) {
 }
 
 Assert-AreEqual $true $hasLegitOutput "Legitimate script output should still pass through"
+
+# Verify escaped output is visible as ##_vso[
+$hasEscaped = $false
+foreach ($line in $allOutput) {
+    $lineStr = ($line | Out-String).Trim()
+    if ($lineStr -match '##_vso\[') {
+        $hasEscaped = $true
+        break
+    }
+}
+
+Assert-AreEqual $true $hasEscaped "Escaped ##vso[ commands should appear as ##_vso[ for diagnostic visibility"
 

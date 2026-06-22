@@ -1,14 +1,11 @@
 [CmdletBinding()]
 param()
 
-# Test: defaultOutputHandler must strip ##vso[ logging commands from remote output.
+# Test: defaultOutputHandler must escape ##vso[ logging commands from remote output.
 # This test verifies that the RemoteDeployer output handler does NOT pass ##vso[
 # commands through to the agent stdout, which would allow a compromised remote VM
 # to inject arbitrary pipeline commands (set variables, upload artifacts, etc.).
-#
-# EXPECTED: This test FAILS until the vulnerability is fixed, because the current
-# $defaultOutputHandler simply does Write-Host ($object | Out-String) without any
-# sanitization of ##vso[ prefixed lines.
+# Instead, ##vso[ is escaped to ##_vso[ so the output remains visible but harmless.
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
@@ -36,7 +33,7 @@ foreach ($line in $captured) {
     }
 }
 
-Assert-AreEqual $false $containsVso "defaultOutputHandler must strip ##vso[ commands from remote output but it passed them through unsanitized"
+Assert-AreEqual $false $containsVso "defaultOutputHandler must escape ##vso[ commands from remote output but it passed them through unsanitized"
 
 # --- Test 2: errorHandler must NOT emit ##vso[ lines to stdout ---
 $maliciousError = "##vso[task.setvariable variable=agent_token;issecret=true]pwned"
@@ -54,7 +51,7 @@ foreach ($line in $captured) {
     }
 }
 
-Assert-AreEqual $false $containsVso "defaultErrorHandler must strip ##vso[ commands from remote output but it passed them through unsanitized"
+Assert-AreEqual $false $containsVso "defaultErrorHandler must escape ##vso[ commands from remote output but it passed them through unsanitized"
 
 # --- Test 3: Normal output must still pass through ---
 $normalOutput = "File copied successfully to C:\deploy\app.dll"
@@ -65,3 +62,11 @@ $captured = & {
 
 $capturedStr = ($captured | Out-String).Trim()
 Assert-AreEqual $true ($capturedStr -like "*File copied successfully*") "Normal output should still be emitted by outputHandler"
+
+# --- Test 4: Escaped ##vso[ output should be visible as ##_vso[ ---
+$captured = & {
+    & $outputHandler $maliciousOutput "compromised-vm"
+} 6>&1 4>&1 *>&1
+
+$capturedStr = ($captured | Out-String).Trim()
+Assert-AreEqual $true ($capturedStr -like "*##_vso*") "Escaped ##vso[ commands should appear as ##_vso[ in output for diagnostic visibility"

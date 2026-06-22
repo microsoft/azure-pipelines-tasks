@@ -13,7 +13,7 @@ param (
     [string]$scriptRoot
     )
 
-    Import-Module�"$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+    Import-Module "$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "scriptPath = $scriptPath"
@@ -35,7 +35,7 @@ param (
     Write-Verbose "Initiating deployment on $fqdn"
     [String]$psOnRemoteScriptBlockString = "Invoke-PsOnRemote -MachineDnsName $fqdn -ScriptPath `$scriptPath -WinRMPort $port -Credential `$credential -ScriptArguments `$scriptArguments -InitializationScriptPath `$initializationScriptPath -SessionVariables `$parsedSessionVariables $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     [scriptblock]$psOnRemoteScriptBlock = [scriptblock]::Create($psOnRemoteScriptBlockString)
-    # Capture and filter information stream (Write-Host) to strip ##vso[ commands from remote output
+    # Capture and filter information stream (Write-Host) to escape ##vso[ commands from remote output
     $deploymentResponse = Invoke-Command -ScriptBlock $psOnRemoteScriptBlock 6>&1 | ForEach-Object {
         if ($_ -is [System.Management.Automation.InformationRecord]) {
             $msg = $_.MessageData
@@ -44,7 +44,9 @@ param (
             } else {
                 $text = "$msg"
             }
-            if ($text -notmatch '^\s*##vso\[') {
+            if ($text -match '^\s*##vso\[') {
+                Write-Host ($text -replace '##vso\[', '##_vso[')
+            } else {
                 Write-Host $text
             }
         } else {

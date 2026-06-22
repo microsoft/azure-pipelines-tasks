@@ -78,7 +78,11 @@ public class VsoFilterTextWriter : TextWriter
     {
         string line = _buffer.ToString();
         _buffer.Clear();
-        if (!line.TrimStart().StartsWith("##vso["))
+        if (line.TrimStart().StartsWith("##vso["))
+        {
+            _inner.WriteLine(line.Replace("##vso[", "##_vso["));
+        }
+        else
         {
             _inner.WriteLine(line);
         }
