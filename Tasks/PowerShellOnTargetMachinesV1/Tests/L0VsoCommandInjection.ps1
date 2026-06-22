@@ -1,71 +1,113 @@
 [CmdletBinding()]
 param()
 
-# Test: PowerShellOnTargetMachinesV1 PowerShellJob must escape ##vso[ commands from remote output.
+# Test: VsoFilterTextWriter must escape ##vso[ commands written to Console.Out.
 #
-# The vulnerability: The job scriptblock calls Invoke-PsOnRemote via Invoke-Command.
-# A compromised VM returns ##vso[ commands via Write-Host in the remote session.
-# These flow through the information stream (stream 6) back to the job.
-# The fix wraps Invoke-Command with 6>&1 filtering to escape ##vso[ lines.
+# The vulnerability: A compromised VM returns ##vso[ commands via Write-Host or
+# direct Console.Out writes (from legacy DTT DLLs). The pipeline agent monitors
+# stdout for ##vso[ lines and executes them as logging commands.
+# The fix: VsoFilterTextWriter is installed globally on Console.Out before any
+# modules load, intercepting all output and escaping ##vso[ → ##_vso[.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-. $PSScriptRoot\MockVariable.ps1
-. $PSScriptRoot\MockModule.ps1
 
-# Source the PowerShellJob.ps1 to get $RunPowershellJob scriptblock
-. $PSScriptRoot\..\PowerShellJob.ps1
+# Load the same VsoFilterTextWriter class that PowerShellOnTargetMachines.ps1 defines
+Add-Type -TypeDefinition @"
+using System;
+using System.IO;
+using System.Text;
 
-# Mock Invoke-PsOnRemote (normally from DLL) to simulate a compromised VM
-# that injects ##vso commands via its script output
-function global:Invoke-PsOnRemote {
-    param([string]$MachineDnsName, [string]$ScriptPath, [string]$WinRMPort, $Credential, 
-          [string]$ScriptArguments, [string]$InitializationScriptPath, $SessionVariables)
-    # Simulate compromised VM writing ##vso commands
-    Write-Host "##vso[task.setvariable variable=injectedSecret;issecret=true]stolen-value"
-    Write-Host "##vso[task.setvariable variable=Build.Repository.Clean]true"
-    Write-Host "Legitimate script output from VM"
-    return @{ Status = "Passed"; DeploymentLog = "Success"; Error = $null }
-}
+public class VsoFilterTextWriter : TextWriter
+{
+    private TextWriter _inner;
+    private StringBuilder _buffer = new StringBuilder();
 
-function global:Get-ParsedSessionVariables { param($inputSessionVariables) return @{} }
+    public VsoFilterTextWriter(TextWriter inner) { _inner = inner; }
+    public override Encoding Encoding { get { return _inner.Encoding; } }
 
-# Execute the job scriptblock directly (not via Start-Job) and capture all output
-$allOutput = & {
-    & $RunPowershellJob "test-vm" $validScriptPath "5986" "" "" $null "-UseHttp" "" "false" ""
-} *>&1
+    public override void Write(char value)
+    {
+        if (value == '\n')
+        {
+            FlushLine();
+        }
+        else
+        {
+            _buffer.Append(value);
+        }
+    }
 
-# Verify: NO ##vso[task.setvariable] commands should appear in the output
-$vsoCommandsFound = @()
-foreach ($line in $allOutput) {
-    $lineStr = ($line | Out-String).Trim()
-    if ($lineStr -match '##vso\[task\.setvariable') {
-        $vsoCommandsFound += $lineStr
+    public override void Write(string value)
+    {
+        if (value == null) return;
+        foreach (char c in value) Write(c);
+    }
+
+    public override void WriteLine(string value)
+    {
+        if (value != null) _buffer.Append(value);
+        FlushLine();
+    }
+
+    public override void Flush()
+    {
+        if (_buffer.Length > 0) FlushLine();
+        _inner.Flush();
+    }
+
+    private void FlushLine()
+    {
+        string line = _buffer.ToString();
+        _buffer.Clear();
+        if (line.TrimStart().StartsWith("##vso["))
+        {
+            _inner.WriteLine(line.Replace("##vso[", "##_vso["));
+        }
+        else
+        {
+            _inner.WriteLine(line);
+        }
+    }
+
+    public void Restore()
+    {
+        Flush();
+        Console.SetOut(_inner);
     }
 }
+"@ -Language CSharp
 
-Assert-AreEqual 0 $vsoCommandsFound.Count "##vso[task.setvariable] commands from remote VM must be escaped by PowerShellJob. Found $($vsoCommandsFound.Count): $($vsoCommandsFound -join '; ')"
+# Install VsoFilterTextWriter wrapping a StringWriter to capture filtered output
+$stringWriter = New-Object System.IO.StringWriter
+$filter = New-Object VsoFilterTextWriter($stringWriter)
+[Console]::SetOut($filter)
 
-# Also verify that legitimate output still passes through
-$hasLegitOutput = $false
-foreach ($line in $allOutput) {
-    $lineStr = ($line | Out-String).Trim()
-    if ($lineStr -match 'Legitimate script output') {
-        $hasLegitOutput = $true
-        break
-    }
+try {
+    # Simulate compromised VM output written to Console.Out (as DTT DLLs do)
+    [Console]::WriteLine("##vso[task.setvariable variable=injectedSecret;issecret=true]stolen-value")
+    [Console]::WriteLine("##vso[task.setvariable variable=Build.Repository.Clean]true")
+    [Console]::WriteLine("Legitimate script output from VM")
+    [Console]::WriteLine("  ##vso[task.logissue type=warning]indented injection attempt")
+    $filter.Flush()
+} finally {
+    # Restore original Console.Out
+    [Console]::SetOut($stringWriter.GetStringBuilder() | Out-Null; [Console]::OpenStandardOutput() | Out-Null)
+    $filter.Restore()
 }
 
-Assert-AreEqual $true $hasLegitOutput "Legitimate script output should still pass through"
+$output = $stringWriter.ToString()
 
-# Verify escaped output is visible as ##_vso[
-$hasEscaped = $false
-foreach ($line in $allOutput) {
-    $lineStr = ($line | Out-String).Trim()
-    if ($lineStr -match '##_vso\[') {
-        $hasEscaped = $true
-        break
-    }
-}
+# Verify: NO raw ##vso[ commands in the output
+$rawVsoLines = ($output -split "`n") | Where-Object { $_ -match '##vso\[' }
+Assert-AreEqual 0 $rawVsoLines.Count "Raw ##vso[ commands must not pass through VsoFilterTextWriter. Found: $($rawVsoLines -join '; ')"
 
-Assert-AreEqual $true $hasEscaped "Escaped ##vso[ commands should appear as ##_vso[ for diagnostic visibility"
+# Verify: escaped ##_vso[ commands ARE present (diagnostic visibility)
+$escapedLines = ($output -split "`n") | Where-Object { $_ -match '##_vso\[' }
+Assert-AreEqual 4 $escapedLines.Count "All 4 ##vso[ lines should be escaped to ##_vso[. Found $($escapedLines.Count)"
+
+# Verify: legitimate output passes through unchanged
+Assert-IsTrue ($output -match 'Legitimate script output from VM') "Legitimate output should pass through unchanged"
+
+# Verify: indented ##vso[ is also caught (TrimStart behavior)
+Assert-IsTrue ($output -match '##_vso\[task\.logissue') "Indented ##vso[ should also be escaped"
 
