@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 273,
+    "Minor": 276,
     "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
@@ -171,7 +171,7 @@
     "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
   },
   "_buildConfigMapping": {
-    "Default": "1.273.0",
-    "Node24_1": "1.273.1"
+    "Default": "1.276.0",
+    "Node24_1": "1.276.1"
   }
 }

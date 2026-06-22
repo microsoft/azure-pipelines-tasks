@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 3
+    "Minor": 276,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "NuGet Authenticate",
@@ -92,8 +92,8 @@
     "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.270.2",
+    "Default": "1.276.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.270.3"
+    "wif_242": "1.276.1"
   }
 }

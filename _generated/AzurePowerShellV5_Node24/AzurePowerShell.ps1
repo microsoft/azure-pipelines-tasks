@@ -1,6 +1,8 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
 # Get inputs.
 $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
@@ -28,6 +30,17 @@ if ($scriptType -eq "FilePath") {
 
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
+}
+
+# Sanitize script arguments to prevent PowerShell command injection.
+# No-op unless BOTH the org-level "Enable shell tasks arguments validation"
+# toggle and the per-task pipeline feature flag are enabled.
+# See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
+if ($scriptType -ne "InlineScript") {
+    Invoke-ScriptArgumentSanitization `
+        -InputArgs $scriptArguments `
+        -TaskName 'AzurePowerShellV5' `
+        -PipelineFeatureFlagName 'EnableAzurePowerShellArgumentsSanitization'
 }
 
 # string constants
@@ -100,11 +113,12 @@ try
         $contents += "`$VerbosePreference = 'continue'"
     }
 
-    $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken -isPSCore $" + "$input_pwsh"
+    $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken `$env:__VSTS_ACCESS_TOKEN -isPSCore $" + "$input_pwsh"
     if ($targetAzurePs) {
         $CoreAzArgument += " -targetAzurePs $targetAzurePs"
     }
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
+    $contents += "`$env:__VSTS_ACCESS_TOKEN = `$null"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
@@ -138,6 +152,9 @@ try
         'Arguments' = $arguments
         'WorkingDirectory' = $input_workingDirectory
     }
+
+    # Pass the access token via environment variable so it is not written to disk.
+    $env:__VSTS_ACCESS_TOKEN = $vstsAccessToken
 
     # Switch to "Continue".
     $global:ErrorActionPreference = 'Continue'
@@ -198,8 +215,11 @@ try
     }
 }
 finally {
-    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
-        Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
+    # Clear the access token from the environment.
+    $env:__VSTS_ACCESS_TOKEN = ""
+
+    if ($__vstsAzPSScriptPath -and (Test-Path -LiteralPath $__vstsAzPSScriptPath) ) {
+        Remove-Item -LiteralPath $__vstsAzPSScriptPath -ErrorAction 'SilentlyContinue'
     }
     . "$PSScriptRoot\Utility.ps1"
     Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"

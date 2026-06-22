@@ -9,8 +9,8 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { downloadToolWithRetries } from "azure-pipelines-tool-lib";
-import { tryValidateScriptArgs } from "./src/argsSanitizer";
+import { tryValidateScriptArgs, ArgsSanitizingError } from "./src/argsSanitizer";
+import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -163,7 +163,11 @@ export class azureclitask {
             }
 
             if (scriptType) {
-                await scriptType.cleanUp();
+                try {
+                    await scriptType.cleanUp();
+                } catch (cleanupErr) {
+                    tl.warning(`scriptType.cleanUp() threw: ${cleanupErr && cleanupErr.message || cleanupErr}`);
+                }
             }
 
             if (this.cliPasswordPath) {
@@ -175,35 +179,47 @@ export class azureclitask {
             if(toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
             } else if (toolExecutionError) {
-              let message = tl.loc('ScriptFailed', toolExecutionError);
-
-              if (typeof toolExecutionError === 'string') {
-                const expiredSecretErrorCode = 'AADSTS7000222';
-                let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
-
-                if (serviceEndpointSecretIsExpired) {
-                  const organizationURL = tl.getVariable('System.CollectionUri');
-                  const projectName = tl.getVariable('System.TeamProject');
-                  const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
-
-                  message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
-                }
-              }
-
-                // only Aggregation error contains array of errors
-                if (toolExecutionError.errors) {
-                    // Iterates through array and log errors separately
-                    toolExecutionError.errors.forEach((error) => {
-                        tl.error(error.message, tl.IssueSource.TaskInternal);
-                    });
-
-                    // fail with main message
+                // ArgsSanitizingError is an internal validation error, not a
+                // script execution failure. Surface only its message — no
+                // stack trace, no double-wrapping in "Script failed with error: …".
+                if (toolExecutionError instanceof ArgsSanitizingError) {
                     tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
                 } else {
-                    tl.setResult(tl.TaskResult.Failed, message);
-                }
+                    // Pass err.message (string), not the Error object, so
+                    // util.format's %s in 'ScriptFailed' does not call
+                    // util.inspect(err) and inline the stack trace.
+                    const errText =
+                        typeof toolExecutionError === 'string'
+                            ? toolExecutionError
+                            : (toolExecutionError && toolExecutionError.message) || String(toolExecutionError);
+                    let message = tl.loc('ScriptFailed', errText);
 
-              tl.setResult(tl.TaskResult.Failed, message);
+                    if (typeof toolExecutionError === 'string') {
+                        const expiredSecretErrorCode = 'AADSTS7000222';
+                        let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
+
+                        if (serviceEndpointSecretIsExpired) {
+                            const organizationURL = tl.getVariable('System.CollectionUri');
+                            const projectName = tl.getVariable('System.TeamProject');
+                            const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
+
+                            message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
+                        }
+                    }
+
+                    // only Aggregation error contains array of errors
+                    if (toolExecutionError.errors) {
+                        // Iterates through array and log errors separately
+                        toolExecutionError.errors.forEach((error: Error) => {
+                            tl.error(error.message, tl.IssueSource.TaskInternal);
+                        });
+
+                        // fail with main message
+                        tl.setResult(tl.TaskResult.Failed, toolExecutionError.message);
+                    } else {
+                        tl.setResult(tl.TaskResult.Failed, message);
+                    }
+                }
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
             }
@@ -243,11 +259,21 @@ export class azureclitask {
             } catch (e) {
                 tl.debug(`Failed to emit token-cleanup telemetry: ${e}`);
             }
+
+            // Must run AFTER all `az` cleanup commands (logoutAzure → `az account clear`
+            // and `az devops configure --defaults`) so they still see the per-invocation
+            // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
+            // to mutate the agent's global profile.
+            if (this.azCliConfigPath) {
+                removePerInvocationAzureConfigDir(this.azCliConfigPath);
+                this.azCliConfigPath = null;
+            }
         }
     }
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static azCliConfigPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
     private static federatedToken: string = null;
@@ -275,10 +301,32 @@ export class azureclitask {
 
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            let versionMatch = [];
+            let versionMatch = null;
             if (tl.getPipelineFeature('UseAzVersion')) {
-                // gets azure-cli version from both az version output which is in JSON format and az --version output text format
-                versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
+                // Strategy 1: Try JSON parse (az version)
+                try {
+                    const parsed = JSON.parse(azVersionResultOutput.trim());
+                    if (parsed["azure-cli"]) {
+                        versionMatch = [null, parsed["azure-cli"]];
+                    }
+                } catch (e) {
+                    tl.debug(`az version output is not JSON, trying regex strategies: ${e}`);
+                }
+
+                // Strategy 2: Same-line match for JSON-like or text format
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/i);
+                }
+
+                // Strategy 3: Table format — version is on the line after the separator (e.g. "Azure-cli\n---\n2.76.0")
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/azure-cli\b[^\n]*\n[-\s]+\n\s*(\d+\.\d+\.\d+)/i);
+                }
+
+                // Strategy 4: TSV format — requires at least two tab-separated version columns (e.g. "2.85.0\t2.85.0\t1.1.0")
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.trim().match(/^(\d+\.\d+\.\d+)\t\d+\.\d+\.\d+/m);
+                }
             }else{
                 // gets azure-cli version from az --version output text format
                 versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
@@ -325,6 +373,24 @@ export class azureclitask {
             tl.debug(`Azure DevOps extension not found: ${error}`);
             return false;
         }
+    }
+
+    // Installs the azure-devops CLI extension with pip dependency resolution disabled.
+    // In network-restricted agent environments, pip may fail to resolve transitive dependencies
+    // during `az extension add`. Setting PIP_NO_DEPS=1 skips dependency resolution
+    private static async installAzureDevOpsExtensionNoDeps(): Promise<void> {
+        const noDepsEnv = {
+            ...process.env,
+            PIP_NO_DEPS: "1",
+            PIP_DISABLE_PIP_VERSION_CHECK: "1"
+        };
+
+        Utility.throwIfError(
+            tl.execSync("az", "extension add --name azure-devops -y", { env: noDepsEnv } as any),
+            tl.loc("FailedToInstallAzureDevOpsCLI")
+        );
+
+        console.log(tl.loc("AzureDevOpsExtensionInstalledNoDeps"));
     }
 
     private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
@@ -430,26 +496,24 @@ export class azureclitask {
                 // Install Azure DevOps extension if not already installed
                 const extensionInstalled = this.isAzureDevOpsExtensionInstalled();
                 if (!extensionInstalled) {
-                    console.log("Azure DevOps extension not found in working environment. Attempting installation.");
+                    console.log(tl.loc("AzureDevOpsExtensionNotFound"));
 
                     if (tl.getPipelineFeature('AzureCliV3EnableWhlFallback')) {
-                        try {
-                            Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                        } catch (error) {
-                            console.log("Standard installation of azure-devops extension failed.");
-
-                            const whlUrl = "https://aka.ms/azure-devops-extension-whl";
-                            const whlFileName = "azure_devops-1.0.2-py2.py3-none-any.whl";
-                            const whlPath = await downloadToolWithRetries(whlUrl, whlFileName);
-
-                            Utility.throwIfError(tl.execSync("az", `extension add --source "${whlPath}" -y`), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                            console.log("Azure DevOps CLI extension installed successfully from wheel.");
+                        const standardInstallResult = tl.execSync("az", "extension add -n azure-devops -y");
+                        if (standardInstallResult.code !== 0) {
+                            tl.warning("Error Code: [" + standardInstallResult.code + "]");
+                            tl.warning(tl.loc("FailedToInstallAzureDevOpsCLI"));
+                            console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
+                            await this.installAzureDevOpsExtensionNoDeps();
+                        } else {
+                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
+                        console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                     }
                 } else {
-                    console.log("Azure DevOps extension is already installed, skipping installation.");
+                    console.log(tl.loc("AzureDevOpsExtensionAlreadyInstalled"));
                 }
 
                 await this.loginWithWorkloadIdentityFederation(connectedService, visibleAzLogin);
@@ -477,10 +541,13 @@ export class azureclitask {
             return;
         }
 
-        if (!!tl.getVariable('Agent.TempDirectory')) {
-            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
-            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        const agentTempDir = tl.getVariable('Agent.TempDirectory');
+        if (!!agentTempDir) {
+            // Security: create an unpredictable per-invocation
+            // directory so an earlier pipeline step cannot pre-seed a poisoned
+            // az config file at $(Agent.TempDirectory)/.azclitask/config.
+            this.azCliConfigPath = createPerInvocationAzureConfigDir(agentTempDir);
+            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
         } else {
             console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
         }

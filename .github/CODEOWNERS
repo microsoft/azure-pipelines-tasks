@@ -112,7 +112,7 @@ Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @menxiao
 
-Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @cjk7989 @jessieyyt @LongOddCode
 
 Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
 
@@ -267,6 +267,8 @@ Tasks/GitHubReleaseV1/     @microsoft/release-management-task-team @manolerazvan
 Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/GradleAuthenticateV0/    @microsoft/azure-artifacts-packages
 
 Tasks/GradleV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 

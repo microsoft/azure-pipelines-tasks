@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 274,
+    "Minor": 276,
     "Patch": 0
   },
   "runsOn": [
@@ -407,7 +407,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
-  "prejobexecution" : {
+  "prejobexecution": {
     "Node16": {
       "target": "PreJobExecutionUniversalPackages.js",
       "argumentFormat": ""

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
-    "Patch": 0
+    "Minor": 276,
+    "Patch": 1
   },
   "deprecated": true,
   "deprecationMessage": "This task has been deprecated. Use conda commands directly in the bash task or batch script task as an alternative.",

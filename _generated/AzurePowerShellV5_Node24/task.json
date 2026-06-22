@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 274,
-    "Patch": 3
+    "Minor": 276,
+    "Patch": 5
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -213,8 +213,8 @@
     "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
   },
   "_buildConfigMapping": {
-    "Default": "5.274.2",
+    "Default": "5.276.4",
     "LocalPackages": "5.249.4",
-    "Node24_1": "5.274.3"
+    "Node24_1": "5.276.5"
   }
 }
