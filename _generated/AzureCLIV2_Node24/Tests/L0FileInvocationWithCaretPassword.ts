@@ -1,6 +1,7 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import os = require('os');
 
 const FIXED_TIMESTAMP = 1700000000000;
 const RealDate = Date;
@@ -49,7 +50,7 @@ process.env['DISTRIBUTEDTASK_TASKS_ENABLELATEBOUNDIDTOKEN'] = 'false';
 process.env['DISTRIBUTEDTASK_TASKS_USEAZVERSION'] = 'false';
 process.env['SYSTEM_PIPELINESTARTTIME'] = '2026-06-08T00:00:00Z';
 process.env['AGENT_OS'] = 'Windows_NT';
-process.env['AGENT_TEMPDIRECTORY'] = 'C:\\temp';
+process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
 
 // Feature flag for -File invocation
 process.env['AZP_AZURECLI_USE_FILE_INVOCATION'] = 'true';
@@ -96,6 +97,31 @@ tmr.registerMock('./src/Utility', {
 });
 
 // Mock az CLI version check and executable resolution
+const pwshCmd = 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -File ' + path.join(os.tmpdir(), 'azureclitaskscript1700000000000.ps1');
+let execAnswers: { [key: string]: { code: number; stdout: string; stderr: string } } = {
+    'az version': {
+        'code': 0,
+        'stdout': 'azure-cli 2.50.0',
+        'stderr': ''
+    },
+    'az --version': {
+        'code': 0,
+        'stdout': 'azure-cli 2.50.0 core 2.50.0 telemetry 1.0.8 extensions 0.4.0',
+        'stderr': ''
+    },
+    'az account clear': {
+        'code': 0,
+        'stdout': '',
+        'stderr': ''
+    },
+    'az login --service-principal -u "spId" --password="spKey" --tenant "tenantId" --allow-no-subscriptions': {
+        'code': 0,
+        'stdout': '',
+        'stderr': ''
+    }
+};
+execAnswers[pwshCmd] = { 'code': 0, 'stdout': '', 'stderr': '' };
+
 let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
         'az': 'az',
@@ -105,33 +131,7 @@ let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'az': true,
         'pwsh': true
     },
-    'exec': {
-        'az version': {
-            'code': 0,
-            'stdout': 'azure-cli 2.50.0',
-            'stderr': ''
-        },
-        'az --version': {
-            'code': 0,
-            'stdout': 'azure-cli 2.50.0 core 2.50.0 telemetry 1.0.8 extensions 0.4.0',
-            'stderr': ''
-        },
-        'az account clear': {
-            'code': 0,
-            'stdout': '',
-            'stderr': ''
-        },
-        'az login --service-principal -u "spId" --password="spKey" --tenant "tenantId" --allow-no-subscriptions': {
-            'code': 0,
-            'stdout': '',
-            'stderr': ''
-        },
-        'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -File C:\\temp\\azureclitaskscript1700000000000.ps1': {
-            'code': 0,
-            'stdout': '',
-            'stderr': ''
-        }
-    }
+    'exec': execAnswers
 };
 tmr.setAnswers(answers);
 
