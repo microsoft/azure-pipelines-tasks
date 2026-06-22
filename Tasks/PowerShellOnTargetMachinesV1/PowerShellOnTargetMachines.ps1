@@ -202,18 +202,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $displayName = $resourceProperties.displayName
         Write-Output (Get-LocalizedString -Key "Deployment started for machine: '{0}'" -ArgumentList $displayName)
 
-        # Install console-level output filter to catch ##vso[ commands from legacy DTT module
-        # which writes directly to Console.Out / PSHost, bypassing stream redirection.
-        $vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
-        [Console]::SetOut($vsoFilter)
-        try
-        {
-            $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
-        }
-        finally
-        {
-            $vsoFilter.Restore()
-        }
+        $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
         Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $deploymentResponse
         $status = $deploymentResponse.Status
 
@@ -251,16 +240,7 @@ else
          {
              if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
              {
-                $vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
-                [Console]::SetOut($vsoFilter)
-                try
-                {
-                    $output = Receive-Job -Id $job.Id
-                }
-                finally
-                {
-                    $vsoFilter.Restore()
-                }
+               $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
                 $status = $output.Status
                 $displayName = $Jobs.Item($job.Id).displayName
