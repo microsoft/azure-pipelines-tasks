@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 276,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Package and publish to PyPI",
