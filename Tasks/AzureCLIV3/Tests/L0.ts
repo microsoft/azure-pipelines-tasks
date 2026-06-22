@@ -162,6 +162,8 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.failed, 'should have failed');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt to install Azure DevOps extension');
+            assert(tr.warningIssues.some(w => w.includes('Error Code: [1]')), 'Should warn with the standard install exit code');
+            assert(tr.warningIssues.some(w => w.includes('loc_mock_FailedToInstallAzureDevOpsCLI')), 'Should warn that the standard install failed');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
             assert(tr.stdout.indexOf('loc_mock_FailedToInstallAzureDevOpsCLI') >= 0, 'Should fail with extension installation error');
             done();
@@ -198,6 +200,8 @@ describe('AzureCLIV3 Suite', function () {
             assert(tr.succeeded, 'should have succeeded');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionNotFound'), 'Should check if extension is installed');
             assert(tr.stdout.includes('az extension add -n azure-devops'), 'Should attempt standard installation first');
+            assert(tr.warningIssues.some(w => w.includes('Error Code: [1]')), 'Should warn with the standard install exit code');
+            assert(tr.warningIssues.some(w => w.includes('loc_mock_FailedToInstallAzureDevOpsCLI')), 'Should warn that the standard install failed before falling back');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionStandardInstallFailed'), 'Should log standard installation failure');
             assert(tr.stdout.includes('az extension add --name azure-devops'), 'Should attempt no-deps installation as fallback');
             assert(tr.stdout.includes('loc_mock_AzureDevOpsExtensionInstalledNoDeps'), 'Should install with no-deps successfully');
@@ -311,6 +315,102 @@ describe('AzureCLIV3 Suite', function () {
         tr.runAsync().then(() => {
             assert(tr.failed, 'should have failed');
             assert(tr.stdout.indexOf('loc_mock_FailedToSetAzureDevOpsProject') >= 0, 'Should fail with project configuration error message');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles JSON format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_JsonFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with JSON format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles table format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TableFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with table format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles text format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TextFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with text format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Older version (< 2.66.0) is correctly parsed and compared', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_OlderVersion.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with older az version');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.50.0') >= 0, 'should correctly extract version 2.50.0');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles TSV format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_TsvFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with TSV format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
+            done();
+        }).catch((err) => {
+            done(err);
+        });
+    });
+
+    it('Az Version Parsing: Handles YAML format output (UseAzVersion enabled)', function (done) {
+        this.timeout(timeout);
+
+        let tp = path.join(__dirname, 'AzVersionParse_YamlFormat.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.runAsync().then(() => {
+            assert(tr.succeeded, 'task should have succeeded with YAML format az version output');
+            assert(tr.stdout.indexOf("Can't parse az version") === -1, 'should not emit version parse error');
+            assert(tr.stdout.indexOf('Current Azure CLI version: 2.85.0') >= 0, 'should correctly extract version 2.85.0');
             done();
         }).catch((err) => {
             done(err);

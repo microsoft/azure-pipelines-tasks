@@ -268,6 +268,8 @@ Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan
 
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/GradleAuthenticateV0/    @microsoft/azure-artifacts-packages
+
 Tasks/GradleV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/GradleV3/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
