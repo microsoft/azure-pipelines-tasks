@@ -224,7 +224,11 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.stdout.indexOf('IDTOKEN_ENV_VARIABLE_PRESENT') >= 0, 'should pass idToken to script environment');
     });
 
-    it('Windows PS/PSCore: File invocation with caret in password (AZP_AZURECLI_USE_FILE_INVOCATION flag)', async () => {
+    it('Windows PS/PSCore: File invocation with caret in password (AZP_AZURECLI_USE_FILE_INVOCATION flag)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
         let tp = path.join(__dirname, 'L0FileInvocationWithCaretPassword.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
