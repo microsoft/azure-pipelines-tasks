@@ -160,23 +160,11 @@ function Set-TaskResult {
 $defaultErrorHandler = {
     Param($object, $computerName)
     $text = $object | Out-String
-    foreach ($line in $text -split "`r?`n") {
-        if ($line -match '^\s*##vso\[') {
-            Write-Host ($line -replace '##vso\[', '##_vso[')
-        } else {
-            Write-Host $line
-        }
-    }
+    Write-Host ($text -replace '##vso\[', '##_vso[')
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
     $text = $object | Out-String
-    foreach ($line in $text -split "`r?`n") {
-        if ($line -match '^\s*##vso\[') {
-            Write-Host ($line -replace '##vso\[', '##_vso[')
-        } else {
-            Write-Host $line
-        }
-    }
+    Write-Host ($text -replace '##vso\[', '##_vso[')
 }
