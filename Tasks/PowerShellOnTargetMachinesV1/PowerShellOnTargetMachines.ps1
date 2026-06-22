@@ -29,76 +29,9 @@ Write-Verbose "sessionVariables = $sessionVariables"
 . $PSScriptRoot/PowerShellJob.ps1
 . $PSScriptRoot/Utility.ps1
 
-# Define a filtering TextWriter that strips ##vso[ commands from console output.
-# Must be installed BEFORE DTT modules are imported — they cache Console.Out at load time.
-Add-Type -TypeDefinition @"
-using System;
-using System.IO;
-using System.Text;
-
-public class VsoFilterTextWriter : TextWriter
-{
-    private TextWriter _inner;
-    private StringBuilder _buffer = new StringBuilder();
-
-    public VsoFilterTextWriter(TextWriter inner) { _inner = inner; }
-    public override Encoding Encoding { get { return _inner.Encoding; } }
-
-    public override void Write(char value)
-    {
-        if (value == '\n')
-        {
-            FlushLine();
-        }
-        else
-        {
-            _buffer.Append(value);
-        }
-    }
-
-    public override void Write(string value)
-    {
-        if (value == null) return;
-        foreach (char c in value) Write(c);
-    }
-
-    public override void WriteLine(string value)
-    {
-        if (value != null) _buffer.Append(value);
-        FlushLine();
-    }
-
-    public override void Flush()
-    {
-        if (_buffer.Length > 0) FlushLine();
-        _inner.Flush();
-    }
-
-    private void FlushLine()
-    {
-        string line = _buffer.ToString();
-        _buffer.Clear();
-        if (line.TrimStart().StartsWith("##vso["))
-        {
-            _inner.WriteLine(line.Replace("##vso[", "##_vso["));
-        }
-        else
-        {
-            _inner.WriteLine(line);
-        }
-    }
-
-    public void Restore()
-    {
-        Flush();
-        Console.SetOut(_inner);
-    }
-}
-"@ -Language CSharp
-
-# Install the filter BEFORE loading DTT modules so they use our filtered Console.Out
-$script:vsoFilter = New-Object VsoFilterTextWriter([Console]::Out)
-[Console]::SetOut($script:vsoFilter)
+# Load and install the VsoFilterTextWriter BEFORE DTT modules — they cache Console.Out at load time.
+. $PSScriptRoot/VsoFilterTextWriter.ps1
+Install-VsoFilter
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
