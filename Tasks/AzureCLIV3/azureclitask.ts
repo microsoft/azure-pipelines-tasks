@@ -301,10 +301,32 @@ export class azureclitask {
 
     private static isAzVersionGreaterOrEqual(azVersionResultOutput, versionToCompare) {
         try {
-            let versionMatch = [];
+            let versionMatch = null;
             if (tl.getPipelineFeature('UseAzVersion')) {
-                // gets azure-cli version from both az version output which is in JSON format and az --version output text format
-                versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/);
+                // Strategy 1: Try JSON parse (az version)
+                try {
+                    const parsed = JSON.parse(azVersionResultOutput.trim());
+                    if (parsed["azure-cli"]) {
+                        versionMatch = [null, parsed["azure-cli"]];
+                    }
+                } catch (e) {
+                    tl.debug(`az version output is not JSON, trying regex strategies: ${e}`);
+                }
+
+                // Strategy 2: Same-line match for JSON-like or text format
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/["']?azure-cli["']?\s*[:\s]\s*["']?(\d+\.\d+\.\d+)["']?/i);
+                }
+
+                // Strategy 3: Table format — version is on the line after the separator (e.g. "Azure-cli\n---\n2.76.0")
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.match(/azure-cli\b[^\n]*\n[-\s]+\n\s*(\d+\.\d+\.\d+)/i);
+                }
+
+                // Strategy 4: TSV format — requires at least two tab-separated version columns (e.g. "2.85.0\t2.85.0\t1.1.0")
+                if (!versionMatch) {
+                    versionMatch = azVersionResultOutput.trim().match(/^(\d+\.\d+\.\d+)\t\d+\.\d+\.\d+/m);
+                }
             }else{
                 // gets azure-cli version from az --version output text format
                 versionMatch = azVersionResultOutput.match(/azure-cli\s+(\d+\.\d+\.\d+)/);
@@ -477,12 +499,14 @@ export class azureclitask {
                     console.log(tl.loc("AzureDevOpsExtensionNotFound"));
 
                     if (tl.getPipelineFeature('AzureCliV3EnableWhlFallback')) {
-                        try {
-                            Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
-                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
-                        } catch (error) {
+                        const standardInstallResult = tl.execSync("az", "extension add -n azure-devops -y");
+                        if (standardInstallResult.code !== 0) {
+                            tl.warning("Error Code: [" + standardInstallResult.code + "]");
+                            tl.warning(tl.loc("FailedToInstallAzureDevOpsCLI"));
                             console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
                             await this.installAzureDevOpsExtensionNoDeps();
+                        } else {
+                            console.log(tl.loc("AzureDevOpsExtensionInstalled"));
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));

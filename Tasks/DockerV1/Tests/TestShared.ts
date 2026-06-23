@@ -13,7 +13,8 @@ export let TestEnvVars = {
     tagMultipleImages: "__tagMultipleImages__",
     arguments: "__arguments__",
     qualifySourceImageName: "__qualifySourceImageName__",
-    addBaseImageData: "addBaseImageData"
+    addBaseImageData: "addBaseImageData",
+    useDockerSkipRedundantTagFeatureFlag: "DISTRIBUTEDTASK_TASKS_USEDOCKERSKIPREDUNDANTTAG"
 };
 
 export let OperatingSystems = {

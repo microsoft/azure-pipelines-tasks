@@ -24,6 +24,8 @@ steps:
 # Build
 - script: node make.js serverBuild --task "${{ parameters.task }}" $(includeLocalPackagesBuildConfigParameter) --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: ${{ parameters.task }} build
+  env:
+    PACKAGE_TOKEN: $(System.AccessToken)
 
 # Check diff for task sources
 #- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"

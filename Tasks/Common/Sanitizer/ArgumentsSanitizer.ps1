@@ -12,6 +12,24 @@ Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.tele
 
 $taskName = ""
 
+# AST node types that represent code execution (not pure data) and therefore
+# must never appear in a relaxed-mode argument. Kept in one module-level place so
+# the set is easy to audit and extend.
+#   ScriptBlockExpressionAst - { ... }
+#   MemberExpressionAst       - property / method access; its subclass
+#                               InvokeMemberExpressionAst (method calls) is covered too
+#   ConvertExpressionAst      - [type]$x / [type]'s' casts, incl. [ordered]@{} / [pscustomobject]@{}
+#   TypeExpressionAst         - a bare [type] reference (also the right side of -is / -isnot)
+# The -as conversion operator is handled separately in Test-SanitizerArgumentAst
+# because it is a BinaryExpressionAst distinguished by its operator, not a
+# dedicated node type.
+$script:DangerousAstNodeTypes = @(
+    [System.Management.Automation.Language.ScriptBlockExpressionAst],
+    [System.Management.Automation.Language.MemberExpressionAst],
+    [System.Management.Automation.Language.ConvertExpressionAst],
+    [System.Management.Automation.Language.TypeExpressionAst]
+)
+
 # public functions - start
 
 function Get-SanitizerFeatureFlags {
@@ -30,14 +48,26 @@ function Get-SanitizerActivateStatus {
 
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
-function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
+function Protect-ScriptArguments([string]$inputArgs, [string]$taskName, [switch]$AllowDataConstructors) {
     $script:taskName = $taskName
+
+    # In the relaxed mode, run the structural AST backstop on the RAW arguments
+    # first. This module only validates - it does not rewrite what the task runs -
+    # so the raw string is exactly what PowerShell parses at the dot-source sink.
+    # The relaxed allow-list permits @ { } [ ], which re-enables expressions that
+    # evaluate at bind time (a hashtable value, cast or sub-expression);
+    # Test-SanitizerArgumentAst rejects those while still allowing pure data
+    # literals such as @{ Port = 8080 }.
+    $astSafe = $true
+    if ($AllowDataConstructors) {
+        $astSafe = Test-SanitizerArgumentAst $inputArgs
+    }
 
     $expandedArgs, $expandTelemetry = Expand-EnvVariables $inputArgs;
 
-    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs
+    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs -AllowDataConstructors:$AllowDataConstructors
 
-    if ($sanitizedArgs -eq $inputArgs) {
+    if (($sanitizedArgs -eq $inputArgs) -and $astSafe) {
         Write-Debug 'Arguments passed sanitization without change.'
     }
     else {
@@ -46,10 +76,16 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
             if ($null -ne $sanitizeTelemetry) {
                 $telemetry += $sanitizeTelemetry;
             }
+            if (-not $astSafe) {
+                if ($null -eq $telemetry) {
+                    $telemetry = @{}
+                }
+                $telemetry.astBackstopRejected = $true
+            }
             Publish-Telemetry $telemetry;
         }
 
-        if ($sanitizedArgs -ne $expandedArgs) {
+        if (($sanitizedArgs -ne $expandedArgs) -or (-not $astSafe)) {
             $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
             if ($featureFlags.activate) {
@@ -69,16 +105,32 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 # public functions - end
 
 # !ATTENTION: don't write any console output in this method, because it will break result
-function Get-SanitizedArguments([string]$inputArgs) {
+function Get-SanitizedArguments([string]$inputArgs, [switch]$AllowDataConstructors) {
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
 
     ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
     ## ('?<!`') - checking if before character no backtick.
-    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Instead replacing to #removed#
     ## (?!true|false) - checking if after characters sequence no $true or $false.
-    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    ##
+    ## Two validation modes exist because there are two groups of tasks:
+    ##   * Strict (default) - the regex below. Used by the long-standing direct
+    ##     callers; their behavior must stay exactly the same.
+    ##   * Relaxed (-AllowDataConstructors) - additionally allows the data-
+    ##     constructor characters @ { } [ ] so legitimate hashtable params are not
+    ##     mangled. Any code execution those characters could re-enable (e.g.
+    ##     @{ k = cmd }) is blocked structurally by Test-SanitizerArgumentAst,
+    ##     not by this allow-list. (@(...) arrays stay blocked in both modes -
+    ##     parentheses are never allowed.)
+    ## Long-term these two modes should be unified into one consistent validation.
+    if ($AllowDataConstructors) {
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#@{}\[\]])(?!true|false)'
+    }
+    else {
+        $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    }
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
@@ -103,6 +155,82 @@ function Get-SanitizedArguments([string]$inputArgs) {
     }
 
     return $($resultArgs, $telemetry);
+}
+
+# Structural backstop for the relaxed validation mode.
+#
+# A character allow-list alone cannot tell a data literal from code: once
+# @ { } [ ] are permitted, an argument such as @{ k = New-Item ... },
+# @{ k = $(...) } or @{ k = [type]::Member() } passes the regex yet is an
+# evaluated expression at the dot-source sink - a hashtable value, cast or
+# sub-expression inside a data constructor runs, whereas the same tokens at
+# top-level argument position are inert literal strings.
+#
+# This function parses the raw arguments exactly as the sink does - as the
+# argument list of a command invocation - and rejects anything that is not a
+# plain data literal:
+#   * a parse error,
+#   * a script block, member access / method call, type-cast, the -as
+#     conversion operator, or a bare type reference,
+#   * a nested command (more than the single placeholder CommandAst), which
+#     covers commands embedded in a hashtable value or a chained statement.
+# Pure data literals (@{ Port = 8080 }), variables including $env:VAR, quoted
+# strings and numbers are accepted. (@(...) arrays pass this check but are still
+# rejected by the character allow-list, which does not permit parentheses.)
+#
+# Returns $true when the arguments are safe, $false when a dangerous construct
+# is present.
+function Test-SanitizerArgumentAst([string]$inputArgs) {
+    if ([string]::IsNullOrWhiteSpace($inputArgs)) {
+        return $true
+    }
+
+    $tokens = $null
+    $parseErrors = $null
+    # A literal placeholder command name keeps the parse focused on the argument
+    # expressions and mirrors how the arguments reach the sink.
+    $ast = [System.Management.Automation.Language.Parser]::ParseInput(
+        "& placeholder $inputArgs", [ref]$tokens, [ref]$parseErrors)
+
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        return $false
+    }
+
+    # $script:DangerousAstNodeTypes lists the node types that execute code (see its
+    # definition for the rationale). InvokeMemberExpressionAst derives from
+    # MemberExpressionAst, so method calls are covered by that single entry. The -as
+    # conversion operator (a BinaryExpressionAst with the 'As' operator) is the
+    # semantically equivalent form of a [type] cast and likewise invokes the target
+    # type's constructor / type-converter at the sink - verified to execute with both
+    # a [type] literal and a string/variable right operand - so it is rejected here
+    # too. (Top-level type literals passed as plain arguments do not parse as
+    # TypeExpressionAst and remain allowed.)
+    $dangerous = $ast.FindAll({
+            param($node)
+            $isDangerousType = $false
+            foreach ($t in $script:DangerousAstNodeTypes) {
+                if ($node -is $t) { $isDangerousType = $true; break }
+            }
+            $isDangerousType -or
+            (($node -is [System.Management.Automation.Language.BinaryExpressionAst]) -and
+             ($node.Operator -eq [System.Management.Automation.Language.TokenKind]::As))
+        }, $true)
+    if ($dangerous -and $dangerous.Count -gt 0) {
+        return $false
+    }
+
+    # Exactly one CommandAst is expected - our placeholder. Any additional
+    # CommandAst means a command nested inside a data constructor or a chained
+    # statement.
+    $commandAsts = $ast.FindAll({
+            param($node)
+            $node -is [System.Management.Automation.Language.CommandAst]
+        }, $true)
+    if ($commandAsts.Count -gt 1) {
+        return $false
+    }
+
+    return $true
 }
 
 function Publish-Telemetry($telemetry) {
