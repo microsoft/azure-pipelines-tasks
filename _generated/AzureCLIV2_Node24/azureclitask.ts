@@ -468,7 +468,11 @@ export class azureclitask {
         const api: ITaskApi = await connection.getTaskApi();
         const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
-            return null;
+            throw new Error(tl.loc('CouldNotFetchIdToken', 'null response'));
+        }
+
+        if (!response.oidcToken) {
+            throw new Error(tl.loc('CouldNotFetchIdToken', 'empty token in response'));
         }
 
         return response.oidcToken;

@@ -276,10 +276,11 @@
     "FailedToSetAzureDevOpsOrganization": "Failed to set Azure DevOps organization",
     "FailedToSetAzureDevOpsProject": "Failed to set Azure DevOps project",
     "SkippingSubscriptionContext": "Skipping subscription context per 'allowNoSubscriptions' input or empty GUID value",
-    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+    "CouldNotFetchIdToken": "Could not fetch the ID token for the federated credentials. Reason: %s"
   },
   "_buildConfigMapping": {
-    "Default": "3.276.4",
+    "Default": "3.276.5",
     "Node24_1": "3.276.5"
   }
 }

@@ -232,10 +232,11 @@
     "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
     "RefreshingAzSession": "Attempting to refresh az-cli session...",
     "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.",
-    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+    "CouldNotFetchIdToken": "Could not fetch the ID token for the federated credentials. Reason: %s"
   },
   "_buildConfigMapping": {
-    "Default": "2.276.2",
+    "Default": "2.276.3",
     "Node24_1": "2.276.3"
   }
 }
