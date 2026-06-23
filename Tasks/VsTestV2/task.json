@@ -319,7 +319,8 @@
       "properties": {
         "EditableOptions": "False"
       }
-    },    {      "name": "distributionBatchType",
+    },   
+    { "name": "distributionBatchType",
       "type": "pickList",
       "label": "Batch tests",
       "defaultValue": "basedOnTestCases",
