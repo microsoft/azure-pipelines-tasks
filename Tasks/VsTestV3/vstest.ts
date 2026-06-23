@@ -181,6 +181,14 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         }
     }
 
+    // Log final architecture decision
+    const platformArg = argsArray.find(arg => /^\/Platform:/i.test(arg));
+    if (platformArg) {
+        tl.debug(tl.loc('vstestFinalArchitecture', platformArg));
+    } else {
+        tl.debug(tl.loc('vstestPlatformDefaultUsed'));
+    }
+
     return argsArray;
 }
 
