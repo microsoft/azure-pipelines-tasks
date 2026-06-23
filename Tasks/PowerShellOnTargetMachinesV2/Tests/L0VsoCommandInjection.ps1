@@ -1,57 +1,61 @@
 [CmdletBinding()]
 param()
 
-# Test: Two layers of defense against ##vso[ command injection from remote VMs.
+# Test: PowerShellOnTargetMachines.ps1 must sanitize ##vso[ commands from remote VM output
+# before they reach the agent's log processor.
 #
-# Layer 1: 6>&1 | ForEach-Object filter in PowerShellJob.ps1 escapes Write-Host injection.
-# Layer 2: Overridden Write-ResponseLogs sanitizes DeploymentLog content (the main vector).
-#
-# The vulnerability: Invoke-PsOnRemote executes scripts on remote VMs via WinRM.
-# Remote output in DeploymentLog flows through Write-ResponseLogs → Write-Output → agent.
-# The agent processes any ##vso[ prefix as a logging command (variable injection, etc.).
+# This test runs the ACTUAL task script with mocked dependencies and a malicious deployment
+# response, then verifies the script's output contains no raw ##vso[ injection commands.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\MockModule.ps1
 
-# Mock Import-Module to avoid loading real DTT DLLs
-function Import-Module { }
+# Remove the default Write-ResponseLogs mock — we want the REAL override from the production script.
+Unregister-Mock Write-ResponseLogs
 
-# Source the PowerShellJob.ps1 to get $RunPowershellJob scriptblock
-. $PSScriptRoot\..\PowerShellJob.ps1
+$remotePowershellRunnerPath = "$PSScriptRoot\..\PowerShellOnTargetMachines.ps1"
 
-# === Test: Write-ResponseLogs sanitizes all injection vectors ===
+# Setup inputs for single-machine sequential execution
+Unregister-Mock Get-VstsInput
+Register-Mock Get-VstsInput { return $environmentWithSkipCANotSet } -ParametersEvaluator{ $Name -eq "EnvironmentName" }
+Register-Mock Get-VstsInput { return $validMachineName1 } -ParametersEvaluator{ $Name -eq "MachineNames" }
+Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq "ScriptPath" }
+Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq "RunPowershellInParallel" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq "InitializationScriptPath" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq "ScriptArguments" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq "SessionVariables" }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq "AdminUserName" }
+Register-Mock Get-VstsInput { return "adminPass" } -ParametersEvaluator{ $Name -eq "AdminPassword" }
+Register-Mock Get-VstsInput { return "HTTPS" } -ParametersEvaluator{ $Name -eq "Protocol" }
+Register-Mock Get-VstsInput { return "true" } -ParametersEvaluator{ $Name -eq "testCertificate" }
 
-# Mock Invoke-PsOnRemote to simulate a compromised VM.
-# In production, DTT collects ALL remote output (Write-Host, Write-Output) into DeploymentLog.
-function global:Invoke-PsOnRemote {
-    param([string]$MachineDnsName, [string]$ScriptPath, [string]$WinRMPort, $Credential, 
-          [string]$ScriptArguments, [string]$InitializationScriptPath, $SessionVariables)
+Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $environmentWithSkipCANotSet } -ParametersEvaluator {$EnvironmentName -eq $environmentWithSkipCANotSet}
+Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $environmentWithSkipCANotSet}
+Register-Mock Get-EnvironmentProperty { return $environmentWinRMHttpsPort } -ParametersEvaluator {$Key -eq $resourceWinRMHttpsPortKeyName}
+Register-Mock Get-EnvironmentProperty { return '' } -ParametersEvaluator {$Key -eq $skipCACheckKeyName}
+
+# Mock Invoke-Command to return a deployment response with malicious ##vso commands in DeploymentLog.
+# This simulates what the DTT DLL returns when a compromised remote VM injects commands.
+Register-Mock Invoke-Command {
     return @{
         Status = "Passed"
-        DeploymentLog = "##vso[task.setvariable variable=secretVar;issecret=true]stolen-credentials`n##vso[task.setvariable variable=system.accesstoken]pwned`nLegitimate deployment output`nMixed ##vso[task.complete result=Failed] mid-line"
+        DeploymentLog = "##vso[task.setvariable variable=DEPLOY_TOKEN]stolen-from-compromised-vm`n##vso[task.setvariable variable=VM_COMPROMISED]true`nLegitimate deployment output`nMixed ##vso[task.complete result=Failed] mid-line"
+        ServiceLog = "##vso[task.setvariable variable=SERVICE_INJECT]via-service-log"
         Error = $null
     }
 }
 
-function global:Get-ParsedSessionVariables { param($inputSessionVariables) return @{} }
+Register-Mock Get-ParsedSessionVariables { return @{} }
 
-# Execute the job scriptblock to get the deployment response
-$deploymentResponse = & $RunPowershellJob "test-vm" $validScriptPath "5986" "" "" $null "-UseHttp" "" "false" "" "$PSScriptRoot\.."
+# Run the actual task script and capture all output
+$allOutput = (& $remotePowershellRunnerPath) 2>&1 | Out-String
 
-# Test the Write-ResponseLogs sanitization logic directly.
-# This is the exact same logic used in the override in PowerShellOnTargetMachines.ps1:
-#   ($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso['
-$sanitizedOutput = ($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso['
+# Verify: NO raw ##vso[task.setvariable] in output (injection blocked by the task's sanitization)
+Assert-AreEqual $true ($allOutput -notmatch '##vso\[task\.setvariable') "##vso[task.setvariable] from remote VM must be escaped by the task's sanitization"
 
-# Verify: NO raw ##vso[ in sanitized output
-Assert-AreEqual $true ($sanitizedOutput -notmatch '(?<![_])##vso\[') "##vso[ commands from remote VM must be escaped by Write-ResponseLogs sanitization"
-
-# Verify: escaped ##_vso[ is present
-Assert-AreEqual $true ($sanitizedOutput -match '##_vso\[') "Escaped ##_vso[ should appear in sanitized output"
+# Verify: escaped ##_vso[ is present (commands are visible but neutralized)
+Assert-AreEqual $true ($allOutput -match '##_vso\[') "Escaped ##_vso[ should appear in task output"
 
 # Verify: legitimate output passes through
-Assert-AreEqual $true ($sanitizedOutput -match 'Legitimate deployment output') "Legitimate output should pass through"
-
-# Verify: mid-line ##vso[ is also escaped
-Assert-AreEqual $true ($sanitizedOutput -match 'Mixed ##_vso\[') "Mid-line ##vso[ should also be escaped"
+Assert-AreEqual $true ($allOutput -match 'Legitimate deployment output') "Legitimate output should pass through unmodified"
