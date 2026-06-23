@@ -13,7 +13,7 @@ param (
     [string]$scriptRoot
     )
 
-    Import-Module "$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+    Import-Module "$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "scriptPath = $scriptPath"

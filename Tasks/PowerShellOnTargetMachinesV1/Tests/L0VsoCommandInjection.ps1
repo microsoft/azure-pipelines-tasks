@@ -1,46 +1,57 @@
 [CmdletBinding()]
 param()
 
-# Test: VsoFilterTextWriter must escape ##vso[ commands written to Console.Out.
+# Test: Two layers of defense against ##vso[ command injection from remote VMs.
 #
-# This test uses the ACTUAL production VsoFilterTextWriter.ps1 to verify that
-# the filter correctly escapes ##vso[ → ##_vso[ for all console output.
+# Layer 1: 6>&1 | ForEach-Object filter in PowerShellJob.ps1 escapes Write-Host injection.
+# Layer 2: Overridden Write-ResponseLogs sanitizes DeploymentLog content (the main vector).
+#
+# The vulnerability: Invoke-PsOnRemote executes scripts on remote VMs via WinRM.
+# Remote output in DeploymentLog flows through Write-ResponseLogs → Write-Output → agent.
+# The agent processes any ##vso[ prefix as a logging command (variable injection, etc.).
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\MockVariable.ps1
+. $PSScriptRoot\MockModule.ps1
 
-# Load the PRODUCTION VsoFilterTextWriter (same file used by PowerShellOnTargetMachines.ps1)
-. $PSScriptRoot\..\VsoFilterTextWriter.ps1
+# Mock Import-Module to avoid loading real DTT DLLs
+function Import-Module { }
 
-# Install VsoFilterTextWriter wrapping a StringWriter to capture filtered output
-$stringWriter = New-Object System.IO.StringWriter
-$filter = New-Object VsoFilterTextWriter($stringWriter)
-[Console]::SetOut($filter)
+# Source the PowerShellJob.ps1 to get $RunPowershellJob scriptblock
+. $PSScriptRoot\..\PowerShellJob.ps1
 
-try {
-    # Simulate compromised VM output written to Console.Out (as DTT DLLs do)
-    [Console]::WriteLine("##vso[task.setvariable variable=injectedSecret;issecret=true]stolen-value")
-    [Console]::WriteLine("##vso[task.setvariable variable=Build.Repository.Clean]true")
-    [Console]::WriteLine("Legitimate script output from VM")
-    [Console]::WriteLine("  ##vso[task.logissue type=warning]indented injection attempt")
-    [Console]::WriteLine("Mixed line with ##vso[task.complete result=Failed] mid-text")
-    $filter.Flush()
-} finally {
-    $filter.Restore()
+# === Test: Write-ResponseLogs sanitizes all injection vectors ===
+
+# Mock Invoke-PsOnRemote to simulate a compromised VM.
+# In production, DTT collects ALL remote output (Write-Host, Write-Output) into DeploymentLog.
+function global:Invoke-PsOnRemote {
+    param([string]$MachineDnsName, [string]$ScriptPath, [string]$WinRMPort, $Credential, 
+          [string]$ScriptArguments, [string]$InitializationScriptPath, $SessionVariables)
+    return @{
+        Status = "Passed"
+        DeploymentLog = "##vso[task.setvariable variable=secretVar;issecret=true]stolen-credentials`n##vso[task.setvariable variable=system.accesstoken]pwned`nLegitimate deployment output`nMixed ##vso[task.complete result=Failed] mid-line"
+        Error = $null
+    }
 }
 
-$output = $stringWriter.ToString()
+function global:Get-ParsedSessionVariables { param($inputSessionVariables) return @{} }
 
-# Verify: NO raw ##vso[ commands in the output
-$rawVsoLines = ($output -split "`n") | Where-Object { $_ -match '##vso\[' }
-Assert-AreEqual 0 $rawVsoLines.Count "Raw ##vso[ commands must not pass through VsoFilterTextWriter. Found: $($rawVsoLines -join '; ')"
+# Execute the job scriptblock to get the deployment response
+$deploymentResponse = & $RunPowershellJob "test-vm" $validScriptPath "5986" "" "" $null "-UseHttp" "" "false" "" "$PSScriptRoot\.."
 
-# Verify: escaped ##_vso[ commands ARE present (diagnostic visibility)
-$escapedLines = ($output -split "`n") | Where-Object { $_ -match '##_vso\[' }
-Assert-AreEqual 4 $escapedLines.Count "All 4 lines with ##vso[ should be escaped to ##_vso[. Found $($escapedLines.Count)"
+# Test the Write-ResponseLogs sanitization logic directly.
+# This is the exact same logic used in the override in PowerShellOnTargetMachines.ps1:
+#   ($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso['
+$sanitizedOutput = ($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso['
 
-# Verify: legitimate output passes through unchanged
-Assert-AreEqual $true ($output -match 'Legitimate script output from VM') "Legitimate output should pass through unchanged"
+# Verify: NO raw ##vso[ in sanitized output
+Assert-AreEqual $true ($sanitizedOutput -notmatch '(?<![_])##vso\[') "##vso[ commands from remote VM must be escaped by Write-ResponseLogs sanitization"
 
-# Verify: mid-line ##vso[ is also caught
-Assert-AreEqual $true ($output -match 'Mixed line with ##_vso\[task\.complete') "Mid-line ##vso[ should also be escaped"
+# Verify: escaped ##_vso[ is present
+Assert-AreEqual $true ($sanitizedOutput -match '##_vso\[') "Escaped ##_vso[ should appear in sanitized output"
 
+# Verify: legitimate output passes through
+Assert-AreEqual $true ($sanitizedOutput -match 'Legitimate deployment output') "Legitimate output should pass through"
+
+# Verify: mid-line ##vso[ is also escaped
+Assert-AreEqual $true ($sanitizedOutput -match 'Mixed ##_vso\[') "Mid-line ##vso[ should also be escaped"

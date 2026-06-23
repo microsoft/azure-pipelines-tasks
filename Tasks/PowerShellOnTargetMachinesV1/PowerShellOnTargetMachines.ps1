@@ -29,14 +29,37 @@ Write-Verbose "sessionVariables = $sessionVariables"
 . $PSScriptRoot/PowerShellJob.ps1
 . $PSScriptRoot/Utility.ps1
 
-# Load and install the VsoFilterTextWriter BEFORE DTT modules — they cache Console.Out at load time.
-. $PSScriptRoot/VsoFilterTextWriter.ps1
-Install-VsoFilter
-
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+
+# Override Write-ResponseLogs exported by the DTT module (Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal).
+# Original: Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1, function Write-ResponseLogs.
+# Script-scope functions take precedence over module-exported functions in PowerShell command resolution,
+# so this definition shadows the module's version for all call sites in this script.
+#
+# Why: The original Write-ResponseLogs outputs $deploymentResponse.DeploymentLog unsanitized via Write-Output.
+# The agent scans pipeline output for ##vso[ prefix and executes matching lines as logging commands.
+# A compromised remote VM can inject ##vso[task.setvariable] commands in its script output, which the
+# DTT DLL collects into DeploymentLog. Without this override, those commands reach the agent and execute.
+function Write-ResponseLogs {
+    [CmdletBinding()]
+    param(
+        [string][Parameter(Mandatory=$true)] $operationName,
+        [string][Parameter(Mandatory=$true)] $fqdn,
+        [object][Parameter(Mandatory=$true)] $deploymentResponse
+    )
+    Write-Verbose "Finished $operationName operation on $fqdn"
+    if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
+        Write-Output "Deployment logs for $operationName operation on $fqdn "
+        Write-Output (($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
+    }
+    if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
+        Write-Verbose "Service logs for $operationName operation on $fqdn "
+        Write-Verbose (($deploymentResponse.ServiceLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
+    }
+}
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
@@ -173,7 +196,7 @@ else
          {
              if($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
              {
-               $output = Receive-Job -Id $job.Id
+                $output = Receive-Job -Id $job.Id
                 Remove-Job $Job
                 $status = $output.Status
                 $displayName = $Jobs.Item($job.Id).displayName
