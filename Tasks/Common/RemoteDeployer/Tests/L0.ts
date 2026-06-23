@@ -51,8 +51,8 @@ describe('Remote Deployer Test Suite', function () {
             psr.run(path.join(__dirname, 'Retry-Connection.AttemptsConnectionStateDisconnectedAvailabilityNone.ps1'), done);
         });
 
-        it('(DefaultHandlers) must strip ##vso[ logging commands from remote output', (done) => {
-            psr.run(path.join(__dirname, 'DefaultHandlers.MustStripVsoCommands.ps1'), done);
+        it('(Invoke-RemoteScript) must strip ##vso[ logging commands from remote output', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-RemoteScript.MustStripVsoCommands.ps1'), done);
         });
     }
 });
