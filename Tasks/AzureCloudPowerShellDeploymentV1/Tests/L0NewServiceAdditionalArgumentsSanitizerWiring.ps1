@@ -22,9 +22,18 @@ Assert-AreEqual $true ($src -match 'Import-Module\s+\$PSScriptRoot\\ps_modules\\
 Assert-AreEqual $true ($src -match 'Invoke-ScriptArgumentSanitization') `
     "Invoke-ScriptArgumentSanitization call is missing from Publish-AzureCloudDeployment.ps1"
 
-# Must validate the NewServiceAdditionalArguments input.
-Assert-AreEqual $true ($src -match '-InputArgs\s+\$NewServiceAdditionalArguments') `
-    "Dispatcher must validate `$NewServiceAdditionalArguments (the input that flows to the new-service Invoke-Expression sink)"
+# Must validate ALL inputs that flow into the same Invoke-Expression sink (Opus-4.8 review,
+# 2026-06-23): the new-service block at line ~85-95 interpolates $ServiceName,
+# $ServiceLocation, $NewServiceAffinityGroup AND $NewServiceAdditionalArguments into the
+# command string before iex, so all four must be validated.
+Assert-AreEqual $true ($src -match '-InputArgs\s+\$ServiceName\b') `
+    'Dispatcher must validate $ServiceName (flows into -ServiceName "..." in the iex sink)'
+Assert-AreEqual $true ($src -match '-InputArgs\s+\$ServiceLocation\b') `
+    'Dispatcher must validate $ServiceLocation (flows into -Location "..." in the iex sink)'
+Assert-AreEqual $true ($src -match '-InputArgs\s+\$NewServiceAffinityGroup\b') `
+    'Dispatcher must validate $NewServiceAffinityGroup (flows into -AffinityGroup "..." in the iex sink)'
+Assert-AreEqual $true ($src -match '-InputArgs\s+\$NewServiceAdditionalArguments\b') `
+    'Dispatcher must validate $NewServiceAdditionalArguments (raw-appended into the iex sink)'
 
 # Must use the exact task name the dispatcher reports in telemetry.
 Assert-AreEqual $true ($src -match "-TaskName\s+'AzureCloudPowerShellDeploymentV1'") `
