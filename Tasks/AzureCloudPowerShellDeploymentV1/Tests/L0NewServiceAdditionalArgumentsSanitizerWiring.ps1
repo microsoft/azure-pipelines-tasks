@@ -52,6 +52,16 @@ Assert-AreEqual $true ($sinkPos -gt 0) "`$azureService = Invoke-Expression -Comm
 Assert-AreEqual $true ($dispatcherPos -lt $sinkPos) `
     "Invoke-ScriptArgumentSanitization must run BEFORE the Invoke-Expression sink so the throw blocks injection"
 
+# Wiring must live INSIDE the if (!$azureService) new-service-creation branch (GPT-5.5 review,
+# 2026-06-23). Moving it up to top-of-try means existing-service deployments would also throw
+# on the FF-enabled char-list when args like -Description "Prod (EU)" are present, even though
+# their iex path is never executed. The dispatcher position must therefore be AFTER the
+# `if (!$azureService) {` opening brace.
+$branchOpenPos = $src.IndexOf('if (!$azureService)')
+Assert-AreEqual $true ($branchOpenPos -gt 0) "if (!`$azureService) branch not found"
+Assert-AreEqual $true ($dispatcherPos -gt $branchOpenPos) `
+    "Invoke-ScriptArgumentSanitization must run INSIDE the new-service-creation branch (after `if (!`$azureService)`), so existing-service deployments are not gated on inputs the iex would never see"
+
 # Sanitizer module must be bundled into the built task so Import-Module resolves.
 # In source tree this is configured in make.json (common: ../Common/Sanitizer); the
 # build copies the result into ps_modules\Sanitizer alongside the task. We check the

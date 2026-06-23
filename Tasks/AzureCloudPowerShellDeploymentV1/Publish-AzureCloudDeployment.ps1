@@ -24,36 +24,6 @@ try{
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
-    # Sanitize all inputs that flow into the same Invoke-Expression -Command $azureService
-    # sink in the new-service-creation path below. The sink interpolates four task inputs
-    # into the command string before iex:
-    #   * $ServiceName (-Require, always present) -> "-ServiceName `"$ServiceName`""
-    #   * $NewServiceAffinityGroup                -> "-AffinityGroup `"$NewServiceAffinityGroup`""
-    #   * $ServiceLocation                        -> "-Location `"$ServiceLocation`""
-    #   * $NewServiceAdditionalArguments          -> raw append
-    # All four are user-controlled and can break the surrounding "..." quoting (a literal " or
-    # $(...) subexpression injects PowerShell at the iex). No-op unless BOTH the org-level
-    # "Enable shell tasks arguments validation" toggle and the per-task pipeline feature flag
-    # are enabled.
-    # See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
-    # MSRC 115118 Bug 2.
-    Invoke-ScriptArgumentSanitization `
-        -InputArgs $ServiceName `
-        -TaskName 'AzureCloudPowerShellDeploymentV1' `
-        -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
-    Invoke-ScriptArgumentSanitization `
-        -InputArgs $ServiceLocation `
-        -TaskName 'AzureCloudPowerShellDeploymentV1' `
-        -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
-    Invoke-ScriptArgumentSanitization `
-        -InputArgs $NewServiceAffinityGroup `
-        -TaskName 'AzureCloudPowerShellDeploymentV1' `
-        -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
-    Invoke-ScriptArgumentSanitization `
-        -InputArgs $NewServiceAdditionalArguments `
-        -TaskName 'AzureCloudPowerShellDeploymentV1' `
-        -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
-
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
     $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
     $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
@@ -93,7 +63,39 @@ try{
 
 
     if (!$azureService)
-    {    
+    {
+        # Sanitize all inputs that flow into the Invoke-Expression -Command $azureService sink
+        # immediately below. Only called when this new-service-creation branch is actually
+        # taken (existing-service deployments never reach the iex, so they keep the pre-fix
+        # behavior for legitimately-non-sanitizer-compatible stale args). The sink
+        # interpolates four task inputs into the command string before iex:
+        #   * $ServiceName (-Require, always present) -> "-ServiceName `"$ServiceName`""
+        #   * $NewServiceAffinityGroup                -> "-AffinityGroup `"$NewServiceAffinityGroup`""
+        #   * $ServiceLocation                        -> "-Location `"$ServiceLocation`""
+        #   * $NewServiceAdditionalArguments          -> raw append
+        # All four are user-controlled and can break the surrounding "..." quoting (a literal "
+        # or $(...) subexpression injects PowerShell at the iex). No-op unless BOTH the
+        # org-level "Enable shell tasks arguments validation" toggle and the per-task pipeline
+        # feature flag are enabled.
+        # See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
+        # MSRC 115118 Bug 2.
+        Invoke-ScriptArgumentSanitization `
+            -InputArgs $ServiceName `
+            -TaskName 'AzureCloudPowerShellDeploymentV1' `
+            -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
+        Invoke-ScriptArgumentSanitization `
+            -InputArgs $ServiceLocation `
+            -TaskName 'AzureCloudPowerShellDeploymentV1' `
+            -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
+        Invoke-ScriptArgumentSanitization `
+            -InputArgs $NewServiceAffinityGroup `
+            -TaskName 'AzureCloudPowerShellDeploymentV1' `
+            -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
+        Invoke-ScriptArgumentSanitization `
+            -InputArgs $NewServiceAdditionalArguments `
+            -TaskName 'AzureCloudPowerShellDeploymentV1' `
+            -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
+
         $azureService = "New-AzureService -ServiceName `"$ServiceName`""
         if($NewServiceAffinityGroup) {
             $azureService += " -AffinityGroup `"$NewServiceAffinityGroup`""
