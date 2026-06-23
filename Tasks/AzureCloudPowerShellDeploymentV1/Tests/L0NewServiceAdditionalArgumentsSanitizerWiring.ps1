@@ -22,10 +22,10 @@ Assert-AreEqual $true ($src -match 'Import-Module\s+\$PSScriptRoot\\ps_modules\\
 Assert-AreEqual $true ($src -match 'Invoke-ScriptArgumentSanitization') `
     "Invoke-ScriptArgumentSanitization call is missing from Publish-AzureCloudDeployment.ps1"
 
-# Must validate ALL inputs that flow into the same Invoke-Expression sink (Opus-4.8 review,
-# 2026-06-23): the new-service block at line ~85-95 interpolates $ServiceName,
-# $ServiceLocation, $NewServiceAffinityGroup AND $NewServiceAdditionalArguments into the
-# command string before iex, so all four must be validated.
+# Must validate ALL inputs that flow into the same Invoke-Expression sink: the new-service
+# block at line ~85-95 interpolates $ServiceName, $ServiceLocation, $NewServiceAffinityGroup
+# AND $NewServiceAdditionalArguments into the command string before iex, so all four must
+# be validated.
 Assert-AreEqual $true ($src -match '-InputArgs\s+\$ServiceName\b') `
     'Dispatcher must validate $ServiceName (flows into -ServiceName "..." in the iex sink)'
 Assert-AreEqual $true ($src -match '-InputArgs\s+\$ServiceLocation\b') `
@@ -52,9 +52,9 @@ Assert-AreEqual $true ($sinkPos -gt 0) "`$azureService = Invoke-Expression -Comm
 Assert-AreEqual $true ($dispatcherPos -lt $sinkPos) `
     "Invoke-ScriptArgumentSanitization must run BEFORE the Invoke-Expression sink so the throw blocks injection"
 
-# Wiring must live INSIDE the if (!$azureService) new-service-creation branch (GPT-5.5 review,
-# 2026-06-23). Moving it up to top-of-try means existing-service deployments would also throw
-# on the FF-enabled char-list when args like -Description "Prod (EU)" are present, even though
+# Wiring must live INSIDE the if (!$azureService) new-service-creation branch. If the
+# validation runs at top-of-try{}, existing-service deployments would also throw on the
+# FF-enabled char-list when args like -Description "Prod (EU)" are present, even though
 # their iex path is never executed. The dispatcher position must therefore be AFTER the
 # `if (!$azureService) {` opening brace.
 $branchOpenPos = $src.IndexOf('if (!$azureService)')
