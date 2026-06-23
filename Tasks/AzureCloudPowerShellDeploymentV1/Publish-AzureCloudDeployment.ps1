@@ -3,6 +3,8 @@ $env:RETIRE_AZURERM_POWERSHELL_MODULE = $false
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
 try{
 
     $ServiceName = Get-VstsInput -Name ServiceName -Require
@@ -21,6 +23,17 @@ try{
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
+
+    # Sanitize NewServiceAdditionalArguments to prevent PowerShell command injection at the
+    # Invoke-Expression -Command $azureService sink in the new-service-creation path below.
+    # No-op unless BOTH the org-level "Enable shell tasks arguments validation" toggle and
+    # the per-task pipeline feature flag are enabled.
+    # See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
+    # MSRC 115118 Bug 2.
+    Invoke-ScriptArgumentSanitization `
+        -InputArgs $NewServiceAdditionalArguments `
+        -TaskName 'AzureCloudPowerShellDeploymentV1' `
+        -PipelineFeatureFlagName 'EnableAzureCloudPowerShellArgumentsSanitization'
 
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
     $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
