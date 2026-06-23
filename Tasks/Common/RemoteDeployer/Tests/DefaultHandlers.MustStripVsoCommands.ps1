@@ -1,21 +1,41 @@
 [CmdletBinding()]
 param()
 
-# Test: Invoke-RemoteScript's output handling must sanitize ##vso[ commands from remote VM output
+# Test: Invoke-RemoteScript must sanitize ##vso[ commands from remote VM output
 # before they reach the agent's log processor.
 #
-# This test calls Get-JobResults (the internal function that receives remote job output and
-# routes it through the production default handlers) with mocked job infrastructure.
-# It verifies that malicious ##vso[ commands in remote output are sanitized end-to-end
-# by the actual production defaultOutputHandler.
+# This test calls Invoke-RemoteScript (the public entry point) end-to-end with mocked
+# infrastructure (sessions, jobs, network). It verifies that malicious ##vso[ commands
+# in remote output are sanitized by the production defaultOutputHandler.
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
-# Mock Get-Job to return a "Completed" job with proper Location
+# --- Mock infrastructure so Invoke-RemoteScript can run without real WinRM connections ---
+
+# Get-TargetMachines: return a single target machine descriptor
+Register-Mock Get-TargetMachines {
+    return @(
+        @{ ComputerName = "compromised-vm"; WSManPort = "5985"; Credential = $null; Authentication = "Default"; sessionConfigurationName = "microsoft.powershell"; UseSsl = $false }
+    )
+}
+
+# Get-WinRmConnectionToTargetMachine: return $null (passes [PSSession[]] type constraint)
+Register-Mock Get-WinRmConnectionToTargetMachine { return $null }
+
+# Get-VstsTaskVariable: return a fake job name
+Register-Mock Get-VstsTaskVariable { return "fake-job-id" }
+
+# Invoke-Command: return a mock parent job object with ChildJobs
+Register-Mock Invoke-Command {
+    $childJob = [pscustomobject]@{ Id = 1; Location = "compromised-vm" }
+    return [pscustomobject]@{ ChildJobs = @($childJob) }
+}
+
+# Get-Job: return a "Completed" job with proper Location
 Register-Mock Get-Job { return @{ State = "Completed"; Location = "compromised-vm" } }
 
-# Mock Receive-Job to simulate malicious remote output containing ##vso injection attempts.
+# Receive-Job: simulate malicious remote output containing ##vso injection attempts.
 # In production, this is where output from the remote script execution arrives.
 Register-Mock Receive-Job {
     Write-Output "##vso[task.setvariable variable=DEPLOY_TOKEN]stolen-from-compromised-vm"
@@ -24,28 +44,22 @@ Register-Mock Receive-Job {
     Write-Output "Mixed ##vso[task.complete result=Failed] mid-line"
 }
 
-# Setup job info simulating a single completed remote job
-$jobsInfo = @(
-    [pscustomobject]@{ Id = 1; Location = "compromised-vm"; JobRetrievelCount = 0 }
-)
-$targetMachines = @(
-    @{ ComputerName = "compromised-vm"; WSManPort = "5985" }
-)
+# Disconnect-WinRmConnectionToTargetMachines: no-op
+Register-Mock Disconnect-WinRmConnectionToTargetMachines {}
 
-# Get the PRODUCTION default handlers from the module
-$outputHandler = & $module { $defaultOutputHandler }
-$errorHandler = & $module { $defaultErrorHandler }
+# Set-TaskResult: no-op
+Register-Mock Set-TaskResult {}
 
-# Call Get-JobResults with production handlers. Capture only stream 6 (Write-Host/Information)
-# which is where the defaultOutputHandler writes sanitized output. Other streams (verbose, etc.)
-# contain mock framework diagnostic messages that would contaminate the assertion.
-$allOutput = (& $module Get-JobResults -jobsInfo $jobsInfo `
-    -targetMachines $targetMachines `
-    -sessionName "test-session" `
-    -sessionOption (New-Object PSObject) `
-    -outputHandler $outputHandler `
-    -errorHandler $errorHandler `
-    -logsFolder "") 6>&1 | Out-String
+# Publish-Telemetry: no-op
+Register-Mock Publish-Telemetry {}
+
+# --- Call Invoke-RemoteScript (the production entry point) ---
+# Capture stream 6 (Write-Host/Information) which is where the defaultOutputHandler writes
+# sanitized output. Other streams (verbose, etc.) contain mock framework noise.
+$allOutput = (& $module Invoke-RemoteScript `
+    -targetMachineNames @("compromised-vm:5985") `
+    -remoteScriptJobArgumentsByName @{ inline = $true; inlineScript = "whoami" } `
+    -sessionOption (New-Object PSObject)) 6>&1 | Out-String
 
 # Verify: NO raw ##vso[task.setvariable] in output (injection blocked by production handler)
 Assert-AreEqual $true ($allOutput -notmatch '##vso\[task\.setvariable') "##vso[task.setvariable] from remote VM must be escaped by the production defaultOutputHandler"
