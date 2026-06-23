@@ -14,6 +14,9 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
+
+// Get machine architecture for vstest executable selection
+const machineArch = os.arch();
 import { isFeatureFlagEnabled } from './runvstest';
 
 const runSettingsExt = '.runsettings';

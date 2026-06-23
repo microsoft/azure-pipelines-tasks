@@ -1,6 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as path from 'path';
+import * as os from 'os';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
@@ -83,7 +84,11 @@ function locateVSTestConsole(testConfig: models.TestConfigurations): string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath: string = vstestExeFolder;
     if (vstestExeFolder) {
-        vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
+        // Select appropriate vstest executable based on machine architecture
+        const machineArch = os.arch();
+        const vstestExeName = machineArch === 'arm64' ? 'vstest.console.arm64.exe' : 'vstest.console.exe';
+        vstestExePath = path.join(vstestExeFolder, vstestExeName);
+        console.log(`Machine architecture: ${machineArch}. Using vstest executable: ${vstestExeName}`);
     }
     return vstestExePath;
 }
@@ -94,8 +99,11 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
             return path.join(testConfig.vsTestLocation, '..');
         }
 
+        // Check for appropriate vstest executable based on machine architecture
+        const machineArch = os.arch();
+        const vstestExeName = machineArch === 'arm64' ? 'vstest.console.arm64.exe' : 'vstest.console.exe';
         if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) &&
-            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
+            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, vstestExeName))) {
             return testConfig.vsTestLocation;
         }
         throw (new Error(tl.loc('VstestLocationDoesNotExist', testConfig.vsTestLocation)));

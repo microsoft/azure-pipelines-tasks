@@ -15,6 +15,9 @@ import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
 
+// Get machine architecture for vstest executable selection
+const machineArch = os.arch();
+
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
 
