@@ -1,10 +1,13 @@
 [CmdletBinding()]
 param()
 
+$originalEnableNewLogic = $env:AZP_75787_ENABLE_NEW_LOGIC
 Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value 'true'
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\ArgumentsSanitizer.ps1
+
+try {
 
 # With -AllowDataConstructors (the path the dispatcher uses for AzurePowerShell
 # and ServiceFabricPowerShell) legitimate hashtable arguments, splatting, bare
@@ -41,5 +44,14 @@ foreach ($test in $benignInputs) {
             $name, $value = $_.Split('=')
             Remove-Item env:$name -ErrorAction SilentlyContinue
         }
+    }
+}
+}
+finally {
+    if ($null -eq $originalEnableNewLogic) {
+        Remove-Item env:AZP_75787_ENABLE_NEW_LOGIC -ErrorAction SilentlyContinue
+    }
+    else {
+        Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value $originalEnableNewLogic
     }
 }

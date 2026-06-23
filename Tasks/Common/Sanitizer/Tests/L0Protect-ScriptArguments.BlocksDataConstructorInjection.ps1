@@ -1,10 +1,13 @@
 [CmdletBinding()]
 param()
 
+$originalEnableNewLogic = $env:AZP_75787_ENABLE_NEW_LOGIC
 Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value 'true'
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\ArgumentsSanitizer.ps1
+
+try {
 
 $expectedMsg = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
 
@@ -58,5 +61,14 @@ foreach ($badInput in $charInjections) {
     }
     catch {
         throw "Expected dangerous characters in [$badInput] to be blocked on the relaxed path, but: $($_.Exception.Message)"
+    }
+}
+}
+finally {
+    if ($null -eq $originalEnableNewLogic) {
+        Remove-Item env:AZP_75787_ENABLE_NEW_LOGIC -ErrorAction SilentlyContinue
+    }
+    else {
+        Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value $originalEnableNewLogic
     }
 }
