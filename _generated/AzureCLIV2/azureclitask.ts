@@ -105,7 +105,6 @@ export class azureclitask {
             });
 
             const addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
-
             if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
