@@ -360,6 +360,7 @@ export class azureclitask {
             //login using svn
             if (process.platform === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
                 // Bypass az.cmd to avoid CMD metacharacter interpretation (e.g. ^ in passwords)
+                // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
                 const azPath = tl.which('az', false);
                 const pythonPath = azPath ? path.join(path.dirname(path.dirname(azPath)), 'python.exe') : null;
                 if (pythonPath && fs.existsSync(pythonPath)) {
