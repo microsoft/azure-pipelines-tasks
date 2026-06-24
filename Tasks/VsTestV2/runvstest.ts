@@ -7,6 +7,7 @@ import * as utils from './helpers';
 import * as inputParser from './inputparser';
 import * as os from 'os';
 import * as localtest from './vstest';
+import * as versionFinder from './versionfinder';
 import { InputDataContract } from './inputdatacontract';
 import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables } from './constants';
 
@@ -34,6 +35,10 @@ async function execute() {
         const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
             inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
+
+        const enableArm64Vstest = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+            'TestExecution.EnableArm64VstestConsole', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        versionFinder.setVstestArm64Enabled(enableArm64Vstest);
 
         if (serverBasedRun) {
 

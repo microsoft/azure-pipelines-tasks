@@ -1,12 +1,54 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as path from 'path';
+import * as os from 'os';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
 import * as ci from './cieventlogger';
 
 const regedit = require('regedit');
+
+const DEFAULT_VSTEST_CONSOLE_EXE = 'vstest.console.exe';
+const ARM64_VSTEST_CONSOLE_EXE = 'vstest.console.arm64.exe';
+
+// Feature-flag gate. When false (default) the task always uses the standard
+// vstest.console.exe, preserving the original behavior on every platform.
+// It is turned on by runvstest.ts once the TestExecution.EnableArm64VstestConsole
+// feature flag has been resolved for the collection.
+let vstestArm64Enabled = false;
+
+export function setVstestArm64Enabled(enabled: boolean): void {
+    vstestArm64Enabled = enabled;
+}
+
+function isArm64Agent(): boolean {
+    const agentOsArchitecture = tl.getVariable('Agent.OSArchitecture');
+    const architecture = (agentOsArchitecture || os.arch() || '').toLowerCase();
+    return architecture === 'arm64';
+}
+
+// Resolves which vstest console executable to use for the given install folder.
+// Returns vstest.console.arm64.exe only when ALL of the following are true:
+//   1. the EnableArm64VstestConsole feature flag is enabled,
+//   2. the agent/machine architecture is ARM64, and
+//   3. the arm64 executable actually exists in the folder.
+// In every other case it returns vstest.console.exe, keeping the existing behavior.
+function resolveVstestExeName(vstestExeFolder: string): string {
+    if (!vstestArm64Enabled) {
+        return DEFAULT_VSTEST_CONSOLE_EXE;
+    }
+    if (!isArm64Agent()) {
+        return DEFAULT_VSTEST_CONSOLE_EXE;
+    }
+    if (vstestExeFolder &&
+        utils.Helper.pathExistsAsFile(path.join(vstestExeFolder, ARM64_VSTEST_CONSOLE_EXE))) {
+        console.log('ARM64 agent detected and ' + ARM64_VSTEST_CONSOLE_EXE + ' found. Using the ARM64 test runner.');
+        return ARM64_VSTEST_CONSOLE_EXE;
+    }
+    console.log(ARM64_VSTEST_CONSOLE_EXE + ' was not found on this ARM64 agent. Falling back to ' + DEFAULT_VSTEST_CONSOLE_EXE + '.');
+    return DEFAULT_VSTEST_CONSOLE_EXE;
+}
 
 export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     const vstestexeLocation = locateVSTestConsole(testConfig);
@@ -83,7 +125,7 @@ function locateVSTestConsole(testConfig: models.TestConfigurations): string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath: string = vstestExeFolder;
     if (vstestExeFolder) {
-        vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
+        vstestExePath = path.join(vstestExeFolder, resolveVstestExeName(vstestExeFolder));
     }
     return vstestExePath;
 }
@@ -95,7 +137,8 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
         }
 
         if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) &&
-            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
+            (utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, DEFAULT_VSTEST_CONSOLE_EXE)) ||
+             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, ARM64_VSTEST_CONSOLE_EXE)))) {
             return testConfig.vsTestLocation;
         }
         throw (new Error(tl.loc('VstestLocationDoesNotExist', testConfig.vsTestLocation)));
