@@ -1,6 +1,7 @@
 import Constants from "./constant";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as crypto from "crypto";
+import * as child from "child_process";
 import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { Writable } from "stream";
 import { RegistryCredential } from './registrycredentialfactory';
@@ -13,6 +14,19 @@ interface Cmd {
 }
 
 export default class Util {
+  /**
+   * Run `docker login` while passing the password through stdin (`--password-stdin`)
+   * instead of as a command-line argument. This keeps the registry password out of
+   * the process argument list and out of any shell interpretation.
+   */
+  public static dockerLogin(server: string, username: string, password: string): child.SpawnSyncReturns<string> {
+    const docker: string = tl.which("docker", true);
+    return child.spawnSync(docker, ["login", "-u", username, "--password-stdin", server], {
+      input: password,
+      encoding: "utf-8",
+    });
+  }
+
   public static expandEnv(input: string, ...exceptKeys: string[]): string {
     const pattern: RegExp = new RegExp(/\$([a-zA-Z0-9_]+)|\${([a-zA-Z0-9_]+)}/g);
     const exceptSet: Set<string> = new Set(exceptKeys);

@@ -77,7 +77,6 @@ class azureclitask {
       let outputStream: EchoStream = new EchoStream();
       let execOptions: IExecOptions = {
         errStream: outputStream as stream.Writable,
-        shell: true,
       } as IExecOptions;
 
       let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);
@@ -188,9 +187,9 @@ class imagevalidationtask {
       if (credentials) {
         Object.keys(credentials).forEach((key: string) => {
           let credential = credentials[key];
-          let loginResult = tl.execSync("docker", ["login", credential.address, "-u", credential.username, "-p", credential.password], Constants.execSyncSilentOption);
-          tl.debug(JSON.stringify(loginResult));
-          if (loginResult.code != 0) {
+          let loginResult = util.dockerLogin(credential.address, credential.username, credential.password);
+          tl.debug(JSON.stringify({ status: loginResult.status }));
+          if (loginResult.status != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
           } else {
             tl.loc("LoginRegistrySucess", credential.address);
