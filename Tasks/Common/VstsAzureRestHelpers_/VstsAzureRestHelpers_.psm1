@@ -27,6 +27,7 @@ $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 # API-Version(s)
 $apiVersion = "2014-04-01"
 $azureStackapiVersion = "2015-06-15"
+$sqlFirewallApiVersion = "2021-11-01"
 
 # Constants
 $azureStack = "AzureStack"
@@ -1000,7 +1001,7 @@ function Add-AzureRmSqlServerFirewall {
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$sqlFirewallApiVersion"
     $body = "{
             'properties' : {
             'startIpAddress':'$startIPAddress',
@@ -1051,7 +1052,7 @@ function Remove-AzureRmSqlServerFirewall {
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$sqlFirewallApiVersion"
     $headers = @{Authorization = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token) }
 
     Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
