@@ -188,8 +188,8 @@ class imagevalidationtask {
         Object.keys(credentials).forEach((key: string) => {
           let credential = credentials[key];
           let loginResult = util.dockerLogin(credential.address, credential.username, credential.password);
-          tl.debug(JSON.stringify({ status: loginResult.status }));
-          if (loginResult.status != 0) {
+          tl.debug(JSON.stringify({ code: loginResult.code }));
+          if (loginResult.code != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
           } else {
             tl.loc("LoginRegistrySucess", credential.address);
