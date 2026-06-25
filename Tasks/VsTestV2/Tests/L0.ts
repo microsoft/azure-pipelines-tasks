@@ -378,4 +378,4 @@ describe('VsTestV2 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
             'should throw ErrorReadingVstestVersion when both methods fail'
         );
     });
-}); 
+});
