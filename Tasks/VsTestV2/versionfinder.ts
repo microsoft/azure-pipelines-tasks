@@ -16,7 +16,7 @@ const ARM64_VSTEST_CONSOLE_EXE = 'vstest.console.arm64.exe';
 // vstest.console.exe, preserving the original behavior on every platform.
 // It is turned on by runvstest.ts once the TestExecution.EnableArm64VstestConsole
 // feature flag has been resolved for the collection.
-let vstestArm64Enabled = true;
+let vstestArm64Enabled = false;
 
 export function setVstestArm64Enabled(enabled: boolean): void {
     vstestArm64Enabled = enabled;

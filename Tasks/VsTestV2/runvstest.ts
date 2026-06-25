@@ -36,9 +36,8 @@ async function execute() {
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
             inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
-        //const enableArm64Vstest = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-        //    'TestExecution.EnableArm64VstestConsole', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
-        const enableArm64Vstest = true;
+        const enableArm64Vstest = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+           'TestExecution.EnableArm64VstestConsole', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         versionFinder.setVstestArm64Enabled(enableArm64Vstest);
 
         if (serverBasedRun) {
