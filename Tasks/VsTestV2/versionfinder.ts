@@ -16,16 +16,20 @@ const ARM64_VSTEST_CONSOLE_EXE = 'vstest.console.arm64.exe';
 // vstest.console.exe, preserving the original behavior on every platform.
 // It is turned on by runvstest.ts once the TestExecution.EnableArm64VstestConsole
 // feature flag has been resolved for the collection.
-let vstestArm64Enabled = false;
+let vstestArm64Enabled = true;
 
 export function setVstestArm64Enabled(enabled: boolean): void {
     vstestArm64Enabled = enabled;
 }
 
-function isArm64Agent(): boolean {
+export function isArm64Agent(): boolean {
     const agentOsArchitecture = tl.getVariable('Agent.OSArchitecture');
     const architecture = (agentOsArchitecture || os.arch() || '').toLowerCase();
     return architecture === 'arm64';
+}
+
+export function isVstestArm64Enabled(): boolean {
+    return vstestArm64Enabled;
 }
 
 // Resolves the full path of the vstest console executable to use for the given
