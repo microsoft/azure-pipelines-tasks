@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 276,
-    "Patch": 0
+    "Patch": 6
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -209,8 +209,8 @@
     "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
   },
   "_buildConfigMapping": {
-    "Default": "5.276.0",
+    "Default": "5.276.6",
     "LocalPackages": "5.249.4",
-    "Node24_1": "5.276.1"
+    "Node24_1": "5.276.7"
   }
 }
