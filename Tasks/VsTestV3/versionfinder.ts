@@ -28,26 +28,29 @@ function isArm64Agent(): boolean {
     return architecture === 'arm64';
 }
 
-// Resolves which vstest console executable to use for the given install folder.
-// Returns vstest.console.arm64.exe only when ALL of the following are true:
+// Resolves the full path of the vstest console executable to use for the given
+// install folder. Returns the vstest.console.arm64.exe path only when ALL of the
+// following are true:
 //   1. the EnableArm64VstestConsole feature flag is enabled,
 //   2. the agent/machine architecture is ARM64, and
 //   3. the arm64 executable actually exists in the folder.
-// In every other case it returns vstest.console.exe, keeping the existing behavior.
-function resolveVstestExeName(vstestExeFolder: string): string {
+// In every other case it returns the vstest.console.exe path, keeping the existing behavior.
+function resolveVstestExePath(vstestExeFolder: string): string {
     if (!vstestArm64Enabled) {
-        return DEFAULT_VSTEST_CONSOLE_EXE;
+        console.log('Feature flag TestExecution.EnableArm64VstestConsole is disabled. Using the standard test runner.');
+        return path.join(vstestExeFolder, DEFAULT_VSTEST_CONSOLE_EXE);
     }
     if (!isArm64Agent()) {
-        return DEFAULT_VSTEST_CONSOLE_EXE;
+        console.log('Agent architecture is not ARM64. Using the standard test runner.');
+        return path.join(vstestExeFolder, DEFAULT_VSTEST_CONSOLE_EXE);
     }
-    if (vstestExeFolder &&
-        utils.Helper.pathExistsAsFile(path.join(vstestExeFolder, ARM64_VSTEST_CONSOLE_EXE))) {
+    const arm64ExePath = path.join(vstestExeFolder, ARM64_VSTEST_CONSOLE_EXE);
+    if (utils.Helper.pathExistsAsFile(arm64ExePath)) {
         console.log('ARM64 agent detected and ' + ARM64_VSTEST_CONSOLE_EXE + ' found. Using the ARM64 test runner.');
-        return ARM64_VSTEST_CONSOLE_EXE;
+        return arm64ExePath;
     }
     console.log(ARM64_VSTEST_CONSOLE_EXE + ' was not found on this ARM64 agent. Falling back to ' + DEFAULT_VSTEST_CONSOLE_EXE + '.');
-    return DEFAULT_VSTEST_CONSOLE_EXE;
+    return path.join(vstestExeFolder, DEFAULT_VSTEST_CONSOLE_EXE);
 }
 
 export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
@@ -125,7 +128,7 @@ function locateVSTestConsole(testConfig: models.TestConfigurations): string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath: string = vstestExeFolder;
     if (vstestExeFolder) {
-        vstestExePath = path.join(vstestExeFolder, resolveVstestExeName(vstestExeFolder));
+        vstestExePath = resolveVstestExePath(vstestExeFolder);
     }
     return vstestExePath;
 }
@@ -137,8 +140,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
         }
 
         if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) &&
-            (utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, DEFAULT_VSTEST_CONSOLE_EXE)) ||
-             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, ARM64_VSTEST_CONSOLE_EXE)))) {
+            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, DEFAULT_VSTEST_CONSOLE_EXE))) {
             return testConfig.vsTestLocation;
         }
         throw (new Error(tl.loc('VstestLocationDoesNotExist', testConfig.vsTestLocation)));
