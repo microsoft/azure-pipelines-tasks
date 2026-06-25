@@ -129,7 +129,14 @@ function Invoke-ScriptArgumentSanitization {
     $caughtMessage  = $null
     $caughtStack    = $null
     try {
-        $null = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName
+        # The dispatcher is the opt-in entry point for the relaxed validation
+        # group (AzurePowerShellV2-V5, ServiceFabricPowerShellV1). They run user
+        # FilePath scripts whose arguments legitimately include hashtable params,
+        # so data constructors are permitted here and the AST backstop inside
+        # Protect-ScriptArguments blocks any that would execute. The other group -
+        # the long-standing direct callers (AzureFileCopy, PowerShell, etc.) - keep
+        # the strict allow-list by not passing this switch.
+        $null = Protect-ScriptArguments -InputArgs $InputArgs -TaskName $TaskName -AllowDataConstructors
     }
     catch {
         $sanitizerThrew = $true

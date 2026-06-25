@@ -54,5 +54,14 @@ describe('AzurePowerShell Suite', function () {
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
             psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
         })
+        it('does not leak access token into generated script', (done) => {
+            psr.run(path.join(__dirname, 'TokenNotLeakedToScript.ps1'), done);
+        })
+        it('cleans up temp script after execution', (done) => {
+            psr.run(path.join(__dirname, 'CleansUpTempScript.ps1'), done);
+        })
+        it('clears access token env var after execution', (done) => {
+            psr.run(path.join(__dirname, 'ClearsTokenEnvVar.ps1'), done);
+        })
     }
 });

@@ -54,5 +54,8 @@ describe('AzurePowerShell Suite', function () {
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
             psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
         })
+        it('cleans up temp script after execution in pwsh mode', (done) => {
+            psr.run(path.join(__dirname, 'CleansUpTempScriptPwsh.ps1'), done);
+        })
     }
 });
