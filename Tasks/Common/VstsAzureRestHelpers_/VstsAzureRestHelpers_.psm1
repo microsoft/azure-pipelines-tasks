@@ -1356,8 +1356,8 @@ function ConvertTo-Pfx {
         $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
     }
     else {
-        $openSSLExePath = "$PSScriptRoot\opensslv3.5.6\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.6\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\opensslv3.5.7\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.7\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version
