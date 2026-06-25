@@ -232,10 +232,11 @@
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "CouldNotFetchIdToken": "ms-resource:loc.messages.CouldNotFetchIdToken"
   },
   "_buildConfigMapping": {
-    "Default": "2.276.2",
+    "Default": "2.276.3",
     "Node24_1": "2.276.3"
   }
 }
