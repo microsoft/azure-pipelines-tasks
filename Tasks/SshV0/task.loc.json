@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 277,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -158,14 +158,6 @@
     "Node24": {
       "target": "ssh.js",
       "argumentFormat": ""
-    }
-  },
-  "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-      "allowed": []
     }
   },
   "messages": {
