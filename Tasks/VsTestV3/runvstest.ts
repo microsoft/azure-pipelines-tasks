@@ -70,16 +70,16 @@ async function execute() {
             }
 
             else{
-            if ((enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
+            if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
-                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests))) {
+                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
                 if (enableApiExecution) {
                     console.log('================== API Execution =====================');
                     inputDataContract.ExecutionSettings.TestPlatformExecutionMode = 'api';
                 }
                 const test = new nondistributedtest.NonDistributedTest(inputDataContract);
                 test.runNonDistributedTest();
-            } else {  
+            } else {
                 localtest.startTest();
             }
         }
