@@ -10,7 +10,7 @@ import * as localtest from './vstest';
 import * as versionFinder from './versionfinder';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
-import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables } from './constants';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, TcmServiceConstants } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -37,8 +37,7 @@ async function execute() {
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
-        const enableArm64Vstest = await isTcmFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-            'TestExecution.EnableArm64VstestConsole', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        const enableArm64Vstest = await isTcmFeatureFlagEnabled('TestExecution.EnableArm64VstestConsole');
         versionFinder.setVstestArm64Enabled(enableArm64Vstest);
 
         setUpConnectedServiceEnvironmentVariables();
@@ -208,14 +207,20 @@ export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string,
     });
 }
 
-// Resource area id for the Test & Case Management (TCM) service. Used to resolve the
-// TCM service base url from the collection/org url via the location (resource areas) service.
-const TCM_RESOURCE_AREA_ID = '00000054-0000-8888-8000-000000000000';
-
 // Checks a feature flag on the TCM service instead of the core/collection service.
-// It first resolves the TCM service url from the collection url and then performs the
-// standard feature flag lookup against that url.
-export function isTcmFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+// It resolves the collection url and access token internally, then resolves the TCM
+// service url from the collection url and performs the standard feature flag lookup
+// against that url.
+export function isTcmFeatureFlagEnabled(featureFlag: string): Promise<boolean> {
+    const collectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
+    const endpointAuth = tl.getEndpointAuthorization('SystemVssConnection', true);
+    const token = endpointAuth && endpointAuth.parameters ? endpointAuth.parameters.AccessToken : undefined;
+
+    if (!collectionUri || !token) {
+        tl.debug('Unable to resolve collection url or access token; treating feature flag ' + featureFlag + ' as off.');
+        return Promise.resolve(false);
+    }
+
     return getTcmServiceUrl(collectionUri, token).then((tcmServiceUrl) => {
         if (!tcmServiceUrl) {
             tl.debug('Unable to resolve TCM service url; treating feature flag ' + featureFlag + ' as off.');
@@ -230,7 +235,7 @@ export function isTcmFeatureFlagEnabled(collectionUri: string, featureFlag: stri
 // (resource areas) service. Returns undefined when it cannot be resolved.
 function getTcmServiceUrl(collectionUri: string, token: string): Promise<string | undefined> {
     const options = {
-        url: collectionUri + '/_apis/resourceAreas/' + TCM_RESOURCE_AREA_ID + '?api-version=5.0-preview.1',
+        url: collectionUri + '/_apis/resourceAreas/' + TcmServiceConstants.ResourceAreaId + '?api-version=5.0-preview.1',
         json: true,
         headers: {
             'Content-Type': 'application/json',

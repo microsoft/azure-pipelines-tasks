@@ -48,3 +48,9 @@ export module BackDoorVariables {
 export module AgentVariables {
     export const AGENT_TEMPDIRECTORY = 'Agent.TempDirectory';
 }
+
+export module TcmServiceConstants {
+    // Resource area id for the Test & Case Management (TCM) service. Used to resolve the
+    // TCM service base url from the collection/org url via the location (resource areas) service.
+    export const ResourceAreaId = '00000054-0000-8888-8000-000000000000';
+}
