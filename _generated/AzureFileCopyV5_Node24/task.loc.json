@@ -14,7 +14,7 @@
   "version": {
     "Major": 5,
     "Minor": 277,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [
     "azureps"
@@ -309,8 +309,8 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "5.277.0",
+    "Default": "5.277.2",
     "LocalPackages": "5.249.4",
-    "Node24_1": "5.277.1"
+    "Node24_1": "5.277.3"
   }
 }
