@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 2
+    "Minor": 276,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -195,6 +195,7 @@
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "ms-resource:loc.messages.AcrAccessTokenAuthFailed",
+    "AcrLogoutFailed": "ms-resource:loc.messages.AcrLogoutFailed",
     "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
     "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
     "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",
