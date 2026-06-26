@@ -37,7 +37,7 @@ async function execute() {
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
-        const enableArm64Vstest = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        const enableArm64Vstest = await isTcmFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
             'TestExecution.EnableArm64VstestConsole', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         versionFinder.setVstestArm64Enabled(enableArm64Vstest);
 
@@ -204,6 +204,54 @@ export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string,
                 tl.debug(' Final feature flag state: ' + state);
             }
             resolve(state);
+        });
+    });
+}
+
+// Resource area id for the Test & Case Management (TCM) service. Used to resolve the
+// TCM service base url from the collection/org url via the location (resource areas) service.
+const TCM_RESOURCE_AREA_ID = '00000054-0000-8888-8000-000000000000';
+
+// Checks a feature flag on the TCM service instead of the core/collection service.
+// It first resolves the TCM service url from the collection url and then performs the
+// standard feature flag lookup against that url.
+export function isTcmFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+    return getTcmServiceUrl(collectionUri, token).then((tcmServiceUrl) => {
+        if (!tcmServiceUrl) {
+            tl.debug('Unable to resolve TCM service url; treating feature flag ' + featureFlag + ' as off.');
+            return false;
+        }
+        console.log('Resolved TCM service url: ' + tcmServiceUrl);
+        return isFeatureFlagEnabled(tcmServiceUrl, featureFlag, token);
+    });
+}
+
+// Resolves the TCM service base url from the collection url using the location
+// (resource areas) service. Returns undefined when it cannot be resolved.
+function getTcmServiceUrl(collectionUri: string, token: string): Promise<string | undefined> {
+    const options = {
+        url: collectionUri + '/_apis/resourceAreas/' + TCM_RESOURCE_AREA_ID + '?api-version=5.0-preview.1',
+        json: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    };
+
+    return new Promise((resolve) => {
+        request(options, (err, res, resourceArea) => {
+            if (err) {
+                tl.debug('Unable to resolve TCM service url. Error:' + err.message);
+                resolve(undefined);
+                return;
+            }
+            if (resourceArea && resourceArea.locationUrl) {
+                // Trim trailing slashes so the feature flag url is well formed.
+                resolve(resourceArea.locationUrl.replace(/\/+$/, ''));
+                return;
+            }
+            tl.debug('TCM resource area did not return a locationUrl.');
+            resolve(undefined);
         });
     });
 }
