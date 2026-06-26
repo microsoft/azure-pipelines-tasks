@@ -64,7 +64,13 @@ async function execute() {
             const enableHydra = isHydraFlowToBeEnabled(inputDataContract);
             const forceLocalForArm64 = shouldForceLocalFlowForArm64(inputDataContract);
 
-            if (!forceLocalForArm64 && (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
+            if(forceLocalForArm64) {
+                console.log('ARM64 agent detected with TestExecution.EnableArm64VstestConsole enabled. Routing through the local test execution flow so the ARM64 test runner can be used.');
+                localtest.startTest();
+            }
+
+            else{
+            if ((enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests))) {
                 if (enableApiExecution) {
@@ -73,12 +79,10 @@ async function execute() {
                 }
                 const test = new nondistributedtest.NonDistributedTest(inputDataContract);
                 test.runNonDistributedTest();
-            } else {
-                if (forceLocalForArm64) {
-                    console.log('ARM64 agent detected with TestExecution.EnableArm64VstestConsole enabled. Routing through the local test execution flow so the ARM64 test runner can be used.');
-                }
+            } else {  
                 localtest.startTest();
             }
+        }
             console.log('======================================================');
         }
     } catch (error) {
