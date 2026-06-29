@@ -51,17 +51,6 @@ export async function run() {
 
   util.setupIotedgedev();
 
-  /* 
-   * iotedgedev will use registry server url to match which credential to use in push process
-   * For example, a normal docker hub credential should have server: https://index.docker.io/v1/ I would like to push to michaeljqzq/repo:0.0.1
-   * But if I set CONTAINER_REGISTRY_SERVER=https://index.docker.io/v1/ in environment variable, it won't work.
-   * iotedgedev won't load this credential
-   * instead, the CONTAINER_REGISTRY_SERVER should be set to michaeljqzq
-   * However, "michaeljqzq" is not in the scope of a credential.
-   * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
-   */
-  tl.execSync(`docker`, ["login", "-u", authenticationToken.getUsername(), "-p", authenticationToken.getPassword(), authenticationToken.getLoginServerUrl()], Constants.execSyncSilentOption)
-
   let envList = process.env;
   // Set bypass modules
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
@@ -75,16 +64,32 @@ export async function run() {
 
   tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
+  /* 
+   * iotedgedev will use registry server url to match which credential to use in push process
+   * For example, a normal docker hub credential should have server: https://index.docker.io/v1/ I would like to push to michaeljqzq/repo:0.0.1
+   * But if I set CONTAINER_REGISTRY_SERVER=https://index.docker.io/v1/ in environment variable, it won't work.
+   * iotedgedev won't load this credential
+   * instead, the CONTAINER_REGISTRY_SERVER should be set to michaeljqzq
+   * However, "michaeljqzq" is not in the scope of a credential.
+   * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
+   */
   try {
+    const loginServerUrl = authenticationToken.getLoginServerUrl();
+    const loginResult = util.dockerLogin(loginServerUrl, authenticationToken.getUsername(), authenticationToken.getPassword());
+    // tl.execSync does not throw on a non-zero exit code, so explicitly fail fast here.
+    // Unlike the deploy task (which validates multiple registries and warns-and-continues),
+    // push depends on this single login succeeding before `iotedgedev push` runs.
+    if (loginResult.code !== 0) {
+      throw new TaskError('Failed to login to container registry', tl.loc('InvalidRegistryCredentialWarning', loginServerUrl, loginResult.stderr));
+    }
+
     let execOptions: IExecOptions = {
       cwd: tl.cwd(),
       env: envList,
-      shell: true,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
     await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
-    tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
     util.createOrAppendDockerCredentials(authenticationToken);
 
     let fillRegistryCredential = tl.getBoolInput('fillRegistryCredential', true);
@@ -122,8 +127,8 @@ export async function run() {
         fs.writeFileSync(outputDeploymentJsonPath, JSON.stringify(deploymentJson, null, 2));
       }
     }
-  } catch (e) {
-    tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
-    throw e;
+  } finally {
+    // Always log out so the registry credential is not left on the agent.
+    util.dockerLogout();
   }
 }
