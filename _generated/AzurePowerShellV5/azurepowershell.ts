@@ -257,7 +257,7 @@ function emitCleanupTelemetry(
             ErrorMessageShort: errorMessage ? errorMessage.substring(0, 200) : undefined,
             AgentOS: process.env.AGENT_OS,
             AgentVersion: process.env.AGENT_VERSION,
-            TaskVersion: '5'
+            TaskVersion: getTaskVersion()
         };
         console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
             'TaskHub',
@@ -266,6 +266,19 @@ function emitCleanupTelemetry(
     } catch (err) {
         // Telemetry must never fail the task.
         tl.debug(`Unable to publish cleanup telemetry: ${err && err.message ? err.message : err}`);
+    }
+}
+
+// Read the real task version (Major.Minor.Patch) from task.json so telemetry can
+// distinguish builds/variants (e.g. Default vs Node24). Falls back to the major
+// version if task.json can't be read for any reason; telemetry must never throw.
+function getTaskVersion(): string {
+    try {
+        const v = require('./task.json').version;
+        return `${v.Major}.${v.Minor}.${v.Patch}`;
+    } catch (err) {
+        tl.debug(`Unable to read task version: ${err && err.message ? err.message : err}`);
+        return '5';
     }
 }
 
