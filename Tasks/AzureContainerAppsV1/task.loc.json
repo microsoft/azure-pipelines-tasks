@@ -195,6 +195,7 @@
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "ms-resource:loc.messages.AcrAccessTokenAuthFailed",
+    "AcrLogoutFailed": "ms-resource:loc.messages.AcrLogoutFailed",
     "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
     "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
     "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",

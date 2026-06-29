@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 276,
     "Patch": 0
   },
   "preview": true,
@@ -187,6 +187,7 @@
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with access token.",
+    "AcrLogoutFailed": "Unable to log Docker out of ACR instance '%s'. Error: %s",
     "AcrAccessTokenLoginMessage": "Logging in to Azure Container Registry using access token to be generated via Azure CLI.",
     "AcrUsernamePasswordAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.",
     "AcrUsernamePasswordLoginMessage": "Logging in to Azure Container Registry using provided acrUsername and acrPassword arguments.",

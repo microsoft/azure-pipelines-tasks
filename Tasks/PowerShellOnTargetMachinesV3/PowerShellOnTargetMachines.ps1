@@ -30,6 +30,18 @@ try {
 
     $input_Protocol = Get-VstsInput -Name "CommunicationProtocol" -Require -ErrorAction "Stop"
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
+
+    # Sanitize NewPsSessionOptionArguments to prevent PowerShell command injection at the
+    # Invoke-Expression "New-PSSessionOption $arguments" sink in Get-NewPSSessionOption.
+    # No-op unless BOTH the org-level "Enable shell tasks arguments validation" toggle and
+    # the per-task pipeline feature flag are enabled.
+    # See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
+    # MSRC 115118 Bug 1.
+    Invoke-ScriptArgumentSanitization `
+        -InputArgs $input_NewPsSessionOptionArguments `
+        -TaskName 'PowerShellOnTargetMachinesV3' `
+        -PipelineFeatureFlagName 'EnablePowerShellOnTargetMachinesArgumentsSanitization'
+
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
     # connecting to a specific powershell configuration can be supported here eg. 'microsoft.powershell32' for a 32 bit session etc.
     $input_sessionConfigurationName = 'microsoft.powershell'

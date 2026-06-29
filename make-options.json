@@ -171,6 +171,7 @@
         "PipAuthenticateV0",
         "PipAuthenticateV1",
         "PowerShellV2",
+        "PowerShellOnTargetMachinesV1",
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifactsV1",
@@ -257,6 +258,7 @@
     "Node24_10": [],
     "Node24_overwrite": [
         "AppCenterDistributeV3",
+        "AzureIoTEdgeV2",
         "PublishSymbolsV2"
     ],
     "wif_242": [

@@ -11,9 +11,9 @@
     "@types/q": "1.0.7",
     "agent-base": "^6.0.2",
     "artifact-engine": "^1.5.5",
-    "azp-tasks-az-blobstorage-provider": "^3.272.1",
+    "azp-tasks-az-blobstorage-provider": "^3.276.1",
     "azure-pipelines-task-lib": "^5.2.10",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.274.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.276.0",
     "azure-pipelines-tasks-utility-common": "^3.272.0",
     "moment": "^2.29.4"
   },
