@@ -6,6 +6,7 @@ import * as constants from './constants';
 import * as ci from './cieventlogger';
 import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
+import * as versionFinder from './versionfinder';
 import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
 const regedit = require('regedit');
@@ -64,6 +65,7 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
     inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
+    inputDataContract.EnableArm64VsTestConsole = versionFinder.isVstestArm64Enabled();
     inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
     inputDataContract.ServerType = tl.getVariable('System.ServerType'); 
 

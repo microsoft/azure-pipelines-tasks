@@ -62,14 +62,7 @@ async function execute() {
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
             const enableHydra = isHydraFlowToBeEnabled(inputDataContract);
-            const forceLocalForArm64 = shouldForceLocalFlowForArm64(inputDataContract);
 
-            if(forceLocalForArm64) {
-                console.log('ARM64 agent detected with TestExecution.EnableArm64VstestConsole enabled. Routing through the local test execution flow so the ARM64 test runner can be used.');
-                localtest.startTest();
-            }
-
-            else{
             if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
@@ -82,7 +75,6 @@ async function execute() {
             } else {
                 localtest.startTest();
             }
-        }
             console.log('======================================================');
         }
     } catch (error) {
@@ -132,56 +124,6 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
     }
 
     return false;
-}
-
-// Decides whether to route an otherwise Hydra-bound run through the local test
-// execution flow so that the ARM64 vstest.console runner can be used. The local
-// flow is the only path in this task that selects vstest.console.arm64.exe.
-// To stay safe we only reroute when:
-//   1. the TestExecution.EnableArm64VstestConsole feature flag is enabled,
-//   2. the agent/machine architecture is ARM64, and
-//   3. none of the Hydra-only capabilities are requested (rerun failed tests,
-//      minimum-tests threshold, overridden results directory, single-agent API
-//      flow) and the FORCE_HYDRA backdoor is not set.
-// If any Hydra-only capability is in use we keep the existing host-driven flow.
-function shouldForceLocalFlowForArm64(inputDataContract: InputDataContract): boolean {
-    try {
-        if (!versionFinder.isVstestArm64Enabled() || !versionFinder.isArm64Agent()) {
-            return false;
-        }
-
-        if (tl.getVariable(BackDoorVariables.FORCE_HYDRA) && tl.getVariable(BackDoorVariables.FORCE_HYDRA).toLowerCase() === 'true') {
-            return false;
-        }
-
-        if (inputDataContract.EnableSingleAgentAPIFlow) {
-            return false;
-        }
-
-        if (inputDataContract.ExecutionSettings
-            && inputDataContract.ExecutionSettings.RerunSettings
-            && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests) {
-            return false;
-        }
-
-        if (inputDataContract.TestReportingSettings && inputDataContract.TestReportingSettings.ExecutionStatusSettings
-            && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet)
-            && inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet !== ActionOnThresholdNotMet.DONOTHING) {
-            return false;
-        }
-
-        if (inputDataContract.TestReportingSettings
-            && !utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestResultsDirectory)
-            && inputDataContract.TestReportingSettings.TestResultsDirectory.toLowerCase()
-                !== path.join(tl.getVariable(AgentVariables.AGENT_TEMPDIRECTORY), 'TestResults').toLowerCase()) {
-            return false;
-        }
-
-        return true;
-    } catch (e) {
-        tl.debug(`Unexpected error occurred while deciding ARM64 local-flow routing ${e}`);
-        return false;
-    }
 }
 
 export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {

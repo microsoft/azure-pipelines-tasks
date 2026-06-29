@@ -9,6 +9,7 @@ export interface InputDataContract {
     VsTestConsolePath : string;
     UsingXCopyTestPlatformPackage : boolean;
     EnableSingleAgentAPIFlow : boolean;
+    EnableArm64VsTestConsole : boolean;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
