@@ -137,10 +137,15 @@ async function main(): Promise<void> {
             defaultVersionType = "latest";
         }
 
-        var token = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
-        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : defaultRetryLimit;
+        let token = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
 
-        // Required to prevent typed-rest-client from adding additional 'Authorization' in header on redirect to AWS
+        if (!token) {
+            const endpointAuth = tl.getEndpointAuthorization(connection, false);
+            
+            token = endpointAuth?.parameters?.AccessToken || endpointAuth?.parameters?.accessToken;
+        }
+
+        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : defaultRetryLimit;
         var customCredentialHandler = {
             canHandleAuthentication: () => false,
             handleAuthentication: () => { },
