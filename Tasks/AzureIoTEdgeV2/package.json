@@ -12,9 +12,9 @@
     "agent-base": "^6.0.2",
     "applicationinsights": "^1.0.2",
     "azure-pipelines-task-lib": "^5.2.6",
-    "azure-pipelines-tasks-artifacts-common": "^2.273.0",
-    "azure-pipelines-tasks-docker-common": "^2.268.0",
-    "azure-pipelines-tasks-utility-common": "^3.270.0",
+    "azure-pipelines-tasks-artifacts-common": "^2.276.0",
+    "azure-pipelines-tasks-docker-common": "^2.276.0",
+    "azure-pipelines-tasks-utility-common": "^3.272.0",
     "minimatch": "3.1.5"
   },
   "devDependencies": {
