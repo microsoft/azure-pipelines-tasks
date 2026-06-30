@@ -7,7 +7,7 @@
     "@types/node": "^24.10.0",
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^5.2.10",
-    "azure-pipelines-tasks-codecoverage-tools": "^3.272.0"
+    "azure-pipelines-tasks-codecoverage-tools": "^3.276.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

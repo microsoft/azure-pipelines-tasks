@@ -61,6 +61,9 @@ export class azurecontainerapps {
             tl.setResult(tl.TaskResult.Failed, err.message);
             this.telemetryHelper.setFailedResult(err.message);
         } finally {
+            // Logout of any Azure Container Registry instances that were authenticated against
+            this.registryHelper.logoutAcr();
+
             // Logout of Azure if logged in during this task session
             this.authHelper.logoutAzure();
 

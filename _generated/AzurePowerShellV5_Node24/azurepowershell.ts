@@ -13,6 +13,7 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 }
 
 async function run() {
+    let resolvedPwshPath: string = '';
     let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
     let tempDirectory = tl.getVariable('agent.tempDirectory');
     tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
@@ -138,7 +139,8 @@ async function run() {
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
         const importSdk = path.join(path.resolve(__dirname), 'ImportVstsTaskSdk.ps1');
-        let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+        resolvedPwshPath = tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true);
+        let powershell = tl.tool(resolvedPwshPath)
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -180,35 +182,103 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
+        // Cleanup is best-effort and must NOT override the task's actual result.
+        // This matches the Windows handler (azurepowershell.ps1), which has long used
+        // `Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue`.
         let cleanupExitCode = 0;
+        let cleanupOutcome: 'Success' | 'NonZeroExit' | 'Threw' | 'SkippedPwshNotResolved' = 'Success';
+        let cleanupErrorMessage: string | undefined;
         try {
-            const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
-                .arg('-NoLogo')
-                .arg('-NoProfile')
-                .arg('-NonInteractive')
-                .arg('-ExecutionPolicy')
-                .arg('Unrestricted')
-                .arg('-Command')
-                .arg(`. '${path.join(path.resolve(__dirname), 'RemoveAzContext.ps1')}'`);
+            if (!resolvedPwshPath) {
+                tl.debug("Skipping cleanup: PowerShell executable was not resolved during main execution.");
+                cleanupOutcome = 'SkippedPwshNotResolved';
+            } else {
+                const powershell = tl.tool(resolvedPwshPath)
+                    .arg('-NoLogo')
+                    .arg('-NoProfile')
+                    .arg('-NonInteractive')
+                    .arg('-ExecutionPolicy')
+                    .arg('Unrestricted')
+                    .arg('-Command')
+                    .arg(`. '${path.join(path.resolve(__dirname), 'RemoveAzContext.ps1')}'`);
 
-            let options = <tr.IExecOptions>{
+                let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
                     failOnStdErr: false,
                     errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
                     outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
                     ignoreReturnCode: true
                 };
-            cleanupExitCode = await powershell.exec(options);
-            tl.debug(`Cleanup exit code: ${cleanupExitCode}`);
+                cleanupExitCode = await powershell.exec(options);
+                tl.debug(`Cleanup exit code: ${cleanupExitCode}`);
+
+                if (cleanupExitCode !== 0) {
+                    cleanupOutcome = 'NonZeroExit';
+                    tl.warning(`Azure context cleanup completed with exit code: ${cleanupExitCode}. Azure context may not have been fully cleared.`);
+                }
+            }
         }
         catch (err) {
-            tl.debug("Az-clearContext not completed due to an error");
-            tl.setResult(tl.TaskResult.Failed, `Cleanup failed with error message: ${err.message}`);
+            cleanupOutcome = 'Threw';
+            cleanupErrorMessage = err && err.message ? err.message : String(err);
+            tl.warning(`Azure context cleanup failed: ${cleanupErrorMessage}. Azure context may not have been fully cleared.`);
         }
 
-        if (cleanupExitCode !== 0) {
-            tl.setResult(tl.TaskResult.Failed, `Cleanup failed with exit code: ${cleanupExitCode}`);
+        // Best-effort: clear service connection env vars from the agent process
+        // whenever cleanup did not complete successfully. Keying off cleanupOutcome
+        // (rather than cleanupExitCode || !resolvedPwshPath) ensures the 'Threw'
+        // branch is also covered — when await powershell.exec() rejects (e.g. spawn
+        // ENOENT, EACCES, fd exhaustion), cleanupExitCode is still 0 from its
+        // initializer but the env vars must still be cleared.
+        if (cleanupOutcome !== 'Success') {
+            tl.debug("Clearing service connection environment variables from agent process.");
+            delete process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID;
+            delete process.env.AZURESUBSCRIPTION_CLIENT_ID;
+            delete process.env.AZURESUBSCRIPTION_TENANT_ID;
         }
+
+        // Emit CustomerIntelligence so the Kusto monitor can track cleanup outcomes
+        // across the new code path. Best-effort — never throws.
+        emitCleanupTelemetry(cleanupOutcome, cleanupExitCode, cleanupErrorMessage);
+    }
+}
+
+function emitCleanupTelemetry(
+    outcome: 'Success' | 'NonZeroExit' | 'Threw' | 'SkippedPwshNotResolved',
+    exitCode: number,
+    errorMessage: string | undefined
+): void {
+    try {
+        const payload = {
+            Outcome: outcome,
+            ExitCode: exitCode,
+            // First 200 chars of the error message only — error text is not sensitive but bound it
+            // defensively so a stack trace cannot blow up the telemetry record.
+            ErrorMessageShort: errorMessage ? errorMessage.substring(0, 200) : undefined,
+            AgentOS: process.env.AGENT_OS,
+            AgentVersion: process.env.AGENT_VERSION,
+            TaskVersion: getTaskVersion()
+        };
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            'TaskHub',
+            'AzurePowerShellV5_Cleanup',
+            JSON.stringify(payload));
+    } catch (err) {
+        // Telemetry must never fail the task.
+        tl.debug(`Unable to publish cleanup telemetry: ${err && err.message ? err.message : err}`);
+    }
+}
+
+// Read the real task version (Major.Minor.Patch) from task.json so telemetry can
+// distinguish builds/variants (e.g. Default vs Node24). Falls back to the major
+// version if task.json can't be read for any reason; telemetry must never throw.
+function getTaskVersion(): string {
+    try {
+        const v = require('./task.json').version;
+        return `${v.Major}.${v.Minor}.${v.Patch}`;
+    } catch (err) {
+        tl.debug(`Unable to read task version: ${err && err.message ? err.message : err}`);
+        return '5';
     }
 }
 
