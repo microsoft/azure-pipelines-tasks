@@ -22,7 +22,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        // Get inputs.
+        // Get inputs..
         let input_errorActionPreference: string = getActionPreference('errorActionPreference', 'Stop');
         let input_warningPreference: string = getActionPreference('warningPreference', 'Default');
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
