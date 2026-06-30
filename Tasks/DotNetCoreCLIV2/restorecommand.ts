@@ -13,7 +13,6 @@ import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tas
 import { RequestOptions } from 'azure-pipelines-tasks-packaging-common/universal/RequestUtilities';
 
 export async function run(): Promise<void> {
-    console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         const timeout: number = utility.getRequestTimeout();
