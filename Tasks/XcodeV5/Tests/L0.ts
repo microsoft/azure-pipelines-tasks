@@ -56,6 +56,20 @@ describe('Xcode L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
+    it('fails the task when an xcpretty-piped build returns a non-zero exit code', async function () {
+        let tp = path.join(__dirname, 'L0XcprettyBuildFails.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build ' +
+            '| /home/bin/xcpretty -r junit --no-color'),
+            'xcodebuild piped to xcpretty should have been run.');
+
+        assert(tr.failed, 'task should have failed when xcodebuild returned a non-zero exit code while piped to xcpretty.');
+    });
+
     it('run Xcode build with test action, without choosing xcpretty', async function () {
         let tp = path.join(__dirname, 'L0NoXcpretty.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
