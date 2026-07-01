@@ -43,6 +43,7 @@
   "loc.input.label.disableTelemetry": "Disable telemetry",
   "loc.input.help.disableTelemetry": "If set to 'true', no telemetry will be collected by this Azure DevOps Task. If set to 'false', or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task.",
   "loc.messages.AcrAccessTokenAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with access token.",
+  "loc.messages.AcrLogoutFailed": "Unable to log Docker out of ACR instance '%s'. Error: %s",
   "loc.messages.AcrAccessTokenLoginMessage": "Logging in to Azure Container Registry using access token to be generated via Azure CLI.",
   "loc.messages.AcrUsernamePasswordAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.",
   "loc.messages.AcrUsernamePasswordLoginMessage": "Logging in to Azure Container Registry using provided acrUsername and acrPassword arguments.",

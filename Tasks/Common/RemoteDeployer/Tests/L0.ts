@@ -34,6 +34,22 @@ describe('Remote Deployer Test Suite', function () {
         it('(Get-WinRmConnectionToTargetMachine) throws if unable to create session', (done) => {
             psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.ThrowsIfUnableToCreateSession.ps1'), done);
         });
+
+        it('(Get-WinRmConnectionToTargetMachine) uses splat into New-PSSession (no Invoke-Expression)', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.UsesSplatNoIex.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) returns the session on success without retrying', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.ReturnsSessionOnSuccess.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) passes every parameter to New-PSSession as data', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.PassesParametersBySplat.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) omits Credential and UseSSL when not provided', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.OmitsCredentialAndSslWhenNotSet.ps1'), done);
+        });
         
         it('(Retry-Connection) does not throw if cannot get pssession', (done) => {
             psr.run(path.join(__dirname, 'Retry-Connection.DoesNotThrowIfCannotGetSession.ps1'), done);

@@ -22,7 +22,7 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^20.11.0",
         "azure-pipelines-task-lib": "^5.2.10",
-        "azure-pipelines-tasks-artifacts-common": "^2.273.0",
+        "azure-pipelines-tasks-artifacts-common": "^2.276.0",
         "mocha": "^10.2.0"
     },
     "devDependencies": {

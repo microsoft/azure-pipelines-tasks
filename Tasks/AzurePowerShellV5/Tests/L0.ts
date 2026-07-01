@@ -8,6 +8,8 @@ import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+
 describe('AzurePowerShell Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
@@ -64,4 +66,66 @@ describe('AzurePowerShell Suite', function () {
             psr.run(path.join(__dirname, 'ClearsTokenEnvVar.ps1'), done);
         })
     }
+
+    describe('Cleanup is best-effort: never overrides task result', function () {
+
+        it('cleanup script fails: task still succeeds with a warning', async () => {
+            let tp = path.join(__dirname, 'L0Cleanup_CleanupFailsWarnsButTaskSucceeds.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            if (!tr.succeeded) {
+                console.log('STDOUT:', tr.stdout);
+                console.log('STDERR:', tr.stderr);
+            }
+
+            assert(tr.succeeded, 'task should have succeeded since main script passed; cleanup must not override the result');
+            assert(tr.stdout.indexOf('Azure context cleanup completed with exit code: 1') >= 0,
+                'should emit warning about cleanup failure');
+            // Cleanup failure must NOT produce a Failed setResult
+            assert(tr.stdout.indexOf('Cleanup failed with exit code:') < 0,
+                'should NOT emit the old "Cleanup failed with exit code:" Failed result');
+        });
+
+        it('pwsh not found: task fails with original error, cleanup is skipped', async () => {
+            let tp = path.join(__dirname, 'L0Cleanup_PwshNotFound.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            assert(!tr.succeeded, 'task should have failed because pwsh is not available');
+            // The original error from tl.which(x, true) must be preserved — cleanup must
+            // not throw on its own and overwrite it.
+            assert(tr.stdout.indexOf('Skipping cleanup') >= 0 || tr.stdout.indexOf('Unable to locate') >= 0,
+                'should either skip cleanup or surface the original pwsh-not-found error');
+            assert(tr.stdout.indexOf('Cleanup failed with error message:') < 0,
+                'should NOT emit the old "Cleanup failed with error message:" Failed result');
+        });
+
+        it('cleanup throws: task still succeeds with a warning and env vars are cleared', async () => {
+            // Regression for the env-clear gate: when await powershell.exec() rejects,
+            // cleanupExitCode stays 0 (never assigned) but cleanupOutcome becomes 'Threw'.
+            // The gate must key off cleanupOutcome, otherwise AZURESUBSCRIPTION_* would leak.
+            let tp = path.join(__dirname, 'L0Cleanup_CleanupThrowsWarnsButTaskSucceeds.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            if (!tr.succeeded) {
+                console.log('STDOUT:', tr.stdout);
+                console.log('STDERR:', tr.stderr);
+            }
+
+            assert(tr.succeeded, 'task should have succeeded since main script passed; cleanup throwing must not override the result');
+            assert(tr.stdout.indexOf('Azure context cleanup failed:') >= 0,
+                'should emit the catch-branch warning about cleanup throwing');
+            // Old setResult(Failed,...) marker must not be present
+            assert(tr.stdout.indexOf('Cleanup failed with error message:') < 0,
+                'should NOT emit the old "Cleanup failed with error message:" Failed result');
+            assert(tr.stdout.indexOf('Cleanup failed with exit code:') < 0,
+                'should NOT emit the old "Cleanup failed with exit code:" Failed result');
+            // The Threw branch must take the env-clear path (debug line covers all
+            // non-Success outcomes after the gate fix).
+            assert(tr.stdout.indexOf('Clearing service connection environment variables from agent process.') >= 0,
+                'env-clear gate must fire for the Threw branch (regression: was skipped when cleanupExitCode stayed 0)');
+        });
+    });
 });

@@ -154,15 +154,15 @@ Tasks/Common/Deployment/     @microsoft/release-management-task-team @manolerazv
 
 Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/RemoteDeployer/   @arjgupta
+Tasks/Common/RemoteDeployer/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/Common/ServiceFabricHelpers/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/TlsHelper_/      @arjgupta
+Tasks/Common/TlsHelper_/      @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/VstsAzureHelpers_/     @vincentdass
+Tasks/Common/VstsAzureHelpers_/     @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  
+Tasks/Common/VstsAzureRestHelpers_/  @microsoft/release-management-task-team @manolerazvan
 
 Tasks/Common/azure-arm-rest/   @microsoft/release-management-task-team @manolerazvan 
 
