@@ -369,9 +369,19 @@ export class azureclitask {
                         loginArgs += ` --output none`;
                     }
                     tl.debug('Using direct python.exe invocation for az login to bypass az.cmd.');
+                    try {
+                        emitTelemetry('AzureCLIV2', 'DirectPythonLogin', { status: 'used' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
                     Utility.throwIfError(tl.execSync(pythonPath, `-IBm azure.cli ${loginArgs}`), tl.loc("LoginFailed"));
                 } else {
                     tl.debug('python.exe not found; falling back to az.cmd for login.');
+                    try {
+                        emitTelemetry('AzureCLIV2', 'DirectPythonLogin', { status: 'fallback', reason: pythonPath ? 'python.exe not on disk' : 'az not found' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
                     if (visibleAzLogin) {
                         Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
                     } else {

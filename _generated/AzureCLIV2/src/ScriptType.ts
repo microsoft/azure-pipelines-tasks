@@ -1,6 +1,7 @@
 import { Utility } from './Utility';
 import tl = require("azure-pipelines-task-lib/task");
 import os = require("os");
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 export class ScriptTypeFactory {
     public static getSriptType(): ScriptType {
@@ -53,6 +54,11 @@ export class WindowsPowerShell extends ScriptType {
                 return await this.getToolWithFileInvocation();
             } catch (err) {
                 tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
+                try {
+                    emitTelemetry('AzureCLIV2', 'FileInvocationFallback', { scriptType: 'ps', error: err.message || String(err) });
+                } catch (telErr) {
+                    tl.debug(`Unable to emit telemetry: ${telErr}`);
+                }
             }
         }
 
@@ -95,6 +101,11 @@ export class PowerShellCore extends ScriptType {
                 return await this.getToolWithFileInvocation();
             } catch (err) {
                 tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
+                try {
+                    emitTelemetry('AzureCLIV2', 'FileInvocationFallback', { scriptType: 'pscore', error: err.message || String(err) });
+                } catch (telErr) {
+                    tl.debug(`Unable to emit telemetry: ${telErr}`);
+                }
             }
         }
 
