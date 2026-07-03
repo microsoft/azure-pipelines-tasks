@@ -456,7 +456,37 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            if (visibleAzLogin) {
+            if (process.platform === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+                // Bypass az.cmd to avoid CMD metacharacter interpretation (e.g. ^ in passwords)
+                // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
+                const azPath = tl.which('az', false);
+                const pythonPath = azPath ? path.join(path.dirname(path.dirname(azPath)), 'python.exe') : null;
+                if (pythonPath && fs.existsSync(pythonPath)) {
+                    let loginArgs = `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`;
+                    if (!visibleAzLogin) {
+                        loginArgs += ` --output none`;
+                    }
+                    tl.debug('Using direct python.exe invocation for az login to bypass az.cmd.');
+                    try {
+                        emitTelemetry('AzureCLIV3', 'DirectPythonLogin', { status: 'used' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
+                    Utility.throwIfError(tl.execSync(pythonPath, `-IBm azure.cli ${loginArgs}`), tl.loc("LoginFailed"));
+                } else {
+                    tl.debug('python.exe not found; falling back to az.cmd for login.');
+                    try {
+                        emitTelemetry('AzureCLIV3', 'DirectPythonLogin', { status: 'fallback', reason: pythonPath ? 'python.exe not on disk' : 'az not found' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
+                    if (visibleAzLogin) {
+                        Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+                    } else {
+                        Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
+                    }
+                }
+            } else if (visibleAzLogin) {
                 Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             }
             else {

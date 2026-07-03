@@ -465,4 +465,76 @@ describe('AzureCLIV3 Suite', function () {
             done(err);
         });
     });
+
+    it('File invocation: Task fails on non-zero exit code (pscore, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationNonZeroExit_pscore.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to non-zero exit code');
+    });
+
+    it('File invocation: Task fails on non-zero exit code (ps, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationNonZeroExit_ps.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to non-zero exit code');
+    });
+
+    it('File invocation: Task fails on terminating error (pscore, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationTerminatingError_pscore.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to terminating error');
+    });
+
+    it('File invocation: Task fails on terminating error (ps, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationTerminatingError_ps.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to terminating error');
+    });
+
+    it('File invocation: Task fails on stderr with failOnStandardError=true (pscore, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationStderrFailOnStdErr_pscore.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to stderr with failOnStandardError=true');
+    });
+
+    it('File invocation: Task fails on stderr with failOnStandardError=true (ps, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationStderrFailOnStdErr_ps.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should have failed due to stderr with failOnStandardError=true');
+    });
 });
