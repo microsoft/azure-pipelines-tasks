@@ -344,4 +344,61 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('function az {') === -1, 'generated script should NOT contain az function alias when FF is off');
     });
+
+    it('File invocation: Task succeeds with % and ^ in password (pscore, FF on)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0FileInvocationPercentPassword.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with % and ^ in password');
+        assert(tr.stdout.indexOf('Using -File invocation for PowerShell Core to avoid CMD metacharacter issues') >= 0, 'should log -File invocation usage');
+    });
+
+    it('Direct python login: python.exe path used when FF on and python.exe exists', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0DirectPythonLogin.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with direct python login');
+        assert(tr.stdout.indexOf('Using direct python.exe invocation for az login to bypass az.cmd') >= 0, 'should log direct python login usage');
+        assert(tr.stdout.indexOf('TELEMETRY: AzureCLIV2/DirectPythonLogin') >= 0, 'should emit DirectPythonLogin telemetry');
+    });
+
+    it('Direct python login fallback: falls back to az.cmd when python.exe not found', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0DirectPythonLoginFallback.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded with az.cmd fallback');
+        assert(tr.stdout.indexOf('python.exe not found; falling back to az.cmd for login.') >= 0, 'should log fallback reason');
+        assert(tr.stdout.indexOf('TELEMETRY: AzureCLIV2/DirectPythonLogin') >= 0, 'should emit fallback telemetry');
+        assert(tr.stdout.indexOf('"status":"fallback"') >= 0, 'telemetry should indicate fallback status');
+    });
 });
