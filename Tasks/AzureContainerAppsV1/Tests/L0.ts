@@ -522,4 +522,28 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
+
+    it('Passes appSourcePath to execSync as a single argument', () => {
+        // appSourcePath must be passed as a single execSync array element so its contents
+        // cannot be interpreted as additional arguments.
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+
+        const injectionAppSourcePath = '/samplepath --builder attacker/image --env INJECTED=true';
+        const originalExecSync = tl.execSync;
+        let capturedArgs: any;
+        tl.execSync = (tool: string, args: any) => {
+            capturedArgs = args;
+            return { code: 0, stdout: '', stderr: '', error: null };
+        };
+
+        try {
+            new ContainerAppHelper(true).createRunnableAppImage('sample-image:tag', injectionAppSourcePath, 'dotnetcore:7.0');
+        } finally {
+            tl.execSync = originalExecSync;
+        }
+
+        assert(Array.isArray(capturedArgs), 'createRunnableAppImage should invoke execSync with an array of arguments, not a single command string.');
+        assert(capturedArgs.indexOf(injectionAppSourcePath) !== -1, 'appSourcePath must be passed as a single execSync argument so its contents cannot be interpreted as additional arguments.');
+    });
 });
