@@ -1,0 +1,36 @@
+name: Auto Assign Owner from CODEOWNERS
+
+# Assigns the individual code owner(s) of the affected task to an issue,
+# using .github/CODEOWNERS as the source of truth. The affected task is taken
+# from the issue-form "Task name" field and from any `Task:` labels.
+#
+# Only assigns when the issue has no assignees yet, so it never overrides a
+# human decision. GitHub teams in CODEOWNERS are ignored (issues can only be
+# assigned to users). When several owners resolve, a single assignee is chosen
+# by priority (tarunramsinghani, then manolerazvan, else the first resolved).
+# No external npm dependencies are needed — CODEOWNERS and the issue body are
+# parsed as plain text.
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - labeled
+
+jobs:
+  assign_owner:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Assign owner from CODEOWNERS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assign owner
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { run } = require('./.github/workflows/assignOwners.cjs');
+            await run({ github, context, core });

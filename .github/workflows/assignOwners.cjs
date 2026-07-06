@@ -1,0 +1,248 @@
+// @ts-check
+'use strict';
+
+/**
+ * Auto-assign issue owners based on the affected task, using the repo's
+ * .github/CODEOWNERS as the single source of truth for ownership.
+ *
+ * Invoked from actions/github-script@v7 (see assignOwners.yml):
+ *   const { run } = require('./.github/workflows/assignOwners.cjs');
+ *   await run({ github, context, core });
+ *
+ * How the affected task is determined (both signals are used and unioned):
+ *   1. The "Task name" field of the issue form (renders as `### Task name`).
+ *   2. Any `Task: <name>` labels on the issue.
+ *
+ * Each task token is normalized (lower-cased, spaces/`@version` stripped,
+ * trailing version suffix like `V2`/`V10` removed) and matched against the
+ * normalized `Tasks/<Folder>/` entries in CODEOWNERS. Only *individual* code
+ * owners are used as assignees; GitHub teams (`@org/team`) are ignored because
+ * issues can only be assigned to users.
+ *
+ * When a task resolves to several owners, a single assignee is chosen by
+ * ASSIGNEE_PRIORITY (tarunramsinghani, then manolerazvan), falling back to the
+ * first resolved owner.
+ *
+ * The workflow assigns owners only when the issue currently has no assignees,
+ * so it never overrides a human decision and never double-assigns.
+ *
+ * Must be CommonJS (`.cjs`): `.github/workflows/package.json` declares
+ * `{"type":"module"}` and actions/github-script requires CommonJS.
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * When a task resolves to several code owners, we assign a single person,
+ * chosen by this descending priority. If none of these are among the resolved
+ * owners, the first resolved owner is used as a fallback.
+ * @type {string[]}
+ */
+const ASSIGNEE_PRIORITY = ['tarunramsinghani', 'manolerazvan'];
+
+/**
+ * Normalize a task-folder name or a user-supplied task token to a comparable
+ * key: lower-case, drop anything from `@` on (a version like `@5`), keep only
+ * alphanumerics, then strip a trailing version segment (`v` + digits).
+ * @param {string} value
+ * @returns {string}
+ */
+function normalizeTaskKey(value) {
+  if (!value) return '';
+  let s = String(value).toLowerCase();
+  const at = s.indexOf('@');
+  if (at !== -1) s = s.slice(0, at); // drop "@5" style version
+  s = s.replace(/[^a-z0-9]/g, ''); // drop spaces/punctuation
+  s = s.replace(/v\d+$/, ''); // drop trailing version, e.g. v2 / v10
+  return s;
+}
+
+/**
+ * @typedef {{ folder: string, key: string, owners: string[] }} OwnerEntry
+ */
+
+/**
+ * Parse CODEOWNERS into task-folder ownership entries.
+ * Keeps only top-level `Tasks/<Folder>` rules (excludes `Tasks/Common/...`)
+ * and keeps only individual owners (drops `@org/team` entries and the global
+ * `*` catch-all).
+ * @param {string} text
+ * @returns {OwnerEntry[]}
+ */
+function parseCodeowners(text) {
+  /** @type {OwnerEntry[]} */
+  const entries = [];
+  const lines = String(text).split(/\r?\n/);
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+
+    const tokens = line.split(/\s+/);
+    const pattern = tokens[0];
+    if (!/^Tasks\//i.test(pattern)) continue;
+
+    // Folder = first path segment after "Tasks/".
+    const rest = pattern.replace(/^Tasks\//i, '').replace(/\/+$/, '');
+    const folder = rest.split('/')[0];
+    if (!folder || /^Common$/i.test(folder)) continue;
+    // Skip nested Common paths (Tasks/Common/...) — not user-facing tasks.
+    if (/^Common$/i.test(rest.split('/')[0])) continue;
+
+    const owners = [];
+    for (const tok of tokens.slice(1)) {
+      if (tok.startsWith('#')) break; // trailing comment
+      if (!tok.startsWith('@')) continue;
+      const handle = tok.slice(1);
+      if (handle.includes('/')) continue; // team (e.g. org/team) — not assignable
+      if (handle) owners.push(handle);
+    }
+    if (owners.length === 0) continue;
+
+    entries.push({ folder, key: normalizeTaskKey(folder), owners });
+  }
+  return entries;
+}
+
+/**
+ * Extract the value of the issue-form "Task name" field from an issue body.
+ * The field renders as a `### Task name` heading followed by the value.
+ * Returns '' when absent or filled with `_No response_`.
+ * @param {string} body
+ * @returns {string}
+ */
+function extractTaskName(body) {
+  if (!body) return '';
+  const lines = String(body).split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    if (/^#{1,6}\s*task name\s*$/i.test(lines[i].trim())) {
+      // Collect the first non-empty line after the heading.
+      for (let j = i + 1; j < lines.length; j++) {
+        const v = lines[j].trim();
+        if (!v) continue;
+        if (/^#{1,6}\s/.test(v)) break; // next section
+        if (/^_no response_$/i.test(v)) return '';
+        return v;
+      }
+      return '';
+    }
+  }
+  return '';
+}
+
+/**
+ * Given task tokens and CODEOWNERS entries, compute the deduped list of
+ * individual owners to assign. Exact (normalized) match is preferred; if a
+ * token has no exact match, a conservative fallback matches folders whose key
+ * starts with the token (token length >= 5) to tolerate minor name variants.
+ * @param {string[]} taskTokens
+ * @param {OwnerEntry[]} entries
+ * @param {{ info?: (m: string) => void }} [log]
+ * @returns {string[]}
+ */
+function computeAssignees(taskTokens, entries, log) {
+  const assignees = new Set();
+  for (const token of taskTokens) {
+    const key = normalizeTaskKey(token);
+    if (!key) continue;
+
+    let matched = entries.filter((e) => e.key === key);
+    let mode = 'exact';
+    if (matched.length === 0 && key.length >= 5) {
+      matched = entries.filter(
+        (e) => e.key.startsWith(key) || key.startsWith(e.key)
+      );
+      mode = 'fuzzy';
+    }
+    if (matched.length === 0) {
+      if (log && log.info) log.info(`No CODEOWNERS match for task "${token}" (key="${key}").`);
+      continue;
+    }
+    if (log && log.info) {
+      log.info(`Task "${token}" (key="${key}") matched ${matched.map((m) => m.folder).join(', ')} [${mode}].`);
+    }
+    for (const e of matched) for (const o of e.owners) assignees.add(o);
+  }
+  return [...assignees];
+}
+
+/**
+ * Reduce a resolved owner list to the single assignee to use, honoring
+ * ASSIGNEE_PRIORITY (case-insensitive). Falls back to the first resolved owner
+ * when no priority owner is present. Returns [] for an empty input.
+ * @param {string[]} owners
+ * @returns {string[]} zero or one login.
+ */
+function selectAssignee(owners) {
+  if (!owners || owners.length === 0) return [];
+  for (const preferred of ASSIGNEE_PRIORITY) {
+    const hit = owners.find((o) => o.toLowerCase() === preferred.toLowerCase());
+    if (hit) return [hit];
+  }
+  return [owners[0]];
+}
+
+/**
+ * Entry point invoked by actions/github-script.
+ * @param {{ github: any, context: any, core: any }} ctx
+ */
+async function run({ github, context, core }) {
+  const issue = context.payload && context.payload.issue;
+  if (!issue) {
+    core.info('No issue in payload; nothing to do.');
+    return;
+  }
+  if (issue.state && issue.state !== 'open') {
+    core.info(`Issue #${issue.number} is ${issue.state}; skipping.`);
+    return;
+  }
+  if (Array.isArray(issue.assignees) && issue.assignees.length > 0) {
+    core.info(`Issue #${issue.number} already has assignees; skipping.`);
+    return;
+  }
+
+  const codeownersPath = path.join(process.cwd(), '.github', 'CODEOWNERS');
+  const entries = parseCodeowners(fs.readFileSync(codeownersPath, 'utf8'));
+
+  // Gather task tokens from the "Task name" field and any `Task:` labels.
+  const tokens = [];
+  const fromField = extractTaskName(issue.body || '');
+  if (fromField) tokens.push(fromField);
+  const labelNames = (issue.labels || []).map((l) =>
+    typeof l === 'string' ? l : l && l.name
+  );
+  for (const name of labelNames) {
+    if (name && /^Task:\s*/i.test(name)) tokens.push(name.replace(/^Task:\s*/i, ''));
+  }
+  if (tokens.length === 0) {
+    core.info(`Issue #${issue.number}: no task name field or Task: label found; skipping.`);
+    return;
+  }
+
+  const resolved = computeAssignees(tokens, entries, core);
+  if (resolved.length === 0) {
+    core.info(`Issue #${issue.number}: no individual code owner resolved for tasks [${tokens.join(', ')}].`);
+    return;
+  }
+
+  const assignees = selectAssignee(resolved);
+  if (resolved.length > 1) {
+    core.info(`Resolved owners [${resolved.join(', ')}]; selected ${assignees[0]} by priority.`);
+  }
+
+  core.info(`Assigning #${issue.number} to: ${assignees.join(', ')}`);
+  try {
+    await github.rest.issues.addAssignees({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      issue_number: issue.number,
+      assignees,
+    });
+  } catch (err) {
+    core.warning(
+      `Failed to assign [${assignees.join(', ')}] to #${issue.number}: ${err && err.message ? err.message : err}`
+    );
+  }
+}
+
+module.exports = { run, computeAssignees, selectAssignee, parseCodeowners, extractTaskName, normalizeTaskKey };
