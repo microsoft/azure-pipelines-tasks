@@ -361,6 +361,8 @@ describe('AzureCLIV2 Suite', function () {
 
         assert(tr.succeeded, 'task should have succeeded with % and ^ in password');
         assert(tr.stdout.indexOf('Using -File invocation for PowerShell Core to avoid CMD metacharacter issues') >= 0, 'should log -File invocation usage');
+        assert(tr.stdout.indexOf('Using direct python.exe invocation for az login to bypass az.cmd') >= 0, 'should use direct python.exe login for % password');
+        assert(tr.stdout.indexOf('TELEMETRY: AzureCLIV2/DirectPythonLogin') >= 0, 'should emit DirectPythonLogin telemetry');
     });
 
     it('Direct python login: python.exe path used when FF on and python.exe exists', async function() {

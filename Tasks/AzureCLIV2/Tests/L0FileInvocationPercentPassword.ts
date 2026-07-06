@@ -33,6 +33,7 @@ tmr.setInput('scriptLocation', 'inlineScript');
 tmr.setInput('inlineScript', 'Write-Host "logged in"');
 tmr.setInput('cwd', '/tmp');
 tmr.setInput('visibleAzLogin', 'true');
+tmr.setInput('useGlobalConfig', 'true');
 
 // Environment variables
 process.env['DISTRIBUTEDTASK_TASKS_ENABLELATEBOUNDIDTOKEN'] = 'false';
@@ -54,9 +55,11 @@ process.env['ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID'] = 'tenantId';
 process.env['ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE'] = 'spnKey';
 process.env['ENDPOINT_DATA_AzureRM'] = '{"environment":"AzureCloud"}';
 
-// Mock Telemetry
+// Mock Telemetry — capture calls to verify DirectPythonLogin telemetry
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
-    emitTelemetry: () => {}
+    emitTelemetry: (area: string, feature: string, data: any) => {
+        console.log(`TELEMETRY: ${area}/${feature} ${JSON.stringify(data)}`);
+    }
 });
 
 // Mock WebApi
@@ -68,6 +71,21 @@ tmr.registerMock('azure-devops-node-api', {
 });
 
 tmr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
+
+// Mock fs — python.exe exists at derived path
+const realFs = require('fs');
+tmr.registerMock('fs', {
+    existsSync: (p: string) => {
+        if (p.endsWith('python.exe')) {
+            return true;
+        }
+        return realFs.existsSync(p);
+    },
+    writeFileSync: realFs.writeFileSync.bind(realFs),
+    unlinkSync: realFs.unlinkSync.bind(realFs),
+    readFileSync: realFs.readFileSync.bind(realFs),
+    mkdtempSync: realFs.mkdtempSync.bind(realFs)
+});
 
 // Mock Utility
 tmr.registerMock('./src/Utility', {
@@ -91,15 +109,17 @@ const pythonLoginCmd = path.join(path.dirname(path.dirname('az')), 'python.exe')
 let execAnswers: { [key: string]: { code: number; stdout: string; stderr: string } } = {
     'az version': { 'code': 0, 'stdout': 'azure-cli 2.50.0', 'stderr': '' },
     'az --version': { 'code': 0, 'stdout': 'azure-cli 2.50.0 core 2.50.0 telemetry 1.0.8 extensions 0.4.0', 'stderr': '' },
-    'az account clear': { 'code': 0, 'stdout': '', 'stderr': '' },
-    // Direct python login with % in password — should work when FF is on
-    'az login --service-principal -u "spId" --password="Pa%ss%wo^rd" --tenant "tenantId" --allow-no-subscriptions': { 'code': 0, 'stdout': '', 'stderr': '' }
+    'az account clear': { 'code': 0, 'stdout': '', 'stderr': '' }
 };
+// Direct python login — derived from dirname(dirname(az))/python.exe with % password
+execAnswers[pythonLoginCmd] = { 'code': 0, 'stdout': '', 'stderr': '' };
+// Fallback az login in case path derivation differs
+execAnswers['az login --service-principal -u "spId" --password="Pa%ss%wo^rd" --tenant "tenantId" --allow-no-subscriptions'] = { 'code': 0, 'stdout': '', 'stderr': '' };
 execAnswers[pwshCmd] = { 'code': 0, 'stdout': '', 'stderr': '' };
 
 let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'which': { 'az': 'az', 'pwsh': 'pwsh' },
-    'checkPath': { 'az': true, 'pwsh': true },
+    'which': { 'az': 'az', 'pwsh': 'pwsh', 'python.exe': 'python.exe' },
+    'checkPath': { 'az': true, 'pwsh': true, 'python.exe': true },
     'exec': execAnswers
 };
 tmr.setAnswers(answers);
