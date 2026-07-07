@@ -219,24 +219,37 @@ async function run({ github, context, core }) {
   const codeownersPath = path.join(process.cwd(), '.github', 'CODEOWNERS');
   const entries = parseCodeowners(fs.readFileSync(codeownersPath, 'utf8'));
 
-  // Gather task tokens from the "Task name" field and any `Task:` labels.
-  const tokens = [];
-  const fromField = extractTaskName(issue.body || '');
-  if (fromField) tokens.push(fromField);
+  // Prefer the `Task:` label signal over the free-text "Task name" field.
+  // The labeler applies `Task:` labels from a controlled mapping, whereas the
+  // field is hand-typed and can be vague. Resolve labels first and only fall
+  // back to the field when no label resolves an owner, so a vague field value
+  // (e.g. "Azure") can't override or dilute a precise label (e.g. a
+  // "Task: CacheV2" label that resolves to a specific owner). Multiple
+  // `Task:` labels are still unioned among themselves.
+  const labelTokens = [];
   const labelNames = (issue.labels || []).map((l) =>
     typeof l === 'string' ? l : l && l.name
   );
   for (const name of labelNames) {
-    if (name && /^Task:\s*/i.test(name)) tokens.push(name.replace(/^Task:\s*/i, ''));
+    if (name && /^Task:\s*/i.test(name)) labelTokens.push(name.replace(/^Task:\s*/i, ''));
   }
-  if (tokens.length === 0) {
+  const fieldToken = extractTaskName(issue.body || '');
+
+  if (labelTokens.length === 0 && !fieldToken) {
     core.info(`Issue #${issue.number}: no task name field or Task: label found; skipping.`);
     return;
   }
 
-  const resolved = computeAssignees(tokens, entries, core);
+  let resolved = computeAssignees(labelTokens, entries, core);
+  let source = 'Task: label(s)';
+  if (resolved.length === 0 && fieldToken) {
+    resolved = computeAssignees([fieldToken], entries, core);
+    source = 'Task name field';
+  }
   if (resolved.length === 0) {
-    core.info(`Issue #${issue.number}: no individual code owner resolved for tasks [${tokens.join(', ')}].`);
+    const attempted = [...labelTokens];
+    if (fieldToken) attempted.push(fieldToken);
+    core.info(`Issue #${issue.number}: no individual code owner resolved for tasks [${attempted.join(', ')}].`);
     return;
   }
 
@@ -272,7 +285,7 @@ async function run({ github, context, core }) {
     );
   }
 
-  core.info(`Assigning #${issue.number} to: ${assignees.join(', ')}`);
+  core.info(`Assigning #${issue.number} to: ${assignees.join(', ')} (source: ${source}).`);
   try {
     await github.rest.issues.addAssignees({
       owner: context.repo.owner,
