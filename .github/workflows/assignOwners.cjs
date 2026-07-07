@@ -230,6 +230,33 @@ async function run({ github, context, core }) {
     core.info(`Resolved owners [${resolved.join(', ')}]; selected ${assignees[0]} by priority.`);
   }
 
+  // Re-read assignees from LIVE state right before assigning. The event
+  // payload snapshot can be stale: the labeler adds several labels per issue
+  // and GitHub fires one `labeled` event per label, so multiple runs of this
+  // workflow can fire for the same issue, each carrying the assignee list as
+  // it was when its event was created. The workflow-level concurrency group
+  // (see assignOwners.yml) serializes runs per issue; this live check makes
+  // the "no assignees yet" guard authoritative, so a run that starts after an
+  // earlier run has already assigned will observe it and skip. Without it,
+  // `addAssignees` (which adds rather than replaces) could double-assign.
+  try {
+    const live = await github.rest.issues.get({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      issue_number: issue.number,
+    });
+    const liveAssignees =
+      live && live.data && Array.isArray(live.data.assignees) ? live.data.assignees : [];
+    if (liveAssignees.length > 0) {
+      core.info(`Issue #${issue.number} was assigned by another run; skipping.`);
+      return;
+    }
+  } catch (err) {
+    core.warning(
+      `Could not re-check live assignees for #${issue.number}; proceeding. ${err && err.message ? err.message : err}`
+    );
+  }
+
   core.info(`Assigning #${issue.number} to: ${assignees.join(', ')}`);
   try {
     await github.rest.issues.addAssignees({
