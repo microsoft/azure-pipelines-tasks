@@ -25,6 +25,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// The issue-form field whose value drives Task:/Area: labeling. This string
+// MUST stay in sync with the label: of the "Task name" input in the issue
+// form templates under .github/ISSUE_TEMPLATE/*.yml. If that field is renamed
+// there, update it here too or labeling will silently stop matching (this is
+// exactly the breakage this labeler was written to fix).
+const TASK_NAME_FIELD = 'Task name';
 function loadYaml() {
     // In CI js-yaml is installed into a temp dir (public registry) and its
     // absolute path is passed via YAML_MODULE, so we never touch the repo's
@@ -91,7 +97,7 @@ function computeLabels({ title, body, existingLabels, rules, nomatches, tags }) 
     const assignees = new Set();
     const existing = new Set(existingLabels || []);
 
-    const taskName = extractField(body || '', 'Task name');
+    const taskName = extractField(body || '', TASK_NAME_FIELD);
     const taskNameLower = taskName.toLowerCase();
 
     let matched = false;
