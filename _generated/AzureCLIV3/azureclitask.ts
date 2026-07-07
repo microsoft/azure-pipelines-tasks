@@ -393,6 +393,19 @@ export class azureclitask {
         console.log(tl.loc("AzureDevOpsExtensionInstalledNoDeps"));
     }
 
+    private static emitExtensionInstallTelemetry(installPath: string, result: string, standardInstallExitCode?: number): void {
+        try {
+            emitTelemetry('TaskHub', 'AzureCLIV3', {
+                event: 'AzDevOpsExtInstall',
+                path: installPath,
+                result: result,
+                standardInstallExitCode: standardInstallExitCode
+            });
+        } catch (e) {
+            tl.debug(`Failed to emit extension-install telemetry: ${e}`);
+        }
+    }
+
     private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
@@ -534,9 +547,16 @@ export class azureclitask {
                             tl.warning("Error Code: [" + standardInstallResult.code + "]");
                             tl.warning(tl.loc("FailedToInstallAzureDevOpsCLI"));
                             console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
-                            await this.installAzureDevOpsExtensionNoDeps();
+                            try {
+                                await this.installAzureDevOpsExtensionNoDeps();
+                                this.emitExtensionInstallTelemetry("noDepsFallback", "success", standardInstallResult.code);
+                            } catch (error) {
+                                this.emitExtensionInstallTelemetry("noDepsFallback", "fail", standardInstallResult.code);
+                                throw error;
+                            }
                         } else {
                             console.log(tl.loc("AzureDevOpsExtensionInstalled"));
+                            this.emitExtensionInstallTelemetry("standard", "success", standardInstallResult.code);
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));
