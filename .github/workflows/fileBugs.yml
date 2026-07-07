@@ -9,11 +9,18 @@ name: File bugs
 # Azure Artifacts feed. It now installs only the three packages it needs from
 # the public npm registry, in an isolated directory. Filing bugs into Azure
 # DevOps still requires a valid AZP_TOKEN secret.
+#
+# Trigger: this runs on a daily schedule rather than on `issues.opened`.
+# The bug-volume thresholds are org-wide and slow-moving, so recomputing them
+# on every opened issue was wasteful. A schedule also avoids racing the
+# separate Label issues workflow: when both ran on `issues.opened` there was
+# no ordering guarantee, so file-bugs could read a just-opened issue before its
+# `Area:` label had been applied and miss counting it under its area.
 
 on:
-  issues:
-    types:
-      - opened
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
 
 permissions:
   issues: read
