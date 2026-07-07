@@ -18,6 +18,18 @@ on:
       - edited
       - labeled
 
+# The labeler adds several Area:/Task: labels per issue, and GitHub fires one
+# `labeled` event per label, so this workflow can be triggered several times
+# for the same issue at once. Serialize those runs per issue number so two of
+# them can't both pass the "no assignees yet" guard and each add a different
+# owner (addAssignees adds rather than replaces). cancel-in-progress is false
+# so a queued run still executes after the in-progress one finishes and can
+# observe the assignment it made. The module also re-reads live assignee state
+# before assigning; the two together guarantee it never double-assigns.
+concurrency:
+  group: assign-owner-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
 jobs:
   assign_owner:
     runs-on: ubuntu-latest
