@@ -149,10 +149,25 @@ function computeAssignees(taskTokens, entries, log) {
     let matched = entries.filter((e) => e.key === key);
     let mode = 'exact';
     if (matched.length === 0 && key.length >= 5) {
-      matched = entries.filter(
-        (e) => e.key.startsWith(key) || key.startsWith(e.key)
-      );
+      // One-directional prefix match only: tolerate a folder whose normalized
+      // name *extends* the entered task (e.g. "AzureFunctionApp" ->
+      // "AzureFunctionAppContainer"). We deliberately do NOT also match the
+      // reverse direction (folder key is a prefix of the entered value): the
+      // "Task name" field is free text typed by hand, so a vague entry like
+      // "Azure" would pull in dozens of unrelated folders across many owners
+      // and then silently collapse to a single priority person. If the prefix
+      // is ambiguous (matches more than one folder) we skip rather than guess.
+      matched = entries.filter((e) => e.key.startsWith(key));
       mode = 'fuzzy';
+      if (matched.length > 1) {
+        if (log && log.info) {
+          log.info(
+            `Ambiguous fuzzy match for task "${token}" (key="${key}"): ` +
+            `${matched.map((m) => m.folder).join(', ')}; skipping to avoid guessing an owner.`
+          );
+        }
+        continue;
+      }
     }
     if (matched.length === 0) {
       if (log && log.info) log.info(`No CODEOWNERS match for task "${token}" (key="${key}").`);
