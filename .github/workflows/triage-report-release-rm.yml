@@ -7,9 +7,11 @@ name: Triage report - Release/RM
 #   2. Set `report_title`.
 #   3. Point the `secrets:` mapping at your team's mail secrets (any names you like).
 #
+# Runs every Monday at 08:00 UTC and on manual dispatch.
+#
 # Required repo/org secrets for email delivery (mapped below). Email is skipped
-# gracefully until at least MAIL_TO + SMTP_SERVER exist, so you can enable the
-# schedule first and wire secrets afterwards:
+# gracefully until at least MAIL_TO + SMTP_SERVER exist, so the schedule can run
+# before the secrets are wired up (the report still lands in the job summary):
 #   RELEASE_RM_MAIL_TO        recipient address(es), comma-separated
 #   RELEASE_RM_SMTP_SERVER    SMTP relay host (e.g. Azure Communication Services
 #                             Email SMTP, SendGrid, or another authenticated relay)
@@ -18,14 +20,13 @@ name: Triage report - Release/RM
 #   RELEASE_RM_SMTP_PASSWORD  SMTP password / API key
 #   RELEASE_RM_MAIL_FROM      From address
 #
-# Until the schedule is enabled, run it manually via the Actions "Run workflow"
-# button; the report is written to the run's job summary either way.
+# Manual runs are always available via the Actions "Run workflow" button; the
+# report is written to the run's job summary either way.
 
 on:
   workflow_dispatch:
-  # Uncomment to run every Monday at 08:00 UTC once the secrets above are set:
-  # schedule:
-  #   - cron: '0 8 * * 1'
+  schedule:
+    - cron: '0 8 * * 1'  # every Monday at 08:00 UTC
 
 permissions:
   issues: read
