@@ -111,7 +111,14 @@ async function fetchAll() {
   console.log(`Report: in-scope=${stats.total} sla=${stats.sla} regressions=${stats.regressions} new7=${stats.new7}`);
 
   if (process.env.GITHUB_STEP_SUMMARY) {
-    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## ${REPORT_TITLE} \u2014 ${date}\n\n\`\`\`\n${text}\n\`\`\`\n`);
+    const tickRuns = [...text.matchAll(/`+/g)].map(m => m[0].length);
+    const fence = '`'.repeat(Math.max(3, ...tickRuns) + 1);
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## ${REPORT_TITLE} — ${date}
+
+${fence}
+${text}
+${fence}
+`);
   }
   if (process.env.WRITE_FILES === 'true') {
     fs.writeFileSync('triage-report.html', html);
