@@ -1,0 +1,47 @@
+name: Triage report - Release/RM
+
+# Example caller of the reusable triage-report engine (.github/workflows/triage-report.yml).
+#
+# To add a report for another team, copy this file, then:
+#   1. Adjust `areas` and/or `owners` to your team's scope.
+#   2. Set `report_title`.
+#   3. Point the `secrets:` mapping at your team's mail secrets (any names you like).
+#
+# Required repo/org secrets for email delivery (mapped below). Email is skipped
+# gracefully until at least MAIL_TO + SMTP_SERVER exist, so you can enable the
+# schedule first and wire secrets afterwards:
+#   RELEASE_RM_MAIL_TO        recipient address(es), comma-separated
+#   RELEASE_RM_SMTP_SERVER    SMTP relay host (e.g. Azure Communication Services
+#                             Email SMTP, SendGrid, or another authenticated relay)
+#   RELEASE_RM_SMTP_PORT      usually 587
+#   RELEASE_RM_SMTP_USERNAME  SMTP username / API key id
+#   RELEASE_RM_SMTP_PASSWORD  SMTP password / API key
+#   RELEASE_RM_MAIL_FROM      From address
+#
+# Until the schedule is enabled, run it manually via the Actions "Run workflow"
+# button; the report is written to the run's job summary either way.
+
+on:
+  workflow_dispatch:
+  # Uncomment to run every Monday at 08:00 UTC once the secrets above are set:
+  # schedule:
+  #   - cron: '0 8 * * 1'
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  report:
+    uses: ./.github/workflows/triage-report.yml
+    with:
+      areas: 'Area: Release, Area:RM'
+      owners: '@manolerazvan'
+      report_title: 'Release/RM Triage Report'
+    secrets:
+      MAIL_TO: ${{ secrets.RELEASE_RM_MAIL_TO }}
+      MAIL_FROM: ${{ secrets.RELEASE_RM_MAIL_FROM }}
+      SMTP_SERVER: ${{ secrets.RELEASE_RM_SMTP_SERVER }}
+      SMTP_PORT: ${{ secrets.RELEASE_RM_SMTP_PORT }}
+      SMTP_USERNAME: ${{ secrets.RELEASE_RM_SMTP_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.RELEASE_RM_SMTP_PASSWORD }}
