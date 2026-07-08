@@ -1,6 +1,21 @@
 # Description: Checks the PowerShell syntax of the script using PSScriptAnalyzer.
 param([String]$pathToBuiltTasks)
 
+# Install helper modules from the Azure DevOps Artifacts feed instead of the public
+# PowerShell Gallery. The feed proxies these packages and allows anonymous reads once
+# they are saved to it, so no authentication token is required here. Anonymous callers
+# only see versions already saved to the feed, so an unpinned install resolves to the
+# latest saved version.
+$AdoFeedName = "PipelineTools_PublicPackages"
+$AdoFeedSource = "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2"
+
+function Register-AdoFeed() {
+  if (-not (Get-PSRepository -Name $AdoFeedName -ErrorAction SilentlyContinue)) {
+    Write-Host "Registering PSRepository '$AdoFeedName'..."
+    Register-PSRepository -Name $AdoFeedName -SourceLocation $AdoFeedSource -InstallationPolicy Trusted
+  }
+}
+
 function Get-AnalyzerSettings() {
   return @{
     Severity=@('Error', 'Warning', 'Information', 'ParseError', 'ParseWarning')
@@ -36,8 +51,9 @@ function Invoke-AnalyzerToTask() {
 
   $module = Get-Module -Name "PSScriptAnalyzer";
   if ($module -eq $null) {
-    Write-Host "Installing PSScriptAnalyzer module..."
-    Install-Module -Name "PSScriptAnalyzer" -Scope CurrentUser -Force
+    Write-Host "Installing PSScriptAnalyzer module from $AdoFeedName..."
+    Register-AdoFeed
+    Install-Module -Name "PSScriptAnalyzer" -Repository $AdoFeedName -Scope CurrentUser -Force
   }
   
   Write-Host "Running PSScriptAnalyzer for $taskPath."
@@ -105,8 +121,9 @@ function main() {
   # https://github.com/PowerShell/PowerShell/issues/1755
   $module = Get-Module -Name "Newtonsoft.Json";
   if ($module -eq $null) {
-    Write-Host "Installing Newtonsoft.Json module..."
-    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Force
+    Write-Host "Installing Newtonsoft.Json module from $AdoFeedName..."
+    Register-AdoFeed
+    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Repository $AdoFeedName -Force
   }
 
   # Get the tasks which have a PowerShell handler.
