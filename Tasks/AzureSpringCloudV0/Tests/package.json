@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "mocha": "^10.5.1",
-    "nock": "9.0.11"
+    "mocha": "^11.7.5",
+    "nock": "^10.0.6"
+  },
+  "overrides": {
+    "serialize-javascript": "7.0.5"
   }
 }

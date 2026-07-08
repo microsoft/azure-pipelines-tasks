@@ -1,5 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
+import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 const UNCPathPattern: RegExp = /^[\\]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 
@@ -41,8 +42,9 @@ export function getCleanTargetFolderCmd(targetFolder: string, forWindows: boolea
         // This pattern will ignore files whose name is . and .. during deletion. These are system files that exist in every Linux directory.
         // An attempt to delete these files will produce warnings that could confuse users.
         // Here is more information about this problem https://unix.stackexchange.com/questions/77127/rm-rf-all-files-and-all-hidden-files-without-error/77313#77313
+        const safeTarget: string = shellQuote(targetFolder);
         const hiddenFilesClean: string = `${ cleanHiddenFiles ? "{,.[!.],..?}" : "" }`;
-        const cleanFilesInTarget: string = `sh -c "rm -rf '${targetFolder}'/${hiddenFilesClean}*"`;
+        const cleanFilesInTarget: string = `rm -rf ${safeTarget}/${hiddenFilesClean}*`;
         return cleanFilesInTarget;
     }
 }

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 248,
-    "Patch": 1
+    "Minor": 277,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -47,6 +47,10 @@
     "Node20_1": {
       "target": "cargoauthenticatemain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -65,8 +69,8 @@
     "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.248.1",
+    "Default": "0.277.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.248.2"
+    "wif_242": "0.277.1"
   }
 }

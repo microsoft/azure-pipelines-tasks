@@ -2,10 +2,11 @@
 import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as semver from 'semver';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";
-import { Constants } from "./versionutilities";
+import { applyRollForwardPolicy, Constants } from "./versionutilities";
 import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 
@@ -18,6 +19,7 @@ function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
 
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
+    let checkForExistingVersion: boolean = tl.getBoolInput('checkForExistingVersion');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
     let vsVersionSpec = tl.getInput('vsVersion');
@@ -31,12 +33,23 @@ async function run() {
     let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
     // Check if we want install dotnet
     if (versionSpec || (useGlobalJson && packageType == "sdk")) {
+        let isDotnetInstalled = false;
+
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
-        await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
-        tl.prependPath(installationPath);
-        // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
-        tl.setVariable('DOTNET_ROOT', installationPath);
+
+        // check is dotnet installed via dotnet cli
+        if (checkForExistingVersion) {
+            isDotnetInstalled = await isCompatibleDotnetVersionInstalled(versionSpec, vsVersionSpec, useGlobalJson, packageType, workingDirectory, includePreviewVersions);
+        }
+
+        if (!isDotnetInstalled) {
+            await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
+            tl.prependPath(installationPath);
+            // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
+            tl.setVariable('DOTNET_ROOT', installationPath);
+        }
+
         // By default disable Multi Level Lookup unless user wants it enabled.
         tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
@@ -46,6 +59,145 @@ async function run() {
     // Install NuGet version specified by user or 4.9.6 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
+}
+
+/**
+ *
+ * @param versionSpec The version the user want to install.
+ * @param vsVersionSpec Compatible Visual Studio version.
+ * @param useGlobalJson A switch so we know if the user have `global.json` files and want use that. If this is true only SDK is possible!
+ * @param packageType The installation type for the installation. Only `sdk` and `runtime` are valid options
+ * @param workingDirectory This is only relevant if the `useGlobalJson` switch is `true`. It will set the root directory for the search of `global.json`
+ * @param includePreviewVersions Define if the installer also search for preview version
+ * @returns { Promise<boolean> } - true if dotnet installed, otherwise - false
+ */
+async function isCompatibleDotnetVersionInstalled(versionSpec: string, vsVersionSpec: string, useGlobalJson: boolean, packageType: string, workingDirectory: string, includePreviewVersions: boolean): Promise<boolean> {
+    const versionFetcher = new DotNetCoreVersionFetcher();
+
+    if (useGlobalJson && packageType === "sdk") {
+        const globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
+        const globalJsonVersions = globalJsonFetcherInstance.getGlobalJsonVersions();
+        const entries = globalJsonVersions.filter(e => e != null);
+        if (entries.length === 0) {
+            return false;
+        }
+
+        // For "latest*" rollForward policies (latestPatch, latestFeature, etc.),
+        // the intent is to always use the latest available version, so we must
+        // resolve to the actual latest and check for that exact version.
+        // For non-latest policies (disable, patch, feature, minor, major), any
+        // installed version within the acceptable range is sufficient.
+        const hasLatestPolicy = entries.some(e => e.rollForward && e.rollForward.startsWith("latest"));
+
+        if (hasLatestPolicy) {
+            // Resolve to the actual latest versions and check for exact matches
+            let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
+            return checkVersionInDotnetCLI(versionsToInstall, packageType);
+        }
+
+        // Non-latest policies: check if any installed version satisfies the range
+        const installedVersions = getInstalledVersions(packageType);
+
+        for (const entry of entries) {
+            let versionRange: string;
+            if (entry.rollForward) {
+                versionRange = applyRollForwardPolicy(entry.version, entry.rollForward);
+            } else {
+                versionRange = entry.version;
+            }
+
+            const satisfied = installedVersions.some(v => semver.satisfies(v, versionRange));
+            if (satisfied) {
+                tl.debug(tl.loc("VersionSatisfiedByInstalledVersion", versionRange));
+            } else {
+                return false;
+            }
+        }
+        return true;
+    } else if (versionSpec) {
+        const versionSpecParts = new VersionParts(versionSpec);
+        const versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, vsVersionSpec, packageType, includePreviewVersions);
+        return checkVersionInDotnetCLI(versionInfo, packageType);
+    }
+
+    return false;
+}
+
+function getInstalledVersions(packageType: string): string[] {
+    const dotnetPath = tl.which('dotnet', false);
+    if (!dotnetPath) {
+        return [];
+    }
+    const dotnet = tl.tool(dotnetPath);
+
+    if (packageType === "sdk") {
+        dotnet.arg('--list-sdks');
+    } else {
+        dotnet.arg('--list-runtimes');
+    }
+
+    const result = dotnet.execSync();
+    if (!result || result.code == null || result.code !== 0) {
+         return [];
+    }
+    const stdout = result.stdout;
+
+    const versions: string[] = [];
+    const lines = stdout.split('\n');
+
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) {
+             continue;
+        }
+
+        let version: string | undefined;
+        if (packageType === "sdk") {
+            // SDK format: "6.0.100 [/path/to/sdk]"
+            const match = trimmed.match(/^(\S+)\s+\[/);
+            if (match) version = match[1];
+        } else {
+            // Runtime format: "Microsoft.NETCore.App 6.0.0 [/path/to/runtime]"
+            const match = trimmed.match(/^\S+\s+(\S+)\s+\[/);
+            if (match) version = match[1];
+        }
+
+        if (version && semver.valid(version)) {
+            versions.push(version);
+        }
+    }
+
+    return versions;
+}
+
+function checkVersionInDotnetCLI(versionInfo: VersionInfo | VersionInfo[], packageType: string): boolean {
+    let versions: VersionInfo[];
+    if (!Array.isArray(versionInfo)) {
+         versions = [ versionInfo ];
+    } else {
+         versions = versionInfo;
+    }
+    const dotnetPath = tl.which('dotnet', false);
+    if (!dotnetPath) {
+        return false;
+    }
+    const dotnet = tl.tool(dotnetPath);
+
+    if (packageType === "sdk") {
+        dotnet.arg('--list-sdks');
+    } else {
+        dotnet.arg('--list-runtimes');
+    }
+
+    const result = dotnet.execSync();
+    if (!result || result.code == null || result.code !== 0) {
+        return false;
+    }
+    const stdout = result.stdout;
+
+    const notFoundedversions = versions.filter(version => !stdout.includes(version.getVersion()));
+
+    return notFoundedversions.length === 0;
 }
 
 /**
@@ -74,6 +226,7 @@ async function installDotNet(
         let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
         for (let index = 0; index < versionsToInstall.length; index++) {
             const version = versionsToInstall[index];
+            console.log(tl.loc("InstallingFromGlobalJson", version.getVersion()));
             let url = versionFetcher.getDownloadUrl(version);
             if (!dotNetCoreInstaller.isVersionInstalled(version.getVersion())) {
                 await dotNetCoreInstaller.downloadAndInstall(version, url);

@@ -58,7 +58,7 @@ async function main(): Promise<void> {
         if (entraWifServiceConnectionName && feedUrl) {
             const urlPieces = feedUrl.split('/');
             let feedName = '';
-            urlPieces.at(-1) === '' ? feedName = urlPieces.at(-4) : feedName = urlPieces.at(-3);
+            urlPieces[urlPieces.length - 1] === '' ? feedName = urlPieces[urlPieces.length - 4] : feedName = urlPieces[urlPieces.length - 3];
 
             const feedTenant = await getFeedTenantId(feedUrl);
             const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);

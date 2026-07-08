@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import path = require('path');
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
-describe("Pull configuration settings test", function(){
+describe("Export task configuration settings test", function(){
     this.timeout(30000);
 
     before(async ()=> {
@@ -246,6 +246,20 @@ describe("Pull configuration settings test", function(){
             assert.strictEqual(tr.warningIssues.length, 0, "should have no warning");
             assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
             assert.strictEqual(tr.errorIssues[0], "loc_mock_InvalidSecretUrl");
+        },tr);
+    });
+
+    it("Trim any trailing forward slash in a store endpoint", async()=> {
+        const taskPath = path.join(__dirname, "downloadKVWithInvalidStoreEndpoint.js");
+        const tr = new MockTestRunner(taskPath);
+
+        await tr.runAsync();
+
+        runValidations(()=>{ 
+            assert.strictEqual(tr.succeeded, true, "should have succeeded");
+            assert.strictEqual(tr.warningIssues.length, 0, "should have no warnings");
+            assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
+            assert.ok(tr.stdout.indexOf("loc_mock_AppConfigurationEndpointTitle https://Test.azconfig.io") >= 0, "App Configuration Endpoint: https://Test.azconfig.io");
         },tr);
     });
 })

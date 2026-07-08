@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 255,
-    "Patch": 0
+    "Minor": 277,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -128,6 +128,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
     },
     {
+      "name": "kind",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.kind"
+    },
+    {
       "name": "targetPort",
       "type": "string",
       "label": "ms-resource:loc.input.label.targetPort",
@@ -180,10 +187,15 @@
     "Node20_1": {
       "target": "azurecontainerapps.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "ms-resource:loc.messages.AcrAccessTokenAuthFailed",
+    "AcrLogoutFailed": "ms-resource:loc.messages.AcrLogoutFailed",
     "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
     "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
     "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",

@@ -219,4 +219,17 @@ describe("Create Snapshot test", function () {
         }, tr);
     });
 
+    it("Trim trailing forward slash in store endpoint", async () => {
+        const taskPath = path.join(__dirname, "createSnapshotWithInvalidStoreEndpoint.js");
+        const tr = new MockTestRunner(taskPath);
+
+        await tr.runAsync();
+        runValidations(() => {
+            assert.strictEqual(tr.succeeded, true, "should have succeeded");
+            assert.strictEqual(tr.warningIssues.length, 0, "should have no warnings");
+            assert.strictEqual(tr.errorIssues.length, 0, "should have no errors");
+            assert.ok(tr.stdout.indexOf("loc_mock_AzureAppConfigurationEndpointTitle https://Test.azconfig.io") >= 0, "App Configuration Endpoint: https://Test.azconfig.io");
+        }, tr);
+    });
+
 });

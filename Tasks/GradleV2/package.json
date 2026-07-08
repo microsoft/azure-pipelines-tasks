@@ -3,6 +3,10 @@
   "version": "2.208.0",
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
+  "scripts": {
+    "build": "node ../../make.js build --task GradleV2",
+    "serverBuild": "node ../../make.js serverBuild --task GradleV2"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
@@ -11,11 +15,16 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-codeanalysis-common": "2.242.0",
-    "azure-pipelines-tasks-codecoverage-tools": "^3.242.0",
-    "azure-pipelines-tasks-java-common": "2.219.1"
+    "azure-pipelines-tasks-codeanalysis-common": "2.276.0",
+    "azure-pipelines-tasks-codecoverage-tools": "^3.276.0",
+    "azure-pipelines-tasks-java-common": "2.272.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "serialize-javascript": "7.0.5",
+    "form-data": "^4.0.4",
+    "minimatch": "5.1.8"
   }
 }

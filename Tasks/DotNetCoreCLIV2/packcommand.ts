@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as utility from "azure-pipelines-tasks-packaging-common/PackUtilities";
 
 import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import * as semver from "semver";
 
 export async function run(): Promise<void> {
 
@@ -74,6 +75,19 @@ export async function run(): Promise<void> {
 
                 version = versionMatches[0];
                 break;
+             
+            case "bySemVerBuildNumber":
+                tl.debug("Getting version number using SemVer build number");
+
+                let semVerBuildNumber: string = tl.getVariable("BUILD_BUILDNUMBER");
+                tl.debug(`Build number: ${semVerBuildNumber}`);
+                if (!semver.valid(semVerBuildNumber)) {
+                  tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidSemVer"));
+                  return;
+                }  
+                version = semVerBuildNumber;
+                break;
+
         }
 
         tl.debug(`Version to use: ${version}`);

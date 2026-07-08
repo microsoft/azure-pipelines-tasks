@@ -74,13 +74,9 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
         helmCli.addArgument('--namespace '.concat(namespace));
 
     const execResult = helmCli.execHelmCommand(true);
-    const skipHelmManifestNullParts = tl.getPipelineFeature("SkipHelmManifestNullParts");
 
     yaml.safeLoadAll(execResult.stdout, (doc) => {
-        if (skipHelmManifestNullParts && doc === null) {
-            return;
-        }
-
+        if (doc === null) return;
         manifests.push(doc);
     });
 

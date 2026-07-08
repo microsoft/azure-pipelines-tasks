@@ -1,0 +1,93 @@
+{
+    "inputs": [
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "download",
+            "helpMarkDown": "The Universal Package command to run.",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "options": {
+                "download": "Download",
+                "publish": "Publish"
+            }
+        },
+        {
+            "name": "adoServiceConnection",
+            "aliases": ["workloadIdentityServiceConnection", "azureDevOpsServiceConnection"],
+            "type": "connectedService:workloadidentityuser",
+            "label": "Azure DevOps Service Connection",
+            "required": false,
+            "helpMarkDown": "Optional. The name of the Azure DevOps Service Connection to use. If not set, build identity is used.",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            }
+        },
+        {
+            "name": "organization",
+            "type": "string",
+            "label": "Organization",
+            "required": false,
+            "helpMarkDown": "Optional. The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg). Required when using a service connection for cross-organization access. When not specified, uses the current pipeline's organization.",
+            "visibleRule": "adoServiceConnection != ''"
+        },
+        {
+            "name": "feed",
+            "type": "string",
+            "label": "Feed",
+            "required": true,
+            "helpMarkDown": "The feed name. For project-scoped feeds, use 'project/feed' format."
+        },
+        {
+            "name": "packageName",
+            "type": "string",
+            "label": "Package name",
+            "required": true,
+            "helpMarkDown": "The name of the Universal Package. Package names must be lower case and can only use letters, numbers, and dashes (-)."
+        },
+        {
+            "name": "packageVersion",
+            "type": "string",
+            "label": "Package version",
+            "required": false,
+            "helpMarkDown": "The version of the package. Required for download. For publish, either specify this or use 'versionIncrement' for auto-incrementing. For downloads, this can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2."
+        },
+        {
+            "name": "versionIncrement",
+            "type": "pickList",
+            "label": "Version increment",
+            "required": false,
+            "helpMarkDown": "Cannot be used with 'packageVersion'. Automatically increment the package version. Queries the feed for the highest existing version and increments the specified component. For new packages, starts at 1.0.0 (major), 0.1.0 (minor), or 0.0.1 (patch).",
+            "visibleRule": "command = publish",
+            "options": {
+                "major": "Major",
+                "minor": "Minor",
+                "patch": "Patch"
+            }
+        },
+        {
+            "name": "directory",
+            "type": "filePath",
+            "label": "Directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "For downloads: folder path where the package's contents will be downloaded. For publish: path to the directory containing files to publish.",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "packageDescription",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "helpMarkDown": "Optional. Description of the contents of this package and/or the changes made in this version of the package.",
+            "required": "false",
+            "visibleRule": "command = publish"
+        }
+    ]
+}

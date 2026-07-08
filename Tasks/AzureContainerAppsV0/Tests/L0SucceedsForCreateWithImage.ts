@@ -66,6 +66,10 @@ tmr.registerMock('./src/ContainerRegistryHelper', {
             pushImageToAcr: function() {
                 console.log('[MOCK] pushImageToAcr called');
                 return;
+            },
+            logoutAcr: function() {
+                console.log('[MOCK] logoutAcr called');
+                return;
             }
         };
     }

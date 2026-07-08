@@ -1,7 +1,7 @@
 import Constants from "./constant";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as crypto from "crypto";
-import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecSyncOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Writable } from "stream";
 import { RegistryCredential } from './registrycredentialfactory';
 import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
@@ -13,6 +13,15 @@ interface Cmd {
 }
 
 export default class Util {
+  public static dockerLogin(server: string, username: string, password: string): IExecSyncResult {
+    return tl.execSync("docker", ["login", "-u", username, "-p", password, server], Constants.execSyncSilentOption);
+  }
+
+  public static dockerLogout(server?: string): IExecSyncResult {
+    const args: string[] = server ? ["logout", server] : ["logout"];
+    return tl.execSync("docker", args, Constants.execSyncSilentOption);
+  }
+
   public static expandEnv(input: string, ...exceptKeys: string[]): string {
     const pattern: RegExp = new RegExp(/\$([a-zA-Z0-9_]+)|\${([a-zA-Z0-9_]+)}/g);
     const exceptSet: Set<string> = new Set(exceptKeys);
@@ -34,7 +43,7 @@ export default class Util {
     var toSign = resourceUri + '\n' + expires;
 
     // Use crypto
-    var hmac = crypto.createHmac('sha256', new Buffer(signingKey, 'base64'));
+    var hmac = crypto.createHmac('sha256', Buffer.from(signingKey, 'base64'));
     hmac.update(toSign);
     var base64UriEncoded = encodeURIComponent(hmac.digest('base64'));
 

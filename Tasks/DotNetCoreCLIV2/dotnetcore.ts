@@ -3,7 +3,7 @@ import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
-import * as toml from 'toml';
+import * as JSON5 from 'json5';
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -118,7 +118,7 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
-            if (this.isBuildCommand()) {
+            if (this.isBuildCommand() || (this.isPublishCommand() && this.shouldUsePublishLogger())) {
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -146,13 +146,84 @@ export class dotNetExe {
         }
     }
 
+    private findGlobalJsonFile(): string | null {
+        // Determine the search boundary mirroring the agent's own logic:
+        // - Default: Agent.BuildDirectory (_work/1)
+        // - If AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES=true: widen to Agent.WorkFolder (_work/)
+        // See: RepositoryPlugin.cs:156-166 and BuildDirectoryManager.cs:197-210
+        const allowWorkDirRepos = (tl.getVariable('AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES') || '').toLowerCase() === 'true';
+        let boundary: string;
+
+        if (allowWorkDirRepos) {
+            boundary = path.resolve(tl.getVariable('Agent.WorkFolder') || process.cwd());
+            tl.debug(`AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled. Using Agent.WorkFolder '${boundary}' as search boundary.`);
+        } else {
+            boundary = path.resolve(tl.getVariable('Agent.BuildDirectory') || process.cwd());
+            tl.debug(`Using Agent.BuildDirectory '${boundary}' as search boundary.`);
+        }
+
+        let searchDir = path.resolve(this.workingDirectory || process.cwd());
+
+        tl.debug(`Searching for global.json starting in '${searchDir}' up to boundary '${boundary}'.`);
+
+        const isInside = (dir: string, root: string): boolean => {
+            const rel = path.relative(root, dir);
+            return !rel.startsWith('..') && !path.isAbsolute(rel);
+        };
+
+        if (!isInside(searchDir, boundary)) {
+            console.log(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
+            return null;
+        }
+
+        while (true) {
+            const candidate = path.join(searchDir, 'global.json');
+            tl.debug(`Checking for global.json at: ${candidate}`);
+
+            if (tl.exist(candidate)) {
+                tl.debug(`Found global.json at: ${candidate}`);
+                return candidate;
+            }
+
+            const parentDir = path.dirname(searchDir);
+            if (parentDir === searchDir) {
+                break;
+            }
+
+            const rel = path.relative(boundary, parentDir);
+            if (rel.startsWith('..') || path.isAbsolute(rel)) {
+                break;
+            }
+
+            searchDir = parentDir;
+        }
+
+        return null;
+    }
+
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("dotnet.config")) {
+        const globalJsonPath = this.findGlobalJsonFile();
+
+        if (!globalJsonPath) {
+            tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let dotnetConfig = fs.readFileSync("dotnet.config", 'utf8');
-        return toml.parse(dotnetConfig).dotnet?.test?.runner?.name === 'Microsoft.Testing.Platform';
+        let globalJsonContents = fs.readFileSync(globalJsonPath, 'utf8');
+        if (!globalJsonContents.length) {
+            tl.debug("global.json is empty. Test run is VSTest");
+            return false;
+        }
+
+        try {
+            const parsed = JSON5.parse(globalJsonContents);
+            const testRunner = parsed?.test?.runner;
+            tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
+            return testRunner === 'Microsoft.Testing.Platform';
+        } catch (error) {
+            tl.warning(`Error occurred reading global.json at ${globalJsonPath}: ${error}`);
+            return false;
+        }
     }
 
     private async executeTestCommand(): Promise<void> {
@@ -188,7 +259,7 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP) {
+            if (isMTP && projectFile.length > 0) {
                 // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
                 if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
                     dotnet.arg("--project");
@@ -449,6 +520,20 @@ export class dotNetExe {
 
     private isRunCommand(): boolean {
         return this.command === "run";
+    }
+
+    private shouldUsePublishLogger(): boolean {
+        // Feature flag to control MSBuild logger for dotnet publish command
+        // Default: enabled (opt-out pattern) - users can disable if needed
+        // Set DISTRIBUTEDTASK_TASKS_DISABLEDOTNETPUBLISHLOGGER=true to disable
+        const disablePublishLogger = tl.getPipelineFeature('DisableDotNetPublishLogger');
+        
+        if (disablePublishLogger) {
+            tl.debug('MSBuild logger disabled for dotnet publish via feature flag DisableDotNetPublishLogger');
+            return false;
+        }
+        
+        return true;
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {

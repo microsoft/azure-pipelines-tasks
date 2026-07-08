@@ -209,6 +209,7 @@ For more information on the structure of the YAML configuration file, please vis
 | `environmentVariables`    | No       | A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret. |
 | `ingress`                 | No       | Possible options: external, internal, disabled. If set to `external` (default value if not provided when creating a Container App), the Container App will be visible from the internet or a VNET, depending on the app environment endpoint configured. If set to `internal`, the Container App will be visible from within the app environment only. If set to `disabled`, ingress will be disabled for this Container App and will not have an HTTP or TCP endpoint. |
 | `disableTelemetry`        | No       | If set to `true`, no telemetry will be collected by this Azure DevOps Task. If set to `false`, or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task. |
+| `kind`                    | No       | Specifies the type of Container App to create. Set to `functionapp` to deploy Azure Functions directly to Container Apps using the native Azure Functions runtime. Leave unset for standard Container Apps. This enables serverless Functions without requiring a separate Functions App resource. |
 
 ## Usage
 
@@ -402,6 +403,22 @@ steps:
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       dockerfilePath: 'test.Dockerfile'
+```
+
+
+### Native Azure Functions on Container Apps
+
+```yml
+steps:
+
+  - task: AzureContainerApps@1
+    displayName: Build and deploy Container App
+    inputs:
+      connectedServiceNameARM: 'azure-subscription-service-connection'
+      appSourcePath: '$(System.DefaultWorkingDirectory)'
+      acrName: 'mytestacr'
+      containerAppEnvironment: 'my-test-container-app-env'
+      kind: 'functionapp'
 ```
 
 This will create a new Container App named `ado-task-app-<build-id>-<build-number>` in a new resource group named

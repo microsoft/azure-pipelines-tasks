@@ -3,6 +3,8 @@
   "version": "2.0.0",
   "description": "Index sources and publish symbols.",
   "scripts": {
+    "build": "node ../../make.js build --task PublishSymbolsV2",
+    "serverBuild": "node ../../make.js serverBuild --task PublishSymbolsV2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,19 +21,21 @@
   "dependencies": {
     "@azure/msal-node": "^2.7.0",
     "@types/mocha": "5.2.6",
-    "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-artifacts-common": "^2.245.1",
-    "azure-pipelines-tasks-packaging-common": "^3.236.0",
-    "azure-pipelines-tasks-utility-common": "^3.225.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.254.0",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.6",
+    "azure-pipelines-tasks-artifacts-common": "^2.273.0",
+    "azure-pipelines-tasks-packaging-common": "^3.273.1",
+    "azure-pipelines-tasks-utility-common": "^3.270.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.276.0",
     "agent-base": "^6.0.2",
-    "msal-node1": "npm:@azure/msal-node@^1.18.4",
     "msal-node2": "npm:@azure/msal-node@^2.9.2",
     "uuid": "^10.0.0",
     "semver": "^6.3.1"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "minimatch": "3.1.5"
   }
 }

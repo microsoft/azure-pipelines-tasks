@@ -52,6 +52,12 @@ class API {
         }, this.projectName);
     }
 
+    public async addBuildTags(buildId: number, tags: string[]) {
+        const api = await this.getBuildApi();
+
+        return await api.addBuildTags(tags, this.projectName, buildId);
+    }
+
     public async updateBuild(buildId: number) {
         const api = await this.getBuildApi();
 

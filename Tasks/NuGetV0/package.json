@@ -4,6 +4,8 @@
   "description": "Nuget Build Task",
   "main": "nuget.js",
   "scripts": {
+    "build": "node ../../make.js build --task NuGetV0",
+    "serverBuild": "node ../../make.js serverBuild --task NuGetV0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +26,8 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "overrides": {
+    "minimatch": "^3.1.5"
   }
 }

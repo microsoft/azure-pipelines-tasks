@@ -5,10 +5,12 @@ import { MysqlTaskParameter } from '../models/MysqlTaskParameter';
 
 export class MysqlClientL0Tests  {
 
-    public static mysqlTaskParameter: MysqlTaskParameter = new MysqlTaskParameter();
-    public static sqlClient: ISqlClient = new  MysqlClient(MysqlClientL0Tests.mysqlTaskParameter, "/usr/local/bin/mysql");
+    public static mysqlTaskParameter: MysqlTaskParameter;
+    public static sqlClient: ISqlClient;
 
     public static async startL0Tests() {
+        MysqlClientL0Tests.mysqlTaskParameter = new MysqlTaskParameter();
+        MysqlClientL0Tests.sqlClient = new MysqlClient(MysqlClientL0Tests.mysqlTaskParameter, "/usr/local/bin/mysql");
         await MysqlClientL0Tests.executeSqlCommand();
     }
     

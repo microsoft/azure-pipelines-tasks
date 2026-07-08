@@ -26,7 +26,8 @@ class PublishOptions implements INuGetCommandOptions {
         public configFile: string,
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
-        public environment: ngToolRunner.NuGetEnvironmentSettings) { }
+        public environment: ngToolRunner.NuGetEnvironmentSettings,
+        public timeoutSeconds?: number) { }
 }
 
 interface IVstsNuGetPushOptions {
@@ -44,6 +45,7 @@ interface EndpointCredentials {
 }
 
 export async function run(nuGetPath: string): Promise<void> {
+    const timeoutSeconds = getRequestTimeoutSeconds();
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
@@ -56,9 +58,6 @@ export async function run(nuGetPath: string): Promise<void> {
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
     try {
-
-
-
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
@@ -249,7 +248,8 @@ export async function run(nuGetPath: string): Promise<void> {
                     configFile,
                     verbosity,
                     authInfo,
-                    environmentSettings);
+                    environmentSettings,
+                    timeoutSeconds);
 
                 for (const packageFile of filesList) {
                     await publishPackageNuGet(packageFile, publishOptions, authInfo, continueOnConflict);
@@ -299,6 +299,10 @@ async function publishPackageNuGet(
     if (options.verbosity && options.verbosity !== "-") {
         nugetTool.arg("-Verbosity");
         nugetTool.arg(options.verbosity);
+    }
+
+    if (options.timeoutSeconds !== undefined) {
+        nugetTool.arg(["-Timeout", String(options.timeoutSeconds)]);
     }
 
     // Listen for stderr output to write timeline results for the build.
@@ -417,6 +421,30 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
+// Reads the optional requestTimeout input (in seconds) for `nuget.exe push -Timeout`.
+// Returns undefined if not set. Emits a warning when the input is invalid (not a positive whole number).
+// Caps the value at 600 seconds (10 minutes).
+function getRequestTimeoutSeconds(): number | undefined {
+    const inputValue: string = tl.getInput("requestTimeout", false);
+    if (!inputValue) {
+        return undefined;
+    }
+
+    const parsed = Number(inputValue);
+    if (Number.isNaN(parsed)) {
+        tl.warning(tl.loc("Warning_InvalidRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    if (parsed < 0) {
+        tl.warning(tl.loc("Warning_NegativeRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    const maxTimeoutSeconds = 600; // 10 minutes
+    return Math.min(Math.floor(parsed), maxTimeoutSeconds);
+}
+
 async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
@@ -485,7 +513,7 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): P
         "Authorization": "Basic " + token64
     };
 
-    const response = await sendRequest(request);
+    const response: WebResponse = await sendRequest(request);
 
     if (response.statusCode == 200) {
         if (response.body) {
