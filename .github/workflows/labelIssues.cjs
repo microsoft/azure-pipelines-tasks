@@ -44,6 +44,135 @@ function escapeRegExp(text) {
 }
 
 /**
+ * Normalize a task-folder name or a user-typed task token to a comparable key:
+ * lower-case, drop anything from `@` on (a version like `@5`), keep only
+ * alphanumerics, then strip a trailing version segment (`v` + digits). So
+ * `AzureCLIV2`, `AzureCLI@2` and `Azure CLI` all normalize to `azurecli`.
+ *
+ * Kept in sync with the same-named helper in assignOwners.cjs, which resolves
+ * owners from CODEOWNERS the same way.
+ * @param {string} value
+ * @returns {string}
+ */
+function normalizeTaskKey(value) {
+    if (!value) {
+        return '';
+    }
+    let s = String(value).toLowerCase();
+    const at = s.indexOf('@');
+    if (at !== -1) {
+        s = s.slice(0, at);
+    }
+    s = s.replace(/[^a-z0-9]/g, '');
+    s = s.replace(/v\d+$/, '');
+    return s;
+}
+
+/**
+ * Canonical `Task:` label name for a task folder: the folder name with any
+ * trailing version segment (`V0`, `V2`, `V10`) removed, so every version of a
+ * task shares one label. e.g. `AzureCLIV2` -> `AzureCLI`.
+ * @param {string} folder
+ * @returns {string}
+ */
+function canonicalTaskName(folder) {
+    return String(folder).replace(/V\d+$/, '');
+}
+
+/**
+ * Build a lookup from normalized task key -> Set of canonical task names, from
+ * the list of `Tasks/<Folder>` directory names in the repo.
+ *
+ * This is the single source of truth for `Task:` labels: it always reflects
+ * the tasks that actually exist in the repo, so labels never drift when tasks
+ * are added, renamed, or removed. That drift (hardcoded `Task:` values in
+ * issue-rules.yml pointing at renamed/removed tasks, or vague tokens matching
+ * several tasks) is exactly the failure mode this replaces.
+ * @param {string[]} taskFolders
+ * @returns {Map<string, Set<string>>}
+ */
+function buildTaskIndex(taskFolders) {
+    const index = new Map();
+    for (const folder of taskFolders || []) {
+        if (!folder || /^Common$/i.test(folder)) {
+            continue;
+        }
+        const key = normalizeTaskKey(folder);
+        if (!key) {
+            continue;
+        }
+        if (!index.has(key)) {
+            index.set(key, new Set());
+        }
+        index.get(key).add(canonicalTaskName(folder));
+    }
+    return index;
+}
+
+/**
+ * Resolve the `Task:` label name for a free-text "Task name" field value by
+ * matching it against the real `Tasks/` folders (via `buildTaskIndex`).
+ *
+ * An exact normalized-key match wins. Otherwise a one-directional prefix match
+ * (a folder whose key *extends* the entered value, value length >= 5) is used,
+ * but only when it is unambiguous; a vague entry like "Azure" that matches many
+ * folders resolves to nothing rather than guessing. Returns the canonical task
+ * name (without the `Task: ` prefix), or '' when nothing resolves.
+ *
+ * The issue form guides users to enter the bare task name (placeholder
+ * "E.g. AzurePowerShell", with a separate Task version field), so exact/prefix
+ * matching on the whole normalized value is sufficient in practice. A verbose
+ * free-text entry that does not normalize to a known task simply yields no
+ * Task: label (the issue still gets its Area: label) rather than a wrong guess.
+ * @param {string} taskName
+ * @param {Map<string, Set<string>>} taskIndex
+ * @returns {string}
+ */
+function resolveTaskName(taskName, taskIndex) {
+    const key = normalizeTaskKey(taskName);
+    if (!key || !taskIndex) {
+        return '';
+    }
+    if (taskIndex.has(key)) {
+        const set = taskIndex.get(key);
+        return set.size === 1 ? [...set][0] : '';
+    }
+    if (key.length >= 5) {
+        const hits = new Set();
+        for (const [folderKey, set] of taskIndex) {
+            if (folderKey.startsWith(key)) {
+                for (const canonical of set) {
+                    hits.add(canonical);
+                }
+            }
+        }
+        if (hits.size === 1) {
+            return [...hits][0];
+        }
+    }
+    return '';
+}
+
+/**
+ * Read the `Tasks/<Folder>` directory names from the checked-out repo. The
+ * labeling workflow runs after actions/checkout, so the whole repo (including
+ * Tasks/) is on disk. Returns [] if the directory is missing, so labeling
+ * degrades gracefully to Area-only rather than failing.
+ * @returns {string[]}
+ */
+function loadTaskFolders() {
+    const tasksDir = path.join(process.cwd(), 'Tasks');
+    try {
+        return fs
+            .readdirSync(tasksDir, { withFileTypes: true })
+            .filter(entry => entry.isDirectory())
+            .map(entry => entry.name);
+    } catch (err) {
+        return [];
+    }
+}
+
+/**
  * Extracts the value a user entered for a given GitHub issue-form field.
  * Forms render each input as:
  *
@@ -90,9 +219,11 @@ function extractField(body, label) {
  * @param {any[]} args.rules `rules` from issue-rules.yml.
  * @param {any[]} args.nomatches `nomatches` from issue-rules.yml.
  * @param {any[]} args.tags `tags` from issue-rules.yml.
+ * @param {string[]} args.taskFolders `Tasks/<Folder>` directory names, used to
+ *   resolve the `Task:` label from the entered task name.
  * @returns {{ labels: Set<string>, assignees: Set<string>, taskName: string, matched: boolean }}
  */
-function computeLabels({ title, body, existingLabels, rules, nomatches, tags }) {
+function computeLabels({ title, body, existingLabels, rules, nomatches, tags, taskFolders }) {
     const labels = new Set();
     const assignees = new Set();
     const existing = new Set(existingLabels || []);
@@ -117,6 +248,16 @@ function computeLabels({ title, body, existingLabels, rules, nomatches, tags }) 
             (rule.addLabels || []).forEach(label => labels.add(label));
             (rule.assign || []).forEach(user => assignees.add(user));
         }
+    }
+
+    // Resolve the `Task:` label from the actual Tasks/ folders in the repo,
+    // rather than from hardcoded `Task:` values in issue-rules.yml (which drift
+    // when tasks are renamed/removed). This is independent of the Area rules
+    // above and does not affect `matched`, so the nomatches fallback below is
+    // unchanged.
+    const resolvedTask = resolveTaskName(taskName, buildTaskIndex(taskFolders));
+    if (resolvedTask) {
+        labels.add('Task: ' + resolvedTask);
     }
 
     // Fallback: if nothing matched, scan the whole issue for team hints.
@@ -181,16 +322,24 @@ async function run({ github, context, core }) {
 
     const existingLabels = (issue.labels || []).map(label => (typeof label === 'string' ? label : label.name));
 
+    const taskFolders = loadTaskFolders();
+    if (taskFolders.length === 0) {
+        // Fail safe to Area-only labeling, but make the misconfiguration visible:
+        // this normally means the repo wasn't checked out or cwd isn't the repo root.
+        core.warning(`No Tasks/ folders found under "${process.cwd()}"; Task: labels will not be applied.`);
+    }
+
     const { labels, assignees, taskName, matched } = computeLabels({
         title: issue.title || '',
         body: issue.body || '',
         existingLabels,
         rules: doc.rules || [],
         nomatches: doc.nomatches || [],
-        tags: doc.tags || []
+        tags: doc.tags || [],
+        taskFolders
     });
 
-    core.info(`Task name: "${taskName || '(none)'}" | rule match: ${matched}`);
+    core.info(`Task name: "${taskName || '(none)'}" | rule match: ${matched} | task folders: ${taskFolders.length}`);
 
     const { owner, repo } = context.repo;
     const issue_number = issue.number;
@@ -217,3 +366,7 @@ async function run({ github, context, core }) {
 module.exports = run;
 module.exports.computeLabels = computeLabels;
 module.exports.extractField = extractField;
+module.exports.normalizeTaskKey = normalizeTaskKey;
+module.exports.canonicalTaskName = canonicalTaskName;
+module.exports.buildTaskIndex = buildTaskIndex;
+module.exports.resolveTaskName = resolveTaskName;
