@@ -53,6 +53,7 @@ Email is sent via SMTP using these secrets (all optional; email is skipped when
 | `MAIL_FROM` | From address (defaults to `SMTP_USERNAME`) |
 | `SMTP_SERVER` | SMTP relay host |
 | `SMTP_PORT` | Port (default 587; 465 implies TLS) |
+| `SMTP_SECURE` | Optional: set to `true` to force TLS (otherwise inferred from port) |
 | `SMTP_USERNAME` / `SMTP_PASSWORD` | SMTP credentials |
 
 Use any authenticated relay reachable from GitHub-hosted runners, e.g. Azure
