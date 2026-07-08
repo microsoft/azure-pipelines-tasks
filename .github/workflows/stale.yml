@@ -24,7 +24,7 @@ jobs:
         days-before-stale: 180
         days-before-close: 5
         operations-per-run: 100
-        exempt-issue-labels: 'backlog,Area: ArtifactsPackages'
+        exempt-issue-labels: 'backlog,Area: ArtifactsPackages,Need more info,Waiting for author feedback,Need Repro'
         remove-stale-when-updated: true
 
   # Fast-track issues that are blocked on the reporter: once labeled Need more
