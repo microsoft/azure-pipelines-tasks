@@ -56,6 +56,8 @@ on:
         required: false
       SMTP_PASSWORD:
         required: false
+      SMTP_SECURE:
+        required: false
   workflow_dispatch:
     inputs:
       areas:
