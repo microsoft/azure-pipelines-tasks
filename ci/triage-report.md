@@ -6,7 +6,9 @@ their own scope and their own mail secrets.
 
 - Engine workflow (reusable): [`.github/workflows/triage-report.yml`](../.github/workflows/triage-report.yml)
 - Example caller: [`.github/workflows/triage-report-release-rm.yml`](../.github/workflows/triage-report-release-rm.yml)
-- Report generator: [`ci/triage-report.js`](./triage-report.js)
+- Orchestrator (entry point): [`ci/triage-report.js`](./triage-report.js) &mdash; parses config/scope, fetches issues, wires the two modules below.
+- Report generator (pure): [`ci/triage-report/report.js`](./triage-report/report.js) &mdash; `buildReport(data, cfg)` &rarr; `{ text, html, stats }`, no I/O.
+- Email delivery: [`ci/triage-report/mailer.js`](./triage-report/mailer.js) &mdash; `sendMail(subject, html, text)` over SMTP (nodemailer).
 
 ## What the report contains
 
@@ -37,7 +39,8 @@ Provide at least one of `areas` or `owners`.
    `.github/workflows/triage-report-<team>.yml`.
 2. Set `areas` / `owners` / `report_title` under `with:`.
 3. Create your mail secrets and map them under `secrets:`.
-4. Uncomment the `schedule:` trigger (default weekly) or keep it manual.
+4. Adjust the `schedule:` cron (default weekly, Monday 08:00 UTC) or remove it to
+   keep the report manual-only.
 
 ## Email delivery
 
