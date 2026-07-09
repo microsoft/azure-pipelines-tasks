@@ -170,7 +170,7 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - ${{ if parameters.signTasks }}:
+  - ${{ if eq(parameters.signTasks, true) }}:
     - template: /ci/sign-all-tasks.yml@self
       parameters:
         layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
