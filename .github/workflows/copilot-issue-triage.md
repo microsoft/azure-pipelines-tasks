@@ -185,6 +185,10 @@ on:
                 core.info(`Ignoring labeled event: '${context.payload.label?.name}' is not the approval label.`);
               } else if (!hasLbl(issue, NOMINATION_LABEL)) {
                 core.info(`#${issue.number} got approval label but has no nomination label — ignoring.`);
+              } else if ((issue.assignees || []).length > 0) {
+                // Someone is already working this issue — don't hand it to
+                // Copilot and clobber a manual assignment.
+                core.info(`#${issue.number} approved but already assigned to ${(issue.assignees || []).map(a => a.login).join(', ')} — skipping.`);
               } else {
                 out.mode = 'confirm-event';
                 out.confirm_numbers = String(issue.number);
@@ -267,10 +271,10 @@ on:
             out.mode = 'scheduled';
 
             // (A) CONFIRM SET — issues a maintainer has approved (BOTH labels
-            // present). Separate label: filters are ANDed. These get assigned
-            // to the Copilot agent this run.
+            // present) and that nobody is already assigned to. Separate label:
+            // filters are ANDed. These get assigned to the Copilot agent this run.
             const confirmQuery =
-              `is:issue is:open repo:${owner}/${repo} ` +
+              `is:issue is:open repo:${owner}/${repo} no:assignee ` +
               `label:"${NOMINATION_LABEL}" label:"${APPROVAL_LABEL}"`;
             core.info(`Confirm search: ${confirmQuery}`);
             const confirmResp = await github.rest.search.issuesAndPullRequests({
