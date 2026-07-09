@@ -18,7 +18,8 @@ description: >-
 # SAFETY MODEL (why this is safe to run on a large public repo):
 #   * The agent job is READ-ONLY. Every write goes through `safe-outputs:`,
 #     which the compiler wires into separate, tightly-scoped jobs.
-#   * Assignment is gated on an opt-in label `copilot-candidate` (the analog of
+#   * Assignment is gated on an opt-in gate label configured per team via
+#     `CONFIG.gateLabel` (RM ships `copilot-candidate-rm`; the analog of
 #     issue-monster's `cookie` label). Nothing is auto-assigned until a
 #     maintainer approves an issue by adding that label.
 #   * `assign-to-agent` is restricted to the `copilot` agent, capped at 2/run,
@@ -76,7 +77,7 @@ on:
           // =================================================================
           const CONFIG = {
             team: 'RM',                                  // shown in logs only
-            gateLabel: 'copilot-candidate',              // opt-in approval label (use a DISTINCT one per team)
+            gateLabel: 'copilot-candidate-rm',           // opt-in approval label (use a DISTINCT one per team)
             areaLabels: ['Area: Release', 'Area:RM'],    // in-scope Area labels
             codeownersHandles: ['manolerazvan'],         // CODEOWNERS owners whose Tasks/* are in scope
             excludeLabels: [                             // disqualifying labels (triage/route/aa-triaged intentionally NOT here)
@@ -292,7 +293,7 @@ safe-outputs:
     max: 2
     target: "*"
   messages:
-    run-started: "🤖 [{workflow_name}]({run_url}) scanning approved `copilot-candidate` issues…"
+    run-started: "🤖 [{workflow_name}]({run_url}) scanning approved candidate issues…"
     run-success: "🤖 [{workflow_name}]({run_url}) finished triage."
     run-failure: "🤖 [{workflow_name}]({run_url}) {status}."
 ---
@@ -310,8 +311,8 @@ issues are assigned, and every action is transparent.
 - **Candidate count**: ${{ needs.pre_activation.outputs.issue_count }}
 - **Candidate numbers**: ${{ needs.pre_activation.outputs.issue_numbers }}
 
-**Pre-filtered & prioritized candidates** (already gated on the
-`copilot-candidate` label, triaged to an `Area:`, actionable label present, no
+**Pre-filtered & prioritized candidates** (already gated on the team's opt-in
+gate label, triaged to an `Area:`, actionable label present, no
 assignee, no open Copilot PR — sorted by score):
 
 ```
@@ -364,7 +365,7 @@ Use the exact field name `issue_number` (underscore). Never pass a PR number.
 For each assigned issue, add a short comment via the `add_comment` safe-output:
 
 ```
-safeoutputs/add_comment(item_number=<number>, body="🤖 **Assigned to the Copilot coding agent**\n\nThis issue was approved (`copilot-candidate`) and looked well-scoped, so I've requested the Copilot coding agent to propose a fix PR. A maintainer will review the result.")
+safeoutputs/add_comment(item_number=<number>, body="🤖 **Assigned to the Copilot coding agent**\n\nThis issue was approved for automated triage and looked well-scoped, so I've requested the Copilot coding agent to propose a fix PR. A maintainer will review the result.")
 ```
 
 Specify `item_number` explicitly — this workflow runs on a schedule with no
@@ -377,7 +378,7 @@ triggering issue.
 - ✅ Comment on every issue you assign.
 - ✅ Prefer skipping over a risky assignment — a large task repo tolerates
   under-assignment far better than conflicting or wrong PRs.
-- ❌ Never assign an issue without the `copilot-candidate` gate label (the
+- ❌ Never assign an issue without the team's opt-in gate label (the
   pre-filter guarantees this — do not try to bypass it).
 - ❌ Never assign a pull request.
 
