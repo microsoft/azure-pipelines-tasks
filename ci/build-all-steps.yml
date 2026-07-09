@@ -1,7 +1,16 @@
 parameters:
-  os: ''
-  useSemverBuildConfig: false
-  generateReleaseNotes: true
+- name: os
+  type: string
+  default: ''
+- name: useSemverBuildConfig
+  type: boolean
+  default: false
+- name: generateReleaseNotes
+  type: boolean
+  default: true
+- name: signTasks
+  type: boolean
+  default: false
 
 steps:
 
@@ -169,9 +178,10 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - template: /ci/sign-all-tasks.yml@self
-    parameters:
-      layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+  - ${{ if parameters.signTasks }}:
+    - template: /ci/sign-all-tasks.yml@self
+      parameters:
+        layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js
