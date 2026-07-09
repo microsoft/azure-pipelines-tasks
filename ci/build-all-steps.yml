@@ -1,8 +1,16 @@
 parameters:
-  os: ''
-  useSemverBuildConfig: false
-  generateReleaseNotes: true
-  signTasks: true
+- name: os
+  type: string
+  default: ''
+- name: useSemverBuildConfig
+  type: boolean
+  default: false
+- name: generateReleaseNotes
+  type: boolean
+  default: true
+- name: signTasks
+  type: boolean
+  default: false
 
 steps:
 
@@ -170,7 +178,7 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - ${{ if eq(parameters.signTasks, true) }}:
+  - ${{ if parameters.signTasks }}:
     - template: /ci/sign-all-tasks.yml@self
       parameters:
         layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout

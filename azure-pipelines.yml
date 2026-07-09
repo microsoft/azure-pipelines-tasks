@@ -86,7 +86,6 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
-            signTasks: false
 
       # All tasks on Linux
       - job: build_all_linux

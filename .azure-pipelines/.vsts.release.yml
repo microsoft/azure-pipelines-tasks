@@ -140,6 +140,7 @@ extends:
           parameters:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
+            signTasks: true
 
       # Courtesy Push
       - job: courtesy_push
