@@ -35,13 +35,17 @@ steps:
   displayName: npm ci
 
 # Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm ci
-  displayName: npm ci min agent demands
-
-- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
-  displayName: Verify min agent demands
+# TEMPORARILY DISABLED: This check calls the GitHub API to fetch the latest agent
+# release, which requires a GitHub PAT. The classic PAT is blocked by the
+# 'Microsoft Open Source' enterprise policy (token lifetime > 8 days). Re-enable
+# once proper auth (e.g. a GitHub App installation token) is set up.
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm ci
+#   displayName: npm ci min agent demands
+#
+# - script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+#   displayName: Verify min agent demands
 
 - powershell: |
     $tasks = "${{ parameters.task }}"

@@ -1,0 +1,48 @@
+name: Auto Assign Owner from CODEOWNERS
+
+# Assigns the individual code owner(s) of the affected task to an issue,
+# using .github/CODEOWNERS as the source of truth. The affected task is taken
+# from the issue-form "Task name" field and from any `Task:` labels.
+#
+# Only assigns when the issue has no assignees yet, so it never overrides a
+# human decision. GitHub teams in CODEOWNERS are ignored (issues can only be
+# assigned to users). When several owners resolve, a single assignee is chosen
+# by priority (tarunramsinghani, then manolerazvan, else the first resolved).
+# No external npm dependencies are needed — CODEOWNERS and the issue body are
+# parsed as plain text.
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - labeled
+
+# The labeler adds several Area:/Task: labels per issue, and GitHub fires one
+# `labeled` event per label, so this workflow can be triggered several times
+# for the same issue at once. Serialize those runs per issue number so two of
+# them can't both pass the "no assignees yet" guard and each add a different
+# owner (addAssignees adds rather than replaces). cancel-in-progress is false
+# so a queued run still executes after the in-progress one finishes and can
+# observe the assignment it made. The module also re-reads live assignee state
+# before assigning; the two together guarantee it never double-assigns.
+concurrency:
+  group: assign-owner-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  assign_owner:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Assign owner from CODEOWNERS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assign owner
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { run } = require('./.github/workflows/assignOwners.cjs');
+            await run({ github, context, core });

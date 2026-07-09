@@ -1,7 +1,16 @@
 parameters:
-  os: ''
-  useSemverBuildConfig: false
-  generateReleaseNotes: true
+- name: os
+  type: string
+  default: ''
+- name: useSemverBuildConfig
+  type: boolean
+  default: false
+- name: generateReleaseNotes
+  type: boolean
+  default: true
+- name: signTasks
+  type: boolean
+  default: false
 
 steps:
 
@@ -44,15 +53,19 @@ steps:
   condition: eq(variables['SYSTEM.PULLREQUEST.ISFORK'], 'true')
 
 # Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm ci
-  displayName: npm ci min agent demands
-
-- script: node ./ci/verifyMinAgentDemands/index.js
-  env:
-    GITHUB_PAT: $(GitHubPAT)
-  displayName: Verify min agent demands
+# TEMPORARILY DISABLED: This check calls the GitHub API to fetch the latest agent
+# release, which requires a GitHub PAT. The classic PAT is blocked by the
+# 'Microsoft Open Source' enterprise policy (token lifetime > 8 days). Re-enable
+# once proper auth (e.g. a GitHub App installation token) is set up.
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm ci
+#   displayName: npm ci min agent demands
+#
+# - script: node ./ci/verifyMinAgentDemands/index.js
+#   env:
+#     GITHUB_PAT: $(GitHubPAT)
+#   displayName: Verify min agent demands
 
 - script: node ./ci/verify-registries.js
   displayName: Verify registries
@@ -165,9 +178,10 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - template: /ci/sign-all-tasks.yml@self
-    parameters:
-      layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+  - ${{ if parameters.signTasks }}:
+    - template: /ci/sign-all-tasks.yml@self
+      parameters:
+        layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js

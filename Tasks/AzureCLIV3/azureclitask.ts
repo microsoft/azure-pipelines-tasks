@@ -393,6 +393,19 @@ export class azureclitask {
         console.log(tl.loc("AzureDevOpsExtensionInstalledNoDeps"));
     }
 
+    private static emitExtensionInstallTelemetry(installPath: string, result: string, standardInstallExitCode?: number): void {
+        try {
+            emitTelemetry('TaskHub', 'AzureCLIV3', {
+                event: 'AzDevOpsExtInstall',
+                path: installPath,
+                result: result,
+                standardInstallExitCode: standardInstallExitCode
+            });
+        } catch (e) {
+            tl.debug(`Failed to emit extension-install telemetry: ${e}`);
+        }
+    }
+
     private static async loginWithWorkloadIdentityFederation(connectedService: string, visibleAzLogin: boolean): Promise<void> {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
@@ -456,7 +469,37 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            if (visibleAzLogin) {
+            if (process.platform === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+                // Bypass az.cmd to avoid CMD metacharacter interpretation (e.g. ^ in passwords)
+                // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
+                const azPath = tl.which('az', false);
+                const pythonPath = azPath ? path.join(path.dirname(path.dirname(azPath)), 'python.exe') : null;
+                if (pythonPath && fs.existsSync(pythonPath)) {
+                    let loginArgs = `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`;
+                    if (!visibleAzLogin) {
+                        loginArgs += ` --output none`;
+                    }
+                    tl.debug('Using direct python.exe invocation for az login to bypass az.cmd.');
+                    try {
+                        emitTelemetry('AzureCLIV3', 'DirectPythonLogin', { status: 'used' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
+                    Utility.throwIfError(tl.execSync(pythonPath, `-IBm azure.cli ${loginArgs}`), tl.loc("LoginFailed"));
+                } else {
+                    tl.debug('python.exe not found; falling back to az.cmd for login.');
+                    try {
+                        emitTelemetry('AzureCLIV3', 'DirectPythonLogin', { status: 'fallback', reason: pythonPath ? 'python.exe not on disk' : 'az not found' });
+                    } catch (telErr) {
+                        tl.debug(`Unable to emit telemetry: ${telErr}`);
+                    }
+                    if (visibleAzLogin) {
+                        Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+                    } else {
+                        Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions --output none`), tl.loc("LoginFailed"));
+                    }
+                }
+            } else if (visibleAzLogin) {
                 Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" ${authParam}="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             }
             else {
@@ -504,9 +547,16 @@ export class azureclitask {
                             tl.warning("Error Code: [" + standardInstallResult.code + "]");
                             tl.warning(tl.loc("FailedToInstallAzureDevOpsCLI"));
                             console.log(tl.loc("AzureDevOpsExtensionStandardInstallFailed"));
-                            await this.installAzureDevOpsExtensionNoDeps();
+                            try {
+                                await this.installAzureDevOpsExtensionNoDeps();
+                                this.emitExtensionInstallTelemetry("noDepsFallback", "success", standardInstallResult.code);
+                            } catch (error) {
+                                this.emitExtensionInstallTelemetry("noDepsFallback", "fail", standardInstallResult.code);
+                                throw error;
+                            }
                         } else {
                             console.log(tl.loc("AzureDevOpsExtensionInstalled"));
+                            this.emitExtensionInstallTelemetry("standard", "success", standardInstallResult.code);
                         }
                     } else {
                         Utility.throwIfError(tl.execSync("az", "extension add -n azure-devops -y"), tl.loc("FailedToInstallAzureDevOpsCLI"));

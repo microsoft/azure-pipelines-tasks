@@ -1,9 +1,7 @@
 # This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
 # This pipeline will be extended to the OneESPT template
 
-trigger:
-- master
-- releases/*
+trigger: none
 
 resources:
   repositories:

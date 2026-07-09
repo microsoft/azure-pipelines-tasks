@@ -1,5 +1,7 @@
 import { Utility } from './Utility';
 import tl = require("azure-pipelines-task-lib/task");
+import os = require("os");
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 export class ScriptTypeFactory {
     public static getScriptType(): ScriptType {
@@ -47,6 +49,19 @@ export abstract class ScriptType {
 export class WindowsPowerShell extends ScriptType {
 
     public async getTool(): Promise<any> {
+        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+            try {
+                return await this.getToolWithFileInvocation();
+            } catch (err) {
+                tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
+                try {
+                    emitTelemetry('AzureCLIV3', 'FileInvocationFallback', { scriptType: 'ps', error: err.message || String(err) });
+                } catch (telErr) {
+                    tl.debug(`Unable to emit telemetry: ${telErr}`);
+                }
+            }
+        }
+
         this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
         let tool: any = tl.tool(tl.which('powershell', true))
             .arg('-NoLogo')
@@ -59,6 +74,20 @@ export class WindowsPowerShell extends ScriptType {
         return tool;
     }
 
+    private async getToolWithFileInvocation(): Promise<any> {
+        this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
+        let tool: any = tl.tool(tl.which('powershell', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-File')
+            .arg(this._scriptPath);
+        tl.debug('Using -File invocation for Windows PowerShell to avoid CMD metacharacter issues.');
+        return tool;
+    }
+
     public async cleanUp(): Promise<void> {
         await Utility.deleteFile(this._scriptPath);
     }
@@ -67,6 +96,19 @@ export class WindowsPowerShell extends ScriptType {
 export class PowerShellCore extends ScriptType {
 
     public async getTool(): Promise<any> {
+        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+            try {
+                return await this.getToolWithFileInvocation();
+            } catch (err) {
+                tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
+                try {
+                    emitTelemetry('AzureCLIV3', 'FileInvocationFallback', { scriptType: 'pscore', error: err.message || String(err) });
+                } catch (telErr) {
+                    tl.debug(`Unable to emit telemetry: ${telErr}`);
+                }
+            }
+        }
+
         this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
         let tool: any = tl.tool(tl.which('pwsh', true))
             .arg('-NoLogo')
@@ -76,6 +118,20 @@ export class PowerShellCore extends ScriptType {
             .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${this._scriptPath.replace(/'/g, "''")}'`);
+        return tool;
+    }
+
+    private async getToolWithFileInvocation(): Promise<any> {
+        this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
+        let tool: any = tl.tool(tl.which('pwsh', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-File')
+            .arg(this._scriptPath);
+        tl.debug('Using -File invocation for PowerShell Core to avoid CMD metacharacter issues.');
         return tool;
     }
 
