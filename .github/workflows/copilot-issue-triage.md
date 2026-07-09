@@ -83,6 +83,16 @@ on:
   issues:
     types: [labeled]
 
+  # Least-privilege read scopes for the pre-activation `steps:` below. Without
+  # this the pre-activation job inherits the top-level `permissions: {}` and its
+  # GITHUB_TOKEN cannot search issues, read CODEOWNERS, enrich linked PRs, or run
+  # the role check — the run would fail. (This is separate from the agent job's
+  # `permissions:` block further down.)
+  permissions:
+    contents: read        # read .github/CODEOWNERS
+    issues: read          # search issues + linked-PR enrichment + role check
+    pull-requests: read   # linked-PR timeline nodes
+
   # Deterministic pre-activation search + prioritization. Runs before the agent
   # and publishes the candidate list as job outputs the agent consumes.
   steps:
