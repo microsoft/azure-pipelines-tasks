@@ -1,9 +1,7 @@
 # This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
 # This pipeline will be extended to the OneESPT template
 
-trigger:
-- master
-- releases/*
+trigger: none
 
 resources:
   repositories:
@@ -88,6 +86,7 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
+            signTasks: false
 
       # All tasks on Linux
       - job: build_all_linux
