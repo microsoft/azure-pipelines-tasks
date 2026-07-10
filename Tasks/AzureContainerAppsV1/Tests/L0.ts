@@ -36,6 +36,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -60,6 +61,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -84,6 +86,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -144,6 +147,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -199,6 +203,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -243,6 +248,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -290,6 +296,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -346,6 +353,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -386,6 +394,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -437,6 +446,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -472,6 +482,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });
@@ -507,6 +518,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
             // Validate that the end-of-test scenarios are hit
             assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
     });

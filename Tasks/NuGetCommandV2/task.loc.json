@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 252,
+    "Minor": 275,
     "Patch": 1
   },
   "runsOn": [
@@ -250,6 +250,15 @@
       "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {
+      "name": "requestTimeout",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.requestTimeout",
+      "required": false,
+      "groupName": "pushAdvanced",
+      "helpMarkDown": "ms-resource:loc.input.help.requestTimeout",
+      "visibleRule": "command = push"
+    },
+    {
       "name": "externalEndpoint",
       "aliases": [
         "publishFeedCredentials"
@@ -483,6 +492,10 @@
     "Node20_1": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -516,6 +529,8 @@
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
     "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
+    "Warning_NegativeRequestTimeoutIgnored": "ms-resource:loc.messages.Warning_NegativeRequestTimeoutIgnored",
+    "Warning_InvalidRequestTimeoutIgnored": "ms-resource:loc.messages.Warning_InvalidRequestTimeoutIgnored",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",

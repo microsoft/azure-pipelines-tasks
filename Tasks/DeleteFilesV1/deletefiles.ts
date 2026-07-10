@@ -141,7 +141,7 @@ function getNegateMarksNumber(str: string, startIndex: number = 0): number {
  */
 function joinPattern(sourcePath: string, pattern: string): string {
     const negateMarks = getNegateMarksNumber(pattern);
-    return path.join(pattern.slice(0, negateMarks) + sourcePath, pattern.slice(negateMarks));
+    return pattern.slice(0, negateMarks) + path.join(sourcePath, pattern.slice(negateMarks));
 }   
 
 /**

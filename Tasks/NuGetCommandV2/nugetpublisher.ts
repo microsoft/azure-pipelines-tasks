@@ -1,12 +1,12 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
+import { IExecOptions, IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication"
 import * as commandHelper from "azure-pipelines-tasks-packaging-common/nuget/CommandHelper";
-import {NuGetConfigHelper2} from "azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2";
+import { NuGetConfigHelper2 } from "azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2";
 import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
 import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/index");
-import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import { VersionInfo } from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
 import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
@@ -26,8 +26,8 @@ class PublishOptions implements INuGetCommandOptions {
         public configFile: string,
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
-        public environment: ngToolRunner.NuGetEnvironmentSettings)
-    { }
+        public environment: ngToolRunner.NuGetEnvironmentSettings,
+        public timeoutSeconds?: number) { }
 }
 
 interface IVstsNuGetPushOptions {
@@ -45,6 +45,7 @@ interface EndpointCredentials {
 }
 
 export async function run(nuGetPath: string): Promise<void> {
+    const timeoutSeconds = getRequestTimeoutSeconds();
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
@@ -57,9 +58,6 @@ export async function run(nuGetPath: string): Promise<void> {
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
     try {
-
-        
-
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
@@ -83,8 +81,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         });
 
-        if (filesList && filesList.length < 1)
-        {
+        if (filesList && filesList.length < 1) {
             tl.warning(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
@@ -123,7 +120,7 @@ export async function run(nuGetPath: string): Promise<void> {
         const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks)
-                                && (!useV1CredProvider && !useV2CredProvider);
+            && (!useV1CredProvider && !useV2CredProvider);
 
         const internalAuthInfo = new auth.InternalAuthInfo(
             urlPrefixes,
@@ -146,8 +143,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let authInfo: auth.NuGetExtendedAuthInfo;
         let nuGetConfigHelper: NuGetConfigHelper2;
 
-        if (isInternalFeed)
-        {
+        if (isInternalFeed) {
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
             nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
@@ -179,8 +175,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
             const externalAuth = externalAuthArr[0];
 
-            if (!externalAuth)
-            {
+            if (!externalAuth) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPush"));
                 return;
             }
@@ -191,13 +186,13 @@ export async function run(nuGetPath: string): Promise<void> {
             credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
 
             const authType: auth.ExternalAuthType = externalAuth.authType;
-            switch(authType) {
+            switch (authType) {
                 case (auth.ExternalAuthType.UsernamePassword):
                 case (auth.ExternalAuthType.Token):
                     apiKey = "RequiredApiKey";
                     break;
                 case (auth.ExternalAuthType.ApiKey):
-                    const apiKeyAuthInfo =  externalAuth as auth.ApiKeyExternalAuthInfo;
+                    const apiKeyAuthInfo = externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
                     break;
                 default:
@@ -219,8 +214,7 @@ export async function run(nuGetPath: string): Promise<void> {
         if (useVstsNuGetPush) {
             vstsPushPath = vstsNuGetPushToolUtilities.getBundledVstsNuGetPushLocation();
 
-            if (!vstsPushPath)
-            {
+            if (!vstsPushPath) {
                 tl.warning(tl.loc("Warning_FallBackToNuGet"));
             }
         }
@@ -242,11 +236,11 @@ export async function run(nuGetPath: string): Promise<void> {
                 };
 
                 for (const packageFile of filesList) {
-                    publishPackageVstsNuGetPush(packageFile, publishOptions);
+                    await publishPackageVstsNuGetPush(packageFile, publishOptions);
                 }
             }
             else {
-                tl.debug("Using NuGet.exe to push the packages");           
+                tl.debug("Using NuGet.exe to push the packages");
                 const publishOptions = new PublishOptions(
                     nuGetPath,
                     feedUri,
@@ -254,10 +248,11 @@ export async function run(nuGetPath: string): Promise<void> {
                     configFile,
                     verbosity,
                     authInfo,
-                    environmentSettings);
+                    environmentSettings,
+                    timeoutSeconds);
 
                 for (const packageFile of filesList) {
-                    publishPackageNuGet(packageFile, publishOptions, authInfo, continueOnConflict);
+                    await publishPackageNuGet(packageFile, publishOptions, authInfo, continueOnConflict);
                 }
             }
 
@@ -278,12 +273,12 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function publishPackageNuGet(
+async function publishPackageNuGet(
     packageFile: string,
     options: PublishOptions,
     authInfo: auth.NuGetExtendedAuthInfo,
     continueOnConflict: boolean)
-    : IExecSyncResult {
+    : Promise<number> {
     const nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
 
     nugetTool.arg("push");
@@ -306,27 +301,35 @@ function publishPackageNuGet(
         nugetTool.arg(options.verbosity);
     }
 
-    const execResult = nugetTool.execSync();
-    if (execResult.code !== 0) {
-        telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
-        if(continueOnConflict && execResult.stderr.indexOf("The feed already contains")>0){
+    if (options.timeoutSeconds !== undefined) {
+        nugetTool.arg(["-Timeout", String(options.timeoutSeconds)]);
+    }
+
+    // Listen for stderr output to write timeline results for the build.
+    let stdErrText = "";
+    nugetTool.on('stderr', (data: Buffer) => {
+        stdErrText += data.toString('utf-8');
+    });
+
+    const execResult = await nugetTool.exec({ ignoreReturnCode: true } as IExecOptions);
+
+    if (execResult !== 0) {
+        telemetry.logResult("Packaging", "NuGetCommand", execResult);
+
+        if (continueOnConflict && stdErrText.indexOf("The feed already contains") > 0) {
             tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
-            return {
-                code: 0,
-                stdout: execResult.stderr,
-                stderr: null,
-                error: null
-            };
+            return 0;
         } else {
             throw tl.loc("Error_NugetFailedWithCodeAndErr",
-                execResult.code,
-                execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
+                execResult,
+                stdErrText.trim());
         }
     }
+    
     return execResult;
 }
 
-function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPushOptions) {
+async function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPushOptions) {
     const vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(
         options.vstsNuGetPushPath,
         options.settings,
@@ -340,39 +343,43 @@ function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPus
         vstsNuGetPushTool.arg(["-Verbosity", "Detailed"]);
     }
 
-    const execResult: IExecSyncResult = vstsNuGetPushTool.execSync();
-    if (execResult.code === 0) {
+    // Listen for stderr output to write timeline results for the build.
+    let stdErrText = "";
+    vstsNuGetPushTool.on('stderr', (data: Buffer) => {
+        stdErrText += data.toString('utf-8');
+    });
+
+    const execResult: number = await vstsNuGetPushTool.exec();
+    if (execResult === 0) {
         return;
     }
 
     // ExitCode 2 means a push conflict occurred
-    if (execResult.code === 2 && options.settings.continueOnConflict) {
+    if (execResult === 2 && options.settings.continueOnConflict) {
         tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
         return;
     }
 
-    telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
+    telemetry.logResult("Packaging", "NuGetCommand", execResult);
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
-        execResult.code,
-        execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
+        execResult,
+        stdErrText.trim()));
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {
-    if (tl.osType() !== "Windows_NT"){
+    if (tl.osType() !== "Windows_NT") {
         tl.debug("Running on a non-windows platform so NuGet.exe will be used.");
         return false;
     }
 
-    if (!isInternalFeed)
-    {
+    if (!isInternalFeed) {
         tl.debug("Pushing to an external feed so NuGet.exe will be used.");
         return false;
     }
 
-    if (commandHelper.isOnPremisesTfs())
-    {
+    if (commandHelper.isOnPremisesTfs()) {
         tl.debug("Pushing to an onPrem environment, only NuGet.exe is supported.");
-        if(conflictsAllowed){
+        if (conflictsAllowed) {
             tl.warning(tl.loc("Warning_AllowDuplicatesOnlyAvailableHosted"));
         }
         return false;
@@ -381,8 +388,7 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     const nugetOverrideFlag = tl.getVariable("NuGet.ForceNuGetForPush");
     if (nugetOverrideFlag === "true") {
         tl.debug("NuGet.exe is force enabled for publish.");
-        if(conflictsAllowed)
-        {
+        if (conflictsAllowed) {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));
         }
         return false;
@@ -401,19 +407,42 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
 
     if (vstsNuGetPushOverrideFlag === "false") {
         tl.debug("VstsNuGetPush.exe is force disabled for publish.");
-        if(conflictsAllowed)
-        {
+        if (conflictsAllowed) {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));
         }
         return false;
     }
 
     // Use VstsNugetPush only if conflictsAllowed is checked. Otherwise use Nuget as default.
-    if (conflictsAllowed){
+    if (conflictsAllowed) {
         return true;
     }
 
     return false;
+}
+
+// Reads the optional requestTimeout input (in seconds) for `nuget.exe push -Timeout`.
+// Returns undefined if not set. Emits a warning when the input is invalid (not a positive whole number).
+// Caps the value at 600 seconds (10 minutes).
+function getRequestTimeoutSeconds(): number | undefined {
+    const inputValue: string = tl.getInput("requestTimeout", false);
+    if (!inputValue) {
+        return undefined;
+    }
+
+    const parsed = Number(inputValue);
+    if (Number.isNaN(parsed)) {
+        tl.warning(tl.loc("Warning_InvalidRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    if (parsed < 0) {
+        tl.warning(tl.loc("Warning_NegativeRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    const maxTimeoutSeconds = 600; // 10 minutes
+    return Math.min(Math.floor(parsed), maxTimeoutSeconds);
 }
 
 async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
@@ -484,7 +513,7 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): P
         "Authorization": "Basic " + token64
     };
 
-    const response = await sendRequest(request);
+    const response: WebResponse = await sendRequest(request);
 
     if (response.statusCode == 200) {
         if (response.body) {

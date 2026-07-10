@@ -191,6 +191,20 @@ export class KuduServiceUtility {
         }
     }
 
+    /**
+     * Warms up Kudu service by calling warmup API.
+     */
+    public async warmUp(): Promise<void> {
+        try {
+            tl.debug('warming up Kudu Service');
+            await this._appServiceKuduService.warmup();
+            tl.debug('warmed up Kudu Service');
+        }
+        catch(error) {
+            tl.debug('Failed to warm-up Kudu: ' + error.toString());
+        }
+    }
+
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
         try {
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);

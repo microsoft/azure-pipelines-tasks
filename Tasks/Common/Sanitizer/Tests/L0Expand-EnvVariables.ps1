@@ -136,6 +136,41 @@ $testSuites = @(
         Input = '${env:VAR1 ${env:VAR2}'
         Variables = @('VAR1=val1', 'VAR2=val2')
         Expected = '${env:VAR1 ${env:VAR2}'
+    },
+    # Regression coverage for PR #22181 / issue #22173 ported to the PowerShell expander.
+    # YAML folded scalars ('arguments: >') emit literal LF/CR between joined lines; the
+    # env-name terminator must include whitespace, otherwise '$env:VAR\n-Flag' is parsed
+    # as a single env-name 'VAR\n-Flag', the lookup misses, and the literal '$env:...\n'
+    # falls through to the sanitizer allowlist (which rejects '$').
+    @{
+        Name      = 'Folded-scalar newline (LF) terminates env name'
+        Input     = "`$env:VAR1`n-Flag"
+        Variables = @('VAR1=val1')
+        Expected  = "val1`n-Flag"
+    },
+    @{
+        Name      = 'Folded-scalar CRLF terminates env name'
+        Input     = "`$env:VAR1`r`n-Flag"
+        Variables = @('VAR1=val1')
+        Expected  = "val1`r`n-Flag"
+    },
+    @{
+        Name      = 'Tab terminates env name'
+        Input     = "`$env:VAR1`t-Flag"
+        Variables = @('VAR1=val1')
+        Expected  = "val1`t-Flag"
+    },
+    @{
+        Name      = 'Multiple env vars separated by newlines all expand'
+        Input     = "`$env:VAR1`n`$env:VAR2`n`$env:VAR3"
+        Variables = @('VAR1=1', 'VAR2=2', 'VAR3=3')
+        Expected  = "1`n2`n3"
+    },
+    @{
+        Name      = 'Folded-scalar reproducer (multi-line arguments: > block)'
+        Input     = "-SubscriptionId `$env:subId`n-Tenant `$env:tenantId`n-ClientSecret `$env:clientSecret"
+        Variables = @('subId=00000000-0000-0000-0000-000000000001', 'tenantId=00000000-0000-0000-0000-000000000002', 'clientSecret=supersecret')
+        Expected  = "-SubscriptionId 00000000-0000-0000-0000-000000000001`n-Tenant 00000000-0000-0000-0000-000000000002`n-ClientSecret supersecret"
     }
 )
 

@@ -1,0 +1,60 @@
+name: Branch Cleanup Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      months:
+        description: 'Delete branches older than N months (preview only)'
+        required: true
+        default: '24'
+
+jobs:
+  preview-branch-deletion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: List branches older than N months (preview)
+        env:
+          MONTHS: ${{ github.event.inputs.months }}
+        run: |
+          set -e
+          echo "Preview: Branches older than $MONTHS months (excluding master, release, Localize, Localization branches):"
+          cutoff=$(date -d "-$MONTHS months" +%s)
+          total=0
+          preserved=0
+          cleanup=0
+          remain=0
+          preserved_list=()
+          cleanup_list=()
+          remain_list=()
+          # List all remote branches
+          while read branch date; do
+            total=$((total+1))
+            bname=${branch#origin/}
+            # Preserved branches
+            if [[ "$bname" == "master" ]] || [[ "$bname" == release* ]] || [[ "$bname" == Localize* ]] || [[ "$bname" == Localization* ]]; then
+              preserved=$((preserved+1))
+              preserved_list+=("$bname")
+              continue
+            fi
+            # Branches to cleanup
+            if [[ $date -lt $cutoff ]]; then
+              cleanup=$((cleanup+1))
+              cleanup_list+=("$bname")
+            else
+              remain=$((remain+1))
+              remain_list+=("$bname")
+            fi
+          done < <(git for-each-ref --format='%(refname:short) %(committerdate:unix)' refs/remotes/)
+          echo "Total branches: $total"
+          echo "Preserved branches (master, release*, Localize*, Localization*): $preserved"
+          echo "Branches to cleanup (older than $MONTHS months): $cleanup"
+          echo "Branches that will remain: $remain"
+          echo "---"
+          echo "Branches to cleanup:"
+          for b in "${cleanup_list[@]}"; do echo "$b"; done
+          echo "---"

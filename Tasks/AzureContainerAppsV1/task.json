@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 247,
+    "Minor": 277,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -128,6 +128,13 @@
       "helpMarkDown": "The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of `<platform>:<version>`. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md"
     },
     {
+      "name": "kind",
+      "type": "string",
+      "label": "Container App kind",
+      "required": false,
+      "helpMarkDown": "Set to `functionapp` to get built in support and autoscaling to run Azure functions on Azure Container apps."
+    },
+    {
       "name": "targetPort",
       "type": "string",
       "label": "Application target port",
@@ -180,10 +187,15 @@
     "Node20_1": {
       "target": "azurecontainerapps.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with access token.",
+    "AcrLogoutFailed": "Unable to log Docker out of ACR instance '%s'. Error: %s",
     "AcrAccessTokenLoginMessage": "Logging in to Azure Container Registry using access token to be generated via Azure CLI.",
     "AcrUsernamePasswordAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.",
     "AcrUsernamePasswordLoginMessage": "Logging in to Azure Container Registry using provided acrUsername and acrPassword arguments.",

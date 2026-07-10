@@ -16,7 +16,7 @@
             {
                 "name": "VstsTaskSdk",
                 "version": "0.20.1",
-                "repository": "https://www.powershellgallery.com/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
                 "cp": [
                     {
                         "source": [

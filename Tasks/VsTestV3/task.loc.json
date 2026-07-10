@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 249,
+    "Minor": 274,
     "Patch": 1
   },
   "demands": [
@@ -226,6 +226,7 @@
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
+        "18.0": "Visual Studio 2026",
         "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
@@ -419,6 +420,15 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "customLoggerConfig",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customLoggerConfig",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customLoggerConfig",
+      "groupName": "reportingOptions"
+    },
+    {
       "name": "publishRunAttachments",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishRunAttachments",
@@ -574,6 +584,10 @@
       "target": "runvstest.js"
     },
     "Node20_1": {
+      "target": "runvstest.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "runvstest.js",
       "argumentFormat": ""
     }

@@ -26,15 +26,13 @@ export class SetProductionUseStagingSucceeds {
         SetProductionUseStagingSucceeds.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'SetProductionUseStagingSucceedsL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert(mockTestRunner.succeeded);
             assert(mockTestRunner.errorIssues.length == 0);
 
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             done(error);
-        }
+        });
     };
 }

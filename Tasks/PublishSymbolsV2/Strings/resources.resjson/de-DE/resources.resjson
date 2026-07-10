@@ -4,12 +4,14 @@
   "loc.description": "Hiermit wird Ihr Quellcode indiziert, und Symbole werden in einer Dateifreigabe oder auf einem Azure Artifacts-Symbolserver veröffentlicht.",
   "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung",
   "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.ConnectedServiceName": "Azure Resource Manager-Verbindung",
+  "loc.input.help.ConnectedServiceName": "Name der Azure Resource Manager-Dienstverbindung. Zurzeit wird nur der Workloadidentitätsverbund als Authentifizierungstyp unterstützt.",
   "loc.input.label.SymbolsFolder": "Pfad zum Symbolordner",
   "loc.input.help.SymbolsFolder": "Der Pfad zu dem Ordner, der nach Symboldateien durchsucht wird. Der Standardwert ist \"$(Build.SourcesDirectory)\". Geben Sie andernfalls einen Stammpfad an, z. B.: \"$(Build.BinariesDirectory)/MyProject\".",
   "loc.input.label.SearchPattern": "Suchmuster",
   "loc.input.help.SearchPattern": "Das Muster, das zum Ermitteln der zu veröffentlichenden PDB-Dateien verwendet wird.",
-  "loc.input.label.Manifest": "",
-  "loc.input.help.Manifest": "",
+  "loc.input.label.Manifest": "Manifest",
+  "loc.input.help.Manifest": "Der Pfad zu einer Datei mit weiteren Symbolclientschlüsseln, die veröffentlicht werden sollen.",
   "loc.input.label.IndexSources": "Quellen indizieren",
   "loc.input.help.IndexSources": "Gibt an, ob Quellserverinformationen in die PDB-Dateien eingefügt werden sollen. Diese Option wird nur auf Windows-Agents unterstützt.",
   "loc.input.label.PublishSymbols": "Symbole veröffentlichen",
@@ -74,5 +76,5 @@
   "loc.messages.UnsupportedSourceProvider0": "Nicht unterstützter Quellanbieter \"{0}\" für die Quellindizierung.",
   "loc.messages.Win32Error0FromMethod1": "Win32-Fehler \"{0}\" aus der Methode \"{1}\".",
   "loc.messages.NodeVersionSupport": "Node v{0} wird ab dem 31.08.2024 nicht mehr unterstützt. Aktualisieren Sie den Pipeline-Agent auf die neueste Version für Node 16 oder höher.",
-  "loc.messages.ManifestFileNotFound": ""
+  "loc.messages.ManifestFileNotFound": "Die Manifestdatei wurde nicht unter „{0}“ gefunden."
 }

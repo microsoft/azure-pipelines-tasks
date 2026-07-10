@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 247,
-    "Patch": 1
+    "Minor": 274,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -218,6 +218,15 @@
       "groupName": "DeploymentInputs"
     },
     {
+      "name": "canDeleteTempFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canDeleteTempFolder",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.canDeleteTempFolder",
+      "defaultValue": false,
+      "groupName": "DeploymentInputs"
+    },
+    {
       "name": "additionalBuilderParameters",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalBuilderParameters",
@@ -304,6 +313,10 @@
       "target": "./src//main.js"
     },
     "Node20_1": {
+      "target": "./src//main.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "./src//main.js",
       "argumentFormat": ""
     }

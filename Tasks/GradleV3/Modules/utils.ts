@@ -4,9 +4,11 @@ import { TaskResult } from 'azure-pipelines-task-lib';
 /**
  * Resolve task status based on code analysis run results
  * @param {ICodeAnalysisResult} codeAnalysisResult - Code analysis run data
+ * @param {string[]} inputTasks - List of tasks that were run
+ * @param {string} inputOptions - Options passed to the Gradle command
  * @returns {ITaskResult} task status and message
  */
-export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult): ITaskResult {
+export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult, inputTasks: string[], inputOptions:string): ITaskResult {
     let status: TaskResult;
     let message: string = '';
 
@@ -17,7 +19,10 @@ export function resolveTaskResult(codeAnalysisResult: ICodeAnalysisResult): ITas
         status = TaskResult.Failed;
 
         if (codeAnalysisResult.statusFailed) {
-            message = `Code analysis failed. Gradle exit code: ${codeAnalysisResult.gradleResult}. Error: ${codeAnalysisResult.analysisError}`;
+            message = `Gradle execution for task(s) ${inputTasks.join(', ')} failed with exit code ${codeAnalysisResult.gradleResult}.`;
+            if(inputOptions != null && inputOptions !== ''){
+                message = `Gradle execution for task(s) ${inputTasks.join(', ')} with options: ${inputOptions} failed with exit code ${codeAnalysisResult.gradleResult}.`;
+            }
         } else {
             message = `Build failed. Gradle exit code: ${codeAnalysisResult.gradleResult}`;
         }

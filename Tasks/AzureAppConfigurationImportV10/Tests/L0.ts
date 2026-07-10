@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from "path";
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
-describe("Push task test", function () {
+describe("Import task test", function () {
     this.timeout(30000);
 
     before(async () => {
@@ -191,4 +191,18 @@ describe("Push task test", function () {
             assert.strictEqual(testRunner.errorIssues[0], "loc_mock_InvalidTypeInTags");
         }, testRunner);
     });
+
+    it("Trim any trailing forward slash in store endpoint", async ()=> {
+        const taskPath = path.join(__dirname, "setKeyValueWithInvalidEndpoint.js");
+        const testRunner = new MockTestRunner(taskPath);
+
+        await testRunner.runAsync();
+
+        runValidations(() => {
+            assert.strictEqual(testRunner.succeeded, true, "should have succeeded");
+            assert.strictEqual(testRunner.errorIssues.length, 0, "should have no errors");
+            assert.strictEqual(testRunner.warningIssues.length, 0, "should have no warnings");
+            assert.ok(testRunner.stdout.indexOf("loc_mock_AppConfigurationEndpointTitle https://Test.azconfig.io") > 0, "should successfully trim any trailing forward slash");
+        }, testRunner);
+    })
 });

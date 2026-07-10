@@ -64,4 +64,34 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Expand-EnvVariables.ps1'), done);
         });
     }
+
+    if (psm.testSupported()) {
+        it('Invoke-ScriptArgumentSanitization dispatcher (FF gates, error handling, telemetry)', (done) => {
+            psr.run(path.join(__dirname, 'L0Invoke-ScriptArgumentSanitization.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Test-SanitizerArgumentAst classifies data literals vs. executable expressions', (done) => {
+            psr.run(path.join(__dirname, 'L0Test-SanitizerArgumentAst.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments allows legitimate data constructors on the relaxed path', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.AllowsDataConstructors.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments blocks data-constructor injection via the AST backstop', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.BlocksDataConstructorInjection.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Get-SanitizedArguments keeps the strict path unchanged for legacy callers', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArguments.GroupBIsolation.ps1'), done);
+        });
+    }
 });

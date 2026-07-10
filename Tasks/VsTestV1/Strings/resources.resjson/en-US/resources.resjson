@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Visual Studio Test",
+  "loc.friendlyName": "[Deprecated] Visual Studio Test",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
-  "loc.description": "Run tests with Visual Studio test runner",
+  "loc.description": "[Deprecated] Run tests with Visual Studio test runner",
   "loc.instanceNameFormat": "Test Assemblies $(testAssembly)",
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.advancedExecutionOptions": "Advanced Execution Options",

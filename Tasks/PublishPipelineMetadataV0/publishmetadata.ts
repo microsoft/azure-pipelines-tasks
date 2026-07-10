@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface RelatedUrl {
     "url": string;
@@ -98,6 +98,7 @@ function constructMetadataRequestBody(requestObject: any): AttestationRequestPay
 async function run() {
     try {
         const metadataObjects = getPipelineMetadataObjects();
+
         if (metadataObjects.length == 0) {
             tl.debug("Not pushing as no metadata found");
             return;

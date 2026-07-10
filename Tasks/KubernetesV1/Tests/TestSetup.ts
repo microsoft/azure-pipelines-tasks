@@ -5,7 +5,6 @@ import * as shared from './TestShared';
 const querystring = require("querystring");
 
 var nock = require("nock");
-var Stats = require('fs').Stats;
 
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ConfigurationFilePath = shared.formatPath("dir/deployment.yaml");
@@ -275,13 +274,15 @@ fsClone.existsSync = function(filePath) {
 };
 
 fsClone.writeFileSync = function(fileName, data) {
-    switch (fileName) {
-        case KubconfigFile:
-            console.log("Content of kubeconfig file : " + data); 
-            break;
-        default:
-            return fs.writeFileSync(fileName, data);
+    // Normalize paths for comparison (handle both Windows and Unix style paths)
+    const normalizedFileName = path.normalize(fileName);
+    const normalizedKubconfigFile = path.normalize(KubconfigFile);
+    
+    if (normalizedFileName.endsWith('config') || normalizedFileName === normalizedKubconfigFile) {
+        console.log("Content of kubeconfig file : " + data); 
+        return;
     }
+    return fs.writeFileSync(fileName, data);
 };
 
 fsClone.chmodSync = function (path, mode) {
@@ -298,25 +299,24 @@ fsClone.chmodSync = function (path, mode) {
 };
 
 fsClone.statSync = (s: string) => {
-    let stat = new Stats;
-
-    stat.isFile = () => {
-        if (s.endsWith('.properties')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    stat.isDirectory = () => {
-        if (s.endsWith('.properties')) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    stat.size = 100;
+    // Create a mock stats object instead of using deprecated Stats constructor
+    const stat = {
+        isFile: () => {
+            if (s.endsWith('.properties')) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        isDirectory: () => {
+            if (s.endsWith('.properties')) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        size: 100
+    };
 
     return stat;
 }

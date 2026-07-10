@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as utility from "azure-pipelines-tasks-packaging-common/PackUtilities";
 
 import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import * as semver from "semver";
 
 export async function run(): Promise<void> {
 
@@ -74,6 +75,19 @@ export async function run(): Promise<void> {
 
                 version = versionMatches[0];
                 break;
+             
+            case "bySemVerBuildNumber":
+                tl.debug("Getting version number using SemVer build number");
+
+                let semVerBuildNumber: string = tl.getVariable("BUILD_BUILDNUMBER");
+                tl.debug(`Build number: ${semVerBuildNumber}`);
+                if (!semver.valid(semVerBuildNumber)) {
+                  tl.setResult(tl.TaskResult.Failed, tl.loc("Error_InvalidSemVer"));
+                  return;
+                }  
+                version = semVerBuildNumber;
+                break;
+
         }
 
         tl.debug(`Version to use: ${version}`);
@@ -135,7 +149,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, includeSymbols: boolean, includeSource: boolean, version: string, properties: string[], verbosity: string): Q.Promise<number> {
+async function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, includeSymbols: boolean, includeSource: boolean, version: string, properties: string[], verbosity: string): Promise<number> {
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");
@@ -175,5 +189,5 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
         dotnet.arg(verbosity);
     }
 
-    return dotnet.exec({ cwd: path.dirname(packageFile) } as IExecOptions);
+    return dotnet.execAsync({ cwd: path.dirname(packageFile) } as IExecOptions) as Promise<number>;
 }

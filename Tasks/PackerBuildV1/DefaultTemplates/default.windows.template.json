@@ -16,7 +16,8 @@
     "script_arguments": "",
     "package_path": "",
     "package_name": "",
-    "capture_name_prefix": ""
+    "capture_name_prefix": "",
+    "delete_temp_folder": ""
   },
   "builders": [{
         "type": "azure-arm",
@@ -65,6 +66,13 @@
                 "C:\\DeployTemp\\{{user `package_name`}}\\{{user `script_relative_path`}} {{user `script_arguments`}}"
             ]
         },
+        {
+            "type": "windows-shell",
+            "inline": [
+             "cmd /c \"echo run_deploy_script: {{user `delete_temp_folder`}}\"",      
+             "cmd /c  \" if '{{user `delete_temp_folder`}}' == 'true' if exist c:\\\\DeployTemp rd /s /q c:\\\\DeployTemp\""
+            ]
+          },
         {
             "type": "powershell",
             "inline": [

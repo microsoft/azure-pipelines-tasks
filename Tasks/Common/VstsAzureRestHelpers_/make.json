@@ -4,7 +4,7 @@
             {
                 "name": "Newtonsoft.Json",
                 "version": "12.0.3",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll"
@@ -14,7 +14,7 @@
             {
                 "name": "Microsoft.AspNet.WebApi.Client",
                 "version": "5.2.7",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/System.Net.Http.Formatting.dll"
@@ -24,7 +24,7 @@
             {
                 "name": "Microsoft.IdentityModel.Clients.ActiveDirectory",
                 "version": "2.23.302261847",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
@@ -34,7 +34,7 @@
             {
                 "name": "Microsoft.Identity.Client",
                 "version": "4.48.0",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Microsoft.Identity.Client.dll",
@@ -45,7 +45,7 @@
             {
                 "name": "Microsoft.IdentityModel.Abstractions",
                 "version": "6.22.0",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net45/Microsoft.IdentityModel.Abstractions.dll",
@@ -56,7 +56,7 @@
             {
                 "name": "Microsoft.TeamFoundationServer.Client",
                 "version": "16.170.0",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": "lib/net462/Microsoft.TeamFoundation.Core.WebApi.dll"
@@ -70,7 +70,7 @@
             {
                 "name": "Microsoft.TeamFoundation.DistributedTask.Common.Contracts",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -82,7 +82,7 @@
             {
                 "name": "Microsoft.TeamFoundation.DistributedTask.WebApi",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -100,7 +100,7 @@
             {
                 "name": "Microsoft.VisualStudio.Services.Client",
                 "version": "19.216.0-preview",
-                "repository": "https://www.nuget.org/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
                 "cp": [
                     {
                         "source": [
@@ -118,13 +118,37 @@
                         "dest": "<CULTURE_NAME>/"
                     }
                 ]
+            },
+            {
+                "name": "VstsTaskSdk",
+                "version": "0.21.0",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
+                "cp": [
+                    {
+                        "source": [
+                            "*.dll",
+                            "*.ps1",
+                            "*.psd1",
+                            "*.psm1",
+                            "lib.json",
+                            "Strings"
+                        ],
+                        "dest": "ps_modules/VstsTaskSdk/",
+                        "options": "-R"
+                    }
+                ]
             }
         ],
         "archivePackages": [
             {
-                "archiveName": "openssl.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip",
-                "dest": "./openssl"
+                "archiveName": "openssl_new3.4.2.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.4.2/M262/openssl.zip",
+                "dest": "./opensslv3.4.2"
+            },
+            {
+                "archiveName": "openssl_new3.5.7.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.5.7/M276/openssl.zip",
+                "dest": "./opensslv3.5.7"
             }
         ]
     }

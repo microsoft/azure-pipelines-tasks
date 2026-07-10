@@ -1,0 +1,34 @@
+{
+    "name": "gradleauthenticate",
+    "version": "0.1.0",
+    "description": "Azure Pipelines Gradle Authenticate Task",
+    "main": "src/main.js",
+    "scripts": {
+        "build": "node ../../make.js build --task GradleAuthenticateV0",
+        "serverBuild": "node ../../make.js serverBuild --task GradleAuthenticateV0",
+        "test": "mocha tests/l0.js --timeout 20000"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+    "dependencies": {
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^20.11.0",
+        "azure-pipelines-task-lib": "^5.2.10",
+        "azure-pipelines-tasks-artifacts-common": "^2.276.0",
+        "mocha": "^10.2.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.2"
+    },
+    "overrides": {
+        "serialize-javascript": "7.0.5"
+    }
+}

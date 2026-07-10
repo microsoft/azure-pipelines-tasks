@@ -212,7 +212,7 @@ function unzipExtract(file, destinationFolder) {
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
-    return handleExecResult(unzip.execSync(), file);
+    return handleExecResult(unzip.execSync({cwd: destinationFolder}), file);
 }
 
 function sevenZipExtract(file, destinationFolder) {
@@ -224,7 +224,7 @@ function sevenZipExtract(file, destinationFolder) {
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
-    return handleExecResult(sevenZip.execSync(), file);
+    return handleExecResult(sevenZip.execSync({cwd: destinationFolder }), file);
 }
 
 function tarExtract(file, destinationFolder) {
@@ -241,7 +241,7 @@ function tarExtract(file, destinationFolder) {
     tar.arg(file);
     tar.arg('-C');
     tar.arg(destinationFolder);
-    return handleExecResult(tar.execSync(), file);
+    return handleExecResult(tar.execSync({cwd: destinationFolder}), file);
 }
 
 function handleExecResult(execResult: tr.IExecSyncResult, file) {

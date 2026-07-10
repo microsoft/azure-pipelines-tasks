@@ -1,6 +1,6 @@
 ﻿$featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = [System.Convert]::ToBoolean($env:USE_OPENSSL_LATEST_VERSION)
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureHelpers'
 }
 
 function Add-Certificate {
@@ -263,7 +263,7 @@ function Get-VstsFederatedToken {
 
         if ($retryAttempt -lt $retryLimit) {
             Write-Verbose "Failed to fetch federated token. Remaining retries count = '$($retryLimit - $retryAttempt)'"
-            Start-Sleep -m $timeToWait * $retryAttempt
+            Start-Sleep -m ($timeToWait * $retryAttempt)
         }
     }
 
@@ -363,24 +363,23 @@ function ConvertTo-Pfx {
     else {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
-
     if(-not $featureFlags.useOpenssLatestVersion) {
-     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
-     $env:RANDFILE=".rnd"
-
-     $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+        $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
     }
-   else{
-     $openSSLExePath = "$PSScriptRoot\opensslv4\openssl.exe"
-     $env:OPENSSL_CONF = "$PSScriptRoot\opensslv4\openssl.cnf"
-     $env:RANDFILE=".rnd"
-
-     $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
-     }
-     
+    else{
+        $openSSLExePath = "$PSScriptRoot\opensslv3.5.7\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.7\openssl.cnf"
+    }
+    try {
+        $versionOutput = & $openSSLExePath version
+        Write-Verbose "OpenSSL version: $versionOutput"
+    } catch {
+        Write-Host "There was an error while getting the OpenSSL version $_"
+    }
+    $env:RANDFILE=".rnd"
+    $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
     $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
-
     return $pfxFilePath, $pfxFilePassword
 }
 

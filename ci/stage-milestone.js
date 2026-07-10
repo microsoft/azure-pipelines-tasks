@@ -2,6 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var util = require('./ci-util');
 
+// Parse command line arguments (positional)
+// Usage: node stage-milestone.js <tasksBuildArtifact>
+var tasksBuildArtifact = process.argv[2] || 'allTasks';
+
 // initialize _package
 util.initializePackagePath();
 
@@ -13,13 +17,20 @@ fs.mkdirSync(util.milestoneLayoutPath);
 fs.writeFileSync(path.join(util.milestoneLayoutPath, 'layout-version.txt'), '2');
 
 // extract the artifact
-var artifactZipPath = path.join(process.env.SYSTEM_ARTIFACTSDIRECTORY, "package", "tasks.zip");
+var artifactZipPath = path.join(process.env.SYSTEM_ARTIFACTSDIRECTORY, tasksBuildArtifact, "tasks.zip");
 var artifactPath = path.join(util.packagePath, "package");
 util.expandTasks(artifactZipPath, artifactPath);
 
 // link the artifact
 fs.readdirSync(artifactPath).forEach(function (itemName) {
     var itemSourcePath = path.join(artifactPath, itemName);
+    
+    // Skip creation of symlink for layout-version.txt file
+    if (itemName === 'layout-version.txt') {
+        console.log(`Skipping file: ${itemName}`);
+        return;
+    }
+    
     if (!fs.lstatSync(itemSourcePath).isDirectory()) {
         throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
     }

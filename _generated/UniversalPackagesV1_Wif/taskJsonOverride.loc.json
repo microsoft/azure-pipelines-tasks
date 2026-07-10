@@ -1,0 +1,93 @@
+{
+    "inputs": [
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "ms-resource:loc.input.label.command",
+            "defaultValue": "download",
+            "helpMarkDown": "ms-resource:loc.input.help.command",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "options": {
+                "download": "Download",
+                "publish": "Publish"
+            }
+        },
+        {
+            "name": "adoServiceConnection",
+            "aliases": ["workloadIdentityServiceConnection", "azureDevOpsServiceConnection"],
+            "type": "connectedService:workloadidentityuser",
+            "label": "ms-resource:loc.input.label.adoServiceConnection",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection",
+            "properties": {
+                "EditableOptions": "False",
+                "MultiSelectFlatList": "False"
+            }
+        },
+        {
+            "name": "organization",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.organization",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.organization",
+            "visibleRule": "adoServiceConnection != ''"
+        },
+        {
+            "name": "feed",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.feed",
+            "required": true,
+            "helpMarkDown": "ms-resource:loc.input.help.feed"
+        },
+        {
+            "name": "packageName",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.packageName",
+            "required": true,
+            "helpMarkDown": "ms-resource:loc.input.help.packageName"
+        },
+        {
+            "name": "packageVersion",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.packageVersion",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.packageVersion"
+        },
+        {
+            "name": "versionIncrement",
+            "type": "pickList",
+            "label": "ms-resource:loc.input.label.versionIncrement",
+            "required": false,
+            "helpMarkDown": "ms-resource:loc.input.help.versionIncrement",
+            "visibleRule": "command = publish",
+            "options": {
+                "major": "Major",
+                "minor": "Minor",
+                "patch": "Patch"
+            }
+        },
+        {
+            "name": "directory",
+            "type": "filePath",
+            "label": "ms-resource:loc.input.label.directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "ms-resource:loc.input.help.directory",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "packageDescription",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.packageDescription",
+            "defaultValue": "",
+            "helpMarkDown": "ms-resource:loc.input.help.packageDescription",
+            "required": "false",
+            "visibleRule": "command = publish"
+        }
+    ]
+}

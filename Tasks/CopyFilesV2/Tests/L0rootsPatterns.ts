@@ -42,7 +42,7 @@ Object.assign(fsClone, {
         }
     },
     statSync(itemPath: string): fs.Stats {
-        const itemStats: fs.Stats = new fs.Stats();
+        const itemStats: fs.Stats = Object.create(fs.Stats.prototype) as fs.Stats;
         switch (itemPath) {
             case path.normalize('/srcDir/someOtherDir/file1.file'):
             case path.normalize('/srcDir/someOtherDir/file2.file'):

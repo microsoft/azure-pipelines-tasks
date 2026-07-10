@@ -12,6 +12,7 @@ import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-util
 import { getCommandConfigurationFile, getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
 
 import ClusterConnection from "./clusterconnection";
+import { sanitizeForLoggingCommand } from "./sanitize";
 
 import trm = require('azure-pipelines-task-lib/toolrunner');
 
@@ -78,10 +79,12 @@ function displayKubectlVersion(connection: ClusterConnection): void {
         const result = command.execSync({ silent: true } as trm.IExecOptions);
         const resultInJSON = JSON.parse(result.stdout);
         if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+            const clientVersion = sanitizeForLoggingCommand(resultInJSON.clientVersion.gitVersion);
             console.log('==============================================================================');
-            console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+            console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + clientVersion);
             if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
-                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                const serverVersion = sanitizeForLoggingCommand(resultInJSON.serverVersion.gitVersion);
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + serverVersion);
                 console.log('==============================================================================');
             }
             else {
@@ -138,7 +141,6 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var result = [];
     return commandImplementation.run(clusterConnection, command, (data) => result.push(data))
         .fin(function cleanup() {
-            console.log("commandOutput" + result);
             const resultString = result.toString();
             const commandOutputLength = resultString.length;
             if (commandOutputLength > environmentVariableMaximumSize) {

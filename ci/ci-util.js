@@ -109,7 +109,7 @@ var run = function (cl, inheritStreams) {
     var rc = 0;
     var output;
     try {
-        output = ncp.execSync(cl, options);
+        output = ncp.execSync(cl, options); // CodeQL [SM01509] this is a generic function used in tasks pipeline to execute few git commands 
     }
     catch (err) {
         if (!inheritStreams) {

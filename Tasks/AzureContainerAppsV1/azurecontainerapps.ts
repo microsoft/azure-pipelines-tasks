@@ -61,6 +61,10 @@ export class azurecontainerapps {
             tl.setResult(tl.TaskResult.Failed, err.message);
             this.telemetryHelper.setFailedResult(err.message);
         } finally {
+            // Logout of any Azure Container Registry instances that were authenticated against so that
+            // registry credentials are not left behind in the Docker config on the agent.
+            this.registryHelper.logoutAcr();
+
             // Logout of Azure if logged in during this task session
             this.authHelper.logoutAzure();
 
@@ -103,6 +107,7 @@ export class azurecontainerapps {
     // Miscellaneous properties
     private static imageToBuild: string;
     private static runtimeStack: string;
+    private static kind: string;
     private static ingress: string;
     private static targetPort: string;
     private static shouldUseUpdateCommand: boolean;
@@ -471,6 +476,14 @@ export class azurecontainerapps {
                 // Note: this step should be skipped if we're updating an existing Container App (ingress is enabled via a separate command)
                 this.commandLineArgs.push(`--ingress ${this.ingress}`);
                 this.commandLineArgs.push(`--target-port ${this.targetPort}`);
+            }
+
+            // Get the kind input
+            this.kind = tl.getInput('kind', false);
+
+            // Set the value of kind if provided
+            if (!util.isNullOrEmpty(this.kind)) {
+                this.commandLineArgs.push(`--kind ${this.kind}`);
             }
         }
 

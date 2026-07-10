@@ -10,6 +10,7 @@ Register-Mock Invoke-BuildTools
 Register-Mock EmitTelemetry
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
+    @{ VSVersion = '18.0' ; MSBuildVersion = '18.0' }
     @{ VSVersion = '17.0' ; MSBuildVersion = '17.0' }
     @{ VSVersion = '16.0' ; MSBuildVersion = '16.0' }
     @{ VSVersion = '15.0' ; MSBuildVersion = '15.0' }

@@ -27,6 +27,7 @@ $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 # API-Version(s)
 $apiVersion = "2014-04-01"
 $azureStackapiVersion = "2015-06-15"
+$sqlFirewallApiVersion = "2021-11-01"
 
 # Constants
 $azureStack = "AzureStack"
@@ -1000,7 +1001,7 @@ function Add-AzureRmSqlServerFirewall {
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$sqlFirewallApiVersion"
     $body = "{
             'properties' : {
             'startIpAddress':'$startIPAddress',
@@ -1051,7 +1052,7 @@ function Remove-AzureRmSqlServerFirewall {
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$sqlFirewallApiVersion"
     $headers = @{Authorization = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token) }
 
     Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
@@ -1350,9 +1351,24 @@ function ConvertTo-Pfx {
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
     Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
 
-    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
+    $useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureRestHelpers'
+    if(-not $useOpenssLatestVersion) {
+        $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
+    }
+    else {
+        $openSSLExePath = "$PSScriptRoot\opensslv3.5.7\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.7\openssl.cnf"
+    }
+    try {
+        $versionOutput = & $openSSLExePath version
+        Write-Verbose "OpenSSL version: $versionOutput"
+    } catch {
+        Write-Host "There was an error while getting the OpenSSL version $_"
+    }
 
+    $env:RANDFILE=".rnd"
+    $openSSLArgs = "pkcs12 -export -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword

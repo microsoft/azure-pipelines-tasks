@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
-  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64, arm64) of MSBuild to run.",
   "loc.input.label.logProjectEvents": "Record Project Details",
   "loc.input.help.logProjectEvents": "Optionally record timeline details for each project.",
   "loc.input.label.createLogFile": "Create Log File",

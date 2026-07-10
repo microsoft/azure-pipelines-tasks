@@ -21,4 +21,5 @@ export class Inputs {
     public static readonly changeLogCompareToRelease = "changeLogCompareToRelease";
     public static readonly changeLogCompareToReleaseTag = "changeLogCompareToReleaseTag";
     public static readonly changeLogType = "changeLogType";
+    public static readonly makeLatest = "makeLatest";
 }

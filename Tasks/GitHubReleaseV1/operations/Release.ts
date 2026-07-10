@@ -8,9 +8,9 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
 
-    public async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
+    public async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, makeLatest: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._createReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "POST";
         request.body = JSON.stringify({
@@ -19,7 +19,8 @@ export class Release {
             "name": releaseTitle,
             "body": releaseNote,
             "draft": isDraft,
-            "prerelease": isPrerelease
+            "prerelease": isPrerelease,
+            "make_latest": makeLatest
         });
         request.headers = {
             "Content-Type": "application/json",
@@ -30,9 +31,9 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
+    public async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string, makeLatest: string): Promise<WebResponse> {
         let request = new WebRequest();
-            
+
         request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "PATCH";
         request.body = JSON.stringify({
@@ -41,7 +42,8 @@ export class Release {
             "name": releaseTitle,
             "body": releaseNote,
             "draft": isDraft,
-            "prerelease": isPrerelease
+            "prerelease": isPrerelease,
+            "make_latest": makeLatest
         });
         request.headers = {
             "Content-Type": "application/json",
@@ -54,7 +56,7 @@ export class Release {
 
     public async deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
-            
+
         request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "DELETE";
         request.headers = {
@@ -67,7 +69,7 @@ export class Release {
 
     public async deleteReleaseAsset(githubEndpointToken: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._deleteReleaseAssetApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, asset_id);
         request.method = "DELETE";
         request.headers = {
@@ -82,7 +84,7 @@ export class Release {
     public async uploadReleaseAsset(githubEndpointToken: string, filePath: string, uploadUrl: string): Promise<WebResponse> {
         let fileName = path.basename(filePath);
         tl.debug("Filename: " + fileName);
-        
+
         let rd = fs.createReadStream(filePath);
         var stats = fs.statSync(filePath);
 
@@ -102,7 +104,7 @@ export class Release {
 
     public async getBranch(githubEndpointToken: string, repositoryName: string, target: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getBranchApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, target);
         request.method = "GET";
         request.headers = {
@@ -115,7 +117,7 @@ export class Release {
 
     public async getTags(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getTagsApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
@@ -128,7 +130,7 @@ export class Release {
 
     public async getReleases(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
@@ -141,7 +143,7 @@ export class Release {
 
     public async getLatestRelease(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getLatestReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
@@ -154,7 +156,7 @@ export class Release {
 
     public async getPaginatedResult(githubEndpointToken: string, nextPageLink: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = nextPageLink;
         request.method = "GET";
         request.headers = {
@@ -167,7 +169,7 @@ export class Release {
 
     public async getCommitsList(githubEndpointToken: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getCommitsListApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, startCommitSha, endCommitSha);
         request.method = "GET";
         request.headers = {
@@ -180,7 +182,7 @@ export class Release {
 
     public async getCommitsBeforeGivenSha(githubEndpointToken: string,repositoryName: string, sha: string): Promise<WebResponse> {
         let request = new WebRequest();
-        
+
         request.uri = util.format(this._getCommitsBeforeGivenShaApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, sha);
         request.method = "GET";
         request.headers = {
@@ -232,7 +234,7 @@ export class Release {
                     title
                     state
                     }`;
-        
+
         let query = `query{
             repository(owner: "${repositoryDetails[0]}", name: "${repositoryDetails[1]}"){
                 ${issuesQuery}

@@ -4,6 +4,8 @@
   "description": "Azure Pipelines Xamarin Android Task",
   "main": "xamarinandroid.js",
   "scripts": {
+    "build": "node ../../make.js build --task XamarinAndroidV1",
+    "serverBuild": "node ../../make.js serverBuild --task XamarinAndroidV1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,9 +23,9 @@
     "@types/node": "^20.3.1",
     "@types/q": "^1.5.1",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-java-common": "^2.198.1",
-    "azure-pipelines-tasks-msbuildhelpers": "^3.252.0"
+    "azure-pipelines-task-lib": "^5.2.8",
+    "azure-pipelines-tasks-java-common": "^2.272.0",
+    "azure-pipelines-tasks-msbuildhelpers": "^3.272.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

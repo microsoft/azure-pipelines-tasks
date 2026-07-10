@@ -194,4 +194,23 @@ describe('SshV0 Suite', function () {
             assert(tr.stdout.indexOf('Input required: readyTimeout') >= 0, 'wrong error message: "' + tr.stdout + '"');
         }, tr);
     });
+
+    describe('escapeVsoCommands', function () {
+        it('escapes ##vso logging commands from remote output', async () => {
+            process.env['sshEndpoint'] = 'IDValidPwd';
+            process.env['commands'] = 'cat motd.txt';
+            process.env['runOptions'] = 'commands';
+            process.env['readyTimeout'] = '20000';
+
+            let tp = path.join(__dirname, 'L0VsoCommandInjection.js');
+            var tr = new tmrm.MockTestRunner(tp);
+
+            await tr.runAsync();
+
+            runValidations(() => {
+                assert(tr.stdout.indexOf('##_vso[task.setvariable variable=INJECTED]hacked') >= 0, 'remote ##vso command should be escaped: "' + tr.stdout + '"');
+                assert(tr.stdout.indexOf('##vso[task.setvariable') < 0, 'raw ##vso command should not reach the agent: "' + tr.stdout + '"');
+            }, tr);
+        });
+    });
 });

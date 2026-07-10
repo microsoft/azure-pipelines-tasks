@@ -1,10 +1,16 @@
 {
+    "common": [
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
+        }
+    ],
     "externals": {
        "nugetv2": [
             {
                 "name": "TaskModuleSqlUtility",
-                "version": "0.1.5",
-                "repository": "https://www.powershellgallery.com/api/v2/",
+                "version": "0.1.7",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
                 "cp": [
                     {
                       "source": "*.ps*",
@@ -14,8 +20,8 @@
             },
             {
                 "name": "VstsTaskSdk",
-                "version": "0.8.2",
-                "repository": "https://www.powershellgallery.com/api/v2/",
+                "version": "0.21.0",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
                 "cp": [
                     {
                         "source": [

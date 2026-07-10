@@ -1,5 +1,16 @@
 parameters:
-  os: ''
+- name: os
+  type: string
+  default: ''
+- name: useSemverBuildConfig
+  type: boolean
+  default: false
+- name: generateReleaseNotes
+  type: boolean
+  default: true
+- name: signTasks
+  type: boolean
+  default: false
 
 steps:
 
@@ -15,19 +26,25 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
 # Use node 20, npm 9
-- task: NodeTool@0
+- task: UseNode@1
   displayName: Use node 20
   inputs:
-    versionSpec: 20.x
+    version: 20.20.x
 
 - task: NpmAuthenticate@0
   inputs:
     workingFile: .npmrc
 
-# npm install
-- script: npm install
-  displayName: npm install
+# npm ci
+- script: npm ci
+  displayName: npm ci
 
 - script: |
     echo "##[error]PRs from fork repositories forbidden. Create PR directly."
@@ -36,15 +53,19 @@ steps:
   condition: eq(variables['SYSTEM.PULLREQUEST.ISFORK'], 'true')
 
 # Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm install
-  displayName: npm install min agent demands
-
-- script: node ./ci/verifyMinAgentDemands/index.js
-  env:
-    GITHUB_PAT: $(GitHubPAT)
-  displayName: Verify min agent demands
+# TEMPORARILY DISABLED: This check calls the GitHub API to fetch the latest agent
+# release, which requires a GitHub PAT. The classic PAT is blocked by the
+# 'Microsoft Open Source' enterprise policy (token lifetime > 8 days). Re-enable
+# once proper auth (e.g. a GitHub App installation token) is set up.
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm ci
+#   displayName: npm ci min agent demands
+#
+# - script: node ./ci/verifyMinAgentDemands/index.js
+#   env:
+#     GITHUB_PAT: $(GitHubPAT)
+#   displayName: Verify min agent demands
 
 - script: node ./ci/verify-registries.js
   displayName: Verify registries
@@ -68,43 +89,14 @@ steps:
 
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
   displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, false)
+
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks --use-semver-build-config
+  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: eq(${{ parameters.useSemverBuildConfig }}, true)
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
-
-- template: /ci/generate-branch-name.yml@self
-  parameters:
-    prefix: releases
-
-- powershell: |
-    $releaseBranch = "$(branchName)"
-
-    # add config entry to avoid errors while pulling
-    git config --global user.email "$(username)@microsoft.com"
-    git config --global user.name "$(username)"
-
-    Write-Host 'Enabling verbose git tracing..'
-    git config --global http.verbose true
-    $env:GIT_TRACE = 1
-    $env:GIT_CURL_VERBOSE = 1
-
-    # Pull commits from remote and push branch to git
-    git checkout -b $releaseBranch
-    Write-Host 'Trying to pull the remote branch..'
-    git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    if (-not $?) {
-      Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
-    }
-    Write-Host 'Trying to push to the remote branch..'
-    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-  condition: |
-    and(
-      succeeded(),
-      in(variables['build.reason'], 'Schedule', 'Manual'),
-      eq(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master')
-    )
-  displayName: Push release branch
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
@@ -116,7 +108,7 @@ steps:
       ne(variables['COURTESY_PUSH'], 'true'),
       eq(variables['build.reason'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master'),
-      ne(variables['System.PullRequest.SourceBranch'], 'users/merlynop/node20merge-2')
+      not(contains(variables['System.PullRequest.SourceBranch'], 'users/bhatibhavesh/concurrentbuild'))
     )
 
 # Clean
@@ -124,9 +116,17 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter)
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
+  env:
+    PACKAGE_TOKEN: $(System.AccessToken)
+
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true --fast-build $(IS_FAST_BUILD_ENABLED)
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
+  env:
+    PACKAGE_TOKEN: $(System.AccessToken)
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
@@ -148,38 +148,11 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
-# Only on Windows:
-- ${{ if eq(parameters.os, 'Windows_NT') }}:
-
-  # Stage tasks individually into the package directory
-  - script: node ./ci/stage-package.js false individually
-    displayName: Stage tasks individually into the package directory
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
-
-  # Sign all task zips as nuget packages
-  - template: /ci/sign-all-tasks.yml@self
-    parameters:
-      layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
-
-  # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js false
-    displayName: Stage all the tasks into a single zip for upload
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
-
 # Test
 - script: node make.js test
   displayName: Run tests
   condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
+
 - script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
   condition: and(succeeded(), ne(variables['numTasks'], 0), ne(variables['tasksSkipTests'], 'true'))
@@ -190,6 +163,35 @@ steps:
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
+
+# Only on Windows:
+- ${{ if eq(parameters.os, 'Windows_NT') }}:
+
+  # Stage tasks individually into the package directory
+  - script: node ./ci/stage-package.js true individually
+    displayName: Stage tasks individually into the package directory
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
+
+  # Sign all task zips as nuget packages
+  - ${{ if parameters.signTasks }}:
+    - template: /ci/sign-all-tasks.yml@self
+      parameters:
+        layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+  # Stage all the tasks into a single zip for upload
+  - script: node ./ci/stage-package.js
+    displayName: Stage all the tasks into a single zip for upload
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
@@ -203,23 +205,3 @@ steps:
         eq(variables.collect_diagnostics, 'true'),
         ne(variables['numTasks'], 0)
       )
-
-  - powershell: |
-      $releaseBranch = "$(branchName)"
-
-      if ($(currentSprintWeek) -eq 3) {
-        cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
-        npm install
-        node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch
-      } else {
-        echo "Skipping since release notes generating on week 3"
-      }
-    condition: |
-      and(
-        succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
-        eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      )
-    continueOnError: true
-    displayName: Create Release
