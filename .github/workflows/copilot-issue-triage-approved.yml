@@ -1,0 +1,144 @@
+name: Copilot Issue Triage — Approved (POC)
+
+# Companion to the copilot-issue-triage agentic workflow (the NOMINATION half).
+#
+# APPROVAL FLOW (why this workflow exists):
+#   * copilot-issue-triage nominates well-scoped issues by adding the
+#     `copilot-candidate-rm` nomination label and a comment.
+#   * A maintainer approves a nominated issue by MANUALLY ASSIGNING the GitHub
+#     Copilot coding agent to it from the issue UI. That manual assignment (a
+#     user action, with a user token) is what starts Copilot — it must be a
+#     human action because assigning an agent is NOT permitted with the Actions
+#     GITHUB_TOKEN (a GitHub App installation token returns "Assigning agents is
+#     not supported…").
+#   * THIS workflow reacts to that assignment and does the deterministic
+#     post-approval housekeeping that the installation token CAN do:
+#       1. remove the `copilot-candidate-rm` nomination label,
+#       2. add a `copilot-working` audit label,
+#       3. comment confirming Copilot is now working the issue.
+#
+# It is a plain Actions workflow (not gh-aw): the work is fully deterministic
+# label/comment bookkeeping keyed on the assignee, so no LLM is involved and
+# there is nothing to compile.
+#
+# FORK FOR YOUR TEAM: set NOMINATION_LABEL below to your team's nomination label
+# (must match the `add-labels.allowed` label in your copilot-issue-triage copy).
+
+on:
+  # Approval signal: a maintainer assigned someone to an issue. The script
+  # no-ops unless the assignee is the Copilot coding agent.
+  issues:
+    types: [assigned]
+  # Manual re-processing of a specific issue that already has Copilot assigned.
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to process (must already have Copilot assigned)"
+        required: true
+        type: string
+
+# Serialize per issue so two near-simultaneous assigned events can't both add
+# the label / comment. cancel-in-progress false so a queued run still runs.
+concurrency:
+  group: copilot-triage-approved-${{ github.event.issue.number || github.event.inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  process_approved:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Process Copilot-assigned issue
+    steps:
+      - name: Housekeeping for Copilot-assigned issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ---- CONFIG (edit per team) --------------------------------------
+            const NOMINATION_LABEL = 'copilot-candidate-rm'; // set by the nominator
+            const WORKING_LABEL = 'copilot-working';         // audit label added here
+            // Exact bot logins the Copilot coding agent is assigned under.
+            const COPILOT_LOGINS = new Set(['copilot-swe-agent', 'copilot']);
+            // ------------------------------------------------------------------
+
+            const { owner, repo } = context.repo;
+            const isCopilot = login => COPILOT_LOGINS.has((login || '').toLowerCase());
+            const hasLbl = (labels, name) =>
+              (labels || []).map(l => (l.name || l).toLowerCase()).includes(name.toLowerCase());
+
+            // Resolve the target issue number for both trigger types.
+            let issueNumber;
+            if (context.eventName === 'workflow_dispatch') {
+              issueNumber = parseInt(context.payload.inputs.issue_number, 10);
+              if (!issueNumber) { core.setFailed('issue_number input is required.'); return; }
+            } else {
+              // issues: assigned. Do NOT early-return based on the triggering
+              // assignee: with concurrency cancel-in-progress:false, a pending
+              // run whose trigger WAS Copilot can be canceled by a newer queued
+              // assignment, which would drop the housekeeping. Instead let every
+              // assigned event proceed and decide off LIVE issue state below —
+              // the live `assignees.some(isCopilot)` check and the
+              // `copilot-working` idempotency guard make this safe and ensure
+              // that whichever run ends up executing still does the work.
+              issueNumber = context.payload.issue.number;
+            }
+
+            // Read live issue state (dispatch has no payload; event payload may
+            // be stale by the time we run).
+            const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number: issueNumber });
+
+            if (issue.pull_request) {
+              core.info(`#${issueNumber} is a pull request — skipping.`);
+              return;
+            }
+
+            // Confirm Copilot is actually assigned (guards manual dispatch and
+            // an assignment that was undone before this run).
+            const assignees = (issue.assignees || []).map(a => a.login);
+            if (!assignees.some(isCopilot)) {
+              core.info(`#${issueNumber} does not have the Copilot coding agent assigned (assignees: ${assignees.join(', ') || 'none'}) — skipping.`);
+              return;
+            }
+
+            // Idempotency: if we already added the working label, assume the
+            // housekeeping (and comment) ran on a previous assigned event.
+            if (hasLbl(issue.labels, WORKING_LABEL)) {
+              core.info(`#${issueNumber} already has '${WORKING_LABEL}' — already processed, skipping.`);
+              return;
+            }
+
+            const wasNominated = hasLbl(issue.labels, NOMINATION_LABEL);
+
+            // 1. Remove the nomination label (best-effort; 404 if never present).
+            if (wasNominated) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number: issueNumber, name: NOMINATION_LABEL });
+                core.info(`Removed '${NOMINATION_LABEL}' from #${issueNumber}.`);
+              } catch (e) {
+                if (e.status !== 404) core.warning(`Could not remove '${NOMINATION_LABEL}' from #${issueNumber}: ${e.message}`);
+              }
+            }
+
+            // 2. Add the working audit label.
+            try {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: [WORKING_LABEL] });
+              core.info(`Added '${WORKING_LABEL}' to #${issueNumber}.`);
+            } catch (e) {
+              core.warning(`Could not add '${WORKING_LABEL}' to #${issueNumber}: ${e.message}`);
+            }
+
+            // 3. Comment confirming Copilot is on it.
+            const nominatedNote = wasNominated
+              ? ' The `' + NOMINATION_LABEL + '` nomination label has been removed and replaced with `' + WORKING_LABEL + '`.'
+              : ' Added the `' + WORKING_LABEL + '` label.';
+            try {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issueNumber,
+                body: '🤖 **Approved — assigned to the Copilot coding agent.**\n\nA maintainer assigned the GitHub Copilot coding agent to this issue, so Copilot is now working on it and will open a draft pull request proposing a fix. A maintainer will review that PR — nothing is merged automatically.' + nominatedNote,
+              });
+              core.info(`Commented on #${issueNumber}.`);
+            } catch (e) {
+              core.warning(`Could not comment on #${issueNumber}: ${e.message}`);
+            }
+
+            core.info(`Done processing #${issueNumber} (wasNominated=${wasNominated}).`);

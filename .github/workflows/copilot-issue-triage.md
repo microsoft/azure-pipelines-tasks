@@ -2,10 +2,12 @@
 emoji: "🤖"
 name: Copilot Issue Triage (POC)
 description: >-
-  Scheduled agentic workflow that nominates well-scoped issues for a maintainer
-  to approve, then assigns approved issues to the GitHub Copilot coding agent for
-  a fix PR. Two-label nomination→approval handshake. Adapted from github/gh-aw
-  issue-monster for microsoft/azure-pipelines-tasks.
+  Scheduled agentic workflow that nominates well-scoped issues (one label + a
+  comment) for a maintainer to hand to the GitHub Copilot coding agent. This is
+  the NOMINATION half; a maintainer approves by manually assigning Copilot, and
+  the companion copilot-issue-triage-approved workflow does the post-assignment
+  housekeeping. Adapted from github/gh-aw issue-monster for
+  microsoft/azure-pipelines-tasks.
 
 # ---------------------------------------------------------------------------
 # POC NOTES (safe to delete before productionizing)
@@ -18,37 +20,39 @@ description: >-
 #
 # SAFETY MODEL (why this is safe to run on a large public repo):
 #   * The agent job is READ-ONLY and its ONLY capability is NOMINATION —
-#     adding the nomination label and commenting. It has NO tool to assign
-#     Copilot and NO tool to remove labels, so a crafted/injected issue body
-#     cannot trick the model into bypassing the human-approval gate.
-#   * Two-label nomination → approval handshake, configured per team:
+#     adding one nomination label and commenting. It has NO tool to assign
+#     Copilot, so a crafted/injected issue body cannot trick the model into
+#     handing work to the coding agent.
+#   * Nomination + a manual human approval:
 #       - `CONFIG.nominationLabel` (RM: `copilot-candidate-rm`) is BOT-applied.
-#         The workflow adds it to at most `CONFIG.nominateCount` issues per
-#         scheduled run to say "maintainer, please look at this".
-#       - `CONFIG.approvalLabel` (RM: `copilot-approved-rm`) is MAINTAINER-applied
-#         by hand. The workflow only READS it — it NEVER adds the approval label.
-#   * Assignment is 100% DETERMINISTIC and lives in the pre-activation
-#     github-script step (NOT the AI): only an issue that carries the approval
-#     label (and has no existing assignee) is assigned to the Copilot coding
-#     agent via the GraphQL `replaceActorsForAssignable` mutation; the nomination
-#     label is then removed and a transparency comment is posted. Because the AI
-#     has no assign capability, the human go-signal cannot be forged.
-#   * Nomination is throttled: if any issue is already nominated-but-unapproved,
-#     the workflow nominates nothing new until the maintainer clears the queue.
+#         The workflow adds it to at most `CONFIG.nominateCount` issues per run
+#         to say "maintainer, please look at this".
+#       - APPROVAL is a maintainer MANUALLY ASSIGNING the issue to the Copilot
+#         coding agent from the issue UI. That manual assignment (a user action,
+#         with a user token) is what starts Copilot — this workflow never assigns
+#         Copilot itself. This is deliberate: assigning an agent is NOT permitted
+#         with the Actions GITHUB_TOKEN (a GitHub App installation token returns
+#         "Assigning agents is not supported…"), so the one security-sensitive
+#         action stays firmly in human hands.
+#   * Nomination is throttled: while any nominated issue is still unassigned
+#     (awaiting a maintainer decision), the workflow nominates nothing new.
 #   * `add-labels` is restricted to the nomination label only, capped per run.
-#     The agent has no `assign-to-agent` and no `remove-labels` handler at all.
-#   * A pre-activation search (github-script) does the heavy filtering/scoring
-#     deterministically, so the model only reasons over a small candidate set.
+#     The agent has no assign and no remove-label handler at all.
+#   * A pre-activation search (github-script, READ-ONLY) does the heavy
+#     filtering/scoring, so the model only reasons over a small candidate set.
+#
+# COMPANION WORKFLOW:
+#   * `copilot-issue-triage-approved.yml` handles the OTHER half: it triggers
+#     when the Copilot coding agent is ASSIGNED to an issue (the maintainer's
+#     approval action) and does the deterministic housekeeping — removes this
+#     nomination label, adds a `copilot-working` audit label, and comments. That
+#     is why THIS workflow has no labeled/assigned trigger: approval and its
+#     bookkeeping live entirely in the companion workflow.
 #
 # TRIGGERS:
-#   * `schedule: daily` + `workflow_dispatch` — the main loop: the pre-activation
-#     step deterministically assigns any already-approved issues to Copilot, then
-#     (if the nomination queue is clear) the agent nominates new candidates.
-#   * `issues: types: [labeled]` — instant path: the moment a maintainer adds
-#     the approval label to a nominated issue, the pre-activation step assigns it
-#     to Copilot within seconds (deterministically, no agent involved) instead of
-#     waiting for the next scheduled run. It exits as a no-op for every other
-#     label add.
+#   * `schedule: daily` + `workflow_dispatch` — the ONLY triggers. Each run
+#     builds a scored candidate pool and (if the nomination queue is clear) the
+#     agent nominates new candidates. There is no label/assignment trigger here.
 #
 # FORK FOR YOUR TEAM (this workflow is generic; RM is the shipped example):
 #   Each area team runs its OWN copy of this workflow. To create one:
@@ -59,21 +63,19 @@ description: >-
 #          - `nominationLabel`    a DISTINCT bot-applied label per team so teams
 #                                 do not pick each other's issues (e.g.
 #                                 `copilot-candidate-artifacts`)
-#          - `approvalLabel`      a DISTINCT maintainer-applied approval label
-#                                 per team (e.g. `copilot-approved-artifacts`)
 #          - `nominateCount`      how many issues to nominate per scheduled run
 #          - `areaLabels`         the `Area: …` labels your team owns
 #          - `codeownersHandles`  CODEOWNERS handles whose `Tasks/*` you own
 #                                 (use `[]` to scope by area labels only)
 #          - `excludeLabels` / `priorityLabels`  optional per-team tuning
-#     3. Create BOTH labels in the repo up front (the approval label must exist
-#        so maintainers can apply it): e.g.
+#     3. Create the nomination label in the repo up front, e.g.
 #          gh label create copilot-candidate-<team> --color 0886dd
-#          gh label create copilot-approved-<team>  --color 0E8A16
 #     4. Edit the FRONTMATTER identity to match: `name`, `description`,
 #        `schedule`, `safe-outputs.messages`, the per-run caps, and the
 #        `add-labels` `allowed:` list (set it to YOUR team's nomination label).
 #     5. `gh aw compile copilot-issue-triage-<team>` and commit both files.
+#     6. Fork the companion workflow too (copilot-issue-triage-approved.yml):
+#        set its NOMINATION_LABEL to your team's nomination label.
 #   The RM team's filter is preserved by the CONFIG values shipped in THIS file.
 # ---------------------------------------------------------------------------
 
@@ -83,31 +85,19 @@ on:
   # spikes. Keep infrequent for a POC; issue-monster runs every 30m.
   schedule: daily
 
-  # Instant confirmation path: when a maintainer adds the approval label to a
-  # nominated issue, process it within seconds instead of waiting for the daily
-  # run. The pre-activation step no-ops for any other label.
-  issues:
-    types: [labeled]
-
   # Scopes for the pre-activation `steps:` below. Without this the pre-activation
   # job inherits the top-level `permissions: {}` and its GITHUB_TOKEN cannot
-  # search issues, read CODEOWNERS, enrich linked PRs, or perform the
-  # deterministic confirmation writes — the run would fail. (This is separate
-  # from the agent job's `permissions:` block further down.)
+  # search issues, read CODEOWNERS, or enrich linked PRs. READ-ONLY: this step
+  # never writes — nominating (label + comment) is done by the agent's
+  # safe-outputs jobs, and assignment is a manual maintainer action handled by
+  # the companion workflow.
   permissions:
     contents: read        # read .github/CODEOWNERS
-    issues: write         # list/enrich issues AND perform the deterministic
-                          # confirmation: assign Copilot, remove the nomination
-                          # label, and post the assignment comment
+    issues: read          # list/enrich candidate issues
     pull-requests: read   # linked-PR timeline nodes
 
-  # Deterministic pre-activation step. Runs before the agent and does two things:
-  #   1. CONFIRM (writes): assign every maintainer-approved issue to the Copilot
-  #      coding agent, remove its nomination label, and comment — all here, so
-  #      the AI never has assign capability (the human-approval gate is enforced
-  #      by the system, not by the prompt).
-  #   2. NOMINATE (read-only): build a scored candidate pool and publish it as
-  #      job outputs for the agent to pick from.
+  # Read-only pre-activation step: build a scored candidate pool and publish it
+  # as job outputs for the agent to nominate from. It performs NO writes.
   steps:
     - name: Search for candidate issues
       id: search
@@ -131,7 +121,6 @@ on:
           const CONFIG = {
             team: 'RM',                                  // shown in logs only
             nominationLabel: 'copilot-candidate-rm',     // BOT-applied: marks an issue the workflow nominated for review
-            approvalLabel: 'copilot-approved-rm',        // MAINTAINER-applied (manual): the go-signal to assign Copilot
             nominateCount: 2,                            // how many issues to nominate per scheduled run
             areaLabels: ['Area: Release', 'Area:RM'],    // in-scope Area labels
             codeownersHandles: ['manolerazvan'],         // CODEOWNERS owners whose Tasks/* are in scope
@@ -154,7 +143,6 @@ on:
           const BODY_SNIPPET_MAX_LENGTH = 600;
 
           const NOMINATION_LABEL = CONFIG.nominationLabel;   // bot-applied
-          const APPROVAL_LABEL = CONFIG.approvalLabel;       // maintainer-applied
           const excludeLabels = CONFIG.excludeLabels.map(l => l.toLowerCase());
           const priorityLabels = CONFIG.priorityLabels.map(l => l.toLowerCase());
           const scopeAreaLabels = CONFIG.areaLabels.map(l => l.toLowerCase());
@@ -185,25 +173,16 @@ on:
             }
             return '';
           };
-          const hasLbl = (iss, name) =>
-            (iss.labels || []).map(l => (l.name || l).toLowerCase()).includes(name.toLowerCase());
-          const snippet = i => {
-            const body = (i.body || '').replace(/\s+/g, ' ').trim();
-            const snip = body.length > BODY_SNIPPET_MAX_LENGTH ? `${body.slice(0, BODY_SNIPPET_MAX_LENGTH)}…` : body;
-            const labs = (i.labels || []).map(l => l.name || l).join(', ');
-            return `#${i.number} | ${i.title}\nlabels=${labs}\nBody: ${snip || '(no body)'}`;
-          };
 
           // Every output the agent job consumes; defaults describe a no-op run.
-          // NOTE: the agent's ONLY job is NOMINATION. Assigning Copilot to an
-          // approved issue is done deterministically in this pre-activation step
-          // (see confirmIssue below), never by the agent — so there are no
-          // confirm_* outputs.
+          // NOTE: the agent's ONLY job is NOMINATION. It never assigns Copilot —
+          // approval is a maintainer manually assigning the coding agent, and the
+          // companion copilot-issue-triage-approved workflow handles the
+          // post-assignment housekeeping.
           const out = {
-            mode: 'noop',                     // 'scheduled' | 'confirm-event' | 'noop'
+            mode: 'noop',                     // 'scheduled' | 'noop'
             team: CONFIG.team,
             nomination_label: NOMINATION_LABEL,
-            approval_label: APPROVAL_LABEL,
             nominate_count: String(CONFIG.nominateCount),
             nominate: 'false',                // whether to nominate new issues this run
             nominate_numbers: '',             // scored pool the agent picks from
@@ -213,93 +192,7 @@ on:
           };
           const flush = () => { for (const [k, v] of Object.entries(out)) core.setOutput(k, v); };
 
-          // ---- Deterministic Copilot assignment (the human-approval gate) ----
-          // Handing an issue to the Copilot coding agent is the security-sensitive
-          // action, so it is performed HERE, in deterministic code, and NEVER by
-          // the AI agent (which has no assign capability). The only way an issue
-          // reaches confirmIssue is by carrying the maintainer-applied approval
-          // label, which the bot cannot self-apply. This enforces "a maintainer
-          // must approve first" in the system, not merely in the prompt.
-          let _copilotActorId; let _copilotResolved = false;
-          const getCopilotActorId = async () => {
-            if (_copilotResolved) return _copilotActorId;
-            _copilotResolved = true;
-            try {
-              const r = await github.graphql(`query($owner:String!,$repo:String!){
-                repository(owner:$owner,name:$repo){
-                  suggestedActors(capabilities:[CAN_BE_ASSIGNED], first:100){
-                    nodes{ login __typename ... on Bot { id } ... on User { id } } } } }`,
-                { owner, repo });
-              const node = (r?.repository?.suggestedActors?.nodes || [])
-                .find(n => (n.login || '').toLowerCase() === 'copilot-swe-agent');
-              if (!node) {
-                core.warning('Copilot coding agent is not an assignable actor on this repo (is the coding agent enabled?). Skipping assignment.');
-                _copilotActorId = null;
-              } else {
-                _copilotActorId = node.id;
-              }
-            } catch (e) {
-              core.warning(`Could not resolve the Copilot coding-agent actor id: ${e.message}`);
-              _copilotActorId = null;
-            }
-            return _copilotActorId;
-          };
-          // Assign Copilot to one approved+unassigned issue, remove the nomination
-          // label (the approval label stays as an audit trail), and post a
-          // transparency comment. Returns true only if the assignment succeeded.
-          const confirmIssue = async (issue) => {
-            const actorId = await getCopilotActorId();
-            if (!actorId) return false;
-            try {
-              await github.graphql(`mutation($assignableId:ID!,$actorIds:[ID!]!){
-                replaceActorsForAssignable(input:{assignableId:$assignableId,actorIds:$actorIds}){
-                  assignable{ ... on Issue { number } } } }`,
-                { assignableId: issue.node_id, actorIds: [actorId] });
-            } catch (e) {
-              core.warning(`Failed to assign Copilot to #${issue.number}: ${e.message}`);
-              return false;
-            }
-            try {
-              await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name: NOMINATION_LABEL });
-            } catch (e) {
-              if (e.status !== 404) core.warning(`Could not remove nomination label from #${issue.number}: ${e.message}`);
-            }
-            try {
-              await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
-                body: '🤖 **Assigned to the Copilot coding agent**\n\nA maintainer approved this issue, so it has been handed to the Copilot coding agent to propose a fix PR. A maintainer will review the result.' });
-            } catch (e) {
-              core.warning(`Could not comment on #${issue.number}: ${e.message}`);
-            }
-            core.info(`Confirmed #${issue.number}: assigned Copilot, removed nomination label, commented.`);
-            return true;
-          };
-
           try {
-            // ---- Fast path: instant confirmation on issues.labeled ----------
-            // Fires for EVERY label added anywhere in the repo, so exit unless
-            // the added label is our approval label AND the issue is one we
-            // previously nominated. The assignment is done RIGHT HERE
-            // (deterministically); the agent job is never involved on this path.
-            if (context.eventName === 'issues' && context.payload?.action === 'labeled') {
-              const added = (context.payload.label?.name || '').toLowerCase();
-              const issue = context.payload.issue;
-              out.mode = 'confirm-event';
-              if (added !== APPROVAL_LABEL.toLowerCase()) {
-                core.info(`Ignoring labeled event: '${context.payload.label?.name}' is not the approval label.`);
-              } else if (!hasLbl(issue, NOMINATION_LABEL)) {
-                core.info(`#${issue.number} got approval label but has no nomination label — ignoring.`);
-              } else if ((issue.assignees || []).length > 0) {
-                // Someone is already working this issue — don't hand it to
-                // Copilot and clobber a manual assignment.
-                core.info(`#${issue.number} approved but already assigned to ${(issue.assignees || []).map(a => a.login).join(', ')} — skipping.`);
-              } else {
-                await confirmIssue(issue);
-              }
-              // Nothing for the agent to do on a label event — has_work stays false.
-              flush();
-              return;
-            }
-
             // Build the set of task base-names owned by CONFIG.codeownersHandles
             // by reading .github/CODEOWNERS (read-only). Versioned folders
             // (…V0, …V1, …) collapse to a single base name. Skipped entirely
@@ -384,44 +277,22 @@ on:
 
             out.mode = 'scheduled';
 
-            // (A) CONFIRM — assign every approved, unassigned issue to Copilot
-            // RIGHT HERE, deterministically. The agent is never given assign
-            // capability, so a crafted issue body cannot trick it into skipping
-            // the human-approval gate. We list by label via the Issues API
-            // (listForRepo with a comma-joined `labels` = AND) instead of the
-            // Search API on purpose:
-            //   * it is read-after-write consistent — Search lags reality by
-            //     seconds–minutes, so a just-approved issue could be missed, or
-            //     two close-together runs could both act on a stale view; and
-            //   * github.paginate walks EVERY match, so an approved issue is
-            //     never dropped past a 100-result page.
-            // listForRepo also returns PRs (a PR is an issue), so filter them out.
-            const confirmAll = await github.paginate(github.rest.issues.listForRepo, {
-              owner, repo, state: 'open',
-              labels: `${NOMINATION_LABEL},${APPROVAL_LABEL}`, per_page: 100,
-            });
-            const confirmItems = confirmAll
-              .filter(i => !i.pull_request && (i.assignees || []).length === 0);
-            core.info(`Confirm set: ${confirmItems.length} approved & unassigned issue(s).`);
-            let confirmedCount = 0;
-            for (const issue of confirmItems) {
-              if (await confirmIssue(issue)) confirmedCount++;
-            }
-            core.info(`Confirmed ${confirmedCount}/${confirmItems.length} approved issue(s).`);
-
-            // (B) NOMINATION — only when nothing is already awaiting approval,
-            // so we never pile up more than nominateCount pending nominations.
-            // Same rationale as (A): list nominated issues directly (consistent +
-            // fully paged) and count those still missing the approval label.
+            // NOMINATION — only when nothing is already awaiting a maintainer
+            // decision, so we never pile up more than nominateCount pending
+            // nominations. List nominated issues directly (read-after-write
+            // consistent + fully paged) and count those still UNASSIGNED. Once a
+            // maintainer assigns Copilot (their approval action), the issue drops
+            // out of this pending set and the throttle releases; the companion
+            // approved-processing workflow removes the nomination label.
             const nominatedAll = await github.paginate(github.rest.issues.listForRepo, {
               owner, repo, state: 'open', labels: NOMINATION_LABEL, per_page: 100,
             });
             const pendingCount = nominatedAll
-              .filter(i => !i.pull_request && !hasLbl(i, APPROVAL_LABEL)).length;
+              .filter(i => !i.pull_request && (i.assignees || []).length === 0).length;
             if (pendingCount > 0) {
-              core.info(`Nomination throttled: ${pendingCount} issue(s) nominated & awaiting maintainer approval.`);
+              core.info(`Nomination throttled: ${pendingCount} issue(s) nominated & awaiting a maintainer decision.`);
             } else {
-              // Pool = open, unassigned, not already in the handshake, not excluded.
+              // Pool = open, unassigned, not already nominated, not excluded.
               // The Search API is the right tool here (it expresses the `-label`
               // exclusions the Issues API can't), but it pages at 100. Walk up to
               // MAX_POOL_PAGES so an older high-priority issue (e.g. a p1 or a
@@ -429,7 +300,7 @@ on:
               // newer issues match; warn if we still have to truncate.
               const poolQuery =
                 `is:issue is:open repo:${owner}/${repo} no:assignee ` +
-                `-label:"${NOMINATION_LABEL}" -label:"${APPROVAL_LABEL}" ` +
+                `-label:"${NOMINATION_LABEL}" ` +
                 excludeLabels.map(l => `-label:"${l}"`).join(' ');
               core.info(`Pool search: ${poolQuery}`);
               const MAX_POOL_PAGES = 10;   // Search API hard-caps at 1000 results
@@ -486,15 +357,15 @@ on:
             }
 
             out.has_work = out.nominate === 'true' ? 'true' : 'false';
-            core.info(`Mode=${out.mode} nominate=${out.nominate} has_work=${out.has_work} (confirmations, if any, were applied deterministically above)`);
+            core.info(`Mode=${out.mode} nominate=${out.nominate} has_work=${out.has_work}`);
           } catch (error) {
             core.error(`Error in pre-activation: ${error.message}`);
           }
           flush();
 
 # Only run the agent if the pre-activation step produced a nomination pool to
-# pick from. Confirmations (assigning approved issues to Copilot) are done
-# deterministically in the pre-activation step and never involve the agent.
+# pick from. The agent only nominates (label + comment); it never assigns
+# Copilot — that is the maintainer's manual action.
 if: needs.pre_activation.outputs.has_work == 'true'
 
 permissions:
@@ -525,7 +396,6 @@ jobs:
       mode: ${{ steps.search.outputs.mode }}
       team: ${{ steps.search.outputs.team }}
       nomination_label: ${{ steps.search.outputs.nomination_label }}
-      approval_label: ${{ steps.search.outputs.approval_label }}
       nominate_count: ${{ steps.search.outputs.nominate_count }}
       nominate: ${{ steps.search.outputs.nominate }}
       nominate_numbers: ${{ steps.search.outputs.nominate_numbers }}
@@ -535,10 +405,10 @@ jobs:
 
 safe-outputs:
   # The agent's ONLY capabilities are nominating candidates: adding the
-  # nomination label and commenting. It has NO assign capability and cannot
-  # remove labels — assigning Copilot to an approved issue (and the subsequent
-  # nomination-label cleanup) is done deterministically in the pre-activation
-  # step, so the human-approval gate cannot be bypassed via prompt injection.
+  # nomination label and commenting. It has NO assign capability — assigning
+  # Copilot is the maintainer's manual action, and the companion
+  # copilot-issue-triage-approved workflow removes this nomination label after
+  # assignment. So a crafted/injected issue cannot hand work to the coding agent.
   add-labels:
     max: 2
     target: "*"
@@ -554,26 +424,29 @@ safe-outputs:
 
 # Copilot Issue Triage 🤖
 
-You are the **nomination** half of a two-step nomination → approval handshake for
-the `${{ github.repository }}` repository. A maintainer always has the final say
+You are the **nomination** step of a nomination → approval flow for the
+`${{ github.repository }}` repository. A maintainer always has the final say
 before the GitHub **Copilot coding agent** is asked to work on an issue.
 
 **Your only job is to NOMINATE candidates.** You do not — and cannot — assign
-issues to Copilot. Assigning an approved issue to the Copilot coding agent is
-handled automatically by a separate deterministic step; you never do it, and you
-have no tool to do it.
+issues to Copilot. Approval is a maintainer manually assigning the Copilot coding
+agent to the issue from the GitHub UI; you never do it, and you have no tool to
+do it.
 
-There are two labels in play:
+There is one label you use:
 
 - **Nomination label** `${{ needs.pre_activation.outputs.nomination_label }}` — **you** apply this to flag an issue you think is a good Copilot candidate.
-- **Approval label** `${{ needs.pre_activation.outputs.approval_label }}` — a **maintainer** applies this manually. It is the go-signal. You NEVER add this label yourself.
+
+Approval is not a label — it is the maintainer **assigning Copilot** to the issue.
 
 What happens after you nominate an issue:
 
 1. A maintainer reviews the nominated issue.
-2. If they agree, they add the **approval label** by hand.
-3. The moment they do, the deterministic step (not you) assigns the issue to the
-   Copilot coding agent, removes the nomination label, and comments.
+2. If they agree, they **assign the Copilot coding agent** to it from the issue
+   UI (the "Assignees" picker). That manual assignment is the approval and is
+   what starts Copilot.
+3. A companion workflow then removes the nomination label, adds a
+   `copilot-working` label, and comments confirming Copilot is on it.
 4. Copilot opens a draft pull request proposing a fix; a maintainer reviews it.
 
 ## Current Context
@@ -582,13 +455,12 @@ What happens after you nominate an issue:
 - **Team**: ${{ needs.pre_activation.outputs.team }}
 - **Run mode**: ${{ needs.pre_activation.outputs.mode }}
 - **Nomination label**: `${{ needs.pre_activation.outputs.nomination_label }}`
-- **Approval label**: `${{ needs.pre_activation.outputs.approval_label }}`
 - **Should nominate this run**: ${{ needs.pre_activation.outputs.nominate }}
 - **How many to nominate**: ${{ needs.pre_activation.outputs.nominate_count }}
 
 **Nomination pool — prioritized candidates awaiting nomination** (open, in-scope
 for this team, actionable label present, no assignee, no open Copilot PR, not yet
-in the handshake — sorted by score):
+nominated — sorted by score):
 
 ```
 ${{ needs.pre_activation.outputs.nominate_list }}
@@ -624,15 +496,15 @@ For **each** issue you decide to nominate:
    safeoutputs/add_labels(item_number=<number>, labels=["${{ needs.pre_activation.outputs.nomination_label }}"])
    ```
 2. **Comment asking a maintainer to approve, and spell out what will happen next.**
-   The comment MUST tell the maintainer exactly what approving does. Use this body
-   (substitute the real approval label), keeping the numbered "what happens after
-   you approve" steps:
+   The comment MUST tell the maintainer exactly how to approve (assign Copilot)
+   and what happens after. Use this body, keeping the numbered "what happens
+   after you assign Copilot" steps:
    ```
-   safeoutputs/add_comment(item_number=<number>, body="🤖 **Nominated as a Copilot candidate**\n\nThis issue looks well-scoped for the GitHub Copilot coding agent.\n\n**Maintainer — if you agree, add the `${{ needs.pre_activation.outputs.approval_label }}` label to approve.** Here is what happens automatically once you do:\n\n1. This workflow assigns the issue to the Copilot coding agent.\n2. The `${{ needs.pre_activation.outputs.nomination_label }}` nomination label is removed (the approval label stays as an audit trail).\n3. Copilot opens a draft pull request proposing a fix.\n4. A maintainer reviews that PR — nothing is merged automatically.\n\nIf this isn't a good fit, just remove the nomination label and no further action is taken.")
+   safeoutputs/add_comment(item_number=<number>, body="🤖 **Nominated as a Copilot candidate**\n\nThis issue looks well-scoped for the GitHub Copilot coding agent.\n\n**Maintainer — if you agree, assign the Copilot coding agent to this issue** (use the **Assignees** picker on the right and choose **Copilot**). That manual assignment is the approval. Here is what happens once you do:\n\n1. Copilot starts working on the issue and opens a draft pull request proposing a fix.\n2. A companion workflow removes the `${{ needs.pre_activation.outputs.nomination_label }}` nomination label and adds a `copilot-working` label so the status is visible.\n3. A maintainer reviews that PR — nothing is merged automatically.\n\nIf this isn't a good fit, just remove the nomination label and no further action is taken.")
    ```
 
-Do **NOT** assign nominated issues to Copilot (you have no such tool), and do
-**NOT** add the approval label yourself — approval is a human action.
+Do **NOT** assign nominated issues to Copilot (you have no such tool) — assigning
+Copilot is the maintainer's manual approval action.
 
 ### Validation (body-first)
 
@@ -644,12 +516,12 @@ is an **issue**, never a pull request.
 
 - ✅ NOMINATE at most ${{ needs.pre_activation.outputs.nominate_count }} per run.
 - ✅ Comment on every issue you nominate, and always include the "what happens
-  after you approve" steps so the maintainer knows the consequence of approving.
+  after you assign Copilot" steps so the maintainer knows how to approve and what
+  the consequence is.
 - ✅ Prefer skipping over a risky nomination — under-nominating is far safer than
   nominating a vague or overlapping issue.
-- ❌ Never add the approval label `${{ needs.pre_activation.outputs.approval_label }}` — that is the maintainer's manual go-signal.
 - ❌ Never try to assign an issue or a pull request to Copilot — you have no
-  assignment tool; assignment is fully automated and gated on the approval label.
+  assignment tool; assigning Copilot is the maintainer's manual approval action.
 
 ## Reporting
 
