@@ -1,5 +1,5 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"9db6e5bb5d95e35180e35946eb91dcc3b26c9a5d26f39d25f2e85f114d8663c0","body_hash":"6b99381d97e4fc108ad8e99862f9954eee3a33b51cc5a92c5e98914536ecf5f5","compiler_version":"v0.81.6","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.65"}}
-# gh-aw-manifest: {"version":1,"secrets":["GH_AW_AGENT_TOKEN","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/cache/restore","sha":"27d5ce7f107fe9357f9df03efb73ab90386fccae","version":"v5.0.5"},{"repo":"actions/cache/save","sha":"27d5ce7f107fe9357f9df03efb73ab90386fccae","version":"v5.0.5"},{"repo":"actions/checkout","sha":"9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0","version":"v7.0.0"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/github-script","sha":"f28e40c7f34bde8b3046d885e986cb6290c5673b","version":"v7"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"ba6380cc6e5be5d21677bebe04d52fb48e3abec7","version":"v0.81.6"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.27.11","digest":"sha256:979723c628182da7729333f2208bb249fd25ddee579645cf9a3892d681a929c7","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.27.11@sha256:979723c628182da7729333f2208bb249fd25ddee579645cf9a3892d681a929c7"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.27.11","digest":"sha256:807e4831999b44513b0a66e5859d478dc4da7ae74ab1918cec967d513f95bf9d","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.27.11@sha256:807e4831999b44513b0a66e5859d478dc4da7ae74ab1918cec967d513f95bf9d"},{"image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.27.11"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.27.11","digest":"sha256:ff27ea0525ad953a6adee28a5fbe9d2e22be47dbec755c15767af4ea3f91df7d","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.27.11@sha256:ff27ea0525ad953a6adee28a5fbe9d2e22be47dbec755c15767af4ea3f91df7d"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.3.30","digest":"sha256:35625d1a2269b1238606078c879f59a91cffc4ac33eb54bf39c6418822c1a8be","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.3.30@sha256:35625d1a2269b1238606078c879f59a91cffc4ac33eb54bf39c6418822c1a8be"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:529d02eb970b1161aa25c593a9c3df57fdfad5a8add328cb3b6eccef66f3183b","pinned_image":"ghcr.io/github/gh-aw-node@sha256:529d02eb970b1161aa25c593a9c3df57fdfad5a8add328cb3b6eccef66f3183b"},{"image":"ghcr.io/github/github-mcp-server:v1.4.0","digest":"sha256:2afb26356481d1a350e14544a6e160f7f7ec1561a1ea309b823665abf0309036","pinned_image":"ghcr.io/github/github-mcp-server:v1.4.0@sha256:2afb26356481d1a350e14544a6e160f7f7ec1561a1ea309b823665abf0309036"}]}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"65d27682ac6c6aef0af3ec3509934cb918bbefac35ba89a83533192dcad5dfc9","body_hash":"feaaa055445d9f5126755381a4b90bc942be91be387573780f19349882a233bc","compiler_version":"v0.81.6","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.65"}}
+# gh-aw-manifest: {"version":1,"secrets":["GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/cache/restore","sha":"27d5ce7f107fe9357f9df03efb73ab90386fccae","version":"v5.0.5"},{"repo":"actions/cache/save","sha":"27d5ce7f107fe9357f9df03efb73ab90386fccae","version":"v5.0.5"},{"repo":"actions/checkout","sha":"9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0","version":"v7.0.0"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/github-script","sha":"f28e40c7f34bde8b3046d885e986cb6290c5673b","version":"v7"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"ba6380cc6e5be5d21677bebe04d52fb48e3abec7","version":"v0.81.6"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.27.11","digest":"sha256:979723c628182da7729333f2208bb249fd25ddee579645cf9a3892d681a929c7","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.27.11@sha256:979723c628182da7729333f2208bb249fd25ddee579645cf9a3892d681a929c7"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.27.11","digest":"sha256:807e4831999b44513b0a66e5859d478dc4da7ae74ab1918cec967d513f95bf9d","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.27.11@sha256:807e4831999b44513b0a66e5859d478dc4da7ae74ab1918cec967d513f95bf9d"},{"image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.27.11"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.27.11","digest":"sha256:ff27ea0525ad953a6adee28a5fbe9d2e22be47dbec755c15767af4ea3f91df7d","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.27.11@sha256:ff27ea0525ad953a6adee28a5fbe9d2e22be47dbec755c15767af4ea3f91df7d"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.3.30","digest":"sha256:35625d1a2269b1238606078c879f59a91cffc4ac33eb54bf39c6418822c1a8be","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.3.30@sha256:35625d1a2269b1238606078c879f59a91cffc4ac33eb54bf39c6418822c1a8be"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:529d02eb970b1161aa25c593a9c3df57fdfad5a8add328cb3b6eccef66f3183b","pinned_image":"ghcr.io/github/gh-aw-node@sha256:529d02eb970b1161aa25c593a9c3df57fdfad5a8add328cb3b6eccef66f3183b"},{"image":"ghcr.io/github/github-mcp-server:v1.4.0","digest":"sha256:2afb26356481d1a350e14544a6e160f7f7ec1561a1ea309b823665abf0309036","pinned_image":"ghcr.io/github/github-mcp-server:v1.4.0@sha256:2afb26356481d1a350e14544a6e160f7f7ec1561a1ea309b823665abf0309036"}]}
 # This file was automatically generated by gh-aw (v0.81.6). DO NOT EDIT. To debug this workflow, load the skill at https://github.com/github/gh-aw/blob/main/debug.md
 #
 #    ___                   _   _      
@@ -26,7 +26,6 @@
 # Scheduled agentic workflow that nominates well-scoped issues for a maintainer to approve, then assigns approved issues to the GitHub Copilot coding agent for a fix PR. Two-label nomination→approval handshake. Adapted from github/gh-aw issue-monster for microsoft/azure-pipelines-tasks.
 #
 # Secrets used:
-#   - GH_AW_AGENT_TOKEN
 #   - GH_AW_GITHUB_MCP_SERVER_TOKEN
 #   - GH_AW_GITHUB_TOKEN
 #   - GITHUB_TOKEN
@@ -59,7 +58,7 @@ on:
     - labeled
   # permissions: # Permissions applied to pre-activation job
     # contents: read
-    # issues: read
+    # issues: write
     # pull-requests: read
   schedule:
   - cron: "38 12 * * *"
@@ -75,7 +74,7 @@ on:
         # // Everything after the "GENERIC ENGINE" marker is team-neutral;
         # // copy it as-is. Team identity that lives in FRONTMATTER — `name`,
         # // `description`, `schedule`, `safe-outputs.messages`, and the per-run
-        # // cap `safe-outputs.assign-to-agent.max` / `add-comment.max` — must
+        # // cap `safe-outputs.add-labels.max` / `add-comment.max` — must
         # // also be set per team (see the "FORK FOR YOUR TEAM" POC note above).
         # //
         # // An issue is IN SCOPE when ANY of these hold:
@@ -120,11 +119,26 @@ on:
         # const normalizeTask = s =>
           # (s || '').toLowerCase().split('@')[0].replace(/[^a-z0-9]/g, '');
         # // Extract the "Task name" value from an issue-form body (rendered as a
-        # // "### Task name" heading followed by the value on the next line).
+        # // "### Task name" heading followed by the value). Line-based so an
+        # // EMPTY field can't accidentally pull in unrelated text further down:
+        # // we take the first non-blank line after the heading, but stop at the
+        # // next heading (field left empty) and ignore the issue-form empty
+        # // placeholder "_No response_".
         # const extractTaskName = body => {
           # if (!body) return '';
-          # const m = body.match(/#{1,6}[^\S\r\n]*Task name[^\S\r\n]*\r?\n+[^\S\r\n]*([^\r\n#][^\r\n]*)/i);
-          # return m ? m[1].trim() : '';
+          # const lines = body.split(/\r?\n/);
+          # for (let i = 0; i < lines.length; i++) {
+            # if (!/^#{1,6}\s*Task name\s*$/i.test(lines[i].trim())) continue;
+            # for (let j = i + 1; j < lines.length; j++) {
+              # const t = lines[j].trim();
+              # if (t === '') continue;               // skip the blank line forms insert
+              # if (t.startsWith('#')) return '';     // next section → field was empty
+              # if (/^_no response_$/i.test(t)) return '';  // issue-form empty placeholder
+              # return t;
+            # }
+            # return '';
+          # }
+          # return '';
         # };
         # const hasLbl = (iss, name) =>
           # (iss.labels || []).map(l => (l.name || l).toLowerCase()).includes(name.toLowerCase());
@@ -136,30 +150,95 @@ on:
         # };
         # 
         # // Every output the agent job consumes; defaults describe a no-op run.
+        # // NOTE: the agent's ONLY job is NOMINATION. Assigning Copilot to an
+        # // approved issue is done deterministically in this pre-activation step
+        # // (see confirmIssue below), never by the agent — so there are no
+        # // confirm_* outputs.
         # const out = {
           # mode: 'noop',                     // 'scheduled' | 'confirm-event' | 'noop'
           # team: CONFIG.team,
           # nomination_label: NOMINATION_LABEL,
           # approval_label: APPROVAL_LABEL,
           # nominate_count: String(CONFIG.nominateCount),
-          # confirm_numbers: '',              // issues to assign to Copilot (both labels present)
-          # confirm_context: '',
           # nominate: 'false',                // whether to nominate new issues this run
           # nominate_numbers: '',             // scored pool the agent picks from
           # nominate_list: '',
           # nominate_context: '',
-          # has_work: 'false',                // gates the agent job
+          # has_work: 'false',                // gates the agent job (nomination only)
         # };
         # const flush = () => { for (const [k, v] of Object.entries(out)) core.setOutput(k, v); };
+        # 
+        # // ---- Deterministic Copilot assignment (the human-approval gate) ----
+        # // Handing an issue to the Copilot coding agent is the security-sensitive
+        # // action, so it is performed HERE, in deterministic code, and NEVER by
+        # // the AI agent (which has no assign capability). The only way an issue
+        # // reaches confirmIssue is by carrying the maintainer-applied approval
+        # // label, which the bot cannot self-apply. This enforces "a maintainer
+        # // must approve first" in the system, not merely in the prompt.
+        # let _copilotActorId; let _copilotResolved = false;
+        # const getCopilotActorId = async () => {
+          # if (_copilotResolved) return _copilotActorId;
+          # _copilotResolved = true;
+          # try {
+            # const r = await github.graphql(`query($owner:String!,$repo:String!){
+              # repository(owner:$owner,name:$repo){
+                # suggestedActors(capabilities:[CAN_BE_ASSIGNED], first:100){
+                  # nodes{ login __typename ... on Bot { id } ... on User { id } } } } }`,
+              # { owner, repo });
+            # const node = (r?.repository?.suggestedActors?.nodes || [])
+              # .find(n => (n.login || '').toLowerCase() === 'copilot-swe-agent');
+            # if (!node) {
+              # core.warning('Copilot coding agent is not an assignable actor on this repo (is the coding agent enabled?). Skipping assignment.');
+              # _copilotActorId = null;
+            # } else {
+              # _copilotActorId = node.id;
+            # }
+          # } catch (e) {
+            # core.warning(`Could not resolve the Copilot coding-agent actor id: ${e.message}`);
+            # _copilotActorId = null;
+          # }
+          # return _copilotActorId;
+        # };
+        # // Assign Copilot to one approved+unassigned issue, remove the nomination
+        # // label (the approval label stays as an audit trail), and post a
+        # // transparency comment. Returns true only if the assignment succeeded.
+        # const confirmIssue = async (issue) => {
+          # const actorId = await getCopilotActorId();
+          # if (!actorId) return false;
+          # try {
+            # await github.graphql(`mutation($assignableId:ID!,$actorIds:[ID!]!){
+              # replaceActorsForAssignable(input:{assignableId:$assignableId,actorIds:$actorIds}){
+                # assignable{ ... on Issue { number } } } }`,
+              # { assignableId: issue.node_id, actorIds: [actorId] });
+          # } catch (e) {
+            # core.warning(`Failed to assign Copilot to #${issue.number}: ${e.message}`);
+            # return false;
+          # }
+          # try {
+            # await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name: NOMINATION_LABEL });
+          # } catch (e) {
+            # if (e.status !== 404) core.warning(`Could not remove nomination label from #${issue.number}: ${e.message}`);
+          # }
+          # try {
+            # await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
+              # body: '🤖 **Assigned to the Copilot coding agent**\n\nA maintainer approved this issue, so it has been handed to the Copilot coding agent to propose a fix PR. A maintainer will review the result.' });
+          # } catch (e) {
+            # core.warning(`Could not comment on #${issue.number}: ${e.message}`);
+          # }
+          # core.info(`Confirmed #${issue.number}: assigned Copilot, removed nomination label, commented.`);
+          # return true;
+        # };
         # 
         # try {
           # // ---- Fast path: instant confirmation on issues.labeled ----------
           # // Fires for EVERY label added anywhere in the repo, so exit unless
           # // the added label is our approval label AND the issue is one we
-          # // previously nominated. No CODEOWNERS read / search needed here.
+          # // previously nominated. The assignment is done RIGHT HERE
+          # // (deterministically); the agent job is never involved on this path.
           # if (context.eventName === 'issues' && context.payload?.action === 'labeled') {
             # const added = (context.payload.label?.name || '').toLowerCase();
             # const issue = context.payload.issue;
+            # out.mode = 'confirm-event';
             # if (added !== APPROVAL_LABEL.toLowerCase()) {
               # core.info(`Ignoring labeled event: '${context.payload.label?.name}' is not the approval label.`);
             # } else if (!hasLbl(issue, NOMINATION_LABEL)) {
@@ -169,12 +248,9 @@ on:
               # // Copilot and clobber a manual assignment.
               # core.info(`#${issue.number} approved but already assigned to ${(issue.assignees || []).map(a => a.login).join(', ')} — skipping.`);
             # } else {
-              # out.mode = 'confirm-event';
-              # out.confirm_numbers = String(issue.number);
-              # out.confirm_context = snippet(issue);
-              # out.has_work = 'true';
-              # core.info(`Confirm (event): will assign Copilot to #${issue.number}`);
+              # await confirmIssue(issue);
             # }
+            # // Nothing for the agent to do on a label event — has_work stays false.
             # flush();
             # return;
           # }
@@ -231,74 +307,116 @@ on:
             # return score + Math.min(ageDays / 10, 20);
           # };
           # const linkedPRs = async (number) => {
+            # const prs = [];
+            # const MAX_PAGES = 5;   // up to 500 cross-references
+            # let cursor = null;
             # try {
-              # const q = `query($owner:String!,$repo:String!,$number:Int!){
-                # repository(owner:$owner,name:$repo){ issue(number:$number){
-                  # timelineItems(first:100, itemTypes:[CROSS_REFERENCED_EVENT]){ nodes{
-                    # ... on CrossReferencedEvent { source { __typename
-                      # ... on PullRequest { number state author { login } } } } } } } } }`;
-              # const r = await github.graphql(q, { owner, repo, number });
-              # return (r?.repository?.issue?.timelineItems?.nodes || [])
-                # .filter(n => n?.source?.__typename === 'PullRequest')
-                # .map(n => ({ number: n.source.number, state: n.source.state, author: n.source.author?.login }));
+              # for (let page = 0; page < MAX_PAGES; page++) {
+                # const q = `query($owner:String!,$repo:String!,$number:Int!,$cursor:String){
+                  # repository(owner:$owner,name:$repo){ issue(number:$number){
+                    # timelineItems(first:100, after:$cursor, itemTypes:[CROSS_REFERENCED_EVENT]){
+                      # pageInfo { hasNextPage endCursor }
+                      # nodes{
+                      # ... on CrossReferencedEvent { source { __typename
+                        # ... on PullRequest { number state author { login } } } } } } } } }`;
+                # const r = await github.graphql(q, { owner, repo, number, cursor });
+                # const conn = r?.repository?.issue?.timelineItems;
+                # for (const n of (conn?.nodes || [])) {
+                  # if (n?.source?.__typename === 'PullRequest') {
+                    # prs.push({ number: n.source.number, state: n.source.state, author: n.source.author?.login });
+                  # }
+                # }
+                # if (!conn?.pageInfo?.hasNextPage) return prs;
+                # cursor = conn.pageInfo.endCursor;
+              # }
+              # core.warning(`Linked-PR scan for #${number} stopped at ${MAX_PAGES} pages (500 cross-refs); an existing Copilot PR beyond that could be missed.`);
+              # return prs;
             # } catch (e) {
               # core.warning(`Could not read linked PRs for #${number}: ${e.message}`);
-              # return [];
+              # return prs;
             # }
           # };
         # 
           # out.mode = 'scheduled';
         # 
-          # // (A) CONFIRM SET — issues a maintainer has approved (BOTH labels
-          # // present) and that nobody is already assigned to. Separate label:
-          # // filters are ANDed. These get assigned to the Copilot agent this run.
-          # const confirmQuery =
-            # `is:issue is:open repo:${owner}/${repo} no:assignee ` +
-            # `label:"${NOMINATION_LABEL}" label:"${APPROVAL_LABEL}"`;
-          # core.info(`Confirm search: ${confirmQuery}`);
-          # const confirmResp = await github.rest.search.issuesAndPullRequests({
-            # q: confirmQuery, per_page: 100,
+          # // (A) CONFIRM — assign every approved, unassigned issue to Copilot
+          # // RIGHT HERE, deterministically. The agent is never given assign
+          # // capability, so a crafted issue body cannot trick it into skipping
+          # // the human-approval gate. We list by label via the Issues API
+          # // (listForRepo with a comma-joined `labels` = AND) instead of the
+          # // Search API on purpose:
+          # //   * it is read-after-write consistent — Search lags reality by
+          # //     seconds–minutes, so a just-approved issue could be missed, or
+          # //     two close-together runs could both act on a stale view; and
+          # //   * github.paginate walks EVERY match, so an approved issue is
+          # //     never dropped past a 100-result page.
+          # // listForRepo also returns PRs (a PR is an issue), so filter them out.
+          # const confirmAll = await github.paginate(github.rest.issues.listForRepo, {
+            # owner, repo, state: 'open',
+            # labels: `${NOMINATION_LABEL},${APPROVAL_LABEL}`, per_page: 100,
           # });
-          # const confirmItems = confirmResp.data.items;
-          # out.confirm_numbers = confirmItems.map(i => i.number).join(',');
-          # out.confirm_context = confirmItems
-            # .slice(0, MAX_ISSUES_WITH_BODY_CONTEXT).map(snippet).join('\n\n---\n\n');
-          # core.info(`Confirm set: ${confirmItems.length} approved issue(s).`);
+          # const confirmItems = confirmAll
+            # .filter(i => !i.pull_request && (i.assignees || []).length === 0);
+          # core.info(`Confirm set: ${confirmItems.length} approved & unassigned issue(s).`);
+          # let confirmedCount = 0;
+          # for (const issue of confirmItems) {
+            # if (await confirmIssue(issue)) confirmedCount++;
+          # }
+          # core.info(`Confirmed ${confirmedCount}/${confirmItems.length} approved issue(s).`);
         # 
           # // (B) NOMINATION — only when nothing is already awaiting approval,
           # // so we never pile up more than nominateCount pending nominations.
-          # const pendingQuery =
-            # `is:issue is:open repo:${owner}/${repo} ` +
-            # `label:"${NOMINATION_LABEL}" -label:"${APPROVAL_LABEL}"`;
-          # const pendingResp = await github.rest.search.issuesAndPullRequests({
-            # q: pendingQuery, per_page: 1,
+          # // Same rationale as (A): list nominated issues directly (consistent +
+          # // fully paged) and count those still missing the approval label.
+          # const nominatedAll = await github.paginate(github.rest.issues.listForRepo, {
+            # owner, repo, state: 'open', labels: NOMINATION_LABEL, per_page: 100,
           # });
-          # const pendingCount = pendingResp.data.total_count;
+          # const pendingCount = nominatedAll
+            # .filter(i => !i.pull_request && !hasLbl(i, APPROVAL_LABEL)).length;
           # if (pendingCount > 0) {
             # core.info(`Nomination throttled: ${pendingCount} issue(s) nominated & awaiting maintainer approval.`);
           # } else {
             # // Pool = open, unassigned, not already in the handshake, not excluded.
+            # // The Search API is the right tool here (it expresses the `-label`
+            # // exclusions the Issues API can't), but it pages at 100. Walk up to
+            # // MAX_POOL_PAGES so an older high-priority issue (e.g. a p1 or a
+            # // regression that scores highest) isn't invisible just because 100+
+            # // newer issues match; warn if we still have to truncate.
             # const poolQuery =
               # `is:issue is:open repo:${owner}/${repo} no:assignee ` +
               # `-label:"${NOMINATION_LABEL}" -label:"${APPROVAL_LABEL}" ` +
               # excludeLabels.map(l => `-label:"${l}"`).join(' ');
             # core.info(`Pool search: ${poolQuery}`);
-            # const poolResp = await github.rest.search.issuesAndPullRequests({
-              # q: poolQuery, per_page: 100, sort: 'created', order: 'desc',
-            # });
+            # const MAX_POOL_PAGES = 10;   // Search API hard-caps at 1000 results
+            # const poolItems = [];
+            # let poolTotal = 0;
+            # for (let page = 1; page <= MAX_POOL_PAGES; page++) {
+              # const poolResp = await github.rest.search.issuesAndPullRequests({
+                # q: poolQuery, per_page: 100, sort: 'created', order: 'desc', page,
+              # });
+              # poolTotal = poolResp.data.total_count;
+              # poolItems.push(...poolResp.data.items);
+              # if (poolItems.length >= poolTotal || poolResp.data.items.length === 0) break;
+            # }
+            # if (poolItems.length < poolTotal) {
+              # core.warning(`Pool truncated: fetched ${poolItems.length} of ${poolTotal} matching issues (cap ${MAX_POOL_PAGES} pages). Older issues beyond this window are not considered this run.`);
+            # }
             # // Cheap scope + actionable filter on raw search items FIRST (they
             # // already carry labels + body), THEN enrich survivors with linked
             # // PRs — keeps the expensive GraphQL calls bounded.
-            # const prelim = poolResp.data.items.filter(i => inScope(i) && isActionable(i));
-            # core.info(`Pool: ${poolResp.data.total_count} open/unassigned; ${prelim.length} pass scope+actionable.`);
+            # const prelim = poolItems.filter(i => inScope(i) && isActionable(i));
+            # core.info(`Pool: ${poolItems.length} open/unassigned fetched (of ${poolTotal}); ${prelim.length} pass scope+actionable.`);
             # const survivors = [];
+            # // Copilot coding-agent PRs are authored by one of these exact bot
+            # // logins. Exact match avoids skipping a real user like "copilothelper".
+            # const COPILOT_PR_AUTHORS = new Set(['copilot-swe-agent', 'copilot']);
             # for (const i of prelim) {
               # const prs = await linkedPRs(i.number);
               # if (prs.some(p => p.state === 'CLOSED' || p.state === 'MERGED')) {
                 # core.info(`Skip #${i.number}: has closed/merged PR`); continue;
               # }
               # if (prs.some(p => p.state === 'OPEN' &&
-                  # (p.author === 'copilot-swe-agent' || (p.author || '').includes('copilot')))) {
+                  # COPILOT_PR_AUTHORS.has((p.author || '').toLowerCase()))) {
                 # core.info(`Skip #${i.number}: open Copilot PR`); continue;
               # }
               # survivors.push(i);
@@ -322,8 +440,8 @@ on:
             # }
           # }
         # 
-          # out.has_work = (out.confirm_numbers || out.nominate === 'true') ? 'true' : 'false';
-          # core.info(`Mode=${out.mode} confirm=[${out.confirm_numbers}] nominate=${out.nominate} has_work=${out.has_work}`);
+          # out.has_work = out.nominate === 'true' ? 'true' : 'false';
+          # core.info(`Mode=${out.mode} nominate=${out.nominate} has_work=${out.has_work} (confirmations, if any, were applied deterministically above)`);
         # } catch (error) {
           # core.error(`Error in pre-activation: ${error.message}`);
         # }
@@ -339,7 +457,8 @@ on:
 permissions: {}
 
 concurrency:
-  group: "gh-aw-${{ github.workflow }}-${{ github.event.issue.number || github.run_id }}"
+  group: "gh-aw-${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}"
+  cancel-in-progress: true
 
 run-name: "Copilot Issue Triage (POC)"
 
@@ -528,8 +647,6 @@ jobs:
           GH_AW_GITHUB_RUN_ID: ${{ github.run_id }}
           GH_AW_GITHUB_WORKSPACE: ${{ github.workspace }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_APPROVAL_LABEL: ${{ needs.pre_activation.outputs.approval_label }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_CONTEXT: ${{ needs.pre_activation.outputs.confirm_context }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_NUMBERS: ${{ needs.pre_activation.outputs.confirm_numbers }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_MODE: ${{ needs.pre_activation.outputs.mode }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE: ${{ needs.pre_activation.outputs.nominate }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE_CONTEXT: ${{ needs.pre_activation.outputs.nominate_context }}
@@ -541,20 +658,20 @@ jobs:
         run: |
           bash "${RUNNER_TEMP}/gh-aw/actions/create_prompt_first.sh"
           {
-          cat << 'GH_AW_PROMPT_605f21cf5939d9a6_EOF'
+          cat << 'GH_AW_PROMPT_1b6fd436885aeb0d_EOF'
           <system>
-          GH_AW_PROMPT_605f21cf5939d9a6_EOF
+          GH_AW_PROMPT_1b6fd436885aeb0d_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/xpia.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/temp_folder_prompt.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/markdown.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/safe_outputs_prompt.md"
-          cat << 'GH_AW_PROMPT_605f21cf5939d9a6_EOF'
+          cat << 'GH_AW_PROMPT_1b6fd436885aeb0d_EOF'
           <safe-output-tools>
-          Tools: add_comment(max:4), add_labels(max:2), remove_labels(max:2), assign_to_agent(max:2), missing_tool, missing_data, noop
+          Tools: add_comment(max:4), add_labels(max:2), missing_tool, missing_data, noop
           </safe-output-tools>
-          GH_AW_PROMPT_605f21cf5939d9a6_EOF
+          GH_AW_PROMPT_1b6fd436885aeb0d_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/mcp_cli_tools_prompt.md"
-          cat << 'GH_AW_PROMPT_605f21cf5939d9a6_EOF'
+          cat << 'GH_AW_PROMPT_1b6fd436885aeb0d_EOF'
           <github-context>
           The following GitHub context information is available for this workflow:
           {{#if github.actor}}
@@ -583,12 +700,12 @@ jobs:
           {{/if}}
           </github-context>
           
-          GH_AW_PROMPT_605f21cf5939d9a6_EOF
+          GH_AW_PROMPT_1b6fd436885aeb0d_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/cli_proxy_with_safeoutputs_prompt.md"
-          cat << 'GH_AW_PROMPT_605f21cf5939d9a6_EOF'
+          cat << 'GH_AW_PROMPT_1b6fd436885aeb0d_EOF'
           </system>
           {{#runtime-import .github/workflows/copilot-issue-triage.md}}
-          GH_AW_PROMPT_605f21cf5939d9a6_EOF
+          GH_AW_PROMPT_1b6fd436885aeb0d_EOF
           } > "$GH_AW_PROMPT"
       - name: Interpolate variables and render templates
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -597,8 +714,6 @@ jobs:
           GH_AW_ENGINE_ID: "copilot"
           GH_AW_GITHUB_REPOSITORY: ${{ github.repository }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_APPROVAL_LABEL: ${{ needs.pre_activation.outputs.approval_label }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_CONTEXT: ${{ needs.pre_activation.outputs.confirm_context }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_NUMBERS: ${{ needs.pre_activation.outputs.confirm_numbers }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_MODE: ${{ needs.pre_activation.outputs.mode }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE: ${{ needs.pre_activation.outputs.nominate }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE_CONTEXT: ${{ needs.pre_activation.outputs.nominate_context }}
@@ -627,8 +742,6 @@ jobs:
           GH_AW_MCP_CLI_SERVERS_LIST: '- `safeoutputs` — run `safeoutputs --help` to see available tools'
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: ${{ needs.pre_activation.outputs.activated }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_APPROVAL_LABEL: ${{ needs.pre_activation.outputs.approval_label }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_CONTEXT: ${{ needs.pre_activation.outputs.confirm_context }}
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_NUMBERS: ${{ needs.pre_activation.outputs.confirm_numbers }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_MODE: ${{ needs.pre_activation.outputs.mode }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE: ${{ needs.pre_activation.outputs.nominate }}
           GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE_CONTEXT: ${{ needs.pre_activation.outputs.nominate_context }}
@@ -658,8 +771,6 @@ jobs:
                 GH_AW_MCP_CLI_SERVERS_LIST: process.env.GH_AW_MCP_CLI_SERVERS_LIST,
                 GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED,
                 GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_APPROVAL_LABEL: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_APPROVAL_LABEL,
-                GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_CONTEXT: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_CONTEXT,
-                GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_NUMBERS: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_CONFIRM_NUMBERS,
                 GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_MODE: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_MODE,
                 GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE,
                 GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE_CONTEXT: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_NOMINATE_CONTEXT,
@@ -829,18 +940,16 @@ jobs:
           mkdir -p "${RUNNER_TEMP}/gh-aw/safeoutputs"
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
-          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_7e097a710f20ab07_EOF'
-          {"add_comment":{"max":4,"target":"*"},"add_labels":{"allowed":["copilot-candidate-rm"],"max":2,"target":"*"},"assign_to_agent":{"allowed":["copilot"],"ignore-if-error":true,"max":2,"target":"*"},"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"remove_labels":{"allowed":["copilot-candidate-rm"],"max":2,"target":"*"},"report_incomplete":{}}
-          GH_AW_SAFE_OUTPUTS_CONFIG_7e097a710f20ab07_EOF
+          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_e28d4edac249ae99_EOF'
+          {"add_comment":{"max":4,"target":"*"},"add_labels":{"allowed":["copilot-candidate-rm"],"max":2,"target":"*"},"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"report_incomplete":{}}
+          GH_AW_SAFE_OUTPUTS_CONFIG_e28d4edac249ae99_EOF
       - name: Generate Safe Outputs Tools
         env:
           GH_AW_TOOLS_META_JSON: |
             {
               "description_suffixes": {
                 "add_comment": " CONSTRAINTS: Maximum 4 comment(s) can be added. Target: *. Supports reply_to_id for discussion threading.",
-                "add_labels": " CONSTRAINTS: Maximum 2 label(s) can be added. Only these labels are allowed: [\"copilot-candidate-rm\"]. Target: *.",
-                "assign_to_agent": " CONSTRAINTS: Maximum 2 issue(s) can be assigned to agent.",
-                "remove_labels": " CONSTRAINTS: Maximum 2 label(s) can be removed. Only these labels can be removed: [copilot-candidate-rm]. Target: *."
+                "add_labels": " CONSTRAINTS: Maximum 2 label(s) can be added. Only these labels are allowed: [\"copilot-candidate-rm\"]. Target: *."
               },
               "repo_params": {},
               "dynamic_tools": []
@@ -884,31 +993,6 @@ jobs:
                     "maxLength": 256
                   }
                 }
-              },
-              "assign_to_agent": {
-                "defaultMax": 1,
-                "fields": {
-                  "agent": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 128
-                  },
-                  "issue_number": {
-                    "issueNumberOrTemporaryId": true
-                  },
-                  "pull_number": {
-                    "optionalPositiveInteger": true
-                  },
-                  "pull_request_repo": {
-                    "type": "string",
-                    "maxLength": 256
-                  },
-                  "repo": {
-                    "type": "string",
-                    "maxLength": 256
-                  }
-                },
-                "customValidation": "requiresOneOf:issue_number,pull_number"
               },
               "missing_data": {
                 "defaultMax": 20,
@@ -964,22 +1048,6 @@ jobs:
                     "type": "string",
                     "sanitize": true,
                     "maxLength": 65000
-                  }
-                }
-              },
-              "remove_labels": {
-                "defaultMax": 5,
-                "fields": {
-                  "item_number": {
-                    "issueNumberOrTemporaryId": true
-                  },
-                  "labels": {
-                    "required": true,
-                    "type": "array"
-                  },
-                  "repo": {
-                    "type": "string",
-                    "maxLength": 256
                   }
                 }
               },
@@ -1572,14 +1640,12 @@ jobs:
           GH_AW_AGENTIC_ENGINE_TIMEOUT: ${{ needs.agent.outputs.agentic_engine_timeout }}
           GH_AW_MODEL_NOT_SUPPORTED_ERROR: ${{ needs.agent.outputs.model_not_supported_error }}
           GH_AW_ENGINE_API_HOSTS: "api.enterprise.githubcopilot.com,api.githubcopilot.com,api.business.githubcopilot.com,api.individual.githubcopilot.com"
-          GH_AW_ASSIGNMENT_ERRORS: ${{ needs.safe_outputs.outputs.assign_to_agent_assignment_errors }}
-          GH_AW_ASSIGNMENT_ERROR_COUNT: ${{ needs.safe_outputs.outputs.assign_to_agent_assignment_error_count }}
           GH_AW_LOCKDOWN_CHECK_FAILED: ${{ needs.activation.outputs.lockdown_check_failed }}
           GH_AW_STALE_LOCK_FILE_FAILED: ${{ needs.activation.outputs.stale_lock_file_failed }}
           GH_AW_DAILY_AI_CREDITS_EXCEEDED: ${{ needs.activation.outputs.daily_ai_credits_exceeded }}
           GH_AW_DAILY_AI_CREDITS_TOTAL_EFFECTIVE_TOKENS: ${{ needs.activation.outputs.daily_ai_credits_total_effective_tokens }}
           GH_AW_DAILY_AI_CREDITS_THRESHOLD: ${{ needs.activation.outputs.daily_ai_credits_threshold }}
-          GH_AW_SAFE_OUTPUT_MESSAGES: "{\"runStarted\":\"🤖 [{workflow_name}]({run_url}) checking approvals \\u0026 nominating candidates…\",\"runSuccess\":\"🤖 [{workflow_name}]({run_url}) finished triage.\",\"runFailure\":\"🤖 [{workflow_name}]({run_url}) {status}.\"}"
+          GH_AW_SAFE_OUTPUT_MESSAGES: "{\"runStarted\":\"🤖 [{workflow_name}]({run_url}) nominating candidates…\",\"runSuccess\":\"🤖 [{workflow_name}]({run_url}) finished nominating.\",\"runFailure\":\"🤖 [{workflow_name}]({run_url}) {status}.\"}"
           GH_AW_GROUP_REPORTS: "false"
           GH_AW_FAILURE_REPORT_AS_ISSUE: "true"
           GH_AW_MISSING_TOOL_REPORT_AS_FAILURE: "true"
@@ -1845,15 +1911,13 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
-      issues: read
+      issues: write
       pull-requests: read
     env:
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
     outputs:
       activated: ${{ steps.check_membership.outputs.is_team_member == 'true' }}
       approval_label: ${{ steps.search.outputs.approval_label }}
-      confirm_context: ${{ steps.search.outputs.confirm_context }}
-      confirm_numbers: ${{ steps.search.outputs.confirm_numbers }}
       has_work: ${{ steps.search.outputs.has_work }}
       matched_command: ''
       mode: ${{ steps.search.outputs.mode }}
@@ -1903,7 +1967,7 @@ jobs:
             // Everything after the "GENERIC ENGINE" marker is team-neutral;
             // copy it as-is. Team identity that lives in FRONTMATTER — `name`,
             // `description`, `schedule`, `safe-outputs.messages`, and the per-run
-            // cap `safe-outputs.assign-to-agent.max` / `add-comment.max` — must
+            // cap `safe-outputs.add-labels.max` / `add-comment.max` — must
             // also be set per team (see the "FORK FOR YOUR TEAM" POC note above).
             //
             // An issue is IN SCOPE when ANY of these hold:
@@ -1948,11 +2012,26 @@ jobs:
             const normalizeTask = s =>
               (s || '').toLowerCase().split('@')[0].replace(/[^a-z0-9]/g, '');
             // Extract the "Task name" value from an issue-form body (rendered as a
-            // "### Task name" heading followed by the value on the next line).
+            // "### Task name" heading followed by the value). Line-based so an
+            // EMPTY field can't accidentally pull in unrelated text further down:
+            // we take the first non-blank line after the heading, but stop at the
+            // next heading (field left empty) and ignore the issue-form empty
+            // placeholder "_No response_".
             const extractTaskName = body => {
               if (!body) return '';
-              const m = body.match(/#{1,6}[^\S\r\n]*Task name[^\S\r\n]*\r?\n+[^\S\r\n]*([^\r\n#][^\r\n]*)/i);
-              return m ? m[1].trim() : '';
+              const lines = body.split(/\r?\n/);
+              for (let i = 0; i < lines.length; i++) {
+                if (!/^#{1,6}\s*Task name\s*$/i.test(lines[i].trim())) continue;
+                for (let j = i + 1; j < lines.length; j++) {
+                  const t = lines[j].trim();
+                  if (t === '') continue;               // skip the blank line forms insert
+                  if (t.startsWith('#')) return '';     // next section → field was empty
+                  if (/^_no response_$/i.test(t)) return '';  // issue-form empty placeholder
+                  return t;
+                }
+                return '';
+              }
+              return '';
             };
             const hasLbl = (iss, name) =>
               (iss.labels || []).map(l => (l.name || l).toLowerCase()).includes(name.toLowerCase());
@@ -1964,30 +2043,95 @@ jobs:
             };
 
             // Every output the agent job consumes; defaults describe a no-op run.
+            // NOTE: the agent's ONLY job is NOMINATION. Assigning Copilot to an
+            // approved issue is done deterministically in this pre-activation step
+            // (see confirmIssue below), never by the agent — so there are no
+            // confirm_* outputs.
             const out = {
               mode: 'noop',                     // 'scheduled' | 'confirm-event' | 'noop'
               team: CONFIG.team,
               nomination_label: NOMINATION_LABEL,
               approval_label: APPROVAL_LABEL,
               nominate_count: String(CONFIG.nominateCount),
-              confirm_numbers: '',              // issues to assign to Copilot (both labels present)
-              confirm_context: '',
               nominate: 'false',                // whether to nominate new issues this run
               nominate_numbers: '',             // scored pool the agent picks from
               nominate_list: '',
               nominate_context: '',
-              has_work: 'false',                // gates the agent job
+              has_work: 'false',                // gates the agent job (nomination only)
             };
             const flush = () => { for (const [k, v] of Object.entries(out)) core.setOutput(k, v); };
+
+            // ---- Deterministic Copilot assignment (the human-approval gate) ----
+            // Handing an issue to the Copilot coding agent is the security-sensitive
+            // action, so it is performed HERE, in deterministic code, and NEVER by
+            // the AI agent (which has no assign capability). The only way an issue
+            // reaches confirmIssue is by carrying the maintainer-applied approval
+            // label, which the bot cannot self-apply. This enforces "a maintainer
+            // must approve first" in the system, not merely in the prompt.
+            let _copilotActorId; let _copilotResolved = false;
+            const getCopilotActorId = async () => {
+              if (_copilotResolved) return _copilotActorId;
+              _copilotResolved = true;
+              try {
+                const r = await github.graphql(`query($owner:String!,$repo:String!){
+                  repository(owner:$owner,name:$repo){
+                    suggestedActors(capabilities:[CAN_BE_ASSIGNED], first:100){
+                      nodes{ login __typename ... on Bot { id } ... on User { id } } } } }`,
+                  { owner, repo });
+                const node = (r?.repository?.suggestedActors?.nodes || [])
+                  .find(n => (n.login || '').toLowerCase() === 'copilot-swe-agent');
+                if (!node) {
+                  core.warning('Copilot coding agent is not an assignable actor on this repo (is the coding agent enabled?). Skipping assignment.');
+                  _copilotActorId = null;
+                } else {
+                  _copilotActorId = node.id;
+                }
+              } catch (e) {
+                core.warning(`Could not resolve the Copilot coding-agent actor id: ${e.message}`);
+                _copilotActorId = null;
+              }
+              return _copilotActorId;
+            };
+            // Assign Copilot to one approved+unassigned issue, remove the nomination
+            // label (the approval label stays as an audit trail), and post a
+            // transparency comment. Returns true only if the assignment succeeded.
+            const confirmIssue = async (issue) => {
+              const actorId = await getCopilotActorId();
+              if (!actorId) return false;
+              try {
+                await github.graphql(`mutation($assignableId:ID!,$actorIds:[ID!]!){
+                  replaceActorsForAssignable(input:{assignableId:$assignableId,actorIds:$actorIds}){
+                    assignable{ ... on Issue { number } } } }`,
+                  { assignableId: issue.node_id, actorIds: [actorId] });
+              } catch (e) {
+                core.warning(`Failed to assign Copilot to #${issue.number}: ${e.message}`);
+                return false;
+              }
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name: NOMINATION_LABEL });
+              } catch (e) {
+                if (e.status !== 404) core.warning(`Could not remove nomination label from #${issue.number}: ${e.message}`);
+              }
+              try {
+                await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
+                  body: '🤖 **Assigned to the Copilot coding agent**\n\nA maintainer approved this issue, so it has been handed to the Copilot coding agent to propose a fix PR. A maintainer will review the result.' });
+              } catch (e) {
+                core.warning(`Could not comment on #${issue.number}: ${e.message}`);
+              }
+              core.info(`Confirmed #${issue.number}: assigned Copilot, removed nomination label, commented.`);
+              return true;
+            };
 
             try {
               // ---- Fast path: instant confirmation on issues.labeled ----------
               // Fires for EVERY label added anywhere in the repo, so exit unless
               // the added label is our approval label AND the issue is one we
-              // previously nominated. No CODEOWNERS read / search needed here.
+              // previously nominated. The assignment is done RIGHT HERE
+              // (deterministically); the agent job is never involved on this path.
               if (context.eventName === 'issues' && context.payload?.action === 'labeled') {
                 const added = (context.payload.label?.name || '').toLowerCase();
                 const issue = context.payload.issue;
+                out.mode = 'confirm-event';
                 if (added !== APPROVAL_LABEL.toLowerCase()) {
                   core.info(`Ignoring labeled event: '${context.payload.label?.name}' is not the approval label.`);
                 } else if (!hasLbl(issue, NOMINATION_LABEL)) {
@@ -1997,12 +2141,9 @@ jobs:
                   // Copilot and clobber a manual assignment.
                   core.info(`#${issue.number} approved but already assigned to ${(issue.assignees || []).map(a => a.login).join(', ')} — skipping.`);
                 } else {
-                  out.mode = 'confirm-event';
-                  out.confirm_numbers = String(issue.number);
-                  out.confirm_context = snippet(issue);
-                  out.has_work = 'true';
-                  core.info(`Confirm (event): will assign Copilot to #${issue.number}`);
+                  await confirmIssue(issue);
                 }
+                // Nothing for the agent to do on a label event — has_work stays false.
                 flush();
                 return;
               }
@@ -2059,74 +2200,116 @@ jobs:
                 return score + Math.min(ageDays / 10, 20);
               };
               const linkedPRs = async (number) => {
+                const prs = [];
+                const MAX_PAGES = 5;   // up to 500 cross-references
+                let cursor = null;
                 try {
-                  const q = `query($owner:String!,$repo:String!,$number:Int!){
-                    repository(owner:$owner,name:$repo){ issue(number:$number){
-                      timelineItems(first:100, itemTypes:[CROSS_REFERENCED_EVENT]){ nodes{
-                        ... on CrossReferencedEvent { source { __typename
-                          ... on PullRequest { number state author { login } } } } } } } } }`;
-                  const r = await github.graphql(q, { owner, repo, number });
-                  return (r?.repository?.issue?.timelineItems?.nodes || [])
-                    .filter(n => n?.source?.__typename === 'PullRequest')
-                    .map(n => ({ number: n.source.number, state: n.source.state, author: n.source.author?.login }));
+                  for (let page = 0; page < MAX_PAGES; page++) {
+                    const q = `query($owner:String!,$repo:String!,$number:Int!,$cursor:String){
+                      repository(owner:$owner,name:$repo){ issue(number:$number){
+                        timelineItems(first:100, after:$cursor, itemTypes:[CROSS_REFERENCED_EVENT]){
+                          pageInfo { hasNextPage endCursor }
+                          nodes{
+                          ... on CrossReferencedEvent { source { __typename
+                            ... on PullRequest { number state author { login } } } } } } } } }`;
+                    const r = await github.graphql(q, { owner, repo, number, cursor });
+                    const conn = r?.repository?.issue?.timelineItems;
+                    for (const n of (conn?.nodes || [])) {
+                      if (n?.source?.__typename === 'PullRequest') {
+                        prs.push({ number: n.source.number, state: n.source.state, author: n.source.author?.login });
+                      }
+                    }
+                    if (!conn?.pageInfo?.hasNextPage) return prs;
+                    cursor = conn.pageInfo.endCursor;
+                  }
+                  core.warning(`Linked-PR scan for #${number} stopped at ${MAX_PAGES} pages (500 cross-refs); an existing Copilot PR beyond that could be missed.`);
+                  return prs;
                 } catch (e) {
                   core.warning(`Could not read linked PRs for #${number}: ${e.message}`);
-                  return [];
+                  return prs;
                 }
               };
 
               out.mode = 'scheduled';
 
-              // (A) CONFIRM SET — issues a maintainer has approved (BOTH labels
-              // present) and that nobody is already assigned to. Separate label:
-              // filters are ANDed. These get assigned to the Copilot agent this run.
-              const confirmQuery =
-                `is:issue is:open repo:${owner}/${repo} no:assignee ` +
-                `label:"${NOMINATION_LABEL}" label:"${APPROVAL_LABEL}"`;
-              core.info(`Confirm search: ${confirmQuery}`);
-              const confirmResp = await github.rest.search.issuesAndPullRequests({
-                q: confirmQuery, per_page: 100,
+              // (A) CONFIRM — assign every approved, unassigned issue to Copilot
+              // RIGHT HERE, deterministically. The agent is never given assign
+              // capability, so a crafted issue body cannot trick it into skipping
+              // the human-approval gate. We list by label via the Issues API
+              // (listForRepo with a comma-joined `labels` = AND) instead of the
+              // Search API on purpose:
+              //   * it is read-after-write consistent — Search lags reality by
+              //     seconds–minutes, so a just-approved issue could be missed, or
+              //     two close-together runs could both act on a stale view; and
+              //   * github.paginate walks EVERY match, so an approved issue is
+              //     never dropped past a 100-result page.
+              // listForRepo also returns PRs (a PR is an issue), so filter them out.
+              const confirmAll = await github.paginate(github.rest.issues.listForRepo, {
+                owner, repo, state: 'open',
+                labels: `${NOMINATION_LABEL},${APPROVAL_LABEL}`, per_page: 100,
               });
-              const confirmItems = confirmResp.data.items;
-              out.confirm_numbers = confirmItems.map(i => i.number).join(',');
-              out.confirm_context = confirmItems
-                .slice(0, MAX_ISSUES_WITH_BODY_CONTEXT).map(snippet).join('\n\n---\n\n');
-              core.info(`Confirm set: ${confirmItems.length} approved issue(s).`);
+              const confirmItems = confirmAll
+                .filter(i => !i.pull_request && (i.assignees || []).length === 0);
+              core.info(`Confirm set: ${confirmItems.length} approved & unassigned issue(s).`);
+              let confirmedCount = 0;
+              for (const issue of confirmItems) {
+                if (await confirmIssue(issue)) confirmedCount++;
+              }
+              core.info(`Confirmed ${confirmedCount}/${confirmItems.length} approved issue(s).`);
 
               // (B) NOMINATION — only when nothing is already awaiting approval,
               // so we never pile up more than nominateCount pending nominations.
-              const pendingQuery =
-                `is:issue is:open repo:${owner}/${repo} ` +
-                `label:"${NOMINATION_LABEL}" -label:"${APPROVAL_LABEL}"`;
-              const pendingResp = await github.rest.search.issuesAndPullRequests({
-                q: pendingQuery, per_page: 1,
+              // Same rationale as (A): list nominated issues directly (consistent +
+              // fully paged) and count those still missing the approval label.
+              const nominatedAll = await github.paginate(github.rest.issues.listForRepo, {
+                owner, repo, state: 'open', labels: NOMINATION_LABEL, per_page: 100,
               });
-              const pendingCount = pendingResp.data.total_count;
+              const pendingCount = nominatedAll
+                .filter(i => !i.pull_request && !hasLbl(i, APPROVAL_LABEL)).length;
               if (pendingCount > 0) {
                 core.info(`Nomination throttled: ${pendingCount} issue(s) nominated & awaiting maintainer approval.`);
               } else {
                 // Pool = open, unassigned, not already in the handshake, not excluded.
+                // The Search API is the right tool here (it expresses the `-label`
+                // exclusions the Issues API can't), but it pages at 100. Walk up to
+                // MAX_POOL_PAGES so an older high-priority issue (e.g. a p1 or a
+                // regression that scores highest) isn't invisible just because 100+
+                // newer issues match; warn if we still have to truncate.
                 const poolQuery =
                   `is:issue is:open repo:${owner}/${repo} no:assignee ` +
                   `-label:"${NOMINATION_LABEL}" -label:"${APPROVAL_LABEL}" ` +
                   excludeLabels.map(l => `-label:"${l}"`).join(' ');
                 core.info(`Pool search: ${poolQuery}`);
-                const poolResp = await github.rest.search.issuesAndPullRequests({
-                  q: poolQuery, per_page: 100, sort: 'created', order: 'desc',
-                });
+                const MAX_POOL_PAGES = 10;   // Search API hard-caps at 1000 results
+                const poolItems = [];
+                let poolTotal = 0;
+                for (let page = 1; page <= MAX_POOL_PAGES; page++) {
+                  const poolResp = await github.rest.search.issuesAndPullRequests({
+                    q: poolQuery, per_page: 100, sort: 'created', order: 'desc', page,
+                  });
+                  poolTotal = poolResp.data.total_count;
+                  poolItems.push(...poolResp.data.items);
+                  if (poolItems.length >= poolTotal || poolResp.data.items.length === 0) break;
+                }
+                if (poolItems.length < poolTotal) {
+                  core.warning(`Pool truncated: fetched ${poolItems.length} of ${poolTotal} matching issues (cap ${MAX_POOL_PAGES} pages). Older issues beyond this window are not considered this run.`);
+                }
                 // Cheap scope + actionable filter on raw search items FIRST (they
                 // already carry labels + body), THEN enrich survivors with linked
                 // PRs — keeps the expensive GraphQL calls bounded.
-                const prelim = poolResp.data.items.filter(i => inScope(i) && isActionable(i));
-                core.info(`Pool: ${poolResp.data.total_count} open/unassigned; ${prelim.length} pass scope+actionable.`);
+                const prelim = poolItems.filter(i => inScope(i) && isActionable(i));
+                core.info(`Pool: ${poolItems.length} open/unassigned fetched (of ${poolTotal}); ${prelim.length} pass scope+actionable.`);
                 const survivors = [];
+                // Copilot coding-agent PRs are authored by one of these exact bot
+                // logins. Exact match avoids skipping a real user like "copilothelper".
+                const COPILOT_PR_AUTHORS = new Set(['copilot-swe-agent', 'copilot']);
                 for (const i of prelim) {
                   const prs = await linkedPRs(i.number);
                   if (prs.some(p => p.state === 'CLOSED' || p.state === 'MERGED')) {
                     core.info(`Skip #${i.number}: has closed/merged PR`); continue;
                   }
                   if (prs.some(p => p.state === 'OPEN' &&
-                      (p.author === 'copilot-swe-agent' || (p.author || '').includes('copilot')))) {
+                      COPILOT_PR_AUTHORS.has((p.author || '').toLowerCase()))) {
                     core.info(`Skip #${i.number}: open Copilot PR`); continue;
                   }
                   survivors.push(i);
@@ -2150,8 +2333,8 @@ jobs:
                 }
               }
 
-              out.has_work = (out.confirm_numbers || out.nominate === 'true') ? 'true' : 'false';
-              core.info(`Mode=${out.mode} confirm=[${out.confirm_numbers}] nominate=${out.nominate} has_work=${out.has_work}`);
+              out.has_work = out.nominate === 'true' ? 'true' : 'false';
+              core.info(`Mode=${out.mode} nominate=${out.nominate} has_work=${out.has_work} (confirmations, if any, were applied deterministically above)`);
             } catch (error) {
               core.error(`Error in pre-activation: ${error.message}`);
             }
@@ -2181,16 +2364,13 @@ jobs:
       GH_AW_ENGINE_MODEL: ${{ needs.agent.outputs.model }}
       GH_AW_ENGINE_VERSION: "1.0.65"
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
-      GH_AW_SAFE_OUTPUT_MESSAGES: "{\"runStarted\":\"🤖 [{workflow_name}]({run_url}) checking approvals \\u0026 nominating candidates…\",\"runSuccess\":\"🤖 [{workflow_name}]({run_url}) finished triage.\",\"runFailure\":\"🤖 [{workflow_name}]({run_url}) {status}.\"}"
+      GH_AW_SAFE_OUTPUT_MESSAGES: "{\"runStarted\":\"🤖 [{workflow_name}]({run_url}) nominating candidates…\",\"runSuccess\":\"🤖 [{workflow_name}]({run_url}) finished nominating.\",\"runFailure\":\"🤖 [{workflow_name}]({run_url}) {status}.\"}"
       GH_AW_THREAT_DETECTION_AIC: ${{ needs.detection.outputs.aic }}
       GH_AW_WORKFLOW_EMOJI: "🤖"
       GH_AW_WORKFLOW_ID: "copilot-issue-triage"
       GH_AW_WORKFLOW_NAME: "Copilot Issue Triage (POC)"
       GH_AW_WORKFLOW_SOURCE_URL: "${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}/.github/workflows/copilot-issue-triage.md"
     outputs:
-      assign_to_agent_assigned: ${{ steps.process_safe_outputs.outputs.assign_to_agent_assigned }}
-      assign_to_agent_assignment_error_count: ${{ steps.process_safe_outputs.outputs.assign_to_agent_assignment_error_count }}
-      assign_to_agent_assignment_errors: ${{ steps.process_safe_outputs.outputs.assign_to_agent_assignment_errors }}
       code_push_failure_count: ${{ steps.process_safe_outputs.outputs.code_push_failure_count }}
       code_push_failure_errors: ${{ steps.process_safe_outputs.outputs.code_push_failure_errors }}
       comment_id: ${{ steps.process_safe_outputs.outputs.comment_id }}
@@ -2246,8 +2426,7 @@ jobs:
           GH_AW_ALLOWED_DOMAINS: "api.business.githubcopilot.com,api.enterprise.githubcopilot.com,api.github.com,api.githubcopilot.com,api.individual.githubcopilot.com,api.snapcraft.io,archive.ubuntu.com,azure.archive.ubuntu.com,crl.geotrust.com,crl.globalsign.com,crl.identrust.com,crl.sectigo.com,crl.thawte.com,crl.usertrust.com,crl.verisign.com,crl3.digicert.com,crl4.digicert.com,crls.ssl.com,github.com,host.docker.internal,json-schema.org,json.schemastore.org,keyserver.ubuntu.com,ocsp.digicert.com,ocsp.geotrust.com,ocsp.globalsign.com,ocsp.identrust.com,ocsp.sectigo.com,ocsp.ssl.com,ocsp.thawte.com,ocsp.usertrust.com,ocsp.verisign.com,packagecloud.io,packages.cloud.google.com,packages.microsoft.com,ppa.launchpad.net,raw.githubusercontent.com,registry.npmjs.org,s.symcb.com,s.symcd.com,security.ubuntu.com,telemetry.enterprise.githubcopilot.com,ts-crl.ws.symantec.com,ts-ocsp.ws.symantec.com,www.googleapis.com"
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_API_URL: ${{ github.api_url }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":4,\"target\":\"*\"},\"add_labels\":{\"allowed\":[\"copilot-candidate-rm\"],\"max\":2,\"target\":\"*\"},\"assign_to_agent\":{\"allowed\":[\"copilot\"],\"ignore-if-error\":true,\"max\":2,\"target\":\"*\"},\"create_report_incomplete_issue\":{},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":1,\"report-as-issue\":\"true\"},\"remove_labels\":{\"allowed\":[\"copilot-candidate-rm\"],\"max\":2,\"target\":\"*\"},\"report_incomplete\":{}}"
-          GH_AW_ASSIGN_TO_AGENT_TOKEN: ${{ secrets.GH_AW_AGENT_TOKEN || secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":4,\"target\":\"*\"},\"add_labels\":{\"allowed\":[\"copilot-candidate-rm\"],\"max\":2,\"target\":\"*\"},\"create_report_incomplete_issue\":{},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":1,\"report-as-issue\":\"true\"},\"report_incomplete\":{}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
