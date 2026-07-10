@@ -45,7 +45,11 @@ function Initialize-AzModule {
           }
         }
 
-        $azAccountsVersion = New-Object -TypeName System.Version -ArgumentList $azAccountsVersion.Major, $azAccountsVersion.Minor, $azAccountsVersion.Build
+        $azAccountsVersion = [System.Version]::new(
+            $azAccountsVersion.Major, 
+            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Build
+        )
 
         Write-Verbose "Initializing Az Subscription."
         $initializeAzSubscriptionParams = @{
