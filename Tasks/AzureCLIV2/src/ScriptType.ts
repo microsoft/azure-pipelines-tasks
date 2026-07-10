@@ -110,7 +110,7 @@ export class PowerShellCore extends ScriptType {
         }
 
         this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
-        let tool: any = tl.tool(tl.which('pwsh', true))
+        let tool: any = tl.tool(this.getPwshPath())
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -123,7 +123,7 @@ export class PowerShellCore extends ScriptType {
 
     private async getToolWithFileInvocation(): Promise<any> {
         this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
-        let tool: any = tl.tool(tl.which('pwsh', true))
+        let tool: any = tl.tool(this.getPwshPath())
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -133,6 +133,15 @@ export class PowerShellCore extends ScriptType {
             .arg(this._scriptPath);
         tl.debug('Using -File invocation for PowerShell Core to avoid CMD metacharacter issues.');
         return tool;
+    }
+
+    private getPwshPath(): string {
+        const customPwshPath: string = tl.getInput('customPwshPath', false);
+        if (customPwshPath) {
+            tl.debug(`Using custom pwsh path: ${customPwshPath}`);
+            return customPwshPath;
+        }
+        return tl.which('pwsh', true);
     }
 
     public async cleanUp(): Promise<void> {
