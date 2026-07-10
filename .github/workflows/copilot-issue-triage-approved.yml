@@ -72,14 +72,14 @@ jobs:
               issueNumber = parseInt(context.payload.inputs.issue_number, 10);
               if (!issueNumber) { core.setFailed('issue_number input is required.'); return; }
             } else {
-              // issues: assigned. Do NOT early-return based on the triggering
-              // assignee: with concurrency cancel-in-progress:false, a pending
-              // run whose trigger WAS Copilot can be canceled by a newer queued
-              // assignment, which would drop the housekeeping. Instead let every
-              // assigned event proceed and decide off LIVE issue state below —
-              // the live `assignees.some(isCopilot)` check and the
-              // `copilot-working` idempotency guard make this safe and ensure
-              // that whichever run ends up executing still does the work.
+              // issues: assigned. Do NOT decide off the triggering assignee in
+              // the webhook payload — it can be stale (e.g. Copilot was assigned
+              // and then re-assigned) and it only names the ONE assignee from
+              // this event, not the full set. Take the issue number here and
+              // decide off LIVE issue state below: the live
+              // `assignees.some(isCopilot)` check plus the `copilot-working`
+              // idempotency guard make the outcome correct regardless of which
+              // assigned event triggered the run.
               issueNumber = context.payload.issue.number;
             }
 
@@ -109,26 +109,35 @@ jobs:
 
             const wasNominated = hasLbl(issue.labels, NOMINATION_LABEL);
 
-            // 1. Remove the nomination label (best-effort; 404 if never present).
+            // 1. Add the working audit label FIRST and fail fast if it can't be
+            // added. This label is the idempotency guard: if we proceeded to
+            // remove the nomination label / comment but failed to add this one,
+            // the issue could end up with neither label AND a re-run would
+            // re-comment. Adding it first means a failure here leaves state
+            // untouched and lets the next assigned event retry cleanly.
+            try {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: [WORKING_LABEL] });
+              core.info(`Added '${WORKING_LABEL}' to #${issueNumber}.`);
+            } catch (e) {
+              core.setFailed(`Could not add '${WORKING_LABEL}' to #${issueNumber}: ${e.message}. Aborting so state stays consistent and a later run can retry.`);
+              return;
+            }
+
+            // 2. Remove the nomination label (best-effort; 404 if never present).
+            let nominationRemoved = false;
             if (wasNominated) {
               try {
                 await github.rest.issues.removeLabel({ owner, repo, issue_number: issueNumber, name: NOMINATION_LABEL });
+                nominationRemoved = true;
                 core.info(`Removed '${NOMINATION_LABEL}' from #${issueNumber}.`);
               } catch (e) {
                 if (e.status !== 404) core.warning(`Could not remove '${NOMINATION_LABEL}' from #${issueNumber}: ${e.message}`);
               }
             }
 
-            // 2. Add the working audit label.
-            try {
-              await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: [WORKING_LABEL] });
-              core.info(`Added '${WORKING_LABEL}' to #${issueNumber}.`);
-            } catch (e) {
-              core.warning(`Could not add '${WORKING_LABEL}' to #${issueNumber}: ${e.message}`);
-            }
-
-            // 3. Comment confirming Copilot is on it.
-            const nominatedNote = wasNominated
+            // 3. Comment confirming Copilot is on it. Base the note on what
+            // actually happened to the nomination label, not on its prior state.
+            const nominatedNote = nominationRemoved
               ? ' The `' + NOMINATION_LABEL + '` nomination label has been removed and replaced with `' + WORKING_LABEL + '`.'
               : ' Added the `' + WORKING_LABEL + '` label.';
             try {
