@@ -1,6 +1,7 @@
 import { Utility } from './Utility';
 import tl = require("azure-pipelines-task-lib/task");
 import os = require("os");
+import fs = require("fs");
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 export class ScriptTypeFactory {
@@ -138,6 +139,9 @@ export class PowerShellCore extends ScriptType {
     private getPwshPath(): string {
         const customPwshPath: string = tl.getInput('customPwshPath', false);
         if (customPwshPath) {
+            if (!fs.existsSync(customPwshPath)) {
+                throw new Error(`Custom pwsh executable not found at: '${customPwshPath}'. Please verify the path is correct.`);
+            }
             tl.debug(`Using custom pwsh path: ${customPwshPath}`);
             return customPwshPath;
         }
