@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 276,
-    "Patch": 2
+    "Minor": 277,
+    "Patch": 4
   },
   "demands": [],
   "satisfies": [
@@ -88,6 +88,7 @@
     "BuildctlNotFoundInFolder": "Buildctl executable not found in path %s",
     "FileContentSynced": "Synced the file content to the disk. The content is %s.",
     "VerifyBuildctlInstallation": "Verifying Buildctl installation...",
-    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+    "NotAddingAnyTagsToBuild": "Not adding any tags to the built image as no repository is specified."
   }
 }
