@@ -128,4 +128,47 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should fail when SqlPackage is not found anywhere', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when SqlPackage is not found');
+            assert(tr.stdout.indexOf('SqlPackageNotFound') >= 0 || tr.errorIssues.some(e => e.includes('SqlPackage not found')), 
+                'should display SqlPackage not found error');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/path/sqlpackage') >= 0, 
+                'should report SqlPackage found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via dotnet tool', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromDotnetTool.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via dotnet tool');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('.dotnet') >= 0, 
+                'should report SqlPackage found at dotnet tool location');
+        }, tr);
+    });
+
+    it('should fail when user-provided SqlPackage path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided SqlPackage path does not exist');
+            assert(tr.stdout.indexOf('SqlPackageNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')), 
+                'should display SqlPackage not found at path error');
+        }, tr);
+    });
 });
