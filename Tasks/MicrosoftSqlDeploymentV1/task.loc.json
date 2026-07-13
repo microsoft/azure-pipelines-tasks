@@ -1,0 +1,148 @@
+{
+  "id": "5c9e8b59-2c3f-4a1e-9d7b-4e3f2a1c0b9a",
+  "name": "MicrosoftSqlDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/microsoft-sql-deployment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "required": true,
+      "defaultValue": "publish",
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "publish": "Publish",
+        "script": "Script",
+        "deployReport": "Deploy Report",
+        "sqlScript": "Execute SQL Script"
+      }
+    },
+    {
+      "name": "path",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "connectionString",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.connectionString",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectionString"
+    },
+    {
+      "name": "azureSubscription",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscription",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
+    },
+    {
+      "name": "publishProfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishProfile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishProfile"
+    },
+    {
+      "name": "additionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.additionalArguments",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.additionalArguments"
+    },
+    {
+      "name": "buildArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildArguments",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildArguments"
+    },
+    {
+      "name": "sqlpackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.sqlpackagePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqlpackagePath"
+    },
+    {
+      "name": "sqlcmdPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.sqlcmdPath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqlcmdPath"
+    },
+    {
+      "name": "firewallRuleManagement",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.firewallRuleManagement",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.firewallRuleManagement"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Path to generated output file for script, deployReport, driftReport, extract, export actions"
+    }
+  ],
+  "execution": {
+    "Node20_1": {
+      "target": "src/microsoftsqldeployment.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",
+    "ActionDetected": "ms-resource:loc.messages.ActionDetected",
+    "ConnectionStringProvided": "ms-resource:loc.messages.ConnectionStringProvided",
+    "UsingAzureSubscription": "ms-resource:loc.messages.UsingAzureSubscription",
+    "DetectingSqlPackage": "ms-resource:loc.messages.DetectingSqlPackage",
+    "SqlPackageFound": "ms-resource:loc.messages.SqlPackageFound",
+    "SqlPackageNotFound": "ms-resource:loc.messages.SqlPackageNotFound",
+    "SettingUpSqlCmd": "ms-resource:loc.messages.SettingUpSqlCmd",
+    "SqlCmdFound": "ms-resource:loc.messages.SqlCmdFound",
+    "SqlCmdInstalling": "ms-resource:loc.messages.SqlCmdInstalling",
+    "SqlCmdInstalled": "ms-resource:loc.messages.SqlCmdInstalled",
+    "DetectingIPAddress": "ms-resource:loc.messages.DetectingIPAddress",
+    "ConnectionSuccessful": "ms-resource:loc.messages.ConnectionSuccessful",
+    "IPAddressDetected": "ms-resource:loc.messages.IPAddressDetected",
+    "AddingFirewallRule": "ms-resource:loc.messages.AddingFirewallRule",
+    "FirewallRuleAdded": "ms-resource:loc.messages.FirewallRuleAdded",
+    "RemovingFirewallRule": "ms-resource:loc.messages.RemovingFirewallRule",
+    "FirewallRuleRemoved": "ms-resource:loc.messages.FirewallRuleRemoved",
+    "FirewallManagementDisabled": "ms-resource:loc.messages.FirewallManagementDisabled",
+    "FirewallManagementRequiresAzureSubscription": "ms-resource:loc.messages.FirewallManagementRequiresAzureSubscription",
+    "BuildingSqlProject": "ms-resource:loc.messages.BuildingSqlProject",
+    "SqlProjectBuildComplete": "ms-resource:loc.messages.SqlProjectBuildComplete",
+    "DotnetNotFound": "ms-resource:loc.messages.DotnetNotFound",
+    "ExecutingSqlPackage": "ms-resource:loc.messages.ExecutingSqlPackage",
+    "ExecutingSqlScript": "ms-resource:loc.messages.ExecutingSqlScript",
+    "DeploymentSuccessful": "ms-resource:loc.messages.DeploymentSuccessful",
+    "DeploymentFailed": "ms-resource:loc.messages.DeploymentFailed",
+    "OutputFileGenerated": "ms-resource:loc.messages.OutputFileGenerated",
+    "InvalidFileExtension": "ms-resource:loc.messages.InvalidFileExtension"
+  }
+}
