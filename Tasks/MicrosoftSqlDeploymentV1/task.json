@@ -1,0 +1,148 @@
+{
+  "id": "5c9e8b59-2c3f-4a1e-9d7b-4e3f2a1c0b9a",
+  "name": "MicrosoftSqlDeployment",
+  "friendlyName": "Microsoft SQL Deployment",
+  "description": "Deploy SQL Server, Azure SQL Database, or Azure SQL Managed Instance using DACPAC, SQL scripts, or SQL projects",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/microsoft-sql-deployment",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/microsoftsqldeployment)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Microsoft SQL Deployment: $(action)",
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "Action",
+      "required": true,
+      "defaultValue": "publish",
+      "helpMarkDown": "SqlPackage action or SQL script execution. For .sqlproj files, use 'publish' action.",
+      "options": {
+        "publish": "Publish",
+        "script": "Script",
+        "deployReport": "Deploy Report",
+        "sqlScript": "Execute SQL Script"
+      }
+    },
+    {
+      "name": "path",
+      "type": "filePath",
+      "label": "Path",
+      "required": true,
+      "helpMarkDown": "Path to .dacpac, .sqlproj, or .sql file. Task detects type automatically based on extension."
+    },
+    {
+      "name": "connectionString",
+      "type": "string",
+      "label": "Connection String",
+      "required": true,
+      "helpMarkDown": "SQL Server connection string. Include server, database, and authentication. Example: Server=myserver.database.windows.net;Database=mydb;User ID=user;Password=$(SqlPassword);Encrypt=True; or Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directory Default;Encrypt=True;"
+    },
+    {
+      "name": "azureSubscription",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Subscription",
+      "required": false,
+      "helpMarkDown": "Optional. Azure Resource Manager service connection for firewall rule management and service principal token authentication."
+    },
+    {
+      "name": "publishProfile",
+      "type": "filePath",
+      "label": "Publish Profile",
+      "required": false,
+      "helpMarkDown": "Optional. Path to a SqlPackage publish profile (.xml). Values in additionalArguments override profile settings."
+    },
+    {
+      "name": "additionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "required": false,
+      "helpMarkDown": "Additional arguments for SqlPackage or sqlcmd. For SqlPackage: /p:BlockOnPossibleDataLoss=true /p:DropObjectsNotInSource=false. For sqlcmd: -v VarName=Value"
+    },
+    {
+      "name": "buildArguments",
+      "type": "string",
+      "label": "Build Arguments",
+      "required": false,
+      "helpMarkDown": "Additional dotnet build arguments (for .sqlproj files only). Example: -c Release /p:TreatTSqlWarningsAsErrors=true"
+    },
+    {
+      "name": "sqlpackagePath",
+      "type": "filePath",
+      "label": "SqlPackage Path",
+      "required": false,
+      "helpMarkDown": "Optional. Override SqlPackage executable path. If not specified, task discovers SqlPackage via: dotnet tool → DacFramework MSI (Windows) → PATH."
+    },
+    {
+      "name": "sqlcmdPath",
+      "type": "filePath",
+      "label": "Sqlcmd Path",
+      "required": false,
+      "helpMarkDown": "Optional. Override sqlcmd executable path. If not specified and sqlcmd is not on PATH, task auto-installs go-sqlcmd."
+    },
+    {
+      "name": "firewallRuleManagement",
+      "type": "boolean",
+      "label": "Firewall Rule Management",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Enable automatic firewall rule management. Default: true when azureSubscription is set, false otherwise. Set to false explicitly for private VNet deployments."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Path to generated output file for script, deployReport, driftReport, extract, export actions"
+    }
+  ],
+  "execution": {
+    "Node20_1": {
+      "target": "src/microsoftsqldeployment.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingDeployment": "Starting Microsoft SQL Deployment",
+    "ActionDetected": "Action: %s, File type: %s",
+    "ConnectionStringProvided": "Connection string provided",
+    "UsingAzureSubscription": "Using Azure subscription: %s",
+    "DetectingSqlPackage": "Detecting SqlPackage location",
+    "SqlPackageFound": "SqlPackage found at: %s",
+    "SqlPackageNotFound": "SqlPackage not found. Install via: dotnet tool install -g microsoft.sqlpackage",
+    "SettingUpSqlCmd": "Setting up sqlcmd",
+    "SqlCmdFound": "sqlcmd found at: %s",
+    "SqlCmdInstalling": "sqlcmd not found on PATH. Installing go-sqlcmd...",
+    "SqlCmdInstalled": "go-sqlcmd installed successfully",
+    "DetectingIPAddress": "Testing connectivity to SQL Server",
+    "ConnectionSuccessful": "Connection successful - no firewall rule needed",
+    "IPAddressDetected": "Client IP address detected: %s",
+    "AddingFirewallRule": "Adding temporary firewall rule for IP: %s",
+    "FirewallRuleAdded": "Firewall rule added: %s",
+    "RemovingFirewallRule": "Removing firewall rule: %s",
+    "FirewallRuleRemoved": "Firewall rule removed successfully",
+    "FirewallManagementDisabled": "Firewall rule management disabled",
+    "FirewallManagementRequiresAzureSubscription": "Firewall rule management requires azureSubscription input",
+    "BuildingSqlProject": "Building SQL project: %s",
+    "SqlProjectBuildComplete": "SQL project built successfully. DACPAC: %s",
+    "DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
+    "ExecutingSqlPackage": "Executing SqlPackage action: %s",
+    "ExecutingSqlScript": "Executing SQL script: %s",
+    "DeploymentSuccessful": "Deployment completed successfully",
+    "DeploymentFailed": "Deployment failed: %s",
+    "OutputFileGenerated": "Output file generated: %s",
+    "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
+  }
+}
