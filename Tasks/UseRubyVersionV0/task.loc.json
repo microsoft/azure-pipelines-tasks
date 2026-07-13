@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -62,6 +62,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",

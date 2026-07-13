@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -398,6 +398,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "SignIdNotFound": "ms-resource:loc.messages.SignIdNotFound",
     "TempKeychainSetupFailed": "ms-resource:loc.messages.TempKeychainSetupFailed",
     "ProvProfileDetailsNotFound": "ms-resource:loc.messages.ProvProfileDetailsNotFound",

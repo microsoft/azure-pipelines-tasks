@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 277,
-    "Patch": 4
+    "Minor": 278,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -239,6 +239,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ScriptReturnCode": "Script exited with return code: %d",
     "ScriptFailed": "Script failed with error: %s",
     "ScriptFailedStdErr": "Script has output to stderr. Failing as failOnStdErr is set to true.",

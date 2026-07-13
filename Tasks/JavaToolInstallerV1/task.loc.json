@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "satisfies": [
@@ -191,6 +191,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",

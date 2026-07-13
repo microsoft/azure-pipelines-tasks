@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 275,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -345,6 +345,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
     "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
     "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",

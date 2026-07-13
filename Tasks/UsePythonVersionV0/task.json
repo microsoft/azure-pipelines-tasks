@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -108,6 +108,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ListAvailableVersions": "Versions in %s:",
     "PlatformNotRecognized": "Platform not recognized",
     "PrependPath": "Prepending PATH environment variable with directory: %s",

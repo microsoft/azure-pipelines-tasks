@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 2
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -197,6 +197,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "GeneratingScript": "Generating script.",
     "JS_FormattedCommand": "Formatted command: %s",
     "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
@@ -209,8 +210,8 @@
     "Az_LowerVersionWarning": "Specified {0} version {1} is out of date, the latest version is {2}"
   },
   "_buildConfigMapping": {
-    "Default": "5.277.2",
+    "Default": "5.278.2",
     "LocalPackages": "5.249.4",
-    "Node24_1": "5.277.3"
+    "Node24_1": "5.278.3"
   }
 }

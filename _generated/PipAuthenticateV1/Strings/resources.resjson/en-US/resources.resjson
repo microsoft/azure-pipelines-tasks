@@ -10,6 +10,7 @@
   "loc.input.help.pythonDownloadServiceConnections": "Select endpoints to authenticate outside this organization.",
   "loc.input.label.onlyAddExtraIndex": "Don't set primary index URL",
   "loc.input.help.onlyAddExtraIndex": "If this is set to true, no feed will be set as the primary index URL. All of the configured feeds/endpoints will be set as extra index URLs. Defaults to false.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
   "loc.messages.Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
   "loc.messages.Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",

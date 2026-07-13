@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +95,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
     "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
@@ -110,8 +111,8 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
+    "Default": "1.278.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "wif_242": "1.278.1"
   }
 }

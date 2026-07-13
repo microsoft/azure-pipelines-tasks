@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 275,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -345,6 +345,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",

@@ -40,6 +40,7 @@
   "loc.input.help.SymbolsVersion": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
   "loc.input.label.SymbolsArtifactName": "Artifact name",
   "loc.input.help.SymbolsArtifactName": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.CleanedUpSemaphoreFile0": "Successfully cleaned up semaphore file '{0}'.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Could not clean up existing semaphore file '{0}'. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Error '{0}' accessing semaphore file '{1}'. Retrying in {2:N0} seconds.",

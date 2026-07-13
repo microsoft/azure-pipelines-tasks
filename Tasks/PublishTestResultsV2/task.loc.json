@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -155,6 +155,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
     "ErrorTestResultsPublisher": "ms-resource:loc.messages.ErrorTestResultsPublisher",
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests"

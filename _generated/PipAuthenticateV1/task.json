@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +95,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
     "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
     "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
@@ -110,8 +111,8 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
+    "Default": "1.278.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "wif_242": "1.278.1"
   }
 }

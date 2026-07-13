@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 6,
-    "Minor": 277,
-    "Patch": 6
+    "Minor": 278,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -245,6 +245,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "AFC_StorageAccountNotFound": "ms-resource:loc.messages.AFC_StorageAccountNotFound",
     "AFC_ResourceGroupNotFound": "ms-resource:loc.messages.AFC_ResourceGroupNotFound",
     "AFC_GetVMStatus": "ms-resource:loc.messages.AFC_GetVMStatus",

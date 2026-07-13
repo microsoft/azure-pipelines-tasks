@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 276,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -108,6 +108,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
     "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
     "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
@@ -146,8 +147,8 @@
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
   },
   "_buildConfigMapping": {
-    "Default": "2.276.0",
+    "Default": "2.278.2",
     "LocalPackages": "2.249.4",
-    "Node24_1": "2.276.1"
+    "Node24_1": "2.278.3"
   }
 }

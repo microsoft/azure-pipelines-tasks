@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "satisfies": [
@@ -191,6 +191,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
     "SuccessFullyFetchedItemList": "Successfully fetched list of items",
     "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",

@@ -47,6 +47,7 @@
   "loc.input.help.spotBugsGradlePluginVersionChoice": "The Spotbugs Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
   "loc.input.label.spotbugsGradlePluginVersion": "Version number",
   "loc.input.help.spotbugsGradlePluginVersion": "Refer to https://plugins.gradle.org/plugin/com.github.spotbugs for all available versions.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
   "loc.messages.sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
   "loc.messages.sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",

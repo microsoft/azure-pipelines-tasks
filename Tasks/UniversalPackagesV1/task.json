@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
-    "Patch": 0
+    "Minor": 278,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -120,6 +120,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Debug_ArtifactToolPath": "Artifact tool path: %s",
     "Debug_AuthenticatedIdentity": "Authenticated identity: %s (ID: %s)",
     "Debug_CalculatedVersion": "Calculated next version: %s",

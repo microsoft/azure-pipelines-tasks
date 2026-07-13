@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 6,
-    "Minor": 277,
-    "Patch": 6
+    "Minor": 278,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -245,6 +245,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "AFC_StorageAccountNotFound": "Storage account: {0} not found. The selected service connection 'Service Principal' supports storage accounts of Azure Resource Manager type only.",
     "AFC_ResourceGroupNotFound": "Provided resource group '{0}' does not exist.",
     "AFC_GetVMStatus": "[Azure Call]Getting the status for vm '{0}'",
@@ -296,8 +297,8 @@
     "AzModuleNotFound": "Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
   },
   "_buildConfigMapping": {
-    "Default": "6.277.6",
+    "Default": "6.278.2",
     "LocalPackages": "6.249.4",
-    "Node24_1": "6.277.7"
+    "Node24_1": "6.278.3"
   }
 }

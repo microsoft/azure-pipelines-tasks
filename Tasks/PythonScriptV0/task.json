@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "demands": [],
   "instanceNameFormat": "Run a Python script",
@@ -120,6 +120,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "NotAFile": "The given path was not to a file: '%s'.",
     "ParameterRequired": "The `%s` parameter is required"
   }

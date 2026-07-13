@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -188,6 +188,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
     "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",

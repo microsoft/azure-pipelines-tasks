@@ -21,7 +21,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -75,6 +75,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "CMakeReturnCode": "CMake exited with return code: %d",
     "CMakeFailed": "CMake failed with error: %s"
   }

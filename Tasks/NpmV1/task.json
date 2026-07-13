@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -188,6 +188,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FoundBuildCredentials": "Found build credentials",
     "NoBuildCredentials": "Could not find build credentials",
     "UnknownCommand": "Unknown command: %s",

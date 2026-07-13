@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -71,6 +71,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",

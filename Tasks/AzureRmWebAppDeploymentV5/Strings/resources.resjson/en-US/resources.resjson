@@ -79,6 +79,7 @@
   "loc.input.help.DeploymentTypeLinux": "Choose the deployment method for the app.",
   "loc.input.label.CleanDeploymentFlag": "Enable clean deployment",
   "loc.input.help.CleanDeploymentFlag": "Deployment mode for complete sync (clean) deployment",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",

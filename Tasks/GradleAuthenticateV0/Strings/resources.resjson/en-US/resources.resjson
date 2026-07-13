@@ -13,6 +13,7 @@
   "loc.input.help.pluginToolVersion": "Override the credential provider plugin version used for the local JAR layout and init script. Use when settings.gradle does not declare the plugin or when version resolution fails.",
   "loc.input.label.gradleUserHome": "Gradle user home",
   "loc.input.help.gradleUserHome": "Override the Gradle user home directory. Defaults to ~/.gradle. The init script is written to <gradleUserHome>/init.d/.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.Error_CouldNotDetermineVersion": "Could not determine the credential provider plugin version. Either declare the plugin in settings.gradle and include it in buildFiles, or set the pluginToolVersion input.",
   "loc.messages.Error_CouldNotResolveCiJar": "Could not resolve the credential provider JAR.",
   "loc.messages.Error_NoBuildFilesOrRepoUrls": "At least one of buildFiles or repositoryUrl must be provided. buildFiles should list Gradle build files containing Azure Artifacts repository URLs. repositoryUrl should be an explicit Azure Artifacts repository URL.",

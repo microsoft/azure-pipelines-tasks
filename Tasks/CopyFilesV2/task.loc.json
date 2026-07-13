@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -138,6 +138,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
     "CleaningTargetFolder": "ms-resource:loc.messages.CleaningTargetFolder",
     "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",

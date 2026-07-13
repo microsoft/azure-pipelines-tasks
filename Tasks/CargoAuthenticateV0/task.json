@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -54,6 +54,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FailedToAddAuthentication": "Failed to add authentication.",
     "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
     "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",

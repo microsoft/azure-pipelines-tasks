@@ -37,6 +37,7 @@
   "loc.input.help.workingDirectory": "Working directory where the script is run.",
   "loc.input.label.runScriptInSeparateScope": "Run script in the separate scope",
   "loc.input.help.runScriptInSeparateScope": "This input allows executing PowerShell scripts using '&' operator instead of the default '.'. If this input set to the true script will be executed in separate scope and globally scoped PowerShell variables won't be updated",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",

@@ -19,7 +19,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "instanceNameFormat": "Extract files $(message)",
@@ -96,6 +96,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
     "ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",
     "ExtractNotAccessibleFile": "Specified archive: %s can not be extracted because it can not be accessed: %s",

@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -143,6 +143,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "Debug_ArtifactToolPath": "ms-resource:loc.messages.Debug_ArtifactToolPath",
     "Debug_AuthenticatedIdentity": "ms-resource:loc.messages.Debug_AuthenticatedIdentity",
     "Debug_CalculatedVersion": "ms-resource:loc.messages.Debug_CalculatedVersion",
@@ -212,8 +213,8 @@
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
+    "Default": "1.278.2",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "wif_242": "1.278.3"
   }
 }

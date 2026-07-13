@@ -30,6 +30,7 @@
   "loc.input.help.validateScriptSignature": "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.help.workingDirectory": "Working directory where the script is run.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",

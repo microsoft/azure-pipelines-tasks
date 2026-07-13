@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [
@@ -198,6 +198,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
     "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
     "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."

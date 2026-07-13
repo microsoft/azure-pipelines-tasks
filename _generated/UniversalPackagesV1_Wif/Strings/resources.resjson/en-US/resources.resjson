@@ -21,6 +21,7 @@
   "loc.input.help.directory": "For downloads: folder path where the package's contents will be downloaded. For publish: path to the directory containing files to publish.",
   "loc.input.label.packageDescription": "Description",
   "loc.input.help.packageDescription": "Optional. Description of the contents of this package and/or the changes made in this version of the package.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.Debug_ArtifactToolPath": "Artifact tool path: %s",
   "loc.messages.Debug_AuthenticatedIdentity": "Authenticated identity: %s (ID: %s)",
   "loc.messages.Debug_CalculatedVersion": "Calculated next version: %s",

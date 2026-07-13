@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -155,6 +155,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "NoMatchingFilesFound": "No test result files matching '%s' were found.",
     "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s.",
     "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."

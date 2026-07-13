@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 242,
+        "Minor": 278,
         "Patch": 0
     },
     "groups": [],
@@ -96,5 +96,7 @@
             "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV1, Agent.Plugins"
         }
     },
-    "messages": {}
+    "messages": {
+        "TestingString": "This string will be removed"
+    }
 }

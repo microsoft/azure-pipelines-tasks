@@ -26,6 +26,7 @@
   "loc.input.help.addBaseImageData": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input.",
   "loc.input.label.container": "Container",
   "loc.input.help.container": "Name of the container. For use with start and stop commands.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.CommandNotRecognized": "Command not recognized: %s",

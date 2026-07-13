@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -183,6 +183,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
     "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
     "PackageDownloadSuccessful": "Package download successful",

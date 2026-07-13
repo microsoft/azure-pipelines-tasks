@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
-    "Patch": 0
+    "Minor": 278,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -120,6 +120,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "Debug_ArtifactToolPath": "ms-resource:loc.messages.Debug_ArtifactToolPath",
     "Debug_AuthenticatedIdentity": "ms-resource:loc.messages.Debug_AuthenticatedIdentity",
     "Debug_CalculatedVersion": "ms-resource:loc.messages.Debug_CalculatedVersion",

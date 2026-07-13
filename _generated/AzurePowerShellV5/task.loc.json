@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -197,6 +197,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
@@ -209,8 +210,8 @@
     "Az_LowerVersionWarning": "ms-resource:loc.messages.Az_LowerVersionWarning"
   },
   "_buildConfigMapping": {
-    "Default": "5.277.2",
+    "Default": "5.278.2",
     "LocalPackages": "5.249.4",
-    "Node24_1": "5.277.3"
+    "Node24_1": "5.278.3"
   }
 }

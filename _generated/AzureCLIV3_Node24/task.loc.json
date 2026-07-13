@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 277,
-    "Patch": 5
+    "Minor": 278,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -243,6 +243,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
     "ScriptFailedStdErr": "ms-resource:loc.messages.ScriptFailedStdErr",
@@ -279,7 +280,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.277.4",
-    "Node24_1": "3.277.5"
+    "Default": "3.278.0",
+    "Node24_1": "3.278.1"
   }
 }

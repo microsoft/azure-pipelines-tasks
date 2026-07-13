@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -86,6 +86,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Error_CouldNotDetermineVersion": "Could not determine the credential provider plugin version. Either declare the plugin in settings.gradle and include it in buildFiles, or set the pluginToolVersion input.",
     "Error_CouldNotResolveCiJar": "Could not resolve the credential provider JAR.",
     "Error_NoBuildFilesOrRepoUrls": "At least one of buildFiles or repositoryUrl must be provided. buildFiles should list Gradle build files containing Azure Artifacts repository URLs. repositoryUrl should be an explicit Azure Artifacts repository URL.",

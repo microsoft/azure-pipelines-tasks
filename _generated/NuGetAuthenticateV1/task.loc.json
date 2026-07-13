@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -57,6 +57,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "Error_ServiceConnectionExists": "ms-resource:loc.messages.Error_ServiceConnectionExists",
     "Error_InvalidFeedUrl": "ms-resource:loc.messages.Error_InvalidFeedUrl",
     "Error_MissingFeedUrlOrServiceConnection": "ms-resource:loc.messages.Error_MissingFeedUrlOrServiceConnection",
@@ -68,8 +69,8 @@
     "Warn_IgnoringFeedUrl": "ms-resource:loc.messages.Warn_IgnoringFeedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
+    "Default": "1.278.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "wif_242": "1.278.1"
   }
 }

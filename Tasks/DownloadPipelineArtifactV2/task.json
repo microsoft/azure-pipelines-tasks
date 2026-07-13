@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 198,
+        "Minor": 278,
         "Patch": 0
     },
     "groups": [],
@@ -243,7 +243,9 @@
             "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV2_0_0, Agent.Plugins"
         }
     },
-    "messages": {},
+    "messages": {
+        "TestingString": "This string will be removed"
+    },
     "outputVariables": [
         {
             "name": "BuildNumber",

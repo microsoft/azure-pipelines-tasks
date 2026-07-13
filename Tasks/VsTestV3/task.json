@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -593,6 +593,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
     "VstestFailedReturnCode": "VsTest task failed.",
     "VstestPassedReturnCode": "VsTest task succeeded.",

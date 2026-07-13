@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -91,6 +91,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles",
     "SkippingSymbolStore": "ms-resource:loc.messages.SkippingSymbolStore",
     "NoFiles": "ms-resource:loc.messages.NoFiles"

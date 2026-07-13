@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "releaseNotes": "This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
@@ -398,6 +398,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "SignIdNotFound": "Failed to find the iOS signing identity. Verify that signing and provisioning information is provided.",
     "TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
     "ProvProfileDetailsNotFound": "Failed to find details for the provisioning profile: %s",

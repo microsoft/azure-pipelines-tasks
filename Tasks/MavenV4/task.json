@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -498,6 +498,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
     "sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
     "sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",

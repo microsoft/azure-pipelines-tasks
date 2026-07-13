@@ -21,7 +21,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -75,6 +75,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "CMakeReturnCode": "ms-resource:loc.messages.CMakeReturnCode",
     "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
   }

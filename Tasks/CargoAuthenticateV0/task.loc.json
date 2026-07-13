@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -54,6 +54,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "ConfigTomlNotToml": "ms-resource:loc.messages.ConfigTomlNotToml",
     "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",

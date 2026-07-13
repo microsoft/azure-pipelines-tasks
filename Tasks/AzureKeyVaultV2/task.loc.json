@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 276,
-    "Patch": 0
+    "Minor": 278,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -100,6 +100,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
     "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
     "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",

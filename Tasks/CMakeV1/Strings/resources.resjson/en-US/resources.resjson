@@ -10,6 +10,7 @@
   "loc.input.help.cmakeArgs": "Arguments passed to cmake",
   "loc.input.label.runInsideShell": "Run cmake command inside shell",
   "loc.input.help.runInsideShell": "CMake arguments will be handled like they would be inside of an OS specific shell. It can be used to handle environment variables inside of argument strings.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.CMakeReturnCode": "CMake exited with return code: %d",
   "loc.messages.CMakeFailed": "CMake failed with error: %s"
 }

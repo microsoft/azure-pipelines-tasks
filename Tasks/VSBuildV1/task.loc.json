@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [
@@ -179,6 +179,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "MSBuildLocationDeprecated0": "ms-resource:loc.messages.MSBuildLocationDeprecated0",
     "MSBuildVersionDeprecated0": "ms-resource:loc.messages.MSBuildVersionDeprecated0",
     "UnexpectedVSVersion0": "ms-resource:loc.messages.UnexpectedVSVersion0",

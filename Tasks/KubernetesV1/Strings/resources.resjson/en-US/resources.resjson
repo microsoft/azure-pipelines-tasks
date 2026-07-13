@@ -74,6 +74,7 @@
   "loc.input.help.cwd": "Working directory for the Kubectl command.",
   "loc.input.label.outputFormat": "Output format",
   "loc.input.help.outputFormat": "Output format.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.DownloadingClient": "Downloading kubernetes client.",
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",

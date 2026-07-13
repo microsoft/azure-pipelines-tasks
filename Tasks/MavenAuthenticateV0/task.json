@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -84,6 +84,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
     "Warning_TokenNotGenerated": "Unable to use a federated token",

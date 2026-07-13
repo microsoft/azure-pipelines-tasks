@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -467,6 +467,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
     "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",

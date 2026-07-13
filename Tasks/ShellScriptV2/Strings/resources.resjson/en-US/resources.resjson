@@ -14,6 +14,7 @@
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.BashReturnCode": "Bash exited with return code: %d",
   "loc.messages.BashFailed": "Bash failed with error: %s",
   "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."

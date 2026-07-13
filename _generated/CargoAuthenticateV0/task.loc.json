@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "runsOn": [
@@ -54,6 +54,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "ConfigTomlNotToml": "ms-resource:loc.messages.ConfigTomlNotToml",
     "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",
@@ -69,8 +70,8 @@
     "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.277.0",
+    "Default": "0.278.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.277.1"
+    "wif_242": "0.278.1"
   }
 }

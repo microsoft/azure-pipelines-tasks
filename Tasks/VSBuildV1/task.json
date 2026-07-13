@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [
@@ -179,6 +179,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
     "MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
     "UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",

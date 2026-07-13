@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 6,
-    "Minor": 277,
-    "Patch": 6
+    "Minor": 278,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -245,6 +245,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "AFC_StorageAccountNotFound": "ms-resource:loc.messages.AFC_StorageAccountNotFound",
     "AFC_ResourceGroupNotFound": "ms-resource:loc.messages.AFC_ResourceGroupNotFound",
     "AFC_GetVMStatus": "ms-resource:loc.messages.AFC_GetVMStatus",
@@ -296,8 +297,8 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "6.277.6",
+    "Default": "6.278.2",
     "LocalPackages": "6.249.4",
-    "Node24_1": "6.277.7"
+    "Node24_1": "6.278.3"
   }
 }

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "satisfies": [
@@ -80,6 +80,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
     "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
   }

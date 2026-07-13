@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 1
   },
   "runsOn": [
@@ -76,6 +76,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FailedToAddAuthentication": "Failed to add authentication.",
     "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
     "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
@@ -91,8 +92,8 @@
     "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
   },
   "_buildConfigMapping": {
-    "Default": "0.277.0",
+    "Default": "0.278.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.277.1"
+    "wif_242": "0.278.1"
   }
 }

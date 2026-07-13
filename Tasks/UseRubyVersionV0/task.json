@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -62,6 +62,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ListAvailableVersions": "Available versions:",
     "PlatformNotRecognized": "Platform not recognized",
     "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",

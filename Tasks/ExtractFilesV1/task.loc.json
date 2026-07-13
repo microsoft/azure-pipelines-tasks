@@ -19,7 +19,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -96,6 +96,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
     "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
     "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",

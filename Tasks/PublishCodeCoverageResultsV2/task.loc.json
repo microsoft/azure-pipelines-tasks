@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -67,6 +67,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }

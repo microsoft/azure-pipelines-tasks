@@ -7,6 +7,7 @@
   "loc.input.help.versionSpec": "Version range or exact version of a Ruby version to use.",
   "loc.input.label.addToPath": "Add to PATH",
   "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.ListAvailableVersions": "Available versions:",
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",

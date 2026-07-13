@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [
@@ -198,6 +198,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "RecordProjectDetailsOnlySupportedOnWindows": "ms-resource:loc.messages.RecordProjectDetailsOnlySupportedOnWindows",
     "CreateLogFileOnlySupportedOnWindows": "ms-resource:loc.messages.CreateLogFileOnlySupportedOnWindows",
     "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"

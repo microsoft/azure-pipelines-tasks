@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "satisfies": [
@@ -80,6 +80,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FailedToDownload": "ms-resource:loc.messages.FailedToDownload",
     "TempDirNotSet": "ms-resource:loc.messages.TempDirNotSet"
   }

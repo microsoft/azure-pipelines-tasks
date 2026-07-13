@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -98,6 +98,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "ToolFailed": "ms-resource:loc.messages.ToolFailed",
     "TryRosetta": "ms-resource:loc.messages.TryRosetta",
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",

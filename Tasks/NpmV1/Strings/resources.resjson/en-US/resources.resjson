@@ -28,6 +28,7 @@
   "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
   "loc.input.label.publishEndpoint": "External Registry",
   "loc.input.help.publishEndpoint": "Credentials to use for publishing to an external registry.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.FoundBuildCredentials": "Found build credentials",
   "loc.messages.NoBuildCredentials": "Could not find build credentials",
   "loc.messages.UnknownCommand": "Unknown command: %s",

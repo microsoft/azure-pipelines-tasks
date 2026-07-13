@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -467,6 +467,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
     "DownloadingClient": "Downloading kubernetes client.",
     "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",

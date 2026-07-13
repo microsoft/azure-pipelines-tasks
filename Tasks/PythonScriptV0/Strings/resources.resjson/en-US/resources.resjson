@@ -18,6 +18,7 @@
   "loc.input.help.workingDirectory": "The working directory where the script will run. If not specified, the value of `System.DefaultWorkingDirectory` will be used. For builds, this variable defaults to the root of the repository. For releases, it defaults to the root of the artifacts directory.",
   "loc.input.label.failOnStderr": "Fail on standard error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any text is written to the stderr stream.",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.NotAFile": "The given path was not to a file: '%s'.",
   "loc.messages.ParameterRequired": "The `%s` parameter is required"
 }

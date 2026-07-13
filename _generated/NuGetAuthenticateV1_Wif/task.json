@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -81,6 +81,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Error_ServiceConnectionExists": "An existing service connection already exists for the endpoint",
     "Error_InvalidFeedUrl": "The provided feed URL '%s' is not a valid Azure DevOps feed URL.",
     "Error_MissingFeedUrlOrServiceConnection": "Both feedUrl and azureDevOpsServiceConnection must be set together.",
@@ -92,8 +93,8 @@
     "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
+    "Default": "1.278.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "wif_242": "1.278.1"
   }
 }

@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 275,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -183,6 +183,7 @@
     }
   },
   "messages": {
+    "TestingString": "ms-resource:loc.messages.TestingString",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PackageDownloadSuccessful": "ms-resource:loc.messages.PackageDownloadSuccessful",

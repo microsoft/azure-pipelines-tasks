@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -450,6 +450,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "DownloadPathForStableTxt": "Download path for stable.txt: %s",
     "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
     "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",

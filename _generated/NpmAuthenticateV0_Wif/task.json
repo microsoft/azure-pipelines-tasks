@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 1
   },
   "runsOn": [
@@ -93,6 +93,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "FoundBuildCredentials": "Found build credentials",
     "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
@@ -125,8 +126,8 @@
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.277.0",
+    "Default": "0.278.0",
     "LocalPackages": "0.249.4",
-    "wif_242": "0.277.1"
+    "wif_242": "0.278.1"
   }
 }

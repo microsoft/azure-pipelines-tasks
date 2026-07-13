@@ -19,6 +19,7 @@
   "loc.input.help.extract": "Instead of extracting the package contents and removing the archive, the artifact folder will contain the package archive.",
   "loc.input.label.downloadPath": "Destination directory",
   "loc.input.help.downloadPath": "Path on the agent machine where the package will be downloaded",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
   "loc.messages.FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
   "loc.messages.PackageDownloadSuccessful": "Package download successful",

@@ -40,6 +40,7 @@
   "loc.input.help.CleanTargetBeforeCopy": "Setting it to true will clean-up the destination folder before copying the files.",
   "loc.input.label.skipCACheck": "Test Certificate",
   "loc.input.help.skipCACheck": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
+  "loc.messages.TestingString": "This string will be removed",
   "loc.messages.AFC_StorageAccountNotFound": "Storage account: {0} not found. The selected service connection 'Service Principal' supports storage accounts of Azure Resource Manager type only.",
   "loc.messages.AFC_ResourceGroupNotFound": "Provided resource group '{0}' does not exist.",
   "loc.messages.AFC_GetVMStatus": "[Azure Call]Getting the status for vm '{0}'",

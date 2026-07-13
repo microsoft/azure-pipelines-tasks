@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 275,
-    "Patch": 1
+    "Minor": 278,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -499,6 +499,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Azure DevOps organization on this build agent, edit your build pipeline to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
     "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
     "PackagesInstalledSuccessfully": "Packages were restored successfully",

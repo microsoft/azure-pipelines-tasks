@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 276,
-    "Patch": 0
+    "Minor": 278,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -100,6 +100,7 @@
     }
   },
   "messages": {
+    "TestingString": "This string will be removed",
     "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
     "DomainCannotBeEmpty": "domain must be a non empty string.",
     "SecretCannotBeEmpty": "secret must be a non empty string.",
@@ -138,8 +139,8 @@
     "InvalidKeyVaultName": "%s is an invalid KeyVault name."
   },
   "_buildConfigMapping": {
-    "Default": "2.276.0",
+    "Default": "2.278.2",
     "LocalPackages": "2.249.4",
-    "Node24_1": "2.276.1"
+    "Node24_1": "2.278.3"
   }
 }
