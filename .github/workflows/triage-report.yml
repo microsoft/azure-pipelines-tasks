@@ -96,20 +96,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Install runtime deps from the ADO public Azure Artifacts feed (an npmjs
-      # upstream) to comply with CFS requirements. The feed allows anonymous
-      # read. We install in an isolated directory outside the checkout so npm
-      # uses only this local .npmrc (the repo root .npmrc, which sets
-      # always-auth=true and would force auth, is not on npm's config search
-      # path from here).
-      - name: Install dependencies (ADO public feed)
-        env:
-          ADO_FEED: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
+      # Install runtime deps from the public npm registry. We install in an
+      # isolated directory outside the checkout so npm uses only this local
+      # .npmrc (the repo root .npmrc, which sets always-auth=true and would
+      # force auth, is not on npm's config search path from here).
+      - name: Install dependencies
         run: |
           mkdir -p "$RUNNER_TEMP/triage"
           cd "$RUNNER_TEMP/triage"
-          echo "registry=$ADO_FEED" > .npmrc
-          npm install --no-save --registry="$ADO_FEED" @octokit/rest@18.12.0 nodemailer@6
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          npm install --no-save --registry=https://registry.npmjs.org/ @octokit/rest@18.12.0 nodemailer@6
 
       - name: Generate and send report
         run: node ci/triage-report.js
