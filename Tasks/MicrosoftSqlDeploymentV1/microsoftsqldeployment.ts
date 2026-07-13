@@ -1,5 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import SqlPackageHelper from './src/SqlPackageHelper';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -71,6 +72,16 @@ async function main(): Promise<void> {
         }
 
         console.log(tl.loc('ActionDetected', action, fileType));
+
+        // Discover SqlPackage for DACPAC/SQLPROJ actions
+        let sqlPackageExePath: string | undefined;
+        const needsSqlPackage = (fileType === 'DACPAC' || fileType === 'SQLPROJ') && action !== 'sqlScript';
+        
+        if (needsSqlPackage) {
+            console.log(tl.loc('DetectingSqlPackage'));
+            sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
+            console.log(tl.loc('SqlPackageFound', sqlPackageExePath));
+        }
 
         // TODO: Implement deployment logic
         // - SqlPackage discovery (dotnet tool → MSI → PATH)
