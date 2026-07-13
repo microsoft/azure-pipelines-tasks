@@ -159,12 +159,10 @@ function Set-TaskResult {
 
 $defaultErrorHandler = {
     Param($object, $computerName)
-    $text = $object | Out-String
-    Write-Host ($text -replace '##vso\[', '##_vso[')
+    Write-Host ($object | Out-String)
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
-    $text = $object | Out-String
-    Write-Host ($text -replace '##vso\[', '##_vso[')
+    Write-Host ($object | Out-String)
 }

@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 277,
-    "Patch": 1
+    "Patch": 4
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Azure Container Apps Deploy",
