@@ -11,6 +11,7 @@ var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var util = require('./make-util');
+var minifyUtil = require('./minify-util');
 var admzip = require('adm-zip');
 
 // util functions
@@ -26,7 +27,7 @@ var fail = util.fail;
 var ensureExists = util.ensureExists;
 var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
-var minifyNodeTask = util.minifyNodeTask;
+var minifyNodeTask = minifyUtil.minifyNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
