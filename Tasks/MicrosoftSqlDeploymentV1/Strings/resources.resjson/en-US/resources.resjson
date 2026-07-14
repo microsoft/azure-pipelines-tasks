@@ -50,5 +50,18 @@
   "loc.messages.FirewallManagementRequiresAzureSubscription": "Firewall rule management requires azureSubscription input",
   "loc.messages.DeploymentSuccessful": "Deployment completed successfully",
   "loc.messages.DeploymentFailed": "Deployment failed: %s",
-  "loc.messages.InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
+  "loc.messages.InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql",
+  "loc.messages.ParsingConnectionString": "Parsing connection string",
+  "loc.messages.InvalidConnectionString": "Invalid connection string. A valid connection string is a series of keyword/value pairs separated by semi-colons. If there are any special characters like quotes or semi-colons in the keyword value, enclose the value within quotes. Refer to https://aka.ms/sqlconnectionstring for more info.",
+  "loc.messages.ConnectionStringMissingServer": "Invalid connection string. Please ensure 'Server' or 'Data Source' is provided in the connection string.",
+  "loc.messages.ConnectionStringMissingDatabase": "Invalid connection string. Please ensure 'Database' or 'Initial Catalog' is provided in the connection string.",
+  "loc.messages.ConnectionStringMissingUserId": "Invalid connection string. Please ensure 'User' or 'User ID' is provided in the connection string.",
+  "loc.messages.ConnectionStringMissingPassword": "Invalid connection string. Please ensure 'Password' is provided in the connection string.",
+  "loc.messages.ConnectionStringMissingClientId": "Invalid connection string. Please ensure client ID is provided in the 'User' or 'User ID' field of the connection string.",
+  "loc.messages.ConnectionStringMissingClientSecret": "Invalid connection string. Please ensure client secret is provided in the 'Password' field of the connection string."
+}
+  "loc.messages.SqlPackageNotFoundAtPath": "SqlPackage not found at specified path: %s",
+  "loc.messages.SqlcmdNotFoundAtPath": "sqlcmd not found at specified path: %s",
+  "loc.messages.SqlcmdFound": "sqlcmd found at: %s"
+>>>>>>> 6ff2201312 (feat(MicrosoftSqlDeploymentV1): Add connection string parsing with custom regex implementation)
 }
