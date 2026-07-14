@@ -28,9 +28,13 @@ Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername 
 $secondDacpacPath = $script:lastCapturedTargetFile
 
 Assert-IsNotNullOrEmpty $firstDacpacPath "Extract-Dacpac: target file path should not be empty"
+Assert-IsNotNullOrEmpty $secondDacpacPath "Extract-Dacpac: target file path should not be empty"
 Assert-AreEqual $true ($firstDacpacPath -like "*$databaseName*") "Extract-Dacpac: target file should contain database name"
+Assert-AreEqual $true ($secondDacpacPath -like "*$databaseName*") "Extract-Dacpac: target file should contain database name"
 Assert-AreEqual $true ($firstDacpacPath -match $guidPattern) "Extract-Dacpac: target file should contain a GUID"
+Assert-AreEqual $true ($secondDacpacPath -match $guidPattern) "Extract-Dacpac: target file should contain a GUID"
 Assert-AreEqual $true ($firstDacpacPath -like "*.dacpac") "Extract-Dacpac: target file should have .dacpac extension"
+Assert-AreEqual $true ($secondDacpacPath -like "*.dacpac") "Extract-Dacpac: target file should have .dacpac extension"
 Assert-AreNotEqual $firstDacpacPath $secondDacpacPath "Extract-Dacpac: consecutive calls should produce unique file paths"
 
 # Test 2 - Export-Bacpac generates unique GUID-based filenames on consecutive calls
