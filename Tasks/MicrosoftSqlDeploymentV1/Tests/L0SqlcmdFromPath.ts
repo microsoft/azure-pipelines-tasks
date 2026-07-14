@@ -4,9 +4,10 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'src', 'microsoftsqldeployment.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('action', 'script');
+tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+// No sqlcmdPath input - should discover from PATH
 
 // Mock fs.existsSync to return true for test.sql
 tmr.registerMock('fs', {

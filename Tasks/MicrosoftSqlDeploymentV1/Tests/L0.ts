@@ -204,6 +204,52 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    // sqlcmd discovery tests
+    it('should fail when user-provided sqlcmd path does not exist', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0SqlcmdUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided sqlcmd path does not exist');
+            assert(tr.stdout.indexOf('SqlcmdNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('sqlcmd not found at specified path')), 
+                'should display sqlcmd not found at path error');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found via user-provided path', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0SqlcmdFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found via user path');
+            assert(tr.stdout.indexOf('SqlcmdFound') >= 0 || tr.stdout.indexOf('custom/path/sqlcmd') >= 0, 
+                'should report sqlcmd found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found on PATH', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0SqlcmdFromPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found on PATH');
+            assert(tr.stdout.indexOf('SqlcmdFound') >= 0 || tr.stdout.indexOf('/usr/bin/sqlcmd') >= 0, 
+                'should report sqlcmd found on PATH');
+        }, tr);
+    });
+
     // TODO: Add more tests as implementation progresses
     // - SqlPackage discovery and execution
     // - sqlcmd discovery/auto-install and execution

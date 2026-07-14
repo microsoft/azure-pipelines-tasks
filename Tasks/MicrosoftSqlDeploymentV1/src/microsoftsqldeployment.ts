@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import SqlPackageHelper from './SqlPackageHelper';
+import SqlcmdHelper from './SqlcmdHelper';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -81,6 +82,16 @@ async function main(): Promise<void> {
             console.log(tl.loc('DetectingSqlPackage'));
             sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
             console.log(tl.loc('SqlPackageFound', sqlPackageExePath));
+        }
+
+        // Discover sqlcmd for SQL script actions
+        let sqlcmdExePath: string | undefined;
+        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
+        
+        if (needsSqlcmd) {
+            console.log(tl.loc('DetectingSqlcmd'));
+            sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
+            console.log(tl.loc('SqlcmdFound', sqlcmdExePath));
         }
 
         // TODO: Implement deployment logic

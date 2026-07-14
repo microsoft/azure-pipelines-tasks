@@ -4,24 +4,21 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'src', 'microsoftsqldeployment.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('action', 'script');
+tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('sqlcmdPath', '/custom/path/sqlcmd.exe');
 
-// Mock fs.existsSync to return true for test.sql
+// Mock fs.existsSync to return false for user-provided sqlcmd path (path not found)
 tmr.registerMock('fs', {
     existsSync: (filePath: string) => {
+        if (filePath === '/custom/path/sqlcmd.exe') {
+            return false; // User-provided sqlcmd path does NOT exist - should fail
+        }
         if (filePath === 'test.sql') {
             return true;
         }
         return false;
-    }
-});
-
-// Mock tl.which to simulate sqlcmd found on PATH
-tmr.setAnswers({
-    which: {
-        'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
     }
 });
 
