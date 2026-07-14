@@ -12,7 +12,9 @@ $AdoFeedSource = "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/Pipe
 function Register-AdoFeed() {
   if (-not (Get-PSRepository -Name $AdoFeedName -ErrorAction SilentlyContinue)) {
     Write-Host "Registering PSRepository '$AdoFeedName'..."
-    Register-PSRepository -Name $AdoFeedName -SourceLocation $AdoFeedSource -InstallationPolicy Trusted
+    # Suppress the success-stream output (e.g. "Package source ... added successfully"); otherwise
+    # it leaks into the pipeline and pollutes the analyzer results collected below.
+    $null = Register-PSRepository -Name $AdoFeedName -SourceLocation $AdoFeedSource -InstallationPolicy Trusted
   }
 }
 
@@ -53,7 +55,7 @@ function Invoke-AnalyzerToTask() {
   if ($module -eq $null) {
     Write-Host "Installing PSScriptAnalyzer module from $AdoFeedName..."
     Register-AdoFeed
-    Install-Module -Name "PSScriptAnalyzer" -Repository $AdoFeedName -Scope CurrentUser -Force
+    $null = Install-Module -Name "PSScriptAnalyzer" -Repository $AdoFeedName -Scope CurrentUser -Force
   }
   
   Write-Host "Running PSScriptAnalyzer for $taskPath."
@@ -123,7 +125,7 @@ function main() {
   if ($module -eq $null) {
     Write-Host "Installing Newtonsoft.Json module from $AdoFeedName..."
     Register-AdoFeed
-    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Repository $AdoFeedName -Force
+    $null = Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Repository $AdoFeedName -Force
   }
 
   # Get the tasks which have a PowerShell handler.
@@ -144,6 +146,12 @@ function main() {
 
 
 $diagnostics = main $pathToBuiltTasks;
+
+# Keep only genuine analyzer results. Installing modules from the feed can emit stray
+# objects onto the success stream (e.g. package-source registration output) which would
+# otherwise be counted as phantom "diagnostics" and fail the build with no file/line shown.
+# A real PSScriptAnalyzer result is a DiagnosticRecord, which always exposes a RuleName.
+$diagnostics = @($diagnostics | Where-Object { $null -ne $_ -and $null -ne $_.PSObject.Properties['RuleName'] });
 
 if ($diagnostics.Count -gt 0) {
   Write-Host "Found $($diagnostics.Count) diagnostic(s) error in the script."

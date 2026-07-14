@@ -65,33 +65,6 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
-# Override Write-ResponseLogs exported by the DTT module (Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal).
-# Original: Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1, function Write-ResponseLogs.
-# Script-scope functions take precedence over module-exported functions in PowerShell command resolution,
-# so this definition shadows the module's version for all call sites in this script.
-#
-# Why: The original Write-ResponseLogs outputs $deploymentResponse.DeploymentLog unsanitized via Write-Output.
-# The agent scans pipeline output for ##vso[ prefix and executes matching lines as logging commands.
-# A compromised remote VM can inject ##vso[task.setvariable] commands in its script output, which the
-# DTT DLL collects into DeploymentLog. Without this override, those commands reach the agent and execute.
-function Write-ResponseLogs {
-    [CmdletBinding()]
-    param(
-        [string][Parameter(Mandatory=$true)] $operationName,
-        [string][Parameter(Mandatory=$true)] $fqdn,
-        [object][Parameter(Mandatory=$true)] $deploymentResponse
-    )
-    Write-Verbose "Finished $operationName operation on $fqdn"
-    if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
-        Write-Output "Deployment logs for $operationName operation on $fqdn "
-        Write-Output (($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
-    }
-    if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
-        Write-Verbose "Service logs for $operationName operation on $fqdn "
-        Write-Verbose (($deploymentResponse.ServiceLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
-    }
-}
-
 if ($featureFlags.retireAzureRM)
 {
     Modify-PSModulePathForHostedAgent
