@@ -45,8 +45,23 @@ jobs:
       npm run build
     displayName: 'Build test pipelines runner'
 
+  - task: AzureCLI@2
+    displayName: Get access token for bug filing
+    inputs:
+      azureSubscription: ARM - WIF - manual
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az account set --subscription $(SUBSCRIPTION_ID)
+        $accessToken = az account get-access-token --resource $(RESOURCE_ID) --query accessToken --output tsv
+        echo "##vso[task.setvariable variable=ACCESS_TOKEN;issecret=true]$accessToken"
+
   - bash: |
       echo "Tasks to test: $(tasks)"
+      if [[ "${BUILD_SOURCEBRANCH}" == "refs/heads/master" ]]; then
+        echo "enable creating bugs"
+        export AZP_BUG_PAT="$(ACCESS_TOKEN)"
+      fi
       node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
     failOnStderr: true

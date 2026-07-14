@@ -4,8 +4,9 @@ import { api } from './api';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
 import { getBuildConfigs, getNodeVersionForTask } from './helpers';
+import { fileBugIfNeeded } from './bugs';
 
-interface BuildResult { result: string; message: string }
+interface BuildResult { result: string; message: string; taskName?: string; buildUrl?: string }
 
 const parralelRunVariable = "ALLOW_PARALLEL_RUN"
 
@@ -91,20 +92,28 @@ async function main() {
 
   let failed: boolean = false;
 
-  Promise.all(runningTestBuilds).then(buildResults => {
+  Promise.all(runningTestBuilds).then(async buildResults => {
     console.log('\nResults:');
     const buildResultsFlat = buildResults.flat();
 
-    buildResultsFlat.map(buildResult => {
+    for (const buildResult of buildResultsFlat) {
       if (buildResult.result === buildResultEnum.PartiallySucceeded) {
         buildResult.message = `##vso[task.issue type=warning]${buildResult.message}`;
       } else if (buildResult.result !== buildResultEnum.Succeeded) {
         buildResult.message = `##vso[task.issue type=error]${buildResult.message}`;
         failed = true;
+
+        // File a bug in mseng for failed/timed-out canary test pipelines.
+        // No-op unless AZP_BUG_PAT is set (schedules pipeline only sets it on master).
+        try {
+          await fileBugIfNeeded(buildResult.taskName ?? 'unknown', buildResult.result, buildResult.buildUrl);
+        } catch (bugErr) {
+          console.log(`Failed to file bug for "${buildResult.taskName}": ${bugErr}`);
+        }
       }
 
       console.log(buildResult.message);
-    });
+    }
   }).catch(error => {
     console.error(error);
   }).finally(() => {
@@ -300,7 +309,7 @@ function completeBuild(
           if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
             clearInterval(interval);
 
-            resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+            resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded`, taskName: pipelineName, buildUrl: pipelineBuild._links.web.href });
           }
 
           return;
@@ -318,7 +327,7 @@ function completeBuild(
         } else {
           clearInterval(interval);
 
-          resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
+          resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"`, taskName: pipelineName, buildUrl: pipelineBuild._links.web.href });
         }
       },
 
