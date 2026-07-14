@@ -519,8 +519,9 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     // fails the build (module-level state could split). Known-stateless packages
     // can be allowlisted per-task via make.json "minify": { "allowDuplicates": [...] },
     // and --allow-duplicates downgrades the failure to a warning for the whole build.
-    var dupeCheck = {
-        allow: Array.isArray(taskMinify.allowDuplicates) ? taskMinify.allowDuplicates : [],
+    var minifyOptions = {
+        sourceMap: withSourceMap,
+        allowDuplicates: Array.isArray(taskMinify.allowDuplicates) ? taskMinify.allowDuplicates : [],
         failOnDuplicates: !argv['allow-duplicates']
     };
 
@@ -561,7 +562,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir, isServerBuild);
+                    buildNodeTask(modPath, modOutDir, { isServerBuild: isServerBuild });
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -624,7 +625,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     // build Node task
     var emitSourceMaps = withSourceMap;
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir, isServerBuild, emitSourceMaps);
+        buildNodeTask(taskPath, outDir, { isServerBuild: isServerBuild, emitSourceMaps: emitSourceMaps });
     }
 
     // remove the hashes for the common packages, they change every build
@@ -687,7 +688,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     // or per-task via a "minify" block in the task's make.json.
     if (doMinify && shouldBuildNode) {
         banner('Minifying task ' + taskName + (withSourceMap ? ' (with TS source map)' : ' (no source map)'), true);
-        await minifyNodeTask(taskPath, outDir, withSourceMap, dupeCheck);
+        await minifyNodeTask(taskPath, outDir, minifyOptions);
     }
 }
 

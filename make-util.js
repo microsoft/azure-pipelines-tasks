@@ -203,7 +203,10 @@ function performNpmAudit(taskPath) {
     }
 }
 
-var buildNodeTask = function (taskPath, outDir, isServerBuild, emitSourceMaps) {
+var buildNodeTask = function (taskPath, outDir, options) {
+    options = options || {};
+    var isServerBuild = options.isServerBuild;
+    var emitSourceMaps = options.emitSourceMaps;
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -317,39 +320,191 @@ exports.findDuplicatePackages = findDuplicatePackages;
 var DEFAULT_DUPLICATE_ALLOWLIST = ['uuid'];
 exports.DEFAULT_DUPLICATE_ALLOWLIST = DEFAULT_DUPLICATE_ALLOWLIST;
 
+// Return the unique set of Node execution targets (entry .js files) declared in
+// a task.json's "execution" block (e.g. cmdline.js).
+var collectNodeExecutionTargets = function (taskDef) {
+    var execution = (taskDef && taskDef.execution) || {};
+    var targets = new Set();
+    Object.keys(execution).forEach(function (handler) {
+        if (/^Node/i.test(handler)) {
+            var target = execution[handler] && execution[handler].target;
+            if (target && /\.js$/i.test(target)) {
+                targets.add(target);
+            }
+        }
+    });
+    return Array.from(targets);
+};
+
+// esbuild plugin that forces shared/stateful azure-pipelines-* packages to a
+// single canonical copy (resolved from outDir) regardless of which importer
+// requested them. Without this, a package nested under a Common module and the
+// task's own copy would both be bundled, splitting any module-level state (e.g.
+// azure-pipelines-task-lib's secret _vault).
+var createDedupePlugin = function (outDir) {
+    return {
+        name: 'dedupe-shared',
+        setup: function (build) {
+            build.onResolve({ filter: /^azure-pipelines-/ }, function (args) {
+                if (args.path.startsWith('.') || path.isAbsolute(args.path)) {
+                    return null;
+                }
+                try {
+                    // resolve as if required from outDir => outDir/node_modules/<pkg>
+                    return { path: require.resolve(args.path, { paths: [outDir] }) };
+                } catch (e) {
+                    return null; // fall back to esbuild's default resolution
+                }
+            });
+        }
+    };
+};
+
+// Bundle a single entry point into a staging file with esbuild and return its
+// metafile so the caller can validate duplicate packages before publishing.
+var bundleEntry = async function (esbuild, opts) {
+    var buildOptions = {
+        entryPoints: [opts.entryPath],
+        bundle: true,
+        minify: true,
+        platform: 'node',
+        format: 'cjs',
+        keepNames: true,        // preserve fn/class names in stack frames even without a map
+        legalComments: 'eof',   // retain third-party license/legal comments (node_modules, incl. LICENSE files, is deleted after bundling)
+        metafile: true,
+        absWorkingDir: opts.outDir,
+        outfile: opts.tmpOut,
+        plugins: [opts.dedupePlugin],
+        logLevel: 'warning',
+        // A source map is only emitted when requested; it chains the tsc-emitted
+        // maps so task-code frames resolve back to the original .ts.
+        sourcemap: opts.withSourceMap ? true : false,
+        sourcesContent: opts.withSourceMap ? true : false
+    };
+    var result = await esbuild.build(buildOptions);
+    return result.metafile;
+};
+
+// Merge the duplicate packages reported for one bundle's metafile into a shared
+// package -> Set<root> map, so the final diagnostic lists every node_modules root
+// a package resolved from across all entry points.
+var mergeDuplicateRoots = function (map, metafile) {
+    findDuplicatePackages(metafile).forEach(function (dupe) {
+        var roots = map.get(dupe.package) || new Set();
+        dupe.roots.forEach(function (root) { roots.add(root); });
+        map.set(dupe.package, roots);
+    });
+};
+
+// Apply the duplicate-package policy. Warns about stale allowlist entries and
+// allowlisted (assumed-stateless) duplicates, and - unless failOnDuplicates is
+// false - throws on any non-allowlisted duplicate. Thrown (not fail()/exit) so
+// the per-task build loop records the failure and continues to the summary.
+var enforceDuplicatePolicy = function (duplicates, opts) {
+    var outDir = opts.outDir;
+    var allowlist = opts.allowlist;         // Set<string>
+    var perTaskAllow = opts.perTaskAllow;   // string[]
+    var failOnDuplicates = opts.failOnDuplicates;
+
+    // Warn about per-task allowlist entries that aren't actually duplicated
+    // (typos / stale entries that give a false sense of protection).
+    if (perTaskAllow.length) {
+        var duplicateNames = new Set(duplicates.map(function (d) { return d.package; }));
+        var staleAllow = perTaskAllow.filter(function (p) { return !duplicateNames.has(p); });
+        if (staleAllow.length) {
+            console.warn('> minify: NOTE - ' + path.basename(outDir) + ' allowlists package(s) that are not ' +
+                'duplicated in this build (stale or misspelled allowDuplicates entries): ' + staleAllow.join(', ') +
+                '. Remove them from make.json "minify": { "allowDuplicates": [...] }.');
+        }
+    }
+
+    if (!duplicates.length) {
+        return;
+    }
+
+    var allowedDuplicates = duplicates.filter(function (d) { return allowlist.has(d.package); });
+    var blockingDuplicates = duplicates.filter(function (d) { return !allowlist.has(d.package); });
+    var printDuplicates = function (list, log) {
+        list.forEach(function (dupe) {
+            log('    ' + dupe.package);
+            dupe.roots.forEach(function (root) { log('      - ' + root); });
+        });
+    };
+
+    // Allowlisted packages are assumed stateless: report but don't block.
+    if (allowedDuplicates.length) {
+        console.warn('> minify: NOTE - allowlisted packages bundled from multiple node_modules roots (assumed stateless):');
+        printDuplicates(allowedDuplicates, console.warn);
+    }
+
+    if (!blockingDuplicates.length) {
+        return;
+    }
+
+    var header = 'minify: ' + path.basename(outDir) +
+        ' bundles the following package(s) from more than one node_modules root, ' +
+        'which can split module-level state (e.g. secrets in azure-pipelines-task-lib):';
+    if (!failOnDuplicates) {
+        console.warn('> minify: WARNING (--allow-duplicates) - ' + header);
+        printDuplicates(blockingDuplicates, console.warn);
+        return;
+    }
+    console.error('> ' + header);
+    printDuplicates(blockingDuplicates, console.error);
+    console.error('> Fix by deduplicating the install, extending the dedupe plugin, or - if the ' +
+        'package is genuinely stateless - allowlisting it via make.json ' +
+        '"minify": { "allowDuplicates": ["' + blockingDuplicates[0].package + '"] } ' +
+        'or the --allow-duplicates build flag.');
+    throw new Error(header + ' ' + blockingDuplicates.map(function (d) { return d.package; }).join(', '));
+};
+
+// Remove intermediate tsc *.js.map files left in outDir, keeping only the final
+// bundle maps (whose absolute paths are in keepMapAbsPaths). The stray maps'
+// content is already inlined into the bundle maps.
+var removeIntermediateSourceMaps = function (outDir, keepMapAbsPaths) {
+    if (!fs.existsSync(outDir)) {
+        return;
+    }
+    var walk = function (dir) {
+        fs.readdirSync(dir, { withFileTypes: true }).forEach(function (dirent) {
+            var full = path.join(dir, dirent.name);
+            if (dirent.isDirectory()) {
+                walk(full);
+            } else if (/\.js\.map$/i.test(dirent.name) && !keepMapAbsPaths.has(full)) {
+                rm('-f', full);
+            }
+        });
+    };
+    walk(outDir);
+};
+
 //
 // Minify a compiled Node task: bundle every Node execution entry point (and its
 // dependencies) into a single minified file using esbuild, then drop the now
-// inlined node_modules folder. A source map is emitted next to each bundle and
-// source-map support is turned on at runtime (via an injected banner) so that
-// stack traces still resolve to the original task source lines/columns.
+// inlined node_modules folder.
 //
-// keepNames is enabled so that, even without the map, function/class names are
-// preserved in stack frames.
+// options:
+//   sourceMap        - when true, chain the tsc-emitted maps so task-code stack
+//                      frames resolve back to the original .ts (dependency frames
+//                      stay at JS). When false, no map is emitted (smallest output);
+//                      keepNames still preserves fn/class names in stack frames.
+//   allowDuplicates  - per-task list of packages exempt from the duplicate check.
+//   failOnDuplicates - when false, a non-allowlisted duplicate warns instead of
+//                      failing (the --allow-duplicates escape hatch).
 //
-// A dedupe resolver plugin forces shared/stateful packages (azure-pipelines-*)
-// to resolve to a single canonical copy, and a metafile-based detector warns
-// about any package that still resolves from more than one node_modules root.
-//
-// withSourceMap controls debugging fidelity:
-//   false -> no map emitted (smallest output).
-//   true  -> esbuild chains the tsc-emitted maps so task-code stack frames
-//            resolve back to the original .ts (dependency frames stay at JS).
+// The whole task is built and validated into a staging dir first; outDir is only
+// mutated once every entry bundles and the duplicate-package policy passes, so a
+// mid-build failure never leaves the task partially rewritten.
 //
 // Returns { entries, duplicates } for reporting. Async because esbuild plugins
 // (needed for dedupe) are only supported by the async build API.
 //
-var minifyNodeTask = async function (taskPath, outDir, withSourceMap, dupeCheck) {
-    // dupeCheck controls how duplicate (multi-root) packages are handled:
-    //   { allow: [<pkg>, ...], failOnDuplicates: <bool> }
-    // Any duplicate NOT in the allowlist fails the build unless
-    // failOnDuplicates is explicitly false (the --allow-duplicates escape hatch).
-    dupeCheck = dupeCheck || {};
-    var failOnDuplicates = dupeCheck.failOnDuplicates !== false; // default: fail
-    var dupeAllowlist = {};
-    DEFAULT_DUPLICATE_ALLOWLIST.concat(dupeCheck.allow || []).forEach(function (p) {
-        dupeAllowlist[p] = true;
-    });
+var minifyNodeTask = async function (taskPath, outDir, options) {
+    options = options || {};
+    var withSourceMap = !!options.sourceMap;
+    var perTaskAllow = Array.isArray(options.allowDuplicates) ? options.allowDuplicates : [];
+    var failOnDuplicates = options.failOnDuplicates !== false; // default: fail
+    var duplicateAllowlist = new Set(DEFAULT_DUPLICATE_ALLOWLIST.concat(perTaskAllow));
 
     var esbuild;
     try {
@@ -368,183 +523,99 @@ var minifyNodeTask = async function (taskPath, outDir, withSourceMap, dupeCheck)
         return { entries: [], duplicates: [] };
     }
 
-    var taskDef = fileToJson(taskJsonPath);
-    var execution = taskDef.execution || {};
-
-    // Collect the unique set of Node handler targets (e.g. cmdline.js).
-    var targets = {};
-    Object.keys(execution).forEach(function (handler) {
-        if (/^Node/i.test(handler)) {
-            var target = execution[handler] && execution[handler].target;
-            if (target && /\.js$/i.test(target)) {
-                targets[target] = true;
-            }
-        }
-    });
-
-    var entries = Object.keys(targets);
+    var entries = collectNodeExecutionTargets(fileToJson(taskJsonPath));
     if (entries.length === 0) {
         console.log('> minify: no Node execution targets found, skipping ' + outDir);
         return { entries: [], duplicates: [] };
     }
 
-    // Dedupe plugin: force shared/stateful packages to a single physical copy
-    // (the task's top-level node_modules) regardless of which importer requested
-    // them. Without this, a package nested under a Common module and the task's
-    // own copy would both be bundled, splitting any module-level state.
-    var dedupePlugin = {
-        name: 'dedupe-shared',
-        setup: function (build) {
-            build.onResolve({ filter: /^azure-pipelines-/ }, function (args) {
-                if (args.path.startsWith('.') || path.isAbsolute(args.path)) {
-                    return null;
-                }
-                try {
-                    // resolve as if required from outDir => outDir/node_modules/<pkg>
-                    var resolved = require.resolve(args.path, { paths: [outDir] });
-                    return { path: resolved };
-                } catch (e) {
-                    return null; // fall back to esbuild's default resolution
-                }
+    var dedupePlugin = createDedupePlugin(outDir);
+
+    // esbuild refuses to overwrite an input file, so every bundle is first written
+    // to a unique staging dir. It lives inside outDir so renameSync into place stays
+    // on one volume, and it is always removed in finally. Nothing in outDir is
+    // touched until all entries build and pass the duplicate-package policy.
+    var stagingDir = fs.mkdtempSync(path.join(outDir, '.minify-'));
+    var duplicates = [];
+    var bundleMapAbsPaths = new Set();
+    try {
+        var duplicateRoots = new Map();
+        var staged = [];
+
+        // Phase 1: build + validate every entry into the staging dir.
+        for (const entry of entries) {
+            var entryPath = path.join(outDir, entry);
+            if (!test('-f', entryPath)) {
+                console.log('> minify: entry not found, skipping ' + entryPath);
+                continue;
+            }
+
+            var entryBase = path.basename(entry, '.js');
+            // In sourcemap mode the real bundle lives at <base>.bundle.js and the
+            // entry becomes a bootstrap; otherwise the bundle replaces the entry.
+            var outName = withSourceMap ? path.join(path.dirname(entry), entryBase + '.bundle.js') : entry;
+            var tmpOut = path.join(stagingDir, outName);
+            mkdir('-p', path.dirname(tmpOut));
+
+            console.log('> minifying ' + entry);
+            var metafile = await bundleEntry(esbuild, {
+                entryPath: entryPath,
+                outDir: outDir,
+                tmpOut: tmpOut,
+                dedupePlugin: dedupePlugin,
+                withSourceMap: withSourceMap
+            });
+            mergeDuplicateRoots(duplicateRoots, metafile);
+
+            staged.push({
+                entryPath: entryPath,
+                entryBase: entryBase,
+                outName: outName,
+                tmpOut: tmpOut,
+                hasMap: fs.existsSync(tmpOut + '.map')
             });
         }
-    };
 
-    // esbuild refuses to overwrite an input file, so bundle into a temp dir that
-    // uses the same basename (keeps the //# sourceMappingURL relative), then move
-    // In no-sourcemap mode the minified bundle replaces the entry directly.
-    // In sourcemap mode the bundle is written to a sibling <base>.bundle.js and
-    // the entry becomes a tiny bootstrap that enables source-map support BEFORE
-    // requiring the bundle. This is required because Node only maps stack frames
-    // for modules loaded AFTER setSourceMapsEnabled(true) - an in-band banner
-    // cannot map the entry module's own frames.
-    var tmpDir = path.join(outDir, '__minify_tmp__');
-    var duplicates = [];
-    var bundleMapRelPaths = [];
-
-    for (const entry of entries) {
-        var entryPath = path.join(outDir, entry);
-        if (!test('-f', entryPath)) {
-            console.log('> minify: entry not found, skipping ' + entryPath);
-            continue;
-        }
-
-        var entryDir = path.dirname(entry);
-        var entryBase = path.basename(entry, '.js');
-        var bundleRel = path.join(entryDir, entryBase + '.bundle.js');
-        var outName = withSourceMap ? bundleRel : entry;
-
-        var tmpOut = path.join(tmpDir, outName);
-        mkdir('-p', path.dirname(tmpOut));
-
-        console.log('> minifying ' + entry);
-        var buildOptions = {
-            entryPoints: [entryPath],
-            bundle: true,
-            minify: true,
-            platform: 'node',
-            format: 'cjs',
-            keepNames: true,
-            legalComments: 'none',
-            metafile: true,
-            absWorkingDir: outDir,
-            outfile: tmpOut,
-            plugins: [dedupePlugin],
-            logLevel: 'warning'
-        };
-        if (withSourceMap) {
-            // Chain the tsc-emitted maps so task-code frames resolve to .ts.
-            buildOptions.sourcemap = true;
-            buildOptions.sourcesContent = true;
-        } else {
-            buildOptions.sourcemap = false;
-        }
-        var result = await esbuild.build(buildOptions);
-
-        // Detect any package that still resolved from >1 node_modules root.
-        findDuplicatePackages(result.metafile).forEach(function (dupe) {
-            if (!duplicates.some(function (d) { return d.package === dupe.package; })) {
-                duplicates.push(dupe);
-            }
+        duplicates = Array.from(duplicateRoots.entries()).map(function (kv) {
+            return { package: kv[0], roots: Array.from(kv[1]) };
         });
 
-        var outPath = path.join(outDir, outName);
-        rm('-f', outPath);
-        fs.renameSync(tmpOut, outPath);
-        if (fs.existsSync(tmpOut + '.map')) {
-            rm('-f', outPath + '.map');
-            fs.renameSync(tmpOut + '.map', outPath + '.map');
-            bundleMapRelPaths.push(outName + '.map');
-        }
+        // Enforce the policy BEFORE touching outDir: a blocking duplicate throws
+        // here, the staging dir is discarded (finally), and the original output is
+        // left intact for the build loop to report as a failed task.
+        enforceDuplicatePolicy(duplicates, {
+            outDir: outDir,
+            allowlist: duplicateAllowlist,
+            perTaskAllow: perTaskAllow,
+            failOnDuplicates: failOnDuplicates
+        });
 
-        if (withSourceMap) {
-            // Replace the entry with a Node10-safe bootstrap that turns on source
-            // maps then loads the bundle (which now maps frames back to .ts).
-            var requireTarget = './' + entryBase + '.bundle.js';
-            var bootstrap =
-                'try{require("process").setSourceMapsEnabled(true)}catch(e){}\n' +
-                'module.exports=require(' + JSON.stringify(requireTarget) + ');\n';
-            rm('-f', entryPath);
-            fs.writeFileSync(entryPath, bootstrap);
-        }
-    }
-
-    rm('-rf', tmpDir);
-
-    // Validate the per-task allowlist: warn about entries that don't correspond
-    // to an actually-duplicated package. These are usually typos or stale entries
-    // left behind after a dependency was deduplicated, and they give a false sense
-    // that a package is being guarded when it isn't.
-    var perTaskAllow = dupeCheck.allow || [];
-    if (perTaskAllow.length) {
-        var foundDupeNames = {};
-        duplicates.forEach(function (d) { foundDupeNames[d.package] = true; });
-        var staleAllow = perTaskAllow.filter(function (p) { return !foundDupeNames[p]; });
-        if (staleAllow.length) {
-            console.warn('> minify: NOTE - ' + path.basename(outDir) + ' allowlists package(s) that are not ' +
-                'duplicated in this build (stale or misspelled allowDuplicates entries): ' + staleAllow.join(', ') +
-                '. Remove them from make.json "minify": { "allowDuplicates": [...] }.');
-        }
-    }
-
-    if (duplicates.length) {
-        var allowedDupes = duplicates.filter(function (d) { return dupeAllowlist[d.package]; });
-        var blockingDupes = duplicates.filter(function (d) { return !dupeAllowlist[d.package]; });
-        var printDupes = function (list, log) {
-            list.forEach(function (dupe) {
-                log('    ' + dupe.package);
-                dupe.roots.forEach(function (root) {
-                    log('      - ' + root);
-                });
-            });
-        };
-
-        // Allowlisted packages are assumed stateless: report but don't block.
-        if (allowedDupes.length) {
-            console.warn('> minify: NOTE - allowlisted packages bundled from multiple node_modules roots (assumed stateless):');
-            printDupes(allowedDupes, console.warn);
-        }
-
-        // Non-allowlisted packages risk split module-level state -> fail the build.
-        if (blockingDupes.length) {
-            var header = 'minify: ' + path.basename(outDir) +
-                ' bundles the following package(s) from more than one node_modules root, ' +
-                'which can split module-level state (e.g. secrets in azure-pipelines-task-lib):';
-            if (failOnDuplicates) {
-                console.error('> ' + header);
-                printDupes(blockingDupes, console.error);
-                console.error('> Fix by deduplicating the install, extending the dedupe plugin, or - if the ' +
-                    'package is genuinely stateless - allowlisting it via make.json ' +
-                    '"minify": { "allowDuplicates": ["' + blockingDupes[0].package + '"] } ' +
-                    'or the --allow-duplicates build flag.');
-                // Thrown (not fail()/process.exit) so the per-task build loop records
-                // it as a failed task and continues to the build summary.
-                throw new Error(header + ' ' + blockingDupes.map(function (d) { return d.package; }).join(', '));
-            } else {
-                console.warn('> minify: WARNING (--allow-duplicates) - ' + header);
-                printDupes(blockingDupes, console.warn);
+        // Phase 2: publish. Everything built and passed, so move bundles into place.
+        staged.forEach(function (s) {
+            var outPath = path.join(outDir, s.outName);
+            rm('-f', outPath);
+            fs.renameSync(s.tmpOut, outPath);
+            if (s.hasMap) {
+                rm('-f', outPath + '.map');
+                fs.renameSync(s.tmpOut + '.map', outPath + '.map');
+                bundleMapAbsPaths.add(outPath + '.map');
             }
-        }
+
+            if (withSourceMap) {
+                // Node only maps stack frames for modules loaded AFTER
+                // setSourceMapsEnabled(true), so the entry can't map its own frames.
+                // Replace it with a Node10-safe bootstrap that enables maps, then
+                // requires the bundle (whose frames then resolve back to the .ts).
+                var requireTarget = './' + s.entryBase + '.bundle.js';
+                var bootstrap =
+                    'try{require("process").setSourceMapsEnabled(true)}catch(e){}\n' +
+                    'module.exports=require(' + JSON.stringify(requireTarget) + ');\n';
+                rm('-f', s.entryPath);
+                fs.writeFileSync(s.entryPath, bootstrap);
+            }
+        });
+    } finally {
+        rm('-rf', stagingDir);
     }
 
     // Dependencies are now inlined into the bundle(s); remove node_modules.
@@ -554,25 +625,7 @@ var minifyNodeTask = async function (taskPath, outDir, withSourceMap, dupeCheck)
         rm('-rf', nodeModulesPath);
     }
 
-    // Remove stray source maps left behind by tsc (all *.js.map except the final
-    // bundle maps). Their content is already inlined into the bundle maps.
-    var keepMaps = {};
-    bundleMapRelPaths.forEach(function (rel) {
-        keepMaps[path.join(outDir, rel)] = true;
-    });
-    var stripStrayMaps = function (dir) {
-        fs.readdirSync(dir, { withFileTypes: true }).forEach(function (dirent) {
-            var full = path.join(dir, dirent.name);
-            if (dirent.isDirectory()) {
-                stripStrayMaps(full);
-            } else if (/\.js\.map$/i.test(dirent.name) && !keepMaps[full]) {
-                rm('-f', full);
-            }
-        });
-    };
-    if (fs.existsSync(outDir)) {
-        stripStrayMaps(outDir);
-    }
+    removeIntermediateSourceMaps(outDir, bundleMapAbsPaths);
 
     return { entries: entries, duplicates: duplicates };
 }
