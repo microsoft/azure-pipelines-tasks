@@ -3,6 +3,11 @@ import path = require('path');
 import SqlPackageHelper from './SqlPackageHelper';
 import SqlcmdHelper from './SqlcmdHelper';
 import SqlConnectionConfig from './SqlConnectionConfig';
+import SqlUtils from './SqlUtils';
+import FirewallManager from './FirewallManager';
+import AzureSqlResourceManager from './AzureSqlResourceManager';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -21,7 +26,7 @@ async function main(): Promise<void> {
         // Set resource path for localization
         tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-        console.log(tl.loc('StartingDeployment'));
+        tl.debug(tl.loc('StartingDeployment'));
 
         // Get required inputs per specification
         const action = tl.getInput('action', true)!;
@@ -30,7 +35,7 @@ async function main(): Promise<void> {
         
         // Mask connection string (contains sensitive data)
         tl.setSecret(connectionString);
-        console.log(tl.loc('ConnectionStringProvided'));
+        tl.debug(tl.loc('ConnectionStringProvided'));
 
         // Get optional inputs
         const azureSubscription = tl.getInput('azureSubscription', false);
@@ -53,7 +58,7 @@ async function main(): Promise<void> {
         }
 
         if (azureSubscription) {
-            console.log(tl.loc('UsingAzureSubscription', azureSubscription));
+            tl.debug(tl.loc('UsingAzureSubscription', azureSubscription));
         }
 
         if (firewallRuleManagement && !azureSubscription) {
@@ -73,10 +78,10 @@ async function main(): Promise<void> {
             throw new Error(tl.loc('InvalidFileExtension', fileExtension));
         }
 
-        console.log(tl.loc('ActionDetected', action, fileType));
+        tl.debug(tl.loc('ActionDetected', action, fileType));
 
         // Parse and validate connection string
-        console.log(tl.loc('ParsingConnectionString'));
+        tl.debug(tl.loc('ParsingConnectionString'));
         const connectionConfig = new SqlConnectionConfig(connectionString);
         tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
 
@@ -85,31 +90,70 @@ async function main(): Promise<void> {
         const needsSqlPackage = (fileType === 'DACPAC' || fileType === 'SQLPROJ') && action !== 'sqlScript';
         
         if (needsSqlPackage) {
-            console.log(tl.loc('DetectingSqlPackage'));
+            tl.debug(tl.loc('DetectingSqlPackage'));
             sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
-            console.log(tl.loc('SqlPackageFound', sqlPackageExePath));
+            tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
         }
 
-        // Discover sqlcmd for SQL script actions
+        // Discover sqlcmd for SQL script actions or firewall detection
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
+        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
         
         if (needsSqlcmd) {
-            console.log(tl.loc('DetectingSqlcmd'));
+            tl.debug(tl.loc('SettingUpSqlCmd'));
             sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
-            console.log(tl.loc('SqlcmdFound', sqlcmdExePath));
+            tl.debug(tl.loc('SqlcmdFound', sqlcmdExePath));
         }
 
-        // TODO: Implement deployment logic
-        // - SqlPackage discovery (dotnet tool → MSI → PATH)
-        // - sqlcmd discovery/auto-install
-        // - Firewall rule management (if enabled)
-        // - SQL project build (if .sqlproj)
-        // - SqlPackage or sqlcmd execution
-        // - Output variable setting
-        // - Firewall cleanup in finally block
+        // Firewall management and deployment execution
+        let firewallManager: FirewallManager | undefined;
+        
+        try {
+            // Step 1: Firewall rule management (if enabled)
+            if (firewallRuleManagement && azureSubscription) {
+                try {
+                    // Get Azure endpoint with credentials
+                    const azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                    
+                    // Detect IP address by testing connectivity
+                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                    
+                    // Add firewall rule only if IP address was detected (connection blocked)
+                    if (ipAddress) {
+                        const resourceManager = await AzureSqlResourceManager.getResourceManager(
+                            connectionConfig.Server,
+                            azureEndpoint
+                        );
+                        firewallManager = new FirewallManager(resourceManager);
+                        await firewallManager.addFirewallRule(ipAddress);
+                    }
+                } catch (error) {
+                    tl.warning(`Firewall rule management failed: ${error.message || error}`);
+                    throw error;
+                }
+            } else if (!firewallRuleManagement) {
+                tl.debug(tl.loc('FirewallManagementDisabled'));
+            }
 
-        console.log(tl.loc('DeploymentSuccessful'));
+            // Step 2: SQL project build (if .sqlproj)
+            // TODO: Implement SQL project build with dotnet build
+
+            // Step 3: Execute deployment (SqlPackage or sqlcmd)
+            // TODO: Implement SqlPackage execution
+            // TODO: Implement sqlcmd execution
+            // TODO: Set output variables
+
+            tl.debug(tl.loc('DeploymentSuccessful'));
+        } finally {
+            // Always cleanup firewall rule
+            if (firewallManager) {
+                try {
+                    await firewallManager.removeFirewallRule();
+                } catch (cleanupError) {
+                    tl.warning(`Failed to cleanup firewall rule: ${cleanupError.message || cleanupError}`);
+                }
+            }
+        }
     }
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);
