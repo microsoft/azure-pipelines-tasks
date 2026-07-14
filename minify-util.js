@@ -379,8 +379,8 @@ var removeIntermediateSourceMaps = function (outDir, keepMapAbsPaths) {
 // mutated once every entry bundles and the duplicate-package policy passes, so a
 // mid-build failure never leaves the task partially rewritten.
 //
-// Returns { entries, duplicates } for reporting. Async because esbuild plugins
-// (needed for dedupe) are only supported by the async build API.
+// Returns { entries, duplicates } for reporting. Async because esbuild's build
+// API (used here with metafile output for duplicate detection) is promise-based.
 //
 var minifyNodeTask = async function (taskPath, outDir, options) {
     options = options || {};
