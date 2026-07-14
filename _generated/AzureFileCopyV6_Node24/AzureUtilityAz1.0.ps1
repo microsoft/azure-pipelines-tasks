@@ -24,8 +24,8 @@ function Get-AzureStorageAccountResourceGroupName {
             }
             catch {
                 $errorMessage = $_.Exception.Message                 
-                # Retry logic for HTTP 429 (Too Many Requests)
-                if ($_.Exception.Response.StatusCode -eq 429) {
+                # Retry logic for HTTP 429 (Too Many Requests), only while retries remain
+                if ($_.Exception.Response.StatusCode -eq 429 -and $retryCnt -lt $maxRetries) {
                     Write-Verbose "Exception Message: $($_.Exception.Response.Message)"
                     Write-Verbose "Exception Response StatusCode: $($_.Exception.Response.StatusCode)"
                     # Wait before retrying
@@ -33,9 +33,12 @@ function Get-AzureStorageAccountResourceGroupName {
                     continue
                 }
                 else {
-                    # For other errors, display the message and exit the loop
-                    Write-Verbose "[Error]: $errorMessage"
-                    break
+                    # Any non-429 error (e.g. 403/AuthorizationFailed, endpoint or Az module
+                    # regression), or exhausted 429 retries. Surface the real error instead of
+                    # letting it fall through and be masked as "storage account not found".
+                    Write-Verbose "[Error] Failed to retrieve details for storage account '$storageAccountName': $errorMessage"
+                    Write-Telemetry "Task_InternalError" "GetStorageAccountDetailsFailed"
+                    throw
                 }
             }
         }
