@@ -62,5 +62,14 @@
   "loc.messages.ConnectionStringMissingClientSecret": "Invalid connection string. Please ensure client secret is provided in the 'Password' field of the connection string.",
   "loc.messages.SqlPackageNotFoundAtPath": "SqlPackage not found at specified path: %s",
   "loc.messages.SqlcmdNotFoundAtPath": "sqlcmd not found at specified path: %s",
-  "loc.messages.SqlcmdFound": "sqlcmd found at: %s"
+  "loc.messages.SqlcmdFound": "sqlcmd found at: %s",
+  "loc.messages.ClientHasAccessToServer": "Client has access to SQL server. Skip adding firewall exception.",
+  "loc.messages.FailedToAddFirewallRule": "Failed to add firewall rule: %s",
+  "loc.messages.FailedToRemoveFirewallRule": "Failed to remove firewall rule '%s': %s",
+  "loc.messages.FailedToDetectIPAddress": "Failed to detect client IP address. Connection error: %s",
+  "loc.messages.ConnectionFailedFirewallDisabled": "Connection failed. If deploying to Azure SQL, ensure your agent has network access or set firewallRuleManagement to true.",
+  "loc.messages.SQLServerNotFound": "SQL Server details not populated",
+  "loc.messages.NoSQLServersFound": "No SQL servers found in subscription: %s",
+  "loc.messages.SQLServerNotFoundInSubscription": "SQL Server '%s' not found in subscription: %s",
+  "loc.messages.FailedToGetSQLServerDetails": "Failed to get SQL Server '%s' details: %s"
 }
