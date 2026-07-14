@@ -316,6 +316,67 @@ type, a platform check, an error handler), so it can pass a quick smoke test and
 - Or leave the task un-minified (don't add the `make.json` opt-in) if it relies heavily on
   dynamic loading.
 
+#### Manually finding hard-to-detect dynamic requires
+
+esbuild's warnings and a simple `require(` grep catch the obvious cases, but several patterns
+slip through because they don't literally read `require("...")`. Search for these by hand:
+
+| Pattern | Example | Why it hides |
+| ------- | ------- | ------------ |
+| Computed argument | `require('./x/' + name)`, `` require(`./${x}`) `` | Not a literal string |
+| Aliased `require` | `const r = require; r('mod')` | The call site isn't `require(` |
+| Indirect via `module` | `module.require(name)` | Different callee |
+| Webpack/ncc escape hatch | `__non_webpack_require__(name)` | Deliberately hidden from bundlers |
+| Dynamic `import()` | `await import(name)` | ESM dynamic import, same problem |
+| Runtime eval | `eval('require')('mod')`, `new Function('return require')()` | Invisible to any static tool |
+| Resolve-then-require | `require(require.resolve(name))` | Path computed at runtime |
+
+A reasonably broad ripgrep sweep (run it on the task **and its dependencies**):
+
+```bash
+# From repo root, targeting one task's build output (see note below about node_modules)
+rg -n --no-ignore \
+  "require\(\s*[^'\")]|require\([^)]*\+|=\s*require\b|module\.require|__non_webpack_require__|\bimport\(|\beval\(|new Function\(" \
+  _build/Tasks/<Task>
+```
+
+Notes on this command:
+
+- **Use `-n`, not `-E`.** ripgrep uses extended regex by default; `-E` is its `--encoding`
+  flag and will consume the pattern by mistake. (Plain `grep` users would use `grep -rnE`.)
+- **`--no-ignore` is required.** By default ripgrep honors `.gitignore`, and `node_modules`
+  is git-ignored - so a plain search **silently skips every dependency**, which is exactly
+  where most dynamic requires live. `--no-ignore` forces it to descend into `node_modules`.
+- The pattern flags `require(` whose first non-space character is not a quote (a variable or
+  template), `require(... + ...)` concatenations, an aliased/`module.require`, the
+  `__non_webpack_require__` escape hatch, dynamic `import()`, and `eval`/`new Function`.
+  Expect some false positives (e.g. `require("a" + "b")` of two literals, or `require()` with
+  no args); skim the hits rather than trusting a count.
+- Multi-line and heavily minified dependency code can defeat line-based regex entirely; the
+  table patterns are a triage aid, not a guarantee.
+
+#### Do I need to search the dependencies too?
+
+**Yes - the dependencies are the main risk, not your task code.** Task authors usually know
+their own `require`s, but a bundled task also inlines its entire transitive dependency tree,
+and a dynamic require **anywhere** in that tree breaks the same way once `node_modules` is
+removed. Real offenders tend to be low-level libraries (encoding/`iconv`-style codec loaders,
+`agent-base`/proxy libraries, gRPC/protobuf loaders, optional native-addon shims that pick a
+build at runtime).
+
+Where to search the dependencies:
+
+- Search the **build output** `_build/Tasks/<Task>` *after* a normal (non-minified) build -
+  its `node_modules` is the exact set of files that would be bundled.
+- Or search the task's source `node_modules` after `npm install` in the task folder.
+- Searching the compiled JS (not just `.ts`) matters, because some deps ship only JS and the
+  dynamic pattern may be introduced by a package's own build step.
+
+Because you often can't rewrite third-party code, the practical fixes for a dependency-side
+dynamic require are to mark that package **external** (ship it in `node_modules`, bundle the
+rest) or to **not opt the task in**. Confirm the outcome by running the task's L0/L2 tests
+against the minified build.
+
 #### Source map / `tsconfig` interactions
 
 The source map produced for minified tasks chains esbuild's bundle map through tsc's
