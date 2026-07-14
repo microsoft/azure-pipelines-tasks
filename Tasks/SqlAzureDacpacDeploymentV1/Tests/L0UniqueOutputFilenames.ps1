@@ -55,7 +55,11 @@ Export-Bacpac -serverName $serverName -databaseName $databaseName -sqlUsername $
 $secondBacpacPath = $script:lastCapturedTargetFile
 
 Assert-IsNotNullOrEmpty $firstBacpacPath "Export-Bacpac: target file path should not be empty"
+Assert-IsNotNullOrEmpty $secondBacpacPath "Export-Bacpac: target file path should not be empty"
 Assert-AreEqual $true ($firstBacpacPath -like "*$databaseName*") "Export-Bacpac: target file should contain database name"
+Assert-AreEqual $true ($secondBacpacPath -like "*$databaseName*") "Export-Bacpac: target file should contain database name"
 Assert-AreEqual $true ($firstBacpacPath -match $guidPattern) "Export-Bacpac: target file should contain a GUID"
+Assert-AreEqual $true ($secondBacpacPath -match $guidPattern) "Export-Bacpac: target file should contain a GUID"
 Assert-AreEqual $true ($firstBacpacPath -like "*.bacpac") "Export-Bacpac: target file should have .bacpac extension"
+Assert-AreEqual $true ($secondBacpacPath -like "*.bacpac") "Export-Bacpac: target file should have .bacpac extension"
 Assert-AreNotEqual $firstBacpacPath $secondBacpacPath "Export-Bacpac: consecutive calls should produce unique file paths"
