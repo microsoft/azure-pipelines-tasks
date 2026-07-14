@@ -55,4 +55,3 @@ Assert-AreEqual $true ($firstBacpacPath -like "*$databaseName*") "Export-Bacpac:
 Assert-AreEqual $true ($firstBacpacPath -match $guidPattern) "Export-Bacpac: target file should contain a GUID"
 Assert-AreEqual $true ($firstBacpacPath -like "*.bacpac") "Export-Bacpac: target file should have .bacpac extension"
 Assert-AreNotEqual $firstBacpacPath $secondBacpacPath "Export-Bacpac: consecutive calls should produce unique file paths"
-
