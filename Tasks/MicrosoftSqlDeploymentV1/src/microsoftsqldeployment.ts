@@ -2,6 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import SqlPackageHelper from './SqlPackageHelper';
 import SqlcmdHelper from './SqlcmdHelper';
+import SqlConnectionConfig from './SqlConnectionConfig';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -73,6 +74,11 @@ async function main(): Promise<void> {
         }
 
         console.log(tl.loc('ActionDetected', action, fileType));
+
+        // Parse and validate connection string
+        console.log(tl.loc('ParsingConnectionString'));
+        const connectionConfig = new SqlConnectionConfig(connectionString);
+        tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
