@@ -264,6 +264,68 @@ after a dependency was deduplicated), the build prints a note so you can clean i
 As a last-resort escape hatch, `--allow-duplicates` downgrades the failure to a warning for
 the whole build - prefer merging the duplication or allowlisting the specific package instead.
 
+### Known caveats (validate before opting in)
+
+Bundling collapses many files into one and drops `node_modules`, which breaks a few
+assumptions that only hold when files stay separate on disk. Always trial a task with
+`--minify` (and run its tests against the minified output) **before** adding a permanent
+`make.json` opt-in. The two things most likely to bite:
+
+#### Dynamic `require()`
+
+esbuild bundles by statically following `require()`/`import` calls whose argument is a
+**literal string**. A **dynamic** require - one whose argument is a variable, a concatenated
+string, or a template literal - cannot be resolved at build time:
+
+```js
+require('azure-pipelines-task-lib/task');   // OK  - static, gets bundled
+require(someVariable);                       // BAD - value only known at runtime
+require('./handlers/' + provider);           // BAD - computed path
+require(`./locales/${locale}.js`);           // BAD - template with a variable
+```
+
+For a dynamic require, esbuild leaves the call in the output instead of inlining the target.
+At runtime Node then tries to resolve it from `node_modules` on disk - but minify **deleted**
+`node_modules`, so it throws `Cannot find module 'X'`. This fails **only** in minified mode,
+**only** on the code path that hits the dynamic require (often a rare branch - a specific auth
+type, a platform check, an error handler), so it can pass a quick smoke test and fail later.
+
+**How to detect it:**
+
+1. **Read the esbuild build warnings** during a `--minify` trial build. esbuild warns about
+   requires it cannot statically resolve. (Note: some patterns, e.g. aliasing `require` to a
+   variable, produce no warning - don't rely on this alone.)
+2. **Grep the task and its dependencies** for non-literal requires:
+
+   ```bash
+   grep -rnE "require\(([^'\"]|[^)]*\+)" Tasks/<Task> --include=*.js --include=*.ts
+   ```
+
+   Look for `require(` followed by a variable, `+` concatenation, or a `` ` `` template.
+3. **Run the task's L0/L2 tests against the minified build** - the most reliable check,
+   because an unresolved require only throws when its branch actually executes. Exercise
+   optional/rare paths (specific inputs, platform branches, error handling) where dynamic
+   loading tends to hide.
+
+**How to fix it:**
+
+- Rewrite the computed require as a static `switch`/map of literal `require()` calls so
+  esbuild can see every target.
+- Or mark the offending module as **external** in the esbuild options (so it isn't bundled)
+  and ship just that one package in `node_modules` - a hybrid that minifies everything else.
+- Or leave the task un-minified (don't add the `make.json` opt-in) if it relies heavily on
+  dynamic loading.
+
+#### Source map / `tsconfig` interactions
+
+The source map produced for minified tasks chains esbuild's bundle map through tsc's
+per-file maps. To keep that chain unambiguous the build emits **external** maps and deletes
+the now-redundant intermediate tsc `*.js.map` files, keeping only the final `.bundle.js.map`.
+Avoid configuring a task's `tsconfig.json` with `inlineSourceMap` when minifying - mixing
+inline tsc maps with the external bundle map produces conflicting `sourceMappingURL`
+directives and frames that resolve to the wrong line (or not at all). Stick with the default
+`sourceMap` behavior and let the minify step manage the maps.
+
 ## Run Tests
 
 Tests for each task are located in Tests folder for each task.  To get additional debugging when you are running your tests, set the environment variable TASK_TEST_TRACE to 1.  This will cause additional logging to be printed to STDOUT.
