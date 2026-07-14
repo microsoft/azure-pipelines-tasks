@@ -75,14 +75,16 @@ function Write-ResponseLogs {
     )
     Write-Verbose "Finished $operationName operation on $fqdn"
     if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
-        Publish-VsoCommandInjectionDryRunTelemetry -source "PowerShellOnTargetMachinesV2:DeploymentLog" -text ($deploymentResponse.DeploymentLog | Out-String)
+        $deploymentLogText = ($deploymentResponse.DeploymentLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "PowerShellOnTargetMachinesV2:DeploymentLog" -text $deploymentLogText
         Write-Output "Deployment logs for $operationName operation on $fqdn "
-        Write-Output ($deploymentResponse.DeploymentLog | Format-List | Out-String)
+        Write-Output $deploymentLogText
     }
     if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
-        Publish-VsoCommandInjectionDryRunTelemetry -source "PowerShellOnTargetMachinesV2:ServiceLog" -text ($deploymentResponse.ServiceLog | Out-String)
+        $serviceLogText = ($deploymentResponse.ServiceLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "PowerShellOnTargetMachinesV2:ServiceLog" -text $serviceLogText
         Write-Verbose "Service logs for $operationName operation on $fqdn "
-        Write-Verbose ($deploymentResponse.ServiceLog | Format-List | Out-String)
+        Write-Verbose $serviceLogText
     }
 }
 
