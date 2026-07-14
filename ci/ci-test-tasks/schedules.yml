@@ -46,7 +46,6 @@ jobs:
     displayName: 'Build test pipelines runner'
 
   - task: AzureCLI@2
-    displayName: Get access token for bug filing
     inputs:
       azureSubscription: ARM - WIF - manual
       scriptType: pscore

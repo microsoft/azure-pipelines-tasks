@@ -2,25 +2,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { WebApi, getPersonalAccessTokenHandler } from 'azure-devops-node-api';
 
-// Bugs for failing canary test pipelines are filed into the mseng organization.
 const MSENG_URL = 'https://dev.azure.com/mseng';
 const BUG_PROJECT = 'AzureDevOps';
 
-// Only file bugs for tasks owned by these CODEOWNERS handles.
 const OWNER_HANDLES = ['@tarunramsinghani'];
 
-// All owned-task failures are routed to this single area path.
 const CANARYTEST_AREA_PATH = 'AzureDevOps\\Pipelines\\Pipeline Agent and Tasks - IDC';
 const BUG_PRIORITY = '2';
 const BUG_TAG = 'azure-pipelines-canary';
 
-// Resolve .github/CODEOWNERS from the repo root (four levels up from dist/).
 const CODEOWNERS_PATH = path.join(__dirname, '..', '..', '..', '..', '.github', 'CODEOWNERS');
 
 let ownedTasksCache: Set<string> | null = null;
 
-// Parses .github/CODEOWNERS and returns the set of task folder names (lower-cased)
-// whose `Tasks/<name>/` entry is owned by one of OWNER_HANDLES.
 function getOwnedTasks(): Set<string> {
     if (ownedTasksCache) {
         return ownedTasksCache;
@@ -57,10 +51,6 @@ function getOwnedTasks(): Set<string> {
     return owned;
 }
 
-// Files a Bug in mseng for a failed/timed-out canary test pipeline.
-// No-op unless AZP_BUG_PAT is set (the schedules pipeline only sets it on master),
-// and only for tasks owned (per CODEOWNERS) by OWNER_HANDLES.
-// De-duplicates against an existing Active bug with the same title.
 export async function fileBugIfNeeded(taskName: string, result: string, buildUrl?: string): Promise<void> {
     const pat = process.env['AZP_BUG_PAT'];
     if (!pat) {
