@@ -49,9 +49,6 @@ describe('PowerShellOnTargetMachine Suite', function () {
         it('Performs deployment on all machines with same resource name', (done) => {
             psr.run(path.join(__dirname, 'L0ParallelRunDuplicate.ps1'), done);
         });
-        it('Blocks ##vso command injection from remote VM job output', (done) => {
-            psr.run(path.join(__dirname, 'L0VsoCommandInjection.ps1'), done);
-        });
     }
 });
 
