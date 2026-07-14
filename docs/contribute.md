@@ -7,6 +7,7 @@
 - [Build and Test](#build-and-test)
   - [Build All Tasks (this can take a while):](#build-all-tasks-this-can-take-a-while)
   - [Build a specific task (recommended):](#build-a-specific-task-recommended)
+  - [Minifying a task (bundling)](#minifying-a-task-bundling)
   - [Run Tests](#run-tests)
   - [Legacy Tests](#legacy-tests)
   - [Remote debugging node tasks](#remote-debugging-node-tasks)
@@ -105,6 +106,163 @@ node make.js build --task ShellScript
 ```bash
 node make.js build --task ShellScript --BypassNpmAudit
 ```
+
+## Minifying a task (bundling)
+
+Node-based tasks can optionally be **bundled and minified** at build time. Instead of
+shipping the compiled JavaScript plus a full `node_modules` tree (often thousands of
+files, tens of MB), each Node execution target is bundled with [esbuild](https://esbuild.github.io/)
+into a single minified file and `node_modules` is dropped from the output. This can
+reduce a task's deployable size by ~90% or more.
+
+Minification is **off by default** and **opt-in per task**. Nothing is minified unless
+the task opts in via `make.json`. The command-line flags exist only for **experimentation** -
+to try minification on a task and inspect the result before you commit to opting in.
+
+### Try it first (command line, experimentation only)
+
+Before opting a task in, use the build flags to try minification and check that the task
+still builds, bundles cleanly (no blocking duplicate packages), and shrinks as expected.
+These flags are **not** meant to be a permanent way to build a task - they apply to the
+current build only and override whatever `make.json` says:
+
+```bash
+# bundle + minify (smallest output, no source map)
+node make.js build --task ShellScript --minify --BypassNpmAudit
+
+# bundle + minify + TypeScript source map (debuggable stack traces)
+node make.js build --task ShellScript --minify --sourcemap --BypassNpmAudit
+
+# force minification OFF even if the task opts in via make.json
+node make.js build --task ShellScript --no-minify --BypassNpmAudit
+```
+
+Inspect `_build/Tasks/<Task>` afterward: confirm the bundle is present, `node_modules` is
+gone, stack traces resolve (with `--sourcemap`), and the build didn't fail on a duplicate
+package. Once you're happy, opt the task in permanently.
+
+### Opt in (make.json - the real switch)
+
+To make minification a permanent property of the task, add a `minify` block to the task's
+`make.json`. The setting then travels with the task and is applied automatically on every
+build (including generated tasks) - no flag required:
+
+```jsonc
+{
+  "minify": {
+    "enabled": true,
+    "sourceMap": true
+  }
+}
+```
+
+**Precedence:** a command-line flag always wins (that's what makes experimentation safe -
+you can force minification on or off regardless of `make.json`). When no flag is given, the
+per-task `make.json` setting decides.
+
+### `make.json` "minify" options
+
+| Field | Type | Default | Description |
+| ----- | ---- | ------- | ----------- |
+| `enabled` | boolean | `false` | Bundle + minify this task's Node execution targets and drop `node_modules`. |
+| `sourceMap` | boolean | `false` | Also emit a TypeScript source map so runtime stack traces resolve back to `.ts` files. Only applied when `enabled` is true. |
+| `allowDuplicates` | string[] | `[]` | Package names that are allowed to be bundled from more than one `node_modules` root (see below). Merged with the built-in stateless allowlist. |
+
+### Source maps and debugging
+
+Without a source map, minified stack traces point at the single-line bundle and are hard
+to read. With `"sourceMap": true` (or `--sourcemap`) the task's own TypeScript frames
+resolve back to the original `.ts` file and line number. The task entry point becomes a
+tiny bootstrap that enables source-map support before loading the bundle, so no agent
+configuration or extra Node flags are required.
+
+Only the task's TypeScript maps back to source; dependency frames stay at the bundled JS
+(their maps are not shipped, to keep size down).
+
+### Duplicate packages (split module state)
+
+If the same npm package is installed in more than one `node_modules` folder, esbuild would
+otherwise bundle two separate copies. For a package that keeps **module-level state**, that
+state splits across the copies and can silently break (for example the internal secret
+`_vault` in `azure-pipelines-task-lib`). To prevent this:
+
+- A dedupe resolver forces `azure-pipelines-*` packages to a single canonical copy.
+- After bundling, any package still resolved from more than one root **fails the build**,
+  with a message listing the offending package(s) and how to fix it.
+
+When the build fails on a duplicate, first decide **whether the package holds module-level
+state** (caches, singletons, registries, secrets, config set once at load), then pick a fix:
+
+- **Stateful** -> **merge to a single copy** (correctness). Two copies would split state.
+- **Stateless** (pure functions, e.g. `uuid`, `semver`) -> **keep both** (convenience). Two
+  copies just cost a little size.
+
+If you are unsure, treat it as stateful and merge.
+
+#### Fixing a duplicate: merge to one copy (stateful)
+
+Pick whichever is easiest for the package in question:
+
+1. **Deduplicate the install** so only one copy exists on disk, then esbuild can only bundle
+   one. Run `npm dedupe` in the task folder, or align the versions so the nested dependency
+   uses the same version as the top-level one:
+
+   ```bash
+   cd Tasks/<Task>
+   npm dedupe
+   ```
+
+2. **Remove the nested copy via `make.json`** - the repo's existing pattern. Many tasks
+   already delete a redundant nested `node_modules/.../azure-pipelines-task-lib` this way.
+   The `rm` runs after install, so only the top-level copy remains for the bundler:
+
+   ```jsonc
+   {
+     "minify": { "enabled": true },
+     "rm": [
+       {
+         "items": ["node_modules/some-common/node_modules/some-stateful-lib"],
+         "options": "-Rf"
+       }
+     ]
+   }
+   ```
+
+3. **Extend the dedupe resolver** (in `make-util.js`) when you cannot change the install and
+   need the bundler to collapse the copies. The plugin already forces `azure-pipelines-*` to
+   the task's top-level copy; widen its `onResolve` filter to also match your package:
+
+   ```js
+   // make-util.js - dedupePlugin
+   build.onResolve({ filter: /^(azure-pipelines-|some-stateful-lib$)/ }, function (args) { ... });
+   ```
+
+> Caveat: two copies usually exist because they are *different versions*. Merging makes one
+> importer run against a version it was not built against. That is fine for compatible
+> versions - verify behavior if the versions differ significantly.
+
+After any of these, rebuild; the package drops out of the duplicate report and the build passes.
+
+#### Keeping both copies (stateless)
+
+If you have confirmed the package is stateless, tell the build both copies are acceptable.
+Known-stateless packages are exempt from the failure; the built-in allowlist covers `uuid`.
+Add more per task in `make.json` (exact names only - each entry exempts just that package):
+
+```jsonc
+{
+  "minify": {
+    "enabled": true,
+    "allowDuplicates": ["some-stateless-package"]
+  }
+}
+```
+
+If you allowlist a package that isn't actually duplicated (a typo or a stale entry left
+after a dependency was deduplicated), the build prints a note so you can clean it up.
+
+As a last-resort escape hatch, `--allow-duplicates` downgrades the failure to a warning for
+the whole build - prefer merging the duplication or allowlisting the specific package instead.
 
 ## Run Tests
 
