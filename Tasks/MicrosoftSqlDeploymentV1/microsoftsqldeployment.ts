@@ -3,6 +3,11 @@ import path = require('path');
 import SqlPackageHelper from './src/SqlPackageHelper';
 import SqlcmdHelper from './src/SqlcmdHelper';
 import SqlConnectionConfig from './src/SqlConnectionConfig';
+import SqlUtils from './src/SqlUtils';
+import FirewallManager from './src/FirewallManager';
+import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
