@@ -540,16 +540,16 @@ export class ChangeLog {
      * @param errors GraphQL errors from getIssuesList response.
      */
     private _areIssueFetchErrorsIgnorable(errors: any[]): boolean {
-        if (!Array.isArray(errors) || errors.length === 0) {
+        if (!Array.isArray(errors)) {
             return false;
         }
 
-        let nonNullErrors = errors.filter(error => !!error);
-        if (nonNullErrors.length === 0) {
-            return false;
+        if (errors.length === 0) {
+            return true;
         }
 
-        return nonNullErrors.every(error => {
+        let definedErrors = errors.filter(error => error !== null && error !== undefined);
+        return definedErrors.every(error => {
             let errorType = error.type || error.extensions?.type || error.extensions?.code;
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
@@ -560,7 +560,7 @@ export class ChangeLog {
     }
 
     private _logNonBlockingIssueFetchErrors(errors: any[]): void {
-        if (Array.isArray(errors) && errors.length > 0) {
+        if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
             tl.warning("Non-blocking GraphQL errors encountered: " + JSON.stringify(errors));
         }
     }
