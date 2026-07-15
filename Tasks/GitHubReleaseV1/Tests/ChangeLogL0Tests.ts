@@ -10,6 +10,7 @@ export class ChangeLogL0Tests {
         await this.validateGetChangeLog4();
         await this.validateGetChangeLog5();
         await this.validateGetChangeLog6();
+        await this.validateGetChangeLog7();
     }
 
     public static async validateGetChangeLog1() {
@@ -49,6 +50,15 @@ export class ChangeLogL0Tests {
 
         if (changes === this.expectedAllIssuesChanges) {
             console.log(TestString.noCategoryChangeLog);
+        }
+    }
+
+    public static async validateGetChangeLog7(){
+        process.env["CHANGELOG_TEST_GRAPHQL_ERROR_TYPE"] = "RATE_LIMITED";
+        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "issueBased", null, []);
+        delete process.env["CHANGELOG_TEST_GRAPHQL_ERROR_TYPE"];
+        if (changes === "") {
+            console.log(TestString.issueFetchFailFastChangeLog);
         }
     }
 

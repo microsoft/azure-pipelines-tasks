@@ -124,6 +124,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
             assert(tr.succeeded, 'ChangeLogTests.js should succeed and include issue-regex assertions.');
             assert(tr.stdout.search(TestString.allIssuesChangeLog) >= 0, 'should have printed: ' + TestString.allIssuesChangeLog);
             assert(tr.stdout.search(TestString.noCategoryChangeLog) >= 0, 'should have printed: ' + TestString.noCategoryChangeLog);
+            assert(tr.stdout.search(TestString.issueFetchFailFastChangeLog) >= 0, 'should have printed: ' + TestString.issueFetchFailFastChangeLog);
             assert(tr.stdout.search("Tag Name: v1.2") >=0, 'should have printed: TagName: v1.2');
             assert(tr.stdout.search("Tag Name: pre_rel") >=0, 'should have printed: TagName: pre_rel');
             assert(tr.stdout.search("Tag Name: tagName") >=0, 'should have printed: TagName: tagName');

@@ -169,14 +169,18 @@ export class ChangeLogTests {
                         };
                     },
                     getIssuesList: function (githubEndpointToken: string, repositoryName: string, issues: number[], includeLabels: boolean) {
+                        let graphQLErrorType = process.env["CHANGELOG_TEST_GRAPHQL_ERROR_TYPE"] || "NOT_FOUND";
+                        let graphQLErrorMessage = graphQLErrorType === "NOT_FOUND"
+                            ? "Could not resolve to an issue or pull request with the number of 123."
+                            : "Issue query failed with " + graphQLErrorType + ".";
                         if (includeLabels) {
                             return {
                                 statusCode: 200,
                                 body: {
                                     "errors": [
                                         {
-                                            "type": "NOT_FOUND",
-                                            "message": "Could not resolve to an issue or pull request with the number of 123."
+                                            "type": graphQLErrorType,
+                                            "message": graphQLErrorMessage
                                         }
                                     ],
                                     "data": {
@@ -248,8 +252,8 @@ export class ChangeLogTests {
                                 body: {
                                     "errors": [
                                         {
-                                            "type": "NOT_FOUND",
-                                            "message": "Could not resolve to an issue or pull request with the number of 123."
+                                            "type": graphQLErrorType,
+                                            "message": graphQLErrorMessage
                                         }
                                     ],
                                     "data": {
