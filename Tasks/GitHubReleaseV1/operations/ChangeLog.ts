@@ -114,9 +114,10 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
+            if (!!graphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
@@ -124,7 +125,10 @@ export class ChangeLog {
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
                 let index = 0;
-                let issuesList = issuesListResponse.body.data.repository;
+                if (!!graphQLErrors) {
+                    tl.warning(JSON.stringify(graphQLErrors));
+                }
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 let labelsRankDictionary = this._getLabelsRankDictionary(labels);
                 tl.debug("labelsRankDictionary: " + JSON.stringify(labelsRankDictionary));
@@ -181,16 +185,20 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
+            if (!!graphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
                 let changeLog: string = "";
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
-                let issuesList = issuesListResponse.body.data.repository;
+                if (!!graphQLErrors) {
+                    tl.warning(JSON.stringify(graphQLErrors));
+                }
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
@@ -528,6 +536,40 @@ export class ChangeLog {
      */
     private _getChangeLogPerIssue(issueId: number | string, issueTitle: string){
         return Delimiters.star + Delimiters.space + Delimiters.hash + issueId + Delimiters.colon + Delimiters.space + issueTitle;
+    }
+
+    private _areIssueFetchErrorsIgnorable(errors: any[]): boolean {
+        if (!Array.isArray(errors) || errors.length === 0) {
+            return false;
+        }
+
+        return errors.every(error => {
+            if (!error) {
+                return false;
+            }
+
+            let errorType = error.type || (error.extensions && (error.extensions.type || error.extensions.code));
+            return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
+        });
+    }
+
+    private _getNonNullIssuesList(issuesListResponseBody: any): any {
+        let issuesList = issuesListResponseBody &&
+            issuesListResponseBody.data &&
+            issuesListResponseBody.data.repository;
+
+        if (!issuesList) {
+            return {};
+        }
+
+        let nonNullIssuesList = {};
+        Object.keys(issuesList).forEach((issueKey: string) => {
+            if (!!issuesList[issueKey]) {
+                nonNullIssuesList[issueKey] = issuesList[issueKey];
+            }
+        });
+
+        return nonNullIssuesList;
     }
 
     /**

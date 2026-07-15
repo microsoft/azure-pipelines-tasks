@@ -173,8 +173,15 @@ export class ChangeLogTests {
                             return {
                                 statusCode: 200,
                                 body: {
+                                    "errors": [
+                                        {
+                                            "type": "NOT_FOUND",
+                                            "message": "Could not resolve to an issue or pull request with the number of 123."
+                                        }
+                                    ],
                                     "data": {
                                         "repository": {
+                                            "_123": null,
                                             "_1": {
                                                 "title": "Incorrect color contrast in control panel",
                                                 "state": "CLOSED",
@@ -239,8 +246,15 @@ export class ChangeLogTests {
                             return {
                                 statusCode: 200,
                                 body: {
+                                    "errors": [
+                                        {
+                                            "type": "NOT_FOUND",
+                                            "message": "Could not resolve to an issue or pull request with the number of 123."
+                                        }
+                                    ],
                                     "data": {
                                         "repository": {
+                                            "_123": null,
                                             "_1": {
                                                 "title": "Incorrect color contrast in control panel",
                                                 "state": "CLOSED",
