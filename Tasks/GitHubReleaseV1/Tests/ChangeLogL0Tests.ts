@@ -1,6 +1,9 @@
 import { ChangeLog } from "../operations/ChangeLog";
 import { ChangeLogStartCommit } from "../operations/Utility";
 import { TestString } from "./TestStrings";
+import * as assert from "assert";
+
+const GRAPHQL_ERROR_TYPE_ENV_VAR: string = "TEST_GRAPHQL_ERROR_TYPE";
 
 export class ChangeLogL0Tests {
     public static async startTests() {
@@ -10,7 +13,7 @@ export class ChangeLogL0Tests {
         await this.validateGetChangeLog4();
         await this.validateGetChangeLog5();
         await this.validateGetChangeLog6();
-        await this.validateGetChangeLog7();
+        await this.validateGetChangeLogFailsFastOnBlockingGraphQLErrors();
     }
 
     public static async validateGetChangeLog1() {
@@ -53,13 +56,17 @@ export class ChangeLogL0Tests {
         }
     }
 
-    public static async validateGetChangeLog7(){
-        process.env["CHANGELOG_TEST_GRAPHQL_ERROR_TYPE"] = "RATE_LIMITED";
-        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "issueBased", null, []);
-        delete process.env["CHANGELOG_TEST_GRAPHQL_ERROR_TYPE"];
-        if (changes === "") {
-            console.log(TestString.issueFetchFailFastChangeLog);
+    public static async validateGetChangeLogFailsFastOnBlockingGraphQLErrors() {
+        let changes = "";
+        process.env[GRAPHQL_ERROR_TYPE_ENV_VAR] = "RATE_LIMITED";
+        try {
+            changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "issueBased", null, []);
         }
+        finally {
+            delete process.env[GRAPHQL_ERROR_TYPE_ENV_VAR];
+        }
+        assert.strictEqual(changes, "");
+        console.log(TestString.issueFetchFailFastChangeLog);
     }
 
     public static readonly expectedCommitBasedChanges = "\n\n## loc_mock_ChangeLogTitle:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
