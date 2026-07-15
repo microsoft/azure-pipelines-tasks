@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 276,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines.",
   "showEnvironmentVariables": true,
@@ -92,6 +92,8 @@
     "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
     "PS_ExitCode": "Cmd.exe exited with code '{0}'.",
     "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe.",
+    "PS_GuardAgainstComSpecNotSet": "The 'ComSpec' environment variable is not set or is empty. This variable is required to locate cmd.exe. Verify it has not been accidentally removed, and that the agent service has been restarted after any environment variable changes.",
+    "PS_GuardAgainstComSpecInvalidPath": "The 'ComSpec' environment variable is set to '{0}', but this path does not exist or is not a file. Verify that cmd.exe is present at this location.",
     "ScriptContents": "Script contents:"
   }
 }
