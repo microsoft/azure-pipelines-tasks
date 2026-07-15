@@ -54,8 +54,10 @@ function getOwnedTasks(): Set<string> {
 export async function fileBugIfNeeded(taskName: string, result: string, buildUrl?: string): Promise<void> {
     const pat = process.env['AZP_BUG_PAT'];
     if (!pat) {
+        console.log(`DEBUG AZP_BUG_PAT not set - skipping bug filing for "${taskName}"`);
         return;
     }
+    console.log(`DEBUG AZP_BUG_PAT is set (length ${pat.length}) - evaluating bug for "${taskName}" (result "${result}")`);
 
     if (!getOwnedTasks().has(taskName.toLowerCase())) {
         console.log(`Skipping bug for "${taskName}" - not owned by ${OWNER_HANDLES.join(', ')} in CODEOWNERS`);

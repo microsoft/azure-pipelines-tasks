@@ -57,9 +57,12 @@ jobs:
 
   - bash: |
       echo "Tasks to test: $(tasks)"
-      if [[ "${BUILD_SOURCEBRANCH}" == "refs/heads/master" ]]; then
+      echo "DEBUG BUILD_SOURCEBRANCH=${BUILD_SOURCEBRANCH}"
+      if [[ "${BUILD_SOURCEBRANCH}" == "refs/heads/users/v-ellendular/failure-alert-configuration" ]]; then
         echo "enable creating bugs"
         export AZP_BUG_PAT="$(ACCESS_TOKEN)"
+      else
+        echo "DEBUG bug creation NOT enabled for branch ${BUILD_SOURCEBRANCH}"
       fi
       node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
