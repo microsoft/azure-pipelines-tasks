@@ -125,7 +125,7 @@ export class ChangeLog {
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
                 let index = 0;
-                this._logNonBlockingIssueFetchErrors(graphQLErrors);
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 let labelsRankDictionary = this._getLabelsRankDictionary(labels);
@@ -193,7 +193,7 @@ export class ChangeLog {
                 let changeLog: string = "";
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
-                this._logNonBlockingIssueFetchErrors(graphQLErrors);
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
@@ -537,6 +537,7 @@ export class ChangeLog {
     /**
      * Returns true if there are no GraphQL errors, or if all errors are ignorable NOT_FOUND errors.
      * NOT_FOUND errors can occur when a commit references a discussion number.
+     * Non-array values are treated as non-ignorable to preserve fail-fast behavior.
      * @param errors GraphQL errors from getIssuesList response.
      */
     private _areIssueFetchErrorsIgnorable(errors: unknown): boolean {
@@ -563,8 +564,8 @@ export class ChangeLog {
         });
     }
 
-    private _logNonBlockingIssueFetchErrors(errors: unknown): void {
-        if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
+    private _logNonBlockingIssueFetchErrors(errors: unknown[]): void {
+        if (errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
             tl.warning(tl.loc("NonBlockingIssuesFetchError", JSON.stringify(errors)));
         }
     }
