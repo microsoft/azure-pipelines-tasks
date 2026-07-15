@@ -3,7 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 const TELEMETRY_AREA: string = 'TaskHub';
 const TELEMETRY_FEATURE: string = 'AzureContainerAppsV1';
 
-const SHELL_METACHAR_REGEX: RegExp = /[;|&$`(){}<>*?!\\]/;
+const SHELL_METACHAR_REGEX: RegExp = /[;|&$`(){}<>*?!\\"']/;
 const WHITESPACE_REGEX: RegExp = /\s/;
 
 export interface ArgInjectionTelemetry {
@@ -33,12 +33,18 @@ export function emitArgInjectionRiskTelemetry(inputName: string, value: string):
         const trimmed: string = value.trim();
         // Split on whitespace runs to count how many arguments this value would become when passed as a string; >1 signals possible arg injection
         const wouldSplitIntoArgs: number = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
+        const hasShellMetachar: boolean = SHELL_METACHAR_REGEX.test(value);
+
+        // Only emit when the value looks risky: it would split into multiple args or contains shell metacharacters
+        if (wouldSplitIntoArgs <= 1 && !hasShellMetachar) {
+            return;
+        }
 
         emitTelemetry({
             event: 'ArgInjectionRiskDetected',
             input: inputName,
             hasWhitespace: WHITESPACE_REGEX.test(value) ? 1 : 0,
-            hasShellMetachar: SHELL_METACHAR_REGEX.test(value) ? 1 : 0,
+            hasShellMetachar: hasShellMetachar ? 1 : 0,
             length: value.length,
             wouldSplitIntoArgs: wouldSplitIntoArgs
         });
