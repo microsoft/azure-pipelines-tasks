@@ -564,8 +564,8 @@ export class ChangeLog {
         });
     }
 
-    private _logNonBlockingIssueFetchErrors(errors: unknown[]): void {
-        if (errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
+    private _logNonBlockingIssueFetchErrors(errors: unknown): void {
+        if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
             tl.warning(tl.loc("NonBlockingIssuesFetchError", JSON.stringify(errors)));
         }
     }
