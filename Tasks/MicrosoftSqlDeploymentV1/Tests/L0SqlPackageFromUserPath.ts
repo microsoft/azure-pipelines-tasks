@@ -1,3 +1,4 @@
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -8,6 +9,14 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
 tmr.setInput('sqlpackagePath', '/custom/path/sqlpackage.exe');
+
+// Mock answers
+let a: ma.TaskLibAnswers = {
+    'checkPath': {
+        'test.dacpac': true
+    }
+};
+tmr.setAnswers(a);
 
 // Mock fs.existsSync to return true for user-provided path
 tmr.registerMock('fs', {
@@ -23,3 +32,4 @@ tmr.registerMock('fs', {
 });
 
 tmr.run();
+

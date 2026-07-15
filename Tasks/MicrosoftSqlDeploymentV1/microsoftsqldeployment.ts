@@ -8,6 +8,7 @@ import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import SqlProjectBuilder from './src/SqlProjectBuilder';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));

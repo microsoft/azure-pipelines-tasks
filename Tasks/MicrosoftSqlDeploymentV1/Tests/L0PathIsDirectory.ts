@@ -6,14 +6,13 @@ let taskPath = path.join(__dirname, '..', 'microsoftsqldeployment.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
-tmr.setInput('path', 'test.dacpac');
+tmr.setInput('path', '/path/to/directory/'); // Path is a directory, not a file
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
-tmr.setInput('firewallRuleManagement', 'true'); // Explicitly enabled but no azureSubscription
 
-// Mock answers
+// Mock answers - checkPath will fail because it's a directory
 let a: ma.TaskLibAnswers = {
     'checkPath': {
-        'test.dacpac': true
+        '/path/to/directory/': false  // Directory, not a file
     }
 };
 tmr.setAnswers(a);

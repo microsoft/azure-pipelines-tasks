@@ -28,7 +28,11 @@ tmr.registerMock('fs', fsClone);
 tmr.setAnswers({
     'which': {
         'sqlpackage': ''  // SqlPackage not found in PATH
+    },
+    'checkPath': {
+        'test.dacpac': true
     }
 });
 
 tmr.run();
+
