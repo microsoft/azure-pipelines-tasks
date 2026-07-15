@@ -6,8 +6,7 @@ import SqlConnectionConfig from './SqlConnectionConfig';
 import SqlUtils from './SqlUtils';
 import FirewallManager from './FirewallManager';
 import AzureSqlResourceManager from './AzureSqlResourceManager';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import SqlProjectBuilder from './SqlProjectBuilder';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -30,8 +29,11 @@ async function main(): Promise<void> {
 
         // Get required inputs per specification
         const action = tl.getInput('action', true)!;
-        const filePath = tl.getInput('path', true)!;
+        let filePath = tl.getInput('path', true)!;
         const connectionString = tl.getInput('connectionString', true)!;
+        
+        // Validate file path exists
+        tl.checkPath(filePath, 'path');
         
         // Mask connection string (contains sensitive data)
         tl.setSecret(connectionString);
@@ -112,8 +114,12 @@ async function main(): Promise<void> {
             // Step 1: Firewall rule management (if enabled)
             if (firewallRuleManagement && azureSubscription) {
                 try {
+                    // Lazy-load Azure ARM libraries only when needed
+                    const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
+                    const { AzureEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
+                    
                     // Get Azure endpoint with credentials
-                    const azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                    const azureEndpoint: typeof AzureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
                     
                     // Detect IP address by testing connectivity
                     const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
@@ -136,7 +142,14 @@ async function main(): Promise<void> {
             }
 
             // Step 2: SQL project build (if .sqlproj)
-            // TODO: Implement SQL project build with dotnet build
+            if (fileType === 'SQLPROJ') {
+                tl.debug(tl.loc('DetectedSqlProject'));
+                const builtDacpacPath = await SqlProjectBuilder.buildProject(filePath, buildArguments);
+                // Update path to point to built .dacpac
+                filePath = builtDacpacPath;
+                fileType = 'DACPAC';
+                tl.debug(tl.loc('UpdatedPathToBuiltDacpac', filePath));
+            }
 
             // Step 3: Execute deployment (SqlPackage or sqlcmd)
             // TODO: Implement SqlPackage execution
