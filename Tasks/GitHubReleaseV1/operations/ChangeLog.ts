@@ -114,7 +114,7 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
-            let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
+            let graphQLErrors = issuesListResponse.body?.errors;
             let hasGraphQLErrors = Array.isArray(graphQLErrors) && graphQLErrors.length > 0;
             if (hasGraphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
@@ -186,7 +186,7 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
-            let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
+            let graphQLErrors = issuesListResponse.body?.errors;
             let hasGraphQLErrors = Array.isArray(graphQLErrors) && graphQLErrors.length > 0;
             if (hasGraphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
@@ -556,7 +556,7 @@ export class ChangeLog {
         }
 
         return nonNullErrors.every(error => {
-            let errorType = error.type || (error.extensions && (error.extensions.type || error.extensions.code));
+            let errorType = error.type || error.extensions?.type || error.extensions?.code;
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
     }
