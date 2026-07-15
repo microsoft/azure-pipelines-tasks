@@ -540,6 +540,10 @@ export class ChangeLog {
      * @param errors GraphQL errors from getIssuesList response.
      */
     private _areIssueFetchErrorsIgnorable(errors: any[]): boolean {
+        if (!errors) {
+            return true;
+        }
+
         if (!Array.isArray(errors)) {
             return false;
         }
@@ -549,6 +553,9 @@ export class ChangeLog {
         }
 
         let definedErrors = errors.filter(error => error !== null && error !== undefined);
+        if (definedErrors.length !== errors.length) {
+            tl.debug("GraphQL issue fetch errors contained null or undefined entries.");
+        }
         return definedErrors.every(error => {
             let errorTypeSource = error.type ? "type" : error.extensions?.type ? "extensions.type" : error.extensions?.code ? "extensions.code" : "none";
             let errorType = error.type || error.extensions?.type || error.extensions?.code;
