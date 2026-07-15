@@ -31,6 +31,7 @@ export function emitArgInjectionRiskTelemetry(inputName: string, value: string):
         }
 
         const trimmed: string = value.trim();
+        // Split on whitespace runs to count how many arguments this value would become when passed as a string; >1 signals possible arg injection
         const wouldSplitIntoArgs: number = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
 
         emitTelemetry({
