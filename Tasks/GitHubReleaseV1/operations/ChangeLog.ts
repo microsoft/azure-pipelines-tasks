@@ -115,7 +115,7 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
             let graphQLErrors = issuesListResponse.body?.errors;
-            if (this._hasBlockingIssueFetchErrors(graphQLErrors)) {
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
                 tl.warning(JSON.stringify(graphQLErrors));
                 return "";
@@ -184,7 +184,7 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
             let graphQLErrors = issuesListResponse.body?.errors;
-            if (this._hasBlockingIssueFetchErrors(graphQLErrors)) {
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
                 tl.warning(JSON.stringify(graphQLErrors));
                 return "";
@@ -561,18 +561,6 @@ export class ChangeLog {
             tl.debug("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"));
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
-    }
-
-    private _hasBlockingIssueFetchErrors(errors: any): boolean {
-        if (!errors) {
-            return false;
-        }
-
-        if (!Array.isArray(errors)) {
-            return true;
-        }
-
-        return errors.length > 0 && !this._areIssueFetchErrorsIgnorable(errors);
     }
 
     private _logNonBlockingIssueFetchErrors(errors: any[]): void {
