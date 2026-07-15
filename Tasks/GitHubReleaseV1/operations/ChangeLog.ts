@@ -564,8 +564,16 @@ export class ChangeLog {
         });
     }
 
-    private _hasBlockingIssueFetchErrors(errors: any[]): boolean {
-        return Array.isArray(errors) && errors.length > 0 && !this._areIssueFetchErrorsIgnorable(errors);
+    private _hasBlockingIssueFetchErrors(errors: any): boolean {
+        if (!errors) {
+            return false;
+        }
+
+        if (!Array.isArray(errors)) {
+            return true;
+        }
+
+        return errors.length > 0 && !this._areIssueFetchErrorsIgnorable(errors);
     }
 
     private _logNonBlockingIssueFetchErrors(errors: any[]): void {
