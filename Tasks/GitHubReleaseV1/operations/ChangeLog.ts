@@ -539,7 +539,7 @@ export class ChangeLog {
      * NOT_FOUND errors can occur when a commit references a discussion number.
      * @param errors GraphQL errors from getIssuesList response.
      */
-    private _areIssueFetchErrorsIgnorable(errors: any[]): boolean {
+    private _areIssueFetchErrorsIgnorable(errors: any): boolean {
         if (!errors) {
             return true;
         }
