@@ -115,7 +115,8 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
             let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
-            if (!!graphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
+            let hasGraphQLErrors = Array.isArray(graphQLErrors) && graphQLErrors.length > 0;
+            if (hasGraphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
                 tl.warning(JSON.stringify(graphQLErrors));
                 return "";
@@ -125,8 +126,8 @@ export class ChangeLog {
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
                 let index = 0;
-                if (!!graphQLErrors) {
-                    tl.warning(JSON.stringify(graphQLErrors));
+                if (hasGraphQLErrors) {
+                    tl.warning("Non-blocking GraphQL errors encountered: " + JSON.stringify(graphQLErrors));
                 }
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
@@ -186,7 +187,8 @@ export class ChangeLog {
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
             let graphQLErrors = issuesListResponse.body && issuesListResponse.body.errors;
-            if (!!graphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
+            let hasGraphQLErrors = Array.isArray(graphQLErrors) && graphQLErrors.length > 0;
+            if (hasGraphQLErrors && !this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
                 tl.warning(JSON.stringify(graphQLErrors));
                 return "";
@@ -195,8 +197,8 @@ export class ChangeLog {
                 let changeLog: string = "";
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
-                if (!!graphQLErrors) {
-                    tl.warning(JSON.stringify(graphQLErrors));
+                if (hasGraphQLErrors) {
+                    tl.warning("Non-blocking GraphQL errors encountered: " + JSON.stringify(graphQLErrors));
                 }
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
@@ -543,11 +545,12 @@ export class ChangeLog {
             return false;
         }
 
-        return errors.every(error => {
-            if (!error) {
-                return false;
-            }
+        let nonNullErrors = errors.filter(error => !!error);
+        if (nonNullErrors.length === 0) {
+            return false;
+        }
 
+        return nonNullErrors.every(error => {
             let errorType = error.type || (error.extensions && (error.extensions.type || error.extensions.code));
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
@@ -562,14 +565,14 @@ export class ChangeLog {
             return {};
         }
 
-        let nonNullIssuesList = {};
+        let filteredIssues = {};
         Object.keys(issuesList).forEach((issueKey: string) => {
             if (!!issuesList[issueKey]) {
-                nonNullIssuesList[issueKey] = issuesList[issueKey];
+                filteredIssues[issueKey] = issuesList[issueKey];
             }
         });
 
-        return nonNullIssuesList;
+        return filteredIssues;
     }
 
     /**
