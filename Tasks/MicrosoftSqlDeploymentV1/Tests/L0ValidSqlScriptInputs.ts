@@ -23,7 +23,11 @@ tmr.registerMock('fs', {
 tmr.setAnswers({
     which: {
         'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
+    },
+    checkPath: {
+        'test.sql': true
     }
 });
 
 tmr.run();
+

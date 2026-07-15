@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
 import Constants from './Constants';
+import { Writable } from 'stream';
 
 export interface ConnectionResult {
     /** True if connection succeeds, false otherwise */
@@ -76,16 +77,16 @@ export default class SqlUtils {
             const result = await tl.exec(sqlcmdPath, sqlcmdArgs, {
                 silent: true,
                 ignoreReturnCode: true,
-                outStream: new tl.WritableStream({
-                    write: (chunk: string) => {
-                        sqlcmdOutput += chunk;
-                        return true;
+                outStream: new Writable({
+                    write: (chunk: Buffer, encoding: string, callback: () => void) => {
+                        sqlcmdOutput += chunk.toString();
+                        callback();
                     }
                 }),
-                errStream: new tl.WritableStream({
-                    write: (chunk: string) => {
-                        sqlcmdError += chunk;
-                        return true;
+                errStream: new Writable({
+                    write: (chunk: Buffer, encoding: string, callback: () => void) => {
+                        sqlcmdError += chunk.toString();
+                        callback();
                     }
                 })
             });

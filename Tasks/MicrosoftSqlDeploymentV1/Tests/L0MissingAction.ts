@@ -9,3 +9,4 @@ tmr.setInput('path', 'test.dacpac');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
 
 tmr.run();
+

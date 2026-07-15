@@ -1,4 +1,4 @@
-// Succeeds when sqlcmd is found at user-specified path.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -9,6 +9,14 @@ tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
 tmr.setInput('sqlcmdPath', '/custom/path/sqlcmd.exe');
+
+// Mock answers
+let a: ma.TaskLibAnswers = {
+    'checkPath': {
+        'test.sql': true
+    }
+};
+tmr.setAnswers(a);
 
 // Mock fs.existsSync to return true for user-provided sqlcmd path
 tmr.registerMock('fs', {
@@ -24,3 +32,4 @@ tmr.registerMock('fs', {
 });
 
 tmr.run();
+
