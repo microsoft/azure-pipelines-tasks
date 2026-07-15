@@ -54,10 +54,8 @@ function getOwnedTasks(): Set<string> {
 export async function fileBugIfNeeded(taskName: string, result: string, buildUrl?: string): Promise<void> {
     const pat = process.env['AZP_BUG_PAT'];
     if (!pat) {
-        console.log(`DEBUG AZP_BUG_PAT not set - skipping bug filing for "${taskName}"`);
         return;
     }
-    console.log(`DEBUG AZP_BUG_PAT is set (length ${pat.length}) - evaluating bug for "${taskName}" (result "${result}")`);
 
     if (!getOwnedTasks().has(taskName.toLowerCase())) {
         console.log(`Skipping bug for "${taskName}" - not owned by ${OWNER_HANDLES.join(', ')} in CODEOWNERS`);
@@ -67,11 +65,11 @@ export async function fileBugIfNeeded(taskName: string, result: string, buildUrl
     const connection = new WebApi(MSENG_URL, getPersonalAccessTokenHandler(pat));
     const wit = await connection.getWorkItemTrackingApi();
 
-    const title = `Canary test pipeline ${taskName} failed`;
+    const title = `Canarytest pipeline ${taskName} failed`;
     const wiql = `SELECT [System.Id] FROM workitems WHERE [System.Title] = '${title}' AND [System.State] = 'Active'`;
     const existing = await wit.queryByWiql({ query: wiql });
     if (existing.workItems && existing.workItems.length > 0) {
-        console.log(`Bug already exists for "${taskName}": ${existing.workItems[0].url}`);
+        console.log(`Work item already exists: ${existing.workItems[0].url}`);
         return;
     }
 
@@ -83,11 +81,12 @@ export async function fileBugIfNeeded(taskName: string, result: string, buildUrl
         add('System.Tags', BUG_TAG)
     ];
 
+    console.log(`Creating bug for canary test pipeline ${taskName} and area path ${CANARYTEST_AREA_PATH}`);
     const workItem = await wit.createWorkItem(null, document, BUG_PROJECT, 'Bug');
 
     const linkPart = buildUrl ? `<div>Failing build: <a href="${buildUrl}">${buildUrl}</a></div>` : '';
     const message = `<div>Canary test pipeline "${taskName}" completed with result "${result}".</div>${linkPart}<div><br></div><div><b>This ticket was created automatically.</b></div>`;
     await wit.addComment({ text: message }, BUG_PROJECT, workItem.id!);
 
-    console.log(`Created bug for "${taskName}": ${workItem.url}`);
+    console.log(`Created work item URL: ${workItem.url}`);
 }
