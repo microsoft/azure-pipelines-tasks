@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 277,
-    "Patch": 4
+    "Minor": 278,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -252,6 +252,7 @@
     "AuthSchemeNotSupportedForAzureDevOps": "ms-resource:loc.messages.AuthSchemeNotSupportedForAzureDevOps",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+    "AzureConfigDirIsolationNotice": "ms-resource:loc.messages.AzureConfigDirIsolationNotice",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",

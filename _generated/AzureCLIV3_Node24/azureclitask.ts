@@ -598,6 +598,7 @@ export class azureclitask {
             // az config file at $(Agent.TempDirectory)/.azclitask/config.
             this.azCliConfigPath = createPerInvocationAzureConfigDir(agentTempDir);
             console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
+            console.log(tl.loc('AzureConfigDirIsolationNotice'));
         } else {
             console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
         }
