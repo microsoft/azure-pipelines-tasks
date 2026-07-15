@@ -535,7 +535,7 @@ export class ChangeLog {
     }
 
     /**
-     * Returns true if the GraphQL errors are all ignorable NOT_FOUND errors.
+     * Returns true if there are no GraphQL errors, or if all errors are ignorable NOT_FOUND errors.
      * NOT_FOUND errors can occur when a commit references a discussion number.
      * @param errors GraphQL errors from getIssuesList response.
      */
@@ -550,7 +550,9 @@ export class ChangeLog {
 
         let definedErrors = errors.filter(error => error !== null && error !== undefined);
         return definedErrors.every(error => {
+            let errorTypeSource = error.type ? "type" : error.extensions?.type ? "extensions.type" : error.extensions?.code ? "extensions.code" : "none";
             let errorType = error.type || error.extensions?.type || error.extensions?.code;
+            tl.debug("GraphQL issue fetch error type source: " + errorTypeSource);
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
     }
@@ -581,7 +583,7 @@ export class ChangeLog {
 
         let filteredIssues: { [key: string]: any } = {};
         Object.keys(issuesList).forEach((issueKey: string) => {
-            if (!!issuesList[issueKey]) {
+            if (issuesList[issueKey]) {
                 filteredIssues[issueKey] = issuesList[issueKey];
             }
         });
