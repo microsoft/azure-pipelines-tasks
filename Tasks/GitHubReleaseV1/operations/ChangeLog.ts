@@ -577,7 +577,7 @@ export class ChangeLog {
 
     private _logNonBlockingIssueFetchErrors(errors: any[]): void {
         if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
-            tl.warning("Non-blocking GraphQL errors encountered: " + JSON.stringify(errors));
+            tl.warning(tl.loc("NonBlockingIssuesFetchError", JSON.stringify(errors)));
         }
     }
 

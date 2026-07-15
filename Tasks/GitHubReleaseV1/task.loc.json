@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 277,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -361,6 +361,7 @@
     "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
     "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
     "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
+    "NonBlockingIssuesFetchError": "ms-resource:loc.messages.NonBlockingIssuesFetchError",
     "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
     "LabelsSyntaxError": "ms-resource:loc.messages.LabelsSyntaxError",
     "InvalidChangeLogTypeAttribute": "ms-resource:loc.messages.InvalidChangeLogTypeAttribute",

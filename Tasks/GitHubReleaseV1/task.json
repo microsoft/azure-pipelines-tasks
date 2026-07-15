@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 277,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -361,6 +361,7 @@
     "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
     "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
     "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
+    "NonBlockingIssuesFetchError": "Non-blocking issue-fetch GraphQL errors encountered: %s",
     "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
     "LabelsSyntaxError": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq",
     "InvalidChangeLogTypeAttribute": "Invalid ChangeLogType attribute: %s. Only 'commitBased' or 'issueBased' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
