@@ -239,6 +239,36 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should fail when path does not exist', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0PathDoesNotExist.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when file path does not exist');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about missing path');
+        }, tr);
+    });
+
+    it('should fail when path is a directory', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0PathIsDirectory.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when path is a directory');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about invalid path');
+        }, tr);
+    });
+
     it('should fail on invalid file extension', async () => {
         this.timeout(5000);
 
@@ -269,6 +299,8 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    // TODO: Move to task4 - requires SqlPackage/sqlcmd execution
+    /*
     it('should succeed with valid dacpac inputs', async () => {
         this.timeout(5000);
 
@@ -421,8 +453,75 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    // SQL Project Build tests
+    it('should successfully build SQL project', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectBuildSuccess.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when building SQL project');
+            assert(tr.stdout.indexOf('DetectedSqlProject') >= 0, 'should detect SQL project');
+            assert(tr.stdout.indexOf('SqlProjectBuiltSuccessfully') >= 0, 'should report successful build');
+        }, tr);
+    });
+    */
+
+    it('should fail when dotnet SDK is not found', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectDotnetNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when dotnet SDK is not found');
+            assert(tr.stdout.indexOf('DotnetNotFound') >= 0 || tr.errorIssues.some(e => e.includes('.NET SDK not found')), 
+                'should display dotnet not found error');
+        }, tr);
+    });
+
+    // TODO: Move to task4 - requires full SQL project build execution
+    /*
+    it('should fail and show actual errors when SQL project build fails', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectBuildFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when SQL project build fails');
+            assert(tr.stdout.indexOf('SqlProjectBuildFailed') >= 0, 'should report build failed');
+            assert(tr.stdout.indexOf('error MSB1009') >= 0 || tr.errorIssues.some(e => e.includes('MSB1009')), 
+                'should show actual build error messages');
+        }, tr);
+    });
+
+    it('should pass build arguments to dotnet build', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectWithBuildArguments.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with build arguments');
+            assert(tr.stdout.indexOf('Release') >= 0 || tr.stdout.indexOf('TreatWarningsAsErrors') >= 0, 
+                'should use provided build arguments');
+        }, tr);
+    });
+    */
+
     // TODO: Add more tests as implementation progresses
-    // - SqlPackage discovery and execution
+    // - SqlPackage execution
+    // - sqlcmd execution
     // - sqlcmd discovery/auto-install and execution
     // - Firewall management with Azure subscription
     // - SQL project build
