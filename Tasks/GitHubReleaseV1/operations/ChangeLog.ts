@@ -540,6 +540,11 @@ export class ChangeLog {
         return Delimiters.star + Delimiters.space + Delimiters.hash + issueId + Delimiters.colon + Delimiters.space + issueTitle;
     }
 
+    /**
+     * Returns true if the GraphQL errors are all ignorable NOT_FOUND errors.
+     * NOT_FOUND errors can occur when a commit references a discussion number.
+     * @param errors GraphQL errors from getIssuesList response.
+     */
     private _areIssueFetchErrorsIgnorable(errors: any[]): boolean {
         if (!Array.isArray(errors) || errors.length === 0) {
             return false;
@@ -556,6 +561,11 @@ export class ChangeLog {
         });
     }
 
+    /**
+     * Returns issues fetched from GraphQL response after removing null entries.
+     * Null entries are returned when issueOrPullRequest cannot be resolved.
+     * @param issuesListResponseBody GraphQL response body from getIssuesList.
+     */
     private _getNonNullIssuesList(issuesListResponseBody: any): any {
         let issuesList = issuesListResponseBody &&
             issuesListResponseBody.data &&
@@ -565,7 +575,7 @@ export class ChangeLog {
             return {};
         }
 
-        let filteredIssues = {};
+        let filteredIssues: { [key: string]: any } = {};
         Object.keys(issuesList).forEach((issueKey: string) => {
             if (!!issuesList[issueKey]) {
                 filteredIssues[issueKey] = issuesList[issueKey];
