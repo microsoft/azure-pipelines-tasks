@@ -557,9 +557,8 @@ export class ChangeLog {
             tl.debug("GraphQL issue fetch errors contained null or undefined entries.");
         }
         return definedErrors.every(error => {
-            let errorTypeSource = error.type ? "type" : error.extensions?.type ? "extensions.type" : error.extensions?.code ? "extensions.code" : "none";
             let errorType = error.type || error.extensions?.type || error.extensions?.code;
-            tl.debug("GraphQL issue fetch error type source: " + errorTypeSource);
+            tl.debug("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"));
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
     }
