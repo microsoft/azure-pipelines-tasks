@@ -13,14 +13,19 @@ export class SqlcmdExecutor {
         sqlcmdPath: string,
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string
+        additionalArguments?: string,
+        accessToken?: string
     ): Promise<void> {
-        const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments);
+        const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments, accessToken);
         
         // Set password as environment variable (more secure than command line)
         const envVars: { [key: string]: string } = {};
         if (connectionConfig.Password) {
             envVars['SQLCMDPASSWORD'] = connectionConfig.Password;
+        }
+        // Access token auth via environment variable (supported by go-sqlcmd and sqlcmd v18+)
+        if (accessToken) {
+            envVars['SQLCMDACCESSTOKEN'] = accessToken;
         }
         
         tl.debug(`Executing sqlcmd: ${sqlcmdPath} ${args.join(' ')}`);
@@ -43,7 +48,8 @@ export class SqlcmdExecutor {
     private static buildArguments(
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string
+        additionalArguments?: string,
+        accessToken?: string
     ): string[] {
         const args: string[] = [];
         
@@ -59,14 +65,12 @@ export class SqlcmdExecutor {
         
         // Authentication
         if (connectionConfig.UserId) {
-            // SQL authentication
+            // SQL authentication - password via SQLCMDPASSWORD env var
             args.push('-U');
             args.push(connectionConfig.UserId);
-            // Password is set via environment variable SQLCMDPASSWORD
         } else {
-            // Integrated/Windows authentication or Azure AD
             const authType = connectionConfig.FormattedAuthentication;
-            if (authType && authType.toLowerCase().includes('active directory')) {
+            if (authType && authType.toLowerCase().includes('activedirectory')) {
                 args.push('-G');  // Azure Active Directory authentication
             } else {
                 args.push('-E');  // Windows integrated authentication
@@ -79,7 +83,6 @@ export class SqlcmdExecutor {
         
         // Additional arguments (optional)
         if (additionalArguments) {
-            // Split additional arguments respecting quotes
             const additionalArgs = this.parseAdditionalArguments(additionalArguments);
             args.push(...additionalArgs);
         }

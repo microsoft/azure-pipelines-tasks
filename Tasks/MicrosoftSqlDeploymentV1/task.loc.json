@@ -119,6 +119,7 @@
     "ActionDetected": "ms-resource:loc.messages.ActionDetected",
     "ConnectionStringProvided": "ms-resource:loc.messages.ConnectionStringProvided",
     "UsingAzureSubscription": "ms-resource:loc.messages.UsingAzureSubscription",
+    "AccessTokenAcquired": "ms-resource:loc.messages.AccessTokenAcquired",
     "DetectingSqlPackage": "ms-resource:loc.messages.DetectingSqlPackage",
     "SqlPackageFound": "ms-resource:loc.messages.SqlPackageFound",
     "SqlPackageNotFound": "ms-resource:loc.messages.SqlPackageNotFound",

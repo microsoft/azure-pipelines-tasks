@@ -25,7 +25,7 @@ if (nodeVersion > 19) {
 async function main(): Promise<void> {
     try {
         // Set resource path for localization
-        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         tl.debug(tl.loc('StartingDeployment'));
 
@@ -101,42 +101,55 @@ async function main(): Promise<void> {
 
         // Discover sqlcmd for SQL script actions or firewall detection
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
+        const needsSqlcmd = action === 'sqlScript' || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));
             sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
-            tl.debug(tl.loc('SqlcmdFound', sqlcmdExePath));
+            tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
         // Firewall management and deployment execution
         let firewallManager: FirewallManager | undefined;
+        let accessToken: string | undefined;
         
         try {
-            // Step 1: Firewall rule management (if enabled)
-            if (firewallRuleManagement && azureSubscription) {
+            // Step 1: Firewall rule management and token acquisition (if azureSubscription set)
+            if (azureSubscription) {
                 try {
-                    // Lazy-load Azure ARM libraries only when needed
                     const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
                     const { AzureEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
                     
-                    // Get Azure endpoint with credentials
                     const azureEndpoint: typeof AzureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
-                    
-                    // Detect IP address by testing connectivity
-                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
-                    
-                    // Add firewall rule only if IP address was detected (connection blocked)
-                    if (ipAddress) {
-                        const resourceManager = await AzureSqlResourceManager.getResourceManager(
-                            connectionConfig.Server,
-                            azureEndpoint
-                        );
-                        firewallManager = new FirewallManager(resourceManager);
-                        await firewallManager.addFirewallRule(ipAddress);
+
+                    // Acquire access token for database authentication
+                    if (azureEndpoint.scheme === 'ServicePrincipal' || azureEndpoint.scheme === 'WorkloadIdentityFederation' || azureEndpoint.scheme === 'ManagedServiceIdentity') {
+                        try {
+                            accessToken = await azureEndpoint.getToken();
+                            if (accessToken) {
+                                tl.setSecret(accessToken);
+                                tl.debug(tl.loc('AccessTokenAcquired'));
+                            }
+                        } catch (tokenError) {
+                            tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
+                        }
+                    }
+
+                    if (firewallRuleManagement) {
+                        // Detect IP address by testing connectivity
+                        const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                        
+                        if (ipAddress) {
+                            const resourceManager = await AzureSqlResourceManager.getResourceManager(
+                                connectionConfig.Server,
+                                azureEndpoint
+                            );
+                            firewallManager = new FirewallManager(resourceManager);
+                            await firewallManager.addFirewallRule(ipAddress);
+                        }
                     }
                 } catch (error) {
-                    tl.warning(`Firewall rule management failed: ${error.message || error}`);
+                    tl.warning(`Azure service connection operation failed: ${error.message || error}`);
                     throw error;
                 }
             } else if (!firewallRuleManagement) {
@@ -145,12 +158,12 @@ async function main(): Promise<void> {
 
             // Step 2: SQL project build (if .sqlproj)
             if (fileType === 'SQLPROJ') {
-                tl.debug(tl.loc('DetectedSqlProject'));
+                tl.debug(tl.loc('BuildingSqlProject', filePath));
                 const builtDacpacPath = await SqlProjectBuilder.buildProject(filePath, buildArguments);
                 // Update path to point to built .dacpac
                 filePath = builtDacpacPath;
                 fileType = 'DACPAC';
-                tl.debug(tl.loc('UpdatedPathToBuiltDacpac', filePath));
+                tl.debug(tl.loc('SqlProjectBuildComplete', filePath));
             }
 
             // Step 3: Execute deployment (SqlPackage or sqlcmd)
@@ -165,7 +178,8 @@ async function main(): Promise<void> {
                     filePath,
                     connectionConfig,
                     publishProfile,
-                    additionalArguments
+                    additionalArguments,
+                    accessToken
                 );
             } else if (fileType === 'SQL' && action === 'sqlScript') {
                 // Execute with sqlcmd (for SQL scripts)
@@ -174,7 +188,8 @@ async function main(): Promise<void> {
                     sqlcmdExePath!,
                     filePath,
                     connectionConfig,
-                    additionalArguments
+                    additionalArguments,
+                    accessToken
                 );
             }
 
