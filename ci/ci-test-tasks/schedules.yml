@@ -57,7 +57,7 @@ jobs:
 
   - bash: |
       echo "Tasks to test: $(tasks)"
-      if [[ "${BUILD_SOURCEBRANCH}" == "refs/heads/users/v-ellendular/failure-alert-configuration" ]]; then
+      if [[ "${BUILD_SOURCEBRANCH}" == "refs/heads/master" ]]; then
         echo "enable creating bugs"
         export AZP_BUG_PAT="$(ACCESS_TOKEN)"
       fi
