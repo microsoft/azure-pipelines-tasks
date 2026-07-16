@@ -131,14 +131,16 @@ try {
     Start-Sleep -Seconds $firewallConfigWaitTime
 
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
-        # Create the directory for output files
+        # Create the directory for output files if it does not already exist.
+        # Do not delete any existing files to avoid destroying outputs from previous steps.
         $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
-        if (Test-Path $generatedOutputFilesRoot) {
-            Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force
+        if (-not (Test-Path $generatedOutputFilesRoot -PathType Container)) {
+            if (Test-Path $generatedOutputFilesRoot) {
+                Remove-Item -Path $generatedOutputFilesRoot -Force
+            }
+            Write-Verbose "Creating output files directory: $generatedOutputFilesRoot"
+            New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
         }
-
-        Write-Verbose "Creating output files directory: $generatedOutputFilesRoot"
-        New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
     }
 
     switch ($taskNameSelector) {
