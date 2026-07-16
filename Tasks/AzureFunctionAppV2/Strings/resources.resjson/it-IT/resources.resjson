@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione Funzioni di Azure",
-  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/azurefunctiondeployreadme)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
   "loc.description": "Aggiorna un'app per le funzioni con applicazioni Web basate su .NET, Python, JavaScript, PowerShell, Java",
   "loc.instanceNameFormat": "Distribuzione app per le funzioni di Azure: $(appName)",
   "loc.releaseNotes": "Novità della versione 2.* <br /> Rimozione del supporto per la distribuzione WAR, impostazione delle opzioni di Web.Config e opzione per il comando di avvio per app per le funzioni di Azure per Linux.",

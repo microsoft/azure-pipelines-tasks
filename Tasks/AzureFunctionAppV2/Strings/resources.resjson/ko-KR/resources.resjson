@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Functions 배포",
-  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://aka.ms/azurefunctiondeployreadme)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
   "loc.description": ".NET, Python, JavaScript, PowerShell, Java 기반 웹 애플리케이션으로 함수 앱 업데이트",
   "loc.instanceNameFormat": "Azure 함수 앱 배포: $(appName)",
   "loc.releaseNotes": "버전 2의 새로운 기능* <br /> 제거된 WAR 배포 지원, Web.Config 옵션 설정, Linux Azure 함수 앱의 시작 명령 옵션.",
