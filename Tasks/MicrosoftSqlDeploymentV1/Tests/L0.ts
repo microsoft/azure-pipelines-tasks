@@ -313,4 +313,70 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'should display dotnet not found error');
         }, tr);
     });
+
+    // Integration tests for SqlPackage/sqlcmd execution
+    it('should succeed with valid dacpac inputs', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0ValidDacpacInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded with valid dacpac inputs');
+        }, tr);
+    });
+
+    it('should succeed with valid sql script inputs', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0ValidSqlScriptInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded with valid sql script inputs');
+        }, tr);
+    });
+
+    it('should succeed with valid sqlproj inputs', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0ValidSqlProjInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded with valid sqlproj inputs');
+        }, tr);
+    });
+
+    it('should fail when SqlPackage is not found', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0SqlPackageNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when SqlPackage is not found');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via user-provided path', async () => {
+        this.timeout(5000);
+
+        const tp = path.join(__dirname, 'L0SqlPackageFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        await tr.runAsync();
+        
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
+        }, tr);
+    });
 });

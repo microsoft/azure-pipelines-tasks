@@ -110,7 +110,7 @@
   ],
   "execution": {
     "Node20_1": {
-      "target": "src/microsoftsqldeployment.js",
+      "target": "microsoftsqldeployment.js",
       "argumentFormat": ""
     }
   },

@@ -1,12 +1,14 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import SqlPackageHelper from './SqlPackageHelper';
-import SqlcmdHelper from './SqlcmdHelper';
-import SqlConnectionConfig from './SqlConnectionConfig';
-import SqlUtils from './SqlUtils';
-import FirewallManager from './FirewallManager';
-import AzureSqlResourceManager from './AzureSqlResourceManager';
-import SqlProjectBuilder from './SqlProjectBuilder';
+import SqlPackageHelper from './src/SqlPackageHelper';
+import SqlcmdHelper from './src/SqlcmdHelper';
+import SqlConnectionConfig from './src/SqlConnectionConfig';
+import SqlUtils from './src/SqlUtils';
+import FirewallManager from './src/FirewallManager';
+import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+import SqlProjectBuilder from './src/SqlProjectBuilder';
+import { SqlPackageExecutor } from './src/SqlPackageExecutor';
+import { SqlcmdExecutor } from './src/SqlcmdExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -152,9 +154,35 @@ async function main(): Promise<void> {
             }
 
             // Step 3: Execute deployment (SqlPackage or sqlcmd)
-            // TODO: Implement SqlPackage execution
-            // TODO: Implement sqlcmd execution
-            // TODO: Set output variables
+            let outputFilePath: string | undefined;
+            
+            if (fileType === 'DACPAC' || (fileType === 'SQL' && action !== 'sqlScript')) {
+                // Execute with SqlPackage (for DACPAC or SQL with script/deployReport action)
+                tl.debug(tl.loc('ExecutingSqlPackage', action));
+                outputFilePath = await SqlPackageExecutor.executeSqlPackage(
+                    sqlPackageExePath!,
+                    action,
+                    filePath,
+                    connectionConfig,
+                    publishProfile,
+                    additionalArguments
+                );
+            } else if (fileType === 'SQL' && action === 'sqlScript') {
+                // Execute with sqlcmd (for SQL scripts)
+                tl.debug(tl.loc('ExecutingSqlScript', filePath));
+                await SqlcmdExecutor.executeSqlcmd(
+                    sqlcmdExePath!,
+                    filePath,
+                    connectionConfig,
+                    additionalArguments
+                );
+            }
+
+            // Step 4: Set output variables
+            if (outputFilePath) {
+                tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
+                tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
+            }
 
             tl.debug(tl.loc('DeploymentSuccessful'));
         } finally {
