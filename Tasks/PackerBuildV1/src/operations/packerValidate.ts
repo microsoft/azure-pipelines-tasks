@@ -17,6 +17,7 @@ export async function run(packerHost: packerHost): Promise<void> {
         let filePath: string = utils.generateTemporaryFilePath();
         let content: string = utils.getPackerVarFileContent(variables);
         utils.writeFile(filePath, content);
+        packerHost.registerTempVarFile(filePath);
         command.arg(util.format("%s=%s", '-var-file', filePath));
     }
 
