@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Azure Functions",
-  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "Actualiza una aplicación de funciones con aplicaciones web basadas en .NET, Python, JavaScript, PowerShell y Java.",
   "loc.instanceNameFormat": "Implementación de Azure Function App: $(appName)",
   "loc.releaseNotes": "Novedades de la versión 2.* <br /> Se quitó la compatibilidad con la implementación de WAR, estableciendo opciones de Web.Config y la opción para el comando de inicio para Aplicaciones de funciones de Azure para Linux.",

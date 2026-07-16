@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Functions 部署",
-  "loc.helpMarkDown": "[了解有关此任务的详细信息](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
+  "loc.helpMarkDown": "[了解有关此任务的详细信息](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "使用基于 .NET、Python、JavaScript、PowerShell、Java 的 Web 应用程序更新函数应用",
   "loc.instanceNameFormat": "Azure 函数应用部署: $(appName)",
   "loc.releaseNotes": "版本 2 中的新增功能。* <br />删除了 WAR 部署支持、设置 Web.Config 选项以及适用于 Linux Azure 函数应用的 Startup 命令的选项。",

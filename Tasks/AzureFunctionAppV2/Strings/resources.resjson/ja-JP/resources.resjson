@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Functions デプロイ",
-  "loc.helpMarkDown": "[このタスクに関する詳細](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
+  "loc.helpMarkDown": "[このタスクに関する詳細](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": ".NET、Python、JavaScript、PowerShell、Java ベースの Web アプリケーションを使用して関数アプリを更新する",
   "loc.instanceNameFormat": "Azure 関数アプリのデプロイ: $(appName)",
   "loc.releaseNotes": "バージョン 2 の新機能。* <br />削除された WAR デプロイ サポート、Web.Config オプションの設定、Linux Azure Function Apps のスタートアップ コマンドのオプション。",

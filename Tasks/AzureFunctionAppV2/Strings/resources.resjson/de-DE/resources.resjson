@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Functions Bereitstellen",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "Funktions-App mit .NET, Python, JavaScript, PowerShell, Java-basierten Webanwendungen aktualisieren",
   "loc.instanceNameFormat": "Azure Functions-App bereitstellen: $(appName)",
   "loc.releaseNotes": "Neuerungen in Version 2.* <br /> Entfernte WAR Deploy-Unterstützung, Festlegen von Web.Config-Optionen und die Option für den Startbefehl für Linux Azure Functions-Apps.",

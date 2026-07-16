@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание функций Azure",
-  "loc.helpMarkDown": "[Подробнее об этой задаче](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "Обновить приложение-функцию с помощью .NET, Python, JavaScript, PowerShell, веб-приложений на основе Java",
   "loc.instanceNameFormat": "Развертывание приложения-функции Azure: $(appName)",
   "loc.releaseNotes": "Новые возможности в версии 2.* <br /> Удалена поддержка развертывания из WAR, настройка параметров Web.Config и параметр для команды Startup для приложений-функций Linux Azure.",
