@@ -157,12 +157,56 @@ function Set-TaskResult {
     }
 }
 
+# DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
+# Instead of sanitizing ##vso[ commands coming from remote machine output, this only publishes
+# telemetry describing which ##vso[ commands WOULD have been blocked. The remote output is still
+# written unchanged so that customers who intentionally rely on ##vso[ commands from remote
+# machines are not broken while we analyze real-world usage.
+function Publish-VsoCommandInjectionDryRunTelemetry {
+    Param(
+        [string] $source,
+        [string] $text
+    )
+    try {
+        if ([string]::IsNullOrEmpty($text)) { return }
+        # Count every ##vso[ occurrence that would have been neutralized by the fix.
+        $occurrences = [regex]::Matches($text, '##vso\[')
+        if ($occurrences.Count -eq 0) { return }
+        # Capture only the command name (e.g. task.setvariable) using a restricted character set so
+        # the telemetry payload can never itself contain a ##vso[ sequence or leak command values.
+        $commandCounts = @{}
+        foreach ($match in [regex]::Matches($text, '##vso\[([\w.]+)')) {
+            $command = $match.Groups[1].Value
+            if ($commandCounts.ContainsKey($command)) {
+                $commandCounts[$command] = $commandCounts[$command] + 1
+            } else {
+                $commandCounts[$command] = 1
+            }
+        }
+        $telemetryData = @{
+            "Source" = $source;
+            "TotalCount" = $occurrences.Count;
+            "Commands" = $commandCounts;
+        }
+        $telemetryDataJson = ConvertTo-Json $telemetryData -Compress -Depth 5
+        $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+        Write-Verbose "VSO command injection dry-run telemetry: $telemetryDataJson"
+        Write-Host "##vso[telemetry.publish area=TaskHub;feature=RemoteVsoCommandInjectionDryRun]$telemetryDataJson"
+    } catch {
+        Write-Verbose "Unable to publish VSO command injection dry-run telemetry. Error: $($_.Exception.Message)"
+    }
+}
+
 $defaultErrorHandler = {
     Param($object, $computerName)
-    Write-Host ($object | Out-String)
+    $text = $object | Out-String
+    Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:ErrorHandler" -text $text
+    Write-Host $text
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
-    Write-Host ($object | Out-String)
+    $text = $object | Out-String
+    Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:OutputHandler" -text $text
+    Write-Host $text
 }
