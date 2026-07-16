@@ -58,7 +58,6 @@ export async function fileBugIfNeeded(taskName: string, result: string, buildUrl
     }
 
     if (!getOwnedTasks().has(taskName.toLowerCase())) {
-        console.log(`Skipping bug for "${taskName}" - not owned by ${OWNER_HANDLES.join(', ')} in CODEOWNERS`);
         return;
     }
 
