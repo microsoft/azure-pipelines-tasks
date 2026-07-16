@@ -359,6 +359,28 @@ var removeIntermediateSourceMaps = function (outDir, keepMapAbsPaths) {
     walk(outDir);
 };
 
+// Publish an esbuild-emitted source map from the staging dir into outDir. esbuild
+// computes each map's "sources" relative to the map file's own directory - which is
+// the staging dir (one level below outDir) - so a plain move would leave every source
+// carrying a spurious leading "../" (e.g. "../index.ts" instead of "index.ts"). That
+// breaks external symbolication tools that resolve "sources" on disk. Rewrite each
+// entry relative to the final location before writing the map into place. Runtime
+// mapping is unaffected (it reads the embedded sourcesContent, not disk); this only
+// corrects the on-disk paths. Left untouched if a sourceRoot is present (we never set
+// one, so this is a defensive guard against double-rebasing).
+var publishSourceMap = function (tmpMapPath, destMapPath, stagingDir, outDir) {
+    var map = JSON.parse(fs.readFileSync(tmpMapPath, 'utf8'));
+    if (Array.isArray(map.sources) && !map.sourceRoot) {
+        map.sources = map.sources.map(function (src) {
+            var abs = path.resolve(stagingDir, src);
+            return path.relative(outDir, abs).split(path.sep).join('/');
+        });
+    }
+    fs.writeFileSync(destMapPath, JSON.stringify(map));
+    rm('-f', tmpMapPath);
+};
+exports.publishSourceMap = publishSourceMap;
+
 //
 // Minify a compiled Node task: bundle every Node execution entry point (and its
 // dependencies) into a single minified file using esbuild, then drop the now
@@ -489,7 +511,7 @@ var minifyNodeTask = async function (taskPath, outDir, options) {
             fs.renameSync(s.tmpOut, outPath);
             if (s.hasMap) {
                 rm('-f', outPath + '.map');
-                fs.renameSync(s.tmpOut + '.map', outPath + '.map');
+                publishSourceMap(s.tmpOut + '.map', outPath + '.map', stagingDir, outDir);
                 bundleMapAbsPaths.add(outPath + '.map');
             }
         });

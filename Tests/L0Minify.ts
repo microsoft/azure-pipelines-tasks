@@ -216,6 +216,62 @@ describe('Minify build helpers (minify-util)', function () {
         });
     });
 
+    describe('publishSourceMap sources rebase (staging -> outDir)', function () {
+        var os = require('os');
+        var anyFs: any = fs;
+
+        it('strips the spurious ../ when moving a map up out of the staging dir', () => {
+            var outDir = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-map-'));
+            try {
+                // esbuild emits the map inside outDir/.minify-x with sources relative to
+                // that staging dir, so a task source at outDir/index.ts is "../index.ts".
+                var stagingDir = path.join(outDir, '.minify-x');
+                anyFs.mkdirSync(stagingDir);
+                var tmpMap = path.join(stagingDir, 'index.js.map');
+                anyFs.writeFileSync(tmpMap, JSON.stringify({
+                    version: 3,
+                    sources: ['../index.ts', '../node_modules/foo/bar.js'],
+                    sourcesContent: ['a', 'b'],
+                    names: [], mappings: 'AAAA'
+                }));
+                var destMap = path.join(outDir, 'index.js.map');
+
+                minifyUtil.publishSourceMap(tmpMap, destMap, stagingDir, outDir);
+
+                var map = JSON.parse(anyFs.readFileSync(destMap, 'utf8'));
+                assert.strictEqual(JSON.stringify(map.sources),
+                    JSON.stringify(['index.ts', 'node_modules/foo/bar.js']),
+                    'sources should be relative to outDir, with no leading ../');
+                assert.strictEqual(JSON.stringify(map.sourcesContent), JSON.stringify(['a', 'b']),
+                    'sourcesContent is preserved');
+                assert.ok(!anyFs.existsSync(tmpMap), 'the staged map is removed after publishing');
+            } finally {
+                anyFs.rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+
+        it('leaves sources untouched when a sourceRoot is present (no double-rebase)', () => {
+            var outDir = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-map-'));
+            try {
+                var stagingDir = path.join(outDir, '.minify-x');
+                anyFs.mkdirSync(stagingDir);
+                var tmpMap = path.join(stagingDir, 'index.js.map');
+                anyFs.writeFileSync(tmpMap, JSON.stringify({
+                    version: 3, sourceRoot: '/abs/root',
+                    sources: ['index.ts'], sourcesContent: ['a'], names: [], mappings: 'AAAA'
+                }));
+                var destMap = path.join(outDir, 'index.js.map');
+
+                minifyUtil.publishSourceMap(tmpMap, destMap, stagingDir, outDir);
+
+                var map = JSON.parse(anyFs.readFileSync(destMap, 'utf8'));
+                assert.strictEqual(JSON.stringify(map.sources), JSON.stringify(['index.ts']),
+                    'sourceRoot-relative sources are left as-is');
+            } finally {
+                anyFs.rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+    });
     describe('inlineSourceMap conflict guard (C4)', function () {
         it('flags an effective tsconfig that enables inlineSourceMap', () => {
             assert.strictEqual(

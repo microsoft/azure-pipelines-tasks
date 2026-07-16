@@ -19,6 +19,8 @@ to try minification on a task and inspect the result before you commit to opting
 - [Source maps and debugging](#source-maps-and-debugging)
 - [Duplicate packages (split module state)](#duplicate-packages-split-module-state)
 - [Known caveats (validate before opting in)](#known-caveats-validate-before-opting-in)
+- [Test and canary coverage (required before opting in)](#test-and-canary-coverage-required-before-opting-in)
+- [Dependency hygiene best practices](#dependency-hygiene-best-practices)
 - [Future work / deferred](#future-work--deferred)
 
 ## Try it first (command line, experimentation only)
@@ -360,6 +362,62 @@ that ships next to the bundled entry. Avoid configuring a task's `tsconfig.json`
 produces conflicting `sourceMappingURL` directives and frames that resolve to the wrong line
 (or not at all). Stick with the default `sourceMap` behavior and let the minify step manage
 the maps.
+
+## Test and canary coverage (required before opting in)
+
+Minification changes how a task is assembled at runtime, and the failure modes in
+[Known caveats](#known-caveats-validate-before-opting-in) — dynamic `require()`, child
+processes, runtime-loaded assets, native addons — do **not** surface at build time. A task
+can build, bundle, shrink, and pass a smoke test, then throw `Cannot find module` later on a
+rare code path (a specific auth type, a platform branch, an error handler) that only runs in
+production. Minification is therefore only as safe as the task's test coverage. **Do not opt
+a task in unless it has strong automated coverage and you have validated that coverage against
+the minified build.**
+
+Before adding a `make.json` `minify` block:
+
+- **Run the task's full test suite against the minified output, not just the normal build.** A
+  green run on the non-minified build proves nothing about the bundle. Build with `--minify`
+  (and `--minify --sourcemap`) and run the `L0`, `L1`, and any `L2` suites against that output.
+- **Exercise every runtime code path, not just the happy path.** The caveats bite on branches —
+  each authentication type, each platform (Windows / Linux / macOS), each optional feature, each
+  error/fallback handler, and any dynamically selected provider or handler. If a path isn't
+  covered by a test, it isn't validated for minification.
+- **Prefer real end-to-end / canary coverage.** Unit tests that mock `require()` or the file
+  system can hide exactly the failures minification introduces. Run the minified task in a real
+  pipeline (a canary / dogfood definition) that hits its major scenarios before rolling it out
+  broadly.
+- **Roll out gradually and watch.** Opt in one task at a time, ship it to a canary ring or a
+  small set of pipelines first, and monitor task failure rates and error telemetry before
+  widening. Keep the change trivially revertible (remove the `minify` block) if a regression
+  appears.
+- **Re-validate after dependency or code changes.** A new dependency, a refactor, or a bumped
+  version can introduce a dynamic `require()`, a duplicate package, or a new on-disk asset. Treat
+  any change to a minified task's dependencies or entry points as a trigger to re-run the
+  minified test + canary pass.
+
+Rule of thumb: if you cannot confidently say the task's risky paths are covered by tests **and**
+exercised in a canary against the minified build, leave it un-minified.
+
+## Dependency hygiene best practices
+
+Independent of minification, a lean dependency tree makes tasks smaller, faster to install, and
+cheaper to audit — and it makes minification cleaner (fewer duplicates, fewer surprises). Good
+habits for task authors:
+
+- **Remove unused dependencies.** Audit periodically with `npx depcheck` and `npm ls <pkg>`;
+  refactors routinely leave orphaned packages behind. Delete anything the task no longer imports.
+- **Keep build-only tools in `devDependencies`.** TypeScript, type definitions, and test/lint
+  tooling must not ship in the task's runtime `dependencies`.
+- **Align versions to avoid duplicate copies.** Run `npm dedupe` and share a single version of
+  `azure-pipelines-task-lib` and common packages so module state stays single-instance. This is
+  also what prevents the duplicate-package build failure described above.
+- **Don't pull a whole library for one helper.** Prefer the standard library or a small, focused
+  package over a heavy transitive tree.
+- **Mind transitive bloat.** One new direct dependency can drag in dozens of transitive ones —
+  check what a package brings with it before committing.
+- **Re-audit after every dependency change.** Make dependency review part of the normal change
+  process, not a one-time cleanup.
 
 ## Future work / deferred
 
