@@ -34,8 +34,11 @@ description: >-
 #         with the Actions GITHUB_TOKEN (a GitHub App installation token returns
 #         "Assigning agents is not supported…"), so the one security-sensitive
 #         action stays firmly in human hands.
-#   * Nomination is throttled: while any nominated issue is still unassigned
-#     (awaiting a maintainer decision), the workflow nominates nothing new.
+#   * Nomination is a TOP-UP model: the workflow keeps up to
+#     `CONFIG.targetCandidateCount` (N) OUTSTANDING candidates (nominated but
+#     still unassigned). When fewer than N are outstanding it nominates enough
+#     NEW issues to top the pool back up to N, bounded by the per-run cap
+#     `CONFIG.nominateCount`; when the pool is already at N it nominates nothing.
 #   * `add-labels` is restricted to the nomination label only, capped per run.
 #     The agent has no assign and no remove-label handler at all.
 #   * A pre-activation search (github-script, READ-ONLY) does the heavy
@@ -51,8 +54,9 @@ description: >-
 #
 # TRIGGERS:
 #   * `schedule: daily` + `workflow_dispatch` — the ONLY triggers. Each run
-#     builds a scored candidate pool and (if the nomination queue is clear) the
-#     agent nominates new candidates. There is no label/assignment trigger here.
+#     builds a scored candidate pool and, if the outstanding-candidate pool is
+#     below `CONFIG.targetCandidateCount`, the agent nominates enough new
+#     candidates to top it back up. There is no label/assignment trigger here.
 #
 # FORK FOR YOUR TEAM (this workflow is generic; RM is the shipped example):
 #   Each area team runs its OWN copy of this workflow. To create one:
@@ -63,7 +67,10 @@ description: >-
 #          - `nominationLabel`    a DISTINCT bot-applied label per team so teams
 #                                 do not pick each other's issues (e.g.
 #                                 `copilot-candidate-artifacts`)
-#          - `nominateCount`      how many issues to nominate per scheduled run
+#          - `targetCandidateCount` N — how many OUTSTANDING candidates to keep
+#                                 available (each run tops the pool up to N)
+#          - `nominateCount`      per-run safety cap on NEW nominations
+#                                 (must be <= the `add-labels.max` below)
 #          - `areaLabels`         the `Area: …` labels your team owns
 #          - `codeownersHandles`  CODEOWNERS handles whose `Tasks/*` you own
 #                                 (use `[]` to scope by area labels only)
@@ -121,7 +128,8 @@ on:
           const CONFIG = {
             team: 'RM',                                  // shown in logs only
             nominationLabel: 'copilot-candidate-rm',     // BOT-applied: marks an issue the workflow nominated for review
-            nominateCount: 2,                            // how many issues to nominate per scheduled run
+            targetCandidateCount: 2,                     // N — desired number of OUTSTANDING candidates (nominated & still unassigned) to keep available for maintainers. Each run tops the pool back up to N.
+            nominateCount: 2,                            // per-run safety cap: never nominate more than this many NEW issues in a single run (the run tops up toward targetCandidateCount, bounded by this)
             areaLabels: ['Area: Release', 'Area:RM'],    // in-scope Area labels
             codeownersHandles: ['manolerazvan'],         // CODEOWNERS owners whose Tasks/* are in scope
             excludeLabels: [                             // disqualifying labels (triage/route/aa-triaged intentionally NOT here)
@@ -183,7 +191,7 @@ on:
             mode: 'noop',                     // 'scheduled' | 'noop'
             team: CONFIG.team,
             nomination_label: NOMINATION_LABEL,
-            nominate_count: String(CONFIG.nominateCount),
+            nominate_count: '0',              // how many NEW issues to nominate THIS run (top-up toward targetCandidateCount); set below
             nominate: 'false',                // whether to nominate new issues this run
             nominate_numbers: '',             // scored pool the agent picks from
             nominate_list: '',
@@ -277,21 +285,29 @@ on:
 
             out.mode = 'scheduled';
 
-            // NOMINATION — only when nothing is already awaiting a maintainer
-            // decision, so we never pile up more than nominateCount pending
-            // nominations. List nominated issues directly (read-after-write
-            // consistent + fully paged) and count those still UNASSIGNED. Once a
-            // maintainer assigns Copilot (their approval action), the issue drops
-            // out of this pending set and the throttle releases; the companion
-            // approved-processing workflow removes the nomination label.
+            // NOMINATION — TOP-UP model. Maintain a steady pool of
+            // `targetCandidateCount` (N) OUTSTANDING candidates (nominated but
+            // not yet assigned to Copilot). List nominated issues directly
+            // (read-after-write consistent + fully paged) and count those still
+            // UNASSIGNED. If fewer than N are outstanding, nominate enough NEW
+            // issues to top the pool back up to N (bounded by the per-run cap
+            // `nominateCount`). Once a maintainer assigns Copilot (their approval
+            // action), the issue drops out of this pending set, the deficit grows
+            // and the next run refills it; the companion approved-processing
+            // workflow removes the nomination label.
             const nominatedAll = await github.paginate(github.rest.issues.listForRepo, {
               owner, repo, state: 'open', labels: NOMINATION_LABEL, per_page: 100,
             });
             const pendingCount = nominatedAll
               .filter(i => !i.pull_request && (i.assignees || []).length === 0).length;
-            if (pendingCount > 0) {
-              core.info(`Nomination throttled: ${pendingCount} issue(s) nominated & awaiting a maintainer decision.`);
+            // How many NEW candidates to add this run to reach N, capped per run.
+            const deficit = CONFIG.targetCandidateCount - pendingCount;
+            const slots = Math.max(0, Math.min(CONFIG.nominateCount, deficit));
+            out.nominate_count = String(slots);
+            if (slots <= 0) {
+              core.info(`Nomination throttled: ${pendingCount} outstanding candidate(s) >= target of ${CONFIG.targetCandidateCount}. Nothing to top up.`);
             } else {
+              core.info(`Nomination top-up: ${pendingCount} outstanding candidate(s) < target of ${CONFIG.targetCandidateCount}; nominating up to ${slots} more this run.`);
               // Pool = open, unassigned, not already nominated, not excluded.
               // The Search API is the right tool here (it expresses the `-label`
               // exclusions the Issues API can't), but it pages at 100. Walk up to
