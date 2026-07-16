@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.input.label.interactiveKeyboardAuthentication": "Use interactive-keyboard authentication",
   "loc.input.help.interactiveKeyboardAuthentication": "Use this value if PasswordAuthentication is disabled on the target machine",
+  "loc.input.label.enableVsoCommands": "Allow logging commands from remote output",
+  "loc.input.help.enableVsoCommands": "When false (default), ##vso[...] lines in remote output are neutralized (printed as text, not executed). Set true only if you trust the remote output and rely on it emitting logging commands.",
   "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
   "loc.messages.FailedToWriteScript": "Failed to write the script to disk: %s",
   "loc.messages.RemoteCmdExecutionErr": "Command failed with errors on remote machine.",

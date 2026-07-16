@@ -125,7 +125,8 @@ export function runCommandOnRemoteMachine(
     sshClient: ssh2.Client,
     options: RemoteCommandOptions,
     password: string = '',
-    interactiveSession: boolean = false
+    interactiveSession: boolean = false,
+    allowVsoCommands: boolean = false
 ): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
@@ -149,8 +150,9 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Escape logging commands so remote output cannot inject ##vso commands.
-                    const output = escapeVsoCommands(data.toString('utf8'));
+                    // Unless the user opts in via enableVsoCommands, neutralize any
+                    // ##vso[...] lines in remote output so it cannot inject logging commands.
+                    const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
                     if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
                         process.stdout.write(Buffer.from(output, 'utf8'));
                     } else {
@@ -182,8 +184,9 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Escape logging commands so remote output cannot inject ##vso commands.
-                    const output = escapeVsoCommands(data.toString('utf8'));
+                    // Unless the user opts in via enableVsoCommands, neutralize any
+                    // ##vso[...] lines in remote output so it cannot inject logging commands.
+                    const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
                     if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
                         process.stdout.write(Buffer.from(output, 'utf8'));
                     } else {
