@@ -29,7 +29,7 @@
       "label": "Action",
       "required": true,
       "defaultValue": "publish",
-      "helpMarkDown": "SqlPackage action or SQL script execution. For .sqlproj files, use 'publish' action.",
+      "helpMarkDown": "The SqlPackage action to run, or sqlScript to execute a .sql file against the target database.",
       "options": {
         "publish": "Publish",
         "script": "Script",
@@ -42,56 +42,56 @@
       "type": "filePath",
       "label": "Path",
       "required": true,
-      "helpMarkDown": "Path to .dacpac, .sqlproj, or .sql file. Task detects type automatically based on extension."
+      "helpMarkDown": "Path to a .dacpac, .sqlproj, or .sql file. The file type is detected automatically from the extension."
     },
     {
       "name": "connectionString",
       "type": "string",
       "label": "Connection String",
       "required": true,
-      "helpMarkDown": "SQL Server connection string. Include server, database, and authentication. Example: Server=myserver.database.windows.net;Database=mydb;User ID=user;Password=$(SqlPassword);Encrypt=True; or Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directory Default;Encrypt=True;"
+      "helpMarkDown": "Connection string for the target database. Store it as a secret pipeline variable and reference it here (e.g. $(ConnectionString)) to avoid exposing credentials in plain text."
     },
     {
       "name": "azureSubscription",
       "type": "connectedService:AzureRM",
       "label": "Azure Subscription",
       "required": false,
-      "helpMarkDown": "Optional. Azure Resource Manager service connection for firewall rule management and service principal token authentication."
+      "helpMarkDown": "Azure Resource Manager service connection used for firewall rule management and Entra ID authentication."
     },
     {
       "name": "publishProfile",
       "type": "filePath",
       "label": "Publish Profile",
       "required": false,
-      "helpMarkDown": "Optional. Path to a SqlPackage publish profile (.xml). Values in additionalArguments override profile settings."
+      "helpMarkDown": "Path to a SqlPackage publish profile (.xml file). Any values set in additionalArguments take precedence over the profile."
     },
     {
       "name": "additionalArguments",
       "type": "string",
       "label": "Additional Arguments",
       "required": false,
-      "helpMarkDown": "Additional arguments for SqlPackage or sqlcmd. For SqlPackage: /p:BlockOnPossibleDataLoss=true /p:DropObjectsNotInSource=false. For sqlcmd: -v VarName=Value"
+      "helpMarkDown": "Additional arguments appended to the SqlPackage or sqlcmd command."
     },
     {
       "name": "buildArguments",
       "type": "string",
       "label": "Build Arguments",
       "required": false,
-      "helpMarkDown": "Additional dotnet build arguments (for .sqlproj files only). Example: -c Release /p:TreatTSqlWarningsAsErrors=true"
+      "helpMarkDown": "Additional arguments passed to dotnet build when the path points to a .sqlproj file."
     },
     {
       "name": "sqlpackagePath",
       "type": "filePath",
       "label": "SqlPackage Path",
       "required": false,
-      "helpMarkDown": "Optional. Override SqlPackage executable path. If not specified, task discovers SqlPackage via: dotnet tool → DacFramework MSI (Windows) → PATH."
+      "helpMarkDown": "Path to the SqlPackage executable. When not specified, the task searches via dotnet tool install, DacFramework MSI (Windows only), then PATH."
     },
     {
       "name": "sqlcmdPath",
       "type": "filePath",
       "label": "Sqlcmd Path",
       "required": false,
-      "helpMarkDown": "Optional. Override sqlcmd executable path. If not specified and sqlcmd is not on PATH, task auto-installs go-sqlcmd."
+      "helpMarkDown": "Path to the sqlcmd executable. When not specified, the task uses sqlcmd from PATH or auto-installs go-sqlcmd."
     },
     {
       "name": "firewallRuleManagement",
@@ -99,7 +99,7 @@
       "label": "Firewall Rule Management",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "Enable automatic firewall rule management. Default: true when azureSubscription is set, false otherwise. Set to false explicitly for private VNet deployments."
+      "helpMarkDown": "When enabled, the task temporarily adds a firewall rule for the agent IP and removes it after deployment. Defaults to true when azureSubscription is provided. Disable this for private VNet or on-premises deployments."
     }
   ],
   "outputVariables": [
