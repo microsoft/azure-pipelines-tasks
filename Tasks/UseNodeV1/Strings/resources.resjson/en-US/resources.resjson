@@ -22,5 +22,6 @@
   "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
   "loc.messages.UnexpectedOS": "Unexpected OS %s",
   "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
-  "loc.messages.InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'"
+  "loc.messages.InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
+  "loc.messages.CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified."
 }

@@ -41,6 +41,10 @@ async function run() {
 }
 
 function getNodeVersion(versionSpecInput: string, versionFilePathInput: string) {
+    if (versionSpecInput && versionFilePathInput) {
+        throw new Error(taskLib.loc('CannotSpecifyVersionAndVersionFilePath'));
+    }
+
     if (versionFilePathInput) {
         return fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' });
     }
