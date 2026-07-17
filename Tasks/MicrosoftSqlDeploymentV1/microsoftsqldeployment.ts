@@ -16,7 +16,7 @@ if (nodeVersion > 19) {
 async function main(): Promise<void> {
     try {
         // Set resource path for localization
-        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         console.log(tl.loc('StartingDeployment'));
 

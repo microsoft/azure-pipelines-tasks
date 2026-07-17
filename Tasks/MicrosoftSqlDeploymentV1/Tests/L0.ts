@@ -1,9 +1,10 @@
+// L0 unit tests for MicrosoftSqlDeploymentV1 task.
 import * as assert from 'assert';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('MicrosoftSqlDeployment Suite', function () {
-    this.timeout(60000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
@@ -24,8 +25,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail if action input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingAction.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -39,8 +38,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail if path input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingPath.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -54,8 +51,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail if connectionString input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingConnectionString.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -69,8 +64,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail on invalid file extension', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0InvalidFileExtension.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -84,8 +77,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail when firewallRuleManagement is true but azureSubscription is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0FirewallWithoutAzureSubscription.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -99,8 +90,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should succeed with valid dacpac inputs', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0ValidDacpacInputs.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -114,8 +103,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should succeed with valid sql script inputs', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0ValidSqlScriptInputs.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -129,8 +116,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should succeed with valid sqlproj inputs', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0ValidSqlProjInputs.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -143,11 +128,4 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    // TODO: Add more tests as implementation progresses
-    // - SqlPackage discovery and execution
-    // - sqlcmd discovery/auto-install and execution
-    // - Firewall management with Azure subscription
-    // - SQL project build
-    // - Connection string masking
-    // - Output variable setting
 });
