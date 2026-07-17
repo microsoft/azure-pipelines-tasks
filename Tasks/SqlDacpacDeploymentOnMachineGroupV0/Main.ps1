@@ -4,30 +4,27 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 function Write-Exception
 {
     param (
-        $exception
+        $exception,
+        $errorRecord
     )
 
-    $errorRecord = $PSItem
-    try
+    if ($null -ne $errorRecord)
     {
-        if($exception.Message) 
-        {
-            Write-Error ($exception.Message)
-        }
-        else 
-        {
-            Write-Error ($exception)
-        }
-    }
-    catch
-    {
-        if ($_ -ne $null) {
-            Write-Verbose "Write-Exception error:"
-            Write-Verbose $_.ToString()
-        }
+        Write-Error -ErrorRecord $errorRecord
+        throw $errorRecord
     }
 
-    throw $errorRecord
+    if ($null -ne $exception)
+    {
+        $currentException = $exception
+        while ($null -ne $currentException)
+        {
+            Write-Error $currentException
+            $currentException = $currentException.InnerException
+        }
+
+        throw $exception
+    }
 }
 
 function Get-SingleFile
@@ -224,9 +221,9 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
-    Write-Exception($_.Exception)
+    Write-Exception -exception $_.Exception -errorRecord $_
 }
 Catch [Exception]
 {
-    Write-Exception($_.Exception)
+    Write-Exception -exception $_.Exception -errorRecord $_
 }
