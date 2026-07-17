@@ -1,12 +1,12 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import SqlPackageHelper from './SqlPackageHelper';
-import SqlcmdHelper from './SqlcmdHelper';
-import SqlConnectionConfig from './SqlConnectionConfig';
-import SqlUtils from './SqlUtils';
-import FirewallManager from './FirewallManager';
-import AzureSqlResourceManager from './AzureSqlResourceManager';
-import SqlProjectBuilder from './SqlProjectBuilder';
+import SqlPackageHelper from './src/SqlPackageHelper';
+import SqlcmdHelper from './src/SqlcmdHelper';
+import SqlConnectionConfig from './src/SqlConnectionConfig';
+import SqlUtils from './src/SqlUtils';
+import FirewallManager from './src/FirewallManager';
+import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+import SqlProjectBuilder from './src/SqlProjectBuilder';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -23,7 +23,7 @@ if (nodeVersion > 19) {
 async function main(): Promise<void> {
     try {
         // Set resource path for localization
-        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         tl.debug(tl.loc('StartingDeployment'));
 
@@ -175,3 +175,4 @@ async function main(): Promise<void> {
 }
 
 main();
+
