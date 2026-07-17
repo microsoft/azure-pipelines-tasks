@@ -111,6 +111,7 @@
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
     "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet",
     "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror",
-    "CannotSpecifyVersionAndVersionFilePath": "ms-resource:loc.messages.CannotSpecifyVersionAndVersionFilePath"
+    "CannotSpecifyVersionAndVersionFilePath": "ms-resource:loc.messages.CannotSpecifyVersionAndVersionFilePath",
+    "InvalidVersionSpecification": "ms-resource:loc.messages.InvalidVersionSpecification"
   }
 }
