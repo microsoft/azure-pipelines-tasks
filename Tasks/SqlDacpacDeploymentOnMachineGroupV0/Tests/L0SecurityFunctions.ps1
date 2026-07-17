@@ -162,7 +162,7 @@ Assert-WasCalled Get-SqlPackageCmdArgs -Times 1
 # Write-Exception - ensure original errors are preserved
 # ============================================================================
 
-$mainPath = Join-Path $PSScriptRoot "..\Main.ps1"
+$mainPath = Join-Path $PSScriptRoot ".." "Main.ps1"
 $mainAst = [System.Management.Automation.Language.Parser]::ParseFile($mainPath, [ref]$null, [ref]$null)
 $writeExceptionAst = $mainAst.FindAll({
     param($node)
