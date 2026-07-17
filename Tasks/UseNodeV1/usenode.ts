@@ -9,6 +9,7 @@
 
 import * as taskLib from 'azure-pipelines-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as semver from 'semver';
 import * as installer from './installer';
 import * as proxyutil from './proxyutil';
 import * as path from 'path';
@@ -45,11 +46,15 @@ function getNodeVersion(versionSpecInput: string, versionFilePathInput: string) 
         throw new Error(taskLib.loc('CannotSpecifyVersionAndVersionFilePath'));
     }
 
-    if (versionFilePathInput) {
-        return fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' });
+    const version =
+        versionFilePathInput
+            ? fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' })
+            : versionSpecInput;
+    if (semver.validRange(version) === null) {
+        throw new Error(taskLib.loc('InvalidVersionSpecification', version));
     }
 
-    return versionSpecInput;
+    return version;
 }
 
 run()

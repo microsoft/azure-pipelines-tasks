@@ -111,6 +111,7 @@
     "UnexpectedOS": "Unexpected OS %s",
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
     "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
-    "CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified."
+    "CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified.",
+    "InvalidVersionSpecification": "Version specification '%s' is invalid."
   }
 }
