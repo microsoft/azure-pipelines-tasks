@@ -110,6 +110,7 @@
     "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
     "UnexpectedOS": "Unexpected OS %s",
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
-    "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'"
+    "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
+    "CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified."
   }
 }
