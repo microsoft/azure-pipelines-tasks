@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
   "loc.messages.CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+  "loc.messages.CouldNotDeleteTempFile": "Could not delete temporary variables file %s. Please delete manually.",
   "loc.messages.InstalledPackerVersion": "Current installed packer version is %s.",
   "loc.messages.PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
   "loc.messages.ResolvingDeployPackageInput": "Resolving deploy package path.",
