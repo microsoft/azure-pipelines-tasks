@@ -9,6 +9,53 @@ export class RemoteCommandOptions {
     public failOnStdErr: boolean;
 }
 
+interface RemoteOutputHandler {
+    write(data: any): void;
+    flush(): void;
+}
+
+function createRemoteOutputHandler(allowVsoCommands: boolean): RemoteOutputHandler {
+    const redirectToStdout = tl.getPipelineFeature("redirectTaskOutputToProcessStdout");
+    const charsToBuffer = '##vso['.length - 1;
+    let pendingOutput = '';
+
+    const writeOutput = (output: string): void => {
+        if (!output) {
+            return;
+        }
+
+        if (redirectToStdout) {
+            process.stdout.write(Buffer.from(output, 'utf8'));
+        } else {
+            console.log(output);
+        }
+    };
+
+    return {
+        write: (data: any): void => {
+            const output = data.toString('utf8');
+            if (allowVsoCommands) {
+                writeOutput(output);
+                return;
+            }
+
+            if (!redirectToStdout) {
+                writeOutput(escapeVsoCommands(output));
+                return;
+            }
+
+            const escapedOutput = escapeVsoCommands(pendingOutput + output);
+            const outputLength = Math.max(0, escapedOutput.length - charsToBuffer);
+            writeOutput(escapedOutput.slice(0, outputLength));
+            pendingOutput = escapedOutput.slice(outputLength);
+        },
+        flush: (): void => {
+            writeOutput(pendingOutput);
+            pendingOutput = '';
+        }
+    };
+}
+
 /**
  * Inserts user password into stream once it's required
  * @param data text stream data
@@ -145,19 +192,13 @@ export function runCommandOnRemoteMachine(
             }
             let dataBuffer = '';
             let passwordSent = false;
+            const outputHandler = createRemoteOutputHandler(allowVsoCommands);
             stream.on('close', (code, signal) => {
+                outputHandler.flush();
                 handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
-                    // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Unless the user opts in via enableRemoteVsoCommands, neutralize any
-                    // ##vso[...] lines in remote output so it cannot inject logging commands.
-                    const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
-                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
-                        process.stdout.write(Buffer.from(output, 'utf8'));
-                    } else {
-                        console.log(output);
-                    }
+                    outputHandler.write(data);
                     if (!passwordSent) {
                         passwordSent = handlePasswordInput(data, stream, password, dataBuffer);
                         if (passwordSent) {
@@ -179,19 +220,13 @@ export function runCommandOnRemoteMachine(
             if (err) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr', err));
             }
+            const outputHandler = createRemoteOutputHandler(allowVsoCommands);
             stream.on('close', (code, signal) => {
+                outputHandler.flush();
                 handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
-                    // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Unless the user opts in via enableRemoteVsoCommands, neutralize any
-                    // ##vso[...] lines in remote output so it cannot inject logging commands.
-                    const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
-                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
-                        process.stdout.write(Buffer.from(output, 'utf8'));
-                    } else {
-                        console.log(output);
-                    }
+                    outputHandler.write(data);
                 }
             }).stderr.on('data', (data) => {
                 stdErrWritten = true;
