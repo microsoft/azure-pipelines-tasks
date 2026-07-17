@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 277,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -146,13 +146,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentication"
     },
     {
-      "name": "enableVsoCommands",
+      "name": "enableRemoteVsoCommands",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableVsoCommands",
+      "label": "ms-resource:loc.input.label.enableRemoteVsoCommands",
       "defaultValue": false,
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.enableVsoCommands"
+      "helpMarkDown": "ms-resource:loc.input.help.enableRemoteVsoCommands"
     }
   ],
   "execution": {

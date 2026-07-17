@@ -35,7 +35,7 @@ async function run() {
         const interactiveSession: boolean = tl.getBoolInput('interactiveSession', false);
         // Secure by default: when false, ##vso[...] lines in remote output are neutralized
         // (printed as text, not executed). Set true only to trust remote logging commands.
-        const allowVsoCommands: boolean = tl.getBoolInput('enableVsoCommands', false);
+        const allowVsoCommands: boolean = tl.getBoolInput('enableRemoteVsoCommands', false);
         const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details

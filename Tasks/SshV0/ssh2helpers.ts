@@ -150,7 +150,7 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Unless the user opts in via enableVsoCommands, neutralize any
+                    // Unless the user opts in via enableRemoteVsoCommands, neutralize any
                     // ##vso[...] lines in remote output so it cannot inject logging commands.
                     const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
                     if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
@@ -184,7 +184,7 @@ export function runCommandOnRemoteMachine(
             }).on('data', (data) => {
                 if (data) {
                     // "data" can be a buffer. Format it here so it outputs as a string.
-                    // Unless the user opts in via enableVsoCommands, neutralize any
+                    // Unless the user opts in via enableRemoteVsoCommands, neutralize any
                     // ##vso[...] lines in remote output so it cannot inject logging commands.
                     const output = allowVsoCommands ? data.toString('utf8') : escapeVsoCommands(data.toString('utf8'));
                     if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
