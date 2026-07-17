@@ -133,8 +133,9 @@ Unregister-Mock Get-Command
 Unregister-Mock Get-VstsPipelineFeature
 
 # Mock the shared module functions that Invoke-DacpacDeploymentV2 calls
-$sqlPackageEchoCommand = if ($IsWindows) { "cmd.exe" } else { "/bin/echo" }
-$sqlPackageEchoPrefix = if ($IsWindows) { "/c echo " } else { "" }
+$isWindowsPlatform = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
+$sqlPackageEchoCommand = if ($isWindowsPlatform) { "cmd.exe" } else { "/bin/echo" }
+$sqlPackageEchoPrefix = if ($isWindowsPlatform) { "/c echo " } else { "" }
 Register-Mock Get-SqlPackageOnTargetMachine { return $sqlPackageEchoCommand }
 Register-Mock Get-SqlPackageCmdArgs { return "$sqlPackageEchoPrefix/Action:Publish /p:BlockOnPossibleDataLoss=False" }
 
@@ -169,14 +170,14 @@ $writeExceptionAst = $mainAst.FindAll({
 }, $true)[0]
 . ([ScriptBlock]::Create($writeExceptionAst.Extent.Text))
 
-$formatLikeMessage = "path {0:%2F&version=GBmaster&_a=contents}"
-$formatLikeException = [System.Exception]::new($formatLikeMessage)
+$messageWithFormatLikePattern = "path {0:%2F&version=GBmaster&_a=contents}"
+$formatLikeException = [System.Exception]::new($messageWithFormatLikePattern)
 try {
     Write-Exception -exception $formatLikeException -errorRecord $null
     throw "Expected Write-Exception to throw"
 }
 catch {
-    Assert-AreEqual $formatLikeMessage $_.Exception.Message "Write-Exception should preserve original exception message"
+    Assert-AreEqual $messageWithFormatLikePattern $_.Exception.Message "Write-Exception should preserve original exception message"
 }
 
 $errorRecord = [System.Management.Automation.ErrorRecord]::new($formatLikeException, "WriteExceptionTest", [System.Management.Automation.ErrorCategory]::NotSpecified, $null)
