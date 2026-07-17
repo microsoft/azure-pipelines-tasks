@@ -170,7 +170,7 @@ $writeExceptionAst = $mainAst.FindAll({
 }, $true)[0]
 . ([ScriptBlock]::Create($writeExceptionAst.Extent.Text))
 
-$messageWithFormatLikePattern = "path {0:%2F&version=GBmaster&_a=contents}"
+$messageWithFormatLikePattern = "path {0:%2F&version=sample&_a=contents}"
 $formatLikeException = [System.Exception]::new($messageWithFormatLikePattern)
 try {
     Write-Exception -exception $formatLikeException -errorRecord $null
