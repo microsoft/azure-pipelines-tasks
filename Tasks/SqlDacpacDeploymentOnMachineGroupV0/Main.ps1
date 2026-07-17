@@ -10,7 +10,7 @@ function Write-Exception
 
     if ($null -ne $errorRecord)
     {
-        Write-Error -ErrorRecord $errorRecord
+        Write-Error -ErrorRecord $errorRecord -ErrorAction Continue
         throw $errorRecord
     }
 
@@ -19,7 +19,7 @@ function Write-Exception
         $currentException = $exception
         while ($null -ne $currentException)
         {
-            Write-Error $currentException
+            Write-Error $currentException -ErrorAction Continue
             $currentException = $currentException.InnerException
         }
 
