@@ -173,7 +173,11 @@ $writeExceptionAst = $mainAst.FindAll({
 $messageWithFormatLikePattern = "path {0:%2F&version=sample&_a=contents}"
 $formatLikeException = [System.Exception]::new($messageWithFormatLikePattern)
 try {
-    Write-Exception -exception $formatLikeException -errorRecord $null
+    # Write-Exception intentionally logs the error chain via Write-Error before
+    # rethrowing. Suppress that error-stream output here (2>$null) so the L0 test
+    # runner does not treat the logged records as a test failure; we only assert
+    # on the rethrown terminating error caught below.
+    Write-Exception -exception $formatLikeException -errorRecord $null 2>$null
     throw "Expected Write-Exception to throw"
 }
 catch {
@@ -182,7 +186,7 @@ catch {
 
 $errorRecord = [System.Management.Automation.ErrorRecord]::new($formatLikeException, "WriteExceptionTest", [System.Management.Automation.ErrorCategory]::NotSpecified, $null)
 try {
-    Write-Exception -exception $formatLikeException -errorRecord $errorRecord
+    Write-Exception -exception $formatLikeException -errorRecord $errorRecord 2>$null
     throw "Expected Write-Exception to throw"
 }
 catch {
