@@ -66,5 +66,9 @@ describe('Remote Deployer Test Suite', function () {
         it('(Retry-Connection) attempts remote connection only if session state is disconnected and availability is none', (done) => {
             psr.run(path.join(__dirname, 'Retry-Connection.AttemptsConnectionStateDisconnectedAvailabilityNone.ps1'), done);
         });
+
+        it('(defaultOutputHandler) publishes dry-run telemetry for ##vso[ commands without sanitizing', (done) => {
+            psr.run(path.join(__dirname, 'DefaultOutputHandler.VsoCommandInjectionDryRun.ps1'), done);
+        });
     }
 });
