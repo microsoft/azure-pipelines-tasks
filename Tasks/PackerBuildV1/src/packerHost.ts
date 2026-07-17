@@ -95,7 +95,6 @@ export default class PackerHost implements definitions.IPackerHost {
     }
 
     public cleanup(): void {
-        // purge var-files containing SPN/WIF credentials from Agent.TempDirectory (rmRF handles files)
         this._tempVarFiles.forEach(filePath => {
             try {
                 utils.deleteDirectory(filePath);
