@@ -11,6 +11,7 @@ var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var util = require('./make-util');
+var minifyUtil = require('./minify-util');
 var admzip = require('adm-zip');
 
 // util functions
@@ -26,6 +27,7 @@ var fail = util.fail;
 var ensureExists = util.ensureExists;
 var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
+var minifyNodeTask = minifyUtil.minifyNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
@@ -491,6 +493,40 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     }
 
     //--------------------------------
+    // Resolve minify opt-in.
+    // The permanent opt-in lives in the task's make.json "minify" block, e.g.:
+    //   "minify": { "enabled": true, "sourceMap": true }
+    // The CLI flags (--minify / --no-minify, --sourcemap / --no-sourcemap) are for
+    // experimentation only: they let you try minification on a build and always win
+    // over make.json so you can force it on or off regardless of the task's setting.
+    //--------------------------------
+    var taskMinify = taskMake.minify || {};
+    var doMinify;
+    if (typeof argv.minify === 'boolean') {
+        doMinify = argv.minify;                 // --minify / --no-minify: experimentation override
+    } else {
+        doMinify = !!taskMinify.enabled;        // permanent per-task opt-in via make.json
+    }
+    var withSourceMap;
+    if (typeof argv.sourcemap === 'boolean' || typeof argv['source-map'] === 'boolean') {
+        withSourceMap = !!(argv.sourcemap || argv['source-map']);   // CLI override
+    } else {
+        withSourceMap = !!taskMinify.sourceMap;                     // per-task setting
+    }
+    // A source map is only meaningful when the task is actually minified.
+    withSourceMap = doMinify && withSourceMap;
+
+    // Duplicate-package policy: any package bundled from >1 node_modules root
+    // fails the build (module-level state could split). Known-stateless packages
+    // can be allowlisted per-task via make.json "minify": { "allowDuplicates": [...] },
+    // and --allow-duplicates downgrades the failure to a warning for the whole build.
+    var minifyOptions = {
+        sourceMap: withSourceMap,
+        allowDuplicates: Array.isArray(taskMinify.allowDuplicates) ? taskMinify.allowDuplicates : [],
+        failOnDuplicates: !argv['allow-duplicates']
+    };
+
+    //--------------------------------
     // Common: build, copy, install
     //--------------------------------
     var commonPacks = [];
@@ -527,7 +563,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir, isServerBuild);
+                    buildNodeTask(modPath, modOutDir, { isServerBuild: isServerBuild });
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -588,8 +624,9 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     }
 
     // build Node task
+    var emitSourceMaps = withSourceMap;
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir, isServerBuild);
+        buildNodeTask(taskPath, outDir, { isServerBuild: isServerBuild, emitSourceMaps: emitSourceMaps });
     }
 
     // remove the hashes for the common packages, they change every build
@@ -645,6 +682,14 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
             console.log(`\n> removing duplicated task-lib node modules in ${buildTasksDuplicateNodeModules}`);
             rm('-Rf', buildTasksDuplicateNodeModules);
         }
+    }
+
+    // Optionally minify the compiled Node task into a single bundle per entry
+    // point and drop node_modules. Enabled globally via the --minify build flag
+    // or per-task via a "minify" block in the task's make.json.
+    if (doMinify && shouldBuildNode) {
+        banner('Minifying task ' + taskName + (withSourceMap ? ' (with TS source map)' : ' (no source map)'), true);
+        await minifyNodeTask(taskPath, outDir, minifyOptions);
     }
 }
 
