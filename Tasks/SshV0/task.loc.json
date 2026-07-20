@@ -17,16 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
-  },
-  "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-      "allowed": []
-    }
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -152,6 +144,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentication"
+    },
+    {
+      "name": "enableRemoteVsoCommands",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableRemoteVsoCommands",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.enableRemoteVsoCommands"
     }
   ],
   "execution": {

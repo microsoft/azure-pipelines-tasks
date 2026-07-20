@@ -20,6 +20,7 @@ export async function run(packerHost: packerHost): Promise<any> {
     for (var provider of variableProviders) {
         var variables = await provider.getTemplateVariables(packerHost);
         let filePath: string = utils.generateTemporaryFilePath();
+        packerHost.registerTempVarFile(filePath);
         let content: string = utils.getPackerVarFileContent(variables);
         utils.writeFile(filePath, content);
         command.arg(util.format("%s=%s", '-var-file', filePath));
