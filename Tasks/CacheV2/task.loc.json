@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "groups": [],
@@ -47,6 +47,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.restoreKeys"
+    },
+    {
+      "name": "saveOnPartialSuccess",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.saveOnPartialSuccess",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.saveOnPartialSuccess"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
