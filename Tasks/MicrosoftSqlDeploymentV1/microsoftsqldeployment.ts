@@ -2,6 +2,13 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import SqlPackageHelper from './src/SqlPackageHelper';
 import SqlcmdHelper from './src/SqlcmdHelper';
+import SqlConnectionConfig from './src/SqlConnectionConfig';
+import SqlUtils from './src/SqlUtils';
+import FirewallManager from './src/FirewallManager';
+import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import SqlProjectBuilder from './src/SqlProjectBuilder';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -73,6 +80,11 @@ async function main(): Promise<void> {
         }
 
         console.log(tl.loc('ActionDetected', action, fileType));
+
+        // Parse and validate connection string
+        console.log(tl.loc('ParsingConnectionString'));
+        const connectionConfig = new SqlConnectionConfig(connectionString);
+        tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
