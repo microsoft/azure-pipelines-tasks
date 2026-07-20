@@ -85,14 +85,21 @@ export default class SqlPackageHelper {
         tl.debug('Searching for DacFramework MSI installations');
 
         const sqlServerBasePath = 'C:\\Program Files\\Microsoft SQL Server';
-        
-        // Common SQL Server version numbers in descending order (newest first)
-        const versions = ['170', '160', '150', '140', '130', '120', '110'];
+
+        if (!fs.existsSync(sqlServerBasePath)) {
+            tl.debug('SQL Server base path does not exist');
+            return null;
+        }
+
+        // Read all numeric subdirectories and sort descending to prefer newest version
+        const versions = fs.readdirSync(sqlServerBasePath)
+            .filter((d: string) => /^\d+$/.test(d))
+            .sort((a: string, b: string) => parseInt(b) - parseInt(a));
 
         for (const version of versions) {
             const sqlPackagePath = path.join(sqlServerBasePath, version, 'DAC', 'bin', 'SqlPackage.exe');
             tl.debug(`Checking: ${sqlPackagePath}`);
-            
+
             if (fs.existsSync(sqlPackagePath)) {
                 tl.debug(`Found DacFramework MSI installation at version ${version}`);
                 return sqlPackagePath;

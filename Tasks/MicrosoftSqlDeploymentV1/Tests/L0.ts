@@ -161,6 +161,17 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should succeed when SqlPackage is found via DacFramework MSI', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromDacFramework.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via DacFramework MSI');
+            assert(tr.stdout.indexOf('DacFramework') >= 0 || tr.stdout.indexOf('170') >= 0 || tr.stdout.indexOf('SqlPackageFound') >= 0,
+                'should report SqlPackage found at DacFramework location');
+        }, tr);
+    });
+
     it('should fail when user-provided SqlPackage path does not exist', async () => {
         const tp = path.join(__dirname, 'L0SqlPackageUserPathNotFound.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

@@ -12,7 +12,7 @@ export default class SqlcmdHelper {
      * Discovery order:
      * 1. User-provided sqlcmdPath input (validated)
      * 2. Check PATH for sqlcmd
-     * 3. Auto-install go-sqlcmd 1.6.0 from GitHub releases
+     * 3. Auto-install go-sqlcmd 1.6.0 from GitHub releases (Windows, Linux, macOS)
      * 
      * @param sqlcmdPathInput Optional user-provided path to sqlcmd executable
      * @returns Full path to sqlcmd executable
@@ -58,7 +58,7 @@ export default class SqlcmdHelper {
     private static async autoInstallSqlcmd(): Promise<string> {
         const platform = process.platform;
         
-        if (platform !== 'linux' && platform !== 'win32') {
+        if (platform !== 'linux' && platform !== 'win32' && platform !== 'darwin') {
             throw new Error(tl.loc('SqlcmdUnsupportedPlatform', platform));
         }
 
@@ -88,8 +88,8 @@ export default class SqlcmdHelper {
             throw new Error(tl.loc('SqlcmdExecutableNotFoundAfterExtract', sqlcmdPath));
         }
 
-        // Make executable on Linux
-        if (platform === 'linux') {
+        // Make executable on Linux/macOS
+        if (platform === 'linux' || platform === 'darwin') {
             fs.chmodSync(sqlcmdPath, '755');
         }
 
@@ -98,16 +98,20 @@ export default class SqlcmdHelper {
 
     /**
      * Gets the GitHub release download URL for go-sqlcmd based on platform.
-     * @param platform Process platform ('linux' or 'win32')
+     * @param platform Process platform ('win32', 'linux', or 'darwin')
      * @returns Download URL for the appropriate platform archive
      */
     private static getDownloadUrl(platform: string): string {
         const baseUrl = `https://github.com/microsoft/go-sqlcmd/releases/download/v${SQLCMD_VERSION}`;
-        
+        const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
+
+        // 'win32' is Node.js's platform identifier for all Windows (32-bit and 64-bit)
         if (platform === 'win32') {
-            return `${baseUrl}/sqlcmd-v${SQLCMD_VERSION}-windows-x64.zip`;
+            return `${baseUrl}/sqlcmd-v${SQLCMD_VERSION}-windows-${arch}.zip`;
+        } else if (platform === 'darwin') {
+            return `${baseUrl}/sqlcmd-v${SQLCMD_VERSION}-darwin-${arch}.tar.bz2`;
         } else {
-            return `${baseUrl}/sqlcmd-v${SQLCMD_VERSION}-linux-x64.tar.bz2`;
+            return `${baseUrl}/sqlcmd-v${SQLCMD_VERSION}-linux-${arch}.tar.bz2`;
         }
     }
 }
