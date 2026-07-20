@@ -1,3 +1,4 @@
+// Fails when user-specified SqlPackage path does not exist.
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 

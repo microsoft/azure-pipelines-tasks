@@ -1,3 +1,4 @@
+// Succeeds when SqlPackage is found via dotnet global tool install.
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 

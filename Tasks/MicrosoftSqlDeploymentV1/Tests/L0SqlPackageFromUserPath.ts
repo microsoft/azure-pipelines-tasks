@@ -1,3 +1,4 @@
+// Succeeds when SqlPackage is found at user-specified path.
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 

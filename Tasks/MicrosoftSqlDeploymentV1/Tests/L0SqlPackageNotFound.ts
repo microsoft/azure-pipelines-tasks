@@ -1,3 +1,4 @@
+// Fails when SqlPackage is not found in any discovery location.
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
