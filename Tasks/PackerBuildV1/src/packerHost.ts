@@ -16,6 +16,7 @@ export default class PackerHost implements definitions.IPackerHost {
         this._templateFileProviders = {};
         this._templateVariablesProviders = {};
         this._taskParameters = new TaskParameters();
+        this._tempVarFiles = [];
     }
 
     public async initialize() {
@@ -88,7 +89,21 @@ export default class PackerHost implements definitions.IPackerHost {
         this._templateVariablesProviders[providerType] = provider;
     }
 
+    // registers a temporary var-file (containing SPN/WIF credentials) so it is purged during cleanup
+    public registerTempVarFile(filePath: string): void {
+        this._tempVarFiles.push(filePath);
+    }
+
     public cleanup(): void {
+        this._tempVarFiles.forEach(filePath => {
+            try {
+                utils.deleteDirectory(filePath);
+            }
+            catch (err) {
+                tl.warning(tl.loc("CouldNotDeleteTempFile", filePath));
+            }
+        });
+
         try{
             utils.deleteDirectory(this._stagingDirectory);
         }
@@ -183,6 +198,7 @@ export default class PackerHost implements definitions.IPackerHost {
     private _packerPath: string;
     private _taskParameters: TaskParameters;
     private _stagingDirectory: string;
+    private _tempVarFiles: string[];
     private _templateFileProviders: ObjectDictionary<definitions.ITemplateFileProvider>;
     private _templateVariablesProviders: ObjectDictionary<definitions.ITemplateVariablesProvider>;
 }

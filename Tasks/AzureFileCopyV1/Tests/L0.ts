@@ -111,8 +111,8 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Check-ContainerNameAndArgs', (done) => {
             psr.run(path.join(__dirname, 'L0CheckContainerNameAndArgs.ps1'), done);
         });
-        it('(AzureFileCopy) must strip ##vso[ logging commands from remote output', (done) => {
-            psr.run(path.join(__dirname, 'L0VsoCommandInjection.ps1'), done);
+        it('(dry-run) publishes telemetry for ##vso[ commands from remote output without sanitizing', (done) => {
+            psr.run(path.join(__dirname, 'L0VsoCommandInjectionDryRun.ps1'), done);
         });
     }   
 });

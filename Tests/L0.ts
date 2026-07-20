@@ -7,6 +7,10 @@ import assert = require('assert');
 import path = require('path');
 import fs = require('fs');
 
+// Minify build-helper unit tests live in their own file; require it here so the
+// suite registers under this L0.js entry (the harness only runs _build/Tests/L0.js).
+require('./L0Minify');
+
 describe('General Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 

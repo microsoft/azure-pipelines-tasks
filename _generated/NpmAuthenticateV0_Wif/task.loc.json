@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
+    "Minor": 277,
     "Patch": 1
   },
   "runsOn": [
@@ -125,7 +125,8 @@
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.275.0",
-    "wif_242": "0.275.1"
+    "Default": "0.277.0",
+    "LocalPackages": "0.249.4",
+    "wif_242": "0.277.1"
   }
 }

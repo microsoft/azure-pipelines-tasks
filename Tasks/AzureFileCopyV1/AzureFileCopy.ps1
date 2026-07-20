@@ -65,15 +65,46 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
+# DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
+# Instead of sanitizing ##vso[ commands from remote machine output, this only publishes telemetry
+# describing which ##vso[ commands WOULD have been blocked. The remote output is still written
+# unchanged so customers who intentionally rely on ##vso[ commands from remote machines keep working
+# while we analyze real-world usage.
+function Publish-VsoCommandInjectionDryRunTelemetry {
+    param(
+        [string] $source,
+        [string] $text
+    )
+    try {
+        if ([string]::IsNullOrEmpty($text)) { return }
+        $occurrences = [regex]::Matches($text, '##vso\[')
+        if ($occurrences.Count -eq 0) { return }
+        # Capture only the command name (e.g. task.setvariable) using a restricted character set so
+        # the telemetry payload can never itself contain a ##vso[ sequence or leak command values.
+        $commandCounts = @{}
+        foreach ($match in [regex]::Matches($text, '##vso\[([\w.]+)')) {
+            $command = $match.Groups[1].Value
+            if ($commandCounts.ContainsKey($command)) { $commandCounts[$command] = $commandCounts[$command] + 1 }
+            else { $commandCounts[$command] = 1 }
+        }
+        $telemetryData = @{
+            "Source" = $source;
+            "TotalCount" = $occurrences.Count;
+            "Commands" = $commandCounts;
+        }
+        $telemetryDataJson = ConvertTo-Json $telemetryData -Compress -Depth 5
+        $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+        Write-Verbose "VSO command injection dry-run telemetry: $telemetryDataJson"
+        Write-Host "##vso[telemetry.publish area=TaskHub;feature=RemoteVsoCommandInjectionDryRun]$telemetryDataJson"
+    } catch {
+        Write-Verbose "Unable to publish VSO command injection dry-run telemetry. Error: $($_.Exception.Message)"
+    }
+}
+
 # Override Write-ResponseLogs exported by the DTT module (Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal).
-# Original: Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1, function Write-ResponseLogs.
 # Script-scope functions take precedence over module-exported functions in PowerShell command resolution,
-# so this definition shadows the module's version for all call sites in this script.
-#
-# Why: The original Write-ResponseLogs outputs $deploymentResponse.DeploymentLog unsanitized via Write-Output.
-# The agent scans pipeline output for ##vso[ prefix and executes matching lines as logging commands.
-# A compromised remote VM can inject ##vso[task.setvariable] commands in its script output, which the
-# DTT DLL collects into DeploymentLog. Without this override, those commands reach the agent and execute.
+# so this definition shadows the module's version for all call sites in this script. It preserves the
+# original pass-through behavior (output is NOT modified) and only adds dry-run telemetry.
 function Write-ResponseLogs {
     [CmdletBinding()]
     param(
@@ -83,12 +114,16 @@ function Write-ResponseLogs {
     )
     Write-Verbose "Finished $operationName operation on $fqdn"
     if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
+        $deploymentLogText = ($deploymentResponse.DeploymentLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:DeploymentLog" -text $deploymentLogText
         Write-Output "Deployment logs for $operationName operation on $fqdn "
-        Write-Output (($deploymentResponse.DeploymentLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
+        Write-Output $deploymentLogText
     }
     if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
+        $serviceLogText = ($deploymentResponse.ServiceLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:ServiceLog" -text $serviceLogText
         Write-Verbose "Service logs for $operationName operation on $fqdn "
-        Write-Verbose (($deploymentResponse.ServiceLog | Format-List | Out-String) -replace '##vso\[', '##_vso[')
+        Write-Verbose $serviceLogText
     }
 }
 
