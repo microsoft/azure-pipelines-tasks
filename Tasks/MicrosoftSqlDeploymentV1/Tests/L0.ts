@@ -161,7 +161,11 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    it('should succeed when SqlPackage is found via DacFramework MSI', async () => {
+    it('should succeed when SqlPackage is found via DacFramework MSI', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
         const tp = path.join(__dirname, 'L0SqlPackageFromDacFramework.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -180,6 +184,39 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.failed, 'task should fail when user-provided SqlPackage path does not exist');
             assert(tr.stdout.indexOf('SqlPackageNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')), 
                 'should display SqlPackage not found at path error');
+        }, tr);
+    });
+
+    it('should fail when user-provided sqlcmd path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided sqlcmd path does not exist');
+            assert(tr.stdout.indexOf('SqlcmdNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')),
+                'should display sqlcmd not found at path error');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found via user path');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('custom/path/sqlcmd') >= 0,
+                'should report sqlcmd found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found on PATH', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found on PATH');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('/usr/bin/sqlcmd') >= 0,
+                'should report sqlcmd found on PATH');
         }, tr);
     });
 });

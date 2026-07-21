@@ -39,11 +39,11 @@ export default class SqlcmdHelper {
         }
 
         // 3. Auto-install go-sqlcmd
-        tl.debug('sqlcmd not found on PATH. Attempting to auto-install go-sqlcmd...');
+        tl.debug(tl.loc('SqlCmdInstalling'));
         
         try {
             const sqlcmdPath = await this.autoInstallSqlcmd();
-            tl.debug(`Auto-installed go-sqlcmd at: ${sqlcmdPath}`);
+            tl.debug(tl.loc('SqlCmdInstalled', sqlcmdPath));
             return sqlcmdPath;
         } catch (error) {
             tl.debug(`Auto-install failed: ${error.message}`);

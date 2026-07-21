@@ -79,9 +79,9 @@ async function main(): Promise<void> {
         const needsSqlPackage = (fileType === 'DACPAC' || fileType === 'SQLPROJ') && action !== 'sqlScript';
         
         if (needsSqlPackage) {
-            console.log(tl.loc('DetectingSqlPackage'));
+            tl.debug(tl.loc('DetectingSqlPackage'));
             sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
-            console.log(tl.loc('SqlPackageFound', sqlPackageExePath));
+            tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
         }
 
         // Discover sqlcmd for SQL script actions
@@ -89,9 +89,9 @@ async function main(): Promise<void> {
         const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
         
         if (needsSqlcmd) {
-            console.log(tl.loc('DetectingSqlcmd'));
+            tl.debug(tl.loc('SettingUpSqlCmd'));
             sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
-            console.log(tl.loc('SqlcmdFound', sqlcmdExePath));
+            tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
         // TODO: Implement deployment logic
