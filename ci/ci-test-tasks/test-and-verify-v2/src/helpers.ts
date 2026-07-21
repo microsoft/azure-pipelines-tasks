@@ -111,7 +111,7 @@ function extractNodeVersions(execution: any): number[] {
     return versions.sort((a, b) => a - b);
 }
 
-function getNodeVersionsFromTaskJson(taskName: string, buildConfig?: string): number[] {
+export function getNodeVersionsFromTaskJson(taskName: string, buildConfig?: string): number[] {
     try {
         const taskJsonPath = getTaskJsonPath(taskName, buildConfig);
         const taskJson = JSON.parse(fs.readFileSync(taskJsonPath, 'utf8'));
