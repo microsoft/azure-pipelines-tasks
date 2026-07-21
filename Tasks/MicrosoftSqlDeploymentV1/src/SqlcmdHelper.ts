@@ -3,7 +3,6 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const SQLCMD_TOOL_NAME = 'go-sqlcmd';
 const SQLCMD_VERSION = '1.6.0';
 
 export default class SqlcmdHelper {
@@ -46,8 +45,9 @@ export default class SqlcmdHelper {
             tl.debug(tl.loc('SqlCmdInstalled', sqlcmdPath));
             return sqlcmdPath;
         } catch (error) {
-            tl.debug(`Auto-install failed: ${error.message}`);
-            throw new Error(tl.loc('SqlcmdAutoInstallFailed', error.message));
+            const message = error instanceof Error ? error.message : String(error);
+            tl.debug(`Auto-install failed: ${message}`);
+            throw new Error(tl.loc('SqlcmdAutoInstallFailed', message));
         }
     }
 
