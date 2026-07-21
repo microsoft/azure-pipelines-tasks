@@ -1,5 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import SqlPackageHelper from './src/SqlPackageHelper';
+import SqlcmdHelper from './src/SqlcmdHelper';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -71,6 +73,26 @@ async function main(): Promise<void> {
         }
 
         console.log(tl.loc('ActionDetected', action, fileType));
+
+        // Discover SqlPackage for DACPAC/SQLPROJ actions
+        let sqlPackageExePath: string | undefined;
+        const needsSqlPackage = (fileType === 'DACPAC' || fileType === 'SQLPROJ') && action !== 'sqlScript';
+        
+        if (needsSqlPackage) {
+            tl.debug(tl.loc('DetectingSqlPackage'));
+            sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
+            tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
+        }
+
+        // Discover sqlcmd for SQL script actions
+        let sqlcmdExePath: string | undefined;
+        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
+        
+        if (needsSqlcmd) {
+            tl.debug(tl.loc('SettingUpSqlCmd'));
+            sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
+            tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
+        }
 
         // TODO: Implement deployment logic
         // - SqlPackage discovery (dotnet tool → MSI → PATH)

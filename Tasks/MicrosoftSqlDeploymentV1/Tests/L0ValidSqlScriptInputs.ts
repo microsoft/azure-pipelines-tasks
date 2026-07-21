@@ -9,4 +9,21 @@ tmr.setInput('action', 'script');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
 
+// Mock fs.existsSync to return true for test.sql
+tmr.registerMock('fs', {
+    existsSync: (filePath: string) => {
+        if (filePath === 'test.sql') {
+            return true;
+        }
+        return false;
+    }
+});
+
+// Mock tl.which to simulate sqlcmd found on PATH
+tmr.setAnswers({
+    which: {
+        'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
+    }
+});
+
 tmr.run();
