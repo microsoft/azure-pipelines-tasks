@@ -219,5 +219,27 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'should report sqlcmd found on PATH');
         }, tr);
     });
+
+    it('should succeed when sqlcmd is auto-installed', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallSuccess.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is auto-installed');
+            assert(tr.stdout.indexOf('SqlCmdInstalled') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
+                'should report sqlcmd installed successfully');
+        }, tr);
+    });
+
+    it('should fail when sqlcmd executable is missing after auto-install extraction', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallExeNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when executable is missing after extraction');
+            assert(tr.stdout.indexOf('SqlcmdAutoInstallFailed') >= 0 || tr.errorIssues.some(e => e.includes('not found after extraction') || e.includes('SqlcmdExecutableNotFoundAfterExtract')),
+                'should report executable not found after extraction');
+        }, tr);
+    });
 });
 

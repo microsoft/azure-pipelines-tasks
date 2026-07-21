@@ -1,0 +1,33 @@
+// Fails when sqlcmd auto-install extracts successfully but executable is missing from the extracted directory.
+import tmrm = require('azure-pipelines-task-lib/mock-run');
+import path = require('path');
+import fs = require('fs');
+
+let taskPath = path.join(__dirname, '..', 'microsoftsqldeployment.js');
+let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+
+tmr.setInput('action', 'sqlScript');
+tmr.setInput('path', 'test.sql');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+
+// Mock tool-lib to simulate successful download and extraction
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
+    downloadTool: async (_url: string) => '/tmp/sqlcmd-download',
+    extractZip: async (_file: string) => '/tmp/sqlcmd-extracted',
+    extractTar: async (_file: string) => '/tmp/sqlcmd-extracted'
+});
+
+const fsClone = Object.assign({}, fs);
+fsClone.existsSync = function(filePath: any): boolean {
+    const p = filePath ? filePath.toString() : '';
+    if (p === 'test.sql') { return true; }
+    if (p.includes('.dotnet')) { return false; }  // dotnet tool not installed
+    if (p.includes('sqlcmd')) { return false; }   // executable missing after extraction
+    return false;
+};
+tmr.registerMock('fs', fsClone);
+
+// sqlcmd not on PATH — triggers auto-install
+tmr.setAnswers({ which: { 'sqlcmd': '' } });
+
+tmr.run();
