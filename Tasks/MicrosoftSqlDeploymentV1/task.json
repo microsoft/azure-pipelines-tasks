@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -122,10 +122,15 @@
     "DetectingSqlPackage": "Detecting SqlPackage location",
     "SqlPackageFound": "SqlPackage found at: %s",
     "SqlPackageNotFound": "SqlPackage not found. Install via: dotnet tool install -g microsoft.sqlpackage",
+    "SqlPackageNotFoundAtPath": "SqlPackage not found at specified path: %s. Ensure the path points to a valid SqlPackage executable.",
     "SettingUpSqlCmd": "Setting up sqlcmd",
     "SqlCmdFound": "sqlcmd found at: %s",
     "SqlCmdInstalling": "sqlcmd not found on PATH. Installing go-sqlcmd...",
-    "SqlCmdInstalled": "go-sqlcmd installed successfully",
+    "SqlCmdInstalled": "go-sqlcmd installed successfully at: %s",
+    "SqlcmdNotFoundAtPath": "sqlcmd not found at specified path: %s. Ensure the path points to a valid sqlcmd executable.",
+    "SqlcmdAutoInstallFailed": "Failed to auto-install go-sqlcmd: %s. Install sqlcmd manually or specify the sqlcmdPath input.",
+    "SqlcmdUnsupportedPlatform": "Unsupported platform for sqlcmd auto-install: %s. Supported platforms: win32, linux, darwin.",
+    "SqlcmdExecutableNotFoundAfterExtract": "sqlcmd executable not found after extraction at: %s.",
     "DetectingIPAddress": "Testing connectivity to SQL Server",
     "ConnectionSuccessful": "Connection successful - no firewall rule needed",
     "IPAddressDetected": "Client IP address detected: %s",
@@ -135,14 +140,8 @@
     "FirewallRuleRemoved": "Firewall rule removed successfully",
     "FirewallManagementDisabled": "Firewall rule management disabled",
     "FirewallManagementRequiresAzureSubscription": "Firewall rule management requires azureSubscription input",
-    "BuildingSqlProject": "Building SQL project: %s",
-    "SqlProjectBuildComplete": "SQL project built successfully. DACPAC: %s",
-    "DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
-    "ExecutingSqlPackage": "Executing SqlPackage action: %s",
-    "ExecutingSqlScript": "Executing SQL script: %s",
     "DeploymentSuccessful": "Deployment completed successfully",
     "DeploymentFailed": "Deployment failed: %s",
-    "OutputFileGenerated": "Output file generated: %s",
     "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
   }
 }

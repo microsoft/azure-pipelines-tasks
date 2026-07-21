@@ -1,28 +1,25 @@
-// Succeeds with minimal valid inputs for a .sql script execution.
+// Fails when user-specified SqlPackage path does not exist.
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'microsoftsqldeployment.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('action', 'script');
-tmr.setInput('path', 'test.sql');
+tmr.setInput('action', 'publish');
+tmr.setInput('path', 'test.dacpac');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('sqlpackagePath', '/nonexistent/path/sqlpackage.exe');
 
-// Mock fs.existsSync to return true for test.sql
+// Mock fs.existsSync to return false for user-provided path
 tmr.registerMock('fs', {
     existsSync: (filePath: string) => {
-        if (filePath === 'test.sql') {
+        if (filePath === '/nonexistent/path/sqlpackage.exe') {
+            return false; // User-provided path does not exist
+        }
+        if (filePath === 'test.dacpac') {
             return true;
         }
         return false;
-    }
-});
-
-// Mock tl.which to simulate sqlcmd found on PATH
-tmr.setAnswers({
-    which: {
-        'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
     }
 });
 

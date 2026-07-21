@@ -128,4 +128,118 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should fail when SqlPackage is not found anywhere', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when SqlPackage is not found');
+            assert(tr.stdout.indexOf('SqlPackageNotFound') >= 0 || tr.errorIssues.some(e => e.includes('SqlPackage not found')), 
+                'should display SqlPackage not found error');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/path/sqlpackage') >= 0, 
+                'should report SqlPackage found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via dotnet tool', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromDotnetTool.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via dotnet tool');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('.dotnet') >= 0, 
+                'should report SqlPackage found at dotnet tool location');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via DacFramework MSI', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        const tp = path.join(__dirname, 'L0SqlPackageFromDacFramework.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via DacFramework MSI');
+            assert(tr.stdout.indexOf('DacFramework') >= 0 || tr.stdout.indexOf('170') >= 0 || tr.stdout.indexOf('SqlPackageFound') >= 0,
+                'should report SqlPackage found at DacFramework location');
+        }, tr);
+    });
+
+    it('should fail when user-provided SqlPackage path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided SqlPackage path does not exist');
+            assert(tr.stdout.indexOf('SqlPackageNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')), 
+                'should display SqlPackage not found at path error');
+        }, tr);
+    });
+
+    it('should fail when user-provided sqlcmd path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided sqlcmd path does not exist');
+            assert(tr.stdout.indexOf('SqlcmdNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')),
+                'should display sqlcmd not found at path error');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found via user path');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('custom/path/sqlcmd') >= 0,
+                'should report sqlcmd found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found on PATH', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found on PATH');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('/usr/bin/sqlcmd') >= 0,
+                'should report sqlcmd found on PATH');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is auto-installed', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallSuccess.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is auto-installed');
+            assert(tr.stdout.indexOf('SqlCmdInstalled') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
+                'should report sqlcmd installed successfully');
+        }, tr);
+    });
+
+    it('should fail when sqlcmd executable is missing after auto-install extraction', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallExeNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when executable is missing after extraction');
+            assert(tr.stdout.indexOf('SqlcmdAutoInstallFailed') >= 0 || tr.errorIssues.some(e => e.includes('not found after extraction') || e.includes('SqlcmdExecutableNotFoundAfterExtract')),
+                'should report executable not found after extraction');
+        }, tr);
+    });
 });
+
