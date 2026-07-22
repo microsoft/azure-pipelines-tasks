@@ -148,33 +148,34 @@ export default class SqlUtils {
         const auth = connectionConfig.FormattedAuthentication;
         
         if (!auth || auth === 'sqlauthentication' || auth === 'sqlpassword') {
-            // SQL Authentication
+            // SQL Authentication — pass User ID via -U; password via SQLCMDPASSWORD env var (not -P) to avoid
+            // exposing the secret in the process argument list
             if (connectionConfig.UserId) {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                args.push('-P', connectionConfig.Password);
+                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
             }
         } else if (auth === 'activedirectorydefault') {
             // AAD Default (Managed Identity)
             args.push('-G');
         } else if (auth === 'activedirectoryserviceprincipal') {
-            // AAD Service Principal
+            // AAD Service Principal — client secret via SQLCMDPASSWORD, client ID via -U
             args.push('-G');
             if (connectionConfig.UserId) {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                args.push('-P', connectionConfig.Password);
+                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
             }
         } else if (auth === 'activedirectorypassword') {
-            // AAD Password
+            // AAD Password — password via SQLCMDPASSWORD, user via -U
             args.push('-G');
             if (connectionConfig.UserId) {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                args.push('-P', connectionConfig.Password);
+                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
             }
         } else if (auth === 'activedirectoryintegrated') {
             // AAD Integrated

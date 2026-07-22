@@ -30,5 +30,6 @@ fsClone.existsSync = function(filePath: any): boolean {
 };
 tmr.registerMock('fs', fsClone);
 
+tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
 tmr.run();
 

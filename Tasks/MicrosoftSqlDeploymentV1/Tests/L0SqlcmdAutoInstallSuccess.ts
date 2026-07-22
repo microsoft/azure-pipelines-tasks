@@ -33,7 +33,7 @@ fsClone.existsSync = function(filePath: any): boolean {
 tmr.registerMock('fs', fsClone);
 
 // sqlcmd not on PATH — triggers auto-install
-tmr.setAnswers({ which: { 'sqlcmd': '' } });
+tmr.setAnswers({ which: { 'sqlcmd': '' }, checkPath: { 'test.sql': true } });
 
 tmr.run();
 

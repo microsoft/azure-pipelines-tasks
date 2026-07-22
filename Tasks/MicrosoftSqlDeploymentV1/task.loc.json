@@ -159,9 +159,6 @@
     "ConnectionStringMissingClientSecret": "ms-resource:loc.messages.ConnectionStringMissingClientSecret",
     "BuildingSqlProject": "ms-resource:loc.messages.BuildingSqlProject",
     "DotnetNotFound": "ms-resource:loc.messages.DotnetNotFound",
-    "DacpacNotFoundAfterBuild": "ms-resource:loc.messages.DacpacNotFoundAfterBuild",
-    "SqlProjectBuiltSuccessfully": "ms-resource:loc.messages.SqlProjectBuiltSuccessfully",
-    "SqlProjectBuildFailed": "ms-resource:loc.messages.SqlProjectBuildFailed",
     "DeploymentSuccessful": "ms-resource:loc.messages.DeploymentSuccessful",
     "DeploymentFailed": "ms-resource:loc.messages.DeploymentFailed",
     "InvalidFileExtension": "ms-resource:loc.messages.InvalidFileExtension"

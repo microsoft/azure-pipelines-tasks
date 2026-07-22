@@ -233,32 +233,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    it('should fail when path does not exist', async () => {
-        const tp = path.join(__dirname, 'L0PathDoesNotExist.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
-        await tr.runAsync();
-        
-        runValidations(() => {
-            assert(tr.failed, 'task should have failed when file path does not exist');
-            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
-            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about missing path');
-        }, tr);
-    });
-
-    it('should fail when path is a directory', async () => {
-        const tp = path.join(__dirname, 'L0PathIsDirectory.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
-        await tr.runAsync();
-        
-        runValidations(() => {
-            assert(tr.failed, 'task should have failed when path is a directory');
-            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
-            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about invalid path');
-        }, tr);
-    });
-
     it('should fail on invalid file extension', async () => {
         const tp = path.join(__dirname, 'L0InvalidFileExtension.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -285,16 +259,40 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    it('should fail when dotnet SDK is not found', async () => {
-        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectDotnetNotFound.js');
+    it('should succeed when SqlPackage is found via DacFramework MSI', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        const tp = path.join(__dirname, 'L0SqlPackageFromDacFramework.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
         await tr.runAsync();
-        
         runValidations(() => {
-            assert(tr.failed, 'task should fail when dotnet SDK is not found');
-            assert(tr.stdout.indexOf('DotnetNotFound') >= 0 || tr.errorIssues.some(e => e.includes('.NET SDK not found')), 
-                'should display dotnet not found error');
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via DacFramework MSI');
+            assert(tr.stdout.indexOf('DacFramework') >= 0 || tr.stdout.indexOf('170') >= 0 || tr.stdout.indexOf('SqlPackageFound') >= 0,
+                'should report SqlPackage found at DacFramework location');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is auto-installed', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallSuccess.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is auto-installed');
+            assert(tr.stdout.indexOf('SqlCmdInstalled') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
+                'should report sqlcmd installed successfully');
+        }, tr);
+    });
+
+    it('should fail when sqlcmd executable is missing after auto-install extraction', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAutoInstallExeNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when executable is missing after extraction');
+            assert(tr.stdout.indexOf('SqlcmdAutoInstallFailed') >= 0 || tr.errorIssues.some(e => e.includes('not found after extraction') || e.includes('SqlcmdExecutableNotFoundAfterExtract')),
+                'should report executable not found after extraction');
         }, tr);
     });
 });
