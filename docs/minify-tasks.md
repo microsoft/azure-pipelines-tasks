@@ -47,6 +47,38 @@ Inspect `_build/Tasks/<Task>` afterward: confirm the bundle is present, `node_mo
 gone, stack traces resolve (with `--sourcemap`), and the build didn't fail on a duplicate
 package. Once you're happy, opt the task in permanently.
 
+### Try minification with external packages
+
+There is no `--external` command-line option. For an experiment, temporarily add the package
+policy to the task's existing `make.json` while leaving permanent minification disabled:
+
+```jsonc
+{
+  "minify": {
+    "enabled": false,
+    "external": [
+      "package-with-runtime-assets"
+    ],
+    "allowBundledAndRetained": [
+      "reviewed-stateless-package"
+    ]
+  }
+}
+```
+
+Preserve any other task-specific settings already present in `make.json`, then force minification
+for that build:
+
+```bash
+node make.js build --task <Task> --minify --BypassNpmAudit
+```
+
+`--minify` overrides only whether minification is enabled. The build still reads `external`,
+`allowDuplicates`, and `allowBundledAndRetained` from `make.json`. Inspect the final
+`_build/Tasks/<Task>/node_modules` closure and run both loader-based tests and final-bundle
+black-box tests. Remove the temporary `minify` block afterward, or set `enabled: true` only when
+the task is ready to opt in permanently.
+
 ## Opt in (make.json - the real switch)
 
 To make minification a permanent property of the task, add a `minify` block to the task's
