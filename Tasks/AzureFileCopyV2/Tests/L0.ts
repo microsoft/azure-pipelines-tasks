@@ -48,6 +48,12 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Upload-FilesToAzureContainer', (done) => {
             psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening strips quotes from additionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.QuoteStripping.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening does not escape containerURL', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ContainerUrlEscaping.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Does-AzureVMMatchTagFilterCriteria', (done) => {
             psr.run(path.join(__dirname, 'L0DoesAzureVMMatchTagFilter.ps1'), done);
         });

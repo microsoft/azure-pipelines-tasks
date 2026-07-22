@@ -188,7 +188,8 @@ function Upload-FilesToAzureContainer
           [bool]$useDefaultArguments,
           [bool]$cleanTargetBeforeCopy,
           [string][Parameter(Mandatory=$false)]$containerSasToken = "",
-          [bool]$useSanitizerActivate = $false
+          [bool]$useSanitizerActivate = $false,
+          [bool]$useSourcePathHardening = $false
     )
 
     try
@@ -247,20 +248,28 @@ function Upload-FilesToAzureContainer
         $blobPrefix = $blobPrefix -replace $trailingChars, "/"
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.TrimStart("/"))
 
+        $rawContainerURL = $containerURL
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
         if($cleanTargetBeforeCopy)
         {
 
-             Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
-             $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
-             Invoke-Expression $cleanToBlobCommand
+             if ($useSourcePathHardening) {
+                 Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"
+                 & $azCopyExeLocation rm $rawContainerURL --recursive=true
+             } else {
+                 Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                 $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                 Invoke-Expression $cleanToBlobCommand
+             }
 
         }
 
-        if ($useSanitizerActivate) {
+        if ($useSourcePathHardening) {
+            $splitArguments = @([regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)') | Where-Object { $_ -ne '' } | ForEach-Object { $_ -replace '"([^"]*)"', '$1' })
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
+            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+        } elseif ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"

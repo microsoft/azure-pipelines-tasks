@@ -187,7 +187,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
           [string][Parameter(Mandatory=$false)]$containerSasToken = "",
-          [bool]$useSanitizerActivate = $false
+          [bool]$useSanitizerActivate = $false,
+          [bool]$useSourcePathHardening = $false
     )
 
     try
@@ -244,10 +245,15 @@ function Upload-FilesToAzureContainer
         $blobPrefix = $blobPrefix -replace $trailingChars, "/"
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.TrimStart("/"))
 
+        $rawContainerURL = $containerURL
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        if ($useSanitizerActivate) {
+        if ($useSourcePathHardening) {
+            $splitArguments = @([regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)') | Where-Object { $_ -ne '' } | ForEach-Object { $_ -replace '"([^"]*)"', '$1' })
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
+            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+        } elseif ($useSanitizerActivate) {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
             $uploadCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
