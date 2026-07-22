@@ -63,6 +63,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When false (default), ##vso[...]5D; lines in remote output are neutralized (printed as text, not executed). Set true only if you trust the remote output and rely on it emitting logging commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Quand la valeur est false (par défaut), les lignes ##vso[...]5D; de la sortie distante sont neutralisées (affichées sous forme de texte, et non exécutées). Définissez la valeur true uniquement si vous faites confiance à la sortie distante et si vous comptez sur elle pour émettre des commandes de journalisation.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.failOnStdErr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this option is selected, the build will fail when the remote commands or script write to STDERR.]]></Val>
@@ -158,6 +167,15 @@
           <Val><![CDATA[Commands]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Commandes]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allow logging commands from remote output]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Autoriser les commandes de journalisation à partir d’une sortie distante]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
