@@ -830,9 +830,15 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
                     npmArgs.push('--omit=dev');
                 }
                 childProcess.execFileSync(
-                    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+                    'npm',
                     npmArgs,
-                    { cwd: scratchPackagePath, stdio: 'inherit', env: process.env });
+                    {
+                        cwd: scratchPackagePath,
+                        stdio: 'inherit',
+                        env: process.env,
+                        // Windows cannot execute npm.cmd directly with execFile.
+                        shell: process.platform === 'win32'
+                    });
                 mkdir('-p', path.dirname(destinationNodeModulesPath));
                 rm('-Rf', destinationNodeModulesPath);
                 fs.renameSync(scratchNodeModulesPath, destinationNodeModulesPath);
