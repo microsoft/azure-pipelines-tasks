@@ -21,11 +21,15 @@ export default class SqlConnectionConfig {
             return '';
         }
         
-        // Remove port number
+        // SQL Server connection strings may include the port as "server,port" (e.g. "myserver.database.windows.net,1433").
+        // The Server getter returns only the hostname so callers can use it for DNS lookups, ARM API server name
+        // matching, and firewall rule management — all of which expect just the hostname without the port.
         if (server.includes(',')) {
             server = server.split(',')[0].trim();
         }
-        // Remove tcp protocol
+
+        // ADO and ODBC connection strings sometimes include a "tcp:" transport prefix
+        // (e.g. "tcp:myserver.database.windows.net,1433"). Strip it so the raw hostname is returned.
         if (server.startsWith('tcp:')) {
             server = server.slice(4).trim();
         }

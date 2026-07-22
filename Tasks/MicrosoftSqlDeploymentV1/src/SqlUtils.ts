@@ -182,7 +182,7 @@ export default class SqlUtils {
             args.push('-G');
         }
 
-        // Connection timeout for test (short)
+        // -l sets the login timeout in seconds; 15s is enough for a connectivity probe without blocking the pipeline
         args.push('-l', '15');
 
         return args;

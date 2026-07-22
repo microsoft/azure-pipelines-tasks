@@ -70,6 +70,7 @@ export default class AzureSqlResourceManager {
         }
 
         const today = new Date();
+        // Dots are not allowed in Azure resource names; replace with underscores for the rule name
         const firewallRuleName = `ClientIPAddress_${today.getTime()}_${startIpAddress.replace(/\./g, '_')}`;
 
         tl.debug(`Creating firewall rule: ${firewallRuleName}`);
@@ -93,6 +94,7 @@ export default class AzureSqlResourceManager {
         try {
             const httpResponse: WebResponse = await this._client.beginRequest(httpRequest);
 
+            // 200 = rule updated, 201 = rule created
             if (httpResponse.statusCode !== 200 && httpResponse.statusCode !== 201) {
                 throw ToError(httpResponse);
             }
@@ -127,6 +129,7 @@ export default class AzureSqlResourceManager {
         try {
             const httpResponse: WebResponse = await this._client.beginRequest(httpRequest);
 
+            // 200 = deleted with response body, 204 = deleted with no content
             if (httpResponse.statusCode !== 200 && httpResponse.statusCode !== 204) {
                 throw ToError(httpResponse);
             }
@@ -174,7 +177,7 @@ export default class AzureSqlResourceManager {
                 throw new Error(tl.loc('NoSQLServersFound', this._client.subscriptionId));
             }
 
-            // Find server by name (case-insensitive)
+        // ARM API returns server names in lowercase; compare case-insensitively to match user-provided names
             this._sqlServer = sqlServers.find(
                 server => server.name.toLowerCase() === serverName.toLowerCase()
             );
