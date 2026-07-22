@@ -134,7 +134,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
           [string]$azCopyLogFilePath,
-          [bool]$useSanitizerActivate = $false
+          [bool]$useSanitizerActivate = $false,
+          [bool]$useSourcePathHardening = $false
     )
 
     try
@@ -153,6 +154,7 @@ function Upload-FilesToAzureContainer
 
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
+        $rawContainerURL = $containerURL
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
         $responseFile = Get-VstsTaskVariable -Name "VSTS_TASKVARIABLE_AFC_V2_ARM_STORAGE_KEY_FILE"
@@ -167,7 +169,11 @@ function Upload-FilesToAzureContainer
             )
         }
 
-        if ($useSanitizerActivate) {
+        if ($useSourcePathHardening) {
+            $splitArguments = @([regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)') | Where-Object { $_ -ne '' } | ForEach-Object { $_ -replace '"([^"]*)"', '$1' })
+            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $additionalArguments"
+            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
+        } elseif ($useSanitizerActivate) {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"
             & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
