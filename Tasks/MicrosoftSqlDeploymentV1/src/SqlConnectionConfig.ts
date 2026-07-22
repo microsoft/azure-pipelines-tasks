@@ -178,17 +178,10 @@ export default class SqlConnectionConfig {
 
         switch (this.FormattedAuthentication) {
             case undefined:
-            case 'sqlpassword': {
-                // SQL password
-                if (!this.UserId) {
-                    throw new Error(tl.loc('ConnectionStringMissingUserId'));
-                }
-                if (!this.Password) {
-                    throw new Error(tl.loc('ConnectionStringMissingPassword'));
-                }
-                break;
-            }
+            case 'sqlauthentication':
+            case 'sqlpassword':
             case 'activedirectorypassword': {
+                // Requires UserId and Password
                 if (!this.UserId) {
                     throw new Error(tl.loc('ConnectionStringMissingUserId'));
                 }
@@ -210,9 +203,10 @@ export default class SqlConnectionConfig {
             case 'activedirectoryintegrated':
             case 'activedirectorydefault': {
                 // These authentication types don't require user ID or password
-                // Active Directory Integrated uses Windows authentication
-                // Active Directory Default uses managed identity or workload identity
                 break;
+            }
+            default: {
+                throw new Error(tl.loc('InvalidConnectionString'));
             }
         }
     }

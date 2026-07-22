@@ -144,7 +144,7 @@ export default class SqlUtils {
         // Authentication
         const auth = connectionConfig.FormattedAuthentication;
         
-        if (!auth || auth === 'sqlauthentication') {
+        if (!auth || auth === 'sqlauthentication' || auth === 'sqlpassword') {
             // SQL Authentication
             if (connectionConfig.UserId) {
                 args.push('-U', connectionConfig.UserId);

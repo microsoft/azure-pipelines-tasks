@@ -4,7 +4,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 
 describe('MicrosoftSqlDeployment Suite', function () {
-    this.timeout(60000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
@@ -195,8 +195,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     // ============================================
 
     it('should fail if action input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingAction.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -210,8 +208,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail if path input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingPath.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -225,8 +221,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail if connectionString input is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0MissingConnectionString.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -240,8 +234,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail when path does not exist', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0PathDoesNotExist.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -255,8 +247,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail when path is a directory', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0PathIsDirectory.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -270,8 +260,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail on invalid file extension', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0InvalidFileExtension.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -285,8 +273,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail when firewallRuleManagement is true but azureSubscription is not provided', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'L0FirewallWithoutAzureSubscription.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -300,8 +286,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
     });
 
     it('should fail when dotnet SDK is not found', async () => {
-        this.timeout(5000);
-
         const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectDotnetNotFound.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -314,4 +298,6 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 });
+
+
 

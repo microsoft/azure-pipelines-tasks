@@ -6,9 +6,8 @@ import SqlConnectionConfig from './src/SqlConnectionConfig';
 import SqlUtils from './src/SqlUtils';
 import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
+
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -79,6 +78,9 @@ async function main(): Promise<void> {
             throw new Error(tl.loc('InvalidFileExtension', fileExtension));
         }
 
+        // Validate file exists
+        tl.checkPath(filePath, 'path');
+
         console.log(tl.loc('ActionDetected', action, fileType));
 
         // Parse and validate connection string
@@ -106,16 +108,37 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
-        // TODO: Implement deployment logic
-        // - SqlPackage discovery (dotnet tool → MSI → PATH)
-        // - sqlcmd discovery/auto-install
-        // - Firewall rule management (if enabled)
-        // - SQL project build (if .sqlproj)
-        // - SqlPackage or sqlcmd execution
-        // - Output variable setting
-        // - Firewall cleanup in finally block
+        // SQL project build (if .sqlproj)
+        let resolvedFilePath = filePath;
+        if (fileType === 'SQLPROJ') {
+            resolvedFilePath = await SqlProjectBuilder.buildProject(filePath, buildArguments || undefined);
+        }
 
-        console.log(tl.loc('DeploymentSuccessful'));
+        // Firewall rule management
+        let firewallManager: FirewallManager | undefined;
+        try {
+            if (firewallRuleManagement && azureSubscription) {
+                const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
+                const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                if (ipAddress) {
+                    const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
+                    firewallManager = new FirewallManager(resourceManager);
+                    await firewallManager.addFirewallRule(ipAddress);
+                }
+            } else if (!firewallRuleManagement) {
+                tl.debug(tl.loc('FirewallManagementDisabled'));
+            }
+
+            // TODO (task4): SqlPackage execution and sqlcmd execution
+            // resolvedFilePath and sqlPackageExePath/sqlcmdExePath are ready for task4
+
+            console.log(tl.loc('DeploymentSuccessful'));
+        } finally {
+            if (firewallManager) {
+                await firewallManager.removeFirewallRule();
+            }
+        }
     }
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);

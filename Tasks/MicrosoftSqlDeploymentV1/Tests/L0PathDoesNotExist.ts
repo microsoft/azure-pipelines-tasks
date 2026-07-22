@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
 tmr.setInput('path', '/path/to/nonexistent.dacpac'); // Path doesn't exist
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=testpass123;');
 
 // Mock answers - checkPath will fail because file doesn't exist
 let a: ma.TaskLibAnswers = {
@@ -18,4 +18,5 @@ let a: ma.TaskLibAnswers = {
 tmr.setAnswers(a);
 
 tmr.run();
+
 

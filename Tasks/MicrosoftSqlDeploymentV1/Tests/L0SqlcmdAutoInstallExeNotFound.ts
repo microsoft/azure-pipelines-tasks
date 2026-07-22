@@ -8,7 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=testpass123;');
 
 // Mock tool-lib to simulate successful download and extraction
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
@@ -31,3 +31,4 @@ tmr.registerMock('fs', fsClone);
 tmr.setAnswers({ which: { 'sqlcmd': '' } });
 
 tmr.run();
+

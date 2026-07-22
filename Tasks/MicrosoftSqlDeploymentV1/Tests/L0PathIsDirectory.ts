@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
 tmr.setInput('path', '/path/to/directory/'); // Path is a directory, not a file
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=testpass123;');
 
 // Mock answers - checkPath will fail because it's a directory
 let a: ma.TaskLibAnswers = {
@@ -18,4 +18,5 @@ let a: ma.TaskLibAnswers = {
 tmr.setAnswers(a);
 
 tmr.run();
+
 
