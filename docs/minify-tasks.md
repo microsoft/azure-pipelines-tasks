@@ -4,8 +4,9 @@
 Node-based tasks can optionally be **bundled and minified** at build time. Instead of
 shipping the compiled JavaScript plus a full `node_modules` tree (often thousands of
 files, tens of MB), each Node execution target is bundled with [esbuild](https://esbuild.github.io/)
-into a single minified file and `node_modules` is dropped from the output. This can
-reduce a task's deployable size by ~90% or more.
+into a single minified file and bundled dependencies are dropped from `node_modules`. Packages
+listed under `minify.external` keep their runtime closures on disk. Fully bundled tasks can reduce
+their deployable size by ~90% or more; external closures reduce that saving.
 
 Minification is **off by default** and **opt-in per task**. Nothing is minified unless
 the task opts in via `make.json`. The command-line flags exist only for **experimentation** -
@@ -19,6 +20,7 @@ to try minification on a task and inspect the result before you commit to opting
 - [Source maps and debugging](#source-maps-and-debugging)
 - [Duplicate packages (split module state)](#duplicate-packages-split-module-state)
 - [Known caveats (validate before opting in)](#known-caveats-validate-before-opting-in)
+- [Partial bundling with external packages](#partial-bundling-with-external-packages)
 - [Test and canary coverage (required before opting in)](#test-and-canary-coverage-required-before-opting-in)
 - [Dependency hygiene best practices](#dependency-hygiene-best-practices)
 - [Future work / deferred](#future-work--deferred)
@@ -55,7 +57,8 @@ build (including generated tasks) - no flag required:
 {
   "minify": {
     "enabled": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "external": ["package-with-runtime-assets"]
   }
 }
 ```
@@ -68,9 +71,11 @@ per-task `make.json` setting decides.
 
 | Field | Type | Default | Description |
 | ----- | ---- | ------- | ----------- |
-| `enabled` | boolean | `false` | Bundle + minify this task's Node execution targets and drop `node_modules`. |
+| `enabled` | boolean | `false` | Bundle + minify this task's Node execution targets and drop bundled packages from `node_modules`. |
 | `sourceMap` | boolean | `false` | Also emit a TypeScript source map so runtime stack traces resolve back to `.ts` files. Only applied when `enabled` is true. |
 | `allowDuplicates` | string[] | `[]` | Package names allowed to be bundled from more than one `node_modules` root (see below). There is no global default - every entry is an explicit per-task decision. |
+| `allowBundledAndRetained` | string[] | `[]` | Reviewed stateless packages allowed to be inlined while the same installed package is also retained as part of an external package's closure. Stateful packages must instead be listed under `external`. |
+| `external` | string[] | `[]` | Top-level package names esbuild must leave as runtime `require()` calls. Their complete installed runtime dependency closures and assets are retained in `node_modules`; unrelated packages are deleted. |
 
 ## Source maps and debugging
 
@@ -212,10 +217,11 @@ package instead.
 
 ## Known caveats (validate before opting in)
 
-Bundling collapses many files into one and drops `node_modules`, which breaks a few
-assumptions that only hold when files stay separate on disk. Always trial a task with
-`--minify` (and run its tests against the minified output) **before** adding a permanent
-`make.json` opt-in. The two things most likely to bite:
+Bundling collapses many files into one and drops all non-external packages from `node_modules`,
+which breaks assumptions that only hold when files stay separate on disk. Always trial a task with
+`--minify`, run its loader-based suites through `make.js test`, and separately launch the production
+bundle in black-box tests **before** adding a permanent `make.json` opt-in. The two things most
+likely to bite:
 
 ### Dynamic `require()`
 
@@ -248,18 +254,20 @@ type, a platform check, an error handler), so it can pass a quick smoke test and
    ```
 
    Look for `require(` followed by a variable, `+` concatenation, or a `` ` `` template.
-3. **Run the task's L0/L2 tests against the minified build** - the most reliable check,
-   because an unresolved require only throws when its branch actually executes. Exercise
-   optional/rare paths (specific inputs, platform branches, error handling) where dynamic
-   loading tends to hide.
+3. **Run black-box tests against `_build/Tasks/<Task>`** - the most reliable check, because an
+   unresolved require only throws when its branch actually executes. `make.js test` uses the
+   pre-bundle mock artifact and cannot prove final packaging closure. Exercise optional/rare paths
+   (specific inputs, platform branches, error handling) where dynamic loading tends to hide.
 
 **How to fix it:**
 
 - Rewrite the computed require as a static `switch`/map of literal `require()` calls so
   esbuild can see every target.
-- Or leave the task un-minified (don't add the `make.json` opt-in) if it relies on dynamic
-  loading that can't be made static. Minify is **all-or-nothing** today - see
-  [Not currently supported](#not-currently-supported-partial-bundling--external) below.
+- If the dynamic loading is contained inside a top-level dependency, list that package under
+  [`minify.external`](#partial-bundling-with-external-packages). Its runtime closure remains
+  on disk.
+- Leave the task un-minified if the dynamic loading crosses package boundaries or cannot be
+  covered and tested safely by an external package closure.
 
 ### Manually finding hard-to-detect dynamic requires
 
@@ -317,47 +325,106 @@ Where to search the dependencies:
 - Searching the compiled JS (not just `.ts`) matters, because some deps ship only JS and the
   dynamic pattern may be introduced by a package's own build step.
 
-Because you often can't rewrite third-party code, the practical fix for a dependency-side
-dynamic require today is to **not opt the task in** (leave it un-minified). Retaining a single
-package in `node_modules` while bundling the rest is **not currently supported** - see
-[Not currently supported](#not-currently-supported-partial-bundling--external) below. Confirm
-the outcome by running the task's L0/L2 tests against the minified build.
+Because you often can't rewrite third-party code, use `minify.external` when the unsupported
+behavior is contained in a top-level package and its runtime closure can remain on disk. Confirm
+the task logic through `make.js test`, then confirm the retained closure by launching the final
+production entry in black-box tests.
 
-### Not currently supported: partial bundling / `external`
+### Partial bundling with external packages
 
-Minify is **all-or-nothing**: every declared entry is bundled and the task's entire
-`node_modules` is deleted. There is **no** `external` / partial-bundling option, so a task that
-depends on something esbuild cannot inline **cannot be minified today** - opt it out instead.
-Packages that fall in this bucket:
+List top-level package names under `minify.external` when they cannot safely be inlined:
 
 - **Native addons** (`.node` binaries) - esbuild can't inline a compiled binary.
 - **Runtime assets loaded from disk** - a package that reads its own non-JS files relative to
   `__dirname` (templates, `.wasm`, data files, worker scripts).
 - **Unavoidable dynamic `require()`/`import()`** in a dependency you can't rewrite.
 
-A future enhancement could add an `external: string[]` field to the `make.json` `minify` block
-that (a) marks those packages `external` in the esbuild options and (b) preserves them - **plus
-their full transitive dependency tree and assets** - in `node_modules` instead of deleting
-them. That transitive-closure retention is the reason it is not implemented yet: keeping only
-the top-level package would still fail at runtime the moment it requires one of its own deps.
-Until then, treat "can't be bundled" as "don't opt in".
+```jsonc
+{
+  "minify": {
+    "enabled": true,
+    "external": [
+      "azure-pipelines-task-lib",
+      "@scope/package-with-assets"
+    ]
+  }
+}
+```
+
+The minifier:
+
+1. Requires every configured name to be installed directly under the task's root
+   `node_modules`. Package subpaths are not accepted.
+2. Fails when an external package name is installed at multiple physical roots. esbuild's
+   external matching is name-based, so nested versions must be aligned first.
+3. Traverses installed `dependencies`, `optionalDependencies`, peer dependencies, and bundled
+   dependencies from each external root.
+4. Preserves every resolved package at its existing root, including nested versions, package
+   assets, and matching `.bin` launchers.
+5. Deletes every package and launcher outside the retained closure.
+6. Traverses the pruned closure again and fails if a required dependency no longer resolves.
+7. Rejects symlinked package roots or symlinked retained `node_modules` trees. Task builds must
+   materialize packages with npm so pruning cannot follow a link outside the task output.
+
+Pruning and closure validation occur in staging. Bundles and the prepared `node_modules` tree are
+published with backups and rollback so a failed prune or replacement does not leave a partially
+rewritten task output.
+
+Externalization is not tree shaking. If an external package declares build-only or unused modules
+under runtime `dependencies`, they are retained because the minifier cannot safely prove they are
+unneeded. Fix the package manifest to reduce that closure.
+
+Do not externalize only a wrapper while bundling another stateful package from its retained
+closure. Loading one physical package both from disk and from the bundle creates two module
+singletons. The build detects that overlap and fails unless the package is explicitly listed in
+`allowBundledAndRetained` as a reviewed stateless exception. Prefer adding the shared stateful
+package to `external` so every import remains a runtime import.
+
+### Testing a minified task
+
+The build preserves compiled pre-bundle code under `_build/TestArtifacts/<Task>` without copying
+its `node_modules`. This artifact exists only for loader-based L0 tests; it is not shipped.
+
+When `node make.js test` sees dependencies missing from that artifact, it:
+
+1. Copies the task package into an isolated `_build/TestDependencies/<Task>` scratch directory,
+   excluding any existing `node_modules`, and runs `npm ci --omit=dev` there. The source task's
+   dependency tree is never renamed or modified.
+2. When `Tests/package.json` and `Tests/package-lock.json` exist, creates a second scratch package
+   and runs `npm ci` there including test development dependencies.
+3. Moves only the resulting modules into the pre-bundle artifact's normal
+   `<Task>/node_modules` and `<Task>/Tests/node_modules` locations.
+4. Removes duplicate copies of configured external packages so tests use the production
+   artifact's retained singleton.
+5. Runs Mocha with normal nested Node resolution; `NODE_PATH` contains only the production
+   `node_modules` needed for configured external packages.
+6. Deletes the temporary test dependency tree.
+
+This permits production dependencies such as utility-common and uuid to remain bundled while
+existing L0 loader mocks operate on pre-bundle JavaScript. L0 therefore validates task logic and
+mock contracts, not the final bundle. Every opted-in task still needs black-box tests that launch
+the production entry from `_build/Tasks/<Task>`.
+
+The complete retained closure must be tested on every supported platform. Optional dependencies,
+native binaries, install-time outputs, and package-owned scripts can differ by OS and architecture.
 
 ### Third-party license attribution
 
-Bundling deletes `node_modules`, which also removes the standalone `LICENSE`/`NOTICE` files that
-ship inside each dependency. esbuild is configured with `legalComments: 'eof'`, so any license or
-legal comment embedded **in a dependency's source** (the `/*! … */`, `//! …`, `@license`, or
-`@preserve` banners) is preserved and collected at the end of the bundle. Standalone license
-*files* are **not** carried over — only in-source legal comments are. If a task (or a compliance
-process) depends on shipping the original `LICENSE` files alongside the code, account for this
-before opting in.
+For bundled dependencies, minification deletes their package directories and therefore their
+standalone `LICENSE`/`NOTICE` files. esbuild is configured with `legalComments: 'eof'`, so legal
+comments embedded **in dependency source** (the `/*! … */`, `//! …`, `@license`, or `@preserve`
+banners) are preserved and collected at the end of the bundle. Standalone license files are not.
+
+External package closures preserve their original package license files. A mixed bundle still needs
+complete attribution for the dependencies that were inlined and removed.
 
 ### Source map / `tsconfig` interactions
 
 The source map produced for minified tasks chains esbuild's bundle map through tsc's
 per-file maps. To keep that chain unambiguous the build emits **external** maps and deletes
-the now-redundant intermediate tsc `*.js.map` files, keeping only the final `<entry>.js.map`
-that ships next to the bundled entry. Avoid configuring a task's `tsconfig.json` with
+the now-redundant intermediate task tsc `*.js.map` files outside retained `node_modules`, keeping
+only the final `<entry>.js.map` that ships next to the bundled entry. Avoid configuring a task's
+`tsconfig.json` with
 `inlineSourceMap` when minifying - mixing inline tsc maps with the external bundle map
 produces conflicting `sourceMappingURL` directives and frames that resolve to the wrong line
 (or not at all). Stick with the default `sourceMap` behavior and let the minify step manage
@@ -376,9 +443,10 @@ the minified build.**
 
 Before adding a `make.json` `minify` block:
 
-- **Run the task's full test suite against the minified output, not just the normal build.** A
-  green run on the non-minified build proves nothing about the bundle. Build with `--minify`
-  (and `--minify --sourcemap`) and run the `L0`, `L1`, and any `L2` suites against that output.
+- **Run both test surfaces.** `make.js test` runs `L0`, `L1`, and `L2` suites against the preserved
+  pre-bundle artifact so loader mocks remain valid. That proves task logic but not packaging.
+  Separately launch `_build/Tasks/<Task>` in black-box tests for both `--minify` and
+  `--minify --sourcemap`; a green pre-bundle suite alone proves nothing about bundle closure.
 - **Exercise every runtime code path, not just the happy path.** The caveats bite on branches —
   each authentication type, each platform (Windows / Linux / macOS), each optional feature, each
   error/fallback handler, and any dynamically selected provider or handler. If a path isn't
@@ -421,14 +489,7 @@ habits for task authors:
 
 ## Future work / deferred
 
-- **Partial bundling / `external` opt-in — deliberately deferred.** We evaluated adding an
-  `external: string[]` field to the `make.json` `minify` block (mark listed packages `external`
-  in esbuild **and** keep them in `node_modules` instead of deleting them) so a task could bundle
-  everything except the one dependency it can't inline. It is **not** implemented for now because
-  correctly preserving a package means preserving its **entire transitive dependency tree and
-  runtime assets**, not just the top-level folder — otherwise the task still fails at runtime the
-  moment the kept package requires one of its own deps. See
-  [Not currently supported: partial bundling / `external`](#not-currently-supported-partial-bundling--external)
-  for the full rationale. Until a genuine need appears, the guidance stays "if a task can't be
-  fully bundled, opt it out." This can be revisited as a TODO if a real task hits a case where
-  opting out entirely is unacceptable.
+- **Package-level runtime manifests.** External closure retention trusts npm dependency metadata
+  and preserves complete package directories. Explicit package manifests for runtime assets,
+  platform selectors, and generated third-party notices would permit narrower retained outputs
+  without guessing which declared files are safe to remove.
