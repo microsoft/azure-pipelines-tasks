@@ -35,7 +35,8 @@ export default class SqlConnectionConfig {
     public get Port(): number | undefined {
         const server = this._getConnectionStringValue('data source') || this._getConnectionStringValue('server');
         if (server && server.includes(',')) {
-            return parseInt(server.split(',')[1].trim());
+            const port = parseInt(server.split(',')[1].trim(), 10);
+            return Number.isFinite(port) ? port : undefined;
         }
         return undefined;
     }

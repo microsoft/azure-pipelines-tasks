@@ -70,7 +70,7 @@ export default class AzureSqlResourceManager {
         }
 
         const today = new Date();
-        const firewallRuleName = `ClientIPAddress_${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}_${startIpAddress.replace(/\./g, '_')}`;
+        const firewallRuleName = `ClientIPAddress_${today.getTime()}_${startIpAddress.replace(/\./g, '_')}`;
 
         tl.debug(`Creating firewall rule: ${firewallRuleName}`);
 

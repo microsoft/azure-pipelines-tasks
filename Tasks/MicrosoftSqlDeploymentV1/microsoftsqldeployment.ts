@@ -98,9 +98,9 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
         }
 
-        // Discover sqlcmd for SQL script actions
+        // Discover sqlcmd for SQL script actions or firewall connectivity testing
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
+        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));

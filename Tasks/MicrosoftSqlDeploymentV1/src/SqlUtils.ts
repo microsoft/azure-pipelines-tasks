@@ -137,8 +137,11 @@ export default class SqlUtils {
     private static buildSqlCmdArgs(connectionConfig: SqlConnectionConfig, database?: string): string[] {
         const args: string[] = [];
 
-        // Server and database
-        args.push('-S', connectionConfig.Server);
+        // Server and port — sqlcmd expects "server,port" when a non-default port is used
+        const serverArg = connectionConfig.Port
+            ? `${connectionConfig.Server},${connectionConfig.Port}`
+            : connectionConfig.Server;
+        args.push('-S', serverArg);
         args.push('-d', database || connectionConfig.Database);
 
         // Authentication
