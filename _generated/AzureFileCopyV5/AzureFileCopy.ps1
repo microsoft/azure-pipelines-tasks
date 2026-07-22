@@ -96,6 +96,7 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$useSourcePathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening'
 
 if ($useSanitizerCall) {
     $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
@@ -217,7 +218,8 @@ try {
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
                                 -containerSasToken $containerSasToken `
-                                -useSanitizerActivate $useSanitizerActivate
+                                -useSanitizerActivate $useSanitizerActivate `
+                                -useSourcePathHardening $useSourcePathHardening
 
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")

@@ -102,5 +102,14 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzCopy version selection and E2E upload', (done) => {
             psr.run(path.join(__dirname, 'L0AzCopyVersionSelection.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening (MSRC 128417)', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening strips quotes from additionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.QuoteStripping.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening does not escape containerURL', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ContainerUrlEscaping.ps1'), done);
+        });
     }   
 });
