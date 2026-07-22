@@ -68,6 +68,9 @@
   "loc.messages.ConnectionStringMissingClientSecret": "Invalid connection string. Please ensure client secret is provided in the 'Password' field of the connection string.",
   "loc.messages.BuildingSqlProject": "Building SQL project: %s",
   "loc.messages.DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
+  "loc.messages.DacpacNotFoundAfterBuild": "Built .dacpac not found at expected path: %s",
+  "loc.messages.SqlProjectBuiltSuccessfully": "SQL project built successfully. DACPAC: %s",
+  "loc.messages.SqlProjectBuildFailed": "SQL project build failed. Exit code: %s. Error: %s",
   "loc.messages.DeploymentSuccessful": "Deployment completed successfully",
   "loc.messages.DeploymentFailed": "Deployment failed: %s",
   "loc.messages.InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"

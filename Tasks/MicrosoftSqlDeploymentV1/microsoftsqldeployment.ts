@@ -6,6 +6,7 @@ import SqlConnectionConfig from './src/SqlConnectionConfig';
 import SqlUtils from './src/SqlUtils';
 import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+import SqlProjectBuilder from './src/SqlProjectBuilder';
 
 
 // Node version handling for DNS and network settings
@@ -107,6 +108,12 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
+        // SQL project build (if .sqlproj)
+        let resolvedFilePath = filePath;
+        if (fileType === 'SQLPROJ') {
+            resolvedFilePath = await SqlProjectBuilder.buildProject(filePath, buildArguments || undefined);
+        }
+
         // Firewall rule management
         let firewallManager: FirewallManager | undefined;
         try {
@@ -123,7 +130,6 @@ async function main(): Promise<void> {
                 tl.debug(tl.loc('FirewallManagementDisabled'));
             }
 
-            // TODO (task3b): SQL project build (.sqlproj → .dacpac)
             // TODO (task4): SqlPackage execution and sqlcmd execution
 
             console.log(tl.loc('DeploymentSuccessful'));
