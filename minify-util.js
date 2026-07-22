@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const Module = require('module');
 const makeUtil = require('./make-util');
 const test = makeUtil.test;
 const rm = makeUtil.rm;
@@ -195,6 +196,402 @@ var readRootVersion = function (outDir, root) {
 };
 exports.readRootVersion = readRootVersion;
 
+// Only top-level npm package names are accepted in make.json. Subpath requests
+// such as "pkg/internal" would make it ambiguous which installed package root and
+// dependency closure must be retained.
+var normalizeExternalPackages = function (external) {
+    if (external === undefined) {
+        return [];
+    }
+    if (!Array.isArray(external)) {
+        throw new Error('minify: "external" must be an array of top-level npm package names.');
+    }
+
+    var seen = new Set();
+    return external.map(function (value) {
+        if (typeof value !== 'string') {
+            throw new Error('minify: every "external" entry must be a top-level npm package name.');
+        }
+        var name = value.trim();
+        var valid = name.length > 0 &&
+            !name.startsWith('.') &&
+            !/\s|\\/.test(name) &&
+            (/^[^/@][^/]*$/.test(name) || /^@[^/]+\/[^/]+$/.test(name));
+        if (!valid) {
+            throw new Error('minify: invalid external package "' + value +
+                '". Use a top-level npm package name such as "package" or "@scope/package", not a subpath.');
+        }
+        return name;
+    }).filter(function (name) {
+        if (seen.has(name)) {
+            return false;
+        }
+        seen.add(name);
+        return true;
+    });
+};
+exports.normalizeExternalPackages = normalizeExternalPackages;
+
+var pathKey = function (value) {
+    var resolved = path.resolve(value);
+    return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+};
+
+var packagePath = function (nodeModulesPath, packageName) {
+    return path.join.apply(path, [nodeModulesPath].concat(packageName.split('/')));
+};
+
+// Visit every physical package root in an installed node_modules tree. This is
+// used to reject an external package name that exists at multiple roots: esbuild
+// externalization is name-based, so moving all requires to the bundle root would
+// otherwise silently change which version nested importers load.
+var walkInstalledPackages = function (nodeModulesPath, visitor) {
+    if (!fs.existsSync(nodeModulesPath)) {
+        return;
+    }
+    if (fs.lstatSync(nodeModulesPath).isSymbolicLink()) {
+        return;
+    }
+    fs.readdirSync(nodeModulesPath, { withFileTypes: true }).forEach(function (entry) {
+        if (entry.name === '.bin' || entry.name.startsWith('.')) {
+            return;
+        }
+        var entryPath = path.join(nodeModulesPath, entry.name);
+        if (entry.name.startsWith('@')) {
+            if (!entry.isDirectory()) {
+                return;
+            }
+            fs.readdirSync(entryPath, { withFileTypes: true }).forEach(function (scopedEntry) {
+                if (!scopedEntry.isDirectory()) {
+                    return;
+                }
+                var root = path.join(entryPath, scopedEntry.name);
+                visitor(root);
+                walkInstalledPackages(path.join(root, 'node_modules'), visitor);
+            });
+            return;
+        }
+        if (!entry.isDirectory()) {
+            return;
+        }
+        visitor(entryPath);
+        walkInstalledPackages(path.join(entryPath, 'node_modules'), visitor);
+    });
+};
+exports.walkInstalledPackages = walkInstalledPackages;
+
+var readPackageJson = function (packageRoot) {
+    var packageJsonPath = path.join(packageRoot, 'package.json');
+    if (!fs.existsSync(packageJsonPath)) {
+        throw new Error('minify: retained package is missing package.json: ' + packageRoot);
+    }
+    try {
+        return JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    } catch (err) {
+        throw new Error('minify: could not read retained package metadata at ' +
+            packageJsonPath + ': ' + err.message);
+    }
+};
+
+// Resolve a dependency using Node's search paths from the installed issuer, but
+// locate its package directory directly instead of resolving "<dep>/package.json"
+// (which modern package "exports" maps may intentionally hide).
+var resolveInstalledDependency = function (issuerRoot, dependencyName) {
+    var issuerRequire = Module.createRequire(path.join(issuerRoot, 'package.json'));
+    var searchPaths = issuerRequire.resolve.paths(dependencyName) || [];
+    for (const searchPath of searchPaths) {
+        var candidate = packagePath(searchPath, dependencyName);
+        if (fs.existsSync(path.join(candidate, 'package.json'))) {
+            return candidate;
+        }
+    }
+    return null;
+};
+exports.resolveInstalledDependency = resolveInstalledDependency;
+
+var packageBinNames = function (packageJson) {
+    if (typeof packageJson.bin === 'string') {
+        return [String(packageJson.name || '').split('/').pop()].filter(Boolean);
+    }
+    if (packageJson.bin && typeof packageJson.bin === 'object') {
+        return Object.keys(packageJson.bin);
+    }
+    return [];
+};
+
+var containingNodeModules = function (packageRoot) {
+    var parent = path.dirname(packageRoot);
+    return path.basename(parent).startsWith('@') ? path.dirname(parent) : parent;
+};
+
+var assertRetainablePackageRoot = function (packageRoot, nodeModulesPath) {
+    var stat = fs.lstatSync(packageRoot);
+    if (stat.isSymbolicLink()) {
+        throw new Error('minify: external package closures do not support symlinked package roots: ' +
+            packageRoot + '. Install the task with npm so packages are materialized before minifying.');
+    }
+    if (!stat.isDirectory()) {
+        throw new Error('minify: retained package root is not a directory: ' + packageRoot);
+    }
+
+    var realNodeModules = fs.realpathSync(nodeModulesPath);
+    var realPackageRoot = fs.realpathSync(packageRoot);
+    var relative = path.relative(realNodeModules, realPackageRoot);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) {
+        throw new Error('minify: retained package resolves outside the task node_modules tree: ' + packageRoot);
+    }
+
+    var nestedNodeModules = path.join(packageRoot, 'node_modules');
+    if (fs.existsSync(nestedNodeModules) && fs.lstatSync(nestedNodeModules).isSymbolicLink()) {
+        throw new Error('minify: retained package has a symlinked node_modules directory: ' +
+            nestedNodeModules + '. Materialize its dependency tree before minifying.');
+    }
+};
+
+// Compute the exact installed runtime closure for configured top-level external
+// packages. The existing physical layout is retained so nested dependency versions
+// continue to resolve exactly as npm installed them.
+var collectExternalPackageClosure = function (outDir, external) {
+    var externalPackages = normalizeExternalPackages(external);
+    var nodeModulesPath = path.join(outDir, 'node_modules');
+    var retainedRoots = new Map(); // canonical absolute path -> { root, name, version }
+    var retainedBins = new Map();  // canonical node_modules path -> Set<bin name>
+
+    if (!externalPackages.length) {
+        return {
+            externalPackages: externalPackages,
+            nodeModulesPath: nodeModulesPath,
+            retainedRoots: retainedRoots,
+            retainedBins: retainedBins
+        };
+    }
+    if (!fs.existsSync(nodeModulesPath)) {
+        throw new Error('minify: cannot retain external packages because node_modules is missing from ' + outDir);
+    }
+
+    var rootPackages = externalPackages.map(function (packageName) {
+        var root = packagePath(nodeModulesPath, packageName);
+        if (!fs.existsSync(path.join(root, 'package.json'))) {
+            throw new Error('minify: external package "' + packageName +
+                '" is not installed at the task node_modules root: ' + root);
+        }
+        assertRetainablePackageRoot(root, nodeModulesPath);
+        return { name: packageName, root: root };
+    });
+
+    var installedByName = new Map();
+    walkInstalledPackages(nodeModulesPath, function (root) {
+        var packageJson = readPackageJson(root);
+        if (!installedByName.has(packageJson.name)) {
+            installedByName.set(packageJson.name, []);
+        }
+        installedByName.get(packageJson.name).push(root);
+    });
+
+    var queue = [];
+    rootPackages.forEach(function (rootPackage) {
+        var occurrences = installedByName.get(rootPackage.name) || [];
+        if (occurrences.length !== 1) {
+            throw new Error('minify: external package "' + rootPackage.name + '" is installed at ' +
+                occurrences.length + ' physical roots. Align/dedupe it to one version before externalizing: ' +
+                occurrences.join(', '));
+        }
+        queue.push(rootPackage.root);
+    });
+
+    while (queue.length) {
+        var packageRoot = queue.shift();
+        var key = pathKey(packageRoot);
+        if (retainedRoots.has(key)) {
+            continue;
+        }
+        assertRetainablePackageRoot(packageRoot, nodeModulesPath);
+
+        var relative = path.relative(nodeModulesPath, packageRoot);
+        if (relative.startsWith('..') || path.isAbsolute(relative)) {
+            throw new Error('minify: retained package resolved outside the task node_modules tree: ' + packageRoot);
+        }
+
+        var packageJson = readPackageJson(packageRoot);
+        retainedRoots.set(key, {
+            root: packageRoot,
+            name: packageJson.name || relative.replace(/\\/g, '/'),
+            version: packageJson.version || 'unknown'
+        });
+
+        var binNames = packageBinNames(packageJson);
+        if (binNames.length) {
+            var binKey = pathKey(containingNodeModules(packageRoot));
+            var bins = retainedBins.get(binKey) || new Set();
+            binNames.forEach(function (name) { bins.add(name); });
+            retainedBins.set(binKey, bins);
+        }
+
+        var dependencies = Object.assign({}, packageJson.dependencies || {});
+        var optional = new Set(Object.keys(packageJson.optionalDependencies || {}));
+        Object.assign(dependencies, packageJson.optionalDependencies || {});
+
+        var peerMeta = packageJson.peerDependenciesMeta || {};
+        Object.keys(packageJson.peerDependencies || {}).forEach(function (name) {
+            dependencies[name] = packageJson.peerDependencies[name];
+            if (peerMeta[name] && peerMeta[name].optional) {
+                optional.add(name);
+            }
+        });
+
+        var bundled = packageJson.bundleDependencies || packageJson.bundledDependencies || [];
+        if (Array.isArray(bundled)) {
+            bundled.forEach(function (name) {
+                if (!Object.prototype.hasOwnProperty.call(dependencies, name)) {
+                    dependencies[name] = '*';
+                }
+            });
+        }
+
+        Object.keys(dependencies).forEach(function (dependencyName) {
+            var dependencyRoot = resolveInstalledDependency(packageRoot, dependencyName);
+            if (!dependencyRoot) {
+                if (optional.has(dependencyName)) {
+                    return;
+                }
+                throw new Error('minify: retained package ' + packageJson.name + '@' +
+                    (packageJson.version || 'unknown') + ' requires "' + dependencyName +
+                    '", but it is not installed/resolvable from ' + packageRoot);
+            }
+            queue.push(dependencyRoot);
+        });
+    }
+
+    return {
+        externalPackages: externalPackages,
+        nodeModulesPath: nodeModulesPath,
+        retainedRoots: retainedRoots,
+        retainedBins: retainedBins
+    };
+};
+exports.collectExternalPackageClosure = collectExternalPackageClosure;
+
+// Return retained physical package roots that esbuild also inlined. Loading the
+// same installed module once from disk and once from the bundle creates two
+// module-level singletons, even though both copies came from one npm directory.
+var findRetainedPackageOverlaps = function (metafile, outDir, retainedRoots) {
+    var overlaps = new Map();
+    Object.keys(metafile.inputs || {}).forEach(function (input) {
+        var norm = input.replace(/\\/g, '/');
+        var idx = norm.lastIndexOf('node_modules/');
+        if (idx === -1) {
+            return;
+        }
+        var rest = norm.slice(idx + 'node_modules/'.length);
+        var match = rest.match(/^((?:@[^/]+\/)?[^/]+)/);
+        if (!match) {
+            return;
+        }
+        var rootText = norm.slice(0, idx + 'node_modules/'.length) + match[1];
+        var absoluteRoot = path.isAbsolute(rootText)
+            ? rootText
+            : path.join(outDir, rootText);
+        var retained = retainedRoots.get(pathKey(absoluteRoot));
+        if (retained) {
+            overlaps.set(retained.name, retained);
+        }
+    });
+    return Array.from(overlaps.values());
+};
+exports.findRetainedPackageOverlaps = findRetainedPackageOverlaps;
+
+var enforceRetainedPackagePolicy = function (overlaps, allowlist, outDir) {
+    if (!overlaps.length) {
+        return;
+    }
+    var allowed = overlaps.filter(function (pkg) { return allowlist.has(pkg.name); });
+    var blocking = overlaps.filter(function (pkg) { return !allowlist.has(pkg.name); });
+    if (allowed.length) {
+        console.warn('> minify: NOTE - package(s) are both bundled and retained on disk ' +
+            '(allowlisted as stateless): ' + allowed.map(function (pkg) {
+                return pkg.name + '@' + pkg.version;
+            }).join(', '));
+    }
+    if (!blocking.length) {
+        return;
+    }
+    var names = blocking.map(function (pkg) { return pkg.name + '@' + pkg.version; });
+    throw new Error('minify: ' + path.basename(outDir) +
+        ' would load package(s) both from the bundle and retained node_modules, splitting module state: ' +
+        names.join(', ') + '. Add the package as a top-level minify.external entry so every import stays ' +
+        'external, align the dependency graph, or allowlist it only when it is genuinely stateless.');
+};
+
+var pruneBinDirectory = function (nodeModulesPath, retainedBins) {
+    var binPath = path.join(nodeModulesPath, '.bin');
+    if (!fs.existsSync(binPath)) {
+        return;
+    }
+    var expected = retainedBins.get(pathKey(nodeModulesPath)) || new Set();
+    var expectedEntries = new Set();
+    expected.forEach(function (name) {
+        expectedEntries.add(name);
+        expectedEntries.add(name + '.cmd');
+        expectedEntries.add(name + '.ps1');
+    });
+    fs.readdirSync(binPath).forEach(function (entry) {
+        if (!expectedEntries.has(entry)) {
+            fs.rmSync(path.join(binPath, entry), { recursive: true, force: true });
+        }
+    });
+    if (fs.readdirSync(binPath).length === 0) {
+        fs.rmSync(binPath, { recursive: true, force: true });
+    }
+};
+
+// Delete every package not present in the retained closure while preserving each
+// retained package at its original root. This keeps Node's nested-version lookup
+// semantics and package-owned runtime assets intact.
+var pruneNodeModules = function (nodeModulesPath, retainedRoots, retainedBins) {
+    if (!fs.existsSync(nodeModulesPath)) {
+        return;
+    }
+
+    fs.readdirSync(nodeModulesPath, { withFileTypes: true }).forEach(function (entry) {
+        var entryPath = path.join(nodeModulesPath, entry.name);
+        if (entry.name === '.bin') {
+            return;
+        }
+        if (entry.name.startsWith('.')) {
+            fs.rmSync(entryPath, { recursive: true, force: true });
+            return;
+        }
+
+        if (entry.name.startsWith('@')) {
+            if (!entry.isDirectory()) {
+                fs.rmSync(entryPath, { recursive: true, force: true });
+                return;
+            }
+            fs.readdirSync(entryPath, { withFileTypes: true }).forEach(function (scopedEntry) {
+                var packageRoot = path.join(entryPath, scopedEntry.name);
+                if (!retainedRoots.has(pathKey(packageRoot))) {
+                    fs.rmSync(packageRoot, { recursive: true, force: true });
+                    return;
+                }
+                pruneNodeModules(path.join(packageRoot, 'node_modules'), retainedRoots, retainedBins);
+            });
+            if (fs.readdirSync(entryPath).length === 0) {
+                fs.rmSync(entryPath, { recursive: true, force: true });
+            }
+            return;
+        }
+
+        if (!retainedRoots.has(pathKey(entryPath))) {
+            fs.rmSync(entryPath, { recursive: true, force: true });
+            return;
+        }
+        pruneNodeModules(path.join(entryPath, 'node_modules'), retainedRoots, retainedBins);
+    });
+
+    pruneBinDirectory(nodeModulesPath, retainedBins);
+};
+exports.pruneNodeModules = pruneNodeModules;
+
 // Return the declared Node execution targets that are missing from the build
 // output. A declared handler target that never got built (task.json typo, case
 // mismatch, tsc exclude, wrong path) must FAIL the build: minify deletes
@@ -248,6 +645,9 @@ var bundleEntry = async function (esbuild, opts) {
         absWorkingDir: opts.outDir,
         outfile: opts.tmpOut,
         logLevel: 'warning',
+        // External package names (and their subpaths) remain as runtime require()
+        // calls. minifyNodeTask preserves their complete installed closures below.
+        external: opts.externalPackages,
         // A source map is only emitted when requested; it chains the tsc-emitted
         // maps so task-code frames resolve back to the original .ts (dependency
         // frames resolve to their original node_modules .js). sourcesContent embeds
@@ -350,6 +750,9 @@ var removeIntermediateSourceMaps = function (outDir, keepMapAbsPaths) {
         fs.readdirSync(dir, { withFileTypes: true }).forEach(function (dirent) {
             var full = path.join(dir, dirent.name);
             if (dirent.isDirectory()) {
+                if (dirent.name === 'node_modules') {
+                    return; // retained external packages keep their complete published contents
+                }
                 walk(full);
             } else if (/\.js\.map$/i.test(dirent.name) && !keepMapAbsPaths.has(full)) {
                 rm('-f', full);
@@ -381,6 +784,40 @@ var publishSourceMap = function (tmpMapPath, destMapPath, stagingDir, outDir) {
 };
 exports.publishSourceMap = publishSourceMap;
 
+// Atomically-as-possible publish a set of staged files/directories. Every existing
+// destination is first renamed into the staging backup directory. If any later
+// rename fails, all destinations processed so far are restored before rethrowing.
+var replaceOutputPaths = function (replacements, backupDir) {
+    fs.mkdirSync(backupDir, { recursive: true });
+    var processed = [];
+    try {
+        replacements.forEach(function (replacement, index) {
+            var backup = path.join(backupDir, String(index));
+            var record = {
+                destination: replacement.destination,
+                backup: backup,
+                hadDestination: fs.existsSync(replacement.destination)
+            };
+            if (record.hadDestination) {
+                fs.renameSync(replacement.destination, backup);
+            }
+            processed.push(record);
+            if (replacement.source) {
+                fs.renameSync(replacement.source, replacement.destination);
+            }
+        });
+    } catch (err) {
+        processed.reverse().forEach(function (record) {
+            fs.rmSync(record.destination, { recursive: true, force: true });
+            if (record.hadDestination && fs.existsSync(record.backup)) {
+                fs.renameSync(record.backup, record.destination);
+            }
+        });
+        throw err;
+    }
+};
+exports.replaceOutputPaths = replaceOutputPaths;
+
 //
 // Minify a compiled Node task: bundle every Node execution entry point (and its
 // dependencies) into a single minified file using esbuild, then drop the now
@@ -394,6 +831,10 @@ exports.publishSourceMap = publishSourceMap;
 //                      When false, no map is emitted (smallest output); keepNames
 //                      still preserves fn/class names in stack frames.
 //   allowDuplicates  - per-task list of packages exempt from the duplicate check.
+//   allowBundledAndRetained - stateless packages allowed to exist both in the
+//                       bundle and an external package's retained closure.
+//   external          - top-level package names left as runtime requires; their
+//                       installed dependency closures are retained in node_modules.
 //   failOnDuplicates - when false, a non-allowlisted duplicate warns instead of
 //                      failing (the --allow-duplicates escape hatch).
 //
@@ -401,15 +842,17 @@ exports.publishSourceMap = publishSourceMap;
 // mutated once every entry bundles and the duplicate-package policy passes, so a
 // mid-build failure never leaves the task partially rewritten.
 //
-// Returns { entries, duplicates } for reporting. Async because esbuild's build
+// Returns { entries, duplicates, externalPackages } for reporting. Async because esbuild's build
 // API (used here with metafile output for duplicate detection) is promise-based.
 //
 var minifyNodeTask = async function (taskPath, outDir, options) {
     options = options || {};
     var withSourceMap = !!options.sourceMap;
     var perTaskAllow = Array.isArray(options.allowDuplicates) ? options.allowDuplicates : [];
+    var retainedOverlapAllowlist = new Set(normalizeExternalPackages(options.allowBundledAndRetained));
     var failOnDuplicates = options.failOnDuplicates !== false; // default: fail
     var duplicateAllowlist = new Set(DEFAULT_DUPLICATE_ALLOWLIST.concat(perTaskAllow));
+    var externalPackages = normalizeExternalPackages(options.external);
 
     var esbuild;
     try {
@@ -446,6 +889,11 @@ var minifyNodeTask = async function (taskPath, outDir, options) {
             'removes node_modules; fix the task.json handler "target" path(s) or the tsc output.');
     }
 
+    // Resolve the retained closure before esbuild changes any output. In addition
+    // to validating the configured root packages, this proves every required
+    // runtime dependency is installed and records the exact nested npm layout.
+    var externalClosure = collectExternalPackageClosure(outDir, externalPackages);
+
     // esbuild refuses to overwrite an input file, so every bundle is first written
     // to a unique staging dir. It lives inside outDir so renameSync into place stays
     // on one volume, and it is always removed in finally. Nothing in outDir is
@@ -455,6 +903,7 @@ var minifyNodeTask = async function (taskPath, outDir, options) {
     var bundleMapAbsPaths = new Set();
     try {
         var duplicateRoots = new Map();
+        var retainedBundleOverlaps = new Map();
         var staged = [];
 
         // Phase 1: build + validate every entry into the staging dir.
@@ -475,9 +924,12 @@ var minifyNodeTask = async function (taskPath, outDir, options) {
                 outDir: outDir,
                 tmpOut: tmpOut,
                 withSourceMap: withSourceMap,
-                nodeTarget: 'node' + entry.nodeMajor
+                nodeTarget: 'node' + entry.nodeMajor,
+                externalPackages: externalPackages
             });
             mergeDuplicateRoots(duplicateRoots, metafile);
+            findRetainedPackageOverlaps(metafile, outDir, externalClosure.retainedRoots)
+                .forEach(function (pkg) { retainedBundleOverlaps.set(pkg.name, pkg); });
 
             staged.push({
                 entryPath: entryPath,
@@ -500,34 +952,77 @@ var minifyNodeTask = async function (taskPath, outDir, options) {
             perTaskAllow: perTaskAllow,
             failOnDuplicates: failOnDuplicates
         });
+        enforceRetainedPackagePolicy(
+            Array.from(retainedBundleOverlaps.values()),
+            retainedOverlapAllowlist,
+            outDir);
 
-        // Phase 2: publish. Everything built and passed, so move bundles into place.
+        // Prepare a pruned dependency tree in staging before publishing anything.
+        // If closure copying, pruning, or validation fails, outDir remains unchanged.
+        var nodeModulesPath = path.join(outDir, 'node_modules');
+        var stagedNodeModules = null;
+        if (fs.existsSync(nodeModulesPath)) {
+            if (!externalPackages.length) {
+                console.log('> minify: removing inlined node_modules');
+            } else {
+                var stagedDependencyRoot = path.join(stagingDir, 'retained-dependencies');
+                stagedNodeModules = path.join(stagedDependencyRoot, 'node_modules');
+                fs.mkdirSync(stagedDependencyRoot, { recursive: true });
+                fs.cpSync(nodeModulesPath, stagedNodeModules, {
+                    recursive: true,
+                    dereference: false,
+                    preserveTimestamps: true
+                });
+                var stagedClosure = collectExternalPackageClosure(stagedDependencyRoot, externalPackages);
+                pruneNodeModules(
+                    stagedClosure.nodeModulesPath,
+                    stagedClosure.retainedRoots,
+                    stagedClosure.retainedBins);
+                collectExternalPackageClosure(stagedDependencyRoot, externalPackages);
+                console.log('> minify: retaining external package closure for ' +
+                    externalPackages.join(', ') + ' (' + stagedClosure.retainedRoots.size + ' package(s))');
+            }
+        }
+
+        // Rebase source maps while they are still staged so publication itself is
+        // only a set of reversible same-volume renames.
+        staged.forEach(function (s) {
+            if (s.hasMap) {
+                s.publishMap = s.tmpOut + '.publish.map';
+                publishSourceMap(s.tmpOut + '.map', s.publishMap, stagingDir, outDir);
+            }
+        });
+
+        // Phase 2: publish. Everything built, pruned, and validated, so replace
+        // bundles and node_modules with rollback if any rename fails.
         // The bundle replaces the entry in place; in sourcemap mode its <entry>.js.map
         // ships alongside and the banner shim maps frames at runtime. No bootstrap is
         // written, so require.main === module is preserved in both modes.
+        var replacements = [];
         staged.forEach(function (s) {
             var outPath = path.join(outDir, s.outName);
-            rm('-f', outPath);
-            fs.renameSync(s.tmpOut, outPath);
+            replacements.push({ source: s.tmpOut, destination: outPath });
             if (s.hasMap) {
-                rm('-f', outPath + '.map');
-                publishSourceMap(s.tmpOut + '.map', outPath + '.map', stagingDir, outDir);
+                replacements.push({ source: s.publishMap, destination: outPath + '.map' });
                 bundleMapAbsPaths.add(outPath + '.map');
+            } else if (fs.existsSync(outPath + '.map')) {
+                replacements.push({ source: null, destination: outPath + '.map' });
             }
         });
+        if (fs.existsSync(nodeModulesPath)) {
+            replacements.push({ source: stagedNodeModules, destination: nodeModulesPath });
+        }
+        replaceOutputPaths(replacements, path.join(stagingDir, 'publish-backup'));
     } finally {
         rm('-rf', stagingDir);
     }
 
-    // Dependencies are now inlined into the bundle(s); remove node_modules.
-    var nodeModulesPath = path.join(outDir, 'node_modules');
-    if (fs.existsSync(nodeModulesPath)) {
-        console.log('> minify: removing inlined node_modules');
-        rm('-rf', nodeModulesPath);
-    }
-
     removeIntermediateSourceMaps(outDir, bundleMapAbsPaths);
 
-    return { entries: entries.map(function (e) { return e.file; }), duplicates: duplicates };
+    return {
+        entries: entries.map(function (e) { return e.file; }),
+        duplicates: duplicates,
+        externalPackages: externalPackages
+    };
 }
 exports.minifyNodeTask = minifyNodeTask;
