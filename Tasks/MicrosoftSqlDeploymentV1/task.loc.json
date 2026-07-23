@@ -151,6 +151,7 @@
     "FailedToGetSQLServerDetails": "ms-resource:loc.messages.FailedToGetSQLServerDetails",
     "ParsingConnectionString": "ms-resource:loc.messages.ParsingConnectionString",
     "InvalidConnectionString": "ms-resource:loc.messages.InvalidConnectionString",
+    "UnsupportedAuthentication": "ms-resource:loc.messages.UnsupportedAuthentication",
     "ConnectionStringMissingServer": "ms-resource:loc.messages.ConnectionStringMissingServer",
     "ConnectionStringMissingDatabase": "ms-resource:loc.messages.ConnectionStringMissingDatabase",
     "ConnectionStringMissingUserId": "ms-resource:loc.messages.ConnectionStringMissingUserId",

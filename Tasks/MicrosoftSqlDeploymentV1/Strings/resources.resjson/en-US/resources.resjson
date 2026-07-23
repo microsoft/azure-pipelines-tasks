@@ -59,6 +59,7 @@
   "loc.messages.FailedToGetSQLServerDetails": "Failed to get SQL Server '%s' details: %s",
   "loc.messages.ParsingConnectionString": "Parsing connection string",
   "loc.messages.InvalidConnectionString": "Invalid connection string. A valid connection string is a series of keyword/value pairs separated by semi-colons. If there are any special characters like quotes or semi-colons in the keyword value, enclose the value within quotes. Refer to https://aka.ms/sqlconnectionstring for more info.",
+  "loc.messages.UnsupportedAuthentication": "Unsupported Authentication type: '%s'. Supported values: SQL auth (no Authentication keyword), Active Directory Default, Active Directory Password, Active Directory Service Principal, Active Directory Integrated.",
   "loc.messages.ConnectionStringMissingServer": "Invalid connection string. Please ensure 'Server' or 'Data Source' is provided in the connection string.",
   "loc.messages.ConnectionStringMissingDatabase": "Invalid connection string. Please ensure 'Database' or 'Initial Catalog' is provided in the connection string.",
   "loc.messages.ConnectionStringMissingUserId": "Invalid connection string. Please ensure 'User' or 'User ID' is provided in the connection string.",

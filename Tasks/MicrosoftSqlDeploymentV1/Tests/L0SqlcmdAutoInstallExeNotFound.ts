@@ -32,3 +32,4 @@ tmr.setAnswers({ which: { 'sqlcmd': '' }, checkPath: { 'test.sql': true } });
 
 tmr.run();
 
+

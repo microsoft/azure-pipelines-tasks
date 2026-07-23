@@ -151,6 +151,7 @@
     "FailedToGetSQLServerDetails": "Failed to get SQL Server '%s' details: %s",
     "ParsingConnectionString": "Parsing connection string",
     "InvalidConnectionString": "Invalid connection string. A valid connection string is a series of keyword/value pairs separated by semi-colons. If there are any special characters like quotes or semi-colons in the keyword value, enclose the value within quotes. Refer to https://aka.ms/sqlconnectionstring for more info.",
+    "UnsupportedAuthentication": "Unsupported Authentication type: '%s'. Supported values: SQL auth (no Authentication keyword), Active Directory Default, Active Directory Password, Active Directory Service Principal, Active Directory Integrated.",
     "ConnectionStringMissingServer": "Invalid connection string. Please ensure 'Server' or 'Data Source' is provided in the connection string.",
     "ConnectionStringMissingDatabase": "Invalid connection string. Please ensure 'Database' or 'Initial Catalog' is provided in the connection string.",
     "ConnectionStringMissingUserId": "Invalid connection string. Please ensure 'User' or 'User ID' is provided in the connection string.",

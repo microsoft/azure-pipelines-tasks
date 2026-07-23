@@ -295,6 +295,116 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'should report executable not found after extraction');
         }, tr);
     });
+
+    it('should fail when SqlPackage is not found anywhere', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when SqlPackage is not found');
+            assert(tr.stdout.indexOf('SqlPackageNotFound') >= 0 || tr.errorIssues.some(e => e.includes('SqlPackage not found')),
+                'should display SqlPackage not found error');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/path/sqlpackage') >= 0,
+                'should report SqlPackage found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when SqlPackage is found via dotnet tool', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageFromDotnetTool.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when SqlPackage is found via dotnet tool');
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('.dotnet') >= 0,
+                'should report SqlPackage found at dotnet tool location');
+        }, tr);
+    });
+
+    it('should fail when user-provided SqlPackage path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided SqlPackage path does not exist');
+            assert(tr.stdout.indexOf('SqlPackageNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('not found at specified path')),
+                'should display SqlPackage not found at path error');
+        }, tr);
+    });
+
+    it('should fail when user-provided sqlcmd path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdUserPathNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when user-provided sqlcmd path does not exist');
+            assert(tr.stdout.indexOf('SqlcmdNotFoundAtPath') >= 0 || tr.errorIssues.some(e => e.includes('sqlcmd not found at specified path')),
+                'should display sqlcmd not found at path error');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found via user-provided path', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromUserPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found via user path');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('custom/path/sqlcmd') >= 0,
+                'should report sqlcmd found at user-provided path');
+        }, tr);
+    });
+
+    it('should succeed when sqlcmd is found on PATH', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFromPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when sqlcmd is found on PATH');
+            assert(tr.stdout.indexOf('SqlCmdFound') >= 0 || tr.stdout.indexOf('/usr/bin/sqlcmd') >= 0,
+                'should report sqlcmd found on PATH');
+        }, tr);
+    });
+
+    it('should succeed with valid dacpac inputs', async () => {
+        const tp = path.join(__dirname, 'L0ValidDacpacInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with valid dacpac inputs');
+            assert(tr.stdout.indexOf('ActionDetected') >= 0, 'should detect action and file type');
+            assert(tr.stdout.indexOf('DACPAC') >= 0, 'should detect DACPAC file type');
+        }, tr);
+    });
+
+    it('should succeed with valid sql script inputs', async () => {
+        const tp = path.join(__dirname, 'L0ValidSqlScriptInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with valid sql script inputs');
+            assert(tr.stdout.indexOf('ActionDetected') >= 0, 'should detect action and file type');
+            assert(tr.stdout.indexOf('SQL') >= 0, 'should detect SQL file type');
+        }, tr);
+    });
+
+    it('should succeed with valid sqlproj inputs', async () => {
+        const tp = path.join(__dirname, 'L0ValidSqlProjInputs.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with valid sqlproj inputs');
+            assert(tr.stdout.indexOf('ActionDetected') >= 0, 'should detect action and file type');
+            assert(tr.stdout.indexOf('SQLPROJ') >= 0, 'should detect SQLPROJ file type');
+        }, tr);
+    });
 });
 
 

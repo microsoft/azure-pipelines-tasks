@@ -154,7 +154,8 @@ export default class SqlUtils {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
+                // Set directly on process.env — scoped to this process only, not persisted as a job variable
+                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
             }
         } else if (auth === 'activedirectorydefault') {
             // AAD Default (Managed Identity)
@@ -166,7 +167,8 @@ export default class SqlUtils {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
+                // Set directly on process.env — scoped to this process only, not persisted as a job variable
+                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
             }
         } else if (auth === 'activedirectorypassword') {
             // AAD Password — password via SQLCMDPASSWORD, user via -U
@@ -175,7 +177,8 @@ export default class SqlUtils {
                 args.push('-U', connectionConfig.UserId);
             }
             if (connectionConfig.Password) {
-                tl.setVariable(Constants.sqlcmdPasswordEnvVarName, connectionConfig.Password);
+                // Set directly on process.env — scoped to this process only, not persisted as a job variable
+                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
             }
         } else if (auth === 'activedirectoryintegrated') {
             // AAD Integrated
@@ -188,3 +191,4 @@ export default class SqlUtils {
         return args;
     }
 }
+

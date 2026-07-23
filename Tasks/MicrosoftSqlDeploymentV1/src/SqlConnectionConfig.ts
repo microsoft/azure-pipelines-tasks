@@ -211,7 +211,9 @@ export default class SqlConnectionConfig {
                 break;
             }
             default: {
-                throw new Error(tl.loc('InvalidConnectionString'));
+                // Unsupported Authentication= value (e.g. Integrated Security=true, Trusted_Connection=yes).
+                // Supported methods: SQL auth (no keyword), Active Directory Default/Password/ServicePrincipal/Integrated.
+                throw new Error(tl.loc('UnsupportedAuthentication', this.FormattedAuthentication));
             }
         }
     }

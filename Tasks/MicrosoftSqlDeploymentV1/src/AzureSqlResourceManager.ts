@@ -155,38 +155,48 @@ export default class AzureSqlResourceManager {
         tl.debug(`Looking for SQL server: ${serverName}`);
 
         // https://docs.microsoft.com/rest/api/sql/2021-11-01/servers/list
-        const httpRequest = new WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this._client.getRequestUri(
-            '//subscriptions/{subscriptionId}/providers/Microsoft.Sql/servers',
-            {},
-            [],
-            SqlApiVersion
-        );
-
+        // The API paginates via nextLink — follow all pages to avoid missing servers in large subscriptions
         try {
-            const httpResponse: WebResponse = await this._client.beginRequest(httpRequest);
-
-            if (httpResponse.statusCode !== 200) {
-                throw ToError(httpResponse);
-            }
-
-            const sqlServers = httpResponse.body?.value as AzureSqlServer[];
-
-            if (!sqlServers || sqlServers.length === 0) {
-                throw new Error(tl.loc('NoSQLServersFound', this._client.subscriptionId));
-            }
-
-        // ARM API returns server names in lowercase; compare case-insensitively to match user-provided names
-            this._sqlServer = sqlServers.find(
-                server => server.name.toLowerCase() === serverName.toLowerCase()
+            // Start with the first page; getRequestUri substitutes {subscriptionId} from the endpoint
+            let nextUri: string | undefined = this._client.getRequestUri(
+                '//subscriptions/{subscriptionId}/providers/Microsoft.Sql/servers',
+                {},
+                [],
+                SqlApiVersion
             );
+
+            while (nextUri) {
+                const httpRequest = new WebRequest();
+                httpRequest.method = 'GET';
+                httpRequest.uri = nextUri;
+
+                const httpResponse: WebResponse = await this._client.beginRequest(httpRequest);
+
+                if (httpResponse.statusCode !== 200) {
+                    throw ToError(httpResponse);
+                }
+
+                const sqlServers = httpResponse.body?.value as AzureSqlServer[];
+
+                if (sqlServers && sqlServers.length > 0) {
+                    // ARM API returns server names in lowercase; compare case-insensitively to match user-provided names
+                    this._sqlServer = sqlServers.find(
+                        server => server.name.toLowerCase() === serverName.toLowerCase()
+                    );
+
+                    if (this._sqlServer) {
+                        tl.debug(`Found SQL server: ${this._sqlServer.name} (${this._sqlServer.id})`);
+                        return;
+                    }
+                }
+
+                // Follow nextLink if present (pagination)
+                nextUri = httpResponse.body?.nextLink as string | undefined;
+            }
 
             if (!this._sqlServer) {
                 throw new Error(tl.loc('SQLServerNotFoundInSubscription', serverName, this._client.subscriptionId));
             }
-
-            tl.debug(`Found SQL server: ${this._sqlServer.name} (${this._sqlServer.id})`);
         } catch (error) {
             throw new Error(tl.loc('FailedToGetSQLServerDetails', serverName, error.message || error));
         }
