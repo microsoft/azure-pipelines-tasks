@@ -9,6 +9,14 @@ import { Utility } from './src/Utility';
 
 const util = new Utility();
 
+// appSourcePath is documented as a filesystem path. As defense-in-depth against command injection
+// (CWE-78), reject values containing shell metacharacters that are highly unlikely to occur in a
+// legitimate path; the primary fix reads and deletes the runtime-stack file via the filesystem
+// instead of a shell (see determineRuntimeStackAsync). Characters that commonly appear in real
+// paths -- '$', '(', ')', and backslash (the Windows path separator) -- are intentionally allowed
+// (e.g. "C:\Program Files (x86)\app").
+const APP_SOURCE_PATH_INVALID_CHARS: RegExp = /[;&|`<>\r\n]/;
+
 export class azurecontainerapps {
 
     public static async runMain(): Promise<void> {
@@ -137,6 +145,13 @@ export class azurecontainerapps {
 
         // Get the path to the application source to build and run, if provided
         this.appSourcePath = tl.getInput('appSourcePath', false);
+
+        // Reject appSourcePath values that contain shell metacharacters, as defense-in-depth against
+        // command injection (CWE-78).
+        if (!util.isNullOrEmpty(this.appSourcePath) && APP_SOURCE_PATH_INVALID_CHARS.test(this.appSourcePath)) {
+            tl.error(tl.loc('InvalidAppSourcePathMessage', this.appSourcePath));
+            throw Error(tl.loc('InvalidAppSourcePathMessage', this.appSourcePath));
+        }
 
         // Get the name of the ACR instance to push images to, if provided
         this.acrName = tl.getInput('acrName', false);

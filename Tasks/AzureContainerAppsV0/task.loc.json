@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 277,
-    "Patch": 4
+    "Minor": 279,
+    "Patch": 0
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
@@ -42,7 +42,7 @@
     },
     {
       "name": "appSourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.appSourcePath",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.appSourcePath"
@@ -219,6 +219,7 @@
     "ErrorMessageFormat": "ms-resource:loc.messages.ErrorMessageFormat",
     "ExistingContainerAppEnvironmentMessage": "ms-resource:loc.messages.ExistingContainerAppEnvironmentMessage",
     "FoundAppSourceDockerfileMessage": "ms-resource:loc.messages.FoundAppSourceDockerfileMessage",
+    "InvalidAppSourcePathMessage": "ms-resource:loc.messages.InvalidAppSourcePathMessage",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MissingAcrNameMessage": "ms-resource:loc.messages.MissingAcrNameMessage",
     "MissingRequiredArgumentMessage": "ms-resource:loc.messages.MissingRequiredArgumentMessage",

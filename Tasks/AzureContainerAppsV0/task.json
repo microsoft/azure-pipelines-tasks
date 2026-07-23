@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 277,
-    "Patch": 4
+    "Minor": 279,
+    "Patch": 0
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
@@ -42,7 +42,7 @@
     },
     {
       "name": "appSourcePath",
-      "type": "string",
+      "type": "filePath",
       "label": "Application source path",
       "required": false,
       "helpMarkDown": "Absolute path on the runner of the source application code to be built. If not provided, the 'imageToDeploy' argument must be provided to ensure the Container App has an image to reference."
@@ -219,6 +219,7 @@
     "ErrorMessageFormat": "Error: %s",
     "ExistingContainerAppEnvironmentMessage": "Discovered existing Container App Environment, '%s', to use with the Container App.",
     "FoundAppSourceDockerfileMessage": "Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.",
+    "InvalidAppSourcePathMessage": "The provided appSourcePath '%s' contains invalid characters. It must be a valid filesystem path and must not contain shell metacharacters.",
     "LoginFailed": "Azure login failed",
     "MissingAcrNameMessage": "The acrName argument must also be provided if the appSourcePath argument is provided.",
     "MissingRequiredArgumentMessage": "One of the following arguments must be provided: appSourcePath, imageToDeploy, yamlConfigPath",
