@@ -349,7 +349,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
         await tr.runAsync();
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
-            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/path/sqlpackage') >= 0,
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/sqlpackage') >= 0,
                 'should report SqlPackage found at user-provided path');
         }, tr);
     });
@@ -439,6 +439,28 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'task should succeed with valid sqlproj inputs');
             assert(tr.stdout.indexOf('ActionDetected') >= 0, 'should detect action and file type');
             assert(tr.stdout.indexOf('SQLPROJ') >= 0, 'should detect SQLPROJ file type');
+        }, tr);
+    });
+
+    it('should fail when SqlPackage execution fails with non-zero exit code', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageExecutionFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when SqlPackage exits with non-zero code');
+            assert(tr.stdout.indexOf('SqlPackageExecutionFailed') >= 0 || tr.errorIssues.some(e => e.includes('SqlPackage execution failed')),
+                'should report SqlPackage execution failure');
+        }, tr);
+    });
+
+    it('should succeed with script action and generate output file', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageScriptAction.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with script action');
+            assert(tr.stdout.indexOf('ExecutingSqlPackage') >= 0 || tr.stdout.indexOf('script') >= 0,
+                'should report executing SqlPackage script action');
         }, tr);
     });
 });

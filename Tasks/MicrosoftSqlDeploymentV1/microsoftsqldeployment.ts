@@ -7,7 +7,7 @@ import SqlUtils from './src/SqlUtils';
 import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
-
+import { SqlPackageExecutor } from './src/SqlPackageExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -108,29 +108,68 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
-        // SQL project build (if .sqlproj)
-        let resolvedFilePath = filePath;
-        if (fileType === 'SQLPROJ') {
-            resolvedFilePath = await SqlProjectBuilder.buildProject(filePath, buildArguments || undefined);
-        }
-
-        // Firewall rule management
+        // Firewall rule management and deployment execution
         let firewallManager: FirewallManager | undefined;
+        let accessToken: string | undefined;
+        let deployFilePath = filePath;
+        let deployFileType = fileType;
+
         try {
-            if (firewallRuleManagement && azureSubscription) {
+            // Step 1: Azure subscription — firewall + access token
+            if (azureSubscription) {
                 const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
                 const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
-                const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
-                if (ipAddress) {
-                    const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
-                    firewallManager = new FirewallManager(resourceManager);
-                    await firewallManager.addFirewallRule(ipAddress);
+
+                // Acquire access token for database authentication
+                if (azureEndpoint.scheme === 'ServicePrincipal' ||
+                    azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
+                    azureEndpoint.scheme === 'ManagedServiceIdentity') {
+                    try {
+                        accessToken = await azureEndpoint.getToken();
+                        if (accessToken) {
+                            tl.setSecret(accessToken);
+                            tl.debug(tl.loc('AccessTokenAcquired'));
+                        }
+                    } catch (tokenError) {
+                        tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
+                    }
+                }
+
+                if (firewallRuleManagement) {
+                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                    if (ipAddress) {
+                        const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
+                        firewallManager = new FirewallManager(resourceManager);
+                        await firewallManager.addFirewallRule(ipAddress);
+                    }
                 }
             } else if (!firewallRuleManagement) {
                 tl.debug(tl.loc('FirewallManagementDisabled'));
             }
 
-            // TODO (task4): SqlPackage execution and sqlcmd execution
+            // Step 2: Build .sqlproj → .dacpac, then execute SqlPackage.
+            if (deployFileType === 'SQLPROJ') {
+                deployFilePath = await SqlProjectBuilder.buildProject(deployFilePath, buildArguments || undefined);
+                deployFileType = 'DACPAC';
+                tl.debug(`SQL project built. Deploying dacpac: ${deployFilePath}`);
+            }
+
+            if (deployFileType === 'DACPAC') {
+                tl.debug(tl.loc('ExecutingSqlPackage', action));
+                const outputFilePath = await SqlPackageExecutor.executeSqlPackage(
+                    sqlPackageExePath!,
+                    action,
+                    deployFilePath,
+                    connectionConfig,
+                    publishProfile || undefined,
+                    additionalArguments || undefined,
+                    accessToken
+                );
+                if (outputFilePath) {
+                    tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
+                    tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
+                }
+            }
 
             console.log(tl.loc('DeploymentSuccessful'));
         } finally {

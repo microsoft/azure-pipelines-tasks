@@ -1,4 +1,5 @@
 // Succeeds with minimal valid inputs for a .sqlproj build + deploy.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -9,25 +10,38 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.sqlproj');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
-const builtDacpac = path.join(path.dirname('test.sqlproj'), 'bin', 'Debug', 'test.dacpac');
-
-tmr.setAnswers({
-    checkPath: { 'test.sqlproj': true, '/usr/bin/dotnet': true },
-    which: { 'dotnet': '/usr/bin/dotnet' },
-    exec: {
-        '/usr/bin/dotnet build test.sqlproj -p:NetCoreBuild=true': { code: 0, stdout: 'Build succeeded.' }
+tmr.registerMock('./src/SqlPackageHelper', {
+    default: {
+        findSqlPackage: async function() {
+            return '/usr/local/bin/sqlpackage';
+        }
     }
 });
 
-tmr.registerMock('fs', {
-    existsSync: (p: string) => {
-        if (p === 'test.sqlproj') { return true; }
-        if (p.includes('.dotnet')) { return true; }
-        if (p === builtDacpac || p.includes('.dacpac')) { return true; }
-        return false;
-    },
-    readdirSync: () => []
+tmr.registerMock('./src/SqlProjectBuilder', {
+    default: {
+        buildProject: async function() {
+            return '/fake/path/bin/Debug/test.dacpac';
+        }
+    }
 });
+
+const a: ma.TaskLibAnswers = {
+    checkPath: {
+        'test.sqlproj': true,
+        '/usr/local/bin/sqlpackage': true
+    },
+    which: {
+        '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage'
+    },
+    exec: {
+        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:/fake/path/bin/Debug/test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;': {
+            code: 0,
+            stdout: 'Successfully published database.'
+        }
+    }
+};
+tmr.setAnswers(a);
 
 tmr.run();
 

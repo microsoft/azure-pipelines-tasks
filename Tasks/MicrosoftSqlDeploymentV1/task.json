@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 278,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -163,6 +163,11 @@
     "DacpacNotFoundAfterBuild": "Built .dacpac not found at expected path: %s",
     "SqlProjectBuiltSuccessfully": "SQL project built successfully. DACPAC: %s",
     "SqlProjectBuildFailed": "SQL project build failed. Exit code: %s. Error: %s",
+    "AccessTokenAcquired": "Access token acquired from service connection for database authentication.",
+    "ExecutingSqlPackage": "Executing SqlPackage action: %s",
+    "SqlPackageExecutionFailed": "SqlPackage execution failed with exit code: %s",
+    "OutputFileGenerated": "Output file generated: %s",
+    "InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport.",
     "DeploymentSuccessful": "Deployment completed successfully",
     "DeploymentFailed": "Deployment failed: %s",
     "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
