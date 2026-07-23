@@ -25,14 +25,13 @@ fsClone.existsSync = function(filePath: any): boolean {
 };
 tmr.registerMock('fs', fsClone);
 
-// Use setAnswers to mock tl.which() returning empty
+// Use setAnswers to mock tl.which() returning empty and checkPath returning true
 tmr.setAnswers({
     'which': {
         'sqlpackage': ''  // SqlPackage not found in PATH
-    }
+    },
+    checkPath: { 'test.dacpac': true }
 });
-
-tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
 
 tmr.run();
 
