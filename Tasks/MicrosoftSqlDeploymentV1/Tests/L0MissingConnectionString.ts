@@ -9,3 +9,5 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
 
 tmr.run();
+
+

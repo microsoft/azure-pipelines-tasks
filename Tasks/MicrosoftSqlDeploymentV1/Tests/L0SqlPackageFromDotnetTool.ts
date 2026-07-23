@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
 // Mock fs.existsSync to return true for dotnet tool location
 tmr.registerMock('fs', {
@@ -27,4 +27,8 @@ tmr.registerMock('fs', {
     }
 });
 
+tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
+
 tmr.run();
+
+

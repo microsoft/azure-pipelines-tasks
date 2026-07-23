@@ -8,7 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
 // Mock fs.existsSync to return false for all SqlPackage locations
 const fsClone = Object.assign({}, fs);
@@ -25,11 +25,14 @@ fsClone.existsSync = function(filePath: any): boolean {
 };
 tmr.registerMock('fs', fsClone);
 
-// Use setAnswers to mock tl.which() returning empty
+// Use setAnswers to mock tl.which() returning empty and checkPath returning true
 tmr.setAnswers({
     'which': {
         'sqlpackage': ''  // SqlPackage not found in PATH
-    }
+    },
+    checkPath: { 'test.dacpac': true }
 });
 
 tmr.run();
+
+
