@@ -182,7 +182,21 @@ export default class SqlConnectionConfig {
         }
 
         switch (this.FormattedAuthentication) {
-            case undefined:
+            case undefined: {
+                // No Authentication= keyword. Check for Windows/trusted auth keywords that we don't support.
+                const integratedSecurity = this._getConnectionStringValue('integrated security') || this._getConnectionStringValue('trusted_connection');
+                if (integratedSecurity && (integratedSecurity.toLowerCase() === 'true' || integratedSecurity.toLowerCase() === 'yes')) {
+                    throw new Error(tl.loc('UnsupportedAuthentication', 'Integrated Security=true'));
+                }
+                // Plain SQL auth — requires UserId and Password
+                if (!this.UserId) {
+                    throw new Error(tl.loc('ConnectionStringMissingUserId'));
+                }
+                if (!this.Password) {
+                    throw new Error(tl.loc('ConnectionStringMissingPassword'));
+                }
+                break;
+            }
             case 'sqlauthentication':
             case 'sqlpassword':
             case 'activedirectorypassword': {
@@ -211,7 +225,7 @@ export default class SqlConnectionConfig {
                 break;
             }
             default: {
-                // Unsupported Authentication= value (e.g. Integrated Security=true, Trusted_Connection=yes).
+                // Unknown Authentication= value (not in the 5 supported types above).
                 // Supported methods: SQL auth (no keyword), Active Directory Default/Password/ServicePrincipal/Integrated.
                 throw new Error(tl.loc('UnsupportedAuthentication', this.FormattedAuthentication));
             }

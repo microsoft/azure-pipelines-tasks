@@ -68,7 +68,10 @@ describe('MicrosoftSqlDeployment Suite', function () {
             [`Server=test1.database.windows.net;Database=testdb;Authentication='SQL Password';Password=password;`, `ConnectionStringMissingUserId`, 'SQL password auth missing user'],
             [`Server=test1.database.windows.net;Database=testdb;Authentication='SQL Password';User Id=user;`, `ConnectionStringMissingPassword`, 'SQL password auth missing password'],
             [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryServicePrincipal';Password=placeholder;`, `ConnectionStringMissingClientId`, 'Service principal auth without client ID'],
-            [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryServicePrincipal';User Id=clientId;`, `ConnectionStringMissingClientSecret`, 'Service principal auth without client secret']
+            [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryServicePrincipal';User Id=clientId;`, `ConnectionStringMissingClientSecret`, 'Service principal auth without client secret'],
+            [`Server=test1.database.windows.net;Database=testdb;Integrated Security=true;`, `UnsupportedAuthentication`, 'Windows Integrated Security not supported'],
+            [`Server=test1.database.windows.net;Database=testdb;Trusted_Connection=yes;`, `UnsupportedAuthentication`, 'Trusted_Connection not supported'],
+            [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryMSI';`, `UnsupportedAuthentication`, 'unknown Authentication keyword rejected']
         ];
 
         invalidConnectionStrings.forEach(([connectionString, expectedError, description]) => {
