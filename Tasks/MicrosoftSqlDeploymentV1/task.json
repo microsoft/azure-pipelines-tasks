@@ -167,6 +167,8 @@
     "ExecutingSqlPackage": "Executing SqlPackage action: %s",
     "SqlPackageExecutionFailed": "SqlPackage execution failed with exit code: %s",
     "OutputFileGenerated": "Output file generated: %s",
+    "ExecutingSqlScript": "Executing SQL script: %s",
+    "SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
     "InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport.",
     "DeploymentSuccessful": "Deployment completed successfully",
     "DeploymentFailed": "Deployment failed: %s",

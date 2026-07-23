@@ -8,6 +8,7 @@ import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
 import { SqlPackageExecutor } from './src/SqlPackageExecutor';
+import { SqlcmdExecutor } from './src/SqlcmdExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -22,6 +23,9 @@ if (nodeVersion > 19) {
 }
 
 async function main(): Promise<void> {
+    // Telemetry: track which features people use to drive product decisions (e.g. P2 actions).
+    const telemetry: Record<string, any> = {};
+
     try {
         // Set resource path for localization
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -82,11 +86,15 @@ async function main(): Promise<void> {
         tl.checkPath(filePath, 'path');
 
         console.log(tl.loc('ActionDetected', action, fileType));
+        telemetry.action = action;
+        telemetry.fileType = fileType;
 
         // Parse and validate connection string
         console.log(tl.loc('ParsingConnectionString'));
         const connectionConfig = new SqlConnectionConfig(connectionString);
         tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
+        telemetry.authMethod = connectionConfig.FormattedAuthentication ?? 'sqlauthentication';
+        telemetry.hasAzureSubscription = !!azureSubscription;
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
@@ -96,16 +104,18 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('DetectingSqlPackage'));
             sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
             tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
+            telemetry.sqlPackageDiscoveryMethod = sqlpackagePath ? 'userSpecified' : 'discovered';
         }
 
-        // Discover sqlcmd for SQL script actions or firewall connectivity testing
+        // sqlcmd is needed for sqlScript action and for firewall connectivity probing
+        const needsSqlcmd = action === 'sqlScript' || firewallRuleManagement;
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));
             sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
+            telemetry.sqlcmdDiscoveryMethod = sqlcmdPath ? 'userSpecified' : 'discovered';
         }
 
         // Firewall rule management and deployment execution
@@ -169,6 +179,15 @@ async function main(): Promise<void> {
                     tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
                     tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
                 }
+            } else if (deployFileType === 'SQL') {
+                tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
+                await SqlcmdExecutor.executeSqlcmd(
+                    sqlcmdExePath!,
+                    deployFilePath,
+                    connectionConfig,
+                    additionalArguments || undefined,
+                    accessToken
+                );
             }
 
             console.log(tl.loc('DeploymentSuccessful'));
@@ -181,6 +200,14 @@ async function main(): Promise<void> {
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);
         tl.setResult(tl.TaskResult.Failed, tl.loc('DeploymentFailed', error.message || error));
+    }
+    finally {
+        try {
+            console.log('##vso[telemetry.publish area=TaskEndpointId;feature=MicrosoftSqlDeploymentV1]'
+                + JSON.stringify(telemetry));
+        } catch (telemetryError) {
+            tl.debug(`Telemetry emission failed (non-fatal): ${telemetryError}`);
+        }
     }
 }
 

@@ -75,6 +75,8 @@
   "loc.messages.ExecutingSqlPackage": "Executing SqlPackage action: %s",
   "loc.messages.SqlPackageExecutionFailed": "SqlPackage execution failed with exit code: %s",
   "loc.messages.OutputFileGenerated": "Output file generated: %s",
+  "loc.messages.ExecutingSqlScript": "Executing SQL script: %s",
+  "loc.messages.SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
   "loc.messages.InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport.",
   "loc.messages.DeploymentSuccessful": "Deployment completed successfully",
   "loc.messages.DeploymentFailed": "Deployment failed: %s",

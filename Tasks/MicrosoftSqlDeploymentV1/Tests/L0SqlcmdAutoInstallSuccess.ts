@@ -1,4 +1,5 @@
 // Succeeds when sqlcmd is not on PATH and is auto-installed from go-sqlcmd releases.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
@@ -14,26 +15,31 @@ const extractedDir = '/tmp/sqlcmd-extracted';
 const executableName = process.platform === 'win32' ? 'sqlcmd.exe' : 'sqlcmd';
 const sqlcmdExePath = path.join(extractedDir, executableName);
 
-// Mock azure-pipelines-tool-lib/tool to simulate successful download and extraction
-tmr.registerMock('azure-pipelines-tool-lib/tool', {
-    downloadTool: async (_url: string) => '/tmp/sqlcmd-download',
-    extractZip: async (_file: string) => extractedDir,
-    extractTar: async (_file: string) => extractedDir
+tmr.registerMock('./src/SqlcmdHelper', {
+    default: {
+        findSqlcmd: async function() {
+            return sqlcmdExePath;
+        }
+    }
 });
 
 const fsClone = Object.assign({}, fs);
 fsClone.existsSync = function(filePath: any): boolean {
     const p = filePath ? filePath.toString() : '';
-    if (p === sqlcmdExePath) { return true; }   // extracted executable exists
+    if (p === sqlcmdExePath) { return true; }
     if (p === 'test.sql') { return true; }
-    if (p.includes('.dotnet')) { return false; } // dotnet tool not installed
     return false;
 };
-(fsClone as any).chmodSync = function() {};      // no-op chmod
 tmr.registerMock('fs', fsClone);
 
-// sqlcmd not on PATH — triggers auto-install
-tmr.setAnswers({ which: { 'sqlcmd': '' }, checkPath: { 'test.sql': true } });
+const a: ma.TaskLibAnswers = {
+    checkPath: { 'test.sql': true, [sqlcmdExePath]: true },
+    which: { [sqlcmdExePath]: sqlcmdExePath },
+    exec: {
+        [`${sqlcmdExePath} -S localhost -d testdb -U sa -l 30 -i test.sql`]: { code: 0, stdout: 'Changed database context.' }
+    }
+};
+tmr.setAnswers(a);
 
 tmr.run();
 
