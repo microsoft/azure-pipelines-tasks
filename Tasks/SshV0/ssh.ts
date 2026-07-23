@@ -33,6 +33,9 @@ async function run() {
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         const port: number = getServerPort(sshEndpoint); //port is optional, will use 22 as default port if not specified
         const interactiveSession: boolean = tl.getBoolInput('interactiveSession', false);
+        // Secure by default: when false, ##vso[...] lines in remote output are neutralized
+        // (printed as text, not executed). Set true only to trust remote logging commands.
+        const allowVsoCommands: boolean = tl.getBoolInput('enableRemoteVsoCommands', false);
         const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details
@@ -112,7 +115,7 @@ async function run() {
                     tl.debug(`Running command ${command} on remote machine.`);
                     console.log(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
-                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession);
+                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession, allowVsoCommands);
                     tl.debug(`Command ${command} completed with return code = ${returnCode}`);
                 }
             } else {
@@ -197,7 +200,7 @@ async function run() {
 
                 console.log(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
-                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, interactiveSession);
+                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, interactiveSession, allowVsoCommands);
             }
         }
 
