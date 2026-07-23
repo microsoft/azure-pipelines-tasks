@@ -9,8 +9,10 @@ if (process.env.IncludeLocalPackagesBuildConfigTest === "1") {
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
+var childProcess = require('child_process');
 var semver = require('semver');
 var util = require('./make-util');
+var minifyUtil = require('./minify-util');
 var admzip = require('adm-zip');
 
 // util functions
@@ -26,6 +28,7 @@ var fail = util.fail;
 var ensureExists = util.ensureExists;
 var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
+var minifyNodeTask = minifyUtil.minifyNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
@@ -46,6 +49,7 @@ var writeUpdatedsFromGenTasks = false;
 var buildPath = path.join(__dirname, '_build');
 var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
 var buildTestsPath = path.join(__dirname, '_build', 'Tests');
+var buildTestArtifactsPath = path.join(__dirname, '_build', 'TestArtifacts');
 var buildTasksCommonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
 var testsLegacyPath = path.join(__dirname, 'Tests-Legacy');
 var tasksPath = path.join(__dirname, 'Tasks');
@@ -65,6 +69,7 @@ var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 var genTaskCommonPathLocal = path.join(__dirname, '_generated_local', 'Common');
 var taskLibPath = path.join(__dirname, 'task-lib/node');
 var tasksCommonPath = path.join(__dirname, 'tasks-common');
+var testDependenciesPath = path.join(buildPath, 'TestDependencies');
 
 var CLI = {};
 
@@ -475,6 +480,16 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         // create loc files
         createTaskLocJson(taskPath);
         createResjson(taskDef, taskPath);
+
+        if (isGeneratedTask) {
+            var sourceTaskPath = path.join(tasksPath, taskName);
+            var sourceTaskJsonPath = path.join(sourceTaskPath, 'task.json');
+            if (sourceTaskPath !== taskPath && test('-f', sourceTaskJsonPath)) {
+                console.log('Refreshing source loc files: ' + sourceTaskPath);
+                createTaskLocJson(sourceTaskPath);
+                createResjson(fileToJson(sourceTaskJsonPath), sourceTaskPath);
+            }
+        }
     } else {
         outDir = path.join(buildTasksPath, path.basename(taskPath));
     }
@@ -489,6 +504,44 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
         console.log('> getting task externals');
         await getExternalsAsync(taskMake.externals, outDir);
     }
+
+    //--------------------------------
+    // Resolve minify opt-in.
+    // The permanent opt-in lives in the task's make.json "minify" block, e.g.:
+    //   "minify": { "enabled": true, "sourceMap": true, "external": ["package-name"] }
+    // The CLI flags (--minify / --no-minify, --sourcemap / --no-sourcemap) are for
+    // experimentation only: they let you try minification on a build and always win
+    // over make.json so you can force it on or off regardless of the task's setting.
+    //--------------------------------
+    var taskMinify = taskMake.minify || {};
+    var doMinify;
+    if (typeof argv.minify === 'boolean') {
+        doMinify = argv.minify;                 // --minify / --no-minify: experimentation override
+    } else {
+        doMinify = !!taskMinify.enabled;        // permanent per-task opt-in via make.json
+    }
+    var withSourceMap;
+    if (typeof argv.sourcemap === 'boolean' || typeof argv['source-map'] === 'boolean') {
+        withSourceMap = !!(argv.sourcemap || argv['source-map']);   // CLI override
+    } else {
+        withSourceMap = !!taskMinify.sourceMap;                     // per-task setting
+    }
+    // A source map is only meaningful when the task is actually minified.
+    withSourceMap = doMinify && withSourceMap;
+
+    // Duplicate-package policy: any package bundled from >1 node_modules root
+    // fails the build (module-level state could split). Known-stateless packages
+    // can be allowlisted per-task via make.json "minify": { "allowDuplicates": [...] },
+    // and --allow-duplicates downgrades the failure to a warning for the whole build.
+    var minifyOptions = {
+        sourceMap: withSourceMap,
+        allowDuplicates: Array.isArray(taskMinify.allowDuplicates) ? taskMinify.allowDuplicates : [],
+        allowBundledAndRetained: Array.isArray(taskMinify.allowBundledAndRetained)
+            ? taskMinify.allowBundledAndRetained
+            : [],
+        external: taskMinify.external,
+        failOnDuplicates: !argv['allow-duplicates']
+    };
 
     //--------------------------------
     // Common: build, copy, install
@@ -527,7 +580,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
 
                 // npm install and compile
                 if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                    buildNodeTask(modPath, modOutDir, isServerBuild);
+                    buildNodeTask(modPath, modOutDir, { isServerBuild: isServerBuild });
                 }
 
                 // copy default resources and any additional resources defined in the module's make.json
@@ -588,8 +641,9 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
     }
 
     // build Node task
+    var emitSourceMaps = withSourceMap;
     if (shouldBuildNode) {
-        buildNodeTask(taskPath, outDir, isServerBuild);
+        buildNodeTask(taskPath, outDir, { isServerBuild: isServerBuild, emitSourceMaps: emitSourceMaps });
     }
 
     // remove the hashes for the common packages, they change every build
@@ -646,6 +700,25 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
             rm('-Rf', buildTasksDuplicateNodeModules);
         }
     }
+
+    // Optionally minify the compiled Node task into a single bundle per entry
+    // point and drop node_modules. Enabled globally via the --minify build flag
+    // or per-task via a "minify" block in the task's make.json.
+    var testArtifactPath = path.join(buildTestArtifactsPath, taskName);
+    rm('-Rf', testArtifactPath);
+    if (doMinify && shouldBuildNode) {
+        // Loader-based L0 mocks cannot replace modules after esbuild inlines them.
+        // Preserve compiled pre-bundle code (without production dependencies) as a
+        // test-only artifact; CLI.test restores its exact lockfile dependencies.
+        fs.cpSync(outDir, testArtifactPath, {
+            recursive: true,
+            filter: function (source) {
+                return path.basename(source) !== 'node_modules';
+            }
+        });
+        banner('Minifying task ' + taskName + (withSourceMap ? ' (with TS source map)' : ' (no source map)'), true);
+        await minifyNodeTask(taskPath, outDir, minifyOptions);
+    }
 }
 
 //
@@ -672,14 +745,157 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
+
+    function getTaskSourcePath(taskName) {
+        var candidates = [
+            path.join(genTaskPath, taskName)
+        ];
+        if (argv.includeLocalPackagesBuildConfig) {
+            candidates.push(path.join(genTaskPathLocal, taskName));
+        }
+        candidates.push(path.join(tasksPath, taskName));
+        return candidates.find(function (candidate) {
+            return fs.existsSync(path.join(candidate, 'package.json'));
+        });
+    }
+
+    function getMissingBuiltRuntimeDependencies(taskBuildPath) {
+        var packageJsonPath = path.join(taskBuildPath, 'package.json');
+        if (!fs.existsSync(packageJsonPath)) {
+            return [];
+        }
+        var packageJson = fileToJson(packageJsonPath);
+        var runtimeDependencies = Object.assign(
+            {},
+            packageJson.dependencies || {},
+            packageJson.optionalDependencies || {});
+        return Object.keys(runtimeDependencies).filter(function (packageName) {
+            return !fs.existsSync(path.join(
+                taskBuildPath,
+                'node_modules',
+                ...packageName.split('/'),
+                'package.json'));
+        });
+    }
+
+    function prepareTaskTestDependencies(taskName, taskBuildPath) {
+        var missing = getMissingBuiltRuntimeDependencies(taskBuildPath);
+        if (!missing.length) {
+            return null;
+        }
+
+        var sourceTaskPath = getTaskSourcePath(taskName);
+        if (!sourceTaskPath || !fs.existsSync(path.join(sourceTaskPath, 'package-lock.json'))) {
+            throw new Error('Tests for minified task ' + taskName +
+                ' require dependencies removed from the production artifact (' + missing.join(', ') +
+                '), but its source package.json/package-lock.json could not be found.');
+        }
+
+        var taskTestDependenciesPath = path.join(testDependenciesPath, taskName);
+        var testNodeModulesPath = path.join(taskBuildPath, 'node_modules');
+        rm('-Rf', taskTestDependenciesPath);
+        mkdir('-p', taskTestDependenciesPath);
+
+        var taskMakePath = path.join(sourceTaskPath, 'make.json');
+        var taskMake = fs.existsSync(taskMakePath) ? fileToJson(taskMakePath) : {};
+        var externalPackages = minifyUtil.normalizeExternalPackages(
+            taskMake.minify && taskMake.minify.external);
+
+        function removeExternalPackageCopies(nodeModulesPath) {
+            var duplicateExternalRoots = [];
+            minifyUtil.walkInstalledPackages(nodeModulesPath, function (packageRoot) {
+                var packageJson = fileToJson(path.join(packageRoot, 'package.json'));
+                if (externalPackages.includes(packageJson.name)) {
+                    duplicateExternalRoots.push(packageRoot);
+                }
+            });
+            duplicateExternalRoots
+                .sort(function (left, right) { return right.length - left.length; })
+                .forEach(function (packageRoot) { rm('-Rf', packageRoot); });
+        }
+
+        function installTestDependencySet(sourcePackagePath, destinationNodeModulesPath, omitDev, scratchName) {
+            var scratchPackagePath = path.join(taskTestDependenciesPath, scratchName);
+            var scratchNodeModulesPath = path.join(scratchPackagePath, 'node_modules');
+            rm('-Rf', scratchPackagePath);
+            fs.cpSync(sourcePackagePath, scratchPackagePath, {
+                recursive: true,
+                filter: function (sourcePath) {
+                    return sourcePath === sourcePackagePath || path.basename(sourcePath) !== 'node_modules';
+                }
+            });
+            try {
+                var npmArgs = ['ci', '--no-audit', '--fund=false'];
+                if (omitDev) {
+                    npmArgs.push('--omit=dev');
+                }
+                childProcess.execFileSync(
+                    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+                    npmArgs,
+                    { cwd: scratchPackagePath, stdio: 'inherit', env: process.env });
+                mkdir('-p', path.dirname(destinationNodeModulesPath));
+                rm('-Rf', destinationNodeModulesPath);
+                fs.renameSync(scratchNodeModulesPath, destinationNodeModulesPath);
+                // External packages must use the production artifact's retained
+                // copy, not a second singleton from restored test dependencies.
+                removeExternalPackageCopies(destinationNodeModulesPath);
+            } catch (err) {
+                rm('-Rf', destinationNodeModulesPath);
+                throw err;
+            } finally {
+                rm('-Rf', scratchPackagePath);
+            }
+        }
+
+        var nodePaths = [];
+        try {
+            console.log('> restoring test-only dependencies for minified task ' + taskName +
+                ' (missing from production output: ' + missing.join(', ') + ')');
+            installTestDependencySet(
+                sourceTaskPath,
+                testNodeModulesPath,
+                true,
+                'task-package');
+            nodePaths.push(testNodeModulesPath);
+
+            var sourceTestsPath = path.join(sourceTaskPath, 'Tests');
+            if (fs.existsSync(path.join(sourceTestsPath, 'package.json')) &&
+                fs.existsSync(path.join(sourceTestsPath, 'package-lock.json'))) {
+                var testsNodeModulesPath = path.join(taskBuildPath, 'Tests', 'node_modules');
+                installTestDependencySet(
+                    sourceTestsPath,
+                    testsNodeModulesPath,
+                    false,
+                    'tests-package');
+                nodePaths.unshift(testsNodeModulesPath);
+            }
+        } catch (err) {
+            nodePaths.forEach(function (nodeModulesPath) { rm('-Rf', nodeModulesPath); });
+            rm('-Rf', taskTestDependenciesPath);
+            throw err;
+        }
+
+        return {
+            root: taskTestDependenciesPath,
+            installedNodeModules: nodePaths
+        };
+    }
+
     async function runTaskTests(taskName, results) {
         banner('Testing: ' + taskName);
+        var productionTaskBuildPath = path.join(buildTasksPath, taskName);
+        var preBundleTestArtifactPath = path.join(buildTestArtifactsPath, taskName);
+        var hasPreBundleTestArtifact = fs.existsSync(preBundleTestArtifactPath);
+        var taskBuildPath = hasPreBundleTestArtifact
+            ? preBundleTestArtifactPath
+            : productionTaskBuildPath;
         // find the tests
         var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
-        var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
+        var pattern1 = path.join(taskBuildPath, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
-        var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
-        var isNodeTask = util.isNodeTask(buildTasksPath, taskName);
+        var coverageTaskPath = path.relative(__dirname, taskBuildPath);
+        var taskPath = path.join('**', coverageTaskPath, "**", "*.js").replace(/\\/g, '/');
+        var isNodeTask = util.isNodeTask(path.dirname(taskBuildPath), taskName);
 
         var isReportWasFormed = false;
         var testsSpec = [];
@@ -696,25 +912,56 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
             return;
         }
 
-        for (let nodeVersion of nodeVersions) {
-            try {
-                nodeVersion = String(nodeVersion);
-                banner('Run Mocha Suits for node ' + nodeVersion);
-                // setup the version of node to run the tests
-                await util.installNodeAsync(nodeVersion);
+        var restoredDependencies = hasPreBundleTestArtifact
+            ? prepareTaskTestDependencies(taskName, taskBuildPath)
+            : null;
+        var originalNodePath = process.env.NODE_PATH;
+        if (restoredDependencies) {
+            var nodePaths = [];
+            var productionNodeModules = path.join(productionTaskBuildPath, 'node_modules');
+            if (fs.existsSync(productionNodeModules)) {
+                nodePaths.push(productionNodeModules);
+            }
+            if (originalNodePath) {
+                nodePaths.push(originalNodePath);
+            }
+            if (nodePaths.length) {
+                process.env.NODE_PATH = nodePaths.join(path.delimiter);
+            }
+        }
 
+        try {
+            for (let nodeVersion of nodeVersions) {
+                try {
+                    nodeVersion = String(nodeVersion);
+                    banner('Run Mocha Suits for node ' + nodeVersion);
+                    // setup the version of node to run the tests
+                    await util.installNodeAsync(nodeVersion);
 
-                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
-                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
-                    isReportWasFormed = true;
+                    if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
+                        run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+                        util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                        isReportWasFormed = true;
+                    }
+                    else {
+                        run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
                 }
-                else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/ false,  /*throwOnError*/ true);
-                }
-            }  catch (e) {
-                console.error(e);
-                results.push({ taskName: taskName, result: `NodeVersion: ${nodeVersion} Error: ${e}` });
+            }
+        } finally {
+            if (originalNodePath === undefined) {
+                delete process.env.NODE_PATH;
+            } else {
+                process.env.NODE_PATH = originalNodePath;
+            }
+            if (restoredDependencies) {
+                restoredDependencies.installedNodeModules.forEach(function (nodeModulesPath) {
+                    rm('-Rf', nodeModulesPath);
+                });
+                rm('-Rf', restoredDependencies.root);
             }
         }
     }

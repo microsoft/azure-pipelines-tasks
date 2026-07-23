@@ -5,6 +5,7 @@ import { AzureAuthenticationHelper } from './src/AzureAuthenticationHelper';
 import { ContainerAppHelper } from './src/ContainerAppHelper';
 import { ContainerRegistryHelper } from './src/ContainerRegistryHelper';
 import { TelemetryHelper } from './src/TelemetryHelper';
+import { emitArgInjectionRiskTelemetry } from './src/telemetry';
 import { Utility } from './src/Utility';
 
 const util = new Utility();
@@ -138,6 +139,9 @@ export class azurecontainerapps {
 
         // Get the path to the application source to build and run, if provided
         this.appSourcePath = tl.getInput('appSourcePath', false);
+
+        // Emit arg-injection risk telemetry (metadata only) for the user-controlled appSourcePath.
+        emitArgInjectionRiskTelemetry('appSourcePath', this.appSourcePath);
 
         // Get the name of the ACR instance to push images to, if provided
         this.acrName = tl.getInput('acrName', false);

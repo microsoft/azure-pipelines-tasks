@@ -96,16 +96,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Install runtime deps from the public npm registry. We install in an
-      # isolated directory outside the checkout so npm uses only this local
-      # .npmrc (the repo root .npmrc, which sets always-auth=true and would
-      # force auth, is not on npm's config search path from here).
+      # Install runtime deps from the internal Microsoft package feed proxy
+      # (https://packagefeedproxy.microsoft.io/npm/) instead of the public npm
+      # registry. We install in an isolated directory outside the checkout so
+      # npm uses only this local .npmrc (the repo root .npmrc, which sets
+      # always-auth=true and would force auth, is not on npm's config search
+      # path from here).
       - name: Install dependencies
         run: |
           mkdir -p "$RUNNER_TEMP/triage"
           cd "$RUNNER_TEMP/triage"
-          echo "registry=https://registry.npmjs.org/" > .npmrc
-          npm install --no-save --registry=https://registry.npmjs.org/ @octokit/rest@18.12.0 nodemailer@6
+          echo "registry=https://packagefeedproxy.microsoft.io/npm/" > .npmrc
+          npm install --no-save --registry=https://packagefeedproxy.microsoft.io/npm/ @octokit/rest@18.12.0 nodemailer@6
 
       - name: Generate and send report
         run: node ci/triage-report.js

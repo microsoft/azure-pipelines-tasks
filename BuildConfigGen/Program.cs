@@ -1,3 +1,4 @@
+using System.CommandLine;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -118,41 +119,102 @@ namespace BuildConfigGen
         /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
         /// <param name="useSemverBuildConfig">If true, the semver "build" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3).</param>
         /// <param name="bumpBaseTask">If true, update the base task.json version independently of generated configs</param>
-        static void Main(
-            string? task = null,
-            string? configs = null,
-            int? currentSprint = null,
-            bool writeUpdates = false,
-            bool allTasks = false,
-            bool getTaskVersionTable = false,
-            string? debugAgentDir = null,
-            bool includeLocalPackagesBuildConfig = false,
-            bool useSemverBuildConfig = false,
-            bool bumpBaseTask = false)
+        static int Main(string[] args)
         {
-            try
+            Option<string> taskOption = new("--task")
             {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, bumpBaseTask);
-            }
-            catch (Exception e2)
+                Description = "The task to generate build configs for"
+            };
+            Option<string> configsOption = new("--configs")
             {
-                // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
-                // error handling strategy:
-                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
-                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
-                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                Description = "List of configs to generate seperated by |"
+            };
+            Option<int?> currentSprintOption = new("--current-sprint")
+            {
+                Description = "Overide current sprint; omit to get from whatsprintis.it"
+            };
+            Option<bool> writeUpdatesOption = new("--write-updates")
+            {
+                Description = "Write updates if true, else validate that the output is up-to-date"
+            };
+            Option<bool> allTasksOption = new("--all-tasks")
+            {
+                Description = "Generate build configs for all tasks"
+            };
+            Option<bool> getTaskVersionTableOption = new("--get-task-version-table")
+            {
+                Description = "Print the config/task/version table and exit"
+            };
+            Option<string> debugAgentDirOption = new("--debug-agent-dir")
+            {
+                Description = "When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent"
+            };
+            Option<bool> includeLocalPackagesBuildConfigOption = new("--include-local-packages-build-config")
+            {
+                Description = "Include LocalPackagesBuildConfig"
+            };
+            Option<bool> useSemverBuildConfigOption = new("--use-semver-build-config")
+            {
+                Description = "If true, the semver \"build\" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3)."
+            };
+            Option<bool> bumpBaseTaskOption = new("--bump-base-task")
+            {
+                Description = "If true, update the base task.json version independently of generated configs"
+            };
 
-                var restore = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e2.ToString());
-                Console.ForegroundColor = restore;
-                Console.WriteLine();
-                Console.WriteLine("An exception occured generating configs.  [MSFT internal only: questions/problems please refer to https://aka.ms/ado/taskseng] Exception message below: (full callstack above)");
-                Console.WriteLine(e2.Message);
+            RootCommand rootCommand = new("Generates, validates, and versions build configurations for Azure Pipelines tasks.")
+            {
+                taskOption,
+                configsOption,
+                currentSprintOption,
+                writeUpdatesOption,
+                allTasksOption,
+                getTaskVersionTableOption,
+                debugAgentDirOption,
+                includeLocalPackagesBuildConfigOption,
+                useSemverBuildConfigOption,
+                bumpBaseTaskOption
+            };
 
-                Environment.Exit(1);
-            }
+            rootCommand.SetAction(parseResult =>
+            {
+                try
+                {
+                    bool writeUpdates = parseResult.GetValue(writeUpdatesOption);
+                    ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
+                    MainInner(
+                        parseResult.GetValue(taskOption),
+                        parseResult.GetValue(configsOption),
+                        parseResult.GetValue(currentSprintOption),
+                        writeUpdates,
+                        parseResult.GetValue(allTasksOption),
+                        parseResult.GetValue(getTaskVersionTableOption),
+                        parseResult.GetValue(debugAgentDirOption),
+                        parseResult.GetValue(includeLocalPackagesBuildConfigOption),
+                        parseResult.GetValue(useSemverBuildConfigOption),
+                        parseResult.GetValue(bumpBaseTaskOption));
+                    return 0;
+                }
+                catch (Exception e2)
+                {
+                    // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
+                    // error handling strategy:
+                    // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+                    // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+                    // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                    var restore = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e2.ToString());
+                    Console.ForegroundColor = restore;
+                    Console.WriteLine();
+                    Console.WriteLine("An exception occured generating configs.  [MSFT internal only: questions/problems please refer to https://aka.ms/ado/taskseng] Exception message below: (full callstack above)");
+                    Console.WriteLine(e2.Message);
+
+                    return 1;
+                }
+            });
+
+            return rootCommand.Parse(args).Invoke();
         }
 
         private static void MainInner(
