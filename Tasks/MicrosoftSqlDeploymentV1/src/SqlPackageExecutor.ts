@@ -52,7 +52,12 @@ export class SqlPackageExecutor {
         const result = await tl.exec(sqlPackagePath, args, {
             failOnStdErr: false,
             ignoreReturnCode: true,
-            listeners: { stdout: captureLines, stderr: captureLines }
+            outStream: new (require('stream').Writable)({
+                write(chunk: Buffer, _enc: string, cb: () => void) { captureLines(chunk); cb(); }
+            }) as NodeJS.WritableStream,
+            errStream: new (require('stream').Writable)({
+                write(chunk: Buffer, _enc: string, cb: () => void) { captureLines(chunk); cb(); }
+            }) as NodeJS.WritableStream
         });
 
         if (result !== 0) {
