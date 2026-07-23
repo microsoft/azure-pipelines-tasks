@@ -1,5 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import * as fs from 'fs';
 import { Writable } from 'stream';
 
 export default class SqlProjectBuilder {
@@ -31,9 +32,9 @@ export default class SqlProjectBuilder {
         tl.debug(tl.loc('BuildingSqlProject', projectPath));
         await this.executeBuild(projectPath, buildArguments);
 
-        // Locate the built .dacpac
+        // Locate the built .dacpac — use fs.existsSync (not tl.exist) so mock tests can intercept this check
         const dacpacPath = path.join(outputDir, `${projectName}.dacpac`);
-        if (!tl.exist(dacpacPath)) {
+        if (!fs.existsSync(dacpacPath)) {
             throw new Error(tl.loc('DacpacNotFoundAfterBuild', dacpacPath));
         }
 

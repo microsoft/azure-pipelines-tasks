@@ -9,10 +9,23 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.sqlproj');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
-tmr.setAnswers({ checkPath: { 'test.sqlproj': true } });
+const builtDacpac = path.join(path.dirname('test.sqlproj'), 'bin', 'Debug', 'test.dacpac');
+
+tmr.setAnswers({
+    checkPath: { 'test.sqlproj': true, '/usr/bin/dotnet': true },
+    which: { 'dotnet': '/usr/bin/dotnet' },
+    exec: {
+        '/usr/bin/dotnet build test.sqlproj -p:NetCoreBuild=true': { code: 0, stdout: 'Build succeeded.' }
+    }
+});
 
 tmr.registerMock('fs', {
-    existsSync: (p: string) => p === 'test.sqlproj' || p.includes('.dotnet'),
+    existsSync: (p: string) => {
+        if (p === 'test.sqlproj') { return true; }
+        if (p.includes('.dotnet')) { return true; }
+        if (p === builtDacpac || p.includes('.dacpac')) { return true; }
+        return false;
+    },
     readdirSync: () => []
 });
 
