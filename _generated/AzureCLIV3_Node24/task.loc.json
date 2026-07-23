@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 277,
-    "Patch": 5
+    "Minor": 278,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -256,6 +256,7 @@
     "AuthSchemeNotSupportedForAzureDevOps": "ms-resource:loc.messages.AuthSchemeNotSupportedForAzureDevOps",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+    "AzureConfigDirIsolationNotice": "ms-resource:loc.messages.AzureConfigDirIsolationNotice",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",
@@ -279,7 +280,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.277.4",
-    "Node24_1": "3.277.5"
+    "Default": "3.278.0",
+    "Node24_1": "3.278.1"
   }
 }
