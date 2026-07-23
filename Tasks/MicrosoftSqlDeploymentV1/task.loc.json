@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 278,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -160,6 +160,14 @@
     "ConnectionStringMissingClientSecret": "ms-resource:loc.messages.ConnectionStringMissingClientSecret",
     "BuildingSqlProject": "ms-resource:loc.messages.BuildingSqlProject",
     "DotnetNotFound": "ms-resource:loc.messages.DotnetNotFound",
+    "DacpacNotFoundAfterBuild": "ms-resource:loc.messages.DacpacNotFoundAfterBuild",
+    "SqlProjectBuiltSuccessfully": "ms-resource:loc.messages.SqlProjectBuiltSuccessfully",
+    "SqlProjectBuildFailed": "ms-resource:loc.messages.SqlProjectBuildFailed",
+    "AccessTokenAcquired": "ms-resource:loc.messages.AccessTokenAcquired",
+    "ExecutingSqlPackage": "ms-resource:loc.messages.ExecutingSqlPackage",
+    "SqlPackageExecutionFailed": "ms-resource:loc.messages.SqlPackageExecutionFailed",
+    "OutputFileGenerated": "ms-resource:loc.messages.OutputFileGenerated",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "DeploymentSuccessful": "ms-resource:loc.messages.DeploymentSuccessful",
     "DeploymentFailed": "ms-resource:loc.messages.DeploymentFailed",
     "InvalidFileExtension": "ms-resource:loc.messages.InvalidFileExtension"
