@@ -9,9 +9,11 @@
 
 import * as taskLib from 'azure-pipelines-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as semver from 'semver';
 import * as installer from './installer';
 import * as proxyutil from './proxyutil';
 import * as path from 'path';
+import * as fs from 'fs';
 
 async function run() {
     try {
@@ -20,7 +22,7 @@ async function run() {
         // If not supplied then task is still used to setup proxy, auth, etc...
         //
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-        const version = taskLib.getInput('version', false);
+        const version = getNodeVersion(taskLib.getInput('version', false), taskLib.getInput('versionFilePath', false));
         const nodejsMirror = taskLib.getInput('nodejsMirror', false) || 'https://nodejs.org/dist/';
         const retryCountOnDownloadFails = taskLib.getInput('retryCountOnDownloadFails', false) || "5";
         const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
@@ -37,6 +39,22 @@ async function run() {
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
+}
+
+function getNodeVersion(versionSpecInput: string, versionFilePathInput: string) {
+    if (versionSpecInput && versionFilePathInput) {
+        throw new Error(taskLib.loc('CannotSpecifyVersionAndVersionFilePath'));
+    }
+
+    const version =
+        versionFilePathInput
+            ? fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' })
+            : versionSpecInput;
+    if (semver.validRange(version) === null) {
+        throw new Error(taskLib.loc('InvalidVersionSpecification', version));
+    }
+
+    return version;
 }
 
 run()

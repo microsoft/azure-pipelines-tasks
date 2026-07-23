@@ -114,4 +114,40 @@ describe('NodeTool Suite', function () {
         assert(tr.stdout.indexOf('DOWNLOAD https://mymirror.example.com/node/v10.15.1/') > -1, 'Should download from the custom mirror base');
       }, tr);
     });
+
+    it('Fails when version and versionFilePath are both specified', async () => {
+      let tp: string = path.join(__dirname, 'L0InvalidConfiguration.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.failed, 'NodeTool should have failed.');
+        assert(tr.stdOutContained('loc_mock_CannotSpecifyVersionAndVersionFilePath'), "Descriptive message should be output");
+      }, tr);
+    });
+
+    it('Fails when specified version is invalid', async () => {
+      let tp: string = path.join(__dirname, 'L0InvalidVersionSpec.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.failed, 'NodeTool should have failed.');
+        assert(tr.stdOutContained('loc_mock_InvalidVersionSpecification InvalidFromVersion'), "Descriptive message should be output");
+      }, tr);
+    });
+
+    it('Fails when version in specified versionSpecFile is invalid', async () => {
+      let tp: string = path.join(__dirname, 'L0InvalidVersionSpecInFile.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.failed, 'NodeTool should have failed.');
+        assert(tr.stdOutContained('loc_mock_InvalidVersionSpecification InvalidFromFile'), "Descriptive message should be output");
+      }, tr);
+    });
 });
