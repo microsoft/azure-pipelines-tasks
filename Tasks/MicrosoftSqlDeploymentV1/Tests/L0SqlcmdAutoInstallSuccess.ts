@@ -8,7 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=testpass123;');
 
 const extractedDir = '/tmp/sqlcmd-extracted';
 const executableName = process.platform === 'win32' ? 'sqlcmd.exe' : 'sqlcmd';
@@ -33,6 +33,8 @@ fsClone.existsSync = function(filePath: any): boolean {
 tmr.registerMock('fs', fsClone);
 
 // sqlcmd not on PATH — triggers auto-install
-tmr.setAnswers({ which: { 'sqlcmd': '' } });
+tmr.setAnswers({ which: { 'sqlcmd': '' }, checkPath: { 'test.sql': true } });
 
 tmr.run();
+
+

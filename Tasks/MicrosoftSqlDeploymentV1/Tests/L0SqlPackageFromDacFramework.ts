@@ -8,7 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=testpass123;');
 
 const sqlServerBasePath = 'C:\\Program Files\\Microsoft SQL Server';
 const dacpacPath = path.join(sqlServerBasePath, '170', 'DAC', 'bin', 'SqlPackage.exe');
@@ -30,4 +30,7 @@ fsClone.existsSync = function(filePath: any): boolean {
 };
 tmr.registerMock('fs', fsClone);
 
+tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
 tmr.run();
+
+

@@ -5,25 +5,19 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'microsoftsqldeployment.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('action', 'script');
+tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
-// Mock fs.existsSync to return true for test.sql
-tmr.registerMock('fs', {
-    existsSync: (filePath: string) => {
-        if (filePath === 'test.sql') {
-            return true;
-        }
-        return false;
-    }
+tmr.setAnswers({
+    checkPath: { 'test.sql': true },
+    which: { 'sqlcmd': '/usr/bin/sqlcmd' }
 });
 
-// Mock tl.which to simulate sqlcmd found on PATH
-tmr.setAnswers({
-    which: {
-        'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
-    }
+tmr.registerMock('fs', {
+    existsSync: (p: string) => p === 'test.sql',
+    readdirSync: () => []
 });
 
 tmr.run();
+

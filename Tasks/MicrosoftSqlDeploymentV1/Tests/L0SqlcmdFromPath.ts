@@ -7,7 +7,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;Integrated Security=true;');
+tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 // No sqlcmdPath input - should discover from PATH
 
 // Mock fs.existsSync to return true for test.sql
@@ -24,7 +24,10 @@ tmr.registerMock('fs', {
 tmr.setAnswers({
     which: {
         'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
-    }
+    },
+    checkPath: { 'test.sql': true }
 });
 
 tmr.run();
+
+

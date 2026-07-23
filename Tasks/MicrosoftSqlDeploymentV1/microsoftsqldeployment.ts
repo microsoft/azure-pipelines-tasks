@@ -2,6 +2,11 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import SqlPackageHelper from './src/SqlPackageHelper';
 import SqlcmdHelper from './src/SqlcmdHelper';
+import SqlConnectionConfig from './src/SqlConnectionConfig';
+import SqlUtils from './src/SqlUtils';
+import FirewallManager from './src/FirewallManager';
+import AzureSqlResourceManager from './src/AzureSqlResourceManager';
+
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -72,7 +77,15 @@ async function main(): Promise<void> {
             throw new Error(tl.loc('InvalidFileExtension', fileExtension));
         }
 
+        // Validate file exists
+        tl.checkPath(filePath, 'path');
+
         console.log(tl.loc('ActionDetected', action, fileType));
+
+        // Parse and validate connection string
+        console.log(tl.loc('ParsingConnectionString'));
+        const connectionConfig = new SqlConnectionConfig(connectionString);
+        tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
@@ -84,9 +97,9 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
         }
 
-        // Discover sqlcmd for SQL script actions
+        // Discover sqlcmd for SQL script actions or firewall connectivity testing
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script');
+        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));
@@ -94,16 +107,31 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
         }
 
-        // TODO: Implement deployment logic
-        // - SqlPackage discovery (dotnet tool → MSI → PATH)
-        // - sqlcmd discovery/auto-install
-        // - Firewall rule management (if enabled)
-        // - SQL project build (if .sqlproj)
-        // - SqlPackage or sqlcmd execution
-        // - Output variable setting
-        // - Firewall cleanup in finally block
+        // Firewall rule management
+        let firewallManager: FirewallManager | undefined;
+        try {
+            if (firewallRuleManagement && azureSubscription) {
+                const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
+                const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                if (ipAddress) {
+                    const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
+                    firewallManager = new FirewallManager(resourceManager);
+                    await firewallManager.addFirewallRule(ipAddress);
+                }
+            } else if (!firewallRuleManagement) {
+                tl.debug(tl.loc('FirewallManagementDisabled'));
+            }
 
-        console.log(tl.loc('DeploymentSuccessful'));
+            // TODO (task3b): SQL project build (.sqlproj → .dacpac)
+            // TODO (task4): SqlPackage execution and sqlcmd execution
+
+            console.log(tl.loc('DeploymentSuccessful'));
+        } finally {
+            if (firewallManager) {
+                await firewallManager.removeFirewallRule();
+            }
+        }
     }
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);
