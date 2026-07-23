@@ -63,6 +63,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When false (default), ##vso[...]5D; lines in remote output are neutralized (printed as text, not executed). Set true only if you trust the remote output and rely on it emitting logging commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[false (既定値) の場合、リモート出力内の ##vso[...]5D; 行は無効化されます (テキストとして出力され、実行されません)。リモート出力を信頼し、その出力がログ コマンドを発行することに依存する場合にのみ、true に設定してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.failOnStdErr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this option is selected, the build will fail when the remote commands or script write to STDERR.]]></Val>
@@ -158,6 +167,15 @@
           <Val><![CDATA[Commands]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[コマンド]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allow logging commands from remote output]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[リモート出力からのログ コマンドを許可する]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -63,6 +63,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When false (default), ##vso[...]5D; lines in remote output are neutralized (printed as text, not executed). Set true only if you trust the remote output and rely on it emitting logging commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[false(기본값)이면 원격 출력의 ##vso[...]5D; 줄이 중화됩니다. 즉, 실행되지 않고 텍스트로만 표시됩니다. 원격 출력을 신뢰하고, 그 출력에서 로깅 명령을 내보내는 데 의존할 때만 true로 설정하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.failOnStdErr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this option is selected, the build will fail when the remote commands or script write to STDERR.]]></Val>
@@ -158,6 +167,15 @@
           <Val><![CDATA[Commands]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[명령]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.enableRemoteVsoCommands" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allow logging commands from remote output]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[원격 출력의 명령 로깅 허용]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
