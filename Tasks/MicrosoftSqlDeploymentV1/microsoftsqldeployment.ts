@@ -125,7 +125,10 @@ async function main(): Promise<void> {
                     azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
                     azureEndpoint.scheme === 'ManagedServiceIdentity') {
                     try {
-                        accessToken = await azureEndpoint.getToken();
+                        // Set SQL resource audience before acquiring the token.
+                        // The default ARM audience is rejected by Azure SQL.
+                        azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = 'https://database.windows.net/';
+                        accessToken = await azureEndpoint.applicationTokenCredentials.getToken(true);
                         if (accessToken) {
                             tl.setSecret(accessToken);
                             tl.debug(tl.loc('AccessTokenAcquired'));

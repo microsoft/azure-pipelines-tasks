@@ -463,6 +463,16 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'should report executing SqlPackage script action');
         }, tr);
     });
+
+    it('should succeed with azureSubscription and use SQL-scoped access token', async () => {
+        const tp = path.join(__dirname, 'L0AzureSubscriptionWithToken.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed when azureSubscription is set and token acquired');
+            assert(tr.stdout.indexOf('AccessTokenAcquired') >= 0, 'should report access token acquired');
+        }, tr);
+    });
 });
 
 
