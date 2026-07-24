@@ -165,9 +165,15 @@ async function main(): Promise<void> {
             }
 
             if (deployFileType === 'DACPAC') {
+                if (action.toLowerCase() === 'sqlscript') {
+                    throw new Error(tl.loc('InvalidAction', action));
+                }
+                if (!sqlPackageExePath) {
+                    throw new Error(tl.loc('SqlPackageNotFound'));
+                }
                 tl.debug(tl.loc('ExecutingSqlPackage', action));
                 const outputFilePath = await SqlPackageExecutor.executeSqlPackage(
-                    sqlPackageExePath!,
+                    sqlPackageExePath,
                     action,
                     deployFilePath,
                     connectionConfig,
