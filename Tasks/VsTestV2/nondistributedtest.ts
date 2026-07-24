@@ -82,7 +82,8 @@ export class NonDistributedTest {
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false
             // Keeping this code in case we want to change failOnStdErr
-            errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+            outStream: new outStream.StringErrorWritable(false, { decodeStrings: false }),
+            errStream: new outStream.StringErrorWritable(true, { decodeStrings: false })
         };
 
         // The error codes return below are not the same as tl.TaskResult which follows a different convention.
