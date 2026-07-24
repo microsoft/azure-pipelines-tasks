@@ -10,19 +10,27 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', '/fake/project/MyDatabase.sqlproj');
 tmr.setInput('connectionString', 'Server=myserver.database.windows.net;Database=MyDB;User Id=admin;Password=pass123');
 
+// Mock SqlPackageHelper so discovery succeeds and the test deterministically
+// reaches the DotnetNotFound check rather than failing early at SqlPackageNotFound.
+tmr.registerMock('./src/SqlPackageHelper', {
+    default: {
+        findSqlPackage: async function() {
+            return '/usr/local/bin/sqlpackage';
+        }
+    }
+});
+
 // Mock answers - dotnet not found
 let a: ma.TaskLibAnswers = {
     'which': {
-        'dotnet': ''  // Not found
+        'dotnet': ''  // Not found — triggers DotnetNotFound error
     },
     'checkPath': {
-        '/fake/project/MyDatabase.sqlproj': true
-    },
-    'exist': {
         '/fake/project/MyDatabase.sqlproj': true
     }
 };
 tmr.setAnswers(a);
 
 tmr.run();
+
 

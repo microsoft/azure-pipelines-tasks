@@ -165,7 +165,7 @@ async function main(): Promise<void> {
                     additionalArguments || undefined,
                     accessToken
                 );
-                if (outputFilePath) {
+                if (outputFilePath && ['script', 'deployreport'].includes(action.toLowerCase())) {
                     tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
                     tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
                 }

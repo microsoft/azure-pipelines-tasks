@@ -117,12 +117,14 @@ export default class SqlProjectBuilder {
             outStream: new Writable({
                 write: (chunk: Buffer, encoding: string, callback: () => void) => {
                     buildOutput += chunk.toString();
+                    process.stdout.write(chunk);
                     callback();
                 }
             }),
             errStream: new Writable({
                 write: (chunk: Buffer, encoding: string, callback: () => void) => {
                     buildError += chunk.toString();
+                    process.stderr.write(chunk);
                     callback();
                 }
             })
