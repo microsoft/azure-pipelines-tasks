@@ -66,6 +66,31 @@ describe('AzureContainerAppsV1 Suite', function () {
         }, tr);
     });
 
+    it('Fails for appSourcePath containing shell metacharacters', async () => {
+        this.timeout(5000);
+
+        const tp: string = path.join(__dirname, 'L0FailsForAppSourcePathWithInjection.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            // Validate the task failed
+            assert(tr.failed, 'AzureContainerAppsV1 task should have failed when appSourcePath contains shell metacharacters.');
+
+            // Validate the correct error message was thrown
+            assert(tr.stdout.includes('InvalidAppSourcePathMessage'), 'AzureContainerAppsV1 task should reject an appSourcePath containing shell metacharacters with InvalidAppSourcePathMessage.');
+
+            // Validate the correct result was logged to telemetry
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task failed.');
+
+            // Validate that the end-of-test scenarios are hit
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
+        }, tr);
+    });
+
     it('Fails for no service connection argument', async () => {
         this.timeout(5000);
 
@@ -574,6 +599,105 @@ describe('AzureContainerAppsV1 Suite', function () {
         }
 
         assert(typeof capturedArgs === 'string', 'createRunnableAppImage should invoke execSync with a single command string when the feature flag is disabled.');
-        assert(capturedArgs.indexOf(`--path ${appSourcePath}`) !== -1, 'appSourcePath should be interpolated into the legacy command string when the feature flag is disabled.');
+        assert(capturedArgs.indexOf(`--path "${appSourcePath}"`) !== -1, 'appSourcePath should be quoted and interpolated into the legacy command string when the feature flag is disabled.');
+    });
+
+    it('escapeBashArg neutralizes shell metacharacters', () => {
+        const { escapeBashArg } = require('../src/shellEscape');
+
+        assert.strictEqual(escapeBashArg('/samplepath'), `'/samplepath'`, 'A benign path should be wrapped in single quotes.');
+        // A malicious value with a command separator and substitution must be fully
+        // contained within single quotes so bash cannot interpret it as code.
+        assert.strictEqual(
+            escapeBashArg('/a; curl evil | bash'),
+            `'/a; curl evil | bash'`,
+            'Shell metacharacters must be enclosed in single quotes.');
+        // An embedded single quote must be closed/escaped/reopened.
+        assert.strictEqual(escapeBashArg(`a'b`), `'a'\\''b'`, "An embedded single quote must be escaped as '\\''.");
+    });
+
+    it('escapePowerShellArg neutralizes shell metacharacters', () => {
+        const { escapePowerShellArg } = require('../src/shellEscape');
+
+        assert.strictEqual(escapePowerShellArg('C:\\src\\app'), `'C:\\src\\app'`, 'Backslashes must remain literal inside single quotes.');
+        assert.strictEqual(
+            escapePowerShellArg('C:\\a; Remove-Item C:\\'),
+            `'C:\\a; Remove-Item C:\\'`,
+            'PowerShell metacharacters must be enclosed in single quotes.');
+        // An embedded single quote must be doubled.
+        assert.strictEqual(escapePowerShellArg(`a'b`), `'a''b'`, 'An embedded single quote must be doubled for PowerShell.');
+    });
+
+    it('validateAppSourcePath rejects shell metacharacters and accepts normal paths', () => {
+        const { validateAppSourcePath } = require('../src/shellEscape');
+
+        // Benign paths (including spaces and parentheses for Windows) must pass.
+        assert.doesNotThrow(() => validateAppSourcePath('/home/user/app source'), 'A path with a space should be accepted.');
+        assert.doesNotThrow(() => validateAppSourcePath('C:\\Program Files (x86)\\src'), 'A Windows path with parentheses should be accepted.');
+        assert.doesNotThrow(() => validateAppSourcePath(''), 'An empty value should be accepted (input is optional).');
+        assert.doesNotThrow(() => validateAppSourcePath(undefined), 'An undefined value should be accepted.');
+
+        // Values containing command-chaining/substitution operators or control chars must be rejected.
+        for (const bad of ['/a; rm -rf /', '/a | bash', '/a && b', '/a$(id)', '/a`id`', '/a<b', '/a>b', '/a\nb']) {
+            assert.throws(() => validateAppSourcePath(bad), /InvalidAppSourcePathMessage/, `validateAppSourcePath should reject '${bad}'.`);
+        }
+    });
+
+    it('determineRuntimeStackAsync escapes appSourcePath in the shell command', async () => {
+        // The read/delete of oryx-runtime.txt flows through a real shell
+        // (bash -c / pwsh -command). A malicious appSourcePath must be escaped so
+        // it cannot break out of the command.
+        const Module = require('module');
+        const os = require('os');
+
+        const maliciousPath = '/tmp/app; touch /tmp/pwned';
+        const capturedCommands: string[] = [];
+
+        // Intercept CommandHelper so we can inspect the exact command strings that
+        // would be handed to bash -c / pwsh -command.
+        const originalLoad = Module._load;
+        const originalExecSync = require('azure-pipelines-task-lib/task').execSync;
+        Module._load = function(request: string, parent: any, isMain: boolean) {
+            if (request === './CommandHelper') {
+                return {
+                    CommandHelper: function() {
+                        return {
+                            execCommandAsync: async function(command: string) {
+                                capturedCommands.push(command);
+                                return 'dotnetcore:7.0';
+                            }
+                        };
+                    }
+                };
+            }
+            return originalLoad.apply(this, arguments);
+        };
+
+        // Avoid actually invoking docker for the runtime-detection step.
+        require('azure-pipelines-task-lib/task').execSync = () => ({ code: 0, stdout: '', stderr: '', error: null });
+
+        try {
+            // Load a fresh copy of ContainerAppHelper so the patched require is used.
+            const helperPath = require.resolve('../src/ContainerAppHelper');
+            delete require.cache[helperPath];
+            const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+
+            await new ContainerAppHelper(true).determineRuntimeStackAsync(maliciousPath);
+        } finally {
+            Module._load = originalLoad;
+            require('azure-pipelines-task-lib/task').execSync = originalExecSync;
+            delete require.cache[require.resolve('../src/ContainerAppHelper')];
+        }
+
+        assert(capturedCommands.length >= 1, 'determineRuntimeStackAsync should build at least one shell command.');
+        const isWindows = os.platform() === 'win32';
+        const { escapeShellArg } = require('../src/shellEscape');
+        const expectedEscapedPath = escapeShellArg(path.join(maliciousPath, 'oryx-runtime.txt'), isWindows);
+        for (const command of capturedCommands) {
+            // Every command handed to bash -c / pwsh -command must embed the path in
+            // its quoted, escaped form so the metacharacters cannot break out.
+            assert(command.indexOf(expectedEscapedPath) !== -1,
+                `appSourcePath must be embedded in its escaped form. Expected to find ${expectedEscapedPath} in: ${command}`);
+        }
     });
 });

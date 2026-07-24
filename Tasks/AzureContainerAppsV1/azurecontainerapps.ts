@@ -6,6 +6,7 @@ import { ContainerAppHelper } from './src/ContainerAppHelper';
 import { ContainerRegistryHelper } from './src/ContainerRegistryHelper';
 import { TelemetryHelper } from './src/TelemetryHelper';
 import { emitArgInjectionRiskTelemetry } from './src/telemetry';
+import { validateAppSourcePath } from './src/shellEscape';
 import { Utility } from './src/Utility';
 
 const util = new Utility();
@@ -142,6 +143,10 @@ export class azurecontainerapps {
 
         // Emit arg-injection risk telemetry (metadata only) for the user-controlled appSourcePath.
         emitArgInjectionRiskTelemetry('appSourcePath', this.appSourcePath);
+
+        // Reject an appSourcePath that contains shell command-chaining/substitution
+        // operators or control characters before it is ever used to build a command.
+        validateAppSourcePath(this.appSourcePath);
 
         // Get the name of the ACR instance to push images to, if provided
         this.acrName = tl.getInput('acrName', false);
