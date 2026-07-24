@@ -83,7 +83,7 @@ export class SqlPackageExecutor {
                 console.log(`##vso[task.uploadfile]${outputPath}`);
                 return outputPath;
             } else if (outputGeneratingActions.includes(action.toLowerCase())) {
-                throw new Error(`SqlPackage succeeded but expected output file was not produced: ${outputPath}`);
+                throw new Error(tl.loc('OutputFileNotProduced', outputPath));
             }
         }
         return undefined;
@@ -105,8 +105,14 @@ export class SqlPackageExecutor {
         args.push(`/Action:${this.mapActionToSqlPackageAction(action)}`);
         args.push(`/SourceFile:${sourcePath}`);
 
-        // Prefer access token when available; fall back to connection string
-        if (accessToken) {
+        // Only use /AccessToken for auth types that rely on token-based auth (AAD Default/Integrated/MSI).
+        // For SQL auth, AAD Password, and AAD Service Principal the connection string carries the
+        // credentials, so always use /TargetConnectionString for those.
+        const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+        const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+        const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
+
+        if (useAccessToken) {
             args.push(`/TargetServerName:${connectionConfig.Server}`);
             args.push(`/TargetDatabaseName:${connectionConfig.Database}`);
             args.push(`/AccessToken:${accessToken}`);

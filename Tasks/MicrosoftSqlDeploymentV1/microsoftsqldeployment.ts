@@ -127,11 +127,18 @@ async function main(): Promise<void> {
                     try {
                         // Set SQL resource audience before acquiring the token.
                         // The default ARM audience is rejected by Azure SQL.
-                        azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = 'https://database.windows.net/';
-                        accessToken = await azureEndpoint.applicationTokenCredentials.getToken(true);
-                        if (accessToken) {
-                            tl.setSecret(accessToken);
-                            tl.debug(tl.loc('AccessTokenAcquired'));
+                        // Save and restore the original resource ID so subsequent ARM calls
+                        // (e.g. firewall rule management) still use the ARM-scoped token.
+                        const originalResourceId = azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId;
+                        try {
+                            azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = 'https://database.windows.net/';
+                            accessToken = await azureEndpoint.applicationTokenCredentials.getToken(true);
+                            if (accessToken) {
+                                tl.setSecret(accessToken);
+                                tl.debug(tl.loc('AccessTokenAcquired'));
+                            }
+                        } finally {
+                            azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = originalResourceId;
                         }
                     } catch (tokenError) {
                         tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);

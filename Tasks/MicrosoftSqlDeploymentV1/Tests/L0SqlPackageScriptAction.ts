@@ -19,8 +19,8 @@ tmr.registerMock('./src/SqlPackageHelper', {
 });
 
 // SqlPackage executor auto-generates /OutputPath for script action when user doesn't specify one.
-// The exec key ends with the auto-generated path, which is dynamic, so we match by prefix using
-// ignoreReturnCode=false behavior — we provide a wildcard-style answer via the function form.
+// The auto-generated path is dynamic (includes timestamp), so this test uses an explicit
+// /OutputPath in additionalArguments to keep the exec mock key deterministic.
 const a: ma.TaskLibAnswers = {
     checkPath: {
         'test.dacpac': true,

@@ -167,6 +167,7 @@
     "ExecutingSqlPackage": "ms-resource:loc.messages.ExecutingSqlPackage",
     "SqlPackageExecutionFailed": "ms-resource:loc.messages.SqlPackageExecutionFailed",
     "OutputFileGenerated": "ms-resource:loc.messages.OutputFileGenerated",
+    "OutputFileNotProduced": "ms-resource:loc.messages.OutputFileNotProduced",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "DeploymentSuccessful": "ms-resource:loc.messages.DeploymentSuccessful",
     "DeploymentFailed": "ms-resource:loc.messages.DeploymentFailed",
