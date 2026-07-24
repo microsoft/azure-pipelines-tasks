@@ -1,4 +1,4 @@
-// Succeeds when sqlcmd is found on PATH.
+// Fails when sqlcmd exits with non-zero code.
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
@@ -19,14 +19,21 @@ tmr.registerMock('./src/SqlcmdHelper', {
 });
 
 const a: ma.TaskLibAnswers = {
-    checkPath: { 'test.sql': true, '/usr/bin/sqlcmd': true },
-    which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
+    checkPath: {
+        'test.sql': true,
+        '/usr/bin/sqlcmd': true
+    },
+    which: {
+        '/usr/bin/sqlcmd': '/usr/bin/sqlcmd'
+    },
     exec: {
-        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': { code: 0, stdout: 'Changed database context.' }
+        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': {
+            code: 1,
+            stdout: '',
+            stderr: 'Msg 208, Level 16, State 1: Invalid object name'
+        }
     }
 };
 tmr.setAnswers(a);
 
 tmr.run();
-
-

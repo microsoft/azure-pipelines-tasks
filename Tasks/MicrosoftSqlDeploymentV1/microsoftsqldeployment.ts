@@ -6,7 +6,9 @@ import SqlConnectionConfig from './src/SqlConnectionConfig';
 import SqlUtils from './src/SqlUtils';
 import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
-
+import SqlProjectBuilder from './src/SqlProjectBuilder';
+import { SqlPackageExecutor } from './src/SqlPackageExecutor';
+import { SqlcmdExecutor } from './src/SqlcmdExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -21,6 +23,9 @@ if (nodeVersion > 19) {
 }
 
 async function main(): Promise<void> {
+    // Telemetry: track which features people use to drive product decisions (e.g. P2 actions).
+    const telemetry: Record<string, any> = {};
+
     try {
         // Set resource path for localization
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -81,11 +86,15 @@ async function main(): Promise<void> {
         tl.checkPath(filePath, 'path');
 
         console.log(tl.loc('ActionDetected', action, fileType));
+        telemetry.action = action;
+        telemetry.fileType = fileType;
 
         // Parse and validate connection string
         console.log(tl.loc('ParsingConnectionString'));
         const connectionConfig = new SqlConnectionConfig(connectionString);
         tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
+        telemetry.authMethod = connectionConfig.FormattedAuthentication ?? 'sqlauthentication';
+        telemetry.hasAzureSubscription = !!azureSubscription;
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
@@ -95,36 +104,91 @@ async function main(): Promise<void> {
             tl.debug(tl.loc('DetectingSqlPackage'));
             sqlPackageExePath = await SqlPackageHelper.findSqlPackage(sqlpackagePath);
             tl.debug(tl.loc('SqlPackageFound', sqlPackageExePath));
+            telemetry.sqlPackageDiscoveryMethod = sqlpackagePath ? 'userSpecified' : 'discovered';
         }
 
-        // Discover sqlcmd for SQL script actions or firewall connectivity testing
+        // sqlcmd is needed for sqlScript action and for firewall connectivity probing
+        const needsSqlcmd = action === 'sqlScript' || firewallRuleManagement;
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));
             sqlcmdExePath = await SqlcmdHelper.findSqlcmd(sqlcmdPath);
             tl.debug(tl.loc('SqlCmdFound', sqlcmdExePath));
+            telemetry.sqlcmdDiscoveryMethod = sqlcmdPath ? 'userSpecified' : 'discovered';
         }
 
-        // Firewall rule management
+        // Firewall rule management and deployment execution
         let firewallManager: FirewallManager | undefined;
+        let accessToken: string | undefined;
+        let deployFilePath = filePath;
+        let deployFileType = fileType;
+
         try {
-            if (firewallRuleManagement && azureSubscription) {
+            // Step 1: Azure subscription — firewall + access token
+            if (azureSubscription) {
                 const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
                 const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
-                const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
-                if (ipAddress) {
-                    const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
-                    firewallManager = new FirewallManager(resourceManager);
-                    await firewallManager.addFirewallRule(ipAddress);
+
+                // Acquire access token for database authentication
+                if (azureEndpoint.scheme === 'ServicePrincipal' ||
+                    azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
+                    azureEndpoint.scheme === 'ManagedServiceIdentity') {
+                    try {
+                        accessToken = await azureEndpoint.getToken();
+                        if (accessToken) {
+                            tl.setSecret(accessToken);
+                            tl.debug(tl.loc('AccessTokenAcquired'));
+                        }
+                    } catch (tokenError) {
+                        tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
+                    }
+                }
+
+                if (firewallRuleManagement) {
+                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                    if (ipAddress) {
+                        const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
+                        firewallManager = new FirewallManager(resourceManager);
+                        await firewallManager.addFirewallRule(ipAddress);
+                    }
                 }
             } else if (!firewallRuleManagement) {
                 tl.debug(tl.loc('FirewallManagementDisabled'));
             }
 
-            // TODO (task3b): SQL project build (.sqlproj → .dacpac)
-            // TODO (task4): SqlPackage execution and sqlcmd execution
+            // Step 2: Build .sqlproj → .dacpac, then execute SqlPackage.
+            if (deployFileType === 'SQLPROJ') {
+                deployFilePath = await SqlProjectBuilder.buildProject(deployFilePath, buildArguments || undefined);
+                deployFileType = 'DACPAC';
+                tl.debug(`SQL project built. Deploying dacpac: ${deployFilePath}`);
+            }
+
+            if (deployFileType === 'DACPAC') {
+                tl.debug(tl.loc('ExecutingSqlPackage', action));
+                const outputFilePath = await SqlPackageExecutor.executeSqlPackage(
+                    sqlPackageExePath!,
+                    action,
+                    deployFilePath,
+                    connectionConfig,
+                    publishProfile || undefined,
+                    additionalArguments || undefined,
+                    accessToken
+                );
+                if (outputFilePath) {
+                    tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
+                    tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
+                }
+            } else if (deployFileType === 'SQL') {
+                tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
+                await SqlcmdExecutor.executeSqlcmd(
+                    sqlcmdExePath!,
+                    deployFilePath,
+                    connectionConfig,
+                    additionalArguments || undefined,
+                    accessToken
+                );
+            }
 
             console.log(tl.loc('DeploymentSuccessful'));
         } finally {
@@ -136,6 +200,14 @@ async function main(): Promise<void> {
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);
         tl.setResult(tl.TaskResult.Failed, tl.loc('DeploymentFailed', error.message || error));
+    }
+    finally {
+        try {
+            console.log('##vso[telemetry.publish area=TaskEndpointId;feature=MicrosoftSqlDeploymentV1]'
+                + JSON.stringify(telemetry));
+        } catch (telemetryError) {
+            tl.debug(`Telemetry emission failed (non-fatal): ${telemetryError}`);
+        }
     }
 }
 

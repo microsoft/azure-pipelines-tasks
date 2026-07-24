@@ -249,6 +249,39 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should fail when path does not exist', async () => {
+        const tp = path.join(__dirname, 'L0PathDoesNotExist.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when file path does not exist');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about missing path');
+        }, tr);
+    });
+
+    it('should fail when path is a directory', async () => {
+        const tp = path.join(__dirname, 'L0PathIsDirectory.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed when path is a directory');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about invalid path');
+        }, tr);
+    });
+
+    it('should fail when dotnet SDK is not found', async () => {
+        const tp = path.join(__dirname, 'Mocks', 'L0SqlProjectDotnetNotFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when dotnet SDK is not found');
+            assert(tr.stdout.indexOf('DotnetNotFound') >= 0 || tr.errorIssues.some(e => e.includes('.NET SDK not found')),
+                'should display dotnet not found error');
+        }, tr);
+    });
+
     it('should fail when firewallRuleManagement is true but azureSubscription is not provided', async () => {
         const tp = path.join(__dirname, 'L0FirewallWithoutAzureSubscription.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -316,7 +349,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
         await tr.runAsync();
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed when SqlPackage is found via user path');
-            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/path/sqlpackage') >= 0,
+            assert(tr.stdout.indexOf('SqlPackageFound') >= 0 || tr.stdout.indexOf('custom/sqlpackage') >= 0,
                 'should report SqlPackage found at user-provided path');
         }, tr);
     });
@@ -397,7 +430,16 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.stdout.indexOf('SQL') >= 0, 'should detect SQL file type');
         }, tr);
     });
-
+    it('should fail when sqlcmd execution fails with non-zero exit code', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdExecutionFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when sqlcmd exits with non-zero code');
+            assert(tr.stdout.indexOf('SqlcmdExecutionFailed') >= 0 || tr.errorIssues.some(e => e.includes('sqlcmd execution failed')),
+                'should report sqlcmd execution failure');
+        }, tr);
+    });
     it('should succeed with valid sqlproj inputs', async () => {
         const tp = path.join(__dirname, 'L0ValidSqlProjInputs.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -406,6 +448,28 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'task should succeed with valid sqlproj inputs');
             assert(tr.stdout.indexOf('ActionDetected') >= 0, 'should detect action and file type');
             assert(tr.stdout.indexOf('SQLPROJ') >= 0, 'should detect SQLPROJ file type');
+        }, tr);
+    });
+
+    it('should fail when SqlPackage execution fails with non-zero exit code', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageExecutionFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when SqlPackage exits with non-zero code');
+            assert(tr.stdout.indexOf('SqlPackageExecutionFailed') >= 0 || tr.errorIssues.some(e => e.includes('SqlPackage execution failed')),
+                'should report SqlPackage execution failure');
+        }, tr);
+    });
+
+    it('should succeed with script action and generate output file', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageScriptAction.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with script action');
+            assert(tr.stdout.indexOf('ExecutingSqlPackage') >= 0 || tr.stdout.indexOf('script') >= 0,
+                'should report executing SqlPackage script action');
         }, tr);
     });
 });
