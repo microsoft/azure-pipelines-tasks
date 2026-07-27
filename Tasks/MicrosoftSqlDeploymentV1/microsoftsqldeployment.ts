@@ -8,6 +8,7 @@ import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
 import { SqlPackageExecutor } from './src/SqlPackageExecutor';
+import { SqlcmdExecutor } from './src/SqlcmdExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -185,9 +186,43 @@ async function main(): Promise<void> {
                     tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
                     tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
                 }
+            } else if (deployFileType === 'SQL') {
+                if (action.toLowerCase() !== 'sqlscript') {
+                    throw new Error(tl.loc('InvalidAction', action));
+                }
+                if (!sqlcmdExePath) {
+                    // Should not reach here — SqlcmdHelper.findSqlcmd throws if not found
+                    throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
+                }
+                tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
+                // Only use access token for token-based auth (AAD Default/Integrated)
+                const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+                const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                const sqlcmdToken = tokenBasedAuthTypes.includes(authType) ? accessToken : undefined;
+                await SqlcmdExecutor.executeSqlcmd(
+                    sqlcmdExePath,
+                    deployFilePath,
+                    connectionConfig,
+                    additionalArguments || undefined,
+                    sqlcmdToken
+                );
             }
 
             console.log(tl.loc('DeploymentSuccessful'));
+
+            // Emit telemetry — actionable fields only, no PII
+            try {
+                const telemetry = {
+                    action: action,
+                    fileType: fileType,
+                    authMethod: connectionConfig.FormattedAuthentication ?? 'sqlauthentication',
+                    hasAzureSubscription: !!azureSubscription,
+                    sqlPackageDiscoveryMethod: needsSqlPackage ? (sqlpackagePath ? 'userSpecified' : 'discovered') : undefined,
+                    sqlcmdDiscoveryMethod: needsSqlcmd ? (sqlcmdPath ? 'userSpecified' : 'discovered') : undefined
+                };
+                console.log('##vso[telemetry.publish area=TaskEndpointId;feature=MicrosoftSqlDeploymentV1]'
+                    + JSON.stringify(telemetry));
+            } catch (_) { /* telemetry is non-fatal */ }
         } finally {
             if (firewallManager) {
                 await firewallManager.removeFirewallRule();

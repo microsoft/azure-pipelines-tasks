@@ -473,6 +473,17 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.stdout.indexOf('AccessTokenAcquired') >= 0, 'should report access token acquired');
         }, tr);
     });
+
+    it('should fail when sqlcmd execution fails with non-zero exit code', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdExecutionFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when sqlcmd exits with non-zero code');
+            assert(tr.stdout.indexOf('SqlcmdExecutionFailed') >= 0 || tr.errorIssues.some(e => e.includes('sqlcmd execution failed')),
+                'should report sqlcmd execution failure');
+        }, tr);
+    });
 });
 
 

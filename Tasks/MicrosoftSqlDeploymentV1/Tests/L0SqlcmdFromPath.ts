@@ -1,4 +1,5 @@
 // Succeeds when sqlcmd is found on PATH.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -8,25 +9,23 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
-// No sqlcmdPath input - should discover from PATH
 
-// Mock fs.existsSync to return true for test.sql
-tmr.registerMock('fs', {
-    existsSync: (filePath: string) => {
-        if (filePath === 'test.sql') {
-            return true;
+tmr.registerMock('./src/SqlcmdHelper', {
+    default: {
+        findSqlcmd: async function() {
+            return '/usr/bin/sqlcmd';
         }
-        return false;
     }
 });
 
-// Mock tl.which to simulate sqlcmd found on PATH
-tmr.setAnswers({
-    which: {
-        'sqlcmd': '/usr/bin/sqlcmd'  // Simulate sqlcmd found on PATH
-    },
-    checkPath: { 'test.sql': true }
-});
+const a: ma.TaskLibAnswers = {
+    checkPath: { 'test.sql': true, '/usr/bin/sqlcmd': true },
+    which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
+    exec: {
+        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': { code: 0, stdout: 'Changed database context.' }
+    }
+};
+tmr.setAnswers(a);
 
 tmr.run();
 
