@@ -223,7 +223,7 @@ async function main(): Promise<void> {
                     sqlPackageDiscoveryMethod: needsSqlPackage ? (sqlpackagePath ? 'userSpecified' : 'discovered') : undefined,
                     sqlcmdDiscoveryMethod: needsSqlcmd ? (sqlcmdPath ? 'userSpecified' : 'discovered') : undefined
                 };
-                console.log('##vso[telemetry.publish area=TaskEndpointId;feature=MicrosoftSqlDeploymentV1]'
+                console.log('##vso[telemetry.publish area=TaskHub;feature=MicrosoftSqlDeploymentV1]'
                     + JSON.stringify(telemetry));
             } catch (_) { /* telemetry is non-fatal */ }
         }
