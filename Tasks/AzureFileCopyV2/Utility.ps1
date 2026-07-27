@@ -278,7 +278,7 @@ function Upload-FilesToAzureContainer
         }
 
         if ($useSourcePathHardening) {
-            $splitArguments = @([regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)') | Where-Object { $_ -ne '' } | ForEach-Object { $_ -replace '"([^"]*)"', '$1' })
+            $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
             Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $additionalArguments"
             & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
         } elseif ($useSanitizerActivate) {

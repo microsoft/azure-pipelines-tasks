@@ -17,5 +17,6 @@ Export-ModuleMember -Function Get-SanitizerCallStatus
 Export-ModuleMember -Function Get-SanitizerActivateStatus
 Export-ModuleMember -Function Protect-ScriptArguments
 Export-ModuleMember -Function Invoke-ScriptArgumentSanitization
+Export-ModuleMember -Function Split-AdditionalArguments
 Export-ModuleMember -Function Test-ShouldUseSanitizer
 Export-ModuleMember -Function Publish-SanitizerErrorTelemetry

@@ -94,4 +94,10 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Get-SanitizedArguments.GroupBIsolation.ps1'), done);
         });
     }
+
+    if (psm.testSupported()) {
+        it('Split-AdditionalArguments tokenizes single-quoted, double-quoted, and mid-token quoted arguments', (done) => {
+            psr.run(path.join(__dirname, 'L0Split-AdditionalArguments.ps1'), done);
+        });
+    }
 });

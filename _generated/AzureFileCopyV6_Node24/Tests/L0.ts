@@ -111,5 +111,8 @@ describe('AzureFileCopy Suite', function () {
         it('Validate Upload-FilesToAzureContainer SourcePath hardening does not escape containerURL', (done) => {
             psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ContainerUrlEscaping.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening handles single-quoted additionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.SingleQuoteHandling.ps1'), done);
+        });
     }   
 });

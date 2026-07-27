@@ -250,7 +250,7 @@ function Upload-FilesToAzureContainer
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
         if ($useSourcePathHardening) {
-            $splitArguments = @([regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)') | Where-Object { $_ -ne '' } | ForEach-Object { $_ -replace '"([^"]*)"', '$1' })
+            $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
             & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
         } elseif ($useSanitizerActivate) {

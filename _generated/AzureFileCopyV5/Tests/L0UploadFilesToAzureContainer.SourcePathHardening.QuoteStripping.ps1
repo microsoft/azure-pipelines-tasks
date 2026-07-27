@@ -21,6 +21,7 @@ param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
 # Upload-FilesToAzureContainer's finally block always calls Import-Module
 # (already globally mocked as a no-op by Initialize-Test.ps1) and

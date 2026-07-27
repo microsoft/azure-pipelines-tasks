@@ -4,6 +4,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
 Register-Mock Write-Telemetry { }
 $fakeResponseFile = Join-Path $env:TEMP "msrc128417-containerurl-l0-responsefile-$([guid]::NewGuid())"

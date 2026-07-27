@@ -283,6 +283,61 @@ function Split-Arguments {
     return $result
 }
 
+function Split-AdditionalArguments
+{
+    param([string]$additionalArguments)
+
+    $tokens = New-Object System.Collections.Generic.List[string]
+    $current = New-Object System.Text.StringBuilder
+    $hasToken = $false
+    $i = 0
+    $length = $additionalArguments.Length
+
+    while ($i -lt $length)
+    {
+        $char = $additionalArguments[$i]
+
+        if ($char -eq '"' -or $char -eq "'")
+        {
+            $quoteChar = $char
+            $hasToken = $true
+            $i++
+            while ($i -lt $length -and $additionalArguments[$i] -ne $quoteChar)
+            {
+                [void]$current.Append($additionalArguments[$i])
+                $i++
+            }
+            if ($i -lt $length)
+            {
+                $i++
+            }
+        }
+        elseif ([char]::IsWhiteSpace($char))
+        {
+            if ($hasToken)
+            {
+                $tokens.Add($current.ToString())
+                [void]$current.Clear()
+                $hasToken = $false
+            }
+            $i++
+        }
+        else
+        {
+            [void]$current.Append($char)
+            $hasToken = $true
+            $i++
+        }
+    }
+
+    if ($hasToken)
+    {
+        $tokens.Add($current.ToString())
+    }
+
+    return $tokens.ToArray()
+}
+
 function Join-Matches {
     param (
         [Parameter(Mandatory = $true)]
