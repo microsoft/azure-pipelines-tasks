@@ -209,8 +209,11 @@ async function main(): Promise<void> {
             }
 
             console.log(tl.loc('DeploymentSuccessful'));
-
-            // Emit telemetry — actionable fields only, no PII
+        } finally {
+            if (firewallManager) {
+                await firewallManager.removeFirewallRule();
+            }
+            // Emit telemetry — actionable fields only, no PII. Always emitted regardless of outcome.
             try {
                 const telemetry = {
                     action: action,
@@ -223,10 +226,6 @@ async function main(): Promise<void> {
                 console.log('##vso[telemetry.publish area=TaskEndpointId;feature=MicrosoftSqlDeploymentV1]'
                     + JSON.stringify(telemetry));
             } catch (_) { /* telemetry is non-fatal */ }
-        } finally {
-            if (firewallManager) {
-                await firewallManager.removeFirewallRule();
-            }
         }
     }
     catch (error) {

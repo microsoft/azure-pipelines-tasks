@@ -66,20 +66,18 @@ export class SqlcmdExecutor {
 
         // Authentication
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
-        if (authType.includes('activedirectory') || authType === '') {
-            if (connectionConfig.UserId) {
-                args.push('-U');
-                args.push(connectionConfig.UserId);
-                // Password passed via SQLCMDPASSWORD env var
-            } else {
-                // AAD Default / Integrated — no credentials needed
-                args.push('-G');
-            }
-        } else {
-            // SQL auth
+        if (authType === 'activedirectorydefault' || authType === 'activedirectoryintegrated') {
+            // AAD Default / Integrated — no credentials, use -G for Entra ID
+            args.push('-G');
+        } else if (authType === 'activedirectorypassword' || authType === 'activedirectoryserviceprincipal') {
+            // AAD Password / Service Principal — UserId required, password via SQLCMDPASSWORD, -G for Entra ID
+            args.push('-G');
             args.push('-U');
             args.push(connectionConfig.UserId!);
-            // Password passed via SQLCMDPASSWORD env var
+        } else {
+            // SQL auth (no auth keyword) or AAD SQL Authentication — UserId required, password via SQLCMDPASSWORD
+            args.push('-U');
+            args.push(connectionConfig.UserId!);
         }
 
         // Login timeout (30s)
