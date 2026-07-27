@@ -1,4 +1,5 @@
 // Succeeds when SqlPackage is found at user-specified path.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -8,22 +9,32 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
-tmr.setInput('sqlpackagePath', '/custom/path/sqlpackage.exe');
+tmr.setInput('sqlpackagePath', '/custom/sqlpackage');
 
-// Mock fs.existsSync to return true for user-provided path
-tmr.registerMock('fs', {
-    existsSync: (filePath: string) => {
-        if (filePath === '/custom/path/sqlpackage.exe') {
-            return true; // User-provided path exists
+tmr.registerMock('./src/SqlPackageHelper', {
+    default: {
+        findSqlPackage: async function() {
+            return '/custom/sqlpackage';
         }
-        if (filePath === 'test.dacpac') {
-            return true;
-        }
-        return false;
     }
 });
 
-tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
+const a: ma.TaskLibAnswers = {
+    checkPath: {
+        'test.dacpac': true,
+        '/custom/sqlpackage': true
+    },
+    which: {
+        '/custom/sqlpackage': '/custom/sqlpackage'
+    },
+    exec: {
+        '/custom/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;': {
+            code: 0,
+            stdout: 'Successfully published database.'
+        }
+    }
+};
+tmr.setAnswers(a);
 
 tmr.run();
 

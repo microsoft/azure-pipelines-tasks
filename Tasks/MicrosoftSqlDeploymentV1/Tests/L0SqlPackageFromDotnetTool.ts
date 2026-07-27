@@ -1,4 +1,5 @@
 // Succeeds when SqlPackage is found via dotnet global tool install.
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
@@ -9,25 +10,32 @@ tmr.setInput('action', 'publish');
 tmr.setInput('path', 'test.dacpac');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
 
-// Mock fs.existsSync to return true for dotnet tool location
-tmr.registerMock('fs', {
-    existsSync: (filePath: string) => {
-        // Check for Windows dotnet tool path
-        if (filePath.includes('.dotnet\\tools\\sqlpackage.exe')) {
-            return true;
+// Mock SqlPackageHelper to return the dotnet tool path without relying on
+// HOME/USERPROFILE env vars (which are dynamic per machine).
+tmr.registerMock('./src/SqlPackageHelper', {
+    default: {
+        findSqlPackage: async function() {
+            return '/home/runner/.dotnet/tools/sqlpackage';
         }
-        // Check for Linux dotnet tool path
-        if (filePath.includes('.dotnet/tools/sqlpackage') && !filePath.endsWith('.exe')) {
-            return true;
-        }
-        if (filePath === 'test.dacpac') {
-            return true;
-        }
-        return false;
     }
 });
 
-tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
+const a: ma.TaskLibAnswers = {
+    checkPath: {
+        'test.dacpac': true,
+        '/home/runner/.dotnet/tools/sqlpackage': true
+    },
+    which: {
+        '/home/runner/.dotnet/tools/sqlpackage': '/home/runner/.dotnet/tools/sqlpackage'
+    },
+    exec: {
+        '/home/runner/.dotnet/tools/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;': {
+            code: 0,
+            stdout: 'Successfully published database.'
+        }
+    }
+};
+tmr.setAnswers(a);
 
 tmr.run();
 
