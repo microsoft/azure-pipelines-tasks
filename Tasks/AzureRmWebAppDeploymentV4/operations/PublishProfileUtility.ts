@@ -23,8 +23,27 @@ export class PublishProfileUtility {
     private _publishProfileJs: any = null;
     private _publishProfilePath: string;
 
+    // MSDeployServiceURL, DeployIisAppPath and UserName are read from a checked-in .pubxml
+    // (attacker-controllable) and are concatenated into a command line that is run through
+    // cmd.exe and forwarded to msdeploy.exe by PublishProfileWebAppDeploymentProvider
+    // (RunCmd uses windowsVerbatimArguments + shell, so the values are NOT escaped). Both
+    // cmd.exe command injection and msdeploy argument injection are therefore possible
+    // (CWE-77/78). Guard with strict positive allowlists that accept the character set used
+    // by Azure App Service publish profiles and reject anything that could break out of the
+    // command line (spaces, quotes, boundary backslashes, shell metacharacters, msdeploy
+    // option/setting separators, etc.).
+    private static readonly _serviceUrlPattern: RegExp = /^[A-Za-z0-9.-]+(?::[0-9]+)?$/;
+    private static readonly _appPathPattern: RegExp = /^[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/;
+    private static readonly _userNamePattern: RegExp = /^[A-Za-z0-9._$@-]+(?:\\[A-Za-z0-9._$@-]+)*$/;
+
     constructor(publishProfilePath: string) {
         this._publishProfilePath = publishProfilePath;
+    }
+
+    private static validatePublishProfileValue(fieldName: string, value: any, allowedPattern: RegExp): void {
+        if (typeof value !== 'string' || !allowedPattern.test(value)) {
+            throw new Error(tl.loc('InvalidPublishProfileValue', fieldName));
+        }
     }
 
     public async GetTaskParametersFromPublishProfileFile(taskParams: TaskParameters): Promise<PublishingProfile> {
@@ -45,6 +64,11 @@ export class PublishProfileUtility {
             UserName: this._publishProfileJs.UserName[0],
             UserPWD: taskParams.PublishProfilePassword
         }
+
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.MSDeployServiceURL, msDeployPublishingProfile.PublishUrl, PublishProfileUtility._serviceUrlPattern);
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.DeployIisAppPath, msDeployPublishingProfile.WebAppName, PublishProfileUtility._appPathPattern);
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.UserName, msDeployPublishingProfile.UserName, PublishProfileUtility._userNamePattern);
+
         return msDeployPublishingProfile;
     }
 

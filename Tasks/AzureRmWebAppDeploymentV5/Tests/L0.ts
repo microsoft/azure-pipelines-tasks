@@ -208,6 +208,54 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
+    it('AzureRmWebAppDeploymentV5 PublishProfile rejects command and argument injection in .pubxml values', async () => {
+        const { PublishProfileUtility } = require('../operations/PublishProfileUtility');
+        const taskParams: any = { PublishProfilePassword: 'p@ss w0rd!&|<>' };
+
+        // The three .pubxml-derived values flow into the msdeploy command line. Reject any value
+        // that could change its command/argument structure: quotes, spaces, boundary backslashes,
+        // shell metacharacters, and msdeploy option/setting separators (',', '=', etc.). CWE-77/78.
+        const maliciousProfiles: any[] = [
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin" x'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443 x'], UserName: ['admin'] },
+            { DeployIisAppPath: ['site x&y'], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin%VAR%'] },
+            // trailing backslash + space (the character combination a metacharacter denylist misses)
+            { DeployIisAppPath: ['w\\'], MSDeployServiceURL: ['host:443'], UserName: ['admin extra'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ["admin' x"] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin,extra=1'] },
+            { DeployIisAppPath: ['Default Web Site/My App'], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+            // non-string (object-shaped xml2js value) must fail closed
+            { DeployIisAppPath: [{}], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+        ];
+        for (const js of maliciousProfiles) {
+            const util: any = new PublishProfileUtility('dummy.pubxml');
+            util._publishProfileJs = js;
+            let threw = false;
+            try { await util.GetTaskParametersFromPublishProfileFile(taskParams); }
+            catch (e) { threw = true; }
+            assert(threw, 'Expected rejection for invalid publish-profile value: ' + JSON.stringify(js));
+        }
+
+        // Regression: real Azure App Service publish-profile values (domain-style and slot
+        // usernames, sub-paths, and a password with special characters) must NOT be rejected and
+        // must be preserved unchanged.
+        const legitProfiles: any[] = [
+            { DeployIisAppPath: ['mysite/sub'], MSDeployServiceURL: ['mysite.scm.azurewebsites.net:443'], UserName: ['$mysite'] },
+            { DeployIisAppPath: ['contoso__staging'], MSDeployServiceURL: ['waws-prod-abc-001.publish.azurewebsites.windows.net:443'], UserName: ['contoso\\$contoso'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:8172'], UserName: ['user@contoso.com'] },
+        ];
+        for (const js of legitProfiles) {
+            const util: any = new PublishProfileUtility('dummy.pubxml');
+            util._publishProfileJs = js;
+            const profile = await util.GetTaskParametersFromPublishProfileFile(taskParams);
+            assert.strictEqual(profile.WebAppName, js.DeployIisAppPath[0], 'legit DeployIisAppPath should be preserved');
+            assert.strictEqual(profile.PublishUrl, js.MSDeployServiceURL[0], 'legit MSDeployServiceURL should be preserved');
+            assert.strictEqual(profile.UserName, js.UserName[0], 'legit UserName should be preserved');
+            assert.strictEqual(profile.UserPWD, 'p@ss w0rd!&|<>', 'password is not validated and must be preserved');
+        }
+    });
+
     it('AzureRmWebAppDeploymentV5 Validate TaskParameters', async () => {
         let tp = path.join(__dirname,'TaskParametersTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
