@@ -39,7 +39,7 @@
     },
     {
       "name": "appSourcePath",
-      "type": "filePath",
+      "type": "string",
       "label": "Application source path",
       "required": false,
       "helpMarkDown": "Absolute path on the runner of the source application code to be built. If not provided, the 'imageToDeploy' argument must be provided to ensure the Container App has an image to reference."

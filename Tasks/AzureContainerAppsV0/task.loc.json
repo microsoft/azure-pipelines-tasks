@@ -42,7 +42,7 @@
     },
     {
       "name": "appSourcePath",
-      "type": "filePath",
+      "type": "string",
       "label": "ms-resource:loc.input.label.appSourcePath",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.appSourcePath"
