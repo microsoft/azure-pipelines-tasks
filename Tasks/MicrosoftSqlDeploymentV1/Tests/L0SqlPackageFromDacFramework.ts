@@ -1,4 +1,5 @@
 // Succeeds when SqlPackage is found via DacFramework MSI on Windows (dynamic version discovery).
+import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
@@ -30,7 +31,23 @@ fsClone.existsSync = function(filePath: any): boolean {
 };
 tmr.registerMock('fs', fsClone);
 
-tmr.setAnswers({ checkPath: { 'test.dacpac': true } });
+const a: ma.TaskLibAnswers = {
+    checkPath: {
+        'test.dacpac': true,
+        [dacpacPath]: true
+    },
+    which: {
+        [dacpacPath]: dacpacPath
+    },
+    exec: {
+        [`${dacpacPath} /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=testpass123;`]: {
+            code: 0,
+            stdout: 'Successfully published database.'
+        }
+    }
+};
+tmr.setAnswers(a);
+
 tmr.run();
 
 
