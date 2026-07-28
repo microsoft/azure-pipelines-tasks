@@ -271,6 +271,9 @@
         "TwineAuthenticateV1",
         "UniversalPackagesV1"
     ],
+    "minified_278": [
+        "BashV3"
+    ],
     "LocalPackages": [
         "AndroidSigningV2",
         "AndroidSigningV3",

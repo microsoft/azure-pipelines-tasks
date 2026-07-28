@@ -6,7 +6,7 @@ import { DeploymentType, TaskParameters } from './TaskParameters';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu, sanitizeKuduLogForConsole } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
@@ -341,7 +341,7 @@ export class KuduServiceUtility {
 
         var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
         for(var deploymentLog of deploymentLogs) {
-            console.log(`${deploymentLog.message}`);
+            console.log(sanitizeKuduLogForConsole(`${deploymentLog.message}`, 'AzureRmWebAppDeployment'));
            
             if(deploymentLog.details_url) {
                 await this._printZipDeployLogs(deploymentLog.details_url);
@@ -360,16 +360,17 @@ export class KuduServiceUtility {
 
         if(stdoutLog) {
             console.log(tl.loc('stdoutFromScript'));
-            console.log(stdoutLog);
+            console.log(sanitizeKuduLogForConsole(stdoutLog, 'AzureRmWebAppDeployment'));
         }
         if(stderrLog) {
             console.log(tl.loc('stderrFromScript'));
+            var sanitizedStderrLog = sanitizeKuduLogForConsole(stderrLog, 'AzureRmWebAppDeployment');
             if(scriptReturnCode != '0') {
-                tl.error(stderrLog);
-                throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
+                tl.error(sanitizedStderrLog);
+                throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, sanitizedStderrLog));
             }
             else {
-                console.log(stderrLog);
+                console.log(sanitizedStderrLog);
             }
         }
     }
