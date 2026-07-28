@@ -153,12 +153,12 @@ if ($useSanitizerCall) {
 if ($useSanitizerActivate) {
     if ($useSourcePathHardening) {
         $additionalArgumentsForBlobCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForBlobCopy
-        $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
     }
     else {
         $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
-        $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
     }
+
+    $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
