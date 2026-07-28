@@ -208,13 +208,14 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV5 PublishProfile rejects command and argument injection in .pubxml values', async () => {
+    it('AzureRmWebAppDeploymentV5 PublishProfile validation is gated by the EnablePublishProfileValidation feature flag', async () => {
         const { PublishProfileUtility } = require('../operations/PublishProfileUtility');
         const taskParams: any = { PublishProfilePassword: 'p@ss w0rd!&|<>' };
+        // tl.getPipelineFeature('EnablePublishProfileValidation') reads this env var (uppercased).
+        const FF = 'DISTRIBUTEDTASK_TASKS_ENABLEPUBLISHPROFILEVALIDATION';
 
-        // The three .pubxml-derived values flow into the msdeploy command line. Reject any value
-        // that could change its command/argument structure: quotes, spaces, boundary backslashes,
-        // shell metacharacters, and msdeploy option/setting separators (',', '=', etc.). CWE-77/78.
+        // Values that flow into the msdeploy command line and would change its command/argument
+        // structure: quotes, spaces, boundary backslashes, shell metacharacters, ',', '='. CWE-77/78.
         const maliciousProfiles: any[] = [
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin" x'] },
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443 x'], UserName: ['admin'] },
@@ -225,34 +226,54 @@ describe('AzureRmWebAppDeployment Suite', function() {
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ["admin' x"] },
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin,extra=1'] },
             { DeployIisAppPath: ['Default Web Site/My App'], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
-            // non-string (object-shaped xml2js value) must fail closed
+            // non-string (object-shaped xml2js value)
             { DeployIisAppPath: [{}], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
         ];
-        for (const js of maliciousProfiles) {
-            const util: any = new PublishProfileUtility('dummy.pubxml');
-            util._publishProfileJs = js;
-            let threw = false;
-            try { await util.GetTaskParametersFromPublishProfileFile(taskParams); }
-            catch (e) { threw = true; }
-            assert(threw, 'Expected rejection for invalid publish-profile value: ' + JSON.stringify(js));
-        }
-
-        // Regression: real Azure App Service publish-profile values (domain-style and slot
-        // usernames, sub-paths, and a password with special characters) must NOT be rejected and
-        // must be preserved unchanged.
         const legitProfiles: any[] = [
             { DeployIisAppPath: ['mysite/sub'], MSDeployServiceURL: ['mysite.scm.azurewebsites.net:443'], UserName: ['$mysite'] },
             { DeployIisAppPath: ['contoso__staging'], MSDeployServiceURL: ['waws-prod-abc-001.publish.azurewebsites.windows.net:443'], UserName: ['contoso\\$contoso'] },
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:8172'], UserName: ['user@contoso.com'] },
         ];
-        for (const js of legitProfiles) {
+        const runProfile = async (js: any) => {
             const util: any = new PublishProfileUtility('dummy.pubxml');
             util._publishProfileJs = js;
-            const profile = await util.GetTaskParametersFromPublishProfileFile(taskParams);
-            assert.strictEqual(profile.WebAppName, js.DeployIisAppPath[0], 'legit DeployIisAppPath should be preserved');
-            assert.strictEqual(profile.PublishUrl, js.MSDeployServiceURL[0], 'legit MSDeployServiceURL should be preserved');
-            assert.strictEqual(profile.UserName, js.UserName[0], 'legit UserName should be preserved');
-            assert.strictEqual(profile.UserPWD, 'p@ss w0rd!&|<>', 'password is not validated and must be preserved');
+            return util.GetTaskParametersFromPublishProfileFile(taskParams);
+        };
+
+        try {
+            // Feature ENABLED -> injection payloads are blocked.
+            process.env[FF] = 'true';
+            for (const js of maliciousProfiles) {
+                let threw = false;
+                try { await runProfile(js); } catch (e) { threw = true; }
+                assert(threw, 'FF on: expected rejection for ' + JSON.stringify(js));
+            }
+            // Feature ENABLED -> legitimate Azure values are preserved unchanged.
+            for (const js of legitProfiles) {
+                const profile = await runProfile(js);
+                assert.strictEqual(profile.WebAppName, js.DeployIisAppPath[0], 'legit DeployIisAppPath preserved');
+                assert.strictEqual(profile.PublishUrl, js.MSDeployServiceURL[0], 'legit MSDeployServiceURL preserved');
+                assert.strictEqual(profile.UserName, js.UserName[0], 'legit UserName preserved');
+                assert.strictEqual(profile.UserPWD, 'p@ss w0rd!&|<>', 'password preserved');
+            }
+            // Feature DISABLED (default) -> nothing is blocked; a rejected value only emits telemetry.
+            delete process.env[FF];
+            let telemetry = '';
+            const origWrite = process.stdout.write.bind(process.stdout);
+            (process.stdout.write as any) = (chunk: any, ...args: any[]) => { telemetry += chunk.toString(); return origWrite(chunk, ...args); };
+            try {
+                for (const js of maliciousProfiles) {
+                    let threw = false;
+                    try { await runProfile(js); } catch (e) { threw = true; }
+                    assert(!threw, 'FF off: value must NOT be blocked (telemetry only): ' + JSON.stringify(js));
+                }
+            } finally {
+                process.stdout.write = origWrite;
+            }
+            assert(telemetry.indexOf('##vso[telemetry.publish') >= 0 && telemetry.indexOf('PublishProfileValueRejected') >= 0,
+                'FF off: a rejected value should still publish telemetry');
+        } finally {
+            delete process.env[FF];
         }
     });
 

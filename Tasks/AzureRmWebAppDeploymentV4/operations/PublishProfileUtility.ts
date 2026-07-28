@@ -41,8 +41,31 @@ export class PublishProfileUtility {
     }
 
     private static validatePublishProfileValue(fieldName: string, value: any, allowedPattern: RegExp): void {
-        if (typeof value !== 'string' || !allowedPattern.test(value)) {
+        if (typeof value === 'string' && allowedPattern.test(value)) {
+            return;
+        }
+        // The value would be rejected. Always record telemetry (field name only, never the value)
+        // so the rollout impact can be measured, then block only when the feature flag is enabled.
+        PublishProfileUtility.publishValidationTelemetry(fieldName);
+        if (tl.getPipelineFeature(PublishProfileUtility._enforceValidationFeature)) {
             throw new Error(tl.loc('InvalidPublishProfileValue', fieldName));
+        }
+        tl.debug(`Publish profile value for '${fieldName}' would be rejected once the '${PublishProfileUtility._enforceValidationFeature}' feature is enabled.`);
+    }
+
+    // Feature flag gating enforcement of the publish-profile input validation. While the feature
+    // is OFF (default) a value that fails validation only publishes telemetry, so the real-world
+    // impact can be measured before the task starts failing existing pipelines. When the feature
+    // is ON the task blocks the value, preventing the command/argument injection (CWE-77/78).
+    private static readonly _enforceValidationFeature: string = 'EnablePublishProfileValidation';
+    private static readonly _telemetryFeature: string = 'AzureRmWebAppDeploymentV4';
+
+    private static publishValidationTelemetry(fieldName: string): void {
+        try {
+            console.log(`##vso[telemetry.publish area=TaskHub;feature=${PublishProfileUtility._telemetryFeature}]`
+                + JSON.stringify({ event: 'PublishProfileValueRejected', field: fieldName }));
+        } catch (err) {
+            tl.debug(`Unable to publish publish-profile validation telemetry: ${err}`);
         }
     }
 
