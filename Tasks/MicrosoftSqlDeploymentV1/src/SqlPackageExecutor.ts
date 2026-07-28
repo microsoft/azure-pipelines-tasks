@@ -105,9 +105,12 @@ export class SqlPackageExecutor {
         args.push(`/Action:${this.mapActionToSqlPackageAction(action)}`);
         args.push(`/SourceFile:${sourcePath}`);
 
-        // Only use /AccessToken for auth types that rely on token-based auth (AAD Default/Integrated/MSI).
-        // For SQL auth, AAD Password, and AAD Service Principal the connection string carries the
-        // credentials, so always use /TargetConnectionString for those.
+        // SqlPackage can acquire its own token from the connection string's Authentication= keyword,
+        // but that uses the agent's ambient identity (DefaultAzureCredential chain — MSI, az CLI, etc.).
+        // When azureSubscription is set, we pre-acquire a token from the specific service connection
+        // identity and pass it via /AccessToken so SqlPackage uses that identity, not the agent's.
+        // Token is only used for auth types that don't carry credentials in the connection string
+        // (AAD Default / Integrated); SQL auth and AAD Password/SP include credentials directly.
         const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
         const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
