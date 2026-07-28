@@ -154,7 +154,6 @@ export class azurecontainerapps {
         // Reject appSourcePath values that contain shell metacharacters, as defense-in-depth against
         // command injection (CWE-78).
         if (!util.isNullOrEmpty(this.appSourcePath) && APP_SOURCE_PATH_INVALID_CHARS.test(this.appSourcePath)) {
-            tl.error(tl.loc('InvalidAppSourcePathMessage', this.appSourcePath));
             throw Error(tl.loc('InvalidAppSourcePathMessage', this.appSourcePath));
         }
 
