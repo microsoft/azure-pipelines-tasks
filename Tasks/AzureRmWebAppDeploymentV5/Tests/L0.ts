@@ -214,8 +214,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         // tl.getPipelineFeature('EnablePublishProfileValidation') reads this env var (uppercased).
         const FF = 'DISTRIBUTEDTASK_TASKS_ENABLEPUBLISHPROFILEVALIDATION';
 
-        // Values that flow into the msdeploy command line and would change its command/argument
-        // structure: quotes, spaces, boundary backslashes, shell metacharacters, ',', '='. CWE-77/78.
+        // Payloads with characters that could alter the msdeploy command line (CWE-77/78).
         const maliciousProfiles: any[] = [
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin" x'] },
             { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443 x'], UserName: ['admin'] },

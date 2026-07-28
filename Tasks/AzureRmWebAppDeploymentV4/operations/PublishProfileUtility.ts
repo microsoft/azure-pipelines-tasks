@@ -23,15 +23,8 @@ export class PublishProfileUtility {
     private _publishProfileJs: any = null;
     private _publishProfilePath: string;
 
-    // MSDeployServiceURL, DeployIisAppPath and UserName are read from a checked-in .pubxml
-    // (attacker-controllable) and are concatenated into a command line that is run through
-    // cmd.exe and forwarded to msdeploy.exe by PublishProfileWebAppDeploymentProvider
-    // (RunCmd uses windowsVerbatimArguments + shell, so the values are NOT escaped). Both
-    // cmd.exe command injection and msdeploy argument injection are therefore possible
-    // (CWE-77/78). Guard with strict positive allowlists that accept the character set used
-    // by Azure App Service publish profiles and reject anything that could break out of the
-    // command line (spaces, quotes, boundary backslashes, shell metacharacters, msdeploy
-    // option/setting separators, etc.).
+    // .pubxml-derived values are concatenated into the msdeploy command line (cmd.exe + shell);
+    // allowlist them to the Azure publish-profile character set to prevent injection (CWE-77/78).
     private static readonly _serviceUrlPattern: RegExp = /^[A-Za-z0-9.-]+(?::[0-9]+)?$/;
     private static readonly _appPathPattern: RegExp = /^[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/;
     private static readonly _userNamePattern: RegExp = /^[A-Za-z0-9._$@-]+(?:\\[A-Za-z0-9._$@-]+)*$/;
@@ -44,19 +37,12 @@ export class PublishProfileUtility {
         if (typeof value === 'string' && allowedPattern.test(value)) {
             return;
         }
-        // The value would be rejected. Always record telemetry (field name only, never the value)
-        // so the rollout impact can be measured, then block only when the feature flag is enabled.
         PublishProfileUtility.publishValidationTelemetry(fieldName);
         if (tl.getPipelineFeature(PublishProfileUtility._enforceValidationFeature)) {
             throw new Error(tl.loc('InvalidPublishProfileValue', fieldName));
         }
-        tl.debug(`Publish profile value for '${fieldName}' would be rejected once the '${PublishProfileUtility._enforceValidationFeature}' feature is enabled.`);
     }
 
-    // Feature flag gating enforcement of the publish-profile input validation. While the feature
-    // is OFF (default) a value that fails validation only publishes telemetry, so the real-world
-    // impact can be measured before the task starts failing existing pipelines. When the feature
-    // is ON the task blocks the value, preventing the command/argument injection (CWE-77/78).
     private static readonly _enforceValidationFeature: string = 'EnablePublishProfileValidation';
     private static readonly _telemetryFeature: string = 'AzureRmWebAppDeploymentV4';
 
