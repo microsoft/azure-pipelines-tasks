@@ -338,6 +338,33 @@ function Split-AdditionalArguments
     return $tokens.ToArray()
 }
 
+# Joins an array of already-tokenized arguments (e.g. the output of
+# Protect-ScriptArguments/Split-Arguments, whose original quote characters
+# have already been stripped) back into a single string, re-quoting any
+# token that contains whitespace.
+#
+# This is required whenever sanitized tokens are subsequently re-split by
+# Split-AdditionalArguments (the SourcePath-hardening call-operator path):
+# without re-quoting, a token such as "sub folder\a.txt" would be rejoined as
+# an unquoted "sub folder\a.txt" and then incorrectly re-split into two
+# separate tokens ("sub" and "folder\a.txt"), corrupting the value passed to
+# AzCopy.
+function Join-SanitizedArguments
+{
+    param([string[]]$arguments)
+
+    if (-not $arguments -or $arguments.Count -eq 0)
+    {
+        return ''
+    }
+
+    $quoted = $arguments | ForEach-Object {
+        if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
+    }
+
+    return ($quoted -join ' ')
+}
+
 function Join-Matches {
     param (
         [Parameter(Mandatory = $true)]

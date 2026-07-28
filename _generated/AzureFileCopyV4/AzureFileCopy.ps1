@@ -113,8 +113,17 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
-    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    if ($useSourcePathHardening) {
+        # The hardened path re-tokenizes this string via Split-AdditionalArguments to
+        # build the call-operator argv array, so tokens containing whitespace must be
+        # re-quoted here to preserve their boundaries across the rejoin/re-split.
+        $additionalArgumentsForBlobCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForBlobCopy
+        $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
+    }
+    else {
+        $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+        $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    }
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####

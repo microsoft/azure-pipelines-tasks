@@ -99,5 +99,8 @@ describe('Security Suite', function () {
         it('Split-AdditionalArguments tokenizes single-quoted, double-quoted, and mid-token quoted arguments', (done) => {
             psr.run(path.join(__dirname, 'L0Split-AdditionalArguments.ps1'), done);
         });
+        it('Join-SanitizedArguments quotes tokens with embedded spaces so Split-AdditionalArguments round-trips them', (done) => {
+            psr.run(path.join(__dirname, 'L0Join-SanitizedArguments.ps1'), done);
+        });
     }
 });

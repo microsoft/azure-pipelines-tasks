@@ -57,6 +57,9 @@ describe('AzureFileCopy Suite', function () {
         it('Validate Upload-FilesToAzureContainer SourcePath hardening handles single-quoted additionalArguments', (done) => {
             psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.SingleQuoteHandling.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Does-AzureVMMatchTagFilterCriteria', (done) => {
             psr.run(path.join(__dirname, 'L0DoesAzureVMMatchTagFilter.ps1'), done);
         });
