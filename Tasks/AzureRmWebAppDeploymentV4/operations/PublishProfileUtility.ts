@@ -8,6 +8,7 @@ import Q = require('q');
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
+const CMD_SENSITIVE_CHARS_REGEX = /[\r\n`&|;<>]/;
 
 export interface PublishingProfile{
     PublishUrl:string;
@@ -45,6 +46,11 @@ export class PublishProfileUtility {
             UserName: this._publishProfileJs.UserName[0],
             UserPWD: taskParams.PublishProfilePassword
         }
+
+        this.ValidateCommandSensitivePublishProfileProperty(Constant.PublishProfileXml.DeployIisAppPath, msDeployPublishingProfile.WebAppName);
+        this.ValidateCommandSensitivePublishProfileProperty(Constant.PublishProfileXml.MSDeployServiceURL, msDeployPublishingProfile.PublishUrl);
+        this.ValidateCommandSensitivePublishProfileProperty(Constant.PublishProfileXml.UserName, msDeployPublishingProfile.UserName);
+
         return msDeployPublishingProfile;
     }
 
@@ -110,7 +116,7 @@ export class PublishProfileUtility {
                windowsVerbatimArguments: true,
                // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
                // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
-               shell: true 
+               shell: true
              });
         } catch (error) {
             cmdError = error;
@@ -119,5 +125,11 @@ export class PublishProfileUtility {
         }
 
         return deferred.promise;
+    }
+
+    private ValidateCommandSensitivePublishProfileProperty(_propertyName: string, propertyValue: string): void {
+        if (!!propertyValue && CMD_SENSITIVE_CHARS_REGEX.test(propertyValue)) {
+            throw new Error(tl.loc('InvalidPublishProfile'));
+        }
     }
 }

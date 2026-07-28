@@ -109,9 +109,21 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         return packageUtility.PackageUtility.getPackagePath(packageDir + "\\*.deploy.cmd");
     }
 
+    private EscapeForCmd(value: string): string {
+        // Escape special characters for cmd.exe by prefixing with caret (^)
+        // This prevents command injection through shell metacharacters
+        if (!value) return value;
+        return value.replace(/[&|;<>^%]/g, '^$&');
+    }
+
     private GetDeployScriptCmdArgs(msDeployPublishingProfile:any): string {
-        var deployCmdArgs: string = " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
-            + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.PublishUrl + "/msdeploy.axd?site=" + msDeployPublishingProfile.WebAppName + "\\\"\"";
+        // Escape publish profile values to prevent command injection
+        var escapedUserName = this.EscapeForCmd(msDeployPublishingProfile.UserName);
+        var escapedPublishUrl = this.EscapeForCmd(msDeployPublishingProfile.PublishUrl);
+        var escapedWebAppName = this.EscapeForCmd(msDeployPublishingProfile.WebAppName);
+
+        var deployCmdArgs: string = " /Y /A:basic \"/U:" + escapedUserName + "\" \"\\\"///P:" + msDeployPublishingProfile.UserPWD 
+            + "\\\"\" \"\\\"///M:" + "https://" + escapedPublishUrl + "/msdeploy.axd?site=" + escapedWebAppName + "\\\"";
 
         if(msDeployPublishingProfile.TakeAppOfflineFlag) {
             deployCmdArgs += ' -enableRule:AppOffline';
