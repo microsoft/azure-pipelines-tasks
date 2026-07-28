@@ -112,6 +112,7 @@ async function main(): Promise<void> {
         // Firewall rule management and deployment execution
         let firewallManager: FirewallManager | undefined;
         let accessToken: string | undefined;
+        let azureEndpoint: any | undefined;
         let deployFilePath = filePath;
         let deployFileType = fileType;
 
@@ -119,7 +120,7 @@ async function main(): Promise<void> {
             // Step 1: Azure subscription — firewall + access token
             if (azureSubscription) {
                 const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
-                const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
 
                 // Acquire access token for database authentication
                 if (azureEndpoint.scheme === 'ServicePrincipal' ||
@@ -195,11 +196,33 @@ async function main(): Promise<void> {
                     throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
                 }
                 tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
+                // For token-based auth types, inject service connection credentials as env vars
+                // so go-sqlcmd's DefaultAzureCredential chain picks up the service connection identity.
+                // This ensures sqlcmd authenticates as the same identity as SqlPackage.
+                let sqlcmdEnvOverrides: { [key: string]: string } | undefined;
+                if (azureSubscription && azureEndpoint?.tenantID) {
+                    const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                    const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated', 'activedirectorymanagedidentity'];
+
+                    // Always inject tenant ID so go-sqlcmd can resolve the tenant.
+                    sqlcmdEnvOverrides = { AZURE_TENANT_ID: azureEndpoint.tenantID };
+
+                    // For token-based auth (no creds in connection string), also inject SP client
+                    // credentials from the service connection so DefaultAzureCredential picks up
+                    // the intended identity rather than the agent's ambient identity.
+                    if (tokenBasedAuthTypes.includes(authType) && azureEndpoint.scheme === 'ServicePrincipal'
+                        && azureEndpoint.servicePrincipalClientID && azureEndpoint.servicePrincipalKey) {
+                        tl.setSecret(azureEndpoint.servicePrincipalKey);
+                        sqlcmdEnvOverrides.AZURE_CLIENT_ID = azureEndpoint.servicePrincipalClientID;
+                        sqlcmdEnvOverrides.AZURE_CLIENT_SECRET = azureEndpoint.servicePrincipalKey;
+                    }
+                }
                 await SqlcmdExecutor.executeSqlcmd(
                     sqlcmdExePath,
                     deployFilePath,
                     connectionConfig,
-                    additionalArguments || undefined
+                    additionalArguments || undefined,
+                    sqlcmdEnvOverrides
                 );
             }
 

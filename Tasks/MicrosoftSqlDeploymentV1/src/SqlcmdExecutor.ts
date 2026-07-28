@@ -11,13 +11,14 @@ export class SqlcmdExecutor {
         sqlcmdPath: string,
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string
+        additionalArguments?: string,
+        envOverrides?: { [key: string]: string }
     ): Promise<void> {
-        const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments);
+        const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments, envOverrides?.['AZURE_TENANT_ID']);
 
         // Pass credentials via environment variables only — never on the command line.
         // Scoped to this exec call only (not set on process.env globally).
-        const envVars: { [key: string]: string } = Object.assign({}, process.env);
+        const envVars: { [key: string]: string } = Object.assign({}, process.env, envOverrides);
 
         if (connectionConfig.Password) {
             // Pass password via SQLCMDPASSWORD env var — never on the command line.
@@ -45,7 +46,8 @@ export class SqlcmdExecutor {
     private static buildArguments(
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string
+        additionalArguments?: string,
+        tenantId?: string
     ): string[] {
         const args: string[] = [];
 
@@ -93,9 +95,16 @@ export class SqlcmdExecutor {
                 break;
 
             case 'activedirectoryserviceprincipal':
-                // UserId = ClientId; ClientSecret supplied via SQLCMDPASSWORD env var
+                // UserId = ClientId; ClientSecret via SQLCMDPASSWORD env var.
+                // go-mssqldb reads the tenant from clientId@tenantId in the User ID field.
+                // When azureSubscription is set, AZURE_TENANT_ID is injected and appended here
                 addAuthenticationMethod('ActiveDirectoryServicePrincipal');
-                addUser();
+                if (connectionConfig.UserId && tenantId && !connectionConfig.UserId.includes('@')) {
+                    args.push('-U');
+                    args.push(`${connectionConfig.UserId}@${tenantId}`);
+                } else {
+                    addUser();
+                }
                 break;
 
             case 'activedirectorymanagedidentity':

@@ -321,6 +321,19 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should auto-install go-sqlcmd when ODBC sqlcmd is on PATH', async () => {
+        // Verifies that isGoSqlcmd() correctly rejects ODBC sqlcmd (--version output
+        // does not match "sqlcmd version X.X.X") and falls through to auto-install.
+        const tp = path.join(__dirname, 'L0SqlcmdOdbcOnPathFallsToAutoInstall.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed after auto-installing go-sqlcmd');
+            assert(tr.stdout.indexOf('SqlCmdInstalling') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
+                'should have triggered auto-install when ODBC sqlcmd was on PATH');
+        }, tr);
+    });
+
     it('should fail when sqlcmd executable is missing after auto-install extraction', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdAutoInstallExeNotFound.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
