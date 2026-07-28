@@ -102,6 +102,9 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Check-ContainerNameAndArgs', (done) => {
             psr.run(path.join(__dirname, 'L0CheckContainerNameAndArgs.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening (MSRC 128417)', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ps1'), done);
+        });
         it('Validate Upload-FilesToAzureContainer SourcePath hardening strips quotes from additionalArguments', (done) => {
             psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.QuoteStripping.ps1'), done);
         });
