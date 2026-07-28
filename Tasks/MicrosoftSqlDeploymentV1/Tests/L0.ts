@@ -484,6 +484,33 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'should report sqlcmd execution failure');
         }, tr);
     });
+
+    it('should succeed with AAD Default auth (-G, no credentials)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadDefaultAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Default auth');
+        }, tr);
+    });
+
+    it('should succeed with AAD Password auth (-G + -U + SQLCMDPASSWORD)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadPasswordAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Password auth');
+        }, tr);
+    });
+
+    it('should succeed with AAD Service Principal auth (--authentication-method)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadServicePrincipalAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Service Principal auth');
+        }, tr);
+    });
 });
 
 

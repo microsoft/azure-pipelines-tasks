@@ -195,16 +195,11 @@ async function main(): Promise<void> {
                     throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
                 }
                 tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
-                // Only use access token for token-based auth (AAD Default/Integrated)
-                const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
-                const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
-                const sqlcmdToken = tokenBasedAuthTypes.includes(authType) ? accessToken : undefined;
                 await SqlcmdExecutor.executeSqlcmd(
                     sqlcmdExePath,
                     deployFilePath,
                     connectionConfig,
-                    additionalArguments || undefined,
-                    sqlcmdToken
+                    additionalArguments || undefined
                 );
             }
 

@@ -11,8 +11,7 @@ export class SqlcmdExecutor {
         sqlcmdPath: string,
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string,
-        accessToken?: string
+        additionalArguments?: string
     ): Promise<void> {
         const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments);
 
@@ -20,11 +19,9 @@ export class SqlcmdExecutor {
         // Scoped to this exec call only (not set on process.env globally).
         const envVars: { [key: string]: string } = Object.assign({}, process.env);
 
-        if (accessToken) {
-            // AAD token-based auth: use SQLCMDACCESSTOKEN, do not set password
-            envVars['SQLCMDACCESSTOKEN'] = accessToken;
-        } else if (connectionConfig.Password) {
-            // SQL / AAD password auth: pass password via SQLCMDPASSWORD env var
+        if (connectionConfig.Password) {
+            // Pass password via SQLCMDPASSWORD env var — never on the command line.
+            // go-sqlcmd reads SQLCMDPASSWORD automatically for SQL auth and AAD password/SP auth.
             envVars[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
         }
 
@@ -54,9 +51,11 @@ export class SqlcmdExecutor {
 
         // Server (with port if specified)
         args.push('-S');
-        args.push(connectionConfig.Port
-            ? `${connectionConfig.Server},${connectionConfig.Port}`
-            : connectionConfig.Server);
+        args.push(
+            connectionConfig.Port
+                ? `${connectionConfig.Server},${connectionConfig.Port}`
+                : connectionConfig.Server
+        );
 
         // Database
         if (connectionConfig.Database) {
@@ -64,20 +63,51 @@ export class SqlcmdExecutor {
             args.push(connectionConfig.Database);
         }
 
-        // Authentication
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
-        if (authType === 'activedirectorydefault' || authType === 'activedirectoryintegrated') {
-            // AAD Default / Integrated — no credentials, use -G for Entra ID
-            args.push('-G');
-        } else if (authType === 'activedirectorypassword' || authType === 'activedirectoryserviceprincipal') {
-            // AAD Password / Service Principal — UserId required, password via SQLCMDPASSWORD, -G for Entra ID
-            args.push('-G');
-            args.push('-U');
-            args.push(connectionConfig.UserId!);
-        } else {
-            // SQL auth (no auth keyword) or AAD SQL Authentication — UserId required, password via SQLCMDPASSWORD
-            args.push('-U');
-            args.push(connectionConfig.UserId!);
+
+        const addAuthenticationMethod = (method: string): void => {
+            args.push('--authentication-method');
+            args.push(method);
+        };
+
+        const addUser = (): void => {
+            if (connectionConfig.UserId) {
+                args.push('-U');
+                args.push(connectionConfig.UserId);
+            }
+        };
+
+        switch (authType) {
+            case 'activedirectorydefault':
+                addAuthenticationMethod('ActiveDirectoryDefault');
+                break;
+
+            case 'activedirectoryintegrated':
+                addAuthenticationMethod('ActiveDirectoryIntegrated');
+                break;
+
+            case 'activedirectorypassword':
+                // UserId required; password supplied via SQLCMDPASSWORD env var
+                addAuthenticationMethod('ActiveDirectoryPassword');
+                addUser();
+                break;
+
+            case 'activedirectoryserviceprincipal':
+                // UserId = ClientId; ClientSecret supplied via SQLCMDPASSWORD env var
+                addAuthenticationMethod('ActiveDirectoryServicePrincipal');
+                addUser();
+                break;
+
+            case 'activedirectorymanagedidentity':
+                // Optional UserId for user-assigned managed identity
+                addAuthenticationMethod('ActiveDirectoryManagedIdentity');
+                addUser();
+                break;
+
+            default:
+                // SQL Authentication — UserId required, password via SQLCMDPASSWORD
+                addUser();
+                break;
         }
 
         // Login timeout (30s)
