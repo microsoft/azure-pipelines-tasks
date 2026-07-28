@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 278,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -132,5 +132,9 @@
     "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
     "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined",
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.278.0",
+    "minified_278": "3.278.1"
   }
 }
