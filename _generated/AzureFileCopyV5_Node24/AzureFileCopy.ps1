@@ -96,34 +96,6 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
-function Get-SourcePathHardeningFeatureFlag {
-    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
-
-    if (-not $hasFeatureFlagCmdlet) {
-        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
-        try {
-            Import-Module (Join-Path $PSScriptRoot 'ps_modules\VstsTaskSdk') -ErrorAction Stop
-            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
-        }
-        catch {
-            Write-Warning "Failed to import VstsTaskSdk module: $_"
-        }
-    }
-
-    if (-not $hasFeatureFlagCmdlet) {
-        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
-        return $false
-    }
-
-    try {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
-    }
-    catch {
-        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
-        return $false
-    }
-}
-
 $useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
 
 if ($useSanitizerCall) {

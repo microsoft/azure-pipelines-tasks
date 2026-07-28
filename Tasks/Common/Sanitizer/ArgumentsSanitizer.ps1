@@ -46,6 +46,42 @@ function Get-SanitizerActivateStatus {
     return $activateFlag
 }
 
+# Checks the AzureFileCopy.EnableSourcePathHardening pipeline feature flag via
+# Get-VstsPipelineFeature. That cmdlet was only added in a later VstsTaskSdk
+# release, so on an older agent it may not exist yet even though the task's
+# own minimumAgentVersion allows the task to run. Calling it unguarded would
+# throw command-not-found and break the task outright. Guard for that case by
+# checking cmdlet availability first, attempting to re-import the task's local
+# VstsTaskSdk copy if needed, and falling back to "disabled" if the cmdlet is
+# still unavailable or the flag check itself throws.
+function Get-SourcePathHardeningFeatureFlag {
+    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try {
+            Import-Module (Join-Path $PSScriptRoot '..\VstsTaskSdk') -ErrorAction Stop
+            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
+        return $false
+    }
+
+    try {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
+    }
+    catch {
+        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName, [switch]$AllowDataConstructors) {

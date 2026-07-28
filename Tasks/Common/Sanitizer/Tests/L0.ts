@@ -103,4 +103,10 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Join-SanitizedArguments.ps1'), done);
         });
     }
+
+    if (psm.testSupported()) {
+        it('Get-SourcePathHardeningFeatureFlag falls back to disabled when Get-VstsPipelineFeature is unavailable or throws', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SourcePathHardeningFeatureFlag.ps1'), done);
+        });
+    }
 });
