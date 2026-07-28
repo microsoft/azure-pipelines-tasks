@@ -146,8 +146,8 @@ $useSanitizerActivate = Get-SanitizerActivateStatus
 $useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
 
 if ($useSanitizerCall) {
-    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
-    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV5"
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV6"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV6"
 }
 
 if ($useSanitizerActivate) {
