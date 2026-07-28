@@ -1096,7 +1096,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$azCopyToolLocation,
         [scriptblock]$fileCopyJobScript,
         [bool]$enableDetailedLogging,
-        [bool]$useSanitizerActivate = $false
+        [bool]$useSanitizerActivate = $false,
+        [bool]$useSourcePathHardening = $false
     )
 
     # Generate storage container URL
@@ -1115,6 +1116,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $azCopyToolFileNamesString = $azCopyToolFileNames -join ";"
     $azCopyToolFileContentsString = $azCopyToolFileContents -join ";"
 
+    $inlineScriptText = $fileCopyJobScript.ToString()
+
     # script block arguments
     $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
     if($cleanTargetBeforeCopy)
@@ -1129,10 +1132,16 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
         $scriptBlockArgs += " -useSanitizerActivate"
     }
+    if($useSourcePathHardening)
+    {
+        $scriptBlockArgs += " -useSourcePathHardening"
+        $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+        $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
+    }
 
     $remoteScriptJobArguments = @{
         inline = $true;
-        inlineScript = $fileCopyJobScript.ToString();
+        inlineScript = $inlineScriptText;
         scriptArguments = $scriptBlockArgs;
         errorActionPreference = "Stop";
         failOnStdErr = $true;
