@@ -143,7 +143,35 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
-$useSourcePathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening'
+function Get-SourcePathHardeningFeatureFlag {
+    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try {
+            Import-Module (Join-Path $PSScriptRoot 'ps_modules\VstsTaskSdk') -ErrorAction Stop
+            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
+        return $false
+    }
+
+    try {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
+    }
+    catch {
+        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
+$useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
 
 if ($useSanitizerCall) {
     $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
@@ -152,9 +180,6 @@ if ($useSanitizerCall) {
 
 if ($useSanitizerActivate) {
     if ($useSourcePathHardening) {
-        # The hardened path re-tokenizes this string via Split-AdditionalArguments to
-        # build the call-operator argv array, so tokens containing whitespace must be
-        # re-quoted here to preserve their boundaries across the rejoin/re-split.
         $additionalArgumentsForBlobCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForBlobCopy
         $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
     }
