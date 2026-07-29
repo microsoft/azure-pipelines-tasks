@@ -79,6 +79,7 @@
   "loc.messages.InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport, sqlScript.",
   "loc.messages.ExecutingSqlScript": "Executing SQL script: %s",
   "loc.messages.SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
+  "loc.messages.SpAuthRequiresTenantId": "Service Principal auth for .sql scripts requires either an azureSubscription (tenant ID is injected automatically) or a User ID in the format clientId@tenantId in the connection string.",
   "loc.messages.DeploymentSuccessful": "Deployment completed successfully",
   "loc.messages.DeploymentFailed": "Deployment failed: %s",
   "loc.messages.InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"

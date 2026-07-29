@@ -171,6 +171,7 @@
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "ExecutingSqlScript": "ms-resource:loc.messages.ExecutingSqlScript",
     "SqlcmdExecutionFailed": "ms-resource:loc.messages.SqlcmdExecutionFailed",
+    "SpAuthRequiresTenantId": "ms-resource:loc.messages.SpAuthRequiresTenantId",
     "DeploymentSuccessful": "ms-resource:loc.messages.DeploymentSuccessful",
     "DeploymentFailed": "ms-resource:loc.messages.DeploymentFailed",
     "InvalidFileExtension": "ms-resource:loc.messages.InvalidFileExtension"

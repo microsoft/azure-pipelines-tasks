@@ -195,26 +195,39 @@ async function main(): Promise<void> {
                     // Should not reach here — SqlcmdHelper.findSqlcmd throws if not found
                     throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
                 }
+
+                // For SP auth, go-mssqldb needs the tenant ID either in the User ID field
+                // (as clientId@tenantId) or via AZURE_TENANT_ID env var (injected when
+                // azureSubscription is set). Without either, auth will fail with a cryptic error.
+                const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                if (sqlAuthType === 'activedirectoryserviceprincipal'
+                    && !azureSubscription
+                    && connectionConfig.UserId && !connectionConfig.UserId.includes('@')) {
+                    throw new Error(tl.loc('SpAuthRequiresTenantId'));
+                }
+
                 tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
-                // For token-based auth types, inject service connection credentials as env vars
-                // so go-sqlcmd's DefaultAzureCredential chain picks up the service connection identity.
-                // This ensures sqlcmd authenticates as the same identity as SqlPackage.
+                // Inject service connection credentials as env vars so go-sqlcmd's
+                // DefaultAzureCredential chain uses the service connection identity.
+                // Only inject what's available — DefaultAzureCredential skips a provider
+                // if its required fields are missing, so no leakage across scheme types:
+                //   SP:  tenantID + clientID + clientSecret → EnvironmentCredential fires
+                //   WIF: tenantID + clientID only           → WorkloadIdentityCredential fires
+                //   MSI: tenantID only                     → ManagedIdentityCredential fires
                 let sqlcmdEnvOverrides: { [key: string]: string } | undefined;
                 if (azureSubscription && azureEndpoint?.tenantID) {
                     const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
                     const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated', 'activedirectorymanagedidentity'];
 
-                    // Always inject tenant ID so go-sqlcmd can resolve the tenant.
-                    sqlcmdEnvOverrides = { AZURE_TENANT_ID: azureEndpoint.tenantID };
-
-                    // For token-based auth (no creds in connection string), also inject SP client
-                    // credentials from the service connection so DefaultAzureCredential picks up
-                    // the intended identity rather than the agent's ambient identity.
-                    if (tokenBasedAuthTypes.includes(authType) && azureEndpoint.scheme === 'ServicePrincipal'
-                        && azureEndpoint.servicePrincipalClientID && azureEndpoint.servicePrincipalKey) {
-                        tl.setSecret(azureEndpoint.servicePrincipalKey);
-                        sqlcmdEnvOverrides.AZURE_CLIENT_ID = azureEndpoint.servicePrincipalClientID;
-                        sqlcmdEnvOverrides.AZURE_CLIENT_SECRET = azureEndpoint.servicePrincipalKey;
+                    if (tokenBasedAuthTypes.includes(authType)) {
+                        sqlcmdEnvOverrides = { AZURE_TENANT_ID: azureEndpoint.tenantID };
+                        if (azureEndpoint.servicePrincipalClientID) {
+                            sqlcmdEnvOverrides.AZURE_CLIENT_ID = azureEndpoint.servicePrincipalClientID;
+                        }
+                        if (azureEndpoint.servicePrincipalKey) {
+                            tl.setSecret(azureEndpoint.servicePrincipalKey);
+                            sqlcmdEnvOverrides.AZURE_CLIENT_SECRET = azureEndpoint.servicePrincipalKey;
+                        }
                     }
                 }
                 await SqlcmdExecutor.executeSqlcmd(

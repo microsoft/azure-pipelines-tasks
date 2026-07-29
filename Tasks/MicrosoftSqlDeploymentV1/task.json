@@ -171,6 +171,7 @@
     "InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport, sqlScript.",
     "ExecutingSqlScript": "Executing SQL script: %s",
     "SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
+    "SpAuthRequiresTenantId": "Service Principal auth for .sql scripts requires either an azureSubscription (tenant ID is injected automatically) or a User ID in the format clientId@tenantId in the connection string.",
     "DeploymentSuccessful": "Deployment completed successfully",
     "DeploymentFailed": "Deployment failed: %s",
     "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
