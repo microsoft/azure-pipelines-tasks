@@ -2,6 +2,20 @@ import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
 import Constants from './Constants';
 
+/**
+ * Identity material derived from the Azure service connection, used to make go-sqlcmd
+ * authenticate as the service connection rather than the agent's ambient identity.
+ * Empty when no azureSubscription is configured.
+ */
+export interface SqlcmdCredentials {
+    /** Service connection tenant ID; used to build clientId@tenantId for AAD SP auth. */
+    tenantId?: string;
+    /** Replaces the --authentication-method value (ActiveDirectoryAzurePipelines for WIF). */
+    authMethodOverride?: string;
+    /** Environment variables that carry the service connection identity to azidentity. */
+    envOverrides?: { [key: string]: string };
+}
+
 export class SqlcmdExecutor {
     /**
      * Execute a .sql script file using sqlcmd.
@@ -12,19 +26,19 @@ export class SqlcmdExecutor {
         scriptPath: string,
         connectionConfig: SqlConnectionConfig,
         additionalArguments?: string,
-        envOverrides?: { [key: string]: string }
+        credentials?: SqlcmdCredentials
     ): Promise<void> {
-        const args = this.buildArguments(scriptPath, connectionConfig, additionalArguments, envOverrides?.['AZURE_TENANT_ID']);
+        const args = this.buildConnectionArguments(connectionConfig, credentials, 30);
 
-        // Pass credentials via environment variables only — never on the command line.
-        // Scoped to this exec call only (not set on process.env globally).
-        const envVars: { [key: string]: string } = Object.assign({}, process.env, envOverrides);
+        // Input file
+        args.push('-i');
+        args.push(scriptPath);
 
-        if (connectionConfig.Password) {
-            // Pass password via SQLCMDPASSWORD env var — never on the command line.
-            // go-sqlcmd reads SQLCMDPASSWORD automatically for SQL auth and AAD password/SP auth.
-            envVars[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
+        if (additionalArguments) {
+            args.push(...this.parseAdditionalArguments(additionalArguments));
         }
+
+        const envVars = this.buildEnvironment(connectionConfig, credentials);
 
         tl.debug(`Executing sqlcmd: ${sqlcmdPath}`);
 
@@ -40,15 +54,43 @@ export class SqlcmdExecutor {
     }
 
     /**
-     * Build sqlcmd command line arguments.
-     * Per spec: UTF-8 encoding is preserved by default with go-sqlcmd.
+     * Build the environment for a sqlcmd invocation. Secrets are passed here rather than
+     * on the command line, and the map is scoped to a single exec — process.env is never mutated.
      */
-    private static buildArguments(
-        scriptPath: string,
+    public static buildEnvironment(
         connectionConfig: SqlConnectionConfig,
-        additionalArguments?: string,
-        tenantId?: string
+        credentials?: SqlcmdCredentials
+    ): { [key: string]: string } {
+        const envVars: { [key: string]: string } = Object.assign({}, process.env, credentials?.envOverrides);
+
+        if (connectionConfig.Password) {
+            // go-sqlcmd reads SQLCMDPASSWORD automatically for SQL auth and AAD password/SP auth.
+            envVars[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
+        }
+
+        return envVars;
+    }
+
+    /**
+     * Build the server/database/authentication portion of a sqlcmd command line.
+     *
+     * This is the single source of truth for how a connection string maps to go-sqlcmd
+     * authentication flags. Both script execution and the firewall connectivity probe use
+     * it so the two can never authenticate as different identities.
+     *
+     * Per spec: UTF-8 encoding is preserved by default with go-sqlcmd (no codepage flag needed).
+     *
+     * @param database Overrides the database from the connection string (the probe uses master).
+     * @param loginTimeoutSeconds Value for -l.
+     */
+    public static buildConnectionArguments(
+        connectionConfig: SqlConnectionConfig,
+        credentials?: SqlcmdCredentials,
+        loginTimeoutSeconds: number = 30,
+        database?: string
     ): string[] {
+        const tenantId = credentials?.tenantId;
+        const authMethodOverride = credentials?.authMethodOverride;
         const args: string[] = [];
 
         // Server (with port if specified)
@@ -60,9 +102,10 @@ export class SqlcmdExecutor {
         );
 
         // Database
-        if (connectionConfig.Database) {
+        const targetDatabase = database || connectionConfig.Database;
+        if (targetDatabase) {
             args.push('-d');
-            args.push(connectionConfig.Database);
+            args.push(targetDatabase);
         }
 
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
@@ -81,11 +124,15 @@ export class SqlcmdExecutor {
 
         switch (authType) {
             case 'activedirectorydefault':
-                addAuthenticationMethod('ActiveDirectoryDefault');
+                // A Workload Identity Federation service connection cannot authenticate
+                // through the DefaultAzureCredential chain, so the caller substitutes
+                // ActiveDirectoryAzurePipelines. That credential takes its client/tenant/
+                // connection id from AZURESUBSCRIPTION_* env vars, so no -U is passed.
+                addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryDefault');
                 break;
 
             case 'activedirectoryintegrated':
-                addAuthenticationMethod('ActiveDirectoryIntegrated');
+                addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryIntegrated');
                 break;
 
             case 'activedirectorypassword':
@@ -109,8 +156,10 @@ export class SqlcmdExecutor {
 
             case 'activedirectorymanagedidentity':
                 // Optional UserId for user-assigned managed identity
-                addAuthenticationMethod('ActiveDirectoryManagedIdentity');
-                addUser();
+                addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryManagedIdentity');
+                if (!authMethodOverride) {
+                    addUser();
+                }
                 break;
 
             default:
@@ -119,18 +168,9 @@ export class SqlcmdExecutor {
                 break;
         }
 
-        // Login timeout (30s)
+        // Login timeout
         args.push('-l');
-        args.push('30');
-
-        // Input file
-        args.push('-i');
-        args.push(scriptPath);
-
-        // Additional arguments
-        if (additionalArguments) {
-            args.push(...this.parseAdditionalArguments(additionalArguments));
-        }
+        args.push(String(loginTimeoutSeconds));
 
         return args;
     }

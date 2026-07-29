@@ -172,6 +172,7 @@
     "ExecutingSqlScript": "Executing SQL script: %s",
     "SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
     "SpAuthRequiresTenantId": "Service Principal auth for .sql scripts requires either an azureSubscription (tenant ID is injected automatically) or a User ID in the format clientId@tenantId in the connection string.",
+    "WifSqlcmdFallbackToAgentIdentity": "Could not resolve the workload identity federation credentials for the service connection. sqlcmd will authenticate using the agent's own identity, which may not have access to the database.",
     "DeploymentSuccessful": "Deployment completed successfully",
     "DeploymentFailed": "Deployment failed: %s",
     "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"

@@ -524,6 +524,33 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'task should succeed with AAD Service Principal auth');
         }, tr);
     });
+
+    it('should use ActiveDirectoryAzurePipelines for a Workload Identity Federation service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdWifUsesAzurePipelinesAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed authenticating as the WIF service connection');
+        }, tr);
+    });
+
+    it('should take the SP tenant id from the service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdSpAuthTenantFromSubscription.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with clientId@tenantId built from the service connection');
+        }, tr);
+    });
+
+    it('should use the same authentication mapping for the firewall probe as for deployment', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFirewallProbeUsesSharedAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with the probe using --authentication-method');
+        }, tr);
+    });
 });
 
 
