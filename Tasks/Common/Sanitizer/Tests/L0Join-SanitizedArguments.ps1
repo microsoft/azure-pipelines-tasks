@@ -37,3 +37,16 @@ $roundTripInput = @("--include-pattern", "sub folder\a.txt", "--recursive")
 $roundTripJoined = Join-SanitizedArguments -arguments $roundTripInput
 [string[]]$roundTripSplit = @(Split-AdditionalArguments -additionalArguments $roundTripJoined)
 Assert-AreEqual -Expected $roundTripInput -Actual $roundTripSplit
+
+# Regression test: a token containing BOTH an embedded double quote and a
+# space (e.g. a"b c) previously broke the round trip. Join-SanitizedArguments
+# quoted the token without escaping the embedded quote, so
+# Split-AdditionalArguments then mis-read the embedded quote as the closing
+# quote, splitting the single token into two (a"b c -> ab, c). This is
+# exactly the scenario hit when useSanitizerActivate and
+# useSourcePathHardening are both enabled on the AzureFileCopy VM-copy and
+# Upload paths.
+$embeddedQuoteRoundTripInput = @("--include-pattern", 'a"b c', "--recursive")
+$embeddedQuoteRoundTripJoined = Join-SanitizedArguments -arguments $embeddedQuoteRoundTripInput
+[string[]]$embeddedQuoteRoundTripSplit = @(Split-AdditionalArguments -additionalArguments $embeddedQuoteRoundTripJoined)
+Assert-AreEqual -Expected $embeddedQuoteRoundTripInput -Actual $embeddedQuoteRoundTripSplit

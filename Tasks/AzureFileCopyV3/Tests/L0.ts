@@ -117,5 +117,8 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Check-ContainerNameAndArgs', (done) => {
             psr.run(path.join(__dirname, 'L0CheckContainerNameAndArgs.ps1'), done);
         });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
+        });
     }   
 });

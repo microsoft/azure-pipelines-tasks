@@ -338,13 +338,25 @@ function Split-AdditionalArguments
             $quoteChar = $char
             $hasToken = $true
             $i++
-            while ($i -lt $length -and $additionalArguments[$i] -ne $quoteChar)
+            # A doubled quote char inside the quoted section (e.g. "" inside a
+            # double-quoted token) is an escaped literal quote, not the
+            # terminator - mirrors the escaping Join-SanitizedArguments applies
+            # when re-quoting a token whose original value contains an embedded
+            # quote character. Without this, such a token would be mis-split.
+            while ($i -lt $length)
             {
+                if ($additionalArguments[$i] -eq $quoteChar)
+                {
+                    if (($i + 1) -lt $length -and $additionalArguments[$i + 1] -eq $quoteChar)
+                    {
+                        [void]$current.Append($quoteChar)
+                        $i += 2
+                        continue
+                    }
+                    $i++
+                    break
+                }
                 [void]$current.Append($additionalArguments[$i])
-                $i++
-            }
-            if ($i -lt $length)
-            {
                 $i++
             }
         }
@@ -394,8 +406,16 @@ function Join-SanitizedArguments
         return ''
     }
 
+    # A token needs re-quoting if it contains whitespace (or it would be
+    # re-split into multiple tokens by Split-AdditionalArguments) or an
+    # embedded quote character (or that character would be silently swallowed
+    # as an unmatched quote). Any embedded double quote is escaped by
+    # doubling it - the same escape convention Split-AdditionalArguments
+    # understands - so the original token round-trips intact instead of
+    # being corrupted or mis-split (e.g. a"b c would otherwise rejoin as
+    # "a"b c" and re-split into ab, c).
     $quoted = $arguments | ForEach-Object {
-        if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
+        if ($_ -match '[\s"]') { '"' + $_.Replace('"', '""') + '"' } else { $_ }
     }
 
     return ($quoted -join ' ')

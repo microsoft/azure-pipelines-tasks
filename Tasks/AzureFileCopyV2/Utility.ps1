@@ -1136,6 +1136,10 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
         $scriptBlockArgs += " -useSourcePathHardening"
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+        if(!$splitAdditionalArgumentsFunctionInfo)
+        {
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+        }
         $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
 
