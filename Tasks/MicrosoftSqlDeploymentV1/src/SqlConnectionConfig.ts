@@ -220,13 +220,15 @@ export default class SqlConnectionConfig {
                 break;
             }
             case 'activedirectoryintegrated':
-            case 'activedirectorydefault': {
-                // These authentication types don't require user ID or password
+            case 'activedirectorydefault':
+            case 'activedirectorymanagedidentity': {
+                // These authentication types don't require user ID or password.
+                // For activedirectorymanagedidentity, UserId is optional (user-assigned MI client ID).
                 break;
             }
             default: {
-                // Unknown Authentication= value (not in the 5 supported types above).
-                // Supported methods: SQL auth (no keyword), Active Directory Default/Password/ServicePrincipal/Integrated.
+                // Unknown Authentication= value (not in the supported types).
+                // Supported: SQL auth (no keyword), Active Directory Default/Password/ServicePrincipal/Integrated/ManagedIdentity.
                 throw new Error(tl.loc('UnsupportedAuthentication', this.FormattedAuthentication));
             }
         }
