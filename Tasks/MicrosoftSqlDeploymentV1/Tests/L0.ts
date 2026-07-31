@@ -513,6 +513,15 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should not inject -b when the user specifies their own error handling', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdRespectsUserErrorHandling.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should respect an explicit --exit-on-error=false');
+        }, tr);
+    });
+
     it('should fail when sqlcmd execution fails with non-zero exit code', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdExecutionFailed.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

@@ -30,6 +30,16 @@ export class SqlcmdExecutor {
     ): Promise<void> {
         const args = this.buildConnectionArguments(connectionConfig, credentials, 30);
 
+        // Abort and return a non-zero exit code when a statement fails. Without -b,
+        // go-sqlcmd prints the error but still exits 0, so a half-applied migration would
+        // be reported as a successful deployment. Only severity >= 11 aborts, so PRINT
+        // output and informational messages are unaffected.
+        // Skipped when the user states their own intent in additionalArguments, which also
+        // provides the opt-out: additionalArguments: '--exit-on-error=false'.
+        if (!this.specifiesErrorHandling(additionalArguments)) {
+            args.push('-b');
+        }
+
         // Input file
         args.push('-i');
         args.push(scriptPath);
@@ -173,6 +183,14 @@ export class SqlcmdExecutor {
         args.push(String(loginTimeoutSeconds));
 
         return args;
+    }
+
+    /**
+     * Returns true when the caller has already specified sqlcmd's error-handling behaviour,
+     * so the task should not impose its own default.
+     */
+    private static specifiesErrorHandling(additionalArguments?: string): boolean {
+        return /(^|\s)(-b|--exit-on-error)(\s|=|$)/.test(additionalArguments ?? '');
     }
 
     /**

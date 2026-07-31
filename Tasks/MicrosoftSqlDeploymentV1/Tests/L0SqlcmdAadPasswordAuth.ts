@@ -21,7 +21,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
             // AAD Password: --authentication-method flag + -U user, password via SQLCMDPASSWORD env var
-            '/usr/bin/sqlcmd -S localhost -d testdb --authentication-method ActiveDirectoryPassword -U user@tenant.com -l 30 -i test.sql': {
+            '/usr/bin/sqlcmd -S localhost -d testdb --authentication-method ActiveDirectoryPassword -U user@tenant.com -l 30 -b -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }

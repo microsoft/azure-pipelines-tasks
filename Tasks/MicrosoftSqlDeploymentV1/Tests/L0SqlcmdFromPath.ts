@@ -22,7 +22,7 @@ const a: ma.TaskLibAnswers = {
     checkPath: { 'test.sql': true, '/usr/bin/sqlcmd': true },
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
-        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': { code: 0, stdout: 'Changed database context.' }
+        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -b -i test.sql': { code: 0, stdout: 'Changed database context.' }
     }
 };
 tmr.setAnswers(a);

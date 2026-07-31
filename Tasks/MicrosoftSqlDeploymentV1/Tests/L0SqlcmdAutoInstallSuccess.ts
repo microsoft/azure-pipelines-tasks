@@ -27,7 +27,7 @@ const a: ma.TaskLibAnswers = {
     checkPath: { 'test.sql': true, [sqlcmdExePath]: true },
     which: { [sqlcmdExePath]: sqlcmdExePath },
     exec: {
-        [`${sqlcmdExePath} -S localhost -d testdb -U sa -l 30 -i test.sql`]: { code: 0, stdout: 'Changed database context.' }
+        [`${sqlcmdExePath} -S localhost -d testdb -U sa -l 30 -b -i test.sql`]: { code: 0, stdout: 'Changed database context.' }
     }
 };
 tmr.setAnswers(a);
