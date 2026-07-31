@@ -487,6 +487,32 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should use the sovereign cloud SQL audience and an isolated credential', async () => {
+        const tp = path.join(__dirname, 'L0SovereignCloudIsolatedSqlCredential.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed against a US Gov service connection');
+            assert(tr.stdout.indexOf('TOKEN_AUDIENCE:https://database.usgovcloudapi.net/') >= 0,
+                'token should be requested with the US Gov SQL audience, not the public cloud one');
+            assert(tr.stdout.indexOf('TOKEN_BASEURL:https://database.usgovcloudapi.net/') >= 0,
+                'baseUrl must also carry the SQL audience for the ADAL managed identity path');
+            assert(tr.stdout.indexOf('IS_SHARED_ARM_CREDENTIAL:false') >= 0,
+                'token must come from an isolated clone so the shared ARM credential stays usable for firewall cleanup');
+        }, tr);
+    });
+
+    it('should not request an access token for SQL authentication', async () => {
+        const tp = path.join(__dirname, 'L0NoTokenForSqlAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with SQL authentication');
+            assert(tr.stdout.indexOf('UNEXPECTED_TOKEN_REQUEST') < 0,
+                'no token should be requested when the connection string carries credentials');
+        }, tr);
+    });
+
     it('should fail when sqlcmd execution fails with non-zero exit code', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdExecutionFailed.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

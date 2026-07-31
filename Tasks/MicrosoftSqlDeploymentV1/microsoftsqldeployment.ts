@@ -22,6 +22,47 @@ if (nodeVersion > 19) {
     tl.debug("Set default auto select family to false");
 }
 
+/**
+ * Returns the SQL Database OAuth audience URL for the given Azure environment.
+ * Defaults to Azure public cloud when the environment is unknown.
+ */
+function getSqlAudienceFromEnvironment(environment: string): string {
+    switch ((environment ?? '').toLowerCase()) {
+        case 'azureusgovernment': return 'https://database.usgovcloudapi.net/';
+        case 'azurechinacloud':   return 'https://database.chinacloudapi.cn/';
+        case 'azuregermancloud':  return 'https://database.cloudapi.de/';
+        default:                  return 'https://database.windows.net/';
+    }
+}
+
+/**
+ * Builds a credential that requests SQL-audience tokens without disturbing the ARM
+ * credential that firewall rule management depends on.
+ *
+ * azureEndpoint.applicationTokenCredentials is shared: AzureSqlResourceManager passes the
+ * same object to its ServiceClient. On the ADAL path getToken() memoizes the result in
+ * token_deferred, so acquiring a SQL-scoped token through that object makes every later
+ * ARM call reuse it - including removeFirewallRule() in the finally block, which would
+ * then fail with an audience mismatch and silently leak the temporary rule.
+ * Cloning gives the SQL request its own cache and leaves the shared object untouched.
+ *
+ * Both resource fields are set because the paths read different ones:
+ *   ADAL service principal / MSAL -> activeDirectoryResourceId
+ *   ADAL managed identity         -> baseUrl (getMSIAuthorizationToken)
+ */
+function createSqlScopedCredentials(azureEndpoint: any, sqlAudience: string): any {
+    const armCredentials = azureEndpoint.applicationTokenCredentials;
+    const sqlCredentials = Object.create(Object.getPrototypeOf(armCredentials));
+    Object.assign(sqlCredentials, armCredentials);
+
+    // Start with an empty cache so this credential fetches its own SQL-scoped token.
+    sqlCredentials.token_deferred = undefined;
+    sqlCredentials.activeDirectoryResourceId = sqlAudience;
+    sqlCredentials.baseUrl = sqlAudience;
+
+    return sqlCredentials;
+}
+
 async function main(): Promise<void> {
     try {
         // Set resource path for localization
@@ -128,37 +169,43 @@ async function main(): Promise<void> {
                 // fields only — no token acquisition, so it cannot poison the ARM token cache.
                 sqlcmdCredentials = resolveSqlcmdCredentials(connectionConfig, azureSubscription, azureEndpoint);
 
-                // Acquire access token for database authentication
-                if (azureEndpoint.scheme === 'ServicePrincipal' ||
-                    azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
-                    azureEndpoint.scheme === 'ManagedServiceIdentity') {
-                    try {
-                        // Set SQL resource audience before acquiring the token.
-                        // The default ARM audience is rejected by Azure SQL.
-                        // Save and restore the original resource ID so subsequent ARM calls
-                        // (e.g. firewall rule management) still use the ARM-scoped token.
-                        const originalResourceId = azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId;
-                        try {
-                            azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = 'https://database.windows.net/';
-                            accessToken = await azureEndpoint.applicationTokenCredentials.getToken(true);
-                            if (accessToken) {
-                                tl.setSecret(accessToken);
-                                tl.debug(tl.loc('AccessTokenAcquired'));
-                            }
-                        } finally {
-                            azureEndpoint.applicationTokenCredentials.activeDirectoryResourceId = originalResourceId;
-                        }
-                    } catch (tokenError) {
-                        tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
-                    }
-                }
-
+                // Firewall management runs before the SQL token is acquired so the ARM
+                // credential is still pristine here. The SQL token is additionally taken
+                // from an isolated credential (createSqlScopedCredentials), which is what
+                // keeps the ARM credential clean for the rule cleanup in the finally block.
                 if (firewallRuleManagement) {
                     const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!, sqlcmdCredentials);
                     if (ipAddress) {
                         const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
                         firewallManager = new FirewallManager(resourceManager);
                         await firewallManager.addFirewallRule(ipAddress);
+                    }
+                }
+
+                // Acquire the SQL-scoped token only for auth types that consume it
+                // (ActiveDirectoryDefault/Integrated). Gating on the same condition
+                // SqlPackageExecutor uses avoids pointless token requests for SQL auth,
+                // AAD Password and AAD Service Principal, which carry their own credentials.
+                const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+                const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                const shouldAcquireToken = tokenBasedAuthTypes.includes(authType) &&
+                    (azureEndpoint.scheme === 'ServicePrincipal' ||
+                     azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
+                     azureEndpoint.scheme === 'ManagedServiceIdentity');
+
+                if (shouldAcquireToken) {
+                    try {
+                        // Derive the audience from the service connection environment so
+                        // sovereign clouds (US Gov, China, Germany) resolve correctly.
+                        const sqlAudience = getSqlAudienceFromEnvironment(azureEndpoint.environment);
+                        const sqlCredentials = createSqlScopedCredentials(azureEndpoint, sqlAudience);
+                        accessToken = await sqlCredentials.getToken();
+                        if (accessToken) {
+                            tl.setSecret(accessToken);
+                            tl.debug(tl.loc('AccessTokenAcquired'));
+                        }
+                    } catch (tokenError) {
+                        tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
                     }
                 }
             } else if (!firewallRuleManagement) {
