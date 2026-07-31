@@ -300,6 +300,164 @@ describe('Minify build helpers (minify-util)', function () {
         });
     });
 
+    describe('external package retention', function () {
+        var os = require('os');
+        var anyFs: any = fs;
+
+        function writePackage(root: string, packageJson: any): void {
+            anyFs.mkdirSync(root, { recursive: true });
+            anyFs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson));
+            anyFs.writeFileSync(path.join(root, 'index.js'), 'module.exports = true;\n');
+        }
+
+        it('accepts unique top-level package names and rejects subpaths', () => {
+            assert.strictEqual(
+                JSON.stringify(minifyUtil.normalizeExternalPackages(['plain', '@scope/pkg', 'plain'])),
+                JSON.stringify(['plain', '@scope/pkg']));
+            assert.throws(
+                () => minifyUtil.normalizeExternalPackages(['plain/subpath']),
+                /invalid external package/);
+            assert.throws(
+                () => minifyUtil.normalizeExternalPackages('plain'),
+                /must be an array/);
+        });
+
+        it('retains the installed dependency closure and prunes unrelated packages', () => {
+            var outDir = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-ext-'));
+            var nodeModules = path.join(outDir, 'node_modules');
+            var externalRoot = path.join(nodeModules, 'external-root');
+            try {
+                writePackage(externalRoot, {
+                    name: 'external-root',
+                    version: '1.0.0',
+                    dependencies: { hoisted: '1.0.0', nested: '2.0.0' },
+                    optionalDependencies: { 'missing-optional': '1.0.0' },
+                    bin: { rootbin: 'cli.js', 'tool.cmd': 'tool.js' }
+                });
+                writePackage(path.join(nodeModules, 'hoisted'), {
+                    name: 'hoisted',
+                    version: '1.0.0'
+                });
+                writePackage(path.join(externalRoot, 'node_modules', 'nested'), {
+                    name: 'nested',
+                    version: '2.0.0',
+                    bin: 'cli.js'
+                });
+                writePackage(path.join(nodeModules, 'unrelated'), {
+                    name: 'unrelated',
+                    version: '1.0.0'
+                });
+
+                var rootBin = path.join(nodeModules, '.bin');
+                anyFs.mkdirSync(rootBin, { recursive: true });
+                anyFs.writeFileSync(path.join(rootBin, 'rootbin'), '');
+                anyFs.writeFileSync(path.join(rootBin, 'rootbin.cmd'), '');
+                anyFs.writeFileSync(path.join(rootBin, 'tool.cmd'), '');
+                anyFs.writeFileSync(path.join(rootBin, 'tool.cmd.cmd'), '');
+                anyFs.writeFileSync(path.join(rootBin, 'unrelated'), '');
+                var nestedBin = path.join(externalRoot, 'node_modules', '.bin');
+                anyFs.mkdirSync(nestedBin, { recursive: true });
+                anyFs.writeFileSync(path.join(nestedBin, 'nested'), '');
+                anyFs.writeFileSync(path.join(nodeModules, '.package-lock.json'), '{}');
+
+                var closure = minifyUtil.collectExternalPackageClosure(outDir, ['external-root']);
+                assert.strictEqual(closure.retainedRoots.size, 3);
+                assert.strictEqual(
+                    JSON.stringify(minifyUtil.findRetainedPackageOverlaps(
+                        { inputs: { 'node_modules/hoisted/index.js': {} } },
+                        outDir,
+                        closure.retainedRoots).map((pkg: any) => pkg.name)),
+                    JSON.stringify(['hoisted']));
+
+                minifyUtil.pruneNodeModules(
+                    closure.nodeModulesPath,
+                    closure.retainedRoots,
+                    closure.retainedBins);
+
+                assert.ok(anyFs.existsSync(path.join(externalRoot, 'package.json')));
+                assert.ok(anyFs.existsSync(path.join(nodeModules, 'hoisted', 'package.json')));
+                assert.ok(anyFs.existsSync(path.join(externalRoot, 'node_modules', 'nested', 'package.json')));
+                assert.strictEqual(anyFs.existsSync(path.join(nodeModules, 'unrelated')), false);
+                assert.strictEqual(anyFs.existsSync(path.join(nodeModules, '.package-lock.json')), false);
+                assert.ok(anyFs.existsSync(path.join(rootBin, 'rootbin')));
+                assert.ok(anyFs.existsSync(path.join(rootBin, 'rootbin.cmd')));
+                assert.ok(anyFs.existsSync(path.join(rootBin, 'tool.cmd')));
+                assert.ok(anyFs.existsSync(path.join(rootBin, 'tool.cmd.cmd')));
+                assert.strictEqual(anyFs.existsSync(path.join(rootBin, 'unrelated')), false);
+                assert.ok(anyFs.existsSync(path.join(nestedBin, 'nested')));
+
+                assert.strictEqual(
+                    minifyUtil.collectExternalPackageClosure(outDir, ['external-root']).retainedRoots.size,
+                    3);
+            } finally {
+                anyFs.rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+
+        it('fails when a required dependency is missing', () => {
+            var outDir = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-ext-'));
+            try {
+                writePackage(path.join(outDir, 'node_modules', 'external-root'), {
+                    name: 'external-root',
+                    version: '1.0.0',
+                    dependencies: { missing: '1.0.0' }
+                });
+                assert.throws(
+                    () => minifyUtil.collectExternalPackageClosure(outDir, ['external-root']),
+                    /requires "missing", but it is not installed/);
+            } finally {
+                anyFs.rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+
+        it('fails when an external package has multiple physical roots', () => {
+            var outDir = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-ext-'));
+            try {
+                var nodeModules = path.join(outDir, 'node_modules');
+                writePackage(path.join(nodeModules, 'external-root'), {
+                    name: 'external-root',
+                    version: '1.0.0'
+                });
+                writePackage(path.join(nodeModules, 'holder'), {
+                    name: 'holder',
+                    version: '1.0.0'
+                });
+                writePackage(path.join(nodeModules, 'holder', 'node_modules', 'external-root'), {
+                    name: 'external-root',
+                    version: '2.0.0'
+                });
+                assert.throws(
+                    () => minifyUtil.collectExternalPackageClosure(outDir, ['external-root']),
+                    /installed at 2 physical roots/);
+            } finally {
+                anyFs.rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+
+        it('restores published outputs when a staged replacement fails', () => {
+            var tmp = anyFs.mkdtempSync(path.join(os.tmpdir(), 'minify-publish-'));
+            try {
+                var firstDest = path.join(tmp, 'first.js');
+                var secondDest = path.join(tmp, 'second.js');
+                var firstSource = path.join(tmp, 'first.new.js');
+                anyFs.writeFileSync(firstDest, 'first-old');
+                anyFs.writeFileSync(secondDest, 'second-old');
+                anyFs.writeFileSync(firstSource, 'first-new');
+
+                assert.throws(() => minifyUtil.replaceOutputPaths([
+                    { source: firstSource, destination: firstDest },
+                    { source: path.join(tmp, 'missing.js'), destination: secondDest }
+                ], path.join(tmp, 'backup')));
+
+                assert.strictEqual(anyFs.readFileSync(firstDest, 'utf8'), 'first-old');
+                assert.strictEqual(anyFs.readFileSync(secondDest, 'utf8'), 'second-old');
+            } finally {
+                anyFs.rmSync(tmp, { recursive: true, force: true });
+            }
+        });
+
+    });
+
     describe('missing declared entry (B3)', function () {
         var os = require('os');
         var anyFs: any = fs;

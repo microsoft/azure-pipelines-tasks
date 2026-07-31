@@ -17,16 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
+    "Minor": 278,
     "Patch": 0
-  },
-  "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-      "allowed": []
-    }
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -152,6 +144,15 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Use this value if PasswordAuthentication is disabled on the target machine"
+    },
+    {
+      "name": "enableRemoteVsoCommands",
+      "type": "boolean",
+      "label": "Allow logging commands from remote output",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "When false (default), ##vso[...] lines in remote output are neutralized (printed as text, not executed). Set true only if you trust the remote output and rely on it emitting logging commands."
     }
   ],
   "execution": {

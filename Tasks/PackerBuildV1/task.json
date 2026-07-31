@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 274,
+    "Minor": 277,
     "Patch": 0
   },
   "demands": [],
@@ -355,6 +355,7 @@
     "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
     "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
     "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+    "CouldNotDeleteTempFile": "Could not delete temporary variables file %s. Please delete manually.",
     "InstalledPackerVersion": "Current installed packer version is %s.",
     "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
     "ResolvingDeployPackageInput": "Resolving deploy package path.",

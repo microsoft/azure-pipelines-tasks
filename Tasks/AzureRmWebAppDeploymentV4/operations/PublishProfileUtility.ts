@@ -23,8 +23,36 @@ export class PublishProfileUtility {
     private _publishProfileJs: any = null;
     private _publishProfilePath: string;
 
+    // .pubxml-derived values are concatenated into the msdeploy command line (cmd.exe + shell);
+    // allowlist them to the Azure publish-profile character set to prevent injection (CWE-77/78).
+    private static readonly _serviceUrlPattern: RegExp = /^[A-Za-z0-9.-]+(?::[0-9]+)?$/;
+    private static readonly _appPathPattern: RegExp = /^[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/;
+    private static readonly _userNamePattern: RegExp = /^[A-Za-z0-9._$@-]+(?:\\[A-Za-z0-9._$@-]+)*$/;
+
     constructor(publishProfilePath: string) {
         this._publishProfilePath = publishProfilePath;
+    }
+
+    private static validatePublishProfileValue(fieldName: string, value: any, allowedPattern: RegExp): void {
+        if (typeof value === 'string' && allowedPattern.test(value)) {
+            return;
+        }
+        PublishProfileUtility.publishValidationTelemetry(fieldName);
+        if (tl.getPipelineFeature(PublishProfileUtility._enforceValidationFeature)) {
+            throw new Error(tl.loc('InvalidPublishProfileValue', fieldName));
+        }
+    }
+
+    private static readonly _enforceValidationFeature: string = 'EnablePublishProfileValidation';
+    private static readonly _telemetryFeature: string = 'AzureRmWebAppDeploymentV4';
+
+    private static publishValidationTelemetry(fieldName: string): void {
+        try {
+            console.log(`##vso[telemetry.publish area=TaskHub;feature=${PublishProfileUtility._telemetryFeature}]`
+                + JSON.stringify({ event: 'PublishProfileValueRejected', field: fieldName }));
+        } catch (err) {
+            tl.debug(`Unable to publish publish-profile validation telemetry: ${err}`);
+        }
     }
 
     public async GetTaskParametersFromPublishProfileFile(taskParams: TaskParameters): Promise<PublishingProfile> {
@@ -45,6 +73,11 @@ export class PublishProfileUtility {
             UserName: this._publishProfileJs.UserName[0],
             UserPWD: taskParams.PublishProfilePassword
         }
+
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.MSDeployServiceURL, msDeployPublishingProfile.PublishUrl, PublishProfileUtility._serviceUrlPattern);
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.DeployIisAppPath, msDeployPublishingProfile.WebAppName, PublishProfileUtility._appPathPattern);
+        PublishProfileUtility.validatePublishProfileValue(Constant.PublishProfileXml.UserName, msDeployPublishingProfile.UserName, PublishProfileUtility._userNamePattern);
+
         return msDeployPublishingProfile;
     }
 

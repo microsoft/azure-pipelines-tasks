@@ -201,6 +201,8 @@ describe('SshV0 Suite', function () {
             process.env['commands'] = 'cat motd.txt';
             process.env['runOptions'] = 'commands';
             process.env['readyTimeout'] = '20000';
+            delete process.env['enableRemoteVsoCommands'];
+            delete process.env['splitVsoCommand'];
 
             let tp = path.join(__dirname, 'L0VsoCommandInjection.js');
             var tr = new tmrm.MockTestRunner(tp);
@@ -210,6 +212,46 @@ describe('SshV0 Suite', function () {
             runValidations(() => {
                 assert(tr.stdout.indexOf('##_vso[task.setvariable variable=INJECTED]hacked') >= 0, 'remote ##vso command should be escaped: "' + tr.stdout + '"');
                 assert(tr.stdout.indexOf('##vso[task.setvariable') < 0, 'raw ##vso command should not reach the agent: "' + tr.stdout + '"');
+            }, tr);
+        });
+
+        it('escapes ##vso logging commands split across output chunks', async () => {
+            process.env['sshEndpoint'] = 'IDValidPwd';
+            process.env['commands'] = 'cat motd.txt';
+            process.env['runOptions'] = 'commands';
+            process.env['readyTimeout'] = '20000';
+            process.env['splitVsoCommand'] = 'true';
+            delete process.env['enableRemoteVsoCommands'];
+
+            let tp = path.join(__dirname, 'L0VsoCommandInjection.js');
+            var tr = new tmrm.MockTestRunner(tp);
+
+            await tr.runAsync();
+            delete process.env['splitVsoCommand'];
+
+            runValidations(() => {
+                assert(tr.stdout.indexOf('##_vso[task.setvariable variable=INJECTED]hacked') >= 0, 'split remote ##vso command should be escaped: "' + tr.stdout + '"');
+                assert(tr.stdout.indexOf('##vso[task.setvariable') < 0, 'split raw ##vso command should not reach the agent: "' + tr.stdout + '"');
+            }, tr);
+        });
+
+        it('allows split ##vso logging commands when explicitly enabled', async () => {
+            process.env['sshEndpoint'] = 'IDValidPwd';
+            process.env['commands'] = 'cat motd.txt';
+            process.env['runOptions'] = 'commands';
+            process.env['readyTimeout'] = '20000';
+            process.env['enableRemoteVsoCommands'] = 'true';
+            process.env['splitVsoCommand'] = 'true';
+
+            let tp = path.join(__dirname, 'L0VsoCommandInjection.js');
+            var tr = new tmrm.MockTestRunner(tp);
+
+            await tr.runAsync();
+            delete process.env['enableRemoteVsoCommands'];
+            delete process.env['splitVsoCommand'];
+
+            runValidations(() => {
+                assert(tr.stdout.indexOf('##vso[task.setvariable variable=INJECTED]hacked') >= 0, 'trusted remote ##vso command should remain unchanged: "' + tr.stdout + '"');
             }, tr);
         });
     });

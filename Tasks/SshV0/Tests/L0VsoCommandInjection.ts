@@ -9,6 +9,7 @@ tmr.setInput('sshEndpoint', 'IDValidPwd');
 tmr.setInput('commands', 'cat motd.txt');
 tmr.setInput('runOptions', 'commands');
 tmr.setInput('readyTimeout', '20000');
+tmr.setInput('enableRemoteVsoCommands', process.env['enableRemoteVsoCommands'] || 'false');
 
 // Mock the task-lib endpoint lookups so the task uses password authentication.
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -38,6 +39,9 @@ tlClone.getEndpointDataParameter = function (id: string, key: string, optional: 
         return '';
     }
     throw new Error(`Endpoint auth data not present: ${id}`);
+};
+tlClone.getPipelineFeature = function (featureName: string): boolean {
+    return featureName === 'redirectTaskOutputToProcessStdout';
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
@@ -69,7 +73,12 @@ class MockClient extends EventEmitter {
         const stream = new MockStream();
         cb(null, stream);
         process.nextTick(() => {
-            stream.emit('data', Buffer.from('##vso[task.setvariable variable=INJECTED]hacked\n'));
+            if (process.env['splitVsoCommand'] === 'true') {
+                stream.emit('data', Buffer.from('##v'));
+                stream.emit('data', Buffer.from('so[task.setvariable variable=INJECTED]hacked\n'));
+            } else {
+                stream.emit('data', Buffer.from('##vso[task.setvariable variable=INJECTED]hacked\n'));
+            }
             stream.emit('close', 0, null);
         });
         return this;
