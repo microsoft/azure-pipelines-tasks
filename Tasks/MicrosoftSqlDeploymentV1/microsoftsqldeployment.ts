@@ -8,6 +8,7 @@ import FirewallManager from './src/FirewallManager';
 import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
 import { SqlPackageExecutor } from './src/SqlPackageExecutor';
+import { SqlcmdExecutor, SqlcmdCredentials } from './src/SqlcmdExecutor';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -111,14 +112,21 @@ async function main(): Promise<void> {
         // Firewall rule management and deployment execution
         let firewallManager: FirewallManager | undefined;
         let accessToken: string | undefined;
+        let azureEndpoint: any | undefined;
+        let sqlcmdCredentials: SqlcmdCredentials | undefined;
         let deployFilePath = filePath;
         let deployFileType = fileType;
 
         try {
-            // Step 1: Azure subscription — firewall + access token
+            // Step 1: Azure subscription — resolve sqlcmd identity, firewall, access token
             if (azureSubscription) {
                 const { AzureRMEndpoint } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint');
-                const azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+                azureEndpoint = await new AzureRMEndpoint(azureSubscription).getEndpoint();
+
+                // Resolved before firewall management so the connectivity probe authenticates
+                // as the service connection, not the agent's ambient identity. Reads endpoint
+                // fields only — no token acquisition, so it cannot poison the ARM token cache.
+                sqlcmdCredentials = resolveSqlcmdCredentials(connectionConfig, azureSubscription, azureEndpoint);
 
                 // Acquire access token for database authentication
                 if (azureEndpoint.scheme === 'ServicePrincipal' ||
@@ -146,7 +154,7 @@ async function main(): Promise<void> {
                 }
 
                 if (firewallRuleManagement) {
-                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!);
+                    const ipAddress = await SqlUtils.detectIPAddress(connectionConfig, sqlcmdExePath!, sqlcmdCredentials);
                     if (ipAddress) {
                         const resourceManager = await AzureSqlResourceManager.getResourceManager(connectionConfig.Server, azureEndpoint);
                         firewallManager = new FirewallManager(resourceManager);
@@ -185,6 +193,34 @@ async function main(): Promise<void> {
                     tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
                     tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
                 }
+            } else if (deployFileType === 'SQL') {
+                if (action.toLowerCase() !== 'sqlscript') {
+                    throw new Error(tl.loc('InvalidAction', action));
+                }
+                if (!sqlcmdExePath) {
+                    // Should not reach here — SqlcmdHelper.findSqlcmd throws if not found
+                    throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
+                }
+
+                // For SP auth, go-mssqldb needs the tenant ID either in the User ID field
+                // (as clientId@tenantId) or via the service connection. Without either, auth
+                // fails with a cryptic error, so surface a clear one up front.
+                const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                if (sqlAuthType === 'activedirectoryserviceprincipal'
+                    && !azureSubscription
+                    && connectionConfig.UserId && !connectionConfig.UserId.includes('@')) {
+                    throw new Error(tl.loc('SpAuthRequiresTenantId'));
+                }
+
+                tl.debug(tl.loc('ExecutingSqlScript', deployFilePath));
+
+                await SqlcmdExecutor.executeSqlcmd(
+                    sqlcmdExePath,
+                    deployFilePath,
+                    connectionConfig,
+                    additionalArguments || undefined,
+                    sqlcmdCredentials
+                );
             }
 
             console.log(tl.loc('DeploymentSuccessful'));
@@ -192,12 +228,106 @@ async function main(): Promise<void> {
             if (firewallManager) {
                 await firewallManager.removeFirewallRule();
             }
+            // Emit telemetry — actionable fields only, no PII. Always emitted regardless of outcome.
+            try {
+                const telemetry = {
+                    action: action,
+                    fileType: fileType,
+                    authMethod: connectionConfig.FormattedAuthentication ?? 'sqlauthentication',
+                    hasAzureSubscription: !!azureSubscription,
+                    sqlPackageDiscoveryMethod: needsSqlPackage ? (sqlpackagePath ? 'userSpecified' : 'discovered') : undefined,
+                    sqlcmdDiscoveryMethod: needsSqlcmd ? (sqlcmdPath ? 'userSpecified' : 'discovered') : undefined
+                };
+                console.log('##vso[telemetry.publish area=TaskHub;feature=MicrosoftSqlDeploymentV1]'
+                    + JSON.stringify(telemetry));
+            } catch (_) { /* telemetry is non-fatal */ }
         }
     }
     catch (error) {
         tl.debug(`Deployment failed with error: ${error}`);
         tl.setResult(tl.TaskResult.Failed, tl.loc('DeploymentFailed', error.message || error));
     }
+}
+
+/**
+ * Derive the credentials that make go-sqlcmd authenticate as the Azure service connection
+ * rather than the agent's ambient identity.
+ *
+ * Each service connection scheme is backed by a different azidentity credential, so the
+ * mechanism differs:
+ *
+ *   ServicePrincipal           → EnvironmentCredential, via AZURE_TENANT_ID + AZURE_CLIENT_ID + AZURE_CLIENT_SECRET.
+ *   WorkloadIdentityFederation → AzurePipelinesCredential, via the ActiveDirectoryAzurePipelines method.
+ *                                DefaultAzureCredential cannot be used: EnvironmentCredential needs a client
+ *                                secret and WorkloadIdentityCredential needs AZURE_FEDERATED_TOKEN_FILE, so the
+ *                                chain would silently fall through to the agent's identity.
+ *   ManagedServiceIdentity     → nothing to inject; the service connection *is* the agent's managed identity,
+ *                                which DefaultAzureCredential already resolves.
+ *
+ * Reads endpoint fields only — it acquires no tokens, so it is safe to call before ARM operations.
+ */
+function resolveSqlcmdCredentials(
+    connectionConfig: SqlConnectionConfig,
+    azureSubscription: string,
+    azureEndpoint: any
+): SqlcmdCredentials | undefined {
+    if (!azureEndpoint?.tenantID) {
+        return undefined;
+    }
+
+    const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+    const scheme = (azureEndpoint.scheme ?? '').toLowerCase();
+
+    // Auth types where the connection string carries no credentials, so the identity
+    // must come from the service connection.
+    const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated', 'activedirectorymanagedidentity'];
+
+    if (tokenBasedAuthTypes.includes(sqlAuthType)) {
+        if (scheme === 'workloadidentityfederation') {
+            // AzurePipelinesCredential exchanges the pipeline's OIDC token for a service
+            // connection token, so it needs the job's own access token.
+            const systemAccessToken = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+            if (!azureEndpoint.servicePrincipalClientID || !systemAccessToken) {
+                tl.warning(tl.loc('WifSqlcmdFallbackToAgentIdentity'));
+                return undefined;
+            }
+            tl.setSecret(systemAccessToken);
+            return {
+                tenantId: azureEndpoint.tenantID,
+                authMethodOverride: 'ActiveDirectoryAzurePipelines',
+                envOverrides: {
+                    AZURESUBSCRIPTION_SERVICE_CONNECTION_ID: azureSubscription,
+                    AZURESUBSCRIPTION_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
+                    AZURESUBSCRIPTION_TENANT_ID: azureEndpoint.tenantID,
+                    SYSTEM_ACCESSTOKEN: systemAccessToken
+                }
+            };
+        }
+
+        if (scheme === 'serviceprincipal' && azureEndpoint.servicePrincipalClientID && azureEndpoint.servicePrincipalKey) {
+            tl.setSecret(azureEndpoint.servicePrincipalKey);
+            return {
+                tenantId: azureEndpoint.tenantID,
+                envOverrides: {
+                    AZURE_TENANT_ID: azureEndpoint.tenantID,
+                    AZURE_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
+                    AZURE_CLIENT_SECRET: azureEndpoint.servicePrincipalKey
+                }
+            };
+        }
+
+        // ManagedServiceIdentity, or an incomplete endpoint: DefaultAzureCredential resolves
+        // the agent's managed identity, which is the service connection identity.
+        return undefined;
+    }
+
+    if (sqlAuthType === 'activedirectoryserviceprincipal') {
+        // Credentials come from the connection string, but go-mssqldb still needs a tenant.
+        // Supply the service connection's so the clientId@tenantId user name can be built.
+        return { tenantId: azureEndpoint.tenantID };
+    }
+
+    return undefined;
 }
 
 main();

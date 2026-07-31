@@ -1,4 +1,4 @@
-// Succeeds with minimal valid inputs for a .sql script execution.
+// Fails when sqlcmd exits with non-zero exit code.
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
@@ -23,12 +23,11 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
         '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': {
-            code: 0,
-            stdout: 'Changed database context to testdb.'
+            code: 1,
+            stderr: 'Msg 208, Level 16, State 1, Server localhost, Line 1\nInvalid object name \'dbo.NonExistentTable\'.'
         }
     }
 };
 tmr.setAnswers(a);
 
 tmr.run();
-

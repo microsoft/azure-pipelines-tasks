@@ -1,4 +1,5 @@
-// Succeeds with minimal valid inputs for a .sql script execution.
+// Succeeds when sqlcmd is used with Active Directory Service Principal auth.
+// Verifies --authentication-method flag is passed instead of -G.
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
@@ -8,7 +9,10 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
-tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');
+tmr.setInput('connectionString',
+    "Server=myserver.database.windows.net;Database=testdb;" +
+    "Authentication='Active Directory Service Principal';" +
+    "User Id=my-client-id;Password=my-secret;");
 
 tmr.registerMock('./src/SqlcmdHelper', {
     default: {
@@ -22,7 +26,7 @@ const a: ma.TaskLibAnswers = {
     checkPath: { 'test.sql': true, '/usr/bin/sqlcmd': true },
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
-        '/usr/bin/sqlcmd -S localhost -d testdb -U sa -l 30 -i test.sql': {
+        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryServicePrincipal -U my-client-id -l 30 -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }
@@ -31,4 +35,3 @@ const a: ma.TaskLibAnswers = {
 tmr.setAnswers(a);
 
 tmr.run();
-

@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
 import Constants from './Constants';
+import { SqlcmdExecutor, SqlcmdCredentials } from './SqlcmdExecutor';
 import { Writable } from 'stream';
 
 export interface ConnectionResult {
@@ -18,13 +19,19 @@ export default class SqlUtils {
      * First tries with master database, and then with user database if first one fails.
      * @param connectionConfig The connection configuration to try
      * @param sqlcmdPath Path to sqlcmd executable
+     * @param credentials Service connection identity, so the probe authenticates as the same
+     *                    identity the deployment will use rather than the agent's ambient one
      * @returns The client IP address if firewall restriction is present, or an empty string if connection succeeds
      */
-    public static async detectIPAddress(connectionConfig: SqlConnectionConfig, sqlcmdPath: string): Promise<string> {
+    public static async detectIPAddress(
+        connectionConfig: SqlConnectionConfig,
+        sqlcmdPath: string,
+        credentials?: SqlcmdCredentials
+    ): Promise<string> {
         tl.debug(tl.loc('DetectingIPAddress'));
 
         // First try connection to master
-        let result = await this.tryConnection(connectionConfig, sqlcmdPath, true);
+        let result = await this.tryConnection(connectionConfig, sqlcmdPath, true, credentials);
         if (result.success) {
             tl.debug(tl.loc('ConnectionSuccessful'));
             return '';
@@ -34,7 +41,7 @@ export default class SqlUtils {
         }
 
         // Retry connection with user database
-        result = await this.tryConnection(connectionConfig, sqlcmdPath, false);
+        result = await this.tryConnection(connectionConfig, sqlcmdPath, false, credentials);
         if (result.success) {
             tl.debug(tl.loc('ConnectionSuccessful'));
             return '';
@@ -52,12 +59,14 @@ export default class SqlUtils {
      * @param config Configuration for the connection
      * @param sqlcmdPath Path to sqlcmd executable
      * @param useMaster If true, uses "master" instead of the database specified in config
+     * @param credentials Service connection identity to authenticate the probe with
      * @returns A ConnectionResult object indicating success/failure
      */
     private static async tryConnection(
         config: SqlConnectionConfig,
         sqlcmdPath: string,
-        useMaster?: boolean
+        useMaster?: boolean,
+        credentials?: SqlcmdCredentials
     ): Promise<ConnectionResult> {
         const database = useMaster ? 'master' : config.Database;
         
@@ -67,14 +76,20 @@ export default class SqlUtils {
         let sqlcmdOutput = '';
 
         try {
-            // Build sqlcmd command with connection info
-            const sqlcmdArgs = this.buildSqlCmdArgs(config, database);
-            
+            // Reuse the deployment's argument builder so the probe and the deployment can
+            // never authenticate as different identities. 15s login timeout is enough for a
+            // connectivity probe without blocking the pipeline.
+            const sqlcmdArgs = SqlcmdExecutor.buildConnectionArguments(config, credentials, 15, database);
+
             // Add query to execute
             sqlcmdArgs.push('-Q', `SELECT 'Validating connection from Azure Pipelines SQL Deployment Task'`);
 
+            // Secrets go through a scoped env map — process.env is never mutated.
+            const sqlcmdEnv = SqlcmdExecutor.buildEnvironment(config, credentials);
+
             // Execute sqlcmd
             const result = await tl.exec(sqlcmdPath, sqlcmdArgs, {
+                env: sqlcmdEnv,
                 silent: true,
                 ignoreReturnCode: true,
                 outStream: new Writable({
@@ -126,69 +141,6 @@ export default class SqlUtils {
             return ipAddresses[0];
         }
         return undefined;
-    }
-
-    /**
-     * Builds sqlcmd arguments with connection settings
-     * @param connectionConfig The connection settings
-     * @param database The database to connect to
-     * @returns Array of sqlcmd arguments
-     */
-    private static buildSqlCmdArgs(connectionConfig: SqlConnectionConfig, database?: string): string[] {
-        const args: string[] = [];
-
-        // Server and port — sqlcmd expects "server,port" when a non-default port is used
-        const serverArg = connectionConfig.Port
-            ? `${connectionConfig.Server},${connectionConfig.Port}`
-            : connectionConfig.Server;
-        args.push('-S', serverArg);
-        args.push('-d', database || connectionConfig.Database);
-
-        // Authentication
-        const auth = connectionConfig.FormattedAuthentication;
-        
-        if (!auth || auth === 'sqlauthentication' || auth === 'sqlpassword') {
-            // SQL Authentication — pass User ID via -U; password via SQLCMDPASSWORD env var (not -P) to avoid
-            // exposing the secret in the process argument list
-            if (connectionConfig.UserId) {
-                args.push('-U', connectionConfig.UserId);
-            }
-            if (connectionConfig.Password) {
-                // Set directly on process.env — scoped to this process only, not persisted as a job variable
-                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
-            }
-        } else if (auth === 'activedirectorydefault') {
-            // AAD Default (Managed Identity)
-            args.push('-G');
-        } else if (auth === 'activedirectoryserviceprincipal') {
-            // AAD Service Principal — client secret via SQLCMDPASSWORD, client ID via -U
-            args.push('-G');
-            if (connectionConfig.UserId) {
-                args.push('-U', connectionConfig.UserId);
-            }
-            if (connectionConfig.Password) {
-                // Set directly on process.env — scoped to this process only, not persisted as a job variable
-                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
-            }
-        } else if (auth === 'activedirectorypassword') {
-            // AAD Password — password via SQLCMDPASSWORD, user via -U
-            args.push('-G');
-            if (connectionConfig.UserId) {
-                args.push('-U', connectionConfig.UserId);
-            }
-            if (connectionConfig.Password) {
-                // Set directly on process.env — scoped to this process only, not persisted as a job variable
-                process.env[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;
-            }
-        } else if (auth === 'activedirectoryintegrated') {
-            // AAD Integrated
-            args.push('-G');
-        }
-
-        // -l sets the login timeout in seconds; 15s is enough for a connectivity probe without blocking the pipeline
-        args.push('-l', '15');
-
-        return args;
     }
 }
 

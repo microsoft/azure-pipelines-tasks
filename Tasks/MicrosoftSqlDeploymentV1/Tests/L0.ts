@@ -321,6 +321,19 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should auto-install go-sqlcmd when ODBC sqlcmd is on PATH', async () => {
+        // Verifies that isGoSqlcmd() correctly rejects ODBC sqlcmd (--version output
+        // does not match "sqlcmd version X.X.X") and falls through to auto-install.
+        const tp = path.join(__dirname, 'L0SqlcmdOdbcOnPathFallsToAutoInstall.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed after auto-installing go-sqlcmd');
+            assert(tr.stdout.indexOf('SqlCmdInstalling') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
+                'should have triggered auto-install when ODBC sqlcmd was on PATH');
+        }, tr);
+    });
+
     it('should fail when sqlcmd executable is missing after auto-install extraction', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdAutoInstallExeNotFound.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -471,6 +484,71 @@ describe('MicrosoftSqlDeployment Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed when azureSubscription is set and token acquired');
             assert(tr.stdout.indexOf('AccessTokenAcquired') >= 0, 'should report access token acquired');
+        }, tr);
+    });
+
+    it('should fail when sqlcmd execution fails with non-zero exit code', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdExecutionFailed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task should fail when sqlcmd exits with non-zero code');
+            assert(tr.stdout.indexOf('SqlcmdExecutionFailed') >= 0 || tr.errorIssues.some(e => e.includes('sqlcmd execution failed')),
+                'should report sqlcmd execution failure');
+        }, tr);
+    });
+
+    it('should succeed with AAD Default auth (-G, no credentials)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadDefaultAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Default auth');
+        }, tr);
+    });
+
+    it('should succeed with AAD Password auth (-G + -U + SQLCMDPASSWORD)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadPasswordAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Password auth');
+        }, tr);
+    });
+
+    it('should succeed with AAD Service Principal auth (--authentication-method)', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdAadServicePrincipalAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with AAD Service Principal auth');
+        }, tr);
+    });
+
+    it('should use ActiveDirectoryAzurePipelines for a Workload Identity Federation service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdWifUsesAzurePipelinesAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed authenticating as the WIF service connection');
+        }, tr);
+    });
+
+    it('should take the SP tenant id from the service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdSpAuthTenantFromSubscription.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with clientId@tenantId built from the service connection');
+        }, tr);
+    });
+
+    it('should use the same authentication mapping for the firewall probe as for deployment', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdFirewallProbeUsesSharedAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with the probe using --authentication-method');
         }, tr);
     });
 });
