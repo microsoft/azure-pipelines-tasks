@@ -1,6 +1,8 @@
 import * as models from 'artifact-engine/Models';
 import * as providers from 'artifact-engine/Providers';
 
+// 100 is the maximum supported per_page value for GitHub's List release assets REST endpoint:
+// https://docs.github.com/en/rest/releases/assets#list-release-assets
 const githubPageSize: number = 100;
 
 export async function getPaginatedArtifactItems(
