@@ -1,0 +1,342 @@
+{
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "download",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "options": {
+        "download": "Download",
+        "publish": "Publish"
+      }
+    },
+    {
+      "name": "adoServiceConnection",
+      "aliases": [
+        "workloadIdentityServiceConnection",
+        "azureDevOpsServiceConnection"
+      ],
+      "type": "connectedService:workloadidentityuser",
+      "label": "ms-resource:loc.input.label.adoServiceConnection",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.adoServiceConnection",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      }
+    },
+    {
+      "name": "organization",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.organization",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.organization",
+      "visibleRule": "adoServiceConnection != ''"
+    },
+    {
+      "name": "downloadDirectory",
+      "aliases": [
+        "downloadDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.downloadDirectory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.downloadDirectory",
+      "required": "true",
+      "visibleRule": "command = download",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "internalOrExternalDownload",
+      "aliases": [
+        "feedsToUse"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.internalOrExternalDownload",
+      "defaultValue": "internal",
+      "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalDownload",
+      "required": "true",
+      "options": {
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
+      },
+      "groupName": "packageDownloadDetails"
+    },
+    {
+      "name": "externalEndpoint",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
+      "type": "connectedService:externaltfs",
+      "label": "ms-resource:loc.input.label.externalEndpoint",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoint",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external"
+    },
+    {
+      "name": "feedListDownload",
+      "aliases": [
+        "vstsFeed"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedListDownload",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "packageListDownload",
+      "aliases": [
+        "vstsFeedPackage"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageListDownload",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "versionListDownload",
+      "aliases": [
+        "vstsPackageVersion"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionListDownload",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionListDownload",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = internal",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "feedDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feedDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external"
+    },
+    {
+      "name": "packageDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external"
+    },
+    {
+      "name": "versionDownloadExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionDownloadExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionDownloadExternal",
+      "required": "true",
+      "groupName": "packageDownloadDetails",
+      "visibleRule": "internalOrExternalDownload = external"
+    },
+    {
+      "name": "publishDirectory",
+      "aliases": [
+        "publishDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishDirectory",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.publishDirectory",
+      "required": "true",
+      "visibleRule": "command = publish"
+    },
+    {
+      "name": "internalOrExternalPublish",
+      "aliases": [
+        "feedsToUsePublish"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.internalOrExternalPublish",
+      "defaultValue": "internal",
+      "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalPublish",
+      "required": "true",
+      "options": {
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
+      },
+      "groupName": "packagePublishDetails"
+    },
+    {
+      "name": "externalEndpoints",
+      "aliases": [
+        "publishFeedCredentials"
+      ],
+      "type": "connectedService:externaltfs",
+      "label": "ms-resource:loc.input.label.externalEndpoints",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external"
+    },
+    {
+      "name": "feedListPublish",
+      "aliases": [
+        "vstsFeedPublish"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedListPublish",
+      "defaultValue": "",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = internal",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && internalOrExternalPublish = internal"
+    },
+    {
+      "name": "packageListPublish",
+      "aliases": [
+        "vstsFeedPackagePublish"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageListPublish",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageListPublish",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = internal",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "feedPublishExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedPublishExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feedPublishExternal",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "packagePublishExternal",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagePublishExternal",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePublishExternal",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "visibleRule": "internalOrExternalPublish = external"
+    },
+    {
+      "name": "versionPublishSelector",
+      "aliases": [
+        "versionOption"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionPublishSelector",
+      "helpMarkDown": "ms-resource:loc.input.help.versionPublishSelector",
+      "defaultValue": "patch",
+      "required": "true",
+      "options": {
+        "major": "Next major",
+        "minor": "Next minor",
+        "patch": "Next patch",
+        "custom": "Custom"
+      },
+      "groupName": "packagePublishDetails"
+    },
+    {
+      "name": "versionPublish",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionPublish",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionPublish",
+      "required": "true",
+      "groupName": "packagePublishDetails",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "versionPublishSelector = custom"
+    },
+    {
+      "name": "packagePublishDescription",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagePublishDescription",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePublishDescription",
+      "required": "false",
+      "groupName": "packagePublishDetails"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": "false",
+      "groupName": "advanced",
+      "options": {
+        "None": "None",
+        "Trace": "Trace",
+        "Debug": "Debug",
+        "Information": "Information",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      }
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
+    }
+  ]
+}

@@ -7,6 +7,9 @@ import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/u
 import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
+#if WIF
+import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
@@ -49,7 +52,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let sessionId: string;
 
-        [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+        [serviceUri, packageName, feedId, projectId, accessToken] = await authSetup(feedType);
 
         if (feedType === "internal") {
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
@@ -117,7 +120,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         //If package already exist, retry with a newer version, do not retry for custom version
         while (retries < numRetries && execResult != null && execResult.code === packageAlreadyExistsError && versionRadio !== "custom") {
-            [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
+            [serviceUri, packageName, feedId, projectId, accessToken] = await authSetup(feedType);
             if (feedType == "internal") {
                 internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
                 toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
@@ -238,7 +241,7 @@ async function getNextPackageVersion(
     return version;
 }
 
-function authSetup(
+async function authSetup(
     feedType: string
 ) {
 
@@ -260,6 +263,16 @@ function authSetup(
 
         // Setting up auth info
         accessToken = getAccessToken();
+#if WIF
+        const adoServiceConnection = tl.getInput("adoServiceConnection", false);
+        if (adoServiceConnection) {
+            const organization = tl.getInput("organization", false);
+            if (organization) {
+                serviceUri = `https://dev.azure.com/${encodeURIComponent(organization)}/`;
+            }
+            accessToken = await getWifAccessToken(adoServiceConnection, serviceUri);
+        }
+#endif
     }
 
     else {
@@ -327,3 +340,26 @@ function getAccessToken() : string {
 
     return accessToken;
 }
+#if WIF
+// X-VSS-ResourceTenant is only returned on HEAD requests, not GET.
+async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
+    try {
+        const response = await fetch(feedUrl, { method: "HEAD" });
+        return response?.headers?.get("X-VSS-ResourceTenant") ?? undefined;
+    } catch (error) {
+        tl.debug(`Failed to get feed tenant id for ${feedUrl}: ${error}`);
+        return undefined;
+    }
+}
+
+async function getWifAccessToken(adoServiceConnection: string, serviceUri: string): Promise<string> {
+    tl.debug(tl.loc("Debug_UsingWifAuth", adoServiceConnection));
+    const feedTenant = await getFeedTenantId(serviceUri);
+    const token = await getFederatedWorkloadIdentityCredentials(adoServiceConnection, feedTenant);
+    if (!token) {
+        throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", adoServiceConnection));
+    }
+    tl.setSecret(token);
+    return token;
+}
+#endif

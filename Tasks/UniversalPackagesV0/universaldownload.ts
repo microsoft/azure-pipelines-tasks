@@ -6,6 +6,9 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
+#if WIF
+import { getFederatedWorkloadIdentityCredentials } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 
 export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
@@ -48,7 +51,17 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             // Getting package name from package Id
             const packageId = tl.getInput("packageListDownload");
-            const accessToken = pkgLocationUtils.getSystemAccessToken();
+            let accessToken = pkgLocationUtils.getSystemAccessToken();
+#if WIF
+            const adoServiceConnection = tl.getInput("adoServiceConnection", false);
+            if (adoServiceConnection) {
+                const organization = tl.getInput("organization", false);
+                if (organization) {
+                    serviceUri = `https://dev.azure.com/${encodeURIComponent(organization)}/`;
+                }
+                accessToken = await getWifAccessToken(adoServiceConnection, serviceUri);
+            }
+#endif
 
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
@@ -134,3 +147,26 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
+#if WIF
+// X-VSS-ResourceTenant is only returned on HEAD requests, not GET.
+async function getFeedTenantId(feedUrl: string): Promise<string | undefined> {
+    try {
+        const response = await fetch(feedUrl, { method: "HEAD" });
+        return response?.headers?.get("X-VSS-ResourceTenant") ?? undefined;
+    } catch (error) {
+        tl.debug(`Failed to get feed tenant id for ${feedUrl}: ${error}`);
+        return undefined;
+    }
+}
+
+async function getWifAccessToken(adoServiceConnection: string, serviceUri: string): Promise<string> {
+    tl.debug(tl.loc("Debug_UsingWifAuth", adoServiceConnection));
+    const feedTenant = await getFeedTenantId(serviceUri);
+    const token = await getFederatedWorkloadIdentityCredentials(adoServiceConnection, feedTenant);
+    if (!token) {
+        throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", adoServiceConnection));
+    }
+    tl.setSecret(token);
+    return token;
+}
+#endif

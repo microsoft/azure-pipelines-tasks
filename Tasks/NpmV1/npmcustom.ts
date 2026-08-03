@@ -6,12 +6,21 @@ import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'azure-pipelines-tasks-packaging-common/util';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import { PackagingLocation } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+#if WIF
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
+import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
+import * as os from 'os';
+#endif
 
 export async function run(packagingLocation: PackagingLocation, command?: string): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmrc = npmutil.getTempNpmrcPath();
     const npmRegistries: INpmRegistry[] = await getCustomRegistries(packagingLocation);
-    const overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) === RegistryLocation.Feed) ? true : false;
+    const customRegistryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
+    let overrideNpmrc = (customRegistryLocation === RegistryLocation.Feed) ? true : false;
+#if WIF
+    overrideNpmrc = overrideNpmrc || (customRegistryLocation === RegistryLocation.WorkloadIdentityFederation);
+#endif
 
     for (const registry of npmRegistries) {
         if (registry.authOnly === false) {
@@ -52,6 +61,35 @@ export async function getCustomRegistries(packagingLocation: PackagingLocation):
                 }));
             }
             break;
+#if WIF
+        case RegistryLocation.WorkloadIdentityFederation:
+            tl.debug(tl.loc('UseFeed'));
+            npmRegistries.push(await getWorkloadIdentityFederationRegistry());
+            break;
+#endif
     }
     return npmRegistries;
 }
+#if WIF
+/** Return an NpmRegistry authenticated with a federated (WIF) token for the given feedUrl */
+async function getWorkloadIdentityFederationRegistry(): Promise<INpmRegistry> {
+    const lineEnd = os.EOL;
+    const serviceConnection = tl.getInput(NpmTaskInput.WorkloadIdentityServiceConnection, true);
+    const feedUrl = tl.getInput(NpmTaskInput.FeedUrl, true);
+
+    const url = npmrcparser.NormalizeRegistry(feedUrl);
+    const nerfed = util.toNerfDart(url);
+
+    console.log(tl.loc('Info_AddingFederatedFeedAuth', serviceConnection, url));
+    const token = await getFederatedWorkloadIdentityCredentials(serviceConnection);
+    if (!token) {
+        throw new Error(tl.loc('FailedToGetServiceConnectionAuth', serviceConnection));
+    }
+    tl.setSecret(token);
+
+    let auth = nerfed + ':_authToken=' + token + lineEnd;
+    auth += nerfed + ':always-auth=true' + lineEnd;
+
+    return new NpmRegistry(url, auth, false);
+}
+#endif
