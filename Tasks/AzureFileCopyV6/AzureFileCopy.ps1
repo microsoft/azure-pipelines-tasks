@@ -143,15 +143,22 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
 
 if ($useSanitizerCall) {
-    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
-    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV5"
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV6"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV6"
 }
 
 if ($useSanitizerActivate) {
-    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
-    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    if ($useSourcePathHardening) {
+        $additionalArgumentsForBlobCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForBlobCopy
+        $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
+    }
+    else {
+        $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+        $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    }
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
@@ -246,7 +253,8 @@ try {
         -destinationType $destination `
         -useDefaultArguments $useDefaultArgumentsForBlobCopy `
         -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
-        -useSanitizerActivate $useSanitizerActivate
+        -useSanitizerActivate $useSanitizerActivate `
+        -useSourcePathHardening $useSourcePathHardening
 
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob") {
@@ -292,7 +300,8 @@ try {
             -azCopyToolLocation $azCopyLocation `
             -fileCopyJobScript $AzureFileCopyRemoteJob `
             -enableDetailedLogging $enableDetailedLogging `
-            -useSanitizerActivate $useSanitizerActivate
+            -useSanitizerActivate $useSanitizerActivate `
+            -useSourcePathHardening $useSourcePathHardening
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }
