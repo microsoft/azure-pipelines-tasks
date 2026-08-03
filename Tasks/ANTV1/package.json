@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.278.0",
     "azure-pipelines-tasks-codecoverage-tools": "3.276.0",
     "azure-pipelines-tasks-java-common": "2.272.0",
     "xml2js": "^0.6.2"
@@ -23,6 +23,7 @@
   },
   "overrides": {
     "serialize-javascript": "7.0.5",
-    "form-data": "^4.0.4"
+    "form-data": "^4.0.6",
+    "fast-uri": "3.1.4"
   }
 }
