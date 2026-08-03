@@ -498,7 +498,22 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.stdout.indexOf('TOKEN_BASEURL:https://database.usgovcloudapi.net/') >= 0,
                 'baseUrl must also carry the SQL audience for the ADAL managed identity path');
             assert(tr.stdout.indexOf('IS_SHARED_ARM_CREDENTIAL:false') >= 0,
-                'token must come from an isolated clone so the shared ARM credential stays usable for firewall cleanup');
+                'token must come from a distinct credential object, not the shared endpoint credential');
+        }, tr);
+    });
+
+    it('should still remove the firewall rule after acquiring the SQL token', async () => {
+        const tp = path.join(__dirname, 'L0FirewallRuleRemovedAfterTokenAcquisition.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should succeed with firewall management enabled');
+            assert(tr.stdout.indexOf('ADD_RULE_TOKEN:token-for:https://management.azure.com/') >= 0,
+                'the rule should be added with an ARM-scoped token');
+            assert(tr.stdout.indexOf('REMOVE_RULE_TOKEN:token-for:https://management.azure.com/') >= 0,
+                'cleanup must still get an ARM-scoped token after the SQL token was acquired');
+            assert(tr.stdout.indexOf('FailedToRemoveFirewallRule') < 0,
+                'the temporary firewall rule must not be leaked');
         }, tr);
     });
 
@@ -510,6 +525,16 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'task should succeed with SQL authentication');
             assert(tr.stdout.indexOf('UNEXPECTED_TOKEN_REQUEST') < 0,
                 'no token should be requested when the connection string carries credentials');
+        }, tr);
+    });
+
+    it('should not reuse the ARM-built MSAL instance for the SQL token on managed identity', async () => {
+        const tp = path.join(__dirname, 'L0MsiMsalCacheNotReused.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'SQL token must be issued for the SQL audience, not the ARM audience captured by the existing msalInstance');
         }, tr);
     });
 
@@ -585,6 +610,105 @@ describe('MicrosoftSqlDeployment Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed with the probe using --authentication-method');
         }, tr);
+    });
+});
+
+// These drive a real ApplicationTokenCredentials rather than a stub, so they fail if the
+// library changes the shape createSqlScopedCredentials depends on - for example moving
+// token_deferred/msalInstance/accessToken to true private fields or a WeakMap, which
+// Object.assign would not copy and would silently break the isolation.
+describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', function () {
+    this.timeout(10000);
+
+    const { ApplicationTokenCredentials } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
+    const { createSqlScopedCredentials, getSqlAudienceFromEnvironment } = require('../src/SqlTokenCredentials');
+
+    const ARM = 'https://management.azure.com/';
+    const SQL = 'https://database.windows.net/';
+
+    function newRealCredential(useMSAL: boolean, scheme: string) {
+        return new ApplicationTokenCredentials(
+            'connected-service',            // connectedServiceName
+            'client-id',                    // clientId
+            'tenant-id',                    // tenantId
+            'client-secret',                // secret
+            ARM,                            // baseUrl
+            'https://login.microsoftonline.com/', // authorityUrl
+            ARM,                            // activeDirectoryResourceId
+            false,                          // isAzureStackEnvironment
+            scheme,                         // scheme
+            '',                             // msiClientId
+            '',                             // authType
+            '',                             // certFilePath
+            false,                          // isADFSEnabled
+            undefined,                      // access_token
+            useMSAL                         // useMSAL
+        );
+    }
+
+    it('should retain getToken from the prototype', () => {
+        const real = newRealCredential(true, 'ServicePrincipal');
+        const clone = createSqlScopedCredentials({ applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(typeof clone.getToken, 'function',
+            'clone must still expose getToken - the prototype was not carried over');
+        assert.strictEqual(Object.getPrototypeOf(clone), Object.getPrototypeOf(real),
+            'clone should share the real prototype');
+    });
+
+    it('should point both resource fields at the SQL audience', () => {
+        const real = newRealCredential(true, 'ManagedServiceIdentity');
+        const clone = createSqlScopedCredentials({ applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(clone.activeDirectoryResourceId, SQL, 'ADAL SP and MSAL read this field');
+        assert.strictEqual(clone.baseUrl, SQL, 'ADAL managed identity reads baseUrl');
+    });
+
+    it('should clear every token cache on the clone', () => {
+        const real = newRealCredential(true, 'ManagedServiceIdentity');
+
+        // Simulate a credential that has already served an ARM token, which is the state
+        // after firewall management runs.
+        (real as any).token_deferred = Promise.resolve('arm-adal-token');
+        (real as any).msalInstance = { capturedResource: ARM };
+        (real as any).accessToken = 'endpoint-supplied-arm-token';
+
+        const clone = createSqlScopedCredentials({ applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(clone.token_deferred, undefined, 'ADAL memo must not be inherited');
+        assert.strictEqual(clone.msalInstance, undefined, 'MSAL instance captures the resource at build time');
+        assert.strictEqual(clone.accessToken, undefined, 'endpoint token is returned verbatim by getADALToken');
+    });
+
+    it('should leave the shared ARM credential untouched', () => {
+        const real = newRealCredential(true, 'ServicePrincipal');
+        (real as any).token_deferred = Promise.resolve('arm-adal-token');
+        (real as any).msalInstance = { capturedResource: ARM };
+
+        createSqlScopedCredentials({ applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(real.activeDirectoryResourceId, ARM, 'ARM credential audience must not change');
+        assert.strictEqual(real.baseUrl, ARM, 'ARM credential baseUrl must not change');
+        assert.notStrictEqual((real as any).token_deferred, undefined, 'ARM token cache must survive');
+        assert.notStrictEqual((real as any).msalInstance, undefined, 'ARM MSAL instance must survive');
+    });
+
+    it('should preserve identity fields needed to authenticate', () => {
+        const real = newRealCredential(false, 'ServicePrincipal');
+        const clone = createSqlScopedCredentials({ applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(clone.getClientId(), real.getClientId(), 'client id must carry over');
+        assert.strictEqual(clone.getTenantId(), real.getTenantId(), 'tenant id must carry over');
+        assert.strictEqual(clone.getUseMSAL(), real.getUseMSAL(), 'MSAL/ADAL selection must carry over');
+        assert.strictEqual(clone.scheme, real.scheme, 'scheme must carry over');
+    });
+
+    it('should derive sovereign cloud audiences', () => {
+        assert.strictEqual(getSqlAudienceFromEnvironment('AzureUSGovernment'), 'https://database.usgovcloudapi.net/');
+        assert.strictEqual(getSqlAudienceFromEnvironment('AzureChinaCloud'), 'https://database.chinacloudapi.cn/');
+        assert.strictEqual(getSqlAudienceFromEnvironment('AzureGermanCloud'), 'https://database.cloudapi.de/');
+        assert.strictEqual(getSqlAudienceFromEnvironment('AzureCloud'), SQL);
+        assert.strictEqual(getSqlAudienceFromEnvironment(undefined as any), SQL, 'unknown environment falls back to public cloud');
     });
 });
 

@@ -9,6 +9,7 @@ import AzureSqlResourceManager from './src/AzureSqlResourceManager';
 import SqlProjectBuilder from './src/SqlProjectBuilder';
 import { SqlPackageExecutor } from './src/SqlPackageExecutor';
 import { SqlcmdExecutor, SqlcmdCredentials } from './src/SqlcmdExecutor';
+import { getSqlAudienceFromEnvironment, createSqlScopedCredentials } from './src/SqlTokenCredentials';
 
 // Node version handling for DNS and network settings
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -20,47 +21,6 @@ if (nodeVersion > 16) {
 if (nodeVersion > 19) {
     require("net").setDefaultAutoSelectFamily(false);
     tl.debug("Set default auto select family to false");
-}
-
-/**
- * Returns the SQL Database OAuth audience URL for the given Azure environment.
- * Defaults to Azure public cloud when the environment is unknown.
- */
-function getSqlAudienceFromEnvironment(environment: string): string {
-    switch ((environment ?? '').toLowerCase()) {
-        case 'azureusgovernment': return 'https://database.usgovcloudapi.net/';
-        case 'azurechinacloud':   return 'https://database.chinacloudapi.cn/';
-        case 'azuregermancloud':  return 'https://database.cloudapi.de/';
-        default:                  return 'https://database.windows.net/';
-    }
-}
-
-/**
- * Builds a credential that requests SQL-audience tokens without disturbing the ARM
- * credential that firewall rule management depends on.
- *
- * azureEndpoint.applicationTokenCredentials is shared: AzureSqlResourceManager passes the
- * same object to its ServiceClient. On the ADAL path getToken() memoizes the result in
- * token_deferred, so acquiring a SQL-scoped token through that object makes every later
- * ARM call reuse it - including removeFirewallRule() in the finally block, which would
- * then fail with an audience mismatch and silently leak the temporary rule.
- * Cloning gives the SQL request its own cache and leaves the shared object untouched.
- *
- * Both resource fields are set because the paths read different ones:
- *   ADAL service principal / MSAL -> activeDirectoryResourceId
- *   ADAL managed identity         -> baseUrl (getMSIAuthorizationToken)
- */
-function createSqlScopedCredentials(azureEndpoint: any, sqlAudience: string): any {
-    const armCredentials = azureEndpoint.applicationTokenCredentials;
-    const sqlCredentials = Object.create(Object.getPrototypeOf(armCredentials));
-    Object.assign(sqlCredentials, armCredentials);
-
-    // Start with an empty cache so this credential fetches its own SQL-scoped token.
-    sqlCredentials.token_deferred = undefined;
-    sqlCredentials.activeDirectoryResourceId = sqlAudience;
-    sqlCredentials.baseUrl = sqlAudience;
-
-    return sqlCredentials;
 }
 
 async function main(): Promise<void> {

@@ -1,7 +1,11 @@
 // Verifies two things for a sovereign cloud (US Gov) service connection:
 //  1. The SQL token is requested with the US Gov SQL audience, not the public cloud one.
-//  2. The token is acquired from an isolated credential, leaving the shared ARM credential
-//     untouched so the firewall rule cleanup in the finally block still works on ADAL.
+//  2. The token is requested from a distinct credential object rather than the shared
+//     endpoint credential.
+//
+// Firewall management is disabled here to isolate the audience derivation, so this test
+// says nothing about rule cleanup. The add -> token -> remove cycle that the isolation
+// actually protects is covered by L0FirewallRuleRemovedAfterTokenAcquisition.
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
