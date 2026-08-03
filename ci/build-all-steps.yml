@@ -11,6 +11,9 @@ parameters:
 - name: signTasks
   type: boolean
   default: false
+- name: signNodeModules
+  type: boolean
+  default: false
 
 steps:
 
@@ -166,6 +169,13 @@ steps:
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
+
+  # Sign the built task files before they are staged and zipped
+  - ${{ if parameters.signTasks }}:
+    - template: /ci/sign-task-files.yml@self
+      parameters:
+        tasksRoot: $(Build.SourcesDirectory)\_build\Tasks
+        signNodeModules: ${{ parameters.signNodeModules }}
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js true individually
