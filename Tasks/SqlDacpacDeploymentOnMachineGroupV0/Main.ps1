@@ -10,7 +10,6 @@ function Write-Exception
 
     if ($null -ne $errorRecord)
     {
-        Write-Error -ErrorRecord $errorRecord -ErrorAction Continue
         throw $errorRecord
     }
 
