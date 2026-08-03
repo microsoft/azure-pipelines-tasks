@@ -114,6 +114,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "DownloadArtifacts": "Downloading assets of release '%s' from: %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to '%s'",

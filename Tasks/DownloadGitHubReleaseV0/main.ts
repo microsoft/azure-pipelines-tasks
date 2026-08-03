@@ -6,6 +6,8 @@ import * as providers from 'artifact-engine/Providers';
 import * as httpc from 'typed-rest-client/HttpClient';
 import { GitHubReleaseProvider } from './githubReleaseProvider';
 
+import { sanitizeForLoggingCommand } from './sanitize';
+
 var packagejson = require('./package.json');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -188,7 +190,7 @@ async function main(): Promise<void> {
         var itemsUrl = "https://api.github.com/repos/" + repositoryName + "/releases/" + release.Id + "/assets";
         itemsUrl = itemsUrl.replace(/([^:]\/)\/+/g, "$1");
         
-        console.log(tl.loc("DownloadArtifacts", release.Name, itemsUrl));
+        console.log(tl.loc("DownloadArtifacts", sanitizeForLoggingCommand(release.Name), itemsUrl));
 
         var templatePath = path.join(__dirname, 'githubrelease.handlebars.txt');
         var gitHubReleaseVariables = {
