@@ -183,6 +183,21 @@ If SqlPackage is not found, install it: `dotnet tool install -g microsoft.sqlpac
 
 ## Known Limitations and Notes
 
+### SQL scripts fail the task on error by default
+The task runs `.sql` files with sqlcmd's `-b` flag, so a statement that fails with severity 11 or
+higher aborts the script and fails the task. Without it, sqlcmd prints the error but still exits 0,
+which would report a half-applied migration as a successful deployment. `PRINT` output and
+informational messages (severity 10 and below) are unaffected.
+
+To opt out and let a script continue past errors, state your own intent in `additionalArguments`:
+
+```yaml
+additionalArguments: '--exit-on-error=false'
+```
+
+The task only supplies `-b` when `additionalArguments` does not already mention `-b` or
+`--exit-on-error`.
+
 ### Service Principal auth for `.sql` scripts requires a tenant ID
 When using `Authentication=Active Directory Service Principal` in the connection string for `.sql` file execution, go-sqlcmd needs the tenant ID to authenticate. If you set `azureSubscription`, the tenant ID is resolved automatically from the service connection — no extra configuration needed. If you do **not** set `azureSubscription`, you must include the tenant ID directly in the `User ID` field using the format `clientId@tenantId`:
 

@@ -22,7 +22,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
         // SP auth: --authentication-method flag + -U clientId@tenantId, secret via SQLCMDPASSWORD env var
-        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryServicePrincipal -U my-client-id@my-tenant-id -l 30 -i test.sql': {
+        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryServicePrincipal -U my-client-id@my-tenant-id -l 30 -b -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }

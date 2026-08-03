@@ -21,7 +21,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
             // AAD Default: --authentication-method flag, no credentials needed
-            '/usr/bin/sqlcmd -S localhost -d testdb --authentication-method ActiveDirectoryDefault -l 30 -i test.sql': {
+            '/usr/bin/sqlcmd -S localhost -d testdb --authentication-method ActiveDirectoryDefault -l 30 -b -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }
