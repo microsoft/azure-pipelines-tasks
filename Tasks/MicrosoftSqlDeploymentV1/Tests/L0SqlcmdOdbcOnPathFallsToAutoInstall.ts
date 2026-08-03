@@ -61,7 +61,7 @@ const a: ma.TaskLibAnswers = {
             stdout: 'Microsoft (R) SQL Server Command Line Tool\nVersion 17.10.0001.1'
         },
         // go-sqlcmd runs the script after auto-install
-        [`${goSqlcmdPath} -S localhost -d testdb -U sa -l 30 -i test.sql`]: {
+        [`${goSqlcmdPath} -S localhost -d testdb -U sa -l 30 -b -i test.sql`]: {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }

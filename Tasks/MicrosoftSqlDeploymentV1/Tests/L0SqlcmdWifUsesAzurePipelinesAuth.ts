@@ -47,7 +47,7 @@ const a: ma.TaskLibAnswers = {
     exec: {
         // ActiveDirectoryAzurePipelines takes client/tenant/connection id from the
         // AZURESUBSCRIPTION_* env vars, so no -U is passed on the command line.
-        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryAzurePipelines -l 30 -i test.sql': {
+        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryAzurePipelines -l 30 -b -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }
