@@ -102,5 +102,23 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Check-ContainerNameAndArgs', (done) => {
             psr.run(path.join(__dirname, 'L0CheckContainerNameAndArgs.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening (MSRC 128417)', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening strips quotes from additionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.QuoteStripping.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening does not escape containerURL', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.ContainerUrlEscaping.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening handles single-quoted additionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.SingleQuoteHandling.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
+        });
     }   
 });

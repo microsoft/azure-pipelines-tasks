@@ -203,7 +203,10 @@ function performNpmAudit(taskPath) {
     }
 }
 
-var buildNodeTask = function (taskPath, outDir, isServerBuild) {
+var buildNodeTask = function (taskPath, outDir, options) {
+    options = options || {};
+    var isServerBuild = options.isServerBuild;
+    var emitSourceMaps = options.emitSourceMaps;
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -242,10 +245,29 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
 
     performNpmAudit(taskPath);
 
+    // Minify source maps require an external tsc .js.map to chain into the bundle
+    // map; a task whose effective tsconfig turns on inlineSourceMap would break that
+    // chain (and trip TS5053 when we add --sourceMap). Fail early and clearly. This
+    // runs ONLY in the minify + sourceMap build (emitSourceMaps), so non-minified or
+    // no-sourcemap builds are never affected. The guard lives in minify-util alongside
+    // the rest of the minify pipeline; it is lazy-required here (rather than at load
+    // time) because minify-util requires this module for shared shell helpers, so a
+    // top-level require would form a cycle.
+    if (emitSourceMaps) {
+        require('./minify-util').assertMinifySourceMapCompatible(taskPath, overrideTscPath);
+    }
+
+    // When emitSourceMaps is set (minify + sourcemap build), have tsc emit a
+    // source map with the original TypeScript inlined. esbuild will then chain
+    // these maps so that minified stack frames for the task's own code resolve
+    // all the way back to the .ts source (dependency frames resolve to their
+    // original node_modules .js, embedded in the bundle map via sourcesContent).
+    var tscSourceMapArgs = emitSourceMaps ? ' --sourceMap --inlineSources' : '';
+
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
         // Clean up broken symlinks in .bin directory
@@ -262,7 +284,7 @@ var buildNodeTask = function (taskPath, outDir, isServerBuild) {
             }
         }
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
+        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
     }
 
     cd(originalDir);
@@ -1896,7 +1918,7 @@ var ensureBuildConfigGeneratorPrereqs = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    const dotnetSdkVersion = "8.0.100";
+    const dotnetSdkVersion = "10.0.301";
     const dotnetInstallationDirectory = path.resolve(baseConfigToolPath, "_dotnetsdk", dotnetSdkVersion);
 
     // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)

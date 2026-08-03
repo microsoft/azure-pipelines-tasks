@@ -66,6 +66,31 @@ describe('AzureContainerAppsV1 Suite', function () {
         }, tr);
     });
 
+    it('Fails for appSourcePath containing shell metacharacters', async () => {
+        this.timeout(5000);
+
+        const tp: string = path.join(__dirname, 'L0FailsForAppSourcePathWithMetacharacters.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            // Validate the task failed
+            assert(tr.failed, 'AzureContainerAppsV1 task should have failed when appSourcePath contains shell metacharacters.');
+
+            // Validate the correct error message was thrown
+            assert(tr.stdout.includes('InvalidAppSourcePathMessage'), 'AzureContainerAppsV1 task should reject an appSourcePath that contains shell metacharacters to prevent command injection.');
+
+            // Validate the correct result was logged to telemetry
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task failed.');
+
+            // Validate that the end-of-test scenarios are hit
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
+        }, tr);
+    });
+
     it('Fails for no service connection argument', async () => {
         this.timeout(5000);
 
@@ -521,5 +546,59 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV1 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
             assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr);
+    });
+
+    it('Passes appSourcePath to execSync as a single argument when UseArgArrayForFilePath is enabled', () => {
+        // With the feature flag ON, appSourcePath must be passed as a single execSync array element
+        // so its contents cannot be interpreted as additional arguments.
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+
+        const injectionAppSourcePath = '/samplepath --builder attacker/image --env INJECTED=true';
+        const originalExecSync = tl.execSync;
+        const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
+        let capturedArgs: any;
+        tl.execSync = (tool: string, args: any) => {
+            capturedArgs = args;
+            return { code: 0, stdout: '', stderr: '', error: null };
+        };
+        process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'true';
+
+        try {
+            new ContainerAppHelper(true).createRunnableAppImage('sample-image:tag', injectionAppSourcePath, 'dotnetcore:7.0');
+        } finally {
+            tl.execSync = originalExecSync;
+            process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = originalFeatureEnv;
+        }
+
+        assert(Array.isArray(capturedArgs), 'createRunnableAppImage should invoke execSync with an array of arguments, not a single command string.');
+        assert(capturedArgs.indexOf(injectionAppSourcePath) !== -1, 'appSourcePath must be passed as a single execSync argument so its contents cannot be interpreted as additional arguments.');
+    });
+
+    it('Passes appSourcePath in the legacy command string when UseArgArrayForFilePath is disabled', () => {
+        // With the feature flag OFF (default), the task retains the original string-based command
+        // form for backwards compatibility.
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+
+        const appSourcePath = '/samplepath';
+        const originalExecSync = tl.execSync;
+        const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
+        let capturedArgs: any;
+        tl.execSync = (tool: string, args: any) => {
+            capturedArgs = args;
+            return { code: 0, stdout: '', stderr: '', error: null };
+        };
+        process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'false';
+
+        try {
+            new ContainerAppHelper(true).createRunnableAppImage('sample-image:tag', appSourcePath, 'dotnetcore:7.0');
+        } finally {
+            tl.execSync = originalExecSync;
+            process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = originalFeatureEnv;
+        }
+
+        assert(typeof capturedArgs === 'string', 'createRunnableAppImage should invoke execSync with a single command string when the feature flag is disabled.');
+        assert(capturedArgs.indexOf(`--path ${appSourcePath}`) !== -1, 'appSourcePath should be interpolated into the legacy command string when the feature flag is disabled.');
     });
 });

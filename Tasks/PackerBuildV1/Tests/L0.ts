@@ -59,6 +59,18 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf(match2) > -1, 'correctly writes contents of var file (containing template variables)');
         });
 
+        it('Deletes packer var file (containing credentials) after execution', async () => {
+            let tp = path.join(__dirname, 'L0Windows.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            let deleteMatch = 'rmRF C:\\somefolder\\somevarfile.json';
+            await tr.runAsync();
+
+            runValidations(() => {
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf(deleteMatch) > -1, 'should delete var file containing credentials from Agent.TempDirectory after execution');
+            }, tr);
+        });
+
         it('Runs successfully for windows template with managed image', async () => {
             let tp = path.join(__dirname, 'L0WindowsManaged.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

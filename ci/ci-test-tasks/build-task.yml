@@ -11,11 +11,11 @@ steps:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
     displayName: ${{ parameters.task }} patch task version
 
-# Use .NET SDK 8
+# Use .NET SDK 10
 - task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 8.x'
+  displayName: 'Install .NET Core SDK 10.x'
   inputs:
-    version: 8.x
+    version: 10.x
 
 # Clean
 - script: node make.js clean
