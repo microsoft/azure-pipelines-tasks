@@ -262,7 +262,6 @@
         "PublishSymbolsV2"
     ],
     "wif_242": [
-        "NpmV1",
         "UniversalPackagesV0",
         "PipAuthenticateV1",
         "CargoAuthenticateV0",

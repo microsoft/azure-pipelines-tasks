@@ -8,9 +8,6 @@ import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as npmrcparser from 'azure-pipelines-tasks-packaging-common/npm/npmrcparser';
 import { getSystemAccessToken, PackagingLocation, getFeedRegistryUrl, RegistryType } from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import * as os from 'os';
-#if WIF
-import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
-#endif
 
 export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
@@ -50,38 +47,9 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
             const endpointId = tl.getInput(NpmTaskInput.PublishEndpoint, true);
             npmRegistry = await NpmRegistry.FromServiceEndpoint(endpointId);
             break;
-#if WIF
-        case RegistryLocation.WorkloadIdentityFederation:
-            tl.debug(tl.loc('PublishExternal'));
-            npmRegistry = await getWorkloadIdentityFederationRegistry();
-            break;
-#endif
     }
     return npmRegistry;
 }
-#if WIF
-/** Return an NpmRegistry authenticated with a federated (WIF) token for the given feedUrl */
-async function getWorkloadIdentityFederationRegistry(): Promise<INpmRegistry> {
-    const lineEnd = os.EOL;
-    const serviceConnection = tl.getInput(NpmTaskInput.WorkloadIdentityServiceConnection, true);
-    const feedUrl = tl.getInput(NpmTaskInput.FeedUrl, true);
-
-    const url = npmrcparser.NormalizeRegistry(feedUrl);
-    const nerfed = util.toNerfDart(url);
-
-    console.log(tl.loc('Info_AddingFederatedFeedAuth', serviceConnection, url));
-    const token = await getFederatedWorkloadIdentityCredentials(serviceConnection);
-    if (!token) {
-        throw new Error(tl.loc('FailedToGetServiceConnectionAuth', serviceConnection));
-    }
-    tl.setSecret(token);
-
-    let auth = nerfed + ':_authToken=' + token + lineEnd;
-    auth += nerfed + ':always-auth=true' + lineEnd;
-
-    return new NpmRegistry(url, auth, false);
-}
-#endif
 
 /** Return NpmRegistry with masked auth*/
 async function getNpmRegistry(defaultPackagingUri: string, feed: any, authOnly?: boolean, useSession?: boolean) {

@@ -9,7 +9,6 @@ export class RegistryLocation {
     public static Npmrc: string = 'useNpmrc';
     public static Feed: string = 'useFeed';
     public static External: string = 'useExternalRegistry';
-    public static WorkloadIdentityFederation: string = 'useWorkloadIdentityFederation';
 }
 
 export class NpmTaskInput {
@@ -23,6 +22,4 @@ export class NpmTaskInput {
     public static PublishRegistry: string = 'publishRegistry';
     public static PublishFeed: string = 'publishFeed';
     public static PublishEndpoint: string = 'publishEndpoint';
-    public static WorkloadIdentityServiceConnection: string = 'workloadIdentityServiceConnection';
-    public static FeedUrl: string = 'feedUrl';
 }
