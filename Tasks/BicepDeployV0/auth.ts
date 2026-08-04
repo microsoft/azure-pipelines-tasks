@@ -15,7 +15,7 @@ export class AzureAuthenticationHelper {
             // on the same host don't share ~/.azure, where one task's
             // `az account clear` can invalidate another's in-flight credential.
             this.azureConfigDir = createPerInvocationAzureConfigDir(agentTempDir);
-            tl.debug(`Isolated AZURE_CONFIG_DIR set to: ${this.azureConfigDir}`);
+            console.log(tl.loc('SettingAzureConfigDir', this.azureConfigDir));
         } else {
             tl.debug('Agent.TempDirectory not set; skipping AZURE_CONFIG_DIR isolation');
         }

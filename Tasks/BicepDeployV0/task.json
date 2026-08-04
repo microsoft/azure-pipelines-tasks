@@ -428,6 +428,7 @@
     "InvalidJsonValue": "Invalid JSON value: %s",
     "FailedToLogout": "The following error occurred while logging out: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",
+    "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "LoginFailed": "Azure login failed",
     "MSILoginFailed": "Azure login failed using Managed Service Identity",
     "AuthSchemeNotSupported": "Auth Scheme %s is not supported",

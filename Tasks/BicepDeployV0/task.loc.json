@@ -428,6 +428,7 @@
     "InvalidJsonValue": "ms-resource:loc.messages.InvalidJsonValue",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
