@@ -92,6 +92,7 @@
   "loc.messages.UnknownPropertyChangeType": "Unknown property change type: %s.",
   "loc.messages.InvalidJsonValue": "Invalid JSON value: %s",
   "loc.messages.FailedToLogout": "The following error occurred while logging out: %s",
+  "loc.messages.FailedToRemoveCertificate": "The following error occurred while removing the service principal certificate file: %s",
   "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
   "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
   "loc.messages.LoginFailed": "Azure login failed",

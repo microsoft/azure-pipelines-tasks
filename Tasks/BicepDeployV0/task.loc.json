@@ -427,6 +427,7 @@
     "UnknownPropertyChangeType": "ms-resource:loc.messages.UnknownPropertyChangeType",
     "InvalidJsonValue": "ms-resource:loc.messages.InvalidJsonValue",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
+    "FailedToRemoveCertificate": "ms-resource:loc.messages.FailedToRemoveCertificate",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",

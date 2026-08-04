@@ -29,7 +29,6 @@
     "typescript": "^5.7.2"
   },
   "overrides": {
-    "agent-base": "^6.0.2",
-    "minimatch": "^3.1.5"
+    "agent-base": "^6.0.2"
   }
 }

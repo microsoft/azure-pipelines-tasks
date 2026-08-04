@@ -38,29 +38,37 @@ export class AzureAuthenticationHelper {
     }
 
     public logoutAzure(): void {
-        // Clean up certificate file if created
-        if (this.cliPasswordPath) {
-            tl.debug('Removing spn certificate file');
-            tl.rmRF(this.cliPasswordPath);
-        }
-
-        // Logout of Azure if logged in
-        if (this.sessionLoggedIn) {
-            tl.debug('Logging out from Azure CLI');
-            try {
-                tl.execSync('az', 'account clear');
-            } catch (err) {
-                // Task should not fail if logout doesn't occur
-                tl.warning(tl.loc('FailedToLogout', err.message));
+        try {
+            // Clean up certificate file if created
+            if (this.cliPasswordPath) {
+                tl.debug('Removing spn certificate file');
+                try {
+                    tl.rmRF(this.cliPasswordPath);
+                } catch (err) {
+                    // Cleanup must not fail an otherwise-successful task.
+                    tl.warning(tl.loc('FailedToRemoveCertificate', err.message));
+                }
             }
-        }
 
-        // Must run AFTER `az account clear` so it still sees the per-invocation
-        // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
-        // to mutate the agent's global profile.
-        if (this.azureConfigDir) {
-            removePerInvocationAzureConfigDir(this.azureConfigDir);
-            this.azureConfigDir = null;
+            // Logout of Azure if logged in
+            if (this.sessionLoggedIn) {
+                tl.debug('Logging out from Azure CLI');
+                try {
+                    tl.execSync('az', 'account clear');
+                } catch (err) {
+                    // Task should not fail if logout doesn't occur
+                    tl.warning(tl.loc('FailedToLogout', err.message));
+                }
+            }
+        } finally {
+            // Must run AFTER `az account clear` so it still sees the per-invocation
+            // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
+            // to mutate the agent's global profile. In `finally` so an earlier cleanup
+            // failure can't leak the directory; the helper itself never throws.
+            if (this.azureConfigDir) {
+                removePerInvocationAzureConfigDir(this.azureConfigDir);
+                this.azureConfigDir = null;
+            }
         }
     }
 }

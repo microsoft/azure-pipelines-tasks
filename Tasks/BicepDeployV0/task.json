@@ -427,6 +427,7 @@
     "UnknownPropertyChangeType": "Unknown property change type: %s.",
     "InvalidJsonValue": "Invalid JSON value: %s",
     "FailedToLogout": "The following error occurred while logging out: %s",
+    "FailedToRemoveCertificate": "The following error occurred while removing the service principal certificate file: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",
     "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "LoginFailed": "Azure login failed",

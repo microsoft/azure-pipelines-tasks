@@ -2,11 +2,14 @@ import assert = require('assert');
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from '../azureConfigDir';
+import { AzureAuthenticationHelper } from '../auth';
 
 export function runConfigDirIsolationTests() {
-    describe('createPerInvocationAzureConfigDir (login-race hardening)', () => {        let agentTemp: string;
+    describe('createPerInvocationAzureConfigDir (login-race hardening)', () => {
+        let agentTemp: string;
 
         beforeEach(() => {
             agentTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'bicepdeploy-agenttmp-'));
@@ -102,6 +105,63 @@ export function runConfigDirIsolationTests() {
             const ghost = path.join(agentTemp, '.bicepdeploy-ghost00');
             assert(!fs.existsSync(ghost));
             assert.doesNotThrow(() => removePerInvocationAzureConfigDir(ghost));
+        });
+    });
+
+    describe('AzureAuthenticationHelper.logoutAzure cleanup guarantees', () => {
+        let agentTemp: string;
+        let realRmRF: typeof tl.rmRF;
+
+        beforeEach(() => {
+            agentTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'bicepdeploy-agenttmp-'));
+            realRmRF = tl.rmRF;
+        });
+
+        afterEach(() => {
+            (tl as any).rmRF = realRmRF;
+            try { fs.rmSync(agentTemp, { recursive: true, force: true }); } catch { /* ignore */ }
+            delete process.env['AZURE_CONFIG_DIR'];
+        });
+
+        it('removes the isolated config dir and unsets the env var', () => {
+            const helper: any = new AzureAuthenticationHelper();
+            const dir = createPerInvocationAzureConfigDir(agentTemp);
+            helper.azureConfigDir = dir;
+
+            helper.logoutAzure();
+
+            assert(!fs.existsSync(dir), 'config dir must be removed on logout');
+            assert.strictEqual(helper.azureConfigDir, null, 'helper must clear its reference');
+            assert.strictEqual(process.env['AZURE_CONFIG_DIR'], undefined);
+        });
+
+        // A throw from certificate cleanup must not strand the isolated config dir.
+        it('removes the isolated config dir even when certificate cleanup fails', () => {
+            const helper: any = new AzureAuthenticationHelper();
+            const dir = createPerInvocationAzureConfigDir(agentTemp);
+            helper.azureConfigDir = dir;
+            helper.cliPasswordPath = path.join(agentTemp, 'spnCert.pem');
+            fs.writeFileSync(helper.cliPasswordPath, 'cert');
+
+            // Throw only for the certificate path -- removePerInvocationAzureConfigDir
+            // calls tl.rmRF too, so a blanket stub would sabotage the code under test.
+            (tl as any).rmRF = (p: string) => {
+                if (p === helper.cliPasswordPath) {
+                    throw new Error('simulated certificate cleanup failure');
+                }
+                return realRmRF(p);
+            };
+
+            assert.doesNotThrow(() => helper.logoutAzure(),
+                'certificate cleanup failure must not fail the task');
+            assert(!fs.existsSync(dir), 'config dir must be removed despite the failure');
+            assert.strictEqual(process.env['AZURE_CONFIG_DIR'], undefined);
+        });
+
+        it('is a no-op when isolation never ran', () => {
+            const helper: any = new AzureAuthenticationHelper();
+            assert.doesNotThrow(() => helper.logoutAzure());
+            assert.strictEqual(helper.azureConfigDir, null);
         });
     });
 }
