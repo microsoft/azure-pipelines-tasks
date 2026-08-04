@@ -31,7 +31,10 @@ async function main(): Promise<void> {
         console.log(tl.loc('StartingDeployment'));
 
         // Get required inputs per specification
-        const action = tl.getInput('action', true)!;
+        const action = tl.getInput('action', true)!.trim();
+        // YAML is not constrained to the pickList casing, so normalize once and use the
+        // normalized value for validation, tool discovery, execution and telemetry.
+        const normalizedAction = action.toLowerCase();
         const filePath = tl.getInput('path', true)!;
         const connectionString = tl.getInput('connectionString', true)!;
         
@@ -83,6 +86,17 @@ async function main(): Promise<void> {
         // Validate file exists
         tl.checkPath(filePath, 'path');
 
+        // Validate the action/file-type combination before any tool discovery so invalid
+        // inputs fail deterministically instead of triggering download/install work first.
+        const sqlPackageActions = ['publish', 'script', 'deployreport'];
+        if (fileType === 'SQL') {
+            if (normalizedAction !== 'sqlscript') {
+                throw new Error(tl.loc('InvalidAction', action));
+            }
+        } else if (!sqlPackageActions.includes(normalizedAction)) {
+            throw new Error(tl.loc('InvalidAction', action));
+        }
+
         console.log(tl.loc('ActionDetected', action, fileType));
 
         // Parse and validate connection string
@@ -92,7 +106,7 @@ async function main(): Promise<void> {
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
-        const needsSqlPackage = (fileType === 'DACPAC' || fileType === 'SQLPROJ') && action !== 'sqlScript';
+        const needsSqlPackage = fileType === 'DACPAC' || fileType === 'SQLPROJ';
         
         if (needsSqlPackage) {
             tl.debug(tl.loc('DetectingSqlPackage'));
@@ -102,7 +116,7 @@ async function main(): Promise<void> {
 
         // Discover sqlcmd for SQL script actions or firewall connectivity testing
         let sqlcmdExePath: string | undefined;
-        const needsSqlcmd = action === 'sqlScript' || (fileType === 'SQL' && action === 'script') || firewallRuleManagement;
+        const needsSqlcmd = normalizedAction === 'sqlscript' || firewallRuleManagement;
         
         if (needsSqlcmd) {
             tl.debug(tl.loc('SettingUpSqlCmd'));
@@ -180,30 +194,24 @@ async function main(): Promise<void> {
             }
 
             if (deployFileType === 'DACPAC') {
-                if (action.toLowerCase() === 'sqlscript') {
-                    throw new Error(tl.loc('InvalidAction', action));
-                }
                 if (!sqlPackageExePath) {
                     throw new Error(tl.loc('SqlPackageNotFound'));
                 }
-                tl.debug(tl.loc('ExecutingSqlPackage', action));
+                tl.debug(tl.loc('ExecutingSqlPackage', normalizedAction));
                 const outputFilePath = await SqlPackageExecutor.executeSqlPackage(
                     sqlPackageExePath,
-                    action,
+                    normalizedAction,
                     deployFilePath,
                     connectionConfig,
                     publishProfile || undefined,
                     additionalArguments || undefined,
                     accessToken
                 );
-                if (outputFilePath && ['script', 'deployreport'].includes(action.toLowerCase())) {
+                if (outputFilePath && ['script', 'deployreport'].includes(normalizedAction)) {
                     tl.debug(tl.loc('OutputFileGenerated', outputFilePath));
                     tl.setVariable('SqlDeploymentOutputFile', outputFilePath);
                 }
             } else if (deployFileType === 'SQL') {
-                if (action.toLowerCase() !== 'sqlscript') {
-                    throw new Error(tl.loc('InvalidAction', action));
-                }
                 if (!sqlcmdExePath) {
                     // Should not reach here — SqlcmdHelper.findSqlcmd throws if not found
                     throw new Error(tl.loc('SqlcmdAutoInstallFailed', 'sqlcmd path is undefined'));
@@ -238,7 +246,7 @@ async function main(): Promise<void> {
             // Emit telemetry — actionable fields only, no PII. Always emitted regardless of outcome.
             try {
                 const telemetry = {
-                    action: action,
+                    action: normalizedAction,
                     fileType: fileType,
                     authMethod: connectionConfig.FormattedAuthentication ?? 'sqlauthentication',
                     hasAzureSubscription: !!azureSubscription,

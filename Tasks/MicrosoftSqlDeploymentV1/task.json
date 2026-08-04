@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 278,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -105,7 +105,7 @@
   "outputVariables": [
     {
       "name": "SqlDeploymentOutputFile",
-      "description": "Path to generated output file for script, deployReport, driftReport, extract, export actions"
+      "description": "Path to the generated output file for the script and deployReport actions"
     }
   ],
   "execution": {

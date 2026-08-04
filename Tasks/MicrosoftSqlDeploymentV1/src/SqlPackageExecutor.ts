@@ -117,7 +117,7 @@ export class SqlPackageExecutor {
             args.push(`/TargetDatabaseName:${connectionConfig.Database}`);
             args.push(`/AccessToken:${accessToken}`);
         } else {
-            args.push(`/TargetConnectionString:${connectionConfig.EscapedConnectionString}`);
+            args.push(`/TargetConnectionString:${connectionConfig.ConnectionString}`);
         }
 
         if (publishProfile) {

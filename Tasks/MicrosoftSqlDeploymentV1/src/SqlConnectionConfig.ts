@@ -66,29 +66,15 @@ export default class SqlConnectionConfig {
     }
 
     /**
-     * Returns the connection string escaped by double quotes for command line usage.
+     * Returns the connection string exactly as the user supplied it.
+     *
+     * Callers pass this as a single argv element (never through a shell), so no extra
+     * quoting is applied. SqlPackage parses it with standard ADO.NET rules, which already
+     * define how quoted values and doubled quotes are escaped — rewriting them here would
+     * corrupt valid values such as `Password="my""pass"`.
      */
-    public get EscapedConnectionString(): string {
-        let result = '';
-
-        // Isolate all the key value pairs from the raw connection string
-        // Using the raw connection string instead of the parsed one to keep it as close to the original as possible
-        const matches = Array.from(this._rawConnectionString.matchAll(Constants.connectionStringParserRegex));
-        for (const match of matches) {
-            if (match.groups) {
-                const key = match.groups.key.trim();
-                let val = match.groups.val.trim();
-
-                // If the value is enclosed in double quotes, escape the double quotes
-                if (val.startsWith('"') && val.endsWith('"')) {
-                    val = '""' + val.slice(1, -1) + '""';
-                }
-
-                result += `${key}=${val};`;
-            }
-        }
-
-        return result;
+    public get ConnectionString(): string {
+        return this._rawConnectionString;
     }
 
     /**

@@ -150,29 +150,30 @@ describe('MicrosoftSqlDeployment Suite', function () {
         });
     });
 
-    describe('SqlConnectionConfig - EscapedConnectionString', function() {
-        it('should double-escape double quotes in quoted values', function() {
+    describe('SqlConnectionConfig - ConnectionString', function() {
+        it('should preserve double-quoted values without re-escaping them', function() {
             const connectionString = `Server=test.database.windows.net;Database=testdb;User Id=user;Password="my""pass"`;
             const config = new SqlConnectionConfig(connectionString);
-            
-            const escaped = config.EscapedConnectionString;
-            assert.ok(escaped.includes('Password=""my""pass""'), 'should double-escape quotes');
+
+            // The value parses as my"pass, so the connection string must be handed to
+            // SqlPackage untouched. Doubling the outer quotes would change the password.
+            assert.strictEqual(config.Password, 'my"pass', 'should parse the escaped password');
+            assert.strictEqual(config.ConnectionString, connectionString, 'should not modify the connection string');
         });
 
         it('should preserve single-quoted values as-is', function() {
             const connectionString = `Server=test.database.windows.net;Database=testdb;User Id=user;Password='my''pass'`;
             const config = new SqlConnectionConfig(connectionString);
-            
-            const escaped = config.EscapedConnectionString;
-            assert.ok(escaped.includes("Password='my''pass'"), 'should preserve single quotes');
+
+            assert.strictEqual(config.Password, "my'pass", 'should parse the escaped password');
+            assert.strictEqual(config.ConnectionString, connectionString, 'should not modify the connection string');
         });
 
         it('should preserve unquoted values', function() {
             const connectionString = `Server=test.database.windows.net;Database=testdb;User Id=user;Password=mypass`;
             const config = new SqlConnectionConfig(connectionString);
-            
-            const escaped = config.EscapedConnectionString;
-            assert.ok(escaped.includes('Password=mypass'), 'should preserve unquoted values');
+
+            assert.strictEqual(config.ConnectionString, connectionString, 'should not modify the connection string');
         });
     });
 
@@ -246,6 +247,44 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.failed, 'task should have failed with invalid file extension');
             assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
             assert(tr.stdout.indexOf('InvalidFileExtension') >= 0, 'should display invalid file extension error');
+        }, tr);
+    });
+
+    it('should accept an action whose casing differs from the pickList', async () => {
+        const tp = path.join(__dirname, 'L0ActionCasingInsensitive.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded with action "SqlScript"');
+            assert(tr.invokedToolCount === 1, 'should have invoked sqlcmd once');
+        }, tr);
+    });
+
+    it('should reject a SqlPackage action for a .sql file before tool discovery', async () => {
+        const tp = path.join(__dirname, 'L0InvalidActionForSqlFile.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed for action "script" with a .sql file');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.stdout.indexOf('InvalidAction') >= 0, 'should display the invalid action error');
+        }, tr);
+    });
+
+    it('should reject sqlScript for a .dacpac file before tool discovery', async () => {
+        const tp = path.join(__dirname, 'L0InvalidActionForDacpac.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.failed, 'task should have failed for action "sqlScript" with a .dacpac file');
+            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
+            assert(tr.stdout.indexOf('InvalidAction') >= 0, 'should display the invalid action error');
         }, tr);
     });
 
