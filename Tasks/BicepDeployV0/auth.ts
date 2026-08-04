@@ -1,12 +1,25 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from './azureConfigDir';
 
 export class AzureAuthenticationHelper {
     private sessionLoggedIn: boolean = false;
     private cliPasswordPath: string = null;
+    private azureConfigDir: string | null = null;
 
     public async loginAzure(connectedService: string): Promise<void> {
+        const agentTempDir = tl.getVariable('Agent.TempDirectory');
+        if (!!agentTempDir) {
+            // Create an unpredictable per-invocation directory so concurrent tasks
+            // on the same host don't share ~/.azure, where one task's
+            // `az account clear` can invalidate another's in-flight credential.
+            this.azureConfigDir = createPerInvocationAzureConfigDir(agentTempDir);
+            tl.debug(`Isolated AZURE_CONFIG_DIR set to: ${this.azureConfigDir}`);
+        } else {
+            tl.debug('Agent.TempDirectory not set; skipping AZURE_CONFIG_DIR isolation');
+        }
+
         await loginAzureRM(connectedService);
 
         // Track certificate path for cleanup if using certificate-based auth
@@ -40,6 +53,14 @@ export class AzureAuthenticationHelper {
                 // Task should not fail if logout doesn't occur
                 tl.warning(tl.loc('FailedToLogout', err.message));
             }
+        }
+
+        // Must run AFTER `az account clear` so it still sees the per-invocation
+        // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
+        // to mutate the agent's global profile.
+        if (this.azureConfigDir) {
+            removePerInvocationAzureConfigDir(this.azureConfigDir);
+            this.azureConfigDir = null;
         }
     }
 }
