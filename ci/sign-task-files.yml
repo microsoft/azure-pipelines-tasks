@@ -154,9 +154,9 @@ steps:
       ]
 
 - ${{ if parameters.signNodeModules }}:
-  # Catch-all: 3rd-party sign signable node_modules files. Microsoft-signed ones are stashed out, so untouched.
+  # Sign node_modules binaries.
   - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-    displayName: Sign node_modules Files (3rd Party Assemblies Signing)
+    displayName: Sign node_modules Binaries (3rd Party Assemblies Signing)
     inputs:
       ConnectedServiceName: $(ConnectedServiceName)
       UseMSIAuthentication: true
@@ -170,10 +170,6 @@ steps:
         **/node_modules/**/*.exe
         **/node_modules/**/*.dll
         **/node_modules/**/*.node
-        **/node_modules/**/*.js
-        **/node_modules/**/*.ps1
-        **/node_modules/**/*.psm1
-        **/node_modules/**/*.psd1
       UseMinimatch: true
       signConfigType: inlineSignParams
       inlineOperation: |
@@ -191,6 +187,62 @@ steps:
         {
         "parameterName": "Append",
         "parameterValue": "/as"
+        },
+        {
+        "parameterName": "FileDigest",
+        "parameterValue": "/fd \"SHA256\""
+        },
+        {
+        "parameterName": "PageHash",
+        "parameterValue": "/NPH"
+        },
+        {
+        "parameterName": "TimeStamp",
+        "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+        }
+        ],
+        "toolName": "sign",
+        "toolVersion": "1.0"
+        },
+        {
+        "keyCode": "CP-231522",
+        "operationSetCode": "SigntoolVerify",
+        "parameters": [],
+        "toolName": "sign",
+        "toolVersion": "1.0"
+        }
+        ]
+
+  # Sign node_modules scripts.
+  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+    displayName: Sign node_modules Scripts (3rd Party Assemblies Signing)
+    inputs:
+      ConnectedServiceName: $(ConnectedServiceName)
+      UseMSIAuthentication: true
+      AppRegistrationClientId: $(AppRegistrationClientId)
+      AppRegistrationTenantId: $(AppRegistrationTenantId)
+      EsrpClientId: $(EsrpClientId)
+      AuthAKVName: $(AuthAKVName)
+      AuthSignCertName: $(AuthSignCertName)
+      FolderPath: '${{ parameters.tasksRoot }}'
+      Pattern: |
+        **/node_modules/**/*.js
+        **/node_modules/**/*.ps1
+        **/node_modules/**/*.psm1
+        **/node_modules/**/*.psd1
+      UseMinimatch: true
+      signConfigType: inlineSignParams
+      inlineOperation: |
+        [{
+        "keyCode": "CP-231522",
+        "operationSetCode": "SigntoolSign",
+        "parameters": [{
+        "parameterName": "OpusName",
+        "parameterValue": "Microsoft"
+        },
+        {
+        "parameterName": "OpusInfo",
+        "parameterValue": "http://www.microsoft.com"
         },
         {
         "parameterName": "FileDigest",
