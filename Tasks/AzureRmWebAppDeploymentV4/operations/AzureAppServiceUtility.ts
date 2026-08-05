@@ -133,7 +133,11 @@ export class AzureAppServiceUtility {
     }
 
     public async getAuthToken(): Promise<string> {
-        const token = await this._appService._client.getCredentials().getToken();
+        // MSDeploy targets the Kudu/SCM endpoint, so it must use an App Service-audience
+        // token rather than the ARM-audience token returned by getToken(). acquireTokenForScope
+        // is gated by the ALLOWSCOPELEVELTOKEN pipeline feature and falls back to the ARM token
+        // when that feature is disabled, preserving previous behavior.
+        const token = await this._appService._client.getCredentials().acquireTokenForScope("appservice");
         tl.setSecret(token);
         return token;
     }
