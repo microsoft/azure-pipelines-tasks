@@ -49,7 +49,7 @@ export abstract class ScriptType {
 export class WindowsPowerShell extends ScriptType {
 
     public async getTool(): Promise<any> {
-        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+        if (os.platform() === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
             try {
                 return await this.getToolWithFileInvocation();
             } catch (err) {
@@ -96,7 +96,7 @@ export class WindowsPowerShell extends ScriptType {
 export class PowerShellCore extends ScriptType {
 
     public async getTool(): Promise<any> {
-        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+        if (os.platform() === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
             try {
                 return await this.getToolWithFileInvocation();
             } catch (err) {

@@ -14,7 +14,7 @@ tmr.setInput('powerShellIgnoreLASTEXITCODE', 'false');
 
 // Environment
 process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
-process.env['AZP_AZURECLI_USE_FILE_INVOCATION'] = 'true';
+process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'] = 'true';
 
 // Mock os to always return win32
 tmr.registerMock('os', {

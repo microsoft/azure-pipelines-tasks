@@ -469,7 +469,7 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            if (process.platform === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+            if (process.platform === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
                 // Bypass az.cmd to avoid CMD metacharacter interpretation (e.g. ^ in passwords)
                 // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
                 const azPath = tl.which('az', false);
