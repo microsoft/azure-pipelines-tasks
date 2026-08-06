@@ -646,6 +646,17 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should not override an explicitly requested managed identity with the WIF service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdMsiNotOverriddenByWif.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should honour Authentication=Active Directory Managed Identity');
+            assert(tr.stdout.indexOf('ActiveDirectoryAzurePipelines') < 0,
+                'must not substitute the service connection identity for the requested managed identity');
+        }, tr);
+    });
+
     it('should take the SP tenant id from the service connection', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdSpAuthTenantFromSubscription.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

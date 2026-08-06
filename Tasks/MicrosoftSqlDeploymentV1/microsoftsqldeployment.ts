@@ -279,6 +279,11 @@ async function main(): Promise<void> {
  *   ManagedServiceIdentity     → nothing to inject; the service connection *is* the agent's managed identity,
  *                                which DefaultAzureCredential already resolves.
  *
+ * `Authentication=Active Directory Managed Identity` is deliberately excluded. That value is an
+ * explicit request for the agent's managed identity, so the service connection identity must not be
+ * substituted for it — doing so would silently authenticate as a different (often broader) principal
+ * when `azureSubscription` was supplied only for firewall management.
+ *
  * Reads endpoint fields only — it acquires no tokens, so it is safe to call before ARM operations.
  */
 function resolveSqlcmdCredentials(
@@ -293,9 +298,10 @@ function resolveSqlcmdCredentials(
     const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
     const scheme = (azureEndpoint.scheme ?? '').toLowerCase();
 
-    // Auth types where the connection string carries no credentials, so the identity
-    // must come from the service connection.
-    const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated', 'activedirectorymanagedidentity'];
+    // Auth types where the connection string names no identity at all, so the identity
+    // must come from the service connection. `Active Directory Managed Identity` is not
+    // one of them: it names the agent's managed identity explicitly.
+    const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
 
     if (tokenBasedAuthTypes.includes(sqlAuthType)) {
         if (scheme === 'workloadidentityfederation') {
