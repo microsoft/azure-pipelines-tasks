@@ -14,7 +14,7 @@ tmr.setInput('powerShellIgnoreLASTEXITCODE', 'false');
 
 // Environment — FF is OFF
 process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
-delete process.env['AZP_AZURECLI_USE_FILE_INVOCATION'];
+delete process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'];
 
 // Mock os to return win32
 tmr.registerMock('os', {

@@ -43,7 +43,7 @@ export class Utility {
 
         // Bypass az.cmd to preserve special characters (e.g. ^ in passwords)
         // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
-        if (os.platform() === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+        if (os.platform() === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
             const azPath = tl.which('az', false);
             if (azPath) {
                 const pythonPath = path.join(path.dirname(path.dirname(azPath)), 'python.exe');
