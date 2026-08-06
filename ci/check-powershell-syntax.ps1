@@ -8,13 +8,15 @@ param([String]$pathToBuiltTasks)
 # latest saved version.
 $AdoFeedName = "PipelineTools_PublicPackages"
 $AdoFeedSource = "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2"
+$AdoFeedRegistered = $false
 
 function Register-AdoFeed() {
-  if (-not (Get-PSRepository -Name $AdoFeedName -ErrorAction SilentlyContinue)) {
+  if (-not $script:AdoFeedRegistered) {
     Write-Host "Registering PSRepository '$AdoFeedName'..."
     # Suppress the success-stream output (e.g. "Package source ... added successfully"); otherwise
     # it leaks into the pipeline and pollutes the analyzer results collected below.
     $null = Register-PSRepository -Name $AdoFeedName -SourceLocation $AdoFeedSource -InstallationPolicy Trusted
+    $script:AdoFeedRegistered = $true
   }
 }
 
