@@ -20,12 +20,12 @@ $microsoftSignedFiles = New-Object Collections.Generic.List[String]
 $filesCounter = 0
 
 # Binaries (.dll/.exe/.node): scan everywhere; node_modules only when requested.
-$filesToScan = Get-ChildItem -Path $tasksRootFullPath -Include "*.dll", "*.exe", "*.node" -Recurse |
+$filesToScan = Get-ChildItem -Path $tasksRootFullPath -Include "*.dll", "*.exe", "*.node" -Recurse -File |
     Where-Object { $IncludeNodeModules -or $_.FullName -notmatch '\\node_modules\\' }
 
 # Scripts (.js/.ps1/.psm1/.psd1): scan only inside node_modules, and only when node_modules is in scope.
 if ($IncludeNodeModules) {
-    $filesToScan += Get-ChildItem -Path $tasksRootFullPath -Include "*.js", "*.ps1", "*.psm1", "*.psd1" -Recurse |
+    $filesToScan += Get-ChildItem -Path $tasksRootFullPath -Include "*.js", "*.ps1", "*.psm1", "*.psd1" -Recurse -File |
         Where-Object { $_.FullName -match '\\node_modules\\' }
 }
 
