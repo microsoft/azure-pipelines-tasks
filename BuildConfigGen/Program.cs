@@ -62,6 +62,12 @@ namespace BuildConfigGen
                 ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
             };
 
+            public static readonly Dictionary<string, string> TaskTypescriptOverrides = new Dictionary<string, string>
+            {
+                ["AzureCLIV2"] = "7.0.2",
+                ["AzureCLIV3"] = "7.0.2"
+            };
+
             public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true, string? typescriptVersion = "5.1.6", string? taskLibVersion = null, Dictionary<string, string>? packageVersionOverrides = null)
             {
                 // Initialize packageVersionOverrides with provided values
@@ -895,7 +901,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides);
+                                WriteNodePackageJson(task, taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides);
                             }
 
                         }
@@ -1277,16 +1283,23 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides)
+        private static void WriteNodePackageJson(string taskName, string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
 
             // Upgrade typescript version if specified from packageVersionOverrides
-            if (shouldUpdateTypescript && packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
+            if (shouldUpdateTypescript)
             {
-                outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = typescriptVersion;
+                if (Config.TaskTypescriptOverrides.TryGetValue(taskName, out var taskTypescriptVersion))
+                {
+                    outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = taskTypescriptVersion;
+                }
+                else if (packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
+                {
+                    outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = typescriptVersion;
+                }
             }
 
             // Determine task-lib version from packageVersionOverrides

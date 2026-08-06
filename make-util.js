@@ -25,7 +25,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2', '7.0.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -270,6 +270,17 @@ var buildNodeTask = function (taskPath, outDir, options) {
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        // TypeScript 7 uses native platform packages that must not ship with the task.
+        var typescriptScopePath = path.join(taskPath, "node_modules", "@typescript");
+        if (test('-d', typescriptScopePath)) {
+            fs.readdirSync(typescriptScopePath)
+                .filter(packageName => packageName.startsWith('typescript-'))
+                .forEach(packageName => rm("-rf", path.join(typescriptScopePath, packageName)));
+
+            if (fs.readdirSync(typescriptScopePath).length === 0) {
+                rm("-rf", typescriptScopePath);
+            }
+        }
         // Clean up broken symlinks in .bin directory
         var binPath = path.join(taskPath, "node_modules", ".bin");
         if (test('-d', binPath)) {
