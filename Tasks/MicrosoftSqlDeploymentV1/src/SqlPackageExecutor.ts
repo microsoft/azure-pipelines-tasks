@@ -105,9 +105,11 @@ export class SqlPackageExecutor {
         args.push(`/Action:${this.mapActionToSqlPackageAction(action)}`);
         args.push(`/SourceFile:${sourcePath}`);
 
-        // Only use /AccessToken for auth types that rely on token-based auth (AAD Default/Integrated/MSI).
-        // For SQL auth, AAD Password, and AAD Service Principal the connection string carries the
-        // credentials, so always use /TargetConnectionString for those.
+        // Only use /AccessToken for auth types that name no identity in the connection string
+        // (AAD Default/Integrated), where the identity has to come from the service connection.
+        // Everything else already identifies its own principal, so use /TargetConnectionString:
+        // SQL auth, AAD Password and AAD Service Principal carry credentials directly, and
+        // AAD Managed Identity explicitly asks for the agent's managed identity.
         const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
         const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
