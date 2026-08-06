@@ -18,6 +18,11 @@ if (!(process.env["customScriptNotSpecified"] === "true")) {
     tr.setInput("skipArchivingCustomScripts", process.env["_doNotArchive_"] === "true" ? "true" : "false");
 }
 
+if (process.env["_safeArgs_"] === "true") {
+    // backtick-escaped separator: the sanitizer trusts it, and the invoker must keep it verbatim (not doubled).
+    tr.setInput("customScriptArguments", "a`;b");
+}
+
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";

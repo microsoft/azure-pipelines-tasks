@@ -47,6 +47,23 @@ describe('Azure VMSS Deployment', function () {
         }, tr);
     });
 
+    it("should pass sanitizer-safe custom script arguments verbatim without doubling backticks when the WI-75787 sanitizer is enabled", async () => {
+        process.env["_sanitizeArgsActivate_"] = "true";
+        process.env["_safeArgs_"] = "true";
+        process.env["existingExtensionName"] = "extensionNameTest";
+        let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["_sanitizeArgsActivate_"];
+        delete process.env["_safeArgs_"];
+        delete process.env["existingExtensionName"];
+        runValidations(() => {
+            assert(tr.succeeded, "task should succeed when custom script arguments are sanitizer-safe");
+            assert(tr.stdout.indexOf("-scriptArgs 'a`;b'") > -1, "backtick-escaped separator should be passed verbatim");
+            assert(tr.stdout.indexOf("a``;b") === -1, "backtick should not be doubled when the sanitizer is enabled");
+        }, tr);
+    });
+
     if (tl.osType().match(/^Win/)) {
         it("should succeed if vmss image updated successfully", async () => {
             let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
