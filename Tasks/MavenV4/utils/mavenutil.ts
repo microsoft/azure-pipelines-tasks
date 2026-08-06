@@ -183,7 +183,7 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
                             const hostMatches = (host: string) => repoHost === host || repoHost.endsWith('.' + host);
                             if (repoUrl && (hostMatches(collectionHost) ||
                                         hostMatches(packageHost) ||
-                                         packagingLocation.PackagingUris.some(uri => hostMatches((new URL(uri).hostname).toLowerCase())))) {
+                                        packagingLocation.PackagingUris.some(uri => hostMatches((new URL(uri).hostname).toLowerCase())))) {
                             tl.debug('using credentials for url: ' + repoUrl);
                             repos.push({
                                 id: (repo.id && repo.id instanceof Array)
