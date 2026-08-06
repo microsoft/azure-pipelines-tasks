@@ -5,7 +5,7 @@ var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias } from './Constants';
-import { AzureAppServiceUtility as AzureAppServiceUtilityCommon } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
+import { AzureAppServiceUtility as AzureAppServiceUtilityCommon, publishKuduAuthModeTelemetry } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 
 //todo replace this class with azure-arm-rest/azureAppServiceUtility
 export class AzureAppServiceUtility {
@@ -137,8 +137,12 @@ export class AzureAppServiceUtility {
         // token rather than the ARM-audience token returned by getToken(). acquireTokenForScope
         // is gated by the ALLOWSCOPELEVELTOKEN pipeline feature and falls back to the ARM token
         // when that feature is disabled, preserving previous behavior.
-        const token = await this._appService._client.getCredentials().acquireTokenForScope("appservice");
+        const credentials = this._appService._client.getCredentials();
+        const token = await credentials.acquireTokenForScope("appservice");
         tl.setSecret(token);
+        // MSDeploy always uses a token (never SCM basic auth), so record it in the unified auth-mode
+        // census so the Windows web-deploy path is counted alongside the standard Kudu REST path.
+        publishKuduAuthModeTelemetry({ authMethod: "Bearer", source: "msDeploy", credentials: credentials, telemetryFeature: "AzureAppServiceDeployment" });
         return token;
     }
 
