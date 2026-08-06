@@ -2,8 +2,7 @@ Param(
     [string]$zipName,
     [string]$script,
     [string]$scriptArgs,
-    [string]$prefixPath,
-    [switch]$useSafeExecution
+    [string]$prefixPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -22,58 +21,4 @@ if ($zipName) {
 Push-Location $filesPath
 
 Write-Host "Invoking command: $script $scriptArgs"
-
-function Split-ArgumentString {
-    param([string]$ArgumentString)
-
-    $result = @()
-    $current = ''
-    $inQuote = $false
-    $quoteChar = ''
-
-    for ($i = 0; $i -lt $ArgumentString.Length; $i++) {
-        $c = $ArgumentString[$i]
-
-        if ($inQuote) {
-            if ($c -eq $quoteChar) {
-                $inQuote = $false
-            }
-            else {
-                $current += $c
-            }
-        }
-        elseif ($c -eq '"' -or $c -eq "'") {
-            $inQuote = $true
-            $quoteChar = $c
-        }
-        elseif ([char]::IsWhiteSpace($c)) {
-            if ($current.Length -gt 0) {
-                $result += $current
-                $current = ''
-            }
-        }
-        else {
-            $current += $c
-        }
-    }
-
-    if ($current.Length -gt 0) {
-        $result += $current
-    }
-
-    return ,$result
-}
-
-if ($useSafeExecution) {
-    # Safe execution opted in via the UseSafeVmssCustomScriptExecution pipeline feature
-    $parsedArgs = @()
-    if (-not [string]::IsNullOrWhiteSpace($scriptArgs)) {
-        $parsedArgs = Split-ArgumentString -ArgumentString $scriptArgs
-    }
-
-    $scriptBlock = [ScriptBlock]::Create($script)
-    & $scriptBlock @parsedArgs
-}
-else {
-    Invoke-Expression "$script $scriptArgs"
-}
+Invoke-Expression "$script $scriptArgs"

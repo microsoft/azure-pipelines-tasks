@@ -1,7 +1,6 @@
 'use strict';
 
 const assert = require('assert');
-const fs = require('fs');
 const ttm = require('azure-pipelines-task-lib/mock-test');
 const tl = require('azure-pipelines-task-lib');
 const path = require('path');
@@ -36,13 +35,16 @@ describe('Azure VMSS Deployment', function () {
     // uncomment to get test traces
     //	process.env['TASK_TEST_TRACE'] = "1";
 
-    it("should provide a safe execution path gated behind the useSafeExecution feature flag (MSRC 129544)", () => {
-        const scriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-        const scriptContent = fs.readFileSync(scriptPath, "utf8");
-
-        assert(scriptContent.indexOf("Split-ArgumentString") > -1, "customScriptInvoker.ps1 should split script arguments safely");
-        assert(scriptContent.indexOf("[ScriptBlock]::Create") > -1, "customScriptInvoker.ps1 should execute through ScriptBlock instead of string eval");
-        assert(scriptContent.indexOf("if ($useSafeExecution)") > -1, "safe execution must be gated behind the useSafeExecution feature flag switch");
+    it("should fail closed when custom script arguments contain injection characters and the WI-75787 sanitizer is enabled (MSRC 129544)", async () => {
+        process.env["_sanitizeArgsActivate_"] = "true";
+        let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["_sanitizeArgsActivate_"];
+        runValidations(() => {
+            assert(tr.failed, "task should fail closed on unsafe custom script arguments");
+            assert(tr.stdout.indexOf("loc_mock_ScriptArgsSanitized") > -1, "should surface the argument sanitization message");
+        }, tr);
     });
 
     if (tl.osType().match(/^Win/)) {

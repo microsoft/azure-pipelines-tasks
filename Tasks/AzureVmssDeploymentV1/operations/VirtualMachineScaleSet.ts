@@ -9,6 +9,7 @@ import azureModel = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
+import { tryValidateScriptArgs } from './argsSanitizer';
 import { AzureRMEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint";
 import utils = require("./Utils")
 
@@ -138,6 +139,11 @@ export default class VirtualMachineScaleSet {
 
         let blobsPefixPath = this._getBlobsPrefixPath();
 
+        // Validate user-provided arguments with the shared WI-75787 sanitizer for the
+        // target shell (ps for Windows, bash for Linux). Fails closed on injection when
+        // AZP_75787_ENABLE_NEW_LOGIC is set and the EnableVmssCustomScriptArgsValidation gate is on.
+        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+
         if (osType === "Windows") {
             // escape powershell special characters. This is needed as this script will be executed in a powershell session
             let script = this.taskParameters.customScript.replace(/`/g, '``').replace(/\$/g, '`$');
@@ -156,11 +162,6 @@ export default class VirtualMachineScaleSet {
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
             invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'`;
-
-            // opt in to the safe (non Invoke-Expression) execution path
-            if (tl.getPipelineFeature("UseSafeVmssCustomScriptExecution")) {
-                invokerCommand += " -useSafeExecution";
-            }
         } else {
             // escape shell special characters. This is needed as this script will be executed in a shell
             let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
