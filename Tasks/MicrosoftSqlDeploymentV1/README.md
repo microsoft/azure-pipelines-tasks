@@ -136,10 +136,13 @@ Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directo
     action: script
     path: $(Build.ArtifactStagingDirectory)/MyDatabase.dacpac
     connectionString: $(SqlConnectionString)
-    additionalArguments: '/OutputPath:$(Build.ArtifactStagingDirectory)/deploy-script.sql'
+    additionalArguments: '/OutputPath:"$(Build.ArtifactStagingDirectory)/deploy-script.sql"'
 - publish: $(Build.ArtifactStagingDirectory)/deploy-script.sql
   artifact: deployment-script
 ```
+
+> Quote any path passed in `additionalArguments`. Arguments are split on unquoted spaces, so an
+> unquoted path breaks if the agent's working directory contains a space.
 
 ---
 
