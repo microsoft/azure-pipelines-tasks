@@ -219,15 +219,44 @@ var ensureTypescriptPlatformPackage = function (taskPath) {
     var platformPackagePath = path.join(taskPath, 'node_modules', '@typescript', platformPackageName);
     if (!test('-d', platformPackagePath)) {
         var platformPackage = `@typescript/${platformPackageName}@${version}`;
+        var packageLockPath = path.join(taskPath, 'package-lock.json');
+        var packageLock = JSON.parse(fs.readFileSync(packageLockPath).toString());
+        var lockEntry = packageLock.packages[`node_modules/@typescript/${platformPackageName}`];
+        if (!lockEntry || lockEntry.version !== version || !lockEntry.resolved || !lockEntry.integrity) {
+            throw new Error(`The package lock does not contain complete metadata for ${platformPackage}.`);
+        }
+
         console.log(`TypeScript native compiler package was not installed by npm. Installing ${platformPackage}.`);
         var tempPath = fs.mkdtempSync(path.join(os.tmpdir(), 'typescript-platform-'));
         try {
-            var packOutput = run(`npm pack "${platformPackage}" --pack-destination "${tempPath}" --ignore-scripts --quiet`, false, false, true);
+            var rootNpmrcPath = path.join(repoPath, '.npmrc');
+            var rootNpmrc = fs.readFileSync(rootNpmrcPath).toString();
+            var userConfigArg = /(?:begin auth token|:_authToken\s*=|:_password\s*=)/i.test(rootNpmrc)
+                ? ` --userconfig "${rootNpmrcPath}"`
+                : '';
+            var packOutput = run(`npm pack "${lockEntry.resolved}" --pack-destination "${tempPath}" --ignore-scripts --quiet${userConfigArg}`, false, false, true);
             var archiveName = path.basename(packOutput.split(/\r?\n/).pop());
             var archivePath = path.join(tempPath, archiveName);
             if (!test('-f', archivePath)) {
                 throw new Error(`npm pack did not create the expected archive for ${platformPackage}.`);
             }
+
+            var crypto = require('crypto');
+            var integrityMatches = lockEntry.integrity.split(/\s+/).some(function (integrity) {
+                var separator = integrity.indexOf('-');
+                if (separator <= 0) {
+                    return false;
+                }
+
+                var algorithm = integrity.substring(0, separator);
+                var expectedDigest = integrity.substring(separator + 1);
+                var actualDigest = crypto.createHash(algorithm).update(fs.readFileSync(archivePath)).digest('base64');
+                return actualDigest === expectedDigest;
+            });
+            if (!integrityMatches) {
+                throw new Error(`Integrity verification failed for ${platformPackage}.`);
+            }
+
             fs.mkdirSync(platformPackagePath, { recursive: true });
             try {
                 run(`tar -xzf "${archivePath}" -C "${platformPackagePath}" --strip-components=1`, false, false, true);
