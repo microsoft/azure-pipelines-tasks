@@ -1,5 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import fs = require('fs');
 import SqlPackageHelper from './src/SqlPackageHelper';
 import SqlcmdHelper from './src/SqlcmdHelper';
 import SqlConnectionConfig from './src/SqlConnectionConfig';
@@ -44,11 +45,11 @@ async function main(): Promise<void> {
 
         // Get optional inputs
         const azureSubscription = tl.getInput('azureSubscription', false);
-        const publishProfile = tl.getInput('publishProfile', false);
+        const publishProfile = getOptionalFilePathInput('publishProfile');
         const additionalArguments = tl.getInput('additionalArguments', false);
         const buildArguments = tl.getInput('buildArguments', false);
-        const sqlpackagePath = tl.getInput('sqlpackagePath', false);
-        const sqlcmdPath = tl.getInput('sqlcmdPath', false);
+        const sqlpackagePath = getOptionalFilePathInput('sqlpackagePath');
+        const sqlcmdPath = getOptionalFilePathInput('sqlcmdPath');
         const firewallRuleManagementInput = tl.getInput('firewallRuleManagement', false);
         
         // Determine firewall rule management default per spec
@@ -262,6 +263,38 @@ async function main(): Promise<void> {
         tl.debug(`Deployment failed with error: ${error}`);
         tl.setResult(tl.TaskResult.Failed, tl.loc('DeploymentFailed', error.message || error));
     }
+}
+
+/**
+ * Read an optional filePath input, returning undefined when the user left it blank.
+ *
+ * The agent roots filePath inputs before the task sees them, so an unset one arrives
+ * as System.DefaultWorkingDirectory rather than an empty string. Passing that through
+ * makes the task treat the repo root as a user-supplied executable or profile: for
+ * sqlcmdPath and sqlpackagePath the existsSync check then succeeds (it is a real
+ * directory) and execution fails with "Unable to locate executable file".
+ *
+ * A directory is never a valid value for any of these inputs, so treating one as
+ * "not specified" also falls back to discovery rather than failing when a user
+ * points at a folder by mistake.
+ */
+function getOptionalFilePathInput(name: string): string | undefined {
+    const raw = tl.getInput(name, false);
+    if (!raw || !raw.trim()) {
+        return undefined;
+    }
+
+    const value = raw.trim();
+    try {
+        if (fs.existsSync(value) && fs.statSync(value).isDirectory()) {
+            tl.debug(`Ignoring ${name}: resolved to a directory (${value}), treating as not specified.`);
+            return undefined;
+        }
+    } catch (_) {
+        // Unreadable path: leave it to the consumer to report a useful error.
+    }
+
+    return value;
 }
 
 /**

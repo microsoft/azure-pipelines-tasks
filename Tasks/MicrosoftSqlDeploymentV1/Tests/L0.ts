@@ -637,6 +637,17 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should ignore filePath inputs the agent rooted to the working directory', async () => {
+        const tp = path.join(__dirname, 'L0BlankFilePathInputsIgnored.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should treat a directory-valued filePath input as not specified');
+            assert(tr.stdout.indexOf('should have been ignored') < 0,
+                'sqlcmdPath pointing at a directory must not be used as the executable');
+        }, tr);
+    });
+
     it('should use ActiveDirectoryAzurePipelines for a Workload Identity Federation service connection', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdWifUsesAzurePipelinesAuth.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
