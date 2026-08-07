@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 278,
     "Patch": 0
   },
   "demands": [],
@@ -231,6 +231,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UploadingToStorageBlobsAuthenticationFailed": "ms-resource:loc.messages.UploadingToStorageBlobsAuthenticationFailed",
     "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash"
   }
 }
