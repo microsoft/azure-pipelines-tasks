@@ -25,7 +25,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2', '7.0.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -202,6 +202,75 @@ function performNpmAudit(taskPath) {
         throw error;
     }
 }
+// Temporary workaround for npm occasionally omitting TypeScript 7's platform-specific optional compiler package from cross-platform lockfile installs.
+// SShould be replaced by a more permanent solution once Typescript 7 is more widely adopted.
+var ensureTypescriptPlatformPackage = function (taskPath) {
+    var typescriptPackageJsonPath = path.join(taskPath, 'node_modules', 'typescript', 'package.json');
+    if (!test('-f', typescriptPackageJsonPath)) {
+        return;
+    }
+
+    var version = JSON.parse(fs.readFileSync(typescriptPackageJsonPath).toString()).version;
+    if (!semver.gte(version, '7.0.0')) {
+        return;
+    }
+
+    var platformPackageName = `typescript-${process.platform}-${process.arch}`;
+    var platformPackagePath = path.join(taskPath, 'node_modules', '@typescript', platformPackageName);
+    if (!test('-d', platformPackagePath)) {
+        var platformPackage = `@typescript/${platformPackageName}@${version}`;
+        var packageLockPath = path.join(taskPath, 'package-lock.json');
+        var packageLock = JSON.parse(fs.readFileSync(packageLockPath).toString());
+        var lockEntry = packageLock.packages[`node_modules/@typescript/${platformPackageName}`];
+        if (!lockEntry || lockEntry.version !== version || !lockEntry.resolved || !lockEntry.integrity) {
+            throw new Error(`The package lock does not contain complete metadata for ${platformPackage}.`);
+        }
+
+        console.log(`TypeScript native compiler package was not installed by npm. Installing ${platformPackage}.`);
+        var tempPath = fs.mkdtempSync(path.join(os.tmpdir(), 'typescript-platform-'));
+        try {
+            var rootNpmrcPath = path.join(repoPath, '.npmrc');
+            var rootNpmrc = fs.readFileSync(rootNpmrcPath).toString();
+            var userConfigArg = /(?:begin auth token|:_authToken\s*=|:_password\s*=)/i.test(rootNpmrc)
+                ? ` --userconfig "${rootNpmrcPath}"`
+                : '';
+            var packOutput = run(`npm pack "${lockEntry.resolved}" --pack-destination "${tempPath}" --ignore-scripts --quiet${userConfigArg}`, false, false, true);
+            var archiveName = path.basename(packOutput.split(/\r?\n/).pop());
+            var archivePath = path.join(tempPath, archiveName);
+            if (!test('-f', archivePath)) {
+                throw new Error(`npm pack did not create the expected archive for ${platformPackage}.`);
+            }
+
+            var crypto = require('crypto');
+            var integrityMatches = lockEntry.integrity.split(/\s+/).some(function (integrity) {
+                var separator = integrity.indexOf('-');
+                if (separator <= 0) {
+                    return false;
+                }
+
+                var algorithm = integrity.substring(0, separator);
+                var expectedDigest = integrity.substring(separator + 1);
+                var actualDigest = crypto.createHash(algorithm).update(fs.readFileSync(archivePath)).digest('base64');
+                return actualDigest === expectedDigest;
+            });
+            if (!integrityMatches) {
+                throw new Error(`Integrity verification failed for ${platformPackage}.`);
+            }
+
+            fs.mkdirSync(platformPackagePath, { recursive: true });
+            try {
+                run(`tar -xzf "${archivePath}" -C "${platformPackagePath}" --strip-components=1`, false, false, true);
+            }
+            catch (error) {
+                fs.rmSync(platformPackagePath, { recursive: true, force: true });
+                throw error;
+            }
+        }
+        finally {
+            fs.rmSync(tempPath, { recursive: true, force: true });
+        }
+    }
+}
 
 var buildNodeTask = function (taskPath, outDir, options) {
     options = options || {};
@@ -231,6 +300,7 @@ var buildNodeTask = function (taskPath, outDir, options) {
         } else {
             run('npm install');
         }
+        ensureTypescriptPlatformPackage(taskPath);
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
@@ -270,6 +340,17 @@ var buildNodeTask = function (taskPath, outDir, options) {
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        // TypeScript 7 uses native platform packages that must not ship with the task.
+        var typescriptScopePath = path.join(taskPath, "node_modules", "@typescript");
+        if (test('-d', typescriptScopePath)) {
+            fs.readdirSync(typescriptScopePath)
+                .filter(packageName => packageName.startsWith('typescript-'))
+                .forEach(packageName => rm("-rf", path.join(typescriptScopePath, packageName)));
+
+            if (fs.readdirSync(typescriptScopePath).length === 0) {
+                rm("-rf", typescriptScopePath);
+            }
+        }
         // Clean up broken symlinks in .bin directory
         var binPath = path.join(taskPath, "node_modules", ".bin");
         if (test('-d', binPath)) {
