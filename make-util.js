@@ -202,6 +202,46 @@ function performNpmAudit(taskPath) {
         throw error;
     }
 }
+// Temporary workaround for npm occasionally omitting TypeScript 7's platform-specific optional compiler package from cross-platform lockfile installs.
+// SShould be replaced by a more permanent solution once Typescript 7 is more widely adopted.
+var ensureTypescriptPlatformPackage = function (taskPath) {
+    var typescriptPackageJsonPath = path.join(taskPath, 'node_modules', 'typescript', 'package.json');
+    if (!test('-f', typescriptPackageJsonPath)) {
+        return;
+    }
+
+    var version = JSON.parse(fs.readFileSync(typescriptPackageJsonPath).toString()).version;
+    if (!semver.gte(version, '7.0.0')) {
+        return;
+    }
+
+    var platformPackageName = `typescript-${process.platform}-${process.arch}`;
+    var platformPackagePath = path.join(taskPath, 'node_modules', '@typescript', platformPackageName);
+    if (!test('-d', platformPackagePath)) {
+        var platformPackage = `@typescript/${platformPackageName}@${version}`;
+        console.log(`TypeScript native compiler package was not installed by npm. Installing ${platformPackage}.`);
+        var tempPath = fs.mkdtempSync(path.join(os.tmpdir(), 'typescript-platform-'));
+        try {
+            var packOutput = run(`npm pack "${platformPackage}" --pack-destination "${tempPath}" --ignore-scripts --quiet`, false, false, true);
+            var archiveName = path.basename(packOutput.split(/\r?\n/).pop());
+            var archivePath = path.join(tempPath, archiveName);
+            if (!test('-f', archivePath)) {
+                throw new Error(`npm pack did not create the expected archive for ${platformPackage}.`);
+            }
+            fs.mkdirSync(platformPackagePath, { recursive: true });
+            try {
+                run(`tar -xzf "${archivePath}" -C "${platformPackagePath}" --strip-components=1`, false, false, true);
+            }
+            catch (error) {
+                fs.rmSync(platformPackagePath, { recursive: true, force: true });
+                throw error;
+            }
+        }
+        finally {
+            fs.rmSync(tempPath, { recursive: true, force: true });
+        }
+    }
+}
 
 var buildNodeTask = function (taskPath, outDir, options) {
     options = options || {};
@@ -231,6 +271,7 @@ var buildNodeTask = function (taskPath, outDir, options) {
         } else {
             run('npm install');
         }
+        ensureTypescriptPlatformPackage(taskPath);
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
