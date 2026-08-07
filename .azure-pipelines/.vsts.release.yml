@@ -93,7 +93,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
-      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,PowerShellGallery,NuGet
+      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,NuGet
     featureFlags:
       autoBaseline: false
     sdl:
@@ -174,7 +174,7 @@ extends:
             condition: succeeded()
           - output: nuget
             packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
-            packageParentPath: '$(Build.SourcesDirectory)'
+            packageParentPath: '$(Build.SourcesDirectory)/_package/nuget-packages'
             condition: and(succeeded(), eq(variables['tasksSkipPublish'], 'false'))
             ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'

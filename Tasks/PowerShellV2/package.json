@@ -21,6 +21,9 @@
     "azure-pipelines-tasks-utility-common": "3.272.0",
     "uuid": "^3.0.1"
   },
+  "overrides": {
+    "picomatch": "2.3.2"
+  },
   "devDependencies": {
     "typescript": "^5.7.2"
   }

@@ -46,6 +46,42 @@ function Get-SanitizerActivateStatus {
     return $activateFlag
 }
 
+# Checks the AzureFileCopy.EnableSourcePathHardening pipeline feature flag via
+# Get-VstsPipelineFeature. That cmdlet was only added in a later VstsTaskSdk
+# release, so on an older agent it may not exist yet even though the task's
+# own minimumAgentVersion allows the task to run. Calling it unguarded would
+# throw command-not-found and break the task outright. Guard for that case by
+# checking cmdlet availability first, attempting to re-import the task's local
+# VstsTaskSdk copy if needed, and falling back to "disabled" if the cmdlet is
+# still unavailable or the flag check itself throws.
+function Get-SourcePathHardeningFeatureFlag {
+    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try {
+            Import-Module (Join-Path $PSScriptRoot '..\VstsTaskSdk') -ErrorAction Stop
+            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
+        return $false
+    }
+
+    try {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
+    }
+    catch {
+        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName, [switch]$AllowDataConstructors) {
@@ -281,6 +317,108 @@ function Split-Arguments {
     }
 
     return $result
+}
+
+function Split-AdditionalArguments
+{
+    param([string]$additionalArguments)
+
+    $tokens = New-Object System.Collections.Generic.List[string]
+    $current = New-Object System.Text.StringBuilder
+    $hasToken = $false
+    $i = 0
+    $length = $additionalArguments.Length
+
+    while ($i -lt $length)
+    {
+        $char = $additionalArguments[$i]
+
+        if ($char -eq '"' -or $char -eq "'")
+        {
+            $quoteChar = $char
+            $hasToken = $true
+            $i++
+            # A doubled quote char inside the quoted section (e.g. "" inside a
+            # double-quoted token) is an escaped literal quote, not the
+            # terminator - mirrors the escaping Join-SanitizedArguments applies
+            # when re-quoting a token whose original value contains an embedded
+            # quote character. Without this, such a token would be mis-split.
+            while ($i -lt $length)
+            {
+                if ($additionalArguments[$i] -eq $quoteChar)
+                {
+                    if (($i + 1) -lt $length -and $additionalArguments[$i + 1] -eq $quoteChar)
+                    {
+                        [void]$current.Append($quoteChar)
+                        $i += 2
+                        continue
+                    }
+                    $i++
+                    break
+                }
+                [void]$current.Append($additionalArguments[$i])
+                $i++
+            }
+        }
+        elseif ([char]::IsWhiteSpace($char))
+        {
+            if ($hasToken)
+            {
+                $tokens.Add($current.ToString())
+                [void]$current.Clear()
+                $hasToken = $false
+            }
+            $i++
+        }
+        else
+        {
+            [void]$current.Append($char)
+            $hasToken = $true
+            $i++
+        }
+    }
+
+    if ($hasToken)
+    {
+        $tokens.Add($current.ToString())
+    }
+
+    return $tokens.ToArray()
+}
+
+# Joins an array of already-tokenized arguments (e.g. the output of
+# Protect-ScriptArguments/Split-Arguments, whose original quote characters
+# have already been stripped) back into a single string, re-quoting any
+# token that contains whitespace.
+#
+# This is required whenever sanitized tokens are subsequently re-split by
+# Split-AdditionalArguments (the SourcePath-hardening call-operator path):
+# without re-quoting, a token such as "sub folder\a.txt" would be rejoined as
+# an unquoted "sub folder\a.txt" and then incorrectly re-split into two
+# separate tokens ("sub" and "folder\a.txt"), corrupting the value passed to
+# AzCopy.
+function Join-SanitizedArguments
+{
+    param([string[]]$arguments)
+
+    if (-not $arguments -or $arguments.Count -eq 0)
+    {
+        return ''
+    }
+
+    # A token needs re-quoting if it contains whitespace (or it would be
+    # re-split into multiple tokens by Split-AdditionalArguments) or an
+    # embedded quote character (or that character would be silently swallowed
+    # as an unmatched quote). Any embedded double quote is escaped by
+    # doubling it - the same escape convention Split-AdditionalArguments
+    # understands - so the original token round-trips intact instead of
+    # being corrupted or mis-split (e.g. a"b c would otherwise rejoin as
+    # "a"b c" and re-split into ab, c).
+    $quoted = $arguments | ForEach-Object {
+        if ($_ -match '[\s"]') { '"' + $_.Replace('"', '""') + '"' } else { $_ }
+    }
+
+    return ($quoted -join ' ')
 }
 
 function Join-Matches {
