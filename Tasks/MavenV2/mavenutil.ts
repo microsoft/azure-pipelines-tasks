@@ -208,12 +208,16 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
     let packageUrl = packagingLocation.DefaultPackagingUri;
     tl.debug('collectionUrl=' + collectionUrl);
     tl.debug('packageUrl=' + packageUrl);
-    let collectionHost:string = url.parse(collectionUrl).hostname.toLowerCase();
-    let packageHost:string ;
+    let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
+    let collectionPathName = url.parse(collectionUrl).pathname;
+    if(collectionPathName && collectionPathName.length > 1) {
+        collectionName = collectionName + collectionPathName.toLowerCase();
+        tl.debug('collectionName=' + collectionName);
+    }
     if (packageUrl) {
-        packageHost = url.parse(packageUrl).hostname.toLowerCase();
+        url.parse(packageUrl).hostname.toLowerCase();
     } else {
-        packageHost = collectionHost;
+        packageUrl = collectionName;
     }
     let parseRepos:(project) => void = function(project) {
         if (project && project.repositories) {
@@ -222,13 +226,11 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                 if (r.repository) {
                     for (let repo of r.repository) {
                         repo = repo instanceof Array ? repo[0] : repo;
-                        let repoUrl:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                        const repoHost = (url.parse(repoUrl).hostname || '').toLowerCase();
-                        const hostMatches = (host: string) => repoHost === host || repoHost.endsWith('.' + host);
-                        if (repoUrl && (hostMatches(collectionHost) ||
-                                    hostMatches(packageHost) ||
-                                    packagingLocation.PackagingUris.some(uri => hostMatches((url.parse(uri).hostname).toLowerCase())))) {
-                        tl.debug('using credentials for url: ' + repoUrl);
+                        let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                        if (url && (url.toLowerCase().includes(collectionName) ||
+                                    url.toLowerCase().includes(packageUrl) ||
+                                    packagingLocation.PackagingUris.some(uri => url.toLowerCase().startsWith(uri.toLowerCase())))) {
+                        tl.debug('using credentials for url: ' + url);
                         repos.push({
                             id: (repo.id && repo.id instanceof Array)
                                 ? repo.id[0]

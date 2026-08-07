@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as path from "path";
 
 import { TaskMockRunner } from "azure-pipelines-task-lib/mock-run";
-import { TaskLibAnswers } from "azure-pipelines-task-lib/mock-answer";
 
 import { registerLocationHelpersMock } from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 
@@ -94,70 +93,3 @@ export const initializeTest = (taskRunner: TaskMockRunner): void => {
     taskRunner.registerMockExport("writefile", (file: string, data: string | Buffer, options?: string | fs.WriteFileOptions): void => {})
     taskRunner.registerMockExport("cp", (source: string, dest: string, options?: string, continueOnError?: boolean): void => {})
 }
-
-export const runMavenFeedHostTest = (): void => {
-    const repoUrl = process.env["MAVEN_TEST_REPO_URL"];
-
-    const taskPath = path.join(__dirname, "..", "maventask.js");
-    const taskRunner = new TaskMockRunner(taskPath);
-
-    initializeTest(taskRunner);
-
-    const inputs: MavenTaskInputs = {
-        mavenVersionSelection: "Default",
-        mavenPOMFile: "pom.xml",
-        options: "",
-        goals: "package",
-        javaHomeSelection: "JDKVersion",
-        jdkVersion: "default",
-        publishJUnitResults: true,
-        testResultsFiles: "**/TEST-*.xml",
-        mavenOpts: "-Xmx2048m",
-        checkstyleAnalysisEnabled: false,
-        pmdAnalysisEnabled: false,
-        findbugsAnalysisEnabled: false,
-        mavenFeedAuthenticate: true
-    };
-    setInputs(taskRunner, inputs);
-
-    delete process.env["M2_HOME"];
-
-    const settingsPath = path.join(getTempDir(), "settings.xml");
-
-    const effectivePom =
-        "Effective POMs, after inheritance, interpolation, and profiles are applied:\r\n" +
-        "\r\n" +
-        "<!-- Effective POM for project 'com.microsoft.xplatalm:xplatalmApp:jar:1.0-SNAPSHOT' -->\r\n" +
-        "\r\n" +
-        "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\r\n" +
-        "  <modelVersion>4.0.0</modelVersion>\r\n" +
-        "  <groupId>com.microsoft.xplatalm</groupId>\r\n" +
-        "  <artifactId>xplatalmApp</artifactId>\r\n" +
-        "  <version>1.0-SNAPSHOT</version>\r\n" +
-        "  <repositories>\r\n" +
-        "    <repository>\r\n" +
-        "      <id>testFeed</id>\r\n" +
-        "      <url>" + repoUrl + "</url>\r\n" +
-        "    </repository>\r\n" +
-        "  </repositories>\r\n" +
-        "</project>\r\n";
-
-    const answers: TaskLibAnswers = {
-        which: { mvn: "/home/bin/maven/bin/mvn" },
-        checkPath: {
-            "/home/bin/maven/bin/mvn": true,
-            "pom.xml": true
-        },
-        exec: {
-            "/home/bin/maven/bin/mvn -version": { code: 0, stdout: "Maven version 1.0.0" },
-            "/home/bin/maven/bin/mvn -f pom.xml help:effective-pom": { code: 0, stdout: effectivePom },
-            [`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} package`]: { code: 0, stdout: "Maven package done" },
-            "/home/bin/maven/bin/mvn -f pom.xml package": { code: 0, stdout: "Maven package done" }
-        },
-        findMatch: { "**/TEST-*.xml": ["/user/build/fun/test-123.xml"] },
-        exist: { [path.join(getTempDir(), ".mavenInfo")]: true }
-    };
-    taskRunner.setAnswers(answers);
-
-    taskRunner.run();
-};
