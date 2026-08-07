@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 274,
+    "Minor": 278,
     "Patch": 0
   },
   "groups": [],
@@ -47,6 +47,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Additional restore key prefixes that are used if the primary key misses. This can be a newline-delimited list of key prefixes."
+    },
+    {
+      "name": "saveOnPartialSuccess",
+      "type": "boolean",
+      "label": "Save cache on partial success",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds."
     }
   ],
   "instanceNameFormat": "Cache",
