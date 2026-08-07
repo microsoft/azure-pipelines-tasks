@@ -28,7 +28,6 @@ steps:
       arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }} -IncludeNodeModules'
     ${{ else }}:
       arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }}'
-  continueOnError: true
 
 # Authenticode sign our authored task scripts with the Microsoft certificate.
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
