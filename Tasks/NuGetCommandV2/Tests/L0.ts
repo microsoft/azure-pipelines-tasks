@@ -433,6 +433,16 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues[1], 'loc_mock_PackagesFailedToInstall', 'should have error from task runner');
     });
 
+    it('restore fails when NuGet skips PackageReference projects with exit code 0', async () => {
+        const tp = path.join(__dirname, './RestoreTests/failRestoreGraph.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 2, 'should have 1 error from nuget and one from task');
+        assert(tr.errorIssues[0].includes('Error reading msbuild project information'), 'should have restore graph error from nuget');
+        assert.equal(tr.errorIssues[1], 'loc_mock_PackagesFailedToInstall', 'should have error from task runner');
+    });
+
     it('restore succeeds on ubuntu 22', async () => {
         const tp = path.join(__dirname, './RestoreTests/singleslnUbuntu22.js')
         const tr = new ttm.MockTestRunner(tp);

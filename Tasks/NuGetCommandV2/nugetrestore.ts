@@ -284,8 +284,11 @@ async function restorePackages(solutionFile: string, options: RestoreOptions): P
         nugetTool.arg(options.configFile);
     }
 
-    // Listen for stderr output to write timeline results for the build.
+    let stdOutText = "";
     let stdErrText = "";
+    nugetTool.on('stdout', (data: Buffer) => {
+        stdOutText += data.toString('utf-8');
+    });
     nugetTool.on('stderr', (data: Buffer) => {
         stdErrText += data.toString('utf-8');
     });
@@ -299,5 +302,15 @@ async function restorePackages(solutionFile: string, options: RestoreOptions): P
             stdErrText.trim());
     }
 
+    const restoreGraphFailure = getRestoreGraphFailure(stdOutText + stdErrText);
+    if (restoreGraphFailure) {
+        throw new Error(restoreGraphFailure);
+    }
+
     return execResult;
+}
+
+function getRestoreGraphFailure(output: string): string | undefined {
+    const match = output.match(/Error reading msbuild project information[^\r\n]*/i);
+    return match ? match[0].trim() : undefined;
 }
