@@ -3,7 +3,6 @@
   "name": "BicepDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "preview": true,
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
-    "Patch": 3
+    "Minor": 278,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -369,6 +368,35 @@
       "visibleRule": "type = deployment && (operation = validate || operation = whatIf)"
     }
   ],
+  "dataSourceBindings": [
+    {
+      "target": "subscriptionId",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureSubscriptions",
+      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}} ({{{subscriptionId}}})\" }"
+    },
+    {
+      "target": "resourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "subscriptionId": "$(subscriptionId)"
+      }
+    },
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocationsByDeploymentScope",
+      "parameters": {
+        "subscriptionId": "$(subscriptionId)",
+        "deploymentScope": "$(scope)"
+      }
+    }
+  ],
   "messages": {
     "StartingOperation": "ms-resource:loc.messages.StartingOperation",
     "UsingTemplateFile": "ms-resource:loc.messages.UsingTemplateFile",
@@ -399,7 +427,9 @@
     "UnknownPropertyChangeType": "ms-resource:loc.messages.UnknownPropertyChangeType",
     "InvalidJsonValue": "ms-resource:loc.messages.InvalidJsonValue",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
+    "FailedToRemoveCertificate": "ms-resource:loc.messages.FailedToRemoveCertificate",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",

@@ -3,7 +3,6 @@
   "name": "BicepDeploy",
   "friendlyName": "Bicep Deploy",
   "description": "Deploy and Manage Azure Resources using Bicep Files",
-  "preview": true,
   "helpMarkDown": "[Learn more about this task](https://aka.ms/bicepdeploytaskreadme)",
   "category": "Deploy",
   "visibility": [
@@ -13,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
-    "Patch": 3
+    "Minor": 278,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Bicep $(operation) $(name)",
@@ -369,6 +368,35 @@
       "visibleRule": "type = deployment && (operation = validate || operation = whatIf)"
     }
   ],
+  "dataSourceBindings": [
+    {
+      "target": "subscriptionId",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureSubscriptions",
+      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}} ({{{subscriptionId}}})\" }"
+    },
+    {
+      "target": "resourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{subscriptionId}}}/resourcegroups?$skiptoken={{{skiptoken}}}&api-version=2016-02-01",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "subscriptionId": "$(subscriptionId)"
+      }
+    },
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocationsByDeploymentScope",
+      "parameters": {
+        "subscriptionId": "$(subscriptionId)",
+        "deploymentScope": "$(scope)"
+      }
+    }
+  ],
   "messages": {
     "StartingOperation": "Starting %s %s at %s '%s' scope%s",
     "UsingTemplateFile": "Using template file: %s",
@@ -399,7 +427,9 @@
     "UnknownPropertyChangeType": "Unknown property change type: %s.",
     "InvalidJsonValue": "Invalid JSON value: %s",
     "FailedToLogout": "The following error occurred while logging out: %s",
+    "FailedToRemoveCertificate": "The following error occurred while removing the service principal certificate file: %s",
     "SettingAzureCloud": "Setting active cloud to: %s",
+    "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
     "LoginFailed": "Azure login failed",
     "MSILoginFailed": "Azure login failed using Managed Service Identity",
     "AuthSchemeNotSupported": "Auth Scheme %s is not supported",

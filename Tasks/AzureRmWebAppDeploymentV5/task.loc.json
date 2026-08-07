@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 277,
-    "Patch": 0
+    "Minor": 278,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -721,6 +721,7 @@
     "InvalidConnectionType": "ms-resource:loc.messages.InvalidConnectionType",
     "InvalidImageSourceType": "ms-resource:loc.messages.InvalidImageSourceType",
     "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
+    "InvalidPublishProfileValue": "ms-resource:loc.messages.InvalidPublishProfileValue",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
     "DeployLogsURL": "ms-resource:loc.messages.DeployLogsURL",

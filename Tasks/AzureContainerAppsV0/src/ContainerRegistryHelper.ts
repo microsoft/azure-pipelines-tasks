@@ -1,6 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as child from 'child_process';
-import { CommandHelper } from './CommandHelper';
 import { Utility } from './Utility';
 
 export class ContainerRegistryHelper {
@@ -39,8 +38,21 @@ export class ContainerRegistryHelper {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with access token`);
         const registry = `${acrName}.azurecr.io`;
         try {
-            const command: string = `CA_ADO_TASK_ACR_ACCESS_TOKEN=$(az acr login --name ${acrName} --output json --expose-token --only-show-errors | jq -r '.accessToken'); docker login ${acrName}.azurecr.io -u 00000000-0000-0000-0000-000000000000 -p $CA_ADO_TASK_ACR_ACCESS_TOKEN > /dev/null 2>&1`;
-            await new CommandHelper().execCommandAsync(command);
+            const tokenJson = child.execFileSync('az', [
+                'acr', 'login',
+                '--name', acrName,
+                '--output', 'json',
+                '--expose-token',
+                '--only-show-errors'
+            ], { encoding: 'utf8' });
+
+            const accessToken = JSON.parse(tokenJson).accessToken;
+
+            child.execFileSync('docker', [
+                'login', '--password-stdin',
+                '--username', '00000000-0000-0000-0000-000000000000',
+                registry
+            ], { input: accessToken, stdio: 'pipe' });
             this.authenticatedRegistries.add(registry);
         } catch (err) {
             tl.error(tl.loc('AcrAccessTokenAuthFailed', acrName));
