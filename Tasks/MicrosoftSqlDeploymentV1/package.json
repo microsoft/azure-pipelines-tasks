@@ -1,0 +1,30 @@
+{
+  "name": "vsts-tasks-microsoftsqldeployment",
+  "version": "1.0.0",
+  "description": "Microsoft SQL Deployment - Cross-platform SQL Server, Azure SQL, and SQL MI deployment task",
+  "main": "microsoftsqldeployment.js",
+  "scripts": {
+    "build": "node ../../make.js build --task MicrosoftSqlDeploymentV1",
+    "serverBuild": "node ../../make.js serverBuild --task MicrosoftSqlDeploymentV1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.3.1",
+    "azure-pipelines-task-lib": "^5.2.10",
+    "azure-pipelines-tool-lib": "^2.0.10"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}
