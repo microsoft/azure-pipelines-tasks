@@ -84,6 +84,20 @@ When a violation is detected, the error message lists the distinct offending cha
 
 `inlineScript` is *not* validated — inline scripts are arbitrary code that the pipeline author intentionally wrote. `scriptPath` and `cwd` are also not validated; they are path inputs, not shell-spliced.
 
+### Azure CLI configuration isolation (`useGlobalConfig`)
+
+By default (`useGlobalConfig: false`) each task invocation runs with its own isolated `AZURE_CONFIG_DIR`. A fresh, unpredictably-named directory is created under `Agent.TempDirectory` when the task starts and is deleted when the task finishes. This is a security hardening: it prevents an earlier step on the same (typically self-hosted) agent from pre-seeding a poisoned Azure CLI `config` file (for example `extension.index_url` / `use_dynamic_install`) that would otherwise execute under the service-connection identity when the task invokes `az`.
+
+**Impact on configuration persistence:** because the directory is per-invocation and removed at task end, configuration written in one Azure CLI task is **not** shared with other Azure CLI tasks in the same job. This applies to `az configure --defaults`, `az config set`, and `az extension add`. A second task that relies on defaults from the first (for example `az ml workspace show` without `--workspace-name`) will fail with an error such as `one of the following arguments are required: --workspace-name/-w`.
+
+To share Azure CLI configuration across tasks, use one of the following:
+
+- Re-run the configuration command (for example `az configure --defaults ...`) in each Azure CLI task, or
+- Pass the values explicitly on each command (for example `--resource-group`, `--workspace-name`), or set the corresponding `AZURE_DEFAULTS_*` environment variables on the task, or
+- Set `useGlobalConfig: true` so the task uses the shared global Azure CLI profile (`~/.azure`). Note that on self-hosted agents the global profile can persist across runs on the same agent, which is a broader scope than the per-task temp directory; on Microsoft-hosted agents the VM is fresh each run.
+
+> **Note:** This per-invocation isolation was introduced together with the task dependency/version updates in the 2.277.x range. Previously the task pointed `AZURE_CONFIG_DIR` at a fixed shared path (`$(Agent.TempDirectory)/.azclitask`), so defaults did carry across tasks. That cross-task persistence is intentionally no longer guaranteed unless `useGlobalConfig: true` is set.
+
 * **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
 
 * **Access service principal details in script**: Select this check box if you want to add service principal id , service principal key and tenantId of the Azure endpoint to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script. This is honored only when the Azure endpoint has Service Principal authentication scheme. \

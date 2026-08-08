@@ -433,6 +433,7 @@ export class azureclitask {
         // attacker pre-seeding and the tight perms come from the agent temp root.
         this.azCliConfigPath = createPerInvocationAzureConfigDir(tempDir);
         console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
+        console.log(tl.loc('AzureConfigDirIsolationNotice'));
     }
 
     private static setAzureCloudBasedOnServiceEndpoint(): void {
