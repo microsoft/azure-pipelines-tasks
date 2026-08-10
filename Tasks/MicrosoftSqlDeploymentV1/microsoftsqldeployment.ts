@@ -252,7 +252,10 @@ async function main(): Promise<void> {
                     authMethod: connectionConfig.FormattedAuthentication ?? 'sqlauthentication',
                     hasAzureSubscription: !!azureSubscription,
                     sqlPackageDiscoveryMethod: needsSqlPackage ? (sqlpackagePath ? 'userSpecified' : 'discovered') : undefined,
-                    sqlcmdDiscoveryMethod: needsSqlcmd ? (sqlcmdPath ? 'userSpecified' : 'discovered') : undefined
+                    sqlcmdDiscoveryMethod: needsSqlcmd ? (sqlcmdPath ? 'userSpecified' : 'discovered') : undefined,
+                    sqlcmdCredentialSource: needsSqlcmd
+                        ? (sqlcmdCredentials?.source ?? 'default')
+                        : undefined
                 };
                 console.log('##vso[telemetry.publish area=TaskHub;feature=MicrosoftSqlDeploymentV1]'
                     + JSON.stringify(telemetry));
@@ -349,6 +352,7 @@ function resolveSqlcmdCredentials(
             return {
                 tenantId: azureEndpoint.tenantID,
                 authMethodOverride: 'ActiveDirectoryAzurePipelines',
+                source: 'azurePipelines',
                 envOverrides: {
                     AZURESUBSCRIPTION_SERVICE_CONNECTION_ID: azureSubscription,
                     AZURESUBSCRIPTION_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
@@ -362,10 +366,28 @@ function resolveSqlcmdCredentials(
             tl.setSecret(azureEndpoint.servicePrincipalKey);
             return {
                 tenantId: azureEndpoint.tenantID,
+                source: 'clientSecret',
                 envOverrides: {
                     AZURE_TENANT_ID: azureEndpoint.tenantID,
                     AZURE_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
                     AZURE_CLIENT_SECRET: azureEndpoint.servicePrincipalKey
+                }
+            };
+        }
+
+        // Certificate-backed service principals use the ServicePrincipal scheme but carry a PEM
+        // instead of servicePrincipalKey, so the branch above does not match them. AzureRMEndpoint
+        // writes the PEM to disk, and EnvironmentCredential reads AZURE_CLIENT_CERTIFICATE_PATH.
+        // Without this, the identity is never injected and azidentity falls back to
+        // DefaultAzureCredential, which resolves nothing on a hosted agent.
+        if (scheme === 'serviceprincipal' && azureEndpoint.servicePrincipalClientID && azureEndpoint.servicePrincipalCertificatePath) {
+            return {
+                tenantId: azureEndpoint.tenantID,
+                source: 'clientCertificate',
+                envOverrides: {
+                    AZURE_TENANT_ID: azureEndpoint.tenantID,
+                    AZURE_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
+                    AZURE_CLIENT_CERTIFICATE_PATH: azureEndpoint.servicePrincipalCertificatePath
                 }
             };
         }

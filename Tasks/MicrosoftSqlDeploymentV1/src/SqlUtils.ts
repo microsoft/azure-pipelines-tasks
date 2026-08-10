@@ -2,7 +2,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
 import Constants from './Constants';
 import { SqlcmdExecutor, SqlcmdCredentials } from './SqlcmdExecutor';
-import { Writable } from 'stream';
 
 export interface ConnectionResult {
     /** True if connection succeeds, false otherwise */
@@ -50,7 +49,10 @@ export default class SqlUtils {
             return result.ipAddress;
         } else {
             // Connection failed but not due to firewall
-            throw new Error(tl.loc('FailedToDetectIPAddress', result.errorMessage || 'Unknown error'));
+            const detail = result.errorMessage
+                || `sqlcmd exited without output while connecting to '${connectionConfig.Server}'. `
+                 + `Run the pipeline with system.debug enabled to capture the sqlcmd command and output.`;
+            throw new Error(tl.loc('FailedToDetectIPAddress', detail));
         }
     }
 
@@ -87,24 +89,19 @@ export default class SqlUtils {
             // Secrets go through a scoped env map — process.env is never mutated.
             const sqlcmdEnv = SqlcmdExecutor.buildEnvironment(config, credentials);
 
-            // Execute sqlcmd
-            const result = await tl.exec(sqlcmdPath, sqlcmdArgs, {
+            // Output is captured through the stdout/stderr events because task-lib only writes
+            // to outStream/errStream when silent is false. Combining silent with custom streams
+            // captures nothing, which leaves the probe unable to read the firewall message and
+            // therefore unable to parse the client IP out of it.
+            const runner = tl.tool(sqlcmdPath).arg(sqlcmdArgs);
+            runner.on('stdout', (data: Buffer) => { sqlcmdOutput += data.toString(); });
+            runner.on('stderr', (data: Buffer) => { sqlcmdError += data.toString(); });
+
+            const result = await runner.exec({
                 env: sqlcmdEnv,
                 silent: true,
-                ignoreReturnCode: true,
-                outStream: new Writable({
-                    write: (chunk: Buffer, encoding: string, callback: () => void) => {
-                        sqlcmdOutput += chunk.toString();
-                        callback();
-                    }
-                }),
-                errStream: new Writable({
-                    write: (chunk: Buffer, encoding: string, callback: () => void) => {
-                        sqlcmdError += chunk.toString();
-                        callback();
-                    }
-                })
-            });
+                ignoreReturnCode: true
+            } as any);
 
             if (result === 0) {
                 // Connection succeeded
