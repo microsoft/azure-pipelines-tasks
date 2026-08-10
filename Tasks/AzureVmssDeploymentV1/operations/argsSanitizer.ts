@@ -88,12 +88,13 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(inputArguments, {
-            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % \n #
+            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
             // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
             // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // CR/LF are rejected: at the Invoke-Expression sink LF is a statement separator (WI-75787).
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%\\n#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).

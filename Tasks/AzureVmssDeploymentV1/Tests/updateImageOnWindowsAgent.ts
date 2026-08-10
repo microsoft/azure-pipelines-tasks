@@ -23,6 +23,11 @@ if (process.env["_safeArgs_"] === "true") {
     tr.setInput("customScriptArguments", "a`;b");
 }
 
+if (process.env["_crlfArgs_"] === "true") {
+    // LF is a PowerShell statement separator at the Invoke-Expression sink, so it must be rejected.
+    tr.setInput("customScriptArguments", "arg1\nWrite-Host pwned");
+}
+
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
