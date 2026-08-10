@@ -94,7 +94,13 @@ export class AzureAppServiceUtility {
         // is gated by the ALLOWSCOPELEVELTOKEN pipeline feature and falls back to the ARM token
         // when that feature is disabled, preserving previous behavior.
         const credentials = this._appService._client.getCredentials();
-        const token = await credentials.acquireTokenForScope("appservice");
+        let token: string;
+        try {
+            token = await credentials.acquireTokenForScope("appservice");
+        } catch (error) {
+            publishKuduAuthModeTelemetry({ authMethod: "Bearer", source: "msDeploy", credentials: credentials, telemetryFeature: "AzureAppServiceDeployment" });
+            throw error;
+        }
         tl.setSecret(token);
         // MSDeploy always uses a token (never SCM basic auth), so record it in the unified auth-mode
         // census so the Windows web-deploy path is counted alongside the standard Kudu REST path.
