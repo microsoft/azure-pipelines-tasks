@@ -199,7 +199,7 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
                                 (isTrusted(collectionUrlParsed, repoUrlParsed) ||
                                 isTrusted(packageUrlParsed, repoUrlParsed) ||
                                 packagingLocation.PackagingUris.some(uri => isTrusted(parseUrl(uri), repoUrlParsed)))) {
-                            tl.debug('using credentials for host: ' + repoUrlParsed.host);
+                            tl.debug('using credentials for url: ' + repoUrl);
                             repos.push({
                                 id: (repo.id && repo.id instanceof Array)
                                     ? repo.id[0]
