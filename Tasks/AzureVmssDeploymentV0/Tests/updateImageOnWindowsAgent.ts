@@ -28,6 +28,16 @@ if (process.env["_crlfArgs_"] === "true") {
     tr.setInput("customScriptArguments", "arg1\nWrite-Host pwned");
 }
 
+if (process.env["_crlfBacktick1_"] === "true") {
+    // Single backtick before LF: the allowlist lookbehind would exempt the newline; must still be rejected.
+    tr.setInput("customScriptArguments", "arg1`\nWrite-Host pwned");
+}
+
+if (process.env["_crlfBacktick2_"] === "true") {
+    // Two backticks before LF: first escapes the second, the LF still separates statements; must be rejected.
+    tr.setInput("customScriptArguments", "arg1``\nWrite-Host pwned");
+}
+
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
