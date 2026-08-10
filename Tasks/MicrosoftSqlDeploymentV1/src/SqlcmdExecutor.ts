@@ -14,6 +14,12 @@ export interface SqlcmdCredentials {
     authMethodOverride?: string;
     /** Environment variables that carry the service connection identity to azidentity. */
     envOverrides?: { [key: string]: string };
+    /**
+     * Records the credential mechanism that supplied the identity, and is reported in
+     * telemetry. An authentication failure can then be traced to the credential that was
+     * actually used instead of being inferred from the error text.
+     */
+    source?: 'azurePipelines' | 'clientSecret' | 'clientCertificate' | 'tenantOnly';
 }
 
 export class SqlcmdExecutor {

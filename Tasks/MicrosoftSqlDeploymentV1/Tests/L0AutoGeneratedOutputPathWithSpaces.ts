@@ -1,5 +1,10 @@
-// Verifies the auto-generated /OutputPath is quoted so a temp directory containing
-// spaces is not split into multiple arguments by parseAdditionalArguments().
+// Verifies the auto-generated /OutputPath survives a temp directory containing spaces.
+//
+// It is pushed as its own argument rather than appended to additionalArguments, which is
+// re-parsed and split on unquoted spaces. Quoting it inside that string is not a fix either:
+// the quotes are preserved through parsing, the agent quotes the argument again, and
+// SqlPackage rejects it with "Illegal characters in path". So the value must arrive whole
+// and unquoted.
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
@@ -46,7 +51,7 @@ const a: ma.TaskLibAnswers = {
 };
 
 // The path must arrive as a single quoted argument, not split on the space.
-(a.exec as any)[`/usr/local/bin/sqlpackage /Action:Script /SourceFile:test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!; /OutputPath:"${expectedOutputFile}"`] = {
+(a.exec as any)[`/usr/local/bin/sqlpackage /Action:Script /SourceFile:test.dacpac /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!; /OutputPath:${expectedOutputFile}`] = {
     code: 0,
     stdout: 'Script generated successfully.'
 };
