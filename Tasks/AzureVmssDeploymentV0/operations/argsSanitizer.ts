@@ -88,12 +88,13 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(inputArguments, {
-            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % \n #
+            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
             // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
             // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%\\n#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).
@@ -101,7 +102,12 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
             saniziteRegExp: new RegExp("(?<!\\\\)([^a-zA-Z0-9\\\\ _'\"\\-=\\/:.*+%])", 'g')
         });
 
-    if (sanitizedArgs === inputArguments) {
+    // CR/LF must be rejected unconditionally on the PowerShell path: the allowlist's escape-aware
+    // (?<!`) lookbehind would otherwise exempt a backtick-preceded newline, which survives to the
+    // Invoke-Expression sink as a statement separator (WI-75787).
+    const hasPsNewline = isPowerShell && /[\r\n]/.test(inputArguments);
+
+    if (sanitizedArgs === inputArguments && !hasPsNewline) {
         return;
     }
 
@@ -118,7 +124,7 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
         }
     }
 
-    if (sanitizedArgs !== inputArguments) {
+    if (sanitizedArgs !== inputArguments || hasPsNewline) {
         const offendingChars = collectOffendingChars(
             (sanitizerTelemetry as { removedSymbols?: Record<string, number> } | null)?.removedSymbols
         );
