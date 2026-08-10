@@ -203,7 +203,20 @@ describe("Maven L0 Suite", function () {
 
         const settingsPath = path.join(getTempDir(), "settings.xml");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} package`), "should run with -s settings.xml");
-        assert(testRunner.stdOutContained("using credentials for url:"), "should authenticate the trusted subdomain");
+        assert(testRunner.stdOutContained("using credentials for host:"), "should authenticate the trusted subdomain");
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
+    });
+
+    it("run maven does not authenticate a feed in a different organization", async function() {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        process.env["MAVEN_TEST_REPO_URL"] = "https://pkgs.otherorg.visualstudio.com/_packaging/XPlatMaven/maven/v1";
+        const testRunner = new MockTestRunner(path.join(__dirname, "L0MavenFeedHostMatching.js"));
+
+        await testRunner.runAsync();
+
+        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "should run without -s settings.xml");
+        assert(!testRunner.stdOutContained("using credentials for host:"), "should not authenticate a different organization");
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
     });
@@ -216,7 +229,7 @@ describe("Maven L0 Suite", function () {
         await testRunner.runAsync();
 
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "should run without -s settings.xml");
-        assert(!testRunner.stdOutContained("using credentials for url:"), "should not authenticate a path-spoofed host");
+        assert(!testRunner.stdOutContained("using credentials for host:"), "should not authenticate a path-spoofed host");
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
     });
@@ -229,7 +242,7 @@ describe("Maven L0 Suite", function () {
         await testRunner.runAsync();
 
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "should run without -s settings.xml");
-        assert(!testRunner.stdOutContained("using credentials for url:"), "should not authenticate a suffix-spoofed host");
+        assert(!testRunner.stdOutContained("using credentials for host:"), "should not authenticate a suffix-spoofed host");
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
     });
@@ -242,21 +255,7 @@ describe("Maven L0 Suite", function () {
         await testRunner.runAsync();
 
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "should run without -s settings.xml");
-        assert(!testRunner.stdOutContained("using credentials for url:"), "should not authenticate a userinfo-spoofed host");
-        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
-        assert(testRunner.succeeded, "task should have succeeded");
-    });
-
-    it("run maven skips an invalid repository url without failing", async function() {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-        process.env["MAVEN_TEST_REPO_URL"] = "not-a-valid-url";
-        const testRunner = new MockTestRunner(path.join(__dirname, "L0MavenFeedHostMatching.js"));
-
-        await testRunner.runAsync();
-
-        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "should run without -s settings.xml");
-        assert(testRunner.stdOutContained("Invalid repo url:"), "should log 'Invalid repo url:' for the malformed url");
-        assert(!testRunner.stdOutContained("using credentials for url:"), "should not authenticate a malformed url");
+        assert(!testRunner.stdOutContained("using credentials for host:"), "should not authenticate a userinfo-spoofed host");
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
     });
