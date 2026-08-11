@@ -155,49 +155,65 @@ export class SqlPackageExecutor {
     }
 
     /**
-     * Parse additional arguments string, respecting quoted values
+     * Split an additional arguments string into argv elements.
+     *
+     * Quotes are treated as syntax and removed once they have done their job of keeping a value
+     * together. Retaining them puts literal quote characters in the argument, and SqlPackage
+     * rejects those as illegal path characters, so /OutputPath:"C:\out dir\x.sql" would fail
+     * even though quoting is the documented way to pass a path containing spaces.
      */
     private static parseAdditionalArguments(additionalArguments: string): string[] {
         const args: string[] = [];
         let current = '';
         let inQuotes = false;
         let quoteChar = '';
+        let hasContent = false;
+
+        const flush = (): void => {
+            if (hasContent || current.length > 0) {
+                args.push(current);
+            }
+            current = '';
+            hasContent = false;
+        };
 
         for (const char of additionalArguments) {
             if ((char === '"' || char === "'") && !inQuotes) {
                 inQuotes = true;
                 quoteChar = char;
-                current += char;
+                // An empty quoted value is still a value, so remember it was quoted.
+                hasContent = true;
             } else if (char === quoteChar && inQuotes) {
                 inQuotes = false;
                 quoteChar = '';
-                current += char;
             } else if (char === ' ' && !inQuotes) {
-                if (current.trim()) {
-                    args.push(current.trim());
-                    current = '';
+                if (current.length > 0 || hasContent) {
+                    flush();
                 }
             } else {
                 current += char;
             }
         }
 
-        if (current.trim()) {
-            args.push(current.trim());
+        if (current.length > 0 || hasContent) {
+            flush();
         }
 
         return args;
     }
 
     /**
-     * Extract /OutputPath value from additional arguments if present.
-     * Handles double-quoted, single-quoted, and unquoted paths.
+     * Extract the user-specified output path from additional arguments, if there is one.
+     *
+     * Recognises both /OutputPath and its documented short form /op. Missing /op made the task
+     * treat the argument as absent and append a second, auto-generated /OutputPath.
+     * Handles double-quoted, single-quoted, and unquoted values.
      */
     private static extractOutputPath(additionalArguments?: string): string | undefined {
         if (!additionalArguments) {
             return undefined;
         }
-        const match = additionalArguments.match(/\/OutputPath[:\s]+(?:"([^"]+)"|'([^']+)'|([^\s]+))/i);
+        const match = additionalArguments.match(/\/(?:OutputPath|op)[:\s]+(?:"([^"]+)"|'([^']+)'|([^\s]+))/i);
         return match ? (match[1] || match[2] || match[3]) : undefined;
     }
 }
