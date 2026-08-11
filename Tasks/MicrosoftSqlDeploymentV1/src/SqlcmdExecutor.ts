@@ -34,7 +34,13 @@ export class SqlcmdExecutor {
         additionalArguments?: string,
         credentials?: SqlcmdCredentials
     ): Promise<void> {
-        const args = this.buildConnectionArguments(connectionConfig, credentials, 30);
+        this.warnAboutUnappliedConnectionStringProperties(connectionConfig);
+
+        const args = this.buildConnectionArguments(
+            connectionConfig,
+            credentials,
+            connectionConfig.ConnectTimeoutSeconds ?? 30
+        );
 
         // Abort and return a non-zero exit code when a statement fails. Without -b,
         // go-sqlcmd prints the error but still exits 0, so a half-applied migration would
@@ -48,7 +54,7 @@ export class SqlcmdExecutor {
 
         // Input file
         args.push('-i');
-        args.push(scriptPath);
+        args.push(this.validateInputFilePath(scriptPath));
 
         if (additionalArguments) {
             args.push(...this.parseAdditionalArguments(additionalArguments));
@@ -184,11 +190,90 @@ export class SqlcmdExecutor {
                 break;
         }
 
+        // Transport security. sqlcmd neither encrypts nor validates the server certificate unless
+        // it is told to, so a connection string that explicitly asks for encryption must be
+        // translated into switches. Dropping them would quietly downgrade the connection.
+        const encrypt = connectionConfig.Encrypt;
+        if (encrypt) {
+            args.push('-N');
+            args.push(encrypt);
+        }
+
+        if (connectionConfig.TrustServerCertificate) {
+            args.push('-C');
+        }
+
+        const hostNameInCertificate = connectionConfig.HostNameInCertificate;
+        if (hostNameInCertificate) {
+            args.push('-F');
+            args.push(hostNameInCertificate);
+        }
+
+        // ReadWrite is the server default and has no switch, so only ReadOnly is translated.
+        if (connectionConfig.ApplicationIntent === 'readonly') {
+            args.push('-K');
+            args.push('ReadOnly');
+        }
+
         // Login timeout
         args.push('-l');
         args.push(String(loginTimeoutSeconds));
 
         return args;
+    }
+
+    /**
+     * sqlcmd is driven by switches, not by a connection string, so only the properties that have a
+     * matching switch survive the translation in buildConnectionArguments. The DACPAC path has no
+     * such limitation because SqlPackage is handed the connection string whole. Warn rather than
+     * fail: the properties left over after the security-relevant ones are translated are pooling
+     * and diagnostic hints that do not change the outcome of a one-shot script run.
+     */
+    private static warnAboutUnappliedConnectionStringProperties(connectionConfig: SqlConnectionConfig): void {
+        const applied = new Set<string>([
+            'data source', 'server', 'addr', 'address', 'network address',
+            'initial catalog', 'database',
+            'user id', 'user', 'uid',
+            'password', 'pwd',
+            'authentication', 'integrated security', 'trusted_connection',
+            'trustservercertificate', 'trust server certificate',
+            'hostnameincertificate', 'host name in certificate',
+            'applicationintent', 'application intent',
+            'connect timeout', 'connection timeout', 'timeout'
+        ]);
+
+        // Encrypt only counts as applied when its value is one SqlClient defines; anything else is
+        // reported so the user learns the encryption level they asked for was not honoured.
+        if (connectionConfig.Encrypt) {
+            applied.add('encrypt');
+        }
+
+        const ignored = connectionConfig.Keys.filter(key => !applied.has(key.toLowerCase()));
+        if (ignored.length > 0) {
+            tl.warning(tl.loc('SqlcmdConnectionPropertiesNotApplied', ignored.join(', ')));
+        }
+    }
+
+    /**
+     * Reject script paths that sqlcmd cannot receive unambiguously.
+     *
+     * -i takes a comma-separated list of files, so a comma inside a path is read as a separator
+     * and sqlcmd looks for files that do not exist. Every other character the task might see -
+     * spaces, semicolons, quotes, ampersands, equals signs, parentheses - passes through fine and
+     * is left alone.
+     *
+     * Measured against go-sqlcmd v1.10: triple quoting does keep a comma-containing path intact,
+     * but only when the path has no spaces, and it breaks paths that do. Rather than switching
+     * quoting styles based on which characters are present, and rejecting the combination that
+     * has no working form, commas are refused outright. The task takes a single file, so a comma
+     * is always part of a name rather than a separator, and the user is told exactly what to change.
+     */
+    private static validateInputFilePath(scriptPath: string): string {
+        if (scriptPath.indexOf(',') >= 0) {
+            throw new Error(tl.loc('ScriptPathContainsComma', scriptPath));
+        }
+
+        return scriptPath;
     }
 
     /**
@@ -200,35 +285,45 @@ export class SqlcmdExecutor {
     }
 
     /**
-     * Parse additional arguments respecting quoted values.
+     * Split an additional arguments string into argv elements.
+     *
+     * Quotes are treated as syntax and removed once they have done their job of keeping a value
+     * together, so a quoted value arrives as a single argument without literal quote characters
+     * in it.
      */
     private static parseAdditionalArguments(additionalArguments: string): string[] {
         const args: string[] = [];
         let current = '';
         let inQuotes = false;
         let quoteChar = '';
+        let hasContent = false;
+
+        const flush = (): void => {
+            args.push(current);
+            current = '';
+            hasContent = false;
+        };
 
         for (const char of additionalArguments) {
             if ((char === '"' || char === "'") && !inQuotes) {
                 inQuotes = true;
                 quoteChar = char;
-                current += char;
+                // An empty quoted value is still a value, so remember it was quoted.
+                hasContent = true;
             } else if (char === quoteChar && inQuotes) {
                 inQuotes = false;
                 quoteChar = '';
-                current += char;
             } else if (char === ' ' && !inQuotes) {
-                if (current.trim()) {
-                    args.push(current.trim());
-                    current = '';
+                if (current.length > 0 || hasContent) {
+                    flush();
                 }
             } else {
                 current += char;
             }
         }
 
-        if (current.trim()) {
-            args.push(current.trim());
+        if (current.length > 0 || hasContent) {
+            flush();
         }
 
         return args;

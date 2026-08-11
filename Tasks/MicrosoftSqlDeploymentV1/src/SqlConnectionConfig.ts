@@ -4,6 +4,25 @@ import Constants from './Constants';
 export default class SqlConnectionConfig {
     private _parsedConnectionString: Map<string, string>;
     private _rawConnectionString: string;
+    private _originalKeyNames: string[] = [];
+
+    /**
+     * SqlClient accepts several spellings for the same setting, and SqlPackage inherits them
+     * because the connection string is handed to it whole. Validation must therefore accept every
+     * spelling, otherwise a string that SqlPackage would have deployed is rejected here with an
+     * error that names the wrong setting.
+     *
+     * https://learn.microsoft.com/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring
+     */
+    private static readonly ServerKeys = ['data source', 'server', 'addr', 'address', 'network address'];
+    private static readonly UserIdKeys = ['user id', 'user', 'uid'];
+    private static readonly PasswordKeys = ['password', 'pwd'];
+    private static readonly DatabaseKeys = ['initial catalog', 'database'];
+    private static readonly EncryptKeys = ['encrypt'];
+    private static readonly TrustServerCertificateKeys = ['trustservercertificate', 'trust server certificate'];
+    private static readonly HostNameInCertificateKeys = ['hostnameincertificate', 'host name in certificate'];
+    private static readonly ApplicationIntentKeys = ['applicationintent', 'application intent'];
+    private static readonly ConnectTimeoutKeys = ['connect timeout', 'connection timeout', 'timeout'];
 
     constructor(connectionString: string) {
         this._validateConnectionString(connectionString);
@@ -16,7 +35,7 @@ export default class SqlConnectionConfig {
     }
 
     public get Server(): string {
-        let server = this._getConnectionStringValue('data source') || this._getConnectionStringValue('server');
+        let server = this._getFirstConnectionStringValue(SqlConnectionConfig.ServerKeys);
         if (!server) {
             return '';
         }
@@ -37,7 +56,7 @@ export default class SqlConnectionConfig {
     }
 
     public get Port(): number | undefined {
-        const server = this._getConnectionStringValue('data source') || this._getConnectionStringValue('server');
+        const server = this._getFirstConnectionStringValue(SqlConnectionConfig.ServerKeys);
         if (server && server.includes(',')) {
             const port = parseInt(server.split(',')[1].trim(), 10);
             return Number.isFinite(port) ? port : undefined;
@@ -46,15 +65,65 @@ export default class SqlConnectionConfig {
     }
 
     public get Database(): string {
-        return this._getConnectionStringValue('initial catalog') || this._getConnectionStringValue('database') || '';
+        return this._getFirstConnectionStringValue(SqlConnectionConfig.DatabaseKeys) || '';
     }
 
     public get UserId(): string | undefined {
-        return this._getConnectionStringValue('user id') || this._getConnectionStringValue('user');
+        return this._getFirstConnectionStringValue(SqlConnectionConfig.UserIdKeys);
     }
 
     public get Password(): string | undefined {
-        return this._getConnectionStringValue('password');
+        return this._getFirstConnectionStringValue(SqlConnectionConfig.PasswordKeys);
+    }
+
+    /**
+     * The requested encryption level, normalized to the values sqlcmd's -N switch accepts.
+     * Returns undefined when the property is absent or holds a value SqlClient does not define,
+     * so that callers report it as unapplied rather than passing it through to the tool.
+     */
+    public get Encrypt(): string | undefined {
+        const value = this._getFirstConnectionStringValue(SqlConnectionConfig.EncryptKeys)?.toLowerCase();
+        switch (value) {
+            case 'true':
+            case 'yes':
+                return 'true';
+            case 'false':
+            case 'no':
+                return 'false';
+            case 'strict':
+                return 'strict';
+            default:
+                return undefined;
+        }
+    }
+
+    public get TrustServerCertificate(): boolean {
+        return this._parseBoolean(this._getFirstConnectionStringValue(SqlConnectionConfig.TrustServerCertificateKeys));
+    }
+
+    public get HostNameInCertificate(): string | undefined {
+        return this._getFirstConnectionStringValue(SqlConnectionConfig.HostNameInCertificateKeys);
+    }
+
+    public get ApplicationIntent(): string | undefined {
+        return this._getFirstConnectionStringValue(SqlConnectionConfig.ApplicationIntentKeys)?.toLowerCase();
+    }
+
+    public get ConnectTimeoutSeconds(): number | undefined {
+        const value = this._getFirstConnectionStringValue(SqlConnectionConfig.ConnectTimeoutKeys);
+        if (!value) {
+            return undefined;
+        }
+        const seconds = parseInt(value, 10);
+        return Number.isFinite(seconds) && seconds >= 0 ? seconds : undefined;
+    }
+
+    /**
+     * The property names exactly as the user spelled them, so diagnostics can quote the
+     * connection string back rather than the lower-cased form used for lookups.
+     */
+    public get Keys(): string[] {
+        return [...this._originalKeyNames];
     }
 
     /**
@@ -104,6 +173,7 @@ export default class SqlConnectionConfig {
                 }
 
                 result.set(key, val);
+                this._originalKeyNames.push(match.groups.key.trim());
             }
         }
 
@@ -111,10 +181,32 @@ export default class SqlConnectionConfig {
     }
 
     /**
+     * SqlClient treats yes/no as equivalent to true/false for boolean properties.
+     */
+    private _parseBoolean(value: string | undefined): boolean {
+        const normalized = value?.trim().toLowerCase();
+        return normalized === 'true' || normalized === 'yes';
+    }
+
+    /**
      * Get a value from the parsed connection string (case-insensitive key lookup).
      */
     private _getConnectionStringValue(key: string): string | undefined {
         return this._parsedConnectionString.get(key.toLowerCase());
+    }
+
+    /**
+     * Return the value for the first key that is present, so the accepted spellings of a setting
+     * resolve to the same value. Keys are tried in order, most canonical first.
+     */
+    private _getFirstConnectionStringValue(keys: string[]): string | undefined {
+        for (const key of keys) {
+            const value = this._getConnectionStringValue(key);
+            if (value) {
+                return value;
+            }
+        }
+        return undefined;
     }
 
     /**

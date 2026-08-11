@@ -139,17 +139,35 @@ export default class AzureSqlResourceManager {
     }
 
     /**
+     * Decides whether an ARM server entry is the one named by the connection string.
+     *
+     * The domain suffix of a SQL server is cloud-specific (.database.windows.net,
+     * .database.usgovcloudapi.net, .database.chinacloudapi.cn, and the Azure Stack variants), so the
+     * host is compared against the fully qualified name ARM itself reports instead of a hard-coded
+     * public-cloud suffix. A bare server name is also accepted, because a connection string may name
+     * the server without a domain. Comparing the first label is safe because Azure SQL server names
+     * are globally unique.
+     */
+    public static matchesRequestedServer(server: AzureSqlServer, requestedServerName: string): boolean {
+        const requested = requestedServerName.trim().toLowerCase();
+        if (!requested) {
+            return false;
+        }
+
+        const name = server.name?.toLowerCase();
+        const fullyQualifiedDomainName = server.properties?.fullyQualifiedDomainName?.toLowerCase();
+
+        return fullyQualifiedDomainName === requested
+            || name === requested
+            || name === requested.split('.')[0];
+    }
+
+    /**
      * Populates SQL server data by listing all SQL servers and finding the matching one
      * @param serverName SQL server name
      */
     private async _populateSqlServerData(serverName: string): Promise<void> {
-        // Remove .database.windows.net suffix if present
-        const sqlServerHostnameSuffix = '.database.windows.net';
-        if (serverName.toLowerCase().endsWith(sqlServerHostnameSuffix)) {
-            serverName = serverName.substring(0, serverName.length - sqlServerHostnameSuffix.length);
-        }
-
-        // Also handle tcp: prefix and port numbers
+        // Handle tcp: prefix and port numbers
         serverName = serverName.replace(/^tcp:/i, '').split(',')[0].trim();
 
         tl.debug(`Looking for SQL server: ${serverName}`);
@@ -179,9 +197,8 @@ export default class AzureSqlResourceManager {
                 const sqlServers = httpResponse.body?.value as AzureSqlServer[];
 
                 if (sqlServers && sqlServers.length > 0) {
-                    // ARM API returns server names in lowercase; compare case-insensitively to match user-provided names
                     this._sqlServer = sqlServers.find(
-                        server => server.name.toLowerCase() === serverName.toLowerCase()
+                        server => AzureSqlResourceManager.matchesRequestedServer(server, serverName)
                     );
 
                     if (this._sqlServer) {

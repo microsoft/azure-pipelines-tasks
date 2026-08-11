@@ -180,7 +180,17 @@ async function main(): Promise<void> {
                             tl.debug(tl.loc('AccessTokenAcquired'));
                         }
                     } catch (tokenError) {
-                        tl.debug(`Access token acquisition failed (non-fatal): ${tokenError.message || tokenError}`);
+                        // Deliberately fatal. Continuing would drop /AccessToken and hand
+                        // SqlPackage a connection string carrying Authentication=Active Directory
+                        // Default, so it would run its own credential chain and could deploy as the
+                        // agent's managed identity or a stale az login session. That identity often
+                        // holds broader permissions than the service connection the user selected,
+                        // and the run would still report success.
+                        throw new Error(tl.loc('AccessTokenAcquisitionFailed', azureSubscription, tokenError.message || tokenError));
+                    }
+
+                    if (!accessToken) {
+                        throw new Error(tl.loc('AccessTokenAcquisitionFailed', azureSubscription, 'no token was returned'));
                     }
                 }
             } else if (!firewallRuleManagement) {
@@ -271,30 +281,36 @@ async function main(): Promise<void> {
 /**
  * Read an optional filePath input, returning undefined when the user left it blank.
  *
- * The agent roots filePath inputs before the task sees them, so an unset one arrives
- * as System.DefaultWorkingDirectory rather than an empty string. Passing that through
- * makes the task treat the repo root as a user-supplied executable or profile: for
- * sqlcmdPath and sqlpackagePath the existsSync check then succeeds (it is a real
- * directory) and execution fails with "Unable to locate executable file".
+ * The agent roots filePath inputs before the task sees them, so an unset one arrives as
+ * System.DefaultWorkingDirectory rather than an empty string. Passing that through makes the
+ * task treat the repo root as a user-supplied executable or profile.
  *
- * A directory is never a valid value for any of these inputs, so treating one as
- * "not specified" also falls back to discovery rather than failing when a user
- * points at a folder by mistake.
+ * tl.filePathSupplied distinguishes the two cases, which matters because the handling differs:
+ * an unset input falls back to discovery, while a supplied one that points at a directory is a
+ * mistake worth reporting. Ignoring the latter would run SqlPackage without /Profile and report
+ * success, deploying with default properties instead of the requested publish profile.
  */
 function getOptionalFilePathInput(name: string): string | undefined {
+    if (!tl.filePathSupplied(name)) {
+        return undefined;
+    }
+
     const raw = tl.getInput(name, false);
     if (!raw || !raw.trim()) {
         return undefined;
     }
 
     const value = raw.trim();
+
+    let isDirectory = false;
     try {
-        if (fs.existsSync(value) && fs.statSync(value).isDirectory()) {
-            tl.debug(`Ignoring ${name}: resolved to a directory (${value}), treating as not specified.`);
-            return undefined;
-        }
+        isDirectory = fs.existsSync(value) && fs.statSync(value).isDirectory();
     } catch (_) {
         // Unreadable path: leave it to the consumer to report a useful error.
+    }
+
+    if (isDirectory) {
+        throw new Error(tl.loc('FilePathInputIsDirectory', name, value));
     }
 
     return value;
@@ -400,7 +416,7 @@ function resolveSqlcmdCredentials(
     if (sqlAuthType === 'activedirectoryserviceprincipal') {
         // Credentials come from the connection string, but go-mssqldb still needs a tenant.
         // Supply the service connection's so the clientId@tenantId user name can be built.
-        return { tenantId: azureEndpoint.tenantID };
+        return { tenantId: azureEndpoint.tenantID, source: 'tenantOnly' };
     }
 
     return undefined;

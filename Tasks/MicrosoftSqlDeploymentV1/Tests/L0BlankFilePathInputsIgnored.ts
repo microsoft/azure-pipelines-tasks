@@ -14,6 +14,11 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // This directory exists, exactly like the agent working directory does.
 const workingDir = __dirname;
 
+// tl.filePathSupplied compares the input against the repo root, so the working directory has
+// to be set for the "user left it blank" case to be reproduced rather than assumed.
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = workingDir;
+process.env['BUILD_SOURCESDIRECTORY'] = workingDir;
+
 tmr.setInput('action', 'sqlScript');
 tmr.setInput('path', 'test.sql');
 tmr.setInput('connectionString', 'Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;');

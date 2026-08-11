@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
+import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
 
 describe('MicrosoftSqlDeployment Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -28,6 +29,37 @@ describe('MicrosoftSqlDeployment Suite', function () {
     // SqlConnectionConfig Unit Tests
     // ============================================
     
+    describe('AzureSqlResourceManager - Server matching', function() {
+        // ARM reports the short name plus the cloud-specific fully qualified name. Firewall
+        // management must locate the server in every cloud, not only the public one.
+        const server = (name: string, fullyQualifiedDomainName: string): AzureSqlServer => ({
+            id: `/subscriptions/sub/resourceGroups/rg/providers/Microsoft.Sql/servers/${name}`,
+            name,
+            location: 'eastus',
+            properties: { fullyQualifiedDomainName, state: 'Ready', version: '12.0' }
+        });
+
+        const matches: [AzureSqlServer, string, string][] = [
+            [server('myserver', 'myserver.database.windows.net'), 'myserver.database.windows.net', 'matches a public cloud host'],
+            [server('myserver', 'myserver.database.usgovcloudapi.net'), 'myserver.database.usgovcloudapi.net', 'matches a US Government host'],
+            [server('myserver', 'myserver.database.chinacloudapi.cn'), 'myserver.database.chinacloudapi.cn', 'matches a China cloud host'],
+            [server('myserver', 'myserver.database.windows.net'), 'MyServer.Database.Windows.Net', 'matches regardless of case'],
+            [server('myserver', 'myserver.database.windows.net'), 'myserver', 'matches a bare server name'],
+            [server('myserver', ''), 'myserver.database.usgovcloudapi.net', 'falls back to the first label when ARM reports no domain name']
+        ];
+
+        matches.forEach(([sqlServer, requested, description]) => {
+            it(description, function() {
+                assert.strictEqual(AzureSqlResourceManager.matchesRequestedServer(sqlServer, requested), true);
+            });
+        });
+
+        it('does not match a different server', function() {
+            const sqlServer = server('myserver', 'myserver.database.windows.net');
+            assert.strictEqual(AzureSqlResourceManager.matchesRequestedServer(sqlServer, 'otherserver.database.windows.net'), false);
+        });
+    });
+
     describe('SqlConnectionConfig - Valid connection strings', function() {
         const validConnectionStrings: [string, string, string][] = [
             [`Server=test1.database.windows.net;User Id=user;Password="placeholder'=placeholder''c;123";Initial catalog=testdb`, `placeholder'=placeholder''c;123`, 'validates values enclosed with double quotes'],
@@ -38,6 +70,10 @@ describe('MicrosoftSqlDeployment Suite', function () {
             [`Server=test1.database.windows.net;Database=testdb;User Id=user;Password=placeholder;Authentication=SQL Password`, `placeholder`, 'validates SQL password authentication'],
             [`Server=test1.database.windows.net;Database=testdb;User Id=user;Password=placeholder;Authentication=SQLPassword`, `placeholder`, 'validates SQL password authentication one word'],
             [`Server=test1.database.windows.net;Database=testdb;User Id=user;Password=placeholder;Authentication='SQL Password'`, `placeholder`, 'validates SQL password authentication with quotes'],
+            [`Data Source=test1.database.windows.net;Initial Catalog=testdb;UID=user;PWD=placeholder`, `placeholder`, 'accepts the UID and PWD synonyms'],
+            [`Addr=test1.database.windows.net;Database=testdb;User=user;Password=placeholder`, `placeholder`, 'accepts the Addr and User synonyms'],
+            [`Address=test1.database.windows.net;Database=testdb;User Id=user;Password=placeholder`, `placeholder`, 'accepts the Address synonym'],
+            [`Network Address=test1.database.windows.net;Database=testdb;User Id=user;Password=placeholder`, `placeholder`, 'accepts the Network Address synonym'],
         ];
 
         validConnectionStrings.forEach(([connectionString, expectedPassword, description]) => {
@@ -648,6 +684,96 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should fail when an explicitly supplied filePath input points at a directory', async () => {
+        const tp = path.join(__dirname, 'L0ExplicitDirectoryFilePathFails.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'a supplied publishProfile pointing at a directory must fail');
+            assert(tr.stdout.indexOf('FilePathInputIsDirectory') >= 0 || tr.stdout.indexOf('points to a directory') >= 0,
+                'the error must name the input and the directory');
+            assert(tr.stdout.indexOf('/Action:Publish') < 0,
+                'SqlPackage must not run: it would deploy with default properties instead of the requested profile');
+        }, tr);
+    });
+
+    it('should strip syntactic quotes from a user-specified output path containing spaces', async () => {
+        const tp = path.join(__dirname, 'L0UserOutputPathWithSpaces.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            // The mocked command is keyed on the unquoted path, so succeeding at all means the
+            // quotes were removed. Asserting on stdout alone would match the debug line that
+            // echoes the raw input, which legitimately still contains them.
+            assert(tr.succeeded, 'a quoted output path containing spaces must reach SqlPackage without the quote characters');
+        }, tr);
+    });
+
+    it('should treat /op as a user-specified output path and not add another', async () => {
+        const tp = path.join(__dirname, 'L0UserOutputPathShortForm.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, '/op is the documented short form and must be recognised');
+            assert(tr.stdout.indexOf('GeneratedOutputFiles') < 0,
+                'no auto-generated output path may be appended when the user already supplied /op');
+        }, tr);
+    });
+
+    it('should reject a script path containing a comma', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdCommaInPathRejected.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'sqlcmd reads commas in -i as file separators, so the path must be refused');
+            assert(tr.stdout.indexOf('ScriptPathContainsComma') >= 0 || tr.stdout.indexOf('contains a comma') >= 0,
+                'the error must name the path and say what to change');
+            assert(tr.stdout.indexOf('-i ') < 0,
+                'sqlcmd must not run: it would look for files that do not exist');
+        }, tr);
+    });
+
+    it('should pass a script path containing spaces through unquoted', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdSpaceInPathAllowed.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'spaces are ordinary in paths and go-sqlcmd accepts them unquoted');
+            assert(tr.stdout.indexOf('"""') < 0,
+                'quoting a path with spaces is what breaks it, so none may be added');
+        }, tr);
+    });
+
+    it('should translate connection string security properties into sqlcmd switches', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdConnectionPropertiesApplied.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'Encrypt, ApplicationIntent and Connect Timeout must reach sqlcmd as -N, -K and -l');
+            assert(tr.stdout.indexOf('-C') < 0,
+                'TrustServerCertificate=False must not disable certificate validation');
+        }, tr);
+    });
+
+    it('should warn about connection string properties that sqlcmd cannot honour', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdConnectionPropertiesWarned.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'unsupported properties are a warning, not a failure');
+            // Scoped to the warning line: the connection string is echoed in debug output, so
+            // searching the whole log would match the user's own input rather than the warning.
+            const warning = tr.stdout.split('\n')
+                .find(line => line.indexOf('loc_mock_SqlcmdConnectionPropertiesNotApplied') >= 0);
+            assert(warning, 'the user must be told which properties were not applied');
+            assert(warning.indexOf('Pooling') >= 0 && warning.indexOf('Application Name') >= 0,
+                'the warning must name the properties, using the spelling the user typed');
+            assert(warning.indexOf('Encrypt') < 0 && warning.indexOf('HostNameInCertificate') < 0,
+                'properties that do have a switch must not be reported as unapplied');
+        }, tr);
+    });
+
     it('should use ActiveDirectoryAzurePipelines for a Workload Identity Federation service connection', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdWifUsesAzurePipelinesAuth.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -674,6 +800,8 @@ describe('MicrosoftSqlDeployment Suite', function () {
         await tr.runAsync();
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed with clientId@tenantId built from the service connection');
+            assert(tr.stdout.indexOf('"sqlcmdCredentialSource":"tenantOnly"') >= 0,
+                'a tenant id was injected, so telemetry must not report that nothing was supplied');
         }, tr);
     });
 
@@ -697,6 +825,19 @@ describe('MicrosoftSqlDeployment Suite', function () {
             // identity on a hosted agent.
             assert(tr.stdout.indexOf('"sqlcmdCredentialSource":"clientCertificate"') >= 0,
                 'certificate connections must resolve to AZURE_CLIENT_CERTIFICATE_PATH, not DefaultAzureCredential');
+        }, tr);
+    });
+
+    it('should fail rather than deploy with ambient credentials when the service connection token cannot be acquired', async () => {
+        const tp = path.join(__dirname, 'L0TokenFailureDoesNotFallBackToAmbientAuth.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'task must fail when the SQL access token cannot be acquired');
+            assert(tr.stdout.indexOf('AccessTokenAcquisitionFailed') >= 0 || tr.stdout.indexOf('Could not acquire a database access token') >= 0,
+                'the failure must name the service connection and the underlying token error');
+            assert(tr.stdout.indexOf('/Action:Publish') < 0,
+                'SqlPackage must not run: doing so would deploy under whatever identity its own credential chain resolves');
         }, tr);
     });
 
