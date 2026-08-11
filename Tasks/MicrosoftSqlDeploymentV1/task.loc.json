@@ -140,6 +140,8 @@
     "FirewallRuleRemoved": "ms-resource:loc.messages.FirewallRuleRemoved",
     "FirewallManagementDisabled": "ms-resource:loc.messages.FirewallManagementDisabled",
     "FirewallManagementRequiresAzureSubscription": "ms-resource:loc.messages.FirewallManagementRequiresAzureSubscription",
+    "IntegratedAuthNotImplementedBySqlcmd": "ms-resource:loc.messages.IntegratedAuthNotImplementedBySqlcmd",
+    "FirewallManagementRequiresAzureSqlDatabase": "ms-resource:loc.messages.FirewallManagementRequiresAzureSqlDatabase",
     "ClientHasAccessToServer": "ms-resource:loc.messages.ClientHasAccessToServer",
     "FailedToAddFirewallRule": "ms-resource:loc.messages.FailedToAddFirewallRule",
     "FailedToRemoveFirewallRule": "ms-resource:loc.messages.FailedToRemoveFirewallRule",

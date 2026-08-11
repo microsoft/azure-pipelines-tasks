@@ -154,7 +154,14 @@ export class SqlcmdExecutor {
                 break;
 
             case 'activedirectoryintegrated':
-                addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryIntegrated');
+                // go-sqlcmd does not implement this method and silently falls back to
+                // ActiveDirectoryDefault, so the effective identity comes from the
+                // DefaultAzureCredential chain rather than the caller's domain account. The
+                // requested method is still passed through unchanged, and no service connection
+                // override is applied, so the tool is never pointed at a different principal than
+                // the connection string asked for.
+                tl.warning(tl.loc('IntegratedAuthNotImplementedBySqlcmd'));
+                addAuthenticationMethod('ActiveDirectoryIntegrated');
                 break;
 
             case 'activedirectorypassword':

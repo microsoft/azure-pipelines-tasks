@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
+import SqlProjectBuilder from '../src/SqlProjectBuilder';
 
 describe('MicrosoftSqlDeployment Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -29,6 +30,70 @@ describe('MicrosoftSqlDeployment Suite', function () {
     // SqlConnectionConfig Unit Tests
     // ============================================
     
+    describe('SqlProjectBuilder - Project name and output directory', function() {
+        it('strips the project extension regardless of case', function() {
+            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.sqlproj'), 'MyDb');
+            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.SQLPROJ'), 'MyDb');
+            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.SqlProj'), 'MyDb');
+        });
+
+        it('keeps a dot in the project name', function() {
+            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/Contoso.Sales.sqlproj'), 'Contoso.Sales');
+        });
+
+        // dotnet accepts each of these spellings, so an explicit choice must be recognised in all of
+        // them rather than replaced by the directory the task would otherwise pin.
+        const outputForms: [string, string][] = [
+            ['--output custom', 'recognises --output'],
+            ['-o custom', 'recognises -o'],
+            ['-p:OutputPath=custom', 'recognises the -p: property form'],
+            ['--property:OutputPath=custom', 'recognises the --property: form'],
+            ['/p:OutputPath=custom', 'recognises the /p: form'],
+            ['-p:OutputPath="custom"', 'recognises a quoted property value']
+        ];
+
+        outputForms.forEach(([args, description]) => {
+            it(description, function() {
+                const resolved = SqlProjectBuilder.findUserSpecifiedOutputDirectory(path.join('/src', 'MyDb.sqlproj'), args);
+                assert.strictEqual(resolved, path.resolve('/src', 'custom'));
+            });
+        });
+
+        it('reports no user-specified output when only the configuration is set', function() {
+            assert.strictEqual(
+                SqlProjectBuilder.findUserSpecifiedOutputDirectory('/src/MyDb.sqlproj', '-p:Configuration=Release'),
+                undefined,
+                'Configuration selects a directory MSBuild derives, so the task must pin its own instead');
+        });
+    });
+
+    describe('SqlConnectionConfig - Firewall-capable target detection', function() {
+        // Firewall management enumerates Microsoft.Sql/servers, so it only applies to Azure SQL
+        // Database logical servers. Every other supported target must be excluded or the task
+        // enables a step that cannot succeed.
+        const targets: [string, boolean, string][] = [
+            ['myserver.database.windows.net', true, 'an Azure SQL Database logical server'],
+            ['myserver.database.usgovcloudapi.net', true, 'a logical server in a sovereign cloud'],
+            ['myinstance.abc123def.database.windows.net', false, 'a managed instance, which adds a DNS zone label'],
+            ['mydb.database.fabric.microsoft.com', false, 'Fabric SQL'],
+            ['sqlserver01.contoso.com', false, 'SQL Server on premises'],
+            ['10.0.0.4', false, 'SQL Server addressed by IP'],
+            ['localhost', false, 'a local server']
+        ];
+
+        targets.forEach(([host, expected, description]) => {
+            it(`${expected ? 'supports' : 'excludes'} ${description}`, function() {
+                const config = new SqlConnectionConfig(`Server=${host};Database=db;User Id=sa;Password=p`);
+                assert.strictEqual(config.IsAzureSqlDatabaseServer, expected);
+            });
+        });
+
+        it('ignores a port when classifying the target', function() {
+            const config = new SqlConnectionConfig('Server=tcp:myserver.database.windows.net,1433;Database=db;User Id=sa;Password=p');
+            assert.strictEqual(config.IsAzureSqlDatabaseServer, true);
+        });
+    });
+
     describe('AzureSqlResourceManager - Server matching', function() {
         // ARM reports the short name plus the cloud-specific fully qualified name. Firewall
         // management must locate the server in every cloud, not only the public one.
@@ -771,6 +836,55 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 'the warning must name the properties, using the spelling the user typed');
             assert(warning.indexOf('Encrypt') < 0 && warning.indexOf('HostNameInCertificate') < 0,
                 'properties that do have a switch must not be reported as unapplied');
+        }, tr);
+    });
+
+    it('should not substitute the service connection identity for Integrated authentication', async () => {
+        const tp = path.join(__dirname, 'L0IntegratedAuthNotSubstituted.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'the connection string must be passed through so the domain identity is used');
+            assert(tr.stdout.indexOf('/AccessToken:') < 0,
+                'Integrated names a specific identity, so a service connection token must not be injected');
+        }, tr);
+    });
+
+    it('should find the dacpac when the configuration is set with MSBuild property syntax', async () => {
+        const tp = path.join(__dirname, 'L0SqlProjMsBuildPropertyConfiguration.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                '-p:Configuration=Release must not send the dacpac lookup to bin/Debug');
+            assert(tr.stdout.indexOf('loc_mock_DacpacNotFoundAfterBuild') < 0,
+                'the build succeeding while the dacpac is looked for elsewhere is the defect');
+        }, tr);
+    });
+
+    it('should not default firewall management on for a managed instance target', async () => {
+        const tp = path.join(__dirname, 'L0FirewallNotDefaultedForManagedInstance.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'supplying azureSubscription for authentication must not enable firewall management');
+            assert(tr.stdout.indexOf('FIREWALL_PROBE_RAN') < 0,
+                'a managed instance has no Azure SQL firewall rules, so the probe must not run');
+            assert(tr.stdout.indexOf('ARM_LOOKUP_RAN') < 0,
+                'a managed instance is not returned by Microsoft.Sql/servers, so it must not be looked up');
+        }, tr);
+    });
+
+    it('should fail clearly when firewall management is requested for a managed instance', async () => {
+        const tp = path.join(__dirname, 'L0FirewallExplicitOnManagedInstanceFails.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'an explicit request for an unsupported target must fail');
+            assert(tr.stdout.indexOf('loc_mock_FirewallManagementRequiresAzureSqlDatabase') >= 0,
+                'the error must name the real constraint, not report the server as missing');
+            assert(tr.stdout.indexOf('loc_mock_SQLServerNotFoundInSubscription') < 0,
+                'failing inside the ARM enumeration is what made this confusing');
         }, tr);
     });
 
