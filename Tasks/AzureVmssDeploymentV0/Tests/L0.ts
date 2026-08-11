@@ -47,6 +47,48 @@ describe('Azure VMSS Deployment', function () {
         }, tr);
     });
 
+    it("should fail closed when PowerShell custom script arguments contain a newline (CR/LF) and the WI-75787 sanitizer is enabled", async () => {
+        process.env["_sanitizeArgsActivate_"] = "true";
+        process.env["_crlfArgs_"] = "true";
+        let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["_sanitizeArgsActivate_"];
+        delete process.env["_crlfArgs_"];
+        runValidations(() => {
+            assert(tr.failed, "task should fail closed when arguments contain a newline statement separator");
+            assert(tr.stdout.indexOf("loc_mock_ScriptArgsSanitized") > -1, "should surface the argument sanitization message");
+        }, tr);
+    });
+
+    it("should fail closed when a PowerShell newline is preceded by a single backtick and the WI-75787 sanitizer is enabled", async () => {
+        process.env["_sanitizeArgsActivate_"] = "true";
+        process.env["_crlfBacktick1_"] = "true";
+        let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["_sanitizeArgsActivate_"];
+        delete process.env["_crlfBacktick1_"];
+        runValidations(() => {
+            assert(tr.failed, "task should fail closed when a backtick-preceded newline is present");
+            assert(tr.stdout.indexOf("loc_mock_ScriptArgsSanitized") > -1, "should surface the argument sanitization message");
+        }, tr);
+    });
+
+    it("should fail closed when a PowerShell newline is preceded by two backticks and the WI-75787 sanitizer is enabled", async () => {
+        process.env["_sanitizeArgsActivate_"] = "true";
+        process.env["_crlfBacktick2_"] = "true";
+        let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["_sanitizeArgsActivate_"];
+        delete process.env["_crlfBacktick2_"];
+        runValidations(() => {
+            assert(tr.failed, "task should fail closed when a double-backtick-preceded newline is present");
+            assert(tr.stdout.indexOf("loc_mock_ScriptArgsSanitized") > -1, "should surface the argument sanitization message");
+        }, tr);
+    });
+
     it("should pass sanitizer-safe custom script arguments verbatim without doubling backticks when the WI-75787 sanitizer is enabled", async () => {
         process.env["_sanitizeArgsActivate_"] = "true";
         process.env["_safeArgs_"] = "true";

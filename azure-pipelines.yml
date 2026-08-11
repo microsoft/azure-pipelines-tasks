@@ -36,7 +36,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
-      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,NuGet
+      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,CFSClean2,CFSClean3,GitHub
     featureFlags:
       autoBaseline: false
     sdl:

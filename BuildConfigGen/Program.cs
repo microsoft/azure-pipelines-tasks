@@ -112,7 +112,7 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
-        /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
+        /// <param name="currentSprint">Override current sprint; omit to calculate it from the standard three-week cadence</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
@@ -132,7 +132,7 @@ namespace BuildConfigGen
             };
             Option<int?> currentSprintOption = new("--current-sprint")
             {
-                Description = "Overide current sprint; omit to get from whatsprintis.it"
+                Description = "Override current sprint; omit to calculate it from the standard three-week cadence"
             };
             Option<bool> writeUpdatesOption = new("--write-updates")
             {
@@ -644,20 +644,11 @@ namespace BuildConfigGen
             // Scheduled time for Cortesy Push
             var cortesyPushScheduleDay = DayOfWeek.Tuesday;
             var cortesyPushUtcTime = new TimeOnly(8, 30); //UTC time
-
-            string url = "https://whatsprintis.it";
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            string json = httpClient.GetStringAsync(url).Result;
-            JsonDocument currentSprintData = JsonDocument.Parse(json);
-            int currentSprint = currentSprintData.RootElement.GetProperty("sprint").GetInt32();
-            int week = currentSprintData.RootElement.GetProperty("week").GetInt32();
+            var nowUtc = DateTimeOffset.UtcNow;
+            (int currentSprint, int week) = CalculateSprint(nowUtc);
 
             if (week == 3) // if it is the end of the current sprint
             {
-                var nowUtc = DateTime.UtcNow;
-
                 // Increase sprint number if scheduled pipeline was already triggered
                 if (nowUtc.DayOfWeek > cortesyPushScheduleDay)
                 {
@@ -665,7 +656,7 @@ namespace BuildConfigGen
                 }
                 else if (nowUtc.DayOfWeek == cortesyPushScheduleDay)
                 {
-                    if (TimeOnly.FromDateTime(nowUtc) >= cortesyPushUtcTime)
+                    if (TimeOnly.FromDateTime(nowUtc.UtcDateTime) >= cortesyPushUtcTime)
                     {
                         currentSprint++;
                     }
@@ -673,6 +664,20 @@ namespace BuildConfigGen
             }
 
             return currentSprint;
+        }
+
+        private static (int Sprint, int Week) CalculateSprint(DateTimeOffset date)
+        {
+            // Sprint 267 started at this UTC instant, establishing the fixed three-week cadence.
+            const int sprintEpochNumber = 267;
+            const int daysPerSprint = 21;
+            const int daysPerWeek = 7;
+            var sprintEpochStart = new DateTimeOffset(2025, 11, 29, 0, 0, 0, TimeSpan.Zero);
+            double elapsedDays = (date.ToUniversalTime() - sprintEpochStart).TotalDays;
+            int sprintOffset = (int)Math.Floor(elapsedDays / daysPerSprint);
+            int dayInSprint = (int)Math.Floor(elapsedDays - sprintOffset * daysPerSprint);
+
+            return (sprintEpochNumber + sprintOffset, dayInSprint / daysPerWeek + 1);
         }
 
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string? task, bool skipContentCheck)
