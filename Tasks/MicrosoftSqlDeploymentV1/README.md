@@ -37,7 +37,7 @@ The task discovers and installs the tools it needs automatically:
 | **buildArguments** | Additional arguments passed to `dotnet build` when path points to a `.sqlproj` file (e.g. `--configuration Release`). |
 | **sqlpackagePath** | Override the SqlPackage executable path. When not set, the task searches via dotnet tool, DacFramework MSI (Windows), then PATH. |
 | **sqlcmdPath** | Override the sqlcmd executable path. When not set, the task uses go-sqlcmd from PATH or auto-installs it. |
-| **firewallRuleManagement** | When `true`, temporarily adds a firewall rule for the agent IP and removes it after deployment. Defaults to `true` when `azureSubscription` is provided. Set to `false` for private VNet or on-premises deployments. |
+| **firewallRuleManagement** | When `true`, temporarily adds a firewall rule for the agent IP and removes it after deployment. Only applies to Azure SQL Database logical servers. Defaults to `true` when `azureSubscription` is provided *and* the target is an Azure SQL Database logical server. Set to `false` for private VNet or on-premises deployments. |
 
 ### Output Variables
 
@@ -73,10 +73,23 @@ Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directo
 Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directory Password;User ID=user@domain.com;Password=$(Password);
 ```
 
-### Active Directory Integrated (Kerberos)
+### Active Directory Integrated
 ```
 Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directory Integrated;
 ```
+
+> Supported for `.dacpac` and `.sqlproj` deployments, which SqlPackage authenticates using the
+> signed-in Windows account.
+>
+> **Not implemented for the `sqlScript` action.** sqlcmd does not implement this method and falls
+> back to `Active Directory Default`, so the script runs under whichever identity the
+> [DefaultAzureCredential chain](https://learn.microsoft.com/dotnet/api/azure.identity.defaultazurecredential)
+> resolves — an environment variable, a managed identity or an `az login` session — rather than the
+> signed-in domain account. The task warns when this happens. Use `Active Directory Service
+> Principal` or `Active Directory Managed Identity` to state the identity explicitly.
+>
+> Supplying `azureSubscription` does not change the identity for this authentication type; the
+> connection string is passed through so the tool resolves it.
 
 ### Active Directory Managed Identity
 For user-assigned managed identity, include the client ID:
@@ -165,6 +178,12 @@ When `azureSubscription` is set and `firewallRuleManagement` is `true` (the defa
 3. Removes the rule after deployment completes (always, even on failure)
 
 This requires the service connection to have `Microsoft.Sql/servers/firewallRules/write` and `Microsoft.Sql/servers/firewallRules/delete` permissions on the SQL server.
+
+> Firewall rules exist only for Azure SQL Database logical servers, which are
+> `Microsoft.Sql/servers` resources. Managed Instance, Fabric SQL and SQL Server on a virtual
+> machine or on premises have no Azure SQL firewall rules, so the default is `false` for those
+> targets even when `azureSubscription` is supplied for authentication. Requesting it explicitly
+> for one of them fails with a message naming this limitation.
 
 Disable this for agents inside a private VNet or on-premises deployments:
 ```yaml
