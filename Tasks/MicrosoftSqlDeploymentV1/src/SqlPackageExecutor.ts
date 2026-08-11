@@ -105,11 +105,12 @@ export class SqlPackageExecutor {
         args.push(`/SourceFile:${sourcePath}`);
 
         // Only use /AccessToken for auth types that name no identity in the connection string
-        // (AAD Default/Integrated), where the identity has to come from the service connection.
+        // (AAD Default), where the identity has to come from the service connection.
         // Everything else already identifies its own principal, so use /TargetConnectionString:
-        // SQL auth, AAD Password and AAD Service Principal carry credentials directly, and
-        // AAD Managed Identity explicitly asks for the agent's managed identity.
-        const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+        // SQL auth, AAD Password and AAD Service Principal carry credentials directly, while
+        // AAD Managed Identity and AAD Integrated each name a specific identity that must not be
+        // replaced by the service connection's.
+        const tokenBasedAuthTypes = ['activedirectorydefault'];
         const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
         const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
 

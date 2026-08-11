@@ -48,6 +48,8 @@
   "loc.messages.FirewallRuleRemoved": "Firewall rule removed successfully",
   "loc.messages.FirewallManagementDisabled": "Firewall rule management disabled",
   "loc.messages.FirewallManagementRequiresAzureSubscription": "Firewall rule management requires azureSubscription input",
+  "loc.messages.IntegratedAuthNotImplementedBySqlcmd": "sqlcmd does not implement Active Directory Integrated authentication and falls back to Active Directory Default, so the script may run under a different identity than the signed-in domain account. Use Active Directory Service Principal or Active Directory Managed Identity to state the identity explicitly.",
+  "loc.messages.FirewallManagementRequiresAzureSqlDatabase": "Firewall rule management is only supported for Azure SQL Database, and '%s' is not an Azure SQL Database logical server. Managed instances, Fabric SQL and SQL Server on a virtual machine or on premises do not have Azure SQL firewall rules. Set firewallRuleManagement to false and allow the agent through the network yourself.",
   "loc.messages.ClientHasAccessToServer": "Client has access to SQL server. Skip adding firewall exception.",
   "loc.messages.FailedToAddFirewallRule": "Failed to add firewall rule: %s",
   "loc.messages.FailedToRemoveFirewallRule": "Failed to remove firewall rule '%s': %s",

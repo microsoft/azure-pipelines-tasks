@@ -51,24 +51,9 @@ async function main(): Promise<void> {
         const sqlpackagePath = getOptionalFilePathInput('sqlpackagePath');
         const sqlcmdPath = getOptionalFilePathInput('sqlcmdPath');
         const firewallRuleManagementInput = tl.getInput('firewallRuleManagement', false);
-        
-        // Determine firewall rule management default per spec
-        let firewallRuleManagement: boolean;
-        if (firewallRuleManagementInput === null || firewallRuleManagementInput === undefined || firewallRuleManagementInput === '') {
-            // Default: true when azureSubscription is set, false otherwise
-            firewallRuleManagement = !!azureSubscription;
-            tl.debug(`firewallRuleManagement defaulted to: ${firewallRuleManagement}`);
-        } else {
-            firewallRuleManagement = firewallRuleManagementInput.toLowerCase() === 'true';
-            tl.debug(`firewallRuleManagement explicitly set to: ${firewallRuleManagement}`);
-        }
 
         if (azureSubscription) {
             console.log(tl.loc('UsingAzureSubscription', azureSubscription));
-        }
-
-        if (firewallRuleManagement && !azureSubscription) {
-            throw new Error(tl.loc('FirewallManagementRequiresAzureSubscription'));
         }
 
         // Detect file type from extension
@@ -104,6 +89,29 @@ async function main(): Promise<void> {
         console.log(tl.loc('ParsingConnectionString'));
         const connectionConfig = new SqlConnectionConfig(connectionString);
         tl.debug(`Parsed connection string - Server: ${connectionConfig.Server}, Database: ${connectionConfig.Database}`);
+
+        // Firewall rules are an Azure SQL Database concept, so the target has to be known before this
+        // can be decided. Defaulting on the presence of azureSubscription alone would enable the
+        // step for managed instances, Fabric and on-premises servers, where the rule can never be
+        // created and the run fails late while looking the server up in ARM.
+        let firewallRuleManagement: boolean;
+        if (!firewallRuleManagementInput) {
+            firewallRuleManagement = !!azureSubscription && connectionConfig.IsAzureSqlDatabaseServer;
+            tl.debug(`firewallRuleManagement defaulted to: ${firewallRuleManagement}`);
+        } else {
+            firewallRuleManagement = firewallRuleManagementInput.toLowerCase() === 'true';
+            tl.debug(`firewallRuleManagement explicitly set to: ${firewallRuleManagement}`);
+        }
+
+        if (firewallRuleManagement && !azureSubscription) {
+            throw new Error(tl.loc('FirewallManagementRequiresAzureSubscription'));
+        }
+
+        // An explicit request for an unsupported target is reported here, rather than as a confusing
+        // "server not found in subscription" once the ARM enumeration has already run.
+        if (firewallRuleManagement && !connectionConfig.IsAzureSqlDatabaseServer) {
+            throw new Error(tl.loc('FirewallManagementRequiresAzureSqlDatabase', connectionConfig.Server));
+        }
 
         // Discover SqlPackage for DACPAC/SQLPROJ actions
         let sqlPackageExePath: string | undefined;
@@ -157,11 +165,13 @@ async function main(): Promise<void> {
                     }
                 }
 
-                // Acquire the SQL-scoped token only for auth types that consume it
-                // (ActiveDirectoryDefault/Integrated). Gating on the same condition
-                // SqlPackageExecutor uses avoids pointless token requests for SQL auth,
-                // AAD Password and AAD Service Principal, which carry their own credentials.
-                const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+                // Acquire the SQL-scoped token only for auth types that consume it.
+                // Gating on the same condition SqlPackageExecutor uses avoids pointless token
+                // requests for SQL auth, AAD Password and AAD Service Principal, which carry their
+                // own credentials. `Active Directory Integrated` is excluded because it names the
+                // caller's domain identity, and handing SqlPackage a service connection token would
+                // deploy as a different principal than the one requested.
+                const tokenBasedAuthTypes = ['activedirectorydefault'];
                 const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
                 const shouldAcquireToken = tokenBasedAuthTypes.includes(authType) &&
                     (azureEndpoint.scheme === 'ServicePrincipal' ||
@@ -351,9 +361,10 @@ function resolveSqlcmdCredentials(
     const scheme = (azureEndpoint.scheme ?? '').toLowerCase();
 
     // Auth types where the connection string names no identity at all, so the identity
-    // must come from the service connection. `Active Directory Managed Identity` is not
-    // one of them: it names the agent's managed identity explicitly.
-    const tokenBasedAuthTypes = ['activedirectorydefault', 'activedirectoryintegrated'];
+    // must come from the service connection. `Active Directory Managed Identity` and
+    // `Active Directory Integrated` are not among them: each names an identity explicitly,
+    // and substituting the service connection would authenticate as a different principal.
+    const tokenBasedAuthTypes = ['activedirectorydefault'];
 
     if (tokenBasedAuthTypes.includes(sqlAuthType)) {
         if (scheme === 'workloadidentityfederation') {

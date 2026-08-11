@@ -119,6 +119,21 @@ export default class SqlConnectionConfig {
     }
 
     /**
+     * True when the host names an Azure SQL Database logical server, the only deployment target
+     * that has ARM firewall rules.
+     *
+     * A managed instance carries an extra DNS zone label (name.zone.database.windows.net) and is a
+     * Microsoft.Sql/managedInstances resource with no IP firewall rules; Fabric SQL uses the
+     * fabric.microsoft.com domain; SQL Server on a VM or on premises is not an ARM SQL resource at
+     * all. None of them are returned when Microsoft.Sql/servers is enumerated. The cloud-specific
+     * suffix is deliberately not enumerated here so that sovereign clouds are covered too.
+     */
+    public get IsAzureSqlDatabaseServer(): boolean {
+        const host = this.Server.toLowerCase();
+        return /^[^.]+\.database\./.test(host) && !host.includes('.fabric.');
+    }
+
+    /**
      * The property names exactly as the user spelled them, so diagnostics can quote the
      * connection string back rather than the lower-cased form used for lookups.
      */
