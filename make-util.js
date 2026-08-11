@@ -15,6 +15,7 @@ const shell = require('shelljs');
 const makeOptions = require('./make-options.json');
 const downloadUtils = require('./build-scripts/download-utils.js');
 const { cleanNodeDistribution } = require('./build-scripts/node-dist-utils.js');
+const { getSprintInfo } = require('./ci/sprint');
 
 const args = minimist(process.argv.slice(2));
 
@@ -2153,13 +2154,7 @@ function getChangedTasks() {
 exports.getChangedTasks = getChangedTasks;
 
 async function getCurrentSprint() {
-    const result = await fetch("https://whatsprintis.it", {
-        headers: {
-            "Accept": "application/json"
-        }
-    });
-
-    return result.json();
+    return getSprintInfo();
 }
 
 exports.getCurrentSprint = getCurrentSprint;
