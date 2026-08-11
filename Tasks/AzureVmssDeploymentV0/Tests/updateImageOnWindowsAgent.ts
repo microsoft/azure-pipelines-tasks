@@ -18,6 +18,11 @@ if (!(process.env["customScriptNotSpecified"] === "true")) {
     tr.setInput("skipArchivingCustomScripts", process.env["_doNotArchive_"] === "true" ? "true" : "false");
 }
 
+if (process.env["_safeArgs_"] === "true") {
+    // backtick-escaped separator: the sanitizer trusts it, and the invoker must keep it verbatim (not doubled).
+    tr.setInput("customScriptArguments", "a`;b");
+}
+
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
@@ -61,5 +66,10 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-compute', requir
 tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage', require('./mock_node_modules/azure-arm-storage'));
 tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
+
+if (process.env["_sanitizeArgsActivate_"] === "true") {
+    process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = "true";
+    process.env["AZP_75787_ENABLE_NEW_LOGIC"] = "true";
+}
 
 tr.run();
