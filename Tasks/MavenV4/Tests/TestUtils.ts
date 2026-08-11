@@ -103,6 +103,11 @@ export const runMavenFeedHostTest = (): void => {
 
     initializeTest(taskRunner);
 
+    const collectionOverride = process.env["MAVEN_TEST_COLLECTION_URL"];
+    if (collectionOverride) {
+        process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = collectionOverride;
+    }
+    
     const inputs: MavenTaskInputs = {
         mavenVersionSelection: "Default",
         mavenPOMFile: "pom.xml",
