@@ -658,6 +658,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FailedToRemoveCertificate" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following error occurred while removing the service principal certificate file: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サービス プリンシパル証明書ファイルの削除中に次のエラーが発生しました: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FailedToResolveBicepVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to resolve Bicep version from download URL: %s]]></Val>
@@ -807,6 +816,15 @@
           <Val><![CDATA[Setting active cloud to: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[アクティブ クラウドを %s に設定しています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SettingAzureConfigDir" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Setting AZURE_CONFIG_DIR env variable to: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境変数 AZURE_CONFIG_DIR を次に設定しています: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

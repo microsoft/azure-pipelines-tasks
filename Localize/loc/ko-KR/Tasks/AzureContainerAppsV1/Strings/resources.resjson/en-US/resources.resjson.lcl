@@ -703,6 +703,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidAppSourcePathMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The provided appSourcePath '%s' contains invalid characters. It must be a valid filesystem path and must not contain shell metacharacters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[제공된 appSourcePath '%s'에 잘못된 문자가 포함되어 있습니다. 유효한 파일 시스템 경로여야 하며 셸 메타 문자를 포함하면 안 됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LoginFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure login failed]]></Val>
