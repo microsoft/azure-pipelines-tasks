@@ -7,6 +7,7 @@ import { NuGetConfigHelper2 } from "azure-pipelines-tasks-packaging-common/nuget
 import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
 import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/index");
 import { VersionInfo } from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import VersionInfoVersion from "azure-pipelines-tasks-packaging-common/pe-parser/VersionInfoVersion";
 import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
@@ -27,6 +28,7 @@ class PublishOptions implements INuGetCommandOptions {
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
         public environment: ngToolRunner.NuGetEnvironmentSettings,
+        public useApiKeyEnvironment: boolean,
         public timeoutSeconds?: number) { }
 }
 
@@ -136,6 +138,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         let configFile = null;
         let apiKey: string;
+        let useApiKeyEnvironment = false;
         let credCleanup = () => { return; };
 
         let feedUri: string;
@@ -194,13 +197,14 @@ export async function run(nuGetPath: string): Promise<void> {
                 case (auth.ExternalAuthType.ApiKey):
                     const apiKeyAuthInfo = externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
+                    useApiKeyEnvironment = true;
                     break;
                 default:
                     break;
             }
         }
 
-        if (isInternalFeed === false || useCredConfig) {
+        if ((isInternalFeed === false && !useApiKeyEnvironment) || useCredConfig) {
             nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
         }
 
@@ -249,6 +253,7 @@ export async function run(nuGetPath: string): Promise<void> {
                     verbosity,
                     authInfo,
                     environmentSettings,
+                    useApiKeyEnvironment,
                     timeoutSeconds);
 
                 for (const packageFile of filesList) {
@@ -279,6 +284,14 @@ async function publishPackageNuGet(
     authInfo: auth.NuGetExtendedAuthInfo,
     continueOnConflict: boolean)
     : Promise<number> {
+    if (options.useApiKeyEnvironment) {
+        const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(options.nuGetPath);
+        const minimumApiKeyEnvironmentVersion = new VersionInfoVersion(7, 6, 0, 0);
+        if (!nuGetVersion.fileVersion || VersionInfoVersion.compare(nuGetVersion.fileVersion, minimumApiKeyEnvironmentVersion) < 0) {
+            throw new Error(tl.loc("Error_ApiKeyRequiresNuGet76", nuGetVersion.fileVersion || "unknown"));
+        }
+    }
+
     const nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
 
     nugetTool.arg("push");
@@ -289,7 +302,7 @@ async function publishPackageNuGet(
 
     nugetTool.arg(["-Source", options.feedUri]);
 
-    nugetTool.argIf(options.apiKey, ["-ApiKey", options.apiKey]);
+    nugetTool.argIf(options.apiKey && !options.useApiKeyEnvironment, ["-ApiKey", options.apiKey]);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
@@ -311,7 +324,11 @@ async function publishPackageNuGet(
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult = await nugetTool.exec({ ignoreReturnCode: true } as IExecOptions);
+    const execOptions = { ignoreReturnCode: true } as IExecOptions;
+    if (options.useApiKeyEnvironment) {
+        execOptions.env = { ...process.env, NUGET_API_KEY: options.apiKey };
+    }
+    const execResult = await nugetTool.exec(execOptions);
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);
