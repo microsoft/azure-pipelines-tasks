@@ -1,28 +1,8 @@
-// Reuses the work-item-75787 argument sanitizer used by BashV3 and the
-// PowerShell ArgumentsSanitizer. Three feature flags drive behavior:
-//   AZP_75787_ENABLE_NEW_LOGIC      -> throw on disallowed characters
-//   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
-//   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
-//
-// The sanitizer is dispatched per scriptType so that allowlists and pre-
-// expansion match the target shell:
-//   * bash         -> BashV3 allowlist (a-zA-Z0-9 _'"-=/:.*+%) and $VAR /
-//                     ${VAR} expansion of process env (catches value-
-//                     injected secrets like VAR=";rm -rf /").
-//   * pscore / ps  -> PowerShellV2 allowlist (adds , ~ ? # and backtick
-//                     escaping, plus $true/$false via lookahead) and CR/LF is
-//                     always rejected (see hasPsNewline) and
-//                     $env:VAR / ${env:VAR} expansion. This is what makes
-//                     PowerShell-native syntax like `$env:servicePrincipalKey`
-//                     or `-MyBoolean $True` pass.
-//                     The allowlist also accepts the PowerShell *data*
-//                     constructors `@ { } [ ]` (hashtable, splatting, array,
-//                     indexing) — they do not turn data into code in a
-//                     PowerShell argument list. The execution primitives that
-//                     do (`$( )`, `;`, `&`, `|`, `` ` `` outside the escape
-//                     position) remain blocked.
-//   * batch        -> Literal-only sanitization with the BashV3 allowlist
-//                     (no env expansion; cmd-specific allowlist is a TODO).
+// Shared WI-75787 script-argument sanitizer for the Node/TS tasks (previously per-task copies in
+// BashV3, PowerShellV2, AzureCLIV2/V3 and AzureVmssDeployment). Gated by AZP_75787_ENABLE_NEW_LOGIC
+// (throw) / _LOG (audit warn) / _COLLECT (telemetry). Dispatched per scriptType: bash and pscore/ps
+// each use their own allow-list and $VAR / $env: pre-expansion, batch sanitizes the literal. The
+// PowerShell path also rejects CR/LF unconditionally (MSRC 129198 — see hasPsNewline).
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
@@ -77,11 +57,6 @@ export function assertNoScriptNewline(
     }
 }
 
-// Outer gate (`EnableAzureCliArgsValidation`, default OFF) decides whether the
-// sanitizer runs at all. When it runs, every exception thrown by the validator
-// (intentional `ArgsSanitizingError` blocks as well as unexpected errors) is
-// reported as an `ArgsValidationFailure` telemetry event and then rethrown so
-// the task fails.
 export function tryValidateScriptArgs(
     inputArguments: string,
     scriptType: string,

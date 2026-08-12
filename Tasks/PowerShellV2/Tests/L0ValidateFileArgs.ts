@@ -60,6 +60,9 @@ export const runValidateFileArgsTests = () => {
             "Rejects a newline in arguments (MSRC 129198)",
             "test\nWrite-Host injected", ['AZP_75787_ENABLE_NEW_LOGIC=true']
         ], [
+            "Rejects PowerShell data constructors (PowerShellV2 keeps the stricter allowlist)",
+            "@{ k = 1 } [0]", ['AZP_75787_ENABLE_NEW_LOGIC=true']
+        ], [
             "If dangerous symbols are present, and FF is on",
             "test; whoami", ['AZP_75787_ENABLE_NEW_LOGIC=true']
         ], [

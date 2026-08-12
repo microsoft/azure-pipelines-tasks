@@ -133,6 +133,10 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: hashtable with semicolon separator still blocked',
             '-Tag @{ a = 1; b = 2 }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS drops @ { } [ ] from the relaxed allowlist.
+        ['pscore: STRICT_DATA_CONSTRUCTORS FF blocks the hashtable that is otherwise allowed',
+            '-Tag @{ K = "v" }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
