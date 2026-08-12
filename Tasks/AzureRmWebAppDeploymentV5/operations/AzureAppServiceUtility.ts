@@ -134,13 +134,20 @@ export class AzureAppServiceUtility {
 
     public async getAuthToken(): Promise<string> {
         // MSDeploy targets the Kudu/SCM endpoint, so it must use an App Service-audience
-        // token rather than the ARM-audience token returned by getToken(). acquireTokenForScope
-        // is gated by the ALLOWSCOPELEVELTOKEN pipeline feature and falls back to the ARM token
-        // when that feature is disabled, preserving previous behavior.
+        // token rather than the ARM-audience token returned by getToken(). Gated explicitly here
+        // - not just inside acquireTokenForScope - so disabling the ALLOWSCOPELEVELTOKEN pipeline
+        // feature is a reliable kill switch for this new code path even if a regression exists
+        // inside acquireTokenForScope itself: the legacy getToken() call is fully restored,
+        // unchanged, whenever the feature is off.
         const credentials = this._appService._client.getCredentials();
         let token: string;
         try {
-            token = await credentials.acquireTokenForScope("appservice");
+            if (tl.getPipelineFeature("ALLOWSCOPELEVELTOKEN")) {
+                token = await credentials.acquireTokenForScope("appservice");
+            } else {
+                tl.debug("ALLOWSCOPELEVELTOKEN is disabled; using the legacy ARM-audience token for MSDeploy.");
+                token = await credentials.getToken();
+            }
         } catch (error) {
             publishKuduAuthModeTelemetry({ authMethod: "Bearer", source: "msDeploy", credentials: credentials, telemetryFeature: "AzureAppServiceDeployment" });
             throw error;
