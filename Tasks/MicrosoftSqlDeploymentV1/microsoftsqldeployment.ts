@@ -72,6 +72,14 @@ async function main(): Promise<void> {
         // Validate file exists
         tl.checkPath(filePath, 'path');
 
+        // tl.checkPath only tests existence, so a directory satisfies it. A directory named with a
+        // supported extension would otherwise be handed to SqlPackage or sqlcmd, which fail with a
+        // message about the tool rather than about the input. The other file inputs already reject
+        // a directory, so this keeps the main input consistent with them.
+        if (isDirectory(filePath)) {
+            throw new Error(tl.loc('FilePathInputIsDirectory', 'path', filePath));
+        }
+
         // Validate the action/file-type combination before any tool discovery so invalid
         // inputs fail deterministically instead of triggering download/install work first.
         const sqlPackageActions = ['publish', 'script', 'deployreport'];
@@ -289,6 +297,20 @@ async function main(): Promise<void> {
 }
 
 /**
+ * True when the path exists and is a directory.
+ *
+ * An unreadable path reports false so the caller's own error surfaces instead of one about the
+ * stat call.
+ */
+function isDirectory(value: string): boolean {
+    try {
+        return fs.existsSync(value) && fs.statSync(value).isDirectory();
+    } catch (_) {
+        return false;
+    }
+}
+
+/**
  * Read an optional filePath input, returning undefined when the user left it blank.
  *
  * The agent roots filePath inputs before the task sees them, so an unset one arrives as
@@ -312,14 +334,7 @@ function getOptionalFilePathInput(name: string): string | undefined {
 
     const value = raw.trim();
 
-    let isDirectory = false;
-    try {
-        isDirectory = fs.existsSync(value) && fs.statSync(value).isDirectory();
-    } catch (_) {
-        // Unreadable path: leave it to the consumer to report a useful error.
-    }
-
-    if (isDirectory) {
+    if (isDirectory(value)) {
         throw new Error(tl.loc('FilePathInputIsDirectory', name, value));
     }
 
@@ -367,25 +382,36 @@ function resolveSqlcmdCredentials(
     const tokenBasedAuthTypes = ['activedirectorydefault'];
 
     if (tokenBasedAuthTypes.includes(sqlAuthType)) {
+        // azidentity defaults to the public cloud when neither its cloud options nor
+        // AZURE_AUTHORITY_HOST is set, so a sovereign sign-in would contact login.microsoftonline.com
+        // even though the endpoint names a different authority. Every credential path below carries
+        // it for that reason.
+        const authorityOverrides: { [key: string]: string } = azureEndpoint.environmentAuthorityUrl
+            ? { AZURE_AUTHORITY_HOST: azureEndpoint.environmentAuthorityUrl }
+            : {};
+
         if (scheme === 'workloadidentityfederation') {
             // AzurePipelinesCredential exchanges the pipeline's OIDC token for a service
             // connection token, so it needs the job's own access token.
             const systemAccessToken = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
             if (!azureEndpoint.servicePrincipalClientID || !systemAccessToken) {
-                tl.warning(tl.loc('WifSqlcmdFallbackToAgentIdentity'));
-                return undefined;
+                // Returning undefined here would run sqlcmd with ActiveDirectoryDefault and no
+                // service connection environment, so azidentity would resolve whatever ambient
+                // credential the agent happens to carry. The user selected a service connection;
+                // deploying as a different principal is worse than not deploying.
+                throw new Error(tl.loc('ServiceConnectionCredentialsUnavailable', azureSubscription));
             }
             tl.setSecret(systemAccessToken);
             return {
                 tenantId: azureEndpoint.tenantID,
                 authMethodOverride: 'ActiveDirectoryAzurePipelines',
                 source: 'azurePipelines',
-                envOverrides: {
+                envOverrides: Object.assign({
                     AZURESUBSCRIPTION_SERVICE_CONNECTION_ID: azureSubscription,
                     AZURESUBSCRIPTION_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
                     AZURESUBSCRIPTION_TENANT_ID: azureEndpoint.tenantID,
                     SYSTEM_ACCESSTOKEN: systemAccessToken
-                }
+                }, authorityOverrides)
             };
         }
 
@@ -394,11 +420,11 @@ function resolveSqlcmdCredentials(
             return {
                 tenantId: azureEndpoint.tenantID,
                 source: 'clientSecret',
-                envOverrides: {
+                envOverrides: Object.assign({
                     AZURE_TENANT_ID: azureEndpoint.tenantID,
                     AZURE_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
                     AZURE_CLIENT_SECRET: azureEndpoint.servicePrincipalKey
-                }
+                }, authorityOverrides)
             };
         }
 
@@ -411,17 +437,24 @@ function resolveSqlcmdCredentials(
             return {
                 tenantId: azureEndpoint.tenantID,
                 source: 'clientCertificate',
-                envOverrides: {
+                envOverrides: Object.assign({
                     AZURE_TENANT_ID: azureEndpoint.tenantID,
                     AZURE_CLIENT_ID: azureEndpoint.servicePrincipalClientID,
                     AZURE_CLIENT_CERTIFICATE_PATH: azureEndpoint.servicePrincipalCertificatePath
-                }
+                }, authorityOverrides)
             };
         }
 
-        // ManagedServiceIdentity, or an incomplete endpoint: DefaultAzureCredential resolves
-        // the agent's managed identity, which is the service connection identity.
-        return undefined;
+        // A managed identity service connection *is* the agent's identity, so letting
+        // DefaultAzureCredential resolve it is the intended behaviour rather than a fallback.
+        if (scheme === 'managedserviceidentity') {
+            return undefined;
+        }
+
+        // Any other scheme reaching this point carries no usable credential material. Running
+        // without an override would authenticate as the agent's ambient identity instead of the
+        // selected service connection, so stop rather than deploy as the wrong principal.
+        throw new Error(tl.loc('ServiceConnectionCredentialsUnavailable', azureSubscription));
     }
 
     if (sqlAuthType === 'activedirectoryserviceprincipal') {

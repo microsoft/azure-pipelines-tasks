@@ -85,6 +85,14 @@ export class SqlcmdExecutor {
     ): { [key: string]: string } {
         const envVars: { [key: string]: string } = Object.assign({}, process.env, credentials?.envOverrides);
 
+        // Names only, never values: several of these carry secrets. Which variables were applied is
+        // the one thing that cannot be recovered from the command line afterwards, and it is what
+        // determines the identity and the Entra authority sqlcmd ends up using.
+        const overrideNames = Object.keys(credentials?.envOverrides ?? {});
+        if (overrideNames.length > 0) {
+            tl.debug(`sqlcmd environment overrides: ${overrideNames.join(', ')}`);
+        }
+
         if (connectionConfig.Password) {
             // go-sqlcmd reads SQLCMDPASSWORD automatically for SQL auth and AAD password/SP auth.
             envVars[Constants.sqlcmdPasswordEnvVarName] = connectionConfig.Password;

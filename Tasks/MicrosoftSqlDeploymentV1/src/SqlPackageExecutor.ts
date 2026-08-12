@@ -115,7 +115,13 @@ export class SqlPackageExecutor {
         const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
 
         if (useAccessToken) {
-            args.push(`/TargetServerName:${connectionConfig.Server}`);
+            // The Server getter returns the host alone, because callers such as ARM lookup and DNS
+            // need it without a port. SqlPackage needs the port back: a managed instance public
+            // endpoint listens on 3342, and dropping it sends the deployment to 1433 instead. The
+            // sqlcmd path rebuilds it the same way.
+            args.push(`/TargetServerName:${connectionConfig.Port
+                ? `${connectionConfig.Server},${connectionConfig.Port}`
+                : connectionConfig.Server}`);
             args.push(`/TargetDatabaseName:${connectionConfig.Database}`);
             args.push(`/AccessToken:${accessToken}`);
         } else {
