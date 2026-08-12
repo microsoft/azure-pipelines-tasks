@@ -5,6 +5,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
@@ -58,4 +59,18 @@ describe('AzurePowerShell Suite', function () {
             psr.run(path.join(__dirname, 'CleansUpTempScriptPwsh.ps1'), done);
         })
     }
+
+    describe('Node handler argument sanitization (MSRC 129198)', function () {
+        it('rejects a newline in ScriptArguments before the dot-source sink', async () => {
+            let tp = path.join(__dirname, 'L0NodeRejectsNewlineArgs.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            assert(!tr.succeeded, 'task must fail when ScriptArguments contains a newline');
+            assert(tr.stdout.indexOf('Line breaks are not allowed') >= 0 || tr.stdout.indexOf('InvalidScriptArguments0') >= 0,
+                'should fail with the InvalidScriptArguments0 message');
+            assert(tr.stdout.indexOf('Formatted command') < 0,
+                'the task must throw before building the dot-source wrapper (no wrapper generated)');
+        });
+    });
 });

@@ -22,7 +22,7 @@ export const runValidateFileArgsTests = () => {
         ],
         [
             "Accepts allowed symbols",
-            "a A z Z 1 \\ ` _ ' \" - = / : . * , + ~ ? % \n #", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+            "a A z Z 1 \\ ` _ ' \" - = / : . * , + ~ ? % #", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
         ],
         [
             "Paths check",
@@ -57,6 +57,9 @@ export const runValidateFileArgsTests = () => {
 
     const throwTestSuites: [string, string, string[]][] = [
         [
+            "Rejects a newline in arguments (MSRC 129198)",
+            "test\nWrite-Host injected", ['AZP_75787_ENABLE_NEW_LOGIC=true']
+        ], [
             "If dangerous symbols are present, and FF is on",
             "test; whoami", ['AZP_75787_ENABLE_NEW_LOGIC=true']
         ], [

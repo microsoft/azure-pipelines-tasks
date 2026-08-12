@@ -6,6 +6,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { assertNoScriptNewline } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
 function convertToNullIfUndefined<T>(arg: T): T|null {
@@ -31,6 +32,10 @@ async function run() {
         let scriptPath = convertToNullIfUndefined(tl.getPathInput('ScriptPath', false));
         let scriptInline: string = convertToNullIfUndefined(tl.getInput('Inline', false));
         let scriptArguments: string = convertToNullIfUndefined(tl.getInput('ScriptArguments', false));
+        // MSRC 129198: a CR/LF in ScriptArguments / ScriptPath is a PowerShell statement separator at
+        // the dot-source sink below, so it injects a new statement. Reject unconditionally (parity with
+        // the Windows handler, AzurePowerShell.ps1). The Node handler runs on Linux/macOS.
+        assertNoScriptNewline(scriptArguments, scriptPath, scriptType.toUpperCase() === 'FILEPATH');
         let _vsts_input_failOnStandardError = convertToNullIfUndefined(tl.getBoolInput('FailOnStandardError', false));
         let targetAzurePs: string = convertToNullIfUndefined(tl.getInput('TargetAzurePs', false));
         let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));

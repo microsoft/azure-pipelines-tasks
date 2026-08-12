@@ -82,11 +82,6 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
     validateAzModuleVersion: () => Promise.resolve()
 });
 
-// Mock argsSanitizer
-tmr.registerMock('./src/argsSanitizer', {
-    tryValidateScriptArgs: () => {},
-    ArgsSanitizingError: class extends Error {}
-});
 
 // Mock AzureCliConfigDir
 tmr.registerMock('./src/AzureCliConfigDir', {
