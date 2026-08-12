@@ -525,6 +525,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.ScriptArgsSanitized" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen Backtick (`), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ScriptArgsSanitizedBash" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\). More information is available here: https://aka.ms/ado/75787]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen umgekehrten Schrägstrich (\), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.SettingVMExtensionFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to install VM custom script extension on VMSS. Error: %s.]]></Val>
