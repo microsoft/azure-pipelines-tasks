@@ -12,17 +12,38 @@ export default class SqlConnectionConfig {
      * spelling, otherwise a string that SqlPackage would have deployed is rejected here with an
      * error that names the wrong setting.
      *
+     * Each spelling maps to one canonical name and the value is stored under that name while
+     * parsing, so `Data Source=old;Server=new` resolves to `new` the way SqlConnectionStringBuilder
+     * does. Preferring one spelling over another regardless of position would read a different
+     * server, database or credential than the connection string handed to SqlPackage.
+     *
      * https://learn.microsoft.com/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring
      */
-    private static readonly ServerKeys = ['data source', 'server', 'addr', 'address', 'network address'];
-    private static readonly UserIdKeys = ['user id', 'user', 'uid'];
-    private static readonly PasswordKeys = ['password', 'pwd'];
-    private static readonly DatabaseKeys = ['initial catalog', 'database'];
-    private static readonly EncryptKeys = ['encrypt'];
-    private static readonly TrustServerCertificateKeys = ['trustservercertificate', 'trust server certificate'];
-    private static readonly HostNameInCertificateKeys = ['hostnameincertificate', 'host name in certificate'];
-    private static readonly ApplicationIntentKeys = ['applicationintent', 'application intent'];
-    private static readonly ConnectTimeoutKeys = ['connect timeout', 'connection timeout', 'timeout'];
+    private static readonly CanonicalKeys: ReadonlyMap<string, string> = new Map<string, string>([
+        ['data source', 'server'],
+        ['server', 'server'],
+        ['addr', 'server'],
+        ['address', 'server'],
+        ['network address', 'server'],
+        ['initial catalog', 'database'],
+        ['database', 'database'],
+        ['user id', 'user id'],
+        ['user', 'user id'],
+        ['uid', 'user id'],
+        ['password', 'password'],
+        ['pwd', 'password'],
+        ['trust server certificate', 'trustservercertificate'],
+        ['trustservercertificate', 'trustservercertificate'],
+        ['host name in certificate', 'hostnameincertificate'],
+        ['hostnameincertificate', 'hostnameincertificate'],
+        ['application intent', 'applicationintent'],
+        ['applicationintent', 'applicationintent'],
+        ['connect timeout', 'connect timeout'],
+        ['connection timeout', 'connect timeout'],
+        ['timeout', 'connect timeout'],
+        ['integrated security', 'integrated security'],
+        ['trusted_connection', 'integrated security']
+    ]);
 
     constructor(connectionString: string) {
         this._validateConnectionString(connectionString);
@@ -35,7 +56,7 @@ export default class SqlConnectionConfig {
     }
 
     public get Server(): string {
-        let server = this._getFirstConnectionStringValue(SqlConnectionConfig.ServerKeys);
+        let server = this._getConnectionStringValue('server');
         if (!server) {
             return '';
         }
@@ -56,7 +77,7 @@ export default class SqlConnectionConfig {
     }
 
     public get Port(): number | undefined {
-        const server = this._getFirstConnectionStringValue(SqlConnectionConfig.ServerKeys);
+        const server = this._getConnectionStringValue('server');
         if (server && server.includes(',')) {
             const port = parseInt(server.split(',')[1].trim(), 10);
             return Number.isFinite(port) ? port : undefined;
@@ -65,30 +86,38 @@ export default class SqlConnectionConfig {
     }
 
     public get Database(): string {
-        return this._getFirstConnectionStringValue(SqlConnectionConfig.DatabaseKeys) || '';
+        return this._getConnectionStringValue('database') || '';
     }
 
     public get UserId(): string | undefined {
-        return this._getFirstConnectionStringValue(SqlConnectionConfig.UserIdKeys);
+        return this._getConnectionStringValue('user id');
     }
 
     public get Password(): string | undefined {
-        return this._getFirstConnectionStringValue(SqlConnectionConfig.PasswordKeys);
+        return this._getConnectionStringValue('password');
     }
 
     /**
      * The requested encryption level, normalized to the values sqlcmd's -N switch accepts.
      * Returns undefined when the property is absent or holds a value SqlClient does not define,
      * so that callers report it as unapplied rather than passing it through to the tool.
+     *
+     * Mandatory and Optional are the current SqlClient spellings of True and False, so they must
+     * map to the same switch value. Leaving them unrecognised would discard an explicit request
+     * to encrypt, which is the one case where failing quietly is least acceptable.
      */
     public get Encrypt(): string | undefined {
-        const value = this._getFirstConnectionStringValue(SqlConnectionConfig.EncryptKeys)?.toLowerCase();
+        const value = this._getConnectionStringValue('encrypt')?.toLowerCase();
         switch (value) {
             case 'true':
+            case 'mandatory':
             case 'yes':
+            case '1':
                 return 'true';
             case 'false':
+            case 'optional':
             case 'no':
+            case '0':
                 return 'false';
             case 'strict':
                 return 'strict';
@@ -98,19 +127,19 @@ export default class SqlConnectionConfig {
     }
 
     public get TrustServerCertificate(): boolean {
-        return this._parseBoolean(this._getFirstConnectionStringValue(SqlConnectionConfig.TrustServerCertificateKeys));
+        return this._parseBoolean(this._getConnectionStringValue('trustservercertificate'));
     }
 
     public get HostNameInCertificate(): string | undefined {
-        return this._getFirstConnectionStringValue(SqlConnectionConfig.HostNameInCertificateKeys);
+        return this._getConnectionStringValue('hostnameincertificate');
     }
 
     public get ApplicationIntent(): string | undefined {
-        return this._getFirstConnectionStringValue(SqlConnectionConfig.ApplicationIntentKeys)?.toLowerCase();
+        return this._getConnectionStringValue('applicationintent')?.toLowerCase();
     }
 
     public get ConnectTimeoutSeconds(): number | undefined {
-        const value = this._getFirstConnectionStringValue(SqlConnectionConfig.ConnectTimeoutKeys);
+        const value = this._getConnectionStringValue('connect timeout');
         if (!value) {
             return undefined;
         }
@@ -187,7 +216,10 @@ export default class SqlConnectionConfig {
                     val = val.replace(/''/g, "'");
                 }
 
-                result.set(key, val);
+                // Synonymous spellings share one canonical name, so a later occurrence overwrites an
+                // earlier one exactly as SqlConnectionStringBuilder does.
+                const canonicalKey = SqlConnectionConfig.CanonicalKeys.get(key) ?? key;
+                result.set(canonicalKey, val);
                 this._originalKeyNames.push(match.groups.key.trim());
             }
         }
@@ -208,20 +240,6 @@ export default class SqlConnectionConfig {
      */
     private _getConnectionStringValue(key: string): string | undefined {
         return this._parsedConnectionString.get(key.toLowerCase());
-    }
-
-    /**
-     * Return the value for the first key that is present, so the accepted spellings of a setting
-     * resolve to the same value. Keys are tried in order, most canonical first.
-     */
-    private _getFirstConnectionStringValue(keys: string[]): string | undefined {
-        for (const key of keys) {
-            const value = this._getConnectionStringValue(key);
-            if (value) {
-                return value;
-            }
-        }
-        return undefined;
     }
 
     /**
@@ -277,7 +295,7 @@ export default class SqlConnectionConfig {
         switch (this.FormattedAuthentication) {
             case undefined: {
                 // No Authentication= keyword. Check for Windows/trusted auth keywords that we don't support.
-                const integratedSecurity = this._getConnectionStringValue('integrated security') || this._getConnectionStringValue('trusted_connection');
+                const integratedSecurity = this._getConnectionStringValue('integrated security');
                 if (integratedSecurity && (integratedSecurity.toLowerCase() === 'true' || integratedSecurity.toLowerCase() === 'yes')) {
                     throw new Error(tl.loc('UnsupportedAuthentication', 'Integrated Security=true'));
                 }

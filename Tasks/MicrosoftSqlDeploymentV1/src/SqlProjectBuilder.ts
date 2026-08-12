@@ -57,25 +57,46 @@ export default class SqlProjectBuilder {
     /**
      * The output directory the user asked for, if any.
      *
-     * dotnet accepts --output/-o as well as the MSBuild property OutputPath, which can be written
-     * as -p:, --property: or /p:. All of them are honoured so that an explicit choice is never
-     * quietly replaced by the directory this task would otherwise pin.
+     * The two ways of asking resolve differently, and the difference is not cosmetic:
+     *   --output / -o        dotnet resolves a relative path against the **current directory**
+     *   -p:OutputPath=       MSBuild resolves it against the **project directory**
+     * Resolving both the same way makes a nested project build successfully and then be searched
+     * for in a directory that does not exist.
+     *
+     * Detection runs over the same tokens that are passed to dotnet, so a value can never be read
+     * differently from the way it is executed.
      */
     public static findUserSpecifiedOutputDirectory(projectPath: string, buildArguments?: string): string | undefined {
         if (!buildArguments) {
             return undefined;
         }
 
-        const outputDir = this.findArgument(buildArguments, '--output', '-o')
-            ?? this.findMsBuildProperty(buildArguments, 'OutputPath');
+        const tokens = this.parseArguments(buildArguments);
 
-        if (!outputDir) {
-            return undefined;
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+
+            if (/^(--output|-o)$/i.test(token)) {
+                const value = tokens[i + 1];
+                if (value) {
+                    return path.resolve(process.cwd(), value);
+                }
+            }
+
+            const inlineOutput = /^(?:--output|-o)[:=](.+)$/i.exec(token);
+            if (inlineOutput) {
+                return path.resolve(process.cwd(), inlineOutput[1]);
+            }
         }
 
-        // Resolve relative paths against the project directory so dacpac lookup works
-        // regardless of the task's working directory
-        return path.resolve(path.dirname(projectPath), outputDir);
+        for (const token of tokens) {
+            const outputPath = /^(?:-p|--property|\/p):OutputPath=(.+)$/i.exec(token);
+            if (outputPath) {
+                return path.resolve(path.dirname(projectPath), outputPath[1]);
+            }
+        }
+
+        return undefined;
     }
 
     /**
@@ -89,49 +110,6 @@ export default class SqlProjectBuilder {
     public static getTaskOwnedOutputDirectory(projectPath: string, projectName: string): string {
         const root = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
         return path.join(root, 'sqlproj-build-output', projectName);
-    }
-
-    /**
-     * Finds an MSBuild property value written as -p:Name=Value, --property:Name=Value or
-     * /p:Name=Value, with an optionally quoted value.
-     */
-    private static findMsBuildProperty(args: string, propertyName: string): string | undefined {
-        const patterns = [
-            new RegExp(`(?:-p|--property|/p):${propertyName}="([^"]+)"`, 'i'),
-            new RegExp(`(?:-p|--property|/p):${propertyName}=([^\\s]+)`, 'i')
-        ];
-
-        for (const pattern of patterns) {
-            const match = args.match(pattern);
-            if (match && match[1]) {
-                return match[1].trim();
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * Finds an argument value from a command line string
-     * Supports both longForm (--output) and shortForm (-o)
-     */
-    private static findArgument(args: string, longForm: string, shortForm: string): string | undefined {
-        // Match patterns like: --output "path" or -o path or --output=path
-        const patterns = [
-            new RegExp(`${longForm}[\\s=]+"([^"]+)"`, 'i'),  // --output "path"
-            new RegExp(`${longForm}[\\s=]+([^\\s]+)`, 'i'),   // --output path or --output=path
-            new RegExp(`${shortForm}[\\s]+"([^"]+)"`, 'i'),   // -o "path"
-            new RegExp(`${shortForm}[\\s]+([^\\s]+)`, 'i')    // -o path
-        ];
-
-        for (const pattern of patterns) {
-            const match = args.match(pattern);
-            if (match && match[1]) {
-                return match[1].trim();
-            }
-        }
-
-        return undefined;
     }
 
     /**
@@ -191,17 +169,47 @@ export default class SqlProjectBuilder {
     }
 
     /**
-     * Parses a command line string into an array of arguments
-     * Preserves quoted strings with spaces
+     * Split a command line string into argv elements.
+     *
+     * A quote is treated as syntax wherever it appears, not only at the start of a token, so
+     * `-p:OutputPath="out dir"` stays one argument. Matching on the start alone split it in two and
+     * handed MSBuild a truncated path. Quotes are removed once they have done their job of keeping
+     * a value together, because argv elements are passed to the tool directly and never through a
+     * shell.
      */
     private static parseArguments(args: string): string[] {
         const parsed: string[] = [];
-        const regex = /"([^"]+)"|'([^']+)'|(\S+)/g;
-        let match;
+        let current = '';
+        let inQuotes = false;
+        let quoteChar = '';
+        let hasContent = false;
 
-        while ((match = regex.exec(args)) !== null) {
-            // match[1] = double quoted, match[2] = single quoted, match[3] = unquoted
-            parsed.push(match[1] || match[2] || match[3]);
+        const flush = (): void => {
+            parsed.push(current);
+            current = '';
+            hasContent = false;
+        };
+
+        for (const char of args) {
+            if ((char === '"' || char === "'") && !inQuotes) {
+                inQuotes = true;
+                quoteChar = char;
+                // An empty quoted value is still a value, so remember it was quoted.
+                hasContent = true;
+            } else if (char === quoteChar && inQuotes) {
+                inQuotes = false;
+                quoteChar = '';
+            } else if (char === ' ' && !inQuotes) {
+                if (current.length > 0 || hasContent) {
+                    flush();
+                }
+            } else {
+                current += char;
+            }
+        }
+
+        if (current.length > 0 || hasContent) {
+            flush();
         }
 
         return parsed;

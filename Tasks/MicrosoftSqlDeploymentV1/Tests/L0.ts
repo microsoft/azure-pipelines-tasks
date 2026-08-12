@@ -41,22 +41,52 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert.strictEqual(SqlProjectBuilder.getProjectName('/src/Contoso.Sales.sqlproj'), 'Contoso.Sales');
         });
 
-        // dotnet accepts each of these spellings, so an explicit choice must be recognised in all of
-        // them rather than replaced by the directory the task would otherwise pin.
-        const outputForms: [string, string][] = [
+        // dotnet resolves --output against the current directory, while MSBuild resolves the
+        // OutputPath property against the project directory. Detection has to match the tool, or a
+        // nested project builds successfully and is then searched for in a directory that does not
+        // exist. Both quote styles are covered because the tokenizer used here is the same one that
+        // builds the command line.
+        const projectFile = path.join('/src', 'App', 'MyDb.sqlproj');
+
+        const cwdRelative: [string, string][] = [
             ['--output custom', 'recognises --output'],
             ['-o custom', 'recognises -o'],
+            ['--output=custom', 'recognises --output='],
+            [`--output "custom"`, 'recognises a double-quoted --output value'],
+            [`--output 'custom'`, 'recognises a single-quoted --output value']
+        ];
+
+        cwdRelative.forEach(([args, description]) => {
+            it(`${description}, resolved against the current directory`, function() {
+                assert.strictEqual(
+                    SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, args),
+                    path.resolve(process.cwd(), 'custom'));
+            });
+        });
+
+        const projectRelative: [string, string][] = [
             ['-p:OutputPath=custom', 'recognises the -p: property form'],
             ['--property:OutputPath=custom', 'recognises the --property: form'],
             ['/p:OutputPath=custom', 'recognises the /p: form'],
-            ['-p:OutputPath="custom"', 'recognises a quoted property value']
+            [`-p:OutputPath="custom"`, 'recognises a double-quoted property value'],
+            [`-p:OutputPath='custom'`, 'recognises a single-quoted property value']
         ];
 
-        outputForms.forEach(([args, description]) => {
-            it(description, function() {
-                const resolved = SqlProjectBuilder.findUserSpecifiedOutputDirectory(path.join('/src', 'MyDb.sqlproj'), args);
-                assert.strictEqual(resolved, path.resolve('/src', 'custom'));
+        projectRelative.forEach(([args, description]) => {
+            it(`${description}, resolved against the project directory`, function() {
+                assert.strictEqual(
+                    SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, args),
+                    path.resolve(path.dirname(projectFile), 'custom'));
             });
+        });
+
+        it('keeps a quoted path containing spaces in one piece', function() {
+            assert.strictEqual(
+                SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, `-p:OutputPath="out dir"`),
+                path.resolve(path.dirname(projectFile), 'out dir'));
+            assert.strictEqual(
+                SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, `-p:OutputPath='out dir'`),
+                path.resolve(path.dirname(projectFile), 'out dir'));
         });
 
         it('reports no user-specified output when only the configuration is set', function() {
@@ -64,6 +94,70 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 SqlProjectBuilder.findUserSpecifiedOutputDirectory('/src/MyDb.sqlproj', '-p:Configuration=Release'),
                 undefined,
                 'Configuration selects a directory MSBuild derives, so the task must pin its own instead');
+        });
+    });
+
+    describe('SqlConnectionConfig - Mixed synonymous keys', function() {
+        // SqlConnectionStringBuilder maps synonyms onto one property, so the last occurrence wins
+        // regardless of which spelling it used. Preferring a fixed spelling would send sqlcmd, the
+        // firewall probe or the /AccessToken SqlPackage path to a different target or credential
+        // than the connection string handed to SqlPackage.
+        it('takes the later server, whichever spelling it used', function() {
+            const config = new SqlConnectionConfig('Data Source=old.database.windows.net;Server=new.database.windows.net;Database=db;User ID=u;Password=p');
+            assert.strictEqual(config.Server, 'new.database.windows.net');
+        });
+
+        it('takes the later server when the aliases appear in the other order', function() {
+            const config = new SqlConnectionConfig('Server=old.database.windows.net;Data Source=new.database.windows.net;Database=db;User ID=u;Password=p');
+            assert.strictEqual(config.Server, 'new.database.windows.net');
+        });
+
+        it('takes the later database', function() {
+            const config = new SqlConnectionConfig('Server=s.database.windows.net;Initial Catalog=olddb;Database=newdb;User ID=u;Password=p');
+            assert.strictEqual(config.Database, 'newdb');
+        });
+
+        it('takes the later user id and password', function() {
+            const config = new SqlConnectionConfig('Server=s.database.windows.net;Database=db;User ID=olduser;UID=newuser;Password=oldpass;PWD=newpass');
+            assert.strictEqual(config.UserId, 'newuser');
+            assert.strictEqual(config.Password, 'newpass');
+        });
+
+        it('takes the later encryption setting', function() {
+            const config = new SqlConnectionConfig('Server=s.database.windows.net;Database=db;User ID=u;Password=p;Encrypt=False;Encrypt=Mandatory');
+            assert.strictEqual(config.Encrypt, 'true');
+        });
+
+        it('takes the later connect timeout, whichever spelling it used', function() {
+            const config = new SqlConnectionConfig('Server=s.database.windows.net;Database=db;User ID=u;Password=p;Connect Timeout=10;Connection Timeout=99');
+            assert.strictEqual(config.ConnectTimeoutSeconds, 99);
+        });
+    });
+
+    describe('SqlConnectionConfig - Encrypt mapping', function() {
+        // go-sqlcmd v1.10 rejects an unknown -N value naming the set it accepts:
+        //   [m[andatory] yes 1 t[rue] disable o[ptional] no 0 f[alse] s[trict]]
+        // Mandatory and Optional are the current SqlClient spellings of True and False, so all of
+        // these have to resolve to the same switch value rather than being dropped.
+        const encryptValues: [string, string | undefined, string][] = [
+            ['True', 'true', 'maps True'],
+            ['Mandatory', 'true', 'maps Mandatory, the current spelling of True'],
+            ['Yes', 'true', 'maps Yes'],
+            ['1', 'true', 'maps 1'],
+            ['False', 'false', 'maps False'],
+            ['Optional', 'false', 'maps Optional, the current spelling of False'],
+            ['No', 'false', 'maps No'],
+            ['0', 'false', 'maps 0'],
+            ['Strict', 'strict', 'maps Strict'],
+            ['MANDATORY', 'true', 'is case-insensitive'],
+            ['bogus', undefined, 'reports an undefined value as unapplied rather than passing it to the tool']
+        ];
+
+        encryptValues.forEach(([value, expected, description]) => {
+            it(description, function() {
+                const config = new SqlConnectionConfig(`Server=s.database.windows.net;Database=d;User Id=sa;Password=p;Encrypt=${value}`);
+                assert.strictEqual(config.Encrypt, expected);
+            });
         });
     });
 
@@ -400,14 +494,16 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    it('should fail when path is a directory', async () => {
+    it('should fail when path is an existing directory with a supported extension', async () => {
         const tp = path.join(__dirname, 'L0PathIsDirectory.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
         runValidations(() => {
-            assert(tr.failed, 'task should have failed when path is a directory');
-            assert(tr.invokedToolCount === 0, 'should not have invoked any tool');
-            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have error about invalid path');
+            assert(tr.failed, 'tl.checkPath only tests existence, so a directory has to be rejected separately');
+            assert(tr.stdout.indexOf('loc_mock_FilePathInputIsDirectory') >= 0,
+                'the error must say the input is a directory rather than blaming the tool');
+            assert(tr.invokedToolCount === 0,
+                'a directory must never reach SqlPackage or sqlcmd');
         }, tr);
     });
 
@@ -821,6 +917,55 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should pass the sovereign Entra authority to sqlcmd', async () => {
+        const tp = path.join(__dirname, 'L0SovereignAuthorityPassedToSqlcmd.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'the deployment should run against the sovereign endpoint');
+            const overrides = tr.stdout.split('\n')
+                .find(line => line.indexOf('sqlcmd environment overrides:') >= 0);
+            assert(overrides, 'the applied environment overrides must be recorded for diagnosis');
+            assert(overrides.indexOf('AZURE_AUTHORITY_HOST') >= 0,
+                'without this azidentity contacts the public Entra authority, not the sovereign one');
+        }, tr);
+    });
+
+    it('should keep the port on /TargetServerName for a managed instance public endpoint', async () => {
+        const tp = path.join(__dirname, 'L0ManagedInstancePortPreserved.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'the MI public endpoint listens on 3342, so dropping the port sends the deployment to 1433');
+        }, tr);
+    });
+
+    it('should not run sqlcmd when the selected service connection cannot be materialized', async () => {
+        const tp = path.join(__dirname, 'L0IncompleteWifCredentialsFail.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'an unusable service connection must stop the deployment');
+            assert(tr.stdout.indexOf('loc_mock_ServiceConnectionCredentialsUnavailable') >= 0,
+                'the error must name the service connection that could not be used');
+            // Discovery logs the sqlcmd path even when it is never executed, so the assertion is on
+            // an actual invocation rather than on the path appearing in the log.
+            assert(tr.stdout.indexOf('[command]') < 0,
+                'sqlcmd must not run: without the service connection environment it would authenticate as the agent');
+        }, tr);
+    });
+
+    it('should send Encrypt=Mandatory to sqlcmd as -N true', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdEncryptMandatory.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'Mandatory is the current spelling of True and must not be dropped, which would leave the connection unencrypted');
+        }, tr);
+    });
+
     it('should warn about connection string properties that sqlcmd cannot honour', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdConnectionPropertiesWarned.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -847,6 +992,18 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'the connection string must be passed through so the domain identity is used');
             assert(tr.stdout.indexOf('/AccessToken:') < 0,
                 'Integrated names a specific identity, so a service connection token must not be injected');
+        }, tr);
+    });
+
+    it('should find the dacpac for a nested project built with a relative --output', async () => {
+        const tp = path.join(__dirname, 'L0SqlProjNestedRelativeOutput.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'dotnet resolves --output against the current directory, so a nested project must be searched there');
+            assert(tr.stdout.indexOf('loc_mock_DacpacNotFoundAfterBuild') < 0,
+                'building successfully and then looking in the project directory is the defect');
         }, tr);
     });
 
