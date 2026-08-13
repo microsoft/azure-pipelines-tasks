@@ -18,6 +18,11 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint', {
         async getEndpoint() {
             return {
                 scheme: 'ServicePrincipal',
+                // A real ServicePrincipal endpoint always carries these. Omitting them describes an
+                // endpoint that cannot be materialized, which the task now rejects.
+                tenantID: 'my-tenant-id',
+                servicePrincipalClientID: 'my-client-id',
+                servicePrincipalKey: 'my-client-secret',
                 applicationTokenCredentials: {
                     activeDirectoryResourceId: 'https://management.azure.com/',
                     getToken: async (_force: boolean) => 'fake-sql-access-token'

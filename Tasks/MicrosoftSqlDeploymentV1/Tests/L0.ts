@@ -956,6 +956,21 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
+    it('should not run sqlcmd when the selected service connection is a Publish Profile', async () => {
+        const tp = path.join(__dirname, 'L0PublishProfileEndpointRejected.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.failed, 'a Publish Profile endpoint carries no usable credential and must stop the deployment');
+            assert(tr.stdout.indexOf('loc_mock_ServiceConnectionCredentialsUnavailable') >= 0,
+                'the error must name the service connection that could not be used');
+            // The endpoint has no tenantID, which is what used to short-circuit ahead of the scheme
+            // check and let sqlcmd run under the agent's ambient identity.
+            assert(tr.stdout.indexOf('[command]') < 0,
+                'sqlcmd must not run: ActiveDirectoryDefault with no injected environment resolves the agent identity');
+        }, tr);
+    });
+
     it('should send Encrypt=Mandatory to sqlcmd as -N true', async () => {
         const tp = path.join(__dirname, 'L0SqlcmdEncryptMandatory.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
