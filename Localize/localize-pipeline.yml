@@ -46,7 +46,22 @@ stages:
         git config --global user.email "$(github_email)"
         git config --global user.name "$(username)"
         git checkout -b Localization origin/Localization
+
+        # OneLocBuild commits .resjson files with Windows CRLF endings, while the repo
+        # standard (.gitattributes) is LF. Enable merge.renormalize so the 3-way merge
+        # canonicalizes line endings and does not raise spurious CRLF-vs-LF conflicts on
+        # every shared localized file.
+        git config merge.renormalize true
+
+        # Fail fast on a failed merge. Previously "git merge" was followed by "git push",
+        # and a merge failure was masked because only the last command's exit code set the
+        # step result - leaving master and Localization silently diverged.
         git merge origin/master
+        if ($LASTEXITCODE -ne 0) {
+          git merge --abort
+          throw "Sync with master failed due to merge conflicts. Resolve them on the Localization branch and re-run."
+        }
+
         git push origin Localization
       displayName: "Sync with master branch"
       condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
