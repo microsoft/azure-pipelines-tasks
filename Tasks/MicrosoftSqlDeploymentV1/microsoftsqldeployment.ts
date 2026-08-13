@@ -356,6 +356,10 @@ function getOptionalFilePathInput(name: string): string | undefined {
  *   ManagedServiceIdentity     → nothing to inject; the service connection *is* the agent's managed identity,
  *                                which DefaultAzureCredential already resolves.
  *
+ * Any other scheme — Publish Profile, or one this task does not recognise — is rejected rather than
+ * left to DefaultAzureCredential, which would resolve the agent's identity instead of the selected
+ * service connection.
+ *
  * `Authentication=Active Directory Managed Identity` is deliberately excluded. That value is an
  * explicit request for the agent's managed identity, so the service connection identity must not be
  * substituted for it — doing so would silently authenticate as a different (often broader) principal
@@ -368,12 +372,8 @@ function resolveSqlcmdCredentials(
     azureSubscription: string,
     azureEndpoint: any
 ): SqlcmdCredentials | undefined {
-    if (!azureEndpoint?.tenantID) {
-        return undefined;
-    }
-
     const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
-    const scheme = (azureEndpoint.scheme ?? '').toLowerCase();
+    const scheme = (azureEndpoint?.scheme ?? '').toLowerCase();
 
     // Auth types where the connection string names no identity at all, so the identity
     // must come from the service connection. `Active Directory Managed Identity` and
@@ -382,6 +382,19 @@ function resolveSqlcmdCredentials(
     const tokenBasedAuthTypes = ['activedirectorydefault'];
 
     if (tokenBasedAuthTypes.includes(sqlAuthType)) {
+        // A managed identity service connection *is* the agent's identity, so letting
+        // DefaultAzureCredential resolve it is the intended behaviour rather than a fallback.
+        if (scheme === 'managedserviceidentity') {
+            return undefined;
+        }
+
+        // The scheme is inspected before the tenant. A Publish Profile endpoint carries no
+        // tenantID, so checking the tenant first returned undefined here and left sqlcmd running
+        // under whatever ambient identity the agent holds.
+        if ((scheme !== 'serviceprincipal' && scheme !== 'workloadidentityfederation') || !azureEndpoint.tenantID) {
+            throw new Error(tl.loc('ServiceConnectionCredentialsUnavailable', azureSubscription));
+        }
+
         // azidentity defaults to the public cloud when neither its cloud options nor
         // AZURE_AUTHORITY_HOST is set, so a sovereign sign-in would contact login.microsoftonline.com
         // even though the endpoint names a different authority. Every credential path below carries
@@ -445,21 +458,17 @@ function resolveSqlcmdCredentials(
             };
         }
 
-        // A managed identity service connection *is* the agent's identity, so letting
-        // DefaultAzureCredential resolve it is the intended behaviour rather than a fallback.
-        if (scheme === 'managedserviceidentity') {
-            return undefined;
-        }
-
-        // Any other scheme reaching this point carries no usable credential material. Running
-        // without an override would authenticate as the agent's ambient identity instead of the
-        // selected service connection, so stop rather than deploy as the wrong principal.
+        // A ServicePrincipal endpoint reaching this point carries neither a client secret nor a
+        // certificate, so there is no credential material to inject.
         throw new Error(tl.loc('ServiceConnectionCredentialsUnavailable', azureSubscription));
     }
 
     if (sqlAuthType === 'activedirectoryserviceprincipal') {
         // Credentials come from the connection string, but go-mssqldb still needs a tenant.
         // Supply the service connection's so the clientId@tenantId user name can be built.
+        if (!azureEndpoint?.tenantID) {
+            return undefined;
+        }
         return { tenantId: azureEndpoint.tenantID, source: 'tenantOnly' };
     }
 
