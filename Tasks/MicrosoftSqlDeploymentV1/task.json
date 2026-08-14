@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 279,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -99,7 +99,7 @@
       "label": "Firewall Rule Management",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "When enabled, the task temporarily adds a firewall rule for the agent IP and removes it after deployment. Defaults to true when azureSubscription is provided. Disable this for private VNet or on-premises deployments."
+      "helpMarkDown": "When enabled, the task temporarily adds a firewall rule for the agent IP and removes it after deployment. Defaults to true when azureSubscription is provided and the target is an Azure SQL Database logical server. Managed instances, Fabric SQL and SQL Server on a virtual machine or on premises have no Azure SQL firewall rules, so it stays off for them. Disable this for private VNet or on-premises deployments."
     }
   ],
   "outputVariables": [
@@ -154,6 +154,7 @@
     "FailedToGetSQLServerDetails": "Failed to get SQL Server '%s' details: %s",
     "ParsingConnectionString": "Parsing connection string",
     "InvalidConnectionString": "Invalid connection string. A valid connection string is a series of keyword/value pairs separated by semi-colons. If there are any special characters like quotes or semi-colons in the keyword value, enclose the value within quotes. Refer to https://aka.ms/sqlconnectionstring for more info.",
+    "InvalidConnectionStringPropertyValue": "The connection string property '%s' has the value '%s', which is not valid. Accepted values: %s. The value was rejected rather than ignored, because continuing would deploy with a different setting than the one requested.",
     "UnsupportedAuthentication": "Unsupported Authentication type: '%s'. Supported values: SQL auth (no Authentication keyword), Active Directory Default, Active Directory Password, Active Directory Service Principal, Active Directory Integrated, Active Directory Managed Identity.",
     "ConnectionStringMissingServer": "Invalid connection string. Please ensure 'Server' or 'Data Source' is provided in the connection string.",
     "ConnectionStringMissingDatabase": "Invalid connection string. Please ensure 'Database' or 'Initial Catalog' is provided in the connection string.",

@@ -181,10 +181,11 @@ async function main(): Promise<void> {
                 // deploy as a different principal than the one requested.
                 const tokenBasedAuthTypes = ['activedirectorydefault'];
                 const authType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
+                const endpointScheme = normalizeEndpointScheme(azureEndpoint);
                 const shouldAcquireToken = tokenBasedAuthTypes.includes(authType) &&
-                    (azureEndpoint.scheme === 'ServicePrincipal' ||
-                     azureEndpoint.scheme === 'WorkloadIdentityFederation' ||
-                     azureEndpoint.scheme === 'ManagedServiceIdentity');
+                    (endpointScheme === 'serviceprincipal' ||
+                     endpointScheme === 'workloadidentityfederation' ||
+                     endpointScheme === 'managedserviceidentity');
 
                 if (shouldAcquireToken) {
                     try {
@@ -341,6 +342,11 @@ function getOptionalFilePathInput(name: string): string | undefined {
     return value;
 }
 
+// AzureRMEndpoint passes the scheme through unnormalized and treats an absent scheme as ServicePrincipal.
+function normalizeEndpointScheme(azureEndpoint: any): string {
+    return (azureEndpoint?.scheme ?? '').toLowerCase() || 'serviceprincipal';
+}
+
 /**
  * Derive the credentials that make go-sqlcmd authenticate as the Azure service connection
  * rather than the agent's ambient identity.
@@ -353,8 +359,10 @@ function getOptionalFilePathInput(name: string): string | undefined {
  *                                DefaultAzureCredential cannot be used: EnvironmentCredential needs a client
  *                                secret and WorkloadIdentityCredential needs AZURE_FEDERATED_TOKEN_FILE, so the
  *                                chain would silently fall through to the agent's identity.
- *   ManagedServiceIdentity     → nothing to inject; the service connection *is* the agent's managed identity,
- *                                which DefaultAzureCredential already resolves.
+ *   ManagedServiceIdentity     → ActiveDirectoryManagedIdentity, carrying the endpoint's msiClientId when the
+ *                                identity is user-assigned. DefaultAzureCredential is not enough on its own:
+ *                                it tries environment and Azure CLI credentials before managed identity, so
+ *                                the agent's identity is not guaranteed to be the one that authenticates.
  *
  * Any other scheme — Publish Profile, or one this task does not recognise — is rejected rather than
  * left to DefaultAzureCredential, which would resolve the agent's identity instead of the selected
@@ -373,7 +381,7 @@ function resolveSqlcmdCredentials(
     azureEndpoint: any
 ): SqlcmdCredentials | undefined {
     const sqlAuthType = (connectionConfig.FormattedAuthentication ?? '').toLowerCase();
-    const scheme = (azureEndpoint?.scheme ?? '').toLowerCase();
+    const scheme = normalizeEndpointScheme(azureEndpoint);
 
     // Auth types where the connection string names no identity at all, so the identity
     // must come from the service connection. `Active Directory Managed Identity` and
@@ -382,10 +390,24 @@ function resolveSqlcmdCredentials(
     const tokenBasedAuthTypes = ['activedirectorydefault'];
 
     if (tokenBasedAuthTypes.includes(sqlAuthType)) {
-        // A managed identity service connection *is* the agent's identity, so letting
-        // DefaultAzureCredential resolve it is the intended behaviour rather than a fallback.
+        // azidentity defaults to the public cloud when neither its cloud options nor
+        // AZURE_AUTHORITY_HOST is set, so a sovereign sign-in would contact login.microsoftonline.com
+        // even though the endpoint names a different authority. Every credential path below carries
+        // it for that reason.
+        const authorityOverrides: { [key: string]: string } = azureEndpoint?.environmentAuthorityUrl
+            ? { AZURE_AUTHORITY_HOST: azureEndpoint.environmentAuthorityUrl }
+            : {};
+
+        // Pinned to the managed identity rather than left to DefaultAzureCredential, whose chain
+        // reaches environment and Azure CLI credentials first.
         if (scheme === 'managedserviceidentity') {
-            return undefined;
+            return {
+                authMethodOverride: 'ActiveDirectoryManagedIdentity',
+                // Absent for a system-assigned identity, which go-sqlcmd selects with no user id.
+                userIdOverride: azureEndpoint.msiClientId || undefined,
+                source: 'managedIdentity',
+                envOverrides: authorityOverrides
+            };
         }
 
         // The scheme is inspected before the tenant. A Publish Profile endpoint carries no
@@ -394,14 +416,6 @@ function resolveSqlcmdCredentials(
         if ((scheme !== 'serviceprincipal' && scheme !== 'workloadidentityfederation') || !azureEndpoint.tenantID) {
             throw new Error(tl.loc('ServiceConnectionCredentialsUnavailable', azureSubscription));
         }
-
-        // azidentity defaults to the public cloud when neither its cloud options nor
-        // AZURE_AUTHORITY_HOST is set, so a sovereign sign-in would contact login.microsoftonline.com
-        // even though the endpoint names a different authority. Every credential path below carries
-        // it for that reason.
-        const authorityOverrides: { [key: string]: string } = azureEndpoint.environmentAuthorityUrl
-            ? { AZURE_AUTHORITY_HOST: azureEndpoint.environmentAuthorityUrl }
-            : {};
 
         if (scheme === 'workloadidentityfederation') {
             // AzurePipelinesCredential exchanges the pipeline's OIDC token for a service

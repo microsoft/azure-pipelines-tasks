@@ -139,7 +139,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
         //   [m[andatory] yes 1 t[rue] disable o[ptional] no 0 f[alse] s[trict]]
         // Mandatory and Optional are the current SqlClient spellings of True and False, so all of
         // these have to resolve to the same switch value rather than being dropped.
-        const encryptValues: [string, string | undefined, string][] = [
+        const encryptValues: [string, string, string][] = [
             ['True', 'true', 'maps True'],
             ['Mandatory', 'true', 'maps Mandatory, the current spelling of True'],
             ['Yes', 'true', 'maps Yes'],
@@ -149,8 +149,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
             ['No', 'false', 'maps No'],
             ['0', 'false', 'maps 0'],
             ['Strict', 'strict', 'maps Strict'],
-            ['MANDATORY', 'true', 'is case-insensitive'],
-            ['bogus', undefined, 'reports an undefined value as unapplied rather than passing it to the tool']
+            ['MANDATORY', 'true', 'is case-insensitive']
         ];
 
         encryptValues.forEach(([value, expected, description]) => {
@@ -158,6 +157,12 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 const config = new SqlConnectionConfig(`Server=s.database.windows.net;Database=d;User Id=sa;Password=p;Encrypt=${value}`);
                 assert.strictEqual(config.Encrypt, expected);
             });
+        });
+
+        it('rejects a value SqlClient does not define rather than connecting unencrypted', function() {
+            assert.throws(() => {
+                new SqlConnectionConfig('Server=s.database.windows.net;Database=d;User Id=sa;Password=p;Encrypt=bogus');
+            }, /InvalidConnectionStringPropertyValue/);
         });
     });
 
@@ -266,7 +271,12 @@ describe('MicrosoftSqlDeployment Suite', function () {
             [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryServicePrincipal';User Id=clientId;`, `ConnectionStringMissingClientSecret`, 'Service principal auth without client secret'],
             [`Server=test1.database.windows.net;Database=testdb;Integrated Security=true;`, `UnsupportedAuthentication`, 'Windows Integrated Security not supported'],
             [`Server=test1.database.windows.net;Database=testdb;Trusted_Connection=yes;`, `UnsupportedAuthentication`, 'Trusted_Connection not supported'],
-            [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryMSI';`, `UnsupportedAuthentication`, 'unknown Authentication keyword rejected']
+            [`Server=test1.database.windows.net;Database=testdb;Authentication='ActiveDirectoryMSI';`, `UnsupportedAuthentication`, 'unknown Authentication keyword rejected'],
+            // Values the task claims to apply. Ignoring them ran with a different setting than the
+            // one asked for, and the key counted as applied so no warning was raised either.
+            [`Server=test1.database.windows.net;Database=testdb;User Id=u;Password=p;Connect Timeout=abc`, `InvalidConnectionStringPropertyValue`, 'non-numeric Connect Timeout'],
+            [`Server=test1.database.windows.net;Database=testdb;User Id=u;Password=p;ApplicationIntent=foo`, `InvalidConnectionStringPropertyValue`, 'unknown ApplicationIntent'],
+            [`Server=test1.database.windows.net;Database=testdb;User Id=u;Password=p;TrustServerCertificate=bogus`, `InvalidConnectionStringPropertyValue`, 'non-boolean TrustServerCertificate']
         ];
 
         invalidConnectionStrings.forEach(([connectionString, expectedError, description]) => {
@@ -978,6 +988,26 @@ describe('MicrosoftSqlDeployment Suite', function () {
         runValidations(() => {
             assert(tr.succeeded,
                 'Mandatory is the current spelling of True and must not be dropped, which would leave the connection unencrypted');
+        }, tr);
+    });
+
+    it('should pass ServerCertificate to sqlcmd as -J', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdServerCertificatePinned.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'dropping the pin validates against the machine trust store instead of the certificate the caller named');
+        }, tr);
+    });
+
+    it('should pin the managed identity credential for an MSI service connection', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdMsiUsesManagedIdentity.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'ActiveDirectoryDefault lets the credential chain pick an ambient identity and ignores msiClientId');
         }, tr);
     });
 

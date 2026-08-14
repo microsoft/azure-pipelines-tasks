@@ -36,6 +36,8 @@ export default class SqlConnectionConfig {
         ['trustservercertificate', 'trustservercertificate'],
         ['host name in certificate', 'hostnameincertificate'],
         ['hostnameincertificate', 'hostnameincertificate'],
+        ['server certificate', 'servercertificate'],
+        ['servercertificate', 'servercertificate'],
         ['application intent', 'applicationintent'],
         ['applicationintent', 'applicationintent'],
         ['connect timeout', 'connect timeout'],
@@ -132,6 +134,11 @@ export default class SqlConnectionConfig {
 
     public get HostNameInCertificate(): string | undefined {
         return this._getConnectionStringValue('hostnameincertificate');
+    }
+
+    /** Path to the certificate the caller pins the server to, for sqlcmd's -J switch. */
+    public get ServerCertificate(): string | undefined {
+        return this._getConnectionStringValue('servercertificate');
     }
 
     public get ApplicationIntent(): string | undefined {
@@ -270,6 +277,28 @@ export default class SqlConnectionConfig {
     }
 
     /**
+     * SqlClient rejects a value it cannot parse rather than falling back to the default, so a typo
+     * must not silently change the encryption, certificate validation or routing of the connection.
+     */
+    private _validatePropertyValues(): void {
+        const requireOneOf = (canonicalKey: string, displayName: string, allowed: string[]): void => {
+            const value = this._getConnectionStringValue(canonicalKey);
+            if (value !== undefined && !allowed.includes(value.trim().toLowerCase())) {
+                throw new Error(tl.loc('InvalidConnectionStringPropertyValue', displayName, value, allowed.join(', ')));
+            }
+        };
+
+        requireOneOf('encrypt', 'Encrypt', ['true', 'mandatory', 'yes', '1', 'false', 'optional', 'no', '0', 'strict']);
+        requireOneOf('trustservercertificate', 'TrustServerCertificate', ['true', 'yes', 'false', 'no']);
+        requireOneOf('applicationintent', 'ApplicationIntent', ['readonly', 'readwrite']);
+
+        const connectTimeout = this._getConnectionStringValue('connect timeout');
+        if (connectTimeout !== undefined && !/^\d+$/.test(connectTimeout.trim())) {
+            throw new Error(tl.loc('InvalidConnectionStringPropertyValue', 'Connect Timeout', connectTimeout, 'a whole number of seconds'));
+        }
+    }
+
+    /**
      * Mask sensitive parts of the connection settings so they don't show up in the pipeline logs.
      */
     private _maskSecrets(): void {
@@ -284,6 +313,8 @@ export default class SqlConnectionConfig {
     }
 
     private _validateConfig(): void {
+        this._validatePropertyValues();
+
         if (!this.Server) {
             throw new Error(tl.loc('ConnectionStringMissingServer'));
         }
