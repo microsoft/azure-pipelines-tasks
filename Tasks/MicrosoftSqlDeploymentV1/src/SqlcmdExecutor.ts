@@ -12,6 +12,8 @@ export interface SqlcmdCredentials {
     tenantId?: string;
     /** Replaces the --authentication-method value (ActiveDirectoryAzurePipelines for WIF). */
     authMethodOverride?: string;
+    /** Client id of a user-assigned managed identity, passed to sqlcmd as -U. */
+    userIdOverride?: string;
     /** Environment variables that carry the service connection identity to azidentity. */
     envOverrides?: { [key: string]: string };
     /**
@@ -19,7 +21,7 @@ export interface SqlcmdCredentials {
      * telemetry. An authentication failure can then be traced to the credential that was
      * actually used instead of being inferred from the error text.
      */
-    source?: 'azurePipelines' | 'clientSecret' | 'clientCertificate' | 'tenantOnly';
+    source?: 'azurePipelines' | 'clientSecret' | 'clientCertificate' | 'managedIdentity' | 'tenantOnly';
 }
 
 export class SqlcmdExecutor {
@@ -121,6 +123,7 @@ export class SqlcmdExecutor {
     ): string[] {
         const tenantId = credentials?.tenantId;
         const authMethodOverride = credentials?.authMethodOverride;
+        const userIdOverride = credentials?.userIdOverride;
         const args: string[] = [];
 
         // Server (with port if specified)
@@ -159,6 +162,11 @@ export class SqlcmdExecutor {
                 // ActiveDirectoryAzurePipelines. That credential takes its client/tenant/
                 // connection id from AZURESUBSCRIPTION_* env vars, so no -U is passed.
                 addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryDefault');
+                // Set only for a user-assigned managed identity, which is selected by client id.
+                if (userIdOverride) {
+                    args.push('-U');
+                    args.push(userIdOverride);
+                }
                 break;
 
             case 'activedirectoryintegrated':
@@ -224,6 +232,14 @@ export class SqlcmdExecutor {
             args.push(hostNameInCertificate);
         }
 
+        // Explicit certificate pinning. Dropping it would fall back to the machine trust store,
+        // which accepts certificates the caller did not ask to trust.
+        const serverCertificate = connectionConfig.ServerCertificate;
+        if (serverCertificate) {
+            args.push('-J');
+            args.push(serverCertificate);
+        }
+
         // ReadWrite is the server default and has no switch, so only ReadOnly is translated.
         if (connectionConfig.ApplicationIntent === 'readonly') {
             args.push('-K');
@@ -253,6 +269,7 @@ export class SqlcmdExecutor {
             'authentication', 'integrated security', 'trusted_connection',
             'trustservercertificate', 'trust server certificate',
             'hostnameincertificate', 'host name in certificate',
+            'servercertificate', 'server certificate',
             'applicationintent', 'application intent',
             'connect timeout', 'connection timeout', 'timeout'
         ]);
