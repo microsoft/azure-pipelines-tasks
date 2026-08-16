@@ -102,7 +102,7 @@ Syntax to access environment variables based on script type.\
 
 * **ErrorActionPreference**: Select this checkbox if you want the task to fail when any errors are written to the StandardError stream. If you leave it unchecked, standard errors will be ignored and only exit codes will be used to determine the status.
 
-* **Use global Azure CLI configuration**: If this is unchecked, the task will use its own separate Azure CLI configuration directory. This allows Azure CLI tasks to run in parallel during releases.
+* **Use global Azure CLI configuration**: If this is unchecked, the task will use its own separate Azure CLI configuration directory. This allows Azure CLI tasks to run in parallel during releases. Each task invocation gets a fresh, isolated `AZURE_CONFIG_DIR` that is deleted when the task finishes (a security hardening that prevents an earlier step from pre-seeding a poisoned Azure CLI config). As a result, configuration written with `az configure --defaults`, `az config set`, or `az extension add` does **not** persist to other Azure CLI tasks in the same job. To share configuration across tasks, re-run the configuration command in each task, pass the values explicitly (for example `--resource-group` / `--workspace-name`) or set the corresponding `AZURE_DEFAULTS_*` environment variables, or check this box to use the shared global Azure CLI profile (`~/.azure`). Note that on self-hosted agents the global profile can persist across runs on the same agent.
 
 * **Working Directory**: Current working directory where the script is run. If left blank, this input is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).
 
