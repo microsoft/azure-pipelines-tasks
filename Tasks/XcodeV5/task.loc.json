@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 274,
+    "Minor": 277,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -425,6 +425,7 @@
     "NoDestinationPlatformWarning": "ms-resource:loc.messages.NoDestinationPlatformWarning",
     "XcprettyNotInstalled": "ms-resource:loc.messages.XcprettyNotInstalled",
     "XcodeRequiresMac": "ms-resource:loc.messages.XcodeRequiresMac",
-    "UsingDefaultSimulator": "ms-resource:loc.messages.UsingDefaultSimulator"
+    "UsingDefaultSimulator": "ms-resource:loc.messages.UsingDefaultSimulator",
+    "XcodeFailedWithExitCode": "ms-resource:loc.messages.XcodeFailedWithExitCode"
   }
 }

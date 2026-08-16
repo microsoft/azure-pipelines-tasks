@@ -6,6 +6,22 @@ import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
+// Executes a ToolRunner and fails on a non-zero exit code.
+//
+// When xcodebuild output is piped to xcpretty (via pipeExecOutputToTool), the
+// task-lib piping logic can resolve exec() with the underlying tool's non-zero
+// exit code instead of rejecting (the failure is not always propagated like a
+// shell `set -o pipefail` would). xcpretty itself exits 0, so a failing
+// xcodebuild can otherwise be reported as success. Explicitly check the return
+// code so build failures are never swallowed.
+async function execToolWithPipefail(tool: ToolRunner): Promise<number> {
+    const returnCode: number = await tool.exec();
+    if (returnCode !== 0) {
+        throw new Error(tl.loc('XcodeFailedWithExitCode', returnCode));
+    }
+    return returnCode;
+}
+
 async function run() {
     const telemetryData: { [key: string]: any; } = {};
 
@@ -269,7 +285,7 @@ async function run() {
         });
 
         try {
-            await xcb.exec();
+            await execToolWithPipefail(xcb);
         } catch (err) {
             if (buildOnlyDeviceErrorFound) {
                 // Tell the user they need to change Destination platform to fix this build error.
@@ -335,7 +351,7 @@ async function run() {
                 xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
                 utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
             }
-            await xcodeArchive.exec();
+            await execToolWithPipefail(xcodeArchive);
 
             let archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
             if (archiveFolders && archiveFolders.length > 0) {
@@ -489,7 +505,7 @@ async function run() {
                         xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
                         utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);
                     }
-                    await xcodeExport.exec();
+                    await execToolWithPipefail(xcodeExport);
                 }
             }
         }
