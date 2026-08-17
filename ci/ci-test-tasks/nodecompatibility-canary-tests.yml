@@ -1,0 +1,208 @@
+schedules:
+- cron: "30 09 * * *"
+  displayName: Daily
+  branches:
+    include:
+    - master
+  always: true
+
+trigger: none
+pr: none
+
+variables:
+  # Override or set these variables in the canarytest org as needed
+  - name: CANARY_ORG
+    value: canarytest
+  # Centralized list of Microsoft-hosted agent images (use these variables in the matrix)
+  # - name: agent_ubuntu_24_04
+  #   value: ubuntu-24.04
+  - name: agent_ubuntu_22_04
+    value: ubuntu-22.04
+  - name: agent_ubuntu_latest
+    value: ubuntu-latest
+  - name: agent_windows_2019
+    value: windows-2019
+  - name: agent_windows_2022
+    value: windows-2022
+  - name: agent_windows_2025
+    value: windows-latest
+  - name: agent_windows_latest
+    value: windows-latest
+  - name: agent_macos_13
+    value: macos-13
+  - name: agent_macos_14
+    value: macos-14
+  - name: agent_macos_15
+    value: macos-15
+  - name: agent_macos_14_arm64
+    value: macos-14-arm64
+  - name: agent_macos_15_arm64
+    value: macos-15-arm64
+  - name: agent_macos_latest
+    value: macos-latest
+
+jobs:
+- job: set_tasks
+  displayName: Set tasks to test
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - bash: |
+      npm i minimist
+    displayName: npm i minimist
+  - bash: |
+      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --exclude "$(TASKS_TO_EXCLUDE)")
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]${tasks}"
+    displayName: Set tasks to test
+    name: set
+
+- job: node_matrix_tests
+  displayName: Node Compatibility Matrix Tests
+  dependsOn: set_tasks
+  timeoutInMinutes: 360
+  variables:
+  - name: tasks
+    value: $[dependencies.set_tasks.outputs['set.tasks']]
+  - name: agent_ubuntu_24_04
+    value: ubuntu-24.04
+  # - name: isNodeCompatible
+  #   value: true
+  strategy:
+    matrix:
+      # ubuntu2404_node10:
+      #   vmImage: ${{variables.agent_ubuntu_24_04}}
+      #   nodeVersion: '10.x'
+      ubuntu2404_node16:
+        vmImage: ${{variables.agent_ubuntu_24_04}}
+        nodeVersion: '16.x'
+      # ubuntu2404_node20:
+      #   vmImage: ${{variables.agent_ubuntu_24_04}}
+      #   nodeVersion: '20.x'
+      # ubuntu2204_node10:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '10.x'
+      # ubuntu2204_node16:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '16.x'
+      # ubuntu2204_node20:
+      #   vmImage: variables.agent_ubuntu_22_04
+      #   nodeVersion: '20.x'
+      # ubuntu_latest_node10:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '10.x'
+      # ubuntu_latest_node16:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '16.x'
+      # ubuntu_latest_node20:
+      #   vmImage: variables.agent_ubuntu_latest
+      #   nodeVersion: '20.x'
+      # windows2019_node10:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '10.x'
+      # windows2019_node16:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '16.x'
+      # windows2019_node20:
+      #   vmImage: variables.agent_windows_2019
+      #   nodeVersion: '20.x'
+      # windows2022_node10:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '10.x'
+      # windows2022_node16:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '16.x'
+      # windows2022_node20:
+      #   vmImage: variables.agent_windows_2022
+      #   nodeVersion: '20.x'
+      # windows2025_node10:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '10.x'
+      # windows2025_node16:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '16.x'
+      # windows2025_node20:
+      #   vmImage: variables.agent_windows_2025
+      #   nodeVersion: '20.x'
+      # windows_latest_node10:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '10.x'
+      # windows_latest_node16:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '16.x'
+      # windows_latest_node20:
+      #   vmImage: variables.agent_windows_latest
+      #   nodeVersion: '20.x'
+      # macos13_node10:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '10.x'
+      # macos13_node16:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '16.x'
+      # macos13_node20:
+      #   vmImage: variables.agent_macos_13
+      #   nodeVersion: '20.x'
+      # macos14_node10:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '10.x'
+      # macos14_node16:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '16.x'
+      # macos14_node20:
+      #   vmImage: variables.agent_macos_14
+      #   nodeVersion: '20.x'
+      # macos14_arm64_node10:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '10.x'
+      # macos14_arm64_node16:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '16.x'
+      # macos14_arm64_node20:
+      #   vmImage: variables.agent_macos_14_arm64
+      #   nodeVersion: '20.x'
+      # macos15_node10:
+      #   vmImage: variables.agent_macos_15
+      #   nodeVersion: '10.x'
+      # macos15_node16: 
+      #   vmImage: $(agent_macos_15)
+      #   nodeVersion: '16.x'
+      # macos15_node20:
+      #   vmImage: $(agent_macos_15)
+      #   nodeVersion: '20.x'
+      # macos15_arm64_node10:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '10.x'
+      # macos15_arm64_node16:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '16.x'
+      # macos15_arm64_node20:
+      #   vmImage: $(agent_macos_15_arm64)
+      #   nodeVersion: '20.x'
+      # macos_latest_node10:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '10.x'
+      # macos_latest_node16:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '16.x'
+      # macos_latest_node20:
+      #   vmImage: $(agent_macos_latest)
+      #   nodeVersion: '20.x'
+  pool:
+    vmImage: $(vmImage)
+  steps:
+  - task: NodeTool@0
+    displayName: Use Node $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i
+      npm run build
+    displayName: 'Build test pipelines runner'
+
+  - bash: |
+      echo "Agent: $(vmImage) - Node: $(nodeVersion)"
+      echo "Tasks to test: $(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks) isNodeCompatible
+    displayName: Run test pipelines and verify results
+    failOnStderr: true
