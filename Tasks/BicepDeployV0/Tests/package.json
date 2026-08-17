@@ -25,9 +25,9 @@
     "sinon": "^19.0.5"
   },
   "overrides": {
-    "serialize-javascript": "7.0.5",
-    "brace-expansion": "2.1.4",
-    "js-yaml": "4.3.1",
-    "minimatch": "5.1.8"
+    "serialize-javascript": "^7.0.5",
+    "brace-expansion": "^2.1.4",
+    "js-yaml": "^4.3.1",
+    "minimatch": "^5.1.8"
   }
 }
