@@ -1,11 +1,12 @@
 import assert = require('assert');
-import { validateScriptArgs, ArgsSanitizingError } from '../src/argsSanitizer';
+import { validateScriptArgs, ArgsSanitizingError } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
 // PowerShell ArgumentsSanitizer. Bash scripts get $VAR / ${VAR} expansion
 // before sanitization; pscore/ps/batch sanitize the literal scriptArguments.
 
 export const runValidateScriptArgsTests = () => {
+    const OPTS = { taskName: 'AzureCLIV2' };
     const setEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName, envValue] = envVariable.split('=');
@@ -57,28 +58,15 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: $false literal allowed (case-insensitive)',
             '-Flag $false', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // Regression #22173: arguments: > YAML folded scalars introduce \n.
-        ['pscore: newline whitespace from folded scalar allowed',
-            '-One 1\n-Two 2\n-Three 3', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
         // pscore allows backtick-escaped otherwise-disallowed characters.
         ['pscore: backtick-escaped @ allowed',
             '-Items `@items', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // Regression #22173 (second break): PowerShell data constructors —
-        // hashtable, splatting, array literal, indexing, type accelerator —
-        // are NOT execution primitives in a PowerShell argument list. They
-        // must pass so customers can pass `-Tag @{...}` (the failing case in
-        // the issue) without redirecting through env vars.
-        //
-        // Note: `;` and `( )` remain blocked because they are execution primitives.
-        // Hashtables can use newline separators (which
-        // is the customer's exact case — YAML folded scalar produces \n).
-        // Array literals `@(...)` cannot be expressed without `( )` and stay
-        // blocked; callers can pass arrays via env vars or splatting.
-        ['pscore: hashtable literal @{ K = "v" } allowed (newline-separated)',
-            '-Tag @{ Solution = "RunnerImagesGeneration"\n      ManagedBy = "Platform-Team" }', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // PowerShell single-line data constructors — hashtable, splatting, array
+        // literal, indexing, type accelerator — are NOT execution primitives in a
+        // PowerShell argument list, so a single-line `-Tag @{ K = "v" }` passes.
+        // `;`, `( )` and newlines remain blocked (MSRC 129198): a newline is a
+        // statement separator, so multi-line hashtable args are rejected below.
         ['pscore: splatting @params allowed',
             'Invoke-Build @params', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
@@ -91,19 +79,13 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: hashtable value containing @ (email) allowed',
             '-Tag @{ Owner = "team@contoso.com" }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // Closest reproduction of feliasson's case from issue #22173: a
-        // YAML folded-scalar hashtable with $env:* references for the values
-        // that would otherwise be ADO macros.
-        ['pscore: issue #22173 hashtable literal (folded scalar) passes',
-            '-Tag @{\n      Solution            = "RunnerImagesGeneration"\n      ManagedBy           = "Platform-Team"\n      RequestedFor        = $env:requestedFor\n    }', 'pscore',
-            ['requestedFor=someone@contoso.com', 'AZP_75787_ENABLE_NEW_LOGIC=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {
         it(testName, () => {
             setEnv(envVariables);
             try {
-                assert.doesNotThrow(() => validateScriptArgs(inputArguments, scriptType));
+                assert.doesNotThrow(() => validateScriptArgs(inputArguments, scriptType, OPTS));
             } finally {
                 clearEnv(envVariables);
             }
@@ -151,8 +133,31 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: hashtable with semicolon separator still blocked',
             '-Tag @{ a = 1; b = 2 }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS drops @ { } [ ] from the relaxed allowlist.
+        ['pscore: STRICT_DATA_CONSTRUCTORS FF blocks the hashtable that is otherwise allowed',
+            '-Tag @{ K = "v" }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // MSRC 129198: a newline in pscore/ps args is a PowerShell statement
+        // separator at the dot-source sink -> injection. Rejected unconditionally.
+        ['pscore: newline injects a new statement (RCE vector)',
+            '-Foo bar\nWrite-Host RCE', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: CRLF newline injection blocked',
+            '-Foo bar\r\nWrite-Host RCE', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: multi-line folded-scalar args now blocked',
+            '-One 1\n-Two 2\n-Three 3', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: multi-line hashtable arg blocked (contains newline)',
+            '-Tag @{\n Solution = "X"\n ManagedBy = "Y"\n }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // Backtick line-continuation collapses one newline, but a second
+        // unescaped newline is still a statement separator (belt-and-suspenders).
+        ['pscore: backtick-continuation then real newline still blocked',
+            '-Foo bar`\n\nWrite-Host RCE', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']]
     ];
 
@@ -160,7 +165,7 @@ export const runValidateScriptArgsTests = () => {
         it(testName, () => {
             setEnv(envVariables);
             try {
-                assert.throws(() => validateScriptArgs(inputArguments, scriptType), ArgsSanitizingError);
+                assert.throws(() => validateScriptArgs(inputArguments, scriptType, OPTS), ArgsSanitizingError);
             } finally {
                 clearEnv(envVariables);
             }
@@ -172,7 +177,7 @@ export const runValidateScriptArgsTests = () => {
         setEnv(env);
         try {
             assert.throws(
-                () => validateScriptArgs('test; whoami | id', 'pscore'),
+                () => validateScriptArgs('test; whoami | id', 'pscore', OPTS),
                 (err: Error) => err instanceof ArgsSanitizingError
                     && /Offending characters:/.test(err.message)
                     && err.message.includes("';'")
@@ -183,15 +188,11 @@ export const runValidateScriptArgsTests = () => {
         }
     });
 
-    // Regression test for https://github.com/microsoft/azure-pipelines-tasks/issues/22173.
-    // Reconstructs the exact arguments string the task would see *after* ADO has
-    // already substituted ${{ parameters.* }} and $(varName), preserving the
-    // YAML folded-scalar \n characters that the user's telemetry reported as
-    // `removedSymbols: { "$": 4, "{": 1, "\n": 11, "}": 1 }`. Under pscore the
-    // four `$env:*` references must be resolved by expandPowerShellEnvVariables,
-    // `$True` must pass the (?!true|false) lookahead, and the embedded
-    // newlines must pass the PowerShell allowlist that includes `\n`.
-    describe('Issue #22173 reproducer (AzureCLI@2 / @3 pscore with $env: and $True)', () => {
+    // MSRC 129198 hardening of the issue #22173 reproducer. The same folded-scalar
+    // argument string is now REJECTED under pscore because the embedded newlines are
+    // PowerShell statement separators at the dot-source sink. $env:* expansion and the
+    // $True lookahead are still exercised by the single-line positive cases above.
+    describe('Issue #22173 reproducer, now blocked by MSRC 129198 (pscore + bash)', () => {
         const issue22173Args = [
             '-ImageType Ubuntu2204',
             '-SubscriptionId 00000000-0000-0000-0000-000000000000',
@@ -214,10 +215,10 @@ export const runValidateScriptArgsTests = () => {
             'servicePrincipalKey=secret-clean'
         ];
 
-        it('pscore: original failing arguments pass after PowerShell expansion', () => {
+        it('pscore: original failing arguments are now rejected (contain newlines)', () => {
             setEnv(repoEnv);
             try {
-                assert.doesNotThrow(() => validateScriptArgs(issue22173Args, 'pscore'));
+                assert.throws(() => validateScriptArgs(issue22173Args, 'pscore', OPTS), ArgsSanitizingError);
             } finally {
                 clearEnv(repoEnv);
             }
@@ -226,7 +227,7 @@ export const runValidateScriptArgsTests = () => {
         it('bash: same arguments still fail (bash sanitizer does not recognize $env:)', () => {
             setEnv(repoEnv);
             try {
-                assert.throws(() => validateScriptArgs(issue22173Args, 'bash'), ArgsSanitizingError);
+                assert.throws(() => validateScriptArgs(issue22173Args, 'bash', OPTS), ArgsSanitizingError);
             } finally {
                 clearEnv(repoEnv);
             }

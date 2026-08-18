@@ -9,7 +9,7 @@ import azureModel = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
-import { tryValidateScriptArgs } from './argsSanitizer';
+import { tryValidateScriptArgs } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 import { AzureRMEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint";
 import utils = require("./Utils")
 
@@ -142,7 +142,12 @@ export default class VirtualMachineScaleSet {
         // Validate user-provided arguments with the shared WI-75787 sanitizer for the
         // target shell (ps for Windows, bash for Linux). Fails closed on injection when
         // AZP_75787_ENABLE_NEW_LOGIC is set and the EnableVmssCustomScriptArgsValidation gate is on.
-        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash', {
+            taskName: 'AzureVmssDeploymentV1',
+            pipelineFeatureFlag: 'EnableVmssCustomScriptArgsValidation',
+            expandEnv: false,
+            bashMessageLocKey: 'ScriptArgsSanitizedBash'
+        });
 
         // WI-75787: our own backtick escaping doubles/backslashes the sanitizer-trusted escape and revives it at the Invoke-Expression/eval sink, so pass args verbatim when the gate is on.
         const sanitizerEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');

@@ -18,6 +18,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.2.10",
+    "azure-pipelines-tasks-args-sanitizer": "file:../../_build/Tasks/Common/azure-pipelines-tasks-args-sanitizer-1.0.0.tgz",
     "azure-pipelines-tasks-utility-common": "3.272.0",
     "uuid": "^3.0.1"
   },

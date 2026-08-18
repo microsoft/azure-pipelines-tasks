@@ -1,27 +1,8 @@
-// Reuses the work-item-75787 argument sanitizer used by BashV3 and the
-// PowerShell ArgumentsSanitizer. Three feature flags drive behavior:
-//   AZP_75787_ENABLE_NEW_LOGIC      -> throw on disallowed characters
-//   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
-//   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
-//
-// The sanitizer is dispatched per scriptType so that allowlists and pre-
-// expansion match the target shell:
-//   * bash         -> BashV3 allowlist (a-zA-Z0-9 _'"-=/:.*+%) and $VAR /
-//                     ${VAR} expansion of process env (catches value-
-//                     injected secrets like VAR=";rm -rf /").
-//   * pscore / ps  -> PowerShellV2 allowlist (adds \n , ~ ? # and backtick
-//                     escaping, plus $true/$false via lookahead) and
-//                     $env:VAR / ${env:VAR} expansion. This is what makes
-//                     PowerShell-native syntax like `$env:servicePrincipalKey`
-//                     or `-MyBoolean $True` pass.
-//                     The allowlist also accepts the PowerShell *data*
-//                     constructors `@ { } [ ]` (hashtable, splatting, array,
-//                     indexing) — they do not turn data into code in a
-//                     PowerShell argument list. The execution primitives that
-//                     do (`$( )`, `;`, `&`, `|`, `` ` `` outside the escape
-//                     position) remain blocked.
-//   * batch        -> Literal-only sanitization with the BashV3 allowlist
-//                     (no env expansion; cmd-specific allowlist is a TODO).
+// Shared WI-75787 script-argument sanitizer for the Node/TS tasks (previously per-task copies in
+// BashV3, PowerShellV2, AzureCLIV2/V3 and AzureVmssDeployment). Gated by AZP_75787_ENABLE_NEW_LOGIC
+// (throw) / _LOG (audit warn) / _COLLECT (telemetry). Dispatched per scriptType: bash and pscore/ps
+// each use their own allow-list and $VAR / $env: pre-expansion, batch sanitizes the literal. The
+// PowerShell path also rejects CR/LF unconditionally (MSRC 129198 — see hasPsNewline).
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
@@ -31,29 +12,69 @@ import { IssueSource } from 'azure-pipelines-task-lib/internal';
 export class ArgsSanitizingError extends Error {
     constructor(message: string) {
         super(message);
+        this.name = 'ArgsSanitizingError';
+        // Pin the prototype so `instanceof` survives even if a consumer's tsc target is lowered to ES5.
+        Object.setPrototypeOf(this, ArgsSanitizingError.prototype);
     }
 }
 
-// Outer gate (`EnableAzureCliArgsValidation`, default OFF) decides whether the
-// sanitizer runs at all. When it runs, every exception thrown by the validator
-// (intentional `ArgsSanitizingError` blocks as well as unexpected errors) is
-// reported as an `ArgsValidationFailure` telemetry event and then rethrown so
-// the task fails.
+export interface SanitizerOptions {
+    /** Telemetry feature name (area is always 'TaskHub'), e.g. 'AzureCLIV2'. */
+    taskName: string;
+    /** Optional outer pipeline-feature gate (default OFF), e.g. 'EnableAzureCliArgsValidation'.
+     *  Omit for tasks with no outer gate (the AZP_75787_* flags still apply), e.g. PowerShellV2. */
+    pipelineFeatureFlag?: string;
+    /** Expand $VAR / $env: references against the agent env before sanitizing. Default true; pass
+     *  false for tasks whose script runs off-agent (e.g. AzureVmssDeployment). */
+    expandEnv?: boolean;
+    /** Allow the PowerShell data constructors @ { } [ ]. Default true. Blocked when false, or when
+     *  the AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS feature flag is on. */
+    allowDataConstructors?: boolean;
+    /** Loc key for the sanitized-args message. Default 'ScriptArgsSanitized'. */
+    messageLocKey?: string;
+    /** Loc key for the bash-path message. Default = messageLocKey. */
+    bashMessageLocKey?: string;
+}
+
+/**
+ * MSRC 129198: a CR/LF in a PowerShell script argument (or a FilePath) is a statement separator at
+ * the `. '<script>' <args>` dot-source sink, so it injects a new statement. Reject it unconditionally
+ * (parity with the AzurePowerShell Windows handler). For tasks that build the wrapper directly and do
+ * not run the allow-list sanitizer. Reuses the caller's existing loc keys.
+ */
+export function assertNoScriptNewline(
+    scriptArguments: string | undefined,
+    scriptPath: string | undefined,
+    isFilePath: boolean,
+    argumentsLocKey: string = 'InvalidScriptArguments0',
+    scriptPathLocKey: string = 'InvalidScriptPath0'
+): void {
+    if (scriptArguments && /[\r\n]/.test(scriptArguments)) {
+        throw new Error(tl.loc(argumentsLocKey, scriptArguments));
+    }
+    if (isFilePath && scriptPath && /[\r\n]/.test(scriptPath)) {
+        throw new Error(tl.loc(scriptPathLocKey, scriptPath));
+    }
+}
+
 export function tryValidateScriptArgs(
     inputArguments: string,
     scriptType: string,
-    validator: (args: string, type: string) => void = validateScriptArgs
+    opts: SanitizerOptions,
+    validator: (args: string, type: string, opts: SanitizerOptions) => void = validateScriptArgs
 ): void {
-    if (!tl.getPipelineFeature('EnableAzureCliArgsValidation')) {
+    // Outer gate: a per-task pipeline feature (e.g. EnableAzureCliArgsValidation, default OFF).
+    // Absent => no outer gate; the caller relies solely on the AZP_75787_* flags (e.g. PowerShellV2).
+    if (opts.pipelineFeatureFlag && !tl.getPipelineFeature(opts.pipelineFeatureFlag)) {
         return;
     }
     try {
-        validator(inputArguments, scriptType);
+        validator(inputArguments, scriptType, opts);
     } catch (err) {
         const e = err as { name?: string; message?: string };
         tl.debug(`validateScriptArgs threw: ${e?.message ?? err}`);
         try {
-            emitTelemetry('TaskHub', 'AzureCLIV3', {
+            emitTelemetry('TaskHub', opts.taskName, {
                 event: 'ArgsValidationFailure',
                 scriptType: (scriptType || 'unknown').toLowerCase(),
                 errorName: e?.name ?? 'Unknown',
@@ -356,7 +377,7 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
     return [result, telemetry];
 }
 
-export function validateScriptArgs(inputArguments: string, scriptType: string): void {
+export function validateScriptArgs(inputArguments: string, scriptType: string, opts: SanitizerOptions): void {
     const featureFlags = {
         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
         activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
@@ -380,23 +401,34 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
     let expandedArgs = inputArguments;
     let envTelemetry: BashEnvTelemetry | ProcessEnvPowerShellTelemetry | null = null;
 
-    if (isBash) {
-        [expandedArgs, envTelemetry] = expandBashEnvVariables(inputArguments);
-        tl.debug(`Expanded script args: ${expandedArgs}`);
-    } else if (isPowerShell) {
-        [expandedArgs, envTelemetry] = expandPowerShellEnvVariables(inputArguments);
-        tl.debug(`Expanded script args: ${expandedArgs}`);
+    // Some tasks (e.g. AzureVmssDeployment) run the script on a remote machine, where expanding the
+    // agent's environment is the wrong context; they pass expandEnv:false to skip it.
+    if (opts.expandEnv !== false) {
+        if (isBash) {
+            [expandedArgs, envTelemetry] = expandBashEnvVariables(inputArguments);
+            tl.debug(`Expanded script args: ${expandedArgs}`);
+        } else if (isPowerShell) {
+            [expandedArgs, envTelemetry] = expandPowerShellEnvVariables(inputArguments);
+            tl.debug(`Expanded script args: ${expandedArgs}`);
+        }
     }
 
+    // Relaxed PowerShell allowlist additionally permits the data constructors @ { } [ ] (hashtable,
+    // splatting, array, indexing). Those can re-enable bind-time expression evaluation (e.g.
+    // `@{ k = <command> }`), which a pure allowlist can't detect, so a strict mode that drops them is
+    // available via AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS (default off) or opts.allowDataConstructors=false.
+    const allowDataConstructors = opts.allowDataConstructors !== false
+        && !tl.getBoolFeatureFlag('AZP_75787_ENABLE_STRICT_DATA_CONSTRUCTORS');
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(expandedArgs, {
-            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % \n #
-            // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
+            // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % # (+ @ { } [ ] when relaxed).
             // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
-            // Execution primitives $( ) ; & | remain blocked — those are the attack vectors
-            // when a template parameter substitutes into args.
+            // CR/LF are rejected below (the (?<!`) lookbehind can't guarantee it).
+            // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%\\n#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: allowDataConstructors
+                ? new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
+                : new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#])(?!true|false)", 'ig')
         })
         : sanitizeArgs(expandedArgs, {
             // BashV3 allowlist (also used for batch and unknown scriptType).
@@ -404,7 +436,13 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
             saniziteRegExp: new RegExp("(?<!\\\\)([^a-zA-Z0-9\\\\ _'\"\\-=\\/:.*+%])", 'g')
         });
 
-    if (sanitizedArgs === inputArguments) {
+    // CR/LF must be rejected unconditionally on the PowerShell path: the allowlist's escape-aware
+    // (?<!`) lookbehind would otherwise exempt a backtick-preceded newline, which survives to the
+    // dot-source sink as a statement separator (MSRC 129198 / WI-75787). Test the expanded form so a
+    // newline introduced via $env: expansion is caught too.
+    const hasPsNewline = isPowerShell && /[\r\n]/.test(expandedArgs);
+
+    if (sanitizedArgs === inputArguments && !hasPsNewline) {
         return;
     }
 
@@ -415,17 +453,21 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
             ...(sanitizerTelemetry ?? {})
         };
         try {
-            emitTelemetry('TaskHub', 'AzureCLIV3', telemetry);
+            emitTelemetry('TaskHub', opts.taskName, telemetry);
         } catch (e) {
             tl.debug(`Failed to emit script-args sanitizer telemetry: ${e}`);
         }
     }
 
-    if (sanitizedArgs !== expandedArgs) {
+    if (sanitizedArgs !== expandedArgs || hasPsNewline) {
         const offendingChars = collectOffendingChars(
-            (sanitizerTelemetry as { removedSymbols?: Record<string, number> } | null)?.removedSymbols
+            (sanitizerTelemetry as { removedSymbols?: Record<string, number> } | null)?.removedSymbols,
+            hasPsNewline
         );
-        let message = tl.loc('ScriptArgsSanitized');
+        const messageKey = isBash
+            ? (opts.bashMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
+            : (opts.messageLocKey ?? 'ScriptArgsSanitized');
+        let message = tl.loc(messageKey);
         if (offendingChars) {
             message = `${message} Offending characters: ${offendingChars}.`;
         }
@@ -439,18 +481,19 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
 }
 
 // Build a human-readable list of the disallowed characters that were removed
-// during sanitization, so the error message names exactly what to fix.
-// Whitespace characters (\n, \r, \t) are excluded because they typically come
-// from YAML folded scalars (`arguments: >`) rather than from author intent;
-// they are still counted in telemetry via removedSymbols.
-function collectOffendingChars(removedSymbols: Record<string, number> | undefined): string {
-    if (!removedSymbols) {
+// during sanitization, so the error message names exactly what to fix. Control
+// characters are rendered as escape sequences (\n, \r, \t, \xNN) so a rejected
+// newline is both visible and cannot inject a logging command into the build log.
+function collectOffendingChars(removedSymbols: Record<string, number> | undefined, hasPsNewline?: boolean): string {
+    const escapes: Record<string, string> = { '\n': '\\n', '\r': '\\r', '\t': '\\t' };
+    const chars = new Set<string>(removedSymbols ? Object.keys(removedSymbols) : []);
+    // A backtick-preceded newline is exempted by the allowlist lookbehind, so name it explicitly.
+    if (hasPsNewline) {
+        chars.add('\n');
+    }
+    if (chars.size === 0) {
         return '';
     }
-    const whitespace = new Set(['\n', '\r', '\t']);
-    const chars = Object.keys(removedSymbols).filter(c => !whitespace.has(c));
-    if (chars.length === 0) {
-        return '';
-    }
-    return chars.map(c => `'${c}'`).join(', ');
+    const render = (c: string) => escapes[c] ?? (c.charCodeAt(0) < 0x20 ? `\\x${c.charCodeAt(0).toString(16).padStart(2, '0')}` : c);
+    return [...chars].map(c => `'${render(c)}'`).join(', ');
 }

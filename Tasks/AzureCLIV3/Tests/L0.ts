@@ -1,8 +1,6 @@
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
-import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
 
 describe('AzureCLIV3 Suite', function () {
@@ -12,14 +10,6 @@ describe('AzureCLIV3 Suite', function () {
     });
 
     after(() => {
-    });
-
-    describe('Script args sanitizer (AZP_75787_*)', () => {
-        runValidateScriptArgsTests();
-    });
-
-    describe('Args validation feature flag (EnableAzureCliArgsValidation)', () => {
-        runTryValidateScriptArgsTests();
     });
 
     describe('AZURE_CONFIG_DIR isolation', () => {
