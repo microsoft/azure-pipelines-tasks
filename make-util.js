@@ -265,22 +265,14 @@ var buildNodeTask = function (taskPath, outDir, options) {
     var tscSourceMapArgs = emitSourceMaps ? ' --sourceMap --inlineSources' : '';
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
+    var tscTimerLabel = `tsc:${path.basename(taskPath)}`;
+    console.time(tscTimerLabel);
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
+        console.timeEnd(tscTimerLabel);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
-        // TypeScript 7 uses native platform packages that must not ship with the task.
-        var typescriptScopePath = path.join(taskPath, "node_modules", "@typescript");
-        if (test('-d', typescriptScopePath)) {
-            fs.readdirSync(typescriptScopePath)
-                .filter(packageName => packageName.startsWith('typescript-'))
-                .forEach(packageName => rm("-rf", path.join(typescriptScopePath, packageName)));
-
-            if (fs.readdirSync(typescriptScopePath).length === 0) {
-                rm("-rf", typescriptScopePath);
-            }
-        }
         // Clean up broken symlinks in .bin directory
         var binPath = path.join(taskPath, "node_modules", ".bin");
         if (test('-d', binPath)) {
@@ -296,6 +288,7 @@ var buildNodeTask = function (taskPath, outDir, options) {
         }
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
+        console.timeEnd(tscTimerLabel);
     }
 
     cd(originalDir);
