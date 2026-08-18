@@ -2,6 +2,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
 import * as extract from 'extract-zip'
+import AdmZip = require("adm-zip");
 
 var tar = require("tar-fs");
 var zlib = require("zlib");
@@ -46,7 +47,8 @@ export class PackageFile {
             case ".zip":
             case ".crate":
             case ".nupkg":
-                return this.unzip(this.initialLocation, this.finalLocation);
+                // return this.unzip(this.initialLocation, this.finalLocation);
+                return this.unzipUsingAdmZip(this.initialLocation, this.finalLocation);
             case ".tgz":
                 return this.unTarGz(this.initialLocation, this.finalLocation);
             default:
@@ -73,5 +75,12 @@ export class PackageFile {
                 reject(error);
             });
         });
+    }
+
+    private async unzipUsingAdmZip(zipLocation: string, unzipLocation: string): Promise<void> {
+        tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
+        tl.debug("Using adm-zip package for extracting archive");
+        const zip: AdmZip = new AdmZip(zipLocation);
+        await zip.extractAllToAsync(unzipLocation, /* overwrite */ true);
     }
 }
