@@ -538,7 +538,7 @@ describe('AzureCLIV3 Suite', function () {
         assert(!tr.succeeded, 'task should have failed due to stderr with failOnStandardError=true');
     });
 
-    it('Windows PS/PSCore: File invocation with caret in password (AZP_AZURECLI_USE_FILE_INVOCATION flag)', async function() {
+    it('Windows PS/PSCore: File invocation with caret in password (AzureCliUseFileInvocation flag)', async function() {
         if (process.platform !== 'win32') {
             this.skip();
             return;
