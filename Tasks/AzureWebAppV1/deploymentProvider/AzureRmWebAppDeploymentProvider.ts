@@ -3,7 +3,7 @@ import publishProfileUtility = require("azure-pipelines-tasks-utility-common/pub
 import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
-import { AzureAppServiceUtility, publishKuduAuthModeTelemetry } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 import { AzureRmEndpointAuthenticationScheme, AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
@@ -42,9 +42,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
             tl.debug("Kudu: using basic authentication for publish profile");    
             console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}');
-            // Unified auth-mode census: publish-profile deployments authenticate to Kudu with SCM
-            // basic credentials (no Entra token), so record them in the "basic" bucket.
-            publishKuduAuthModeTelemetry({ authMethod: "Basic", source: "publishProfile", telemetryFeature: "AzureAppServiceDeployment" });
             
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, authHeader);
             let resourceId = publishProfileEndpoint.resourceId;

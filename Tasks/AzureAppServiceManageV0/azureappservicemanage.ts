@@ -5,7 +5,6 @@ import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels'
 import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
-import { publishKuduAuthModeTelemetry } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-appinsights';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
@@ -86,9 +85,6 @@ async function run() {
             
             tl.debug("Kudu: using basic authentication for publish profile");            
             console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}');
-            // Unified auth-mode census: publish-profile actions authenticate to Kudu with SCM basic
-            // credentials (no Entra token), so record them in the "basic" bucket.
-            publishKuduAuthModeTelemetry({ authMethod: "Basic", source: "publishProfile", telemetryFeature: "AzureAppServiceManage" });
 
             kuduService = new Kudu(scmCreds.scmUri, authHeader);
             kuduServiceUtils = new KuduServiceUtils(kuduService);

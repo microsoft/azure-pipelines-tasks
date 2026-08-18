@@ -5,7 +5,7 @@ var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias } from './Constants';
-import { AzureAppServiceUtility as AzureAppServiceUtilityCommon, publishKuduAuthModeTelemetry } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
+import { AzureAppServiceUtility as AzureAppServiceUtilityCommon } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 
 //todo replace this class with azure-arm-rest/azureAppServiceUtility
 export class AzureAppServiceUtility {
@@ -141,21 +141,13 @@ export class AzureAppServiceUtility {
         // unchanged, whenever the feature is off.
         const credentials = this._appService._client.getCredentials();
         let token: string;
-        try {
-            if (tl.getPipelineFeature("ALLOWSCOPELEVELTOKEN")) {
-                token = await credentials.acquireTokenForScope("appservice");
-            } else {
-                tl.debug("ALLOWSCOPELEVELTOKEN is disabled; using the legacy ARM-audience token for MSDeploy.");
-                token = await credentials.getToken();
-            }
-        } catch (error) {
-            publishKuduAuthModeTelemetry({ authMethod: "Bearer", source: "msDeploy", credentials: credentials, telemetryFeature: "AzureAppServiceDeployment" });
-            throw error;
+        if (tl.getPipelineFeature("ALLOWSCOPELEVELTOKEN")) {
+            token = await credentials.acquireTokenForScope("appservice");
+        } else {
+            tl.debug("ALLOWSCOPELEVELTOKEN is disabled; using the legacy ARM-audience token for MSDeploy.");
+            token = await credentials.getToken();
         }
         tl.setSecret(token);
-        // MSDeploy always uses a token (never SCM basic auth), so record it in the unified auth-mode
-        // census so the Windows web-deploy path is counted alongside the standard Kudu REST path.
-        publishKuduAuthModeTelemetry({ authMethod: "Bearer", source: "msDeploy", credentials: credentials, telemetryFeature: "AzureAppServiceDeployment" });
         return token;
     }
 
