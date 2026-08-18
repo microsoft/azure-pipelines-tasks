@@ -117,6 +117,13 @@ export function isPowerShellArgumentAstSafe(inputArguments: string, executable?:
         windowsHide: true
     });
 
+    return isAstProbeResultSafe(result);
+}
+
+// Fail closed: the arguments are proven safe only by a clean exit 0. Any spawn error (ENOENT for a
+// missing interpreter, ETIMEDOUT for a hung one) or a non-zero exit (parse error, dangerous node, or
+// more than one command) means safety could not be established, so a slow or broken interpreter blocks.
+export function isAstProbeResultSafe(result: { error?: Error | null; status: number | null }): boolean {
     return !result.error && result.status === 0;
 }
 

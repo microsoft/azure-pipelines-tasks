@@ -1,6 +1,6 @@
 import assert = require('assert');
 import tl = require('azure-pipelines-task-lib/task');
-import { validateScriptArgs, ArgsSanitizingError, isPowerShellArgumentAstSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
+import { validateScriptArgs, ArgsSanitizingError, isPowerShellArgumentAstSafe, isAstProbeResultSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
 // PowerShell ArgumentsSanitizer. Bash scripts get $VAR / ${VAR} expansion
@@ -17,6 +17,18 @@ export const runValidateScriptArgsTests = () => {
         assert(!isPowerShellArgumentAstSafe('@{ k = [System.Net.Dns]::MachineName }'));
         // Fail closed: a missing interpreter must block a constructor expression, never silently allow it.
         assert(!isPowerShellArgumentAstSafe('@{ k = New-Item C:\\evil }', 'pwsh-does-not-exist-xyz'));
+    });
+
+    it('AST probe result is interpreted fail-closed (timeout, missing interpreter, non-zero exit)', () => {
+        // Ivan review (#22428): "if the timeout has passed, what would happen?" A hung interpreter makes
+        // spawnSync set error=ETIMEDOUT (status null); a missing one sets ENOENT; a rejected payload exits
+        // non-zero. Only a clean exit 0 is safe. Deterministic - no spawned process, no timing dependency.
+        assert.strictEqual(isAstProbeResultSafe({ error: Object.assign(new Error('ETIMEDOUT'), { code: 'ETIMEDOUT' }), status: null }), false);
+        assert.strictEqual(isAstProbeResultSafe({ error: Object.assign(new Error('ENOENT'), { code: 'ENOENT' }), status: null }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 2 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 3 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 4 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 0 }), true);
     });
 
     const setEnv = (envVariables: string[]) => {
@@ -229,6 +241,58 @@ export const runValidateScriptArgsTests = () => {
         } finally {
             clearEnv(env);
         }
+    });
+
+    // Ivan review (#22428): scriptArguments may carry secrets, so a validation failure must never echo
+    // the argument values. validateScriptArgs reports only the offending characters (or a generic AST
+    // description), so a secret embedded in the arguments is not exposed in the build log.
+    describe('Failure messages never echo argument values (secret non-exposure)', () => {
+        const SECRET = 'SuperSecretValue123';
+
+        it('character rejection names only the offending character, not the value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Password ${SECRET}; whoami`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("';'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('newline rejection names only the newline escape, not the surrounding value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Token ${SECRET}\nWrite-Host x`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("'\\n'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('AST rejection uses a generic description, not the argument value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Tag @{ k = New-Item -Path C:\\${SECRET} -ItemType File }`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
     });
 
     // Regression test for https://github.com/microsoft/azure-pipelines-tasks/issues/22173.
