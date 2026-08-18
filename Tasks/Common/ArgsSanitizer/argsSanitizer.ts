@@ -89,7 +89,7 @@ function escapeControlChars(s: string): string {
     return s.replace(/[\x00-\x1f]/g, escapeControlChar);
 }
 
-export function isPowerShellArgumentAstSafe(inputArguments: string, executable?: string): boolean {
+export function isPowerShellArgumentAstSafe(inputArguments: string, executable?: string, timeoutMs: number = 10000): boolean {
     if (!/[@{}\[\]]/.test(inputArguments)) {
         return true;
     }
@@ -113,10 +113,12 @@ export function isPowerShellArgumentAstSafe(inputArguments: string, executable?:
     const result = spawnSync(psExe, ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', validator], {
         input: inputArguments,
         encoding: 'utf8',
-        timeout: 10000,
+        timeout: timeoutMs,
         windowsHide: true
     });
 
+    // Fail closed: any spawn error (ENOENT for a missing interpreter, ETIMEDOUT for a hung one) or a
+    // non-zero exit is treated as unsafe, so a slow or broken interpreter blocks rather than allows.
     return !result.error && result.status === 0;
 }
 

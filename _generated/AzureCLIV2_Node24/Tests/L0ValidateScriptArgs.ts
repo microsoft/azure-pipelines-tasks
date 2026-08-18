@@ -19,6 +19,16 @@ export const runValidateScriptArgsTests = () => {
         assert(!isPowerShellArgumentAstSafe('@{ k = New-Item C:\\evil }', 'pwsh-does-not-exist-xyz'));
     });
 
+    it('PowerShell AST validation fails closed when the interpreter times out', () => {
+        // Ivan review (#22428): a hung or slow interpreter must block, never allow. A 1 ms budget is far
+        // below any real cold-start, so spawnSync returns ETIMEDOUT and the arguments are treated as unsafe.
+        // Guarded on interpreter presence: a missing pwsh yields ENOENT (also fail-closed) but is not a timeout.
+        if (tl.which('pwsh', false) || tl.which('powershell', false)) {
+            assert.strictEqual(isPowerShellArgumentAstSafe('@{ k = "v" }', undefined, 1), false);
+        }
+        assert.strictEqual(isPowerShellArgumentAstSafe('@{ k = "v" }', 'pwsh-does-not-exist-xyz', 1), false);
+    });
+
     const setEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName, envValue] = envVariable.split('=');
@@ -229,6 +239,58 @@ export const runValidateScriptArgsTests = () => {
         } finally {
             clearEnv(env);
         }
+    });
+
+    // Ivan review (#22428): scriptArguments may carry secrets, so a validation failure must never echo
+    // the argument values. validateScriptArgs reports only the offending characters (or a generic AST
+    // description), so a secret embedded in the arguments is not exposed in the build log.
+    describe('Failure messages never echo argument values (secret non-exposure)', () => {
+        const SECRET = 'SuperSecretValue123';
+
+        it('character rejection names only the offending character, not the value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Password ${SECRET}; whoami`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("';'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('newline rejection names only the newline escape, not the surrounding value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Token ${SECRET}\nWrite-Host x`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("'\\n'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('AST rejection uses a generic description, not the argument value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Tag @{ k = New-Item -Path C:\\${SECRET} -ItemType File }`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
     });
 
     // Regression test for https://github.com/microsoft/azure-pipelines-tasks/issues/22173.
