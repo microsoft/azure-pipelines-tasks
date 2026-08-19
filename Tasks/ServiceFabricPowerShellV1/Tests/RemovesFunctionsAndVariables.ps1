@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Invoke-ScriptArgumentSanitization
 . $PSScriptRoot\SetupMocks.ps1
 
 # Arrange the task inputs.

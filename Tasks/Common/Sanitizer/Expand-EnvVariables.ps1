@@ -97,7 +97,14 @@ function Expand-EnvVariables([string]$ArgsLine) {
             $telemetry.bracedVariables++
         }
         else {
-            $envName = $result.Substring($envStartIndex).Split(' ', '"', "'", ';', '$')[0]
+            # Terminate the env-name on whitespace too (newline / carriage return / tab),
+            # not just space. YAML folded scalars ('arguments: >') produce embedded newlines;
+            # without these terminators the env-name greedily spans across lines, the lookup
+            # returns $null, the literal '$env:VAR<newline>...' falls through to the sanitizer
+            # allowlist, and a perfectly valid PowerShell argument string is rejected.
+            # Companion to PR #22181 which fixed the same bug in the TypeScript twin
+            # (expandPowerShellEnvVariables, regression #22173).
+            $envName = $result.Substring($envStartIndex).Split(' ', '"', "'", ';', '$', "`n", "`r", "`t")[0]
             $envEndIndex = $envStartIndex + $envName.Length
         }
 

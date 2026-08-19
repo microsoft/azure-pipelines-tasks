@@ -10,6 +10,8 @@
   "loc.input.help.connectedServiceName": "Выберите универсальное подключение к службе, которое следует использовать для выбора URL-адреса и создания заголовка авторизации для HTTP-запроса.",
   "loc.input.label.connectedServiceNameARM": "Подписка Azure",
   "loc.input.help.connectedServiceNameARM": "Выберите подписку Azure Resource Manager, используемую для вызова API управления. \"ManagementPortalUrl\" облака используется в качестве baseURL",
+  "loc.input.label.connectedServiceNameAzureDevOps": "Azure DevOps service connection",
+  "loc.input.help.connectedServiceNameAzureDevOps": "Select an Azure DevOps service connection to use for invoking Azure DevOps REST APIs. The service connection URL is used as the baseURL.",
   "loc.input.label.method": "Метод",
   "loc.input.help.method": "Выберите метод HTTP, с помощью которого следует вызывать API.",
   "loc.input.label.headers": "Заголовки",

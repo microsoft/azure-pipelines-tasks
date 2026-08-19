@@ -30,7 +30,7 @@ function validateTaskSources( taskList ) {
  * @returns {Array<String>} - array of messages with tasks which don't have versionmap file 
  */
 function validateGeneratedTasksExists( makeOptionJson ) {
-  const excludedKeys = ['tasks', 'taskResources', 'LocalPackages']; // LocalPackages does not generate entries in versionmap (see useGlobalVersion)
+  const excludedKeys = ['tasks', 'taskResources', 'LocalPackages', 'Node24_overwrite']; // LocalPackages does not generate entries in versionmap (see useGlobalVersion); Node24_overwrite merges in-place and does not generate versionmap
   const errorList = [];
 
   for (const key in makeOptionJson) {

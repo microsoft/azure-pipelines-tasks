@@ -1,0 +1,51 @@
+name: File bugs
+
+# Reports GitHub bug volume per area and files P1 tracking bugs into the mseng
+# Azure DevOps project when thresholds are exceeded (see ci/file-bugs.js and the
+# pathMappings section of issue-rules.yml).
+#
+# NOTE: this was previously part of the combined "Labeler" workflow (blank.yml).
+# It failed with npm E401 because it ran `npm ci` against the repo's private
+# Azure Artifacts feed. It now installs only the three packages it needs from
+# the public npm registry, in an isolated directory. Filing bugs into Azure
+# DevOps still requires a valid AZP_TOKEN secret.
+#
+# Trigger: this runs on a daily schedule rather than on `issues.opened`.
+# The bug-volume thresholds are org-wide and slow-moving, so recomputing them
+# on every opened issue was wasteful. A schedule also avoids racing the
+# separate Label issues workflow: when both ran on `issues.opened` there was
+# no ordering guarantee, so file-bugs could read a just-opened issue before its
+# `Area:` label had been applied and miss counting it under its area.
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: read
+
+jobs:
+  file-bugs:
+    runs-on: ubuntu-latest
+    name: File bugs
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Install runtime deps from the PUBLIC npm registry in an isolated
+      # directory, avoiding the repo's private-feed .npmrc (root `npm ci`
+      # against the private feed is what produced the npm E401 failure).
+      - name: Install dependencies (public registry)
+        run: |
+          mkdir -p "$RUNNER_TEMP/filebugs"
+          cd "$RUNNER_TEMP/filebugs"
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          npm install --no-save --registry=https://registry.npmjs.org/ @octokit/rest@18.12.0 js-yaml@3 azure-devops-node-api@12
+
+      - name: File bugs
+        run: node ci/file-bugs.js
+        env:
+          NODE_PATH: ${{ runner.temp }}/filebugs/node_modules
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+          AZP_PAT: ${{ secrets.AZP_TOKEN }}

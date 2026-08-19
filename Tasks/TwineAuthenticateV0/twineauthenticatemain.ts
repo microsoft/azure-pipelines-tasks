@@ -24,8 +24,8 @@ export class Repository
 }
 
 async function main(): Promise<void> {
-    tl.warning(tl.loc("TaskDeprecationNotice"));
     tl.setResourcePath(path.join(__dirname, "task.json"));
+    tl.warning(tl.loc("TaskDeprecationNotice"));
     try {
         // Local feeds
         const internalFeeds = await auth.getInternalAuthInfoArray("feedList");

@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "パッケージを配置する PowerShell スクリプト (Windows の場合) またはシェル スクリプト (Linux の場合) の相対パスを指定します。このスクリプトは、上で選択したパッケージ パスに含まれている必要があります。minimatch パターンがサポートされています。パスの例: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "配置スクリプトの引数",
   "loc.input.help.deployScriptArguments": "配置スクリプトに渡される引数を指定します。",
+  "loc.input.label.canDeleteTempFolder": "一時フォルダーを削除する",
+  "loc.input.help.canDeleteTempFolder": "このオプションは、一時フォルダーの削除を許可します",
   "loc.input.label.additionalBuilderParameters": "追加のビルダー パラメーター",
   "loc.input.help.additionalBuilderParameters": "自動生成された Packer テンプレート モードでは、タスクは Azure のビルダーを使用して Packer テンプレートを作成します。このビルダーは、マシン イメージを生成するために使用されます。Azure のビルダーにキーを追加すると、生成される Packer テンプレートをカスタマイズできます。たとえば、CentOS 基本イメージを使用していて、sudo を実行するために tty が必要な場合は、ssh_tty=true と設定します。<br/>追加のパラメーターをグリッドで表示/編集するには、テキスト ボックスの隣の […] をクリックします。",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "プロビジョニング解除中に一時ファイルのクリーンアップをスキップする",

@@ -1,10 +1,15 @@
+import assert from 'assert';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
-import * as assert from 'assert';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
+import { appendAuthToNpmrc, removeExistingCredentialEntries } from '../npmauthutils';
 
-describe('NpmAuthenticate L0 - Authentication', function () {
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
+describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     this.timeout(20000);
 
     beforeEach(function () {
@@ -17,72 +22,27 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
     describe('Internal feed authentication', function () {
         it('appends auth token for a matching internal registry', async () => {
-            // Arrange
-            const npmrcPath = TestHelpers.createTempNpmrc(
-                `registry=${TestData.internalRegistryUrl}\nalways-auth=true`
-            );
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
+            // The project .npmrc and the target .npmrc are the same file here.
+            // The registry host (dev.azure.com) matches the collectionUri host.
+            const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
 
-            const localRegistry = TestHelpers.buildLocalRegistry(TestData.internalRegistryUrl, 'internal-auth-token-abc');
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = TestData.internalRegistryUrl;
-            process.env[TestEnvVars.localRegistries] = JSON.stringify([localRegistry]);
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertAuthAppended(tr, 'internal-auth-token-abc');
-            TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=internal-auth-token-abc');
-        });
-
-        it('appends auth for each registry when multiple internal feeds are listed', async () => {
-            // Arrange
-            const url1 = 'https://pkgs.dev.azure.com/testorg/_packaging/Feed1/npm/registry/';
-            const url2 = 'https://pkgs.dev.azure.com/testorg/_packaging/Feed2/npm/registry/';
-            const npmrcPath = TestHelpers.createTempNpmrc(
-                `@scope1:registry=${url1}\n@scope2:registry=${url2}`
-            );
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
-
-            const localReg1 = TestHelpers.buildLocalRegistry(url1, 'token-feed1');
-            const localReg2 = TestHelpers.buildLocalRegistry(url2, 'token-feed2');
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = [url1, url2].join(';');
-            process.env[TestEnvVars.localRegistries] = JSON.stringify([localReg1, localReg2]);
-
-            // Act
-            await tr.runAsync();
-
-            // Assert
-            TestHelpers.assertSuccess(tr);
-            TestHelpers.assertAuthAppended(tr, 'token-feed1');
-            TestHelpers.assertAuthAppended(tr, 'token-feed2');
-            const appended = TestHelpers.getAppendedAuth(tr);
-            assert.strictEqual(appended.length, 2, 'appendToNpmrc should be called once per matching registry');
-            TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=token-feed1');
-            TestHelpers.assertNpmrcContains(npmrcPath, '_authToken=token-feed2');
+            TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.systemAccessToken}`);
         });
 
         it('logs that credentials are being added', async () => {
-            // Arrange
-            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.internalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
+            const internalUrl = `${TestData.collectionUri}_packaging/TestFeed/npm/registry/`;
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl}`);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = TestData.internalRegistryUrl;
-            process.env[TestEnvVars.localRegistries] = JSON.stringify([
-                TestHelpers.buildLocalRegistry(TestData.internalRegistryUrl, 'some-token')
-            ]);
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'AddingLocalCredentials');
         });
@@ -90,43 +50,29 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
     describe('External service connection authentication', function () {
         it('appends auth token for a matching external registry', async () => {
-            // Arrange
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            // No local registries — the external endpoint is the only auth source
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertAuthAppended(tr, TestData.externalRegistryToken);
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.externalRegistryToken}`);
         });
 
         it('logs that endpoint credentials are being added', async () => {
-            // Arrange
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'AddingEndpointCredentials');
         });
@@ -134,68 +80,207 @@ describe('NpmAuthenticate L0 - Authentication', function () {
 
     describe('Unmatched registry', function () {
         it('ignores registry when no auth source matches', async () => {
-            // Arrange: .npmrc has a registry that has no matching local or external auth source
             const unmatchedUrl = 'https://registry.npmjs.org/';
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${unmatchedUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = unmatchedUrl;
-            // No localRegistries, no customEndpoint — nothing matches
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertNoAuthAppended(tr, 'appendToNpmrc should not be called for unmatched registry');
             TestHelpers.assertOutputContains(tr, 'IgnoringRegistry');
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken');
         });
 
         it('succeeds with no auth when .npmrc has no registries', async () => {
-            // Arrange: completely empty .npmrc
             const npmrcPath = TestHelpers.createTempNpmrc('');
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            // npmrcRegistries not set → mock returns empty list
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertNoAuthAppended(tr);
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken');
         });
     });
 
     describe('Duplicate endpoint detection', function () {
         it('warns when external endpoint was already registered in a prior task run', async () => {
-            // Arrange: EXISTING_ENDPOINTS already contains the external registry URL,
-            // simulating a previous NpmAuthenticate task run in the same pipeline job.
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr = new ttm.MockTestRunner(tp);
 
-            process.env[TestEnvVars.npmrcPath] = npmrcPath;
-            process.env[TestEnvVars.npmrcRegistries] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.customEndpoint] = TestData.externalEndpointId;
-            process.env[TestEnvVars.externalRegistryUrl] = TestData.externalRegistryUrl;
-            process.env[TestEnvVars.externalRegistryToken] = TestData.externalRegistryToken;
-            // Seed the already-seen endpoints list so the task sees a duplicate
-            process.env[TestEnvVars.existingEndpoints] = TestData.externalRegistryUrl;
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken,
+                [TestEnvVars.existingEndpoints]: TestData.externalRegistryUrl
+            });
 
-            // Act
-            await tr.runAsync();
-
-            // Assert
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertWarningIssue(tr, 'DuplicateCredentials',
                 'Task should warn when the same endpoint is registered twice in the same job');
+        });
+    });
+
+    describe('Checked-in credentials', function () {
+        it('warns and replaces when .npmrc has checked-in credentials', async () => {
+            // Arrange: .npmrc has an external registry with pre-existing auth lines
+            // (a common user mistake — committing tokens to source control).
+            // The task should warn about overriding them and write fresh auth.
+            const npmrcContent = [
+                `registry=${TestData.externalRegistryUrl}`,
+                `//registry.example.com/npm/:_authToken=old-checked-in-token`,
+                `//registry.example.com/npm/:always-auth=true`
+            ].join('\n');
+            const npmrcPath = TestHelpers.createTempNpmrc(npmrcContent);
+
+            // Act
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            // Fresh token should be written, replacing the checked-in one
+            TestHelpers.assertNpmrcContains(npmrcPath, TestData.externalRegistryToken);
+        });
+    });
+
+    describe('Mixed internal and external registries', function () {
+        it('authenticates both internal and external registries in the same .npmrc', async () => {
+            // Arrange: .npmrc has two registries — one internal (matches collectionUri host)
+            // and one external (resolved via customEndpoint mock)
+            const internalUrl = `${TestData.collectionUri}_packaging/InternalFeed/npm/registry/`;
+            const npmrcContent = [
+                `@internal:registry=${internalUrl}`,
+                `@external:registry=${TestData.externalRegistryUrl}`
+            ].join('\n');
+            const npmrcPath = TestHelpers.createTempNpmrc(npmrcContent);
+
+            // Act
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            // Internal feed should get System.AccessToken
+            TestHelpers.assertNpmrcContains(npmrcPath, TestData.systemAccessToken);
+            // External feed should get the endpoint token
+            TestHelpers.assertNpmrcContains(npmrcPath, TestData.externalRegistryToken);
+            // Both credential sources should be logged
+            TestHelpers.assertOutputContains(tr, 'AddingLocalCredentials');
+            TestHelpers.assertOutputContains(tr, 'AddingEndpointCredentials');
+        });
+    });
+
+    describe('npmrc file mutations', function () {
+        let tempDir: string;
+
+        beforeEach(function () {
+            tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-l0-'));
+        });
+
+        afterEach(function () {
+            fs.rmSync(tempDir, { recursive: true, force: true });
+        });
+
+        it('appends auth entry to npmrc file', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'registry=https://registry.npmjs.org/\n', 'utf8');
+
+            appendAuthToNpmrc(npmrcPath, '//registry.npmjs.org/:_authToken=test-token');
+
+            const content = fs.readFileSync(npmrcPath, 'utf8');
+            assert(content.includes('//registry.npmjs.org/:_authToken=test-token'));
+        });
+
+        it('removes pre-existing credential lines for the same registry', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const lines = [
+                'registry=https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token',
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:always-auth=true'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const updated = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                registryUrl,
+                [registryUrl]
+            );
+
+            assert.strictEqual(updated[0], lines[0], 'registry= line should be preserved');
+            assert.strictEqual(updated[1], '', 'old auth token line should be blanked');
+            assert.strictEqual(updated[2], '', 'old always-auth line should be blanked');
+
+            const fileContent = fs.readFileSync(npmrcPath, 'utf8');
+            assert(!fileContent.includes('_authToken=old-token'));
+            assert(!fileContent.includes('always-auth=true'));
+        });
+
+        it('suppresses warning when same URL was already added by a prior iteration', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const registryUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const previouslyAdded = new URL('https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/');
+            const lines = [
+                '//pkgs.dev.azure.com/org/_packaging/feed/npm/registry/:_authToken=old-token'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const updated = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                registryUrl,
+                [previouslyAdded, registryUrl]
+            );
+
+            assert.strictEqual(updated[0], '', 'old auth should be blanked even for duplicate');
+        });
+
+        it('processes separately when scoped and default registries point to different feeds', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const feedAUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/');
+            const feedBUrl = new URL('https://pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/');
+            const lines = [
+                'registry=https://pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feedA/npm/registry/:_authToken=old-tokenA',
+                '@scope:registry=https://pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/',
+                '//pkgs.dev.azure.com/org/_packaging/feedB/npm/registry/:_authToken=old-tokenB'
+            ];
+
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            const afterFeedA = removeExistingCredentialEntries(
+                npmrcPath,
+                [...lines],
+                feedAUrl,
+                [feedAUrl]
+            );
+
+            assert.strictEqual(afterFeedA[1], '', 'feedA old auth should be blanked');
+            assert.strictEqual(afterFeedA[3], lines[3], 'feedB auth should be untouched');
+
+            const afterFeedB = removeExistingCredentialEntries(
+                npmrcPath,
+                [...afterFeedA],
+                feedBUrl,
+                [feedAUrl, feedBUrl]
+            );
+
+            assert.strictEqual(afterFeedB[3], '', 'feedB old auth should be blanked');
+            assert.strictEqual(afterFeedB[0], lines[0], 'feedA registry= line still preserved');
+            assert.strictEqual(afterFeedB[2], lines[2], 'feedB registry= line still preserved');
         });
     });
 });

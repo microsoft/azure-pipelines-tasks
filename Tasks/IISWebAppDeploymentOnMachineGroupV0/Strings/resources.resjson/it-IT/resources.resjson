@@ -22,7 +22,7 @@
   "loc.input.label.AdditionalArguments": "Argomenti aggiuntivi",
   "loc.input.help.AdditionalArguments": "Argomenti aggiuntivi di Distribuzione Web che verranno applicati quando si distribuisce l'app Web di Azure, ad esempio -disableLink:AppPoolExtension -disableLink:ContentExtension.",
   "loc.input.label.XmlTransformation": "Trasformazione XML",
-  "loc.input.help.XmlTransformation": "Le trasformazioni dei file config verranno eseguite per `*.Release.config` e `*.<NomeAmbiente>.config` nel file `*.config`.<br/> Le trasformazioni dei file config verranno eseguite prima della sostituzione delle variabili.<br/>Le trasformazioni XML sono supportate solo per la piattaforma Windows.",
+  "loc.input.help.XmlTransformation": "Le trasformazioni dei file di configurazione verranno eseguite per '*.Release.config' e '*.<EnvironmentName>.config' nel fie '*.config file'.<br/> Le trasformazioni dei file di configurazione verranno eseguite prima della sostituzione delle variabili.<br/>Le trasformazioni XML sono supportate solo per la piattaforma Windows.",
   "loc.input.label.XmlVariableSubstitution": "Sostituzione di variabili XML",
   "loc.input.help.XmlVariableSubstitution": "Le variabili definite nella pipeline di compilazione o di versione verranno confrontate con le voci 'key' o 'name' nelle sezioni appSettings, applicationSettings e connectionStrings di tutti i file config e parameters.xml. La sostituzione delle variabili viene eseguita dopo le trasformazioni dei file config. <br/><br/> Nota: se si definiscono le stesse variabili nella pipeline di versione e nell'ambiente, quelle di ambiente prevarranno su quelle della pipeline di versione.<br/>",
   "loc.input.label.JSONFiles": "Sostituzione di variabili JSON",

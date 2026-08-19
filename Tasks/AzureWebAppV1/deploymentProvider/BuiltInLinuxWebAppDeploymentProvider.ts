@@ -17,7 +17,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         tl.debug('Performing Linux built-in package deployment');
 
-        await this.kuduServiceUtility.warmpUp();
+        await this.kuduServiceUtility.warmUp();
 
         switch(packageType){
             case PackageType.folder:

@@ -5,4 +5,9 @@ import './L0.Authentication';
 import './L0.InputValidation';
 import './L0.Telemetry';
 import './L0.Cleanup';
+import './L0.EndpointCredential';
+import './L0.ErrorPaths';
 import './L0.WIF';
+
+// Unit tests (pure logic, no task runner)
+import './Unit';

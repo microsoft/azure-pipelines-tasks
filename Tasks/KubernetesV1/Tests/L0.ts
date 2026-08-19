@@ -629,3 +629,59 @@ describe('Kubernetes Suite', function() {
     });
 
 });
+
+// Unit tests for sanitizeForLoggingCommand (MSRC 122198 - prevent ##vso[ command injection)
+import { sanitizeForLoggingCommand } from '../src/sanitize';
+
+describe('sanitizeForLoggingCommand', function() {
+    it('should return normal version strings unchanged', () => {
+        assert.strictEqual(sanitizeForLoggingCommand('v1.30.0'), 'v1.30.0');
+        assert.strictEqual(sanitizeForLoggingCommand('v1.12.7'), 'v1.12.7');
+    });
+
+    it('should strip ##vso[ patterns from version strings', () => {
+        const malicious = 'v1.30.0 ##vso[task.setvariable variable=BASH_ENV;]/tmp/pwn.sh';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+        assert(sanitized.indexOf('__vso[') !== -1, 'should replace with __vso[');
+    });
+
+    it('should strip ##vso[ case-insensitively', () => {
+        const malicious = 'v1.30.0 ##VSO[task.setvariable variable=X;]val';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##VSO[') === -1, 'should not contain ##VSO[');
+    });
+
+    it('should strip ##[ logging command patterns', () => {
+        const malicious = 'v1.30.0 ##[section]Injected section';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##[') === -1, 'should not contain ##[');
+        assert(sanitized.indexOf('__[') !== -1, 'should replace with __[');
+    });
+
+    it('should replace newlines to prevent line-splitting injection', () => {
+        const malicious = 'v1.30.0\n##vso[task.setvariable variable=BASH_ENV;]/tmp/pwn.sh';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('\n') === -1, 'should not contain newlines');
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+    });
+
+    it('should replace carriage return + newline sequences', () => {
+        const malicious = 'v1.30.0\r\n##vso[task.setendpoint id=1;]http://evil.com';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('\r') === -1, 'should not contain CR');
+        assert(sanitized.indexOf('\n') === -1, 'should not contain LF');
+    });
+
+    it('should handle null and empty strings', () => {
+        assert.strictEqual(sanitizeForLoggingCommand(null), null);
+        assert.strictEqual(sanitizeForLoggingCommand(undefined), undefined);
+        assert.strictEqual(sanitizeForLoggingCommand(''), '');
+    });
+
+    it('should handle multiple ##vso[ injections in one string', () => {
+        const malicious = '##vso[task.setvariable variable=A;]x ##vso[task.setvariable variable=B;]y';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain any ##vso[');
+    });
+});

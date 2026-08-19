@@ -14,7 +14,7 @@
   "loc.input.help.solution": "Chemin du fichier solution, du fichier packages.config ou du fichier project.json qui référence les packages à restaurer.",
   "loc.input.label.selectOrConfig": "Flux à utiliser",
   "loc.input.help.selectOrConfig": "Sélectionnez un flux à partir d'Azure Artifacts et/ou NuGet.org ici, ou validez un fichier nuget.config dans votre dépôt de code source, puis définissez son chemin ici.",
-  "loc.input.label.feedRestore": "Utiliser les packages de ce flux Azure Artifacts/TFS",
+  "loc.input.label.feedRestore": "Utiliser les packages de ce flux Azure Artifacts/TFS. Sélectionnez dans la liste déroulante ou saisissez [nom du projet/]nom du flux.",
   "loc.input.help.feedRestore": "Incluez le flux sélectionné dans le fichier NuGet.config généré. Pour pouvoir sélectionner un flux, vous devez au préalable installer Azure Artifacts et l'associer à une licence.",
   "loc.input.label.includeNuGetOrg": "Utiliser les packages de NuGet.org",
   "loc.input.help.includeNuGetOrg": "Incluez NuGet.org dans le fichier NuGet.config généré.",
@@ -39,6 +39,8 @@
   "loc.input.help.publishPackageMetadata": "Associer les métadonnées de ce pipeline de build/mise en production (numéro d'exécution, informations de code source) au package",
   "loc.input.label.allowPackageConflicts": "Permettre d'ignorer les doublons",
   "loc.input.help.allowPackageConflicts": "Si vous publiez continuellement un ensemble de packages et si vous changez uniquement le numéro de version du sous-ensemble de packages ayant changé, utilisez cette option. Cela permet à la tâche d'indiquer que l'exécution est réussie même si certains de vos packages sont rejetés en raison d'erreurs de conflit 409.\n\nCette option est disponible uniquement sur Azure Pipelines via les agents Windows. Si NuGet.exe détecte un conflit, l'exécution de la tâche se solde par un échec. Si vous êtes dans un environnement de proxy, cette option ne fonctionne pas et la publication se solde par un échec.",
+  "loc.input.label.requestTimeout": "Set timeout for package publish request",
+  "loc.input.help.requestTimeout": "Optionally provide a timeout value for HTTP requests that the task makes while publishing packages. The value is in milliseconds. If omitted, or if a negative value is provided, the task uses the service default behavior. Cannot be more than 600000 milliseconds (10 minutes).",
   "loc.input.label.externalEndpoint": "Serveur NuGet",
   "loc.input.help.externalEndpoint": "Connexion de service NuGet qui contient les informations d'identification externes du serveur NuGet.",
   "loc.input.label.verbosityPush": "Détail",
@@ -105,6 +107,7 @@
   "loc.messages.Error_PushNotARegularFile": "%s n'est pas un fichier. Vérifiez la propriété 'Chemin/modèle de nupkg' de la tâche.",
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "L'option Permettre d'ignorer les doublons est disponible uniquement sur Azure Pipelines. Si NuGet.exe détecte un conflit, l'exécution de la tâche se solde par un échec.",
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "L'option Permettre d'ignorer les doublons est disponible uniquement sur les agents Windows. Si NuGet.exe détecte un conflit, l'exécution de la tâche se solde par un échec.",
+  "loc.messages.Warning_NegativeRequestTimeoutIgnored": "Ignoring negative requestTimeout value '%s'. The task will use the default service behavior.",
   "loc.messages.Error_CommandNotRecognized": "La commande %s n'a pas été reconnue.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.",
   "loc.messages.Error_ExpectedConfigurationElement": "Contenu xml non valide. L'élément nommé 'configuration' est attendu.",
@@ -135,5 +138,8 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants risquent de se produire au moment de la mise à jour de NuGet vers une nouvelle version. Pour ne pas que cela se produise, désélectionnez l'option 'Rechercher la dernière version' dans la tâche.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Échec de la commande nuget avec le code de sortie (%s) et l'erreur (%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg est actuellement activé pour cette tâche. Pour résoudre cet avertissement, modifiez votre tâche de build et définissez 'includeNuGetOrg' sur 'false' ou désélectionnez 'Use packages from NuGet.org'.",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Nous n’avons pas pu restaurer des paquets. Editez votre tâche de build et mettez 'includeNuGetOrg' à 'false' ou désélectionnez 'Use packages from NuGet.org'."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Nous n’avons pas pu restaurer des paquets. Editez votre tâche de build et mettez 'includeNuGetOrg' à 'false' ou désélectionnez 'Use packages from NuGet.org'.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel.",
+  "loc.messages.LIB_WhichNotFound_Linux": "Nous ne pouvons pas localiser le fichier exécutable : « %s ». Veuillez vérifier que le chemin d’accès du fichier existe ou que le fichier se trouve au sein d’un répertoire spécifié par la variable d’environnement PATH. Vérifiez également le mode du fichier pour confirmer qu’il est exécutable.",
+  "loc.messages.Error_IncompatibleUbuntuVersion": "Nous n’avons pas pu effectuer la tâche, car vous utilisez Ubuntu 24.04 ou une version ultérieure sans Mono installée. Pour découvrir plus d’informations, consultez https://aka.ms/nuget-task-mono."
 }

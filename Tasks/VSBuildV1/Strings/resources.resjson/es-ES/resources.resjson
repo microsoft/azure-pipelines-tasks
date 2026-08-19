@@ -21,7 +21,7 @@
   "loc.input.label.restoreNugetPackages": "Restaurar paquetes NuGet",
   "loc.input.help.restoreNugetPackages": "Esta opción está en desuso. Para restaurar paquetes NuGet, agregue una tarea del [Instalador de la herramienta NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) antes de la compilación.",
   "loc.input.label.msbuildArchitecture": "Arquitectura MSBuild",
-  "loc.input.help.msbuildArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de MSBuild que se va a ejecutar.",
+  "loc.input.help.msbuildArchitecture": "Opcionalmente, proporcione la arquitectura (x86, x64, arm64) de MSBuild que se va a ejecutar.",
   "loc.input.label.logProjectEvents": "Registrar detalles del proyecto",
   "loc.input.help.logProjectEvents": "Se registra, de manera opcional, los detalles de la escala de tiempo de cada proyecto.",
   "loc.input.label.createLogFile": "Crear archivo de registro",

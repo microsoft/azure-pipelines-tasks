@@ -153,9 +153,7 @@ export function deleteDirectory(dir: string): void {
 
     if(tl.exist(dir)) {
         tl.debug("Cleaning-up directory " + dir);
-        try {
-            tl.rmRF(dir);
-        } catch(error) {}
+        tl.rmRF(dir);
     }
 }
 

@@ -7,6 +7,7 @@
 - [Build and Test](#build-and-test)
   - [Build All Tasks (this can take a while):](#build-all-tasks-this-can-take-a-while)
   - [Build a specific task (recommended):](#build-a-specific-task-recommended)
+  - [Minifying a task (bundling)](#minifying-a-task-bundling)
   - [Run Tests](#run-tests)
   - [Legacy Tests](#legacy-tests)
   - [Remote debugging node tasks](#remote-debugging-node-tasks)
@@ -105,6 +106,17 @@ node make.js build --task ShellScript
 ```bash
 node make.js build --task ShellScript --BypassNpmAudit
 ```
+
+## Minifying a task (bundling)
+
+Node-based tasks can optionally be **bundled and minified** at build time — each Node execution
+target is bundled with [esbuild](https://esbuild.github.io/) into a single minified file and the
+per-task `node_modules` tree is dropped from the output, cutting deployable size by ~90% or more.
+Minification is **off by default** and **opt-in per task** via `make.json`.
+
+See **[Minifying a task (bundling)](minify-tasks.md)** for the full guide: trying it on the command
+line, opting in via `make.json`, the `minify` options, source maps and debugging, duplicate-package
+handling, and the caveats to validate before opting a task in.
 
 ## Run Tests
 

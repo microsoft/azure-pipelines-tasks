@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "typescript": "4.0.2"
+  },
+  "overrides": {
+    "lodash": "4.18.1"
   }
 }

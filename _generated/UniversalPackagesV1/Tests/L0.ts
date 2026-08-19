@@ -1,10 +1,14 @@
 import * as path from 'path';
+import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib';
 import {runTestWithEnv, assertArtifactToolCommand, assertTaskFailedBeforeToolExecution, buildCommandString } from './testHelpers';
 import { TEST_CONSTANTS, getDefaultEnvVars } from './testConstants';
 
 // Set resource path to enable localization in tests
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
+// Import pre-job installer tests
+import './L0.ArtifactToolInstaller';
 
 describe('UniversalPackages Suite', function () {
     describe('Download Operations', function () {
@@ -190,6 +194,28 @@ describe('UniversalPackages Suite', function () {
             });
             
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_UniversalPackagesNotSupportedOnPrem'));
+        });
+
+        it('downloads artifact tool inline when pre-job did not cache it', async function() {
+            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            const tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH': '',
+                'INPUT_COMMAND': 'download',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+            });
+
+            // Verify the resolver installed the artifact tool inline and cached the path
+            const vars = tr.getSetVariables();
+            assert.strictEqual(vars.get('UPACK_ARTIFACTTOOL_PATH'), TEST_CONSTANTS.ARTIFACT_TOOL_PATH, 'should have installed and cached artifact tool path');
         });
     });
 

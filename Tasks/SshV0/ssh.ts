@@ -7,6 +7,7 @@ import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 /**
  * By default configuration, SSH runs on port 22.
@@ -32,6 +33,9 @@ async function run() {
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         const port: number = getServerPort(sshEndpoint); //port is optional, will use 22 as default port if not specified
         const interactiveSession: boolean = tl.getBoolInput('interactiveSession', false);
+        // Secure by default: when false, ##vso[...] lines in remote output are neutralized
+        // (printed as text, not executed). Set true only to trust remote logging commands.
+        const allowVsoCommands: boolean = tl.getBoolInput('enableRemoteVsoCommands', false);
         const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details
@@ -111,7 +115,7 @@ async function run() {
                     tl.debug(`Running command ${command} on remote machine.`);
                     console.log(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
-                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession);
+                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession, allowVsoCommands);
                     tl.debug(`Command ${command} completed with return code = ${returnCode}`);
                 }
             } else {
@@ -150,7 +154,7 @@ async function run() {
                 //set execute permissions on the script
                 tl.debug('Setting execute permission on script copied to remote machine');
                 console.log(`chmod +x ${remoteScriptPath}`);
-                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${remoteScriptPath}`, sshClientConnection, remoteCmdOptions);
+                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${shellQuote(remoteScriptPath)}`, sshClientConnection, remoteCmdOptions);
 
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
@@ -189,14 +193,14 @@ async function run() {
                 }
 
                 //setup command to clean up script file
-                cleanUpScriptCmd = `rm -f ${remoteScriptPath}`;
+                cleanUpScriptCmd = `rm -f ${shellQuote(remoteScriptPath)}`;
                 if (isWin) {
-                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${originalScriptPath}`;
+                    cleanUpScriptCmd = `rm -f ${shellQuote(remoteScriptPath)} ${shellQuote(originalScriptPath)}`;
                 }
 
                 console.log(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
-                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, interactiveSession);
+                    runScriptCmd, sshClientConnection, remoteCmdOptions, password, interactiveSession, allowVsoCommands);
             }
         }
 

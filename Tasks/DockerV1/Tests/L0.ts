@@ -11,6 +11,15 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.operatingSystem] = tl.getPlatform() === tl.Platform.Windows ? shared.OperatingSystems.Windows : shared.OperatingSystems.Other;
         done();
     });
+
+    function setupTagTestEnv(ffEnabled: boolean) {
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
+        process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
+        process.env[shared.TestEnvVars.qualifyImageName] = "true";
+        process.env[shared.TestEnvVars.qualifySourceImageName] = "true";
+        process.env[shared.TestEnvVars.useDockerSkipRedundantTagFeatureFlag] = ffEnabled ? "true" : "false";
+    }
+
     beforeEach(() => {
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
@@ -25,6 +34,7 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.qualifySourceImageName];
         delete process.env[shared.TestEnvVars.addBaseImageData];
+        delete process.env[shared.TestEnvVars.useDockerSkipRedundantTagFeatureFlag];
     });
     after(function () {
     });
@@ -227,16 +237,41 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker tag image with sourcequalify set to true', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
-        process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
-        process.env[shared.TestEnvVars.qualifyImageName] = "true";
-        process.env[shared.TestEnvVars.qualifySourceImageName] = "true";
+        setupTagTestEnv(true);
         await tr.runAsync();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool since source and target are identical. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker tag should run");
+        assert(tr.stdout.indexOf(`Skipping tag`) != -1, "should log skip message when source and target are identical");
+        console.log(tr.stderr);
+    });
+
+    it('Runs successfully for docker tag image with sourcequalify set to true when feature flag is disabled', async () => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        setupTagTestEnv(false);
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time when feature flag is disabled. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker tag should run for identical source/target when feature flag is disabled");
+        console.log(tr.stderr);
+    });
+
+    it('Runs successfully for docker tag image with mixed mappings when feature flag is enabled', async () => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        setupTagTestEnv(true);
+        process.env[shared.TestEnvVars.arguments] = "test/test:v1";
+        await tr.runAsync();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time after skipping the redundant self-tag. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`Skipping tag`) != -1, "should log skip message for the redundant self-tag");
+        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:v1`) != -1, "docker tag should still run for later non-identical mappings");
         console.log(tr.stderr);
     });
 
@@ -248,7 +283,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.arguments] = 'test/test:v1';
         await tr.runAsync();
 
-        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker tag test/test:latest test/test:v1`) != -1, "docker tag should run");

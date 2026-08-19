@@ -202,7 +202,7 @@ export class AzureSpringAppsDeploymentProvider {
             file: fileName,
             sync: true,
             cwd: sourceDirectoryPath,
-            onWarn: warning => {
+            onwarn: warning => {
                 tl.warning(warning);
             }
         }, ['.']);

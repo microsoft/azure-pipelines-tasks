@@ -1,0 +1,40 @@
+name: Label issues
+
+# Applies Area:/Task: labels (and best-effort assignees) to newly opened
+# issues, based on the "Task name" field of the issue form and the rules in
+# issue-rules.yml. Replaces the retired damccorm/tag-ur-it action.
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    name: Label issue
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Install js-yaml from the PUBLIC npm registry in an isolated directory
+      # so we never resolve against the repo's private-feed .npmrc.
+      - name: Install js-yaml (public registry)
+        run: |
+          mkdir -p "$RUNNER_TEMP/labeler"
+          cd "$RUNNER_TEMP/labeler"
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          npm install --no-save --registry=https://registry.npmjs.org/ js-yaml@4
+
+      - name: Apply labels
+        uses: actions/github-script@v7
+        env:
+          YAML_MODULE: ${{ runner.temp }}/labeler/node_modules/js-yaml
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run = require('./.github/workflows/labelIssues.cjs');
+            await run({ github, context, core });

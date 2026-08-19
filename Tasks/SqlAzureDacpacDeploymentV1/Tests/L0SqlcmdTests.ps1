@@ -4,7 +4,12 @@ param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
+. $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\SqlAzureActions.ps1
+
+# Mock feature flag to use legacy path (backward compat)
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Should-UseSanitizedArguments { return $false }
 
 # Test Run-SqlCmd
 $sqlFilePath = "C:\Test\TestFile.sql"

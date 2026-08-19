@@ -27,7 +27,7 @@
       {
         "name": "Microsoft.TeamFoundationServer.Client",
         "version": "15.101.0-preview",
-        "repository": "https://www.nuget.org/api/v2/",
+        "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
         "cp": [
           {
             "source": "lib/net45/Microsoft.TeamFoundation.Core.WebApi.dll"
@@ -41,7 +41,7 @@
       {
         "name": "Microsoft.TeamFoundationServer.ExtendedClient",
         "version": "15.101.1-preview",
-        "repository": "https://www.nuget.org/api/v2/",
+        "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
         "cp": [
           {
             "source": [
@@ -62,7 +62,7 @@
       {
         "name": "Microsoft.VisualStudio.Services.Client",
         "version": "15.101.0-preview",
-        "repository": "https://www.nuget.org/api/v2/",
+        "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
         "cp": [
           {
             "source": [
@@ -84,7 +84,7 @@
       {
         "name": "VstsTaskSdk",
         "version": "0.9.0",
-        "repository": "https://www.powershellgallery.com/api/v2/",
+        "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
         "cp": [
           {
             "source": [

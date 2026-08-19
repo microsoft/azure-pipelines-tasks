@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@octokit/rest": "^16.43.2",
-    "axios": "^1.12.2"
+    "@octokit/rest": "^16.43.2"
   }
 }

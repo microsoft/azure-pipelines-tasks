@@ -3,6 +3,13 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
 
+// Ensure path formatting in shared helpers is stable even if earlier tests mutate env state.
+if (!process.env[shared.TestEnvVars.operatingSystem]) {
+    process.env[shared.TestEnvVars.operatingSystem] = process.platform === 'win32'
+        ? shared.OperatingSystems.Windows
+        : shared.OperatingSystems.Other;
+}
+
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ImageNamesPath = shared.formatPath("dir/image_names.txt");
 const DockerFilePath = shared.formatPath('dir1/DockerFile');
@@ -112,6 +119,9 @@ a.exec[`docker tag test/test:latest test/test:latest`] = {
     "code": 0
 };
 a.exec[`docker tag test/test:latest test/test:v1`] = {
+    "code": 0
+};
+a.exec[`docker tag ajgtestacr1.azurecr.io/test/test:2 ajgtestacr1.azurecr.io/test/test:v1`] = {
     "code": 0
 };
 a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`] = {

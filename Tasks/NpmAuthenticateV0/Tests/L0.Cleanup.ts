@@ -1,21 +1,21 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { TestEnvVars } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
- * Create a SAVE_NPMRC_PATH directory containing an index.json whose entry for
- * `npmrcPath` maps to a placeholder original content string.
- * The directory is tracked via TestHelpers so afterEach() cleans it up.
+ * Create a SAVE_NPMRC_PATH directory containing an index.json and a backup file
+ * in the format NpmrcBackupManager expects: { "nextId": 1, "entries": { "<npmrcPath>": 0 } }
+ * with a file named "0" holding the original .npmrc content.
  */
-function createSaveDir(npmrcPath: string): string {
+function createSaveDir(npmrcPath: string, originalContent: string = 'original=https://registry.npmjs.org/\n'): string {
     const saveDir = TestHelpers.createTempDir('npm-auth-save-');
-    const indexContent: { [key: string]: string } = {};
-    indexContent[npmrcPath] = 'original=https://registry.npmjs.org/\n';
-    fs.writeFileSync(path.join(saveDir, 'index.json'), JSON.stringify(indexContent), 'utf8');
+    const index = { nextId: 1, entries: { [npmrcPath]: 0 } };
+    fs.writeFileSync(path.join(saveDir, 'index.json'), JSON.stringify(index), 'utf8');
+    // Create the backup file that restoreBackedUpFile() will copy back
+    fs.writeFileSync(path.join(saveDir, '0'), originalContent, 'utf8');
     return saveDir;
 }
 
@@ -34,40 +34,39 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
 
     it('restores the .npmrc when index.json and working file both exist', async () => {
         // Arrange
+        const originalContent = 'registry=https://registry.npmjs.org/\n';
         const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
-        const saveDir   = createSaveDir(npmrcPath);
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]      = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]  = saveDir;
+        const saveDir   = createSaveDir(npmrcPath, originalContent);
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        TestHelpers.assertOutputContains(tr, 'RESTORE_FILE_CALLED');
         TestHelpers.assertOutputContains(tr, 'loc_mock_RevertedChangesToNpmrc');
+        // Verify the file was physically restored
+        const restoredContent = fs.readFileSync(npmrcPath, 'utf8');
+        TestHelpers.assertNpmrcContains(npmrcPath, 'registry=https://registry.npmjs.org/');
     });
 
     it('logs NoIndexJsonFile when index.json is missing from SAVE_NPMRC_PATH', async () => {
         // Arrange — save dir exists but index.json is absent
         const npmrcPath = TestHelpers.createTempNpmrc();
         const saveDir   = TestHelpers.createTempDir('npm-auth-save-');   // no index.json written
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]       = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]   = saveDir;
-        process.env[TestEnvVars.cleanupIndexShouldExist] = 'false';
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupIndexShouldExist]: 'false'
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        TestHelpers.assertOutputNotContains(tr, 'RESTORE_FILE_CALLED');
+        TestHelpers.assertOutputNotContains(tr, 'loc_mock_RevertedChangesToNpmrc');
         TestHelpers.assertOutputContains(tr, 'loc_mock_NoIndexJsonFile');
     });
 
@@ -75,41 +74,38 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         // Arrange — index.json is present but the .npmrc it references is gone
         const npmrcPath = TestHelpers.createTempNpmrc();
         const saveDir   = createSaveDir(npmrcPath);
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]        = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]    = saveDir;
-        process.env[TestEnvVars.cleanupNpmrcShouldExist] = 'false';   // simulate deleted .npmrc
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupNpmrcShouldExist]: 'false'
+        }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
-        TestHelpers.assertOutputNotContains(tr, 'RESTORE_FILE_CALLED');
+        TestHelpers.assertOutputNotContains(tr, 'loc_mock_RevertedChangesToNpmrc');
         TestHelpers.assertOutputContains(tr, 'loc_mock_NoIndexJsonFile');
     });
 
     it('removes the temp directory when SAVE_NPMRC_PATH contains only the index file', async () => {
-        // Arrange — save dir has exactly 1 file (index.json) so the rmRF branch is reached
+        // Arrange — after restore, only index.json remains so the rmRF branch triggers.
+        // createSaveDir adds both index.json and the backup file "0".
+        // After restoreBackedUpFile runs, it deletes "0", leaving only index.json.
         const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
-        const saveDir   = createSaveDir(npmrcPath);   // 1 file: index.json
+        const saveDir   = createSaveDir(npmrcPath);
         const tempDir   = TestHelpers.createTempDir('npm-auth-temp-');
-        const tp = path.join(__dirname, 'TestSetupCleanup.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        process.env[TestEnvVars.cleanupNpmrcPath]       = npmrcPath;
-        process.env[TestEnvVars.cleanupSaveNpmrcPath]   = saveDir;
-        process.env[TestEnvVars.cleanupTempDirectory]   = tempDir;
-        process.env[TestEnvVars.cleanupTempDirExists]   = 'true';
 
         // Act
-        await tr.runAsync();
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTempDirectory]: tempDir,
+            [TestEnvVars.cleanupTempDirExists]: 'true'
+        }, 'TestSetupCleanup.js');
 
-        // Assert — task reaches the rmRF branch without throwing
+        // Assert
         TestHelpers.assertSuccess(tr);
-        TestHelpers.assertOutputContains(tr, 'RESTORE_FILE_CALLED');
         TestHelpers.assertOutputContains(tr, 'loc_mock_RevertedChangesToNpmrc');
     });
 });

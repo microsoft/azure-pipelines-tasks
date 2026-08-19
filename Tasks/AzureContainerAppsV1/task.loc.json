@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 278,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -195,6 +195,7 @@
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "ms-resource:loc.messages.AcrAccessTokenAuthFailed",
+    "AcrLogoutFailed": "ms-resource:loc.messages.AcrLogoutFailed",
     "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
     "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
     "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",
@@ -226,6 +227,7 @@
     "ErrorMessageFormat": "ms-resource:loc.messages.ErrorMessageFormat",
     "ExistingContainerAppEnvironmentMessage": "ms-resource:loc.messages.ExistingContainerAppEnvironmentMessage",
     "FoundAppSourceDockerfileMessage": "ms-resource:loc.messages.FoundAppSourceDockerfileMessage",
+    "InvalidAppSourcePathMessage": "ms-resource:loc.messages.InvalidAppSourcePathMessage",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MissingAcrNameMessage": "ms-resource:loc.messages.MissingAcrNameMessage",
     "MissingRequiredArgumentMessage": "ms-resource:loc.messages.MissingRequiredArgumentMessage",

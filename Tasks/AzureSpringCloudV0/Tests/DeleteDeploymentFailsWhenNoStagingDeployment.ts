@@ -25,16 +25,14 @@ export class DeleteStagingDeploymentTest {
         DeleteStagingDeploymentTest.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'DeleteStagingDeploymentTestL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             assert(mockTestRunner.failed);
             let expectedError = 'No staging deployment found.';
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             done(error);
-        }
+        });
     };
 }

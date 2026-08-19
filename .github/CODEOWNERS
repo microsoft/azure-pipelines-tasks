@@ -68,6 +68,8 @@ Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @
 
 Tasks/AzureFunctionV1/     @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/AzureFunctionV2/     @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/AzureIoTEdgeV2/     @marianan 
 
 Tasks/AzureKeyVaultV1/     @microsoft/release-management-task-team @manolerazvan 
@@ -79,6 +81,8 @@ Tasks/AzureMonitorV0/      @microsoft/release-management-task-team @manolerazvan
 Tasks/AzureMonitorV1/      @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureMysqlDeploymentV1/  @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/AzureMysqlDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureNLBManagementV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -96,6 +100,8 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/BicepDeployV0/      @azure/bicep-admins
+
 # DRI rotation: App Service (Web Apps)
 Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
@@ -106,7 +112,7 @@ Tasks/AzureRmWebAppDeploymentV5/   @jvano @dannysongg @shilpirachna1 @microsoft/
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @menxiao
 
-Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @cjk7989 @jessieyyt @LongOddCode
 
 Tasks/AzureTestPlanV0/     @manos  @microsoft/adoautotest
 
@@ -148,15 +154,15 @@ Tasks/Common/Deployment/     @microsoft/release-management-task-team @manolerazv
 
 Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/RemoteDeployer/   @arjgupta
+Tasks/Common/RemoteDeployer/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/Common/ServiceFabricHelpers/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/TlsHelper_/      @arjgupta
+Tasks/Common/TlsHelper_/      @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/VstsAzureHelpers_/     @vincentdass
+Tasks/Common/VstsAzureHelpers_/     @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  
+Tasks/Common/VstsAzureRestHelpers_/  @microsoft/release-management-task-team @manolerazvan
 
 Tasks/Common/azure-arm-rest/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -216,6 +222,8 @@ Tasks/DotNetCoreInstallerV1/   @microsoft/azure-pipelines-tasks-and-agent @tarun
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/DownloadBuildArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DownloadGitHubNpmPackageV1/    @microsoft/release-management-task-team @manolerazvan 
@@ -259,6 +267,8 @@ Tasks/GitHubReleaseV1/     @microsoft/release-management-task-team @manolerazvan
 Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/GradleAuthenticateV0/    @microsoft/azure-artifacts-packages
 
 Tasks/GradleV2/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 

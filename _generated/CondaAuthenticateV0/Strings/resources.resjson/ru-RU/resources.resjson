@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "",
   "loc.description": "Задача проверки подлинности для клиента Conda",
   "loc.instanceNameFormat": "Проверка подлинности Conda",
+  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
+  "loc.input.help.workloadIdentityServiceConnection": "Если этот параметр задан, учетные данные будут создаваться с помощью подключения к службе, а не удостоверения конвейера сборки.",
   "loc.messages.FailedToAddAuthentication": "Добавить проверку подлинности не удалось.",
   "loc.messages.AddingAuthChannel": "Добавление проверки подлинности для маркера %s",
   "loc.messages.Info_AddingFederatedFeedAuth": "Добавление сведений о проверке подлинности из подключения к службе %s",

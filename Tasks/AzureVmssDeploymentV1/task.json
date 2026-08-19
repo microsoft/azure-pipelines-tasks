@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 279,
     "Patch": 0
   },
   "demands": [],
@@ -230,6 +230,8 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "UploadingToStorageBlobsAuthenticationFailed": "Failed to upload custom scripts to azure blob storage. Please ensure that the subscription has the 'Storage Blob Data Contributor' role assigned for storage account '%s'.",
-    "SettingVMExtensionFailedwithAuthentication": "Failed to install VM custom script extension on VMSS. Error: %s. Please ensure that the subscription has the 'Contributor' role assigned for vmss '%s'. "
+    "SettingVMExtensionFailedwithAuthentication": "Failed to install VM custom script extension on VMSS. Error: %s. Please ensure that the subscription has the 'Contributor' role assigned for vmss '%s'. ",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787",
+    "ScriptArgsSanitizedBash": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   }
 }

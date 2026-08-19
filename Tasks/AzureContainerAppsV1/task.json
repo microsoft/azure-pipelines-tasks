@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 270,
+    "Minor": 278,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -195,6 +195,7 @@
   },
   "messages": {
     "AcrAccessTokenAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with access token.",
+    "AcrLogoutFailed": "Unable to log Docker out of ACR instance '%s'. Error: %s",
     "AcrAccessTokenLoginMessage": "Logging in to Azure Container Registry using access token to be generated via Azure CLI.",
     "AcrUsernamePasswordAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.",
     "AcrUsernamePasswordLoginMessage": "Logging in to Azure Container Registry using provided acrUsername and acrPassword arguments.",
@@ -226,6 +227,7 @@
     "ErrorMessageFormat": "Error: %s",
     "ExistingContainerAppEnvironmentMessage": "Discovered existing Container App Environment, '%s', to use with the Container App.",
     "FoundAppSourceDockerfileMessage": "Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.",
+    "InvalidAppSourcePathMessage": "The provided appSourcePath '%s' contains invalid characters. It must be a valid filesystem path and must not contain shell metacharacters.",
     "LoginFailed": "Azure login failed",
     "MissingAcrNameMessage": "The acrName argument must also be provided if the appSourcePath argument is provided.",
     "MissingRequiredArgumentMessage": "One of the following arguments must be provided: appSourcePath, imageToDeploy, yamlConfigPath",

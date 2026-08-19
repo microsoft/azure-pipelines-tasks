@@ -64,7 +64,7 @@
   "loc.messages.InvalidContainerRegistry": "Échec de la récupération (fetch) du jeton d'authentification du registre de conteneurs. Vérifiez le paramètre du registre de conteneurs dans la tâche de build. Le nom d'utilisateur du registre de conteneurs est %s",
   "loc.messages.DeploymentFileNotFound": "Le fichier de déploiement est introuvable. Vérifiez que le chemin du fichier de déploiement est correctement défini dans la tâche.",
   "loc.messages.ValidDeploymentFileNotFound": "Impossible de localiser un fichier de déploiement valide. Vérifiez que le chemin du fichier de déploiement est correctement défini dans la tâche.",
-  "loc.messages.AzureSdkNotFound": "Kit Azure SDK introuvable",
+  "loc.messages.AzureSdkNotFound": "SDK Azure introuvable",
   "loc.messages.RootPathNotExist": "Le chemin racine %s n'existe pas",
   "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION a la valeur true. Validation de l'image de module ignorée.",
   "loc.messages.InvalidRegistryCredentialWarning": "Échec de la connexion %s avec les informations d'identification fournies. %s",

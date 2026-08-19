@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "請使用語法「-索引鍵 值」編輯 Web 應用程式設定。若值包含空格，應將其括以雙引號。<br />範例 -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "部署方法",
   "loc.input.help.deploymentMethod": "選擇應用程式的部署方法。",
+  "loc.input.label.siteContainersConfig": "網站容器組態",
+  "loc.input.help.siteContainersConfig": "為 SiteContainers 部署提供 siteContainers-config JSON。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "提供的 App Service 套件或資料夾路徑無效: %s",
   "loc.messages.SetParamFilenotfound0": "找不到設定參數檔案: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "已成功套用 XML 轉換",
@@ -111,7 +113,7 @@
   "loc.messages.PollingForFileTimeOut": "因為逾時，所以無法擷取指令碼狀態。您可以將 'appservicedeploy.retrytimeout' 變數設定為所需的分鐘數來提高逾時限制。",
   "loc.messages.InvalidPollOption": "提供的輪詢選項無效: %s。",
   "loc.messages.MissingAppTypeWebConfigParameters": "Web.config 參數中缺少屬性 '-appType'。'-appType' 的有效值為: 'python_Bottle'、'python_Django'、'python_Flask'、'node' 和 'Go'。<br />假如是 Python Bottle 架構，即為 '-appType python_Bottle' (不含括號)。",
-  "loc.messages.AutoDetectDjangoSettingsFailed": "偵測不到 DJANGO_SETTINGS_MODULE 'settings.py' 檔案路徑。請確定 'settings.py' 檔案存在，或依下列格式在 Web.config 參數輸入中提供正確的路徑: '-DJANGO_SETTINGS_MODULE <資料夾名稱>.settings'",
+  "loc.messages.AutoDetectDjangoSettingsFailed": "偵測不到 DJANGO_SETTINGS_MODULE 'settings.py' 檔案路徑。請確定 'settings.py' 檔案存在，或依下列格式在 Web.config 參數輸入中提供正確的路徑: '-DJANGO_SETTINGS_MODULE <folder_name>.settings'",
   "loc.messages.FailedToApplyTransformation": "無法對指定的套件套用轉換。請確認下列事項。",
   "loc.messages.FailedToApplyTransformationReason1": "1. 是否已對建置期間由 MSBuild 產生的套件套用轉換。若已套用，請移除 csproj 檔案中每項設定的 <DependentUpon> 標記，然後重建。",
   "loc.messages.FailedToApplyTransformationReason2": "2. 確認組態檔與轉換檔皆位於套件內的同一個資料夾中。",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "沒有 Java 的 jar 路徑",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
   "loc.messages.InvalidDockerImageName": "提供的 Docker 中樞映像名稱無效。",
-  "loc.messages.MsBuildPackageNotSupported": "不支援部署 msBuild 產生的套件。請變更套件格式或使用 Azure App Service 部署工作。"
+  "loc.messages.MsBuildPackageNotSupported": "不支援部署 msBuild 產生的套件。請變更套件格式或使用 Azure App Service 部署工作。",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "網站容器不支援發佈設定檔驗證。請使用服務連線驗證。",
+  "loc.messages.StartedUpdatingSiteContainers": "已開始更新網站容器。",
+  "loc.messages.UpdatingSiteContainer": "更新網站容器: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "已完成更新網站容器。"
 }

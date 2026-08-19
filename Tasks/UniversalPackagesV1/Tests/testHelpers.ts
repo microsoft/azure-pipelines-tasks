@@ -5,10 +5,6 @@ import { UniversalMockHelper } from './UniversalMockHelper';
 import { TEST_CONSTANTS } from './testConstants';
 import { UniversalMockTestRunner } from './UniversalMockTestRunner';
 
-function assertResultMessage(tr: MockTestRunner, expectedMessage: string): void {
-    assert(tr.stdOutContained(expectedMessage), `should contain result message: ${expectedMessage}`);
-}
-
 function assertTaskSucceeded(tr: MockTestRunner): void {
     assert(tr.succeeded, 'should have succeeded');
     assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -17,6 +13,10 @@ function assertTaskSucceeded(tr: MockTestRunner): void {
 function assertTaskFailed(tr: MockTestRunner): void {
     assert(tr.failed, 'should have failed');
     assert(tr.errorIssues.length > 0, 'should have error messages');
+}
+
+export function assertResultMessage(tr: MockTestRunner, expectedMessage: string): void {
+    assert(tr.stdOutContained(expectedMessage), `should contain result message: ${expectedMessage}`);
 }
 
 export function buildCommandString(params: {

@@ -8,6 +8,7 @@
   "loc.input.label.command": "npm 명령",
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "추가 인수를 npm에 전달했습니다.",
+  "loc.messages.TaskDeprecationNotice": "NpmV0 작업은 2026년 6월에 사용 중단될 예정입니다. NpmAuthenticate와 스크립트 작업 또는 NpmV1로 전환해 주세요.",
   "loc.messages.InvalidCommand": "npm에는 명령을 하나만 사용해야 합니다. 추가 인수에는 '인수' 입력을 사용하세요.",
   "loc.messages.NpmReturnCode": "npm이 종료되었습니다(반환 코드: %d).",
   "loc.messages.NpmFailed": "npm이 실패했습니다(오류: %s).",

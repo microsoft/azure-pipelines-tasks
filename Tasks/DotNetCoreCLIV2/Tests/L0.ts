@@ -559,4 +559,130 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
     });
+
+    it('test command finds non-root global.json file based on working directory', async () => {
+      
+      const tp = path.join(__dirname, './TestCommandTests/runTestsWithNonRootGlobalJson.js');
+      const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      assert(tr.succeeded, 'task should succeed when global.json is found');
+      assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+    });
+    
+    it('finds global.json located in parent directory of workingDirectory', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithParentGlobalJson.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
+    });
+
+    it('does not search above repository root for global.json', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithGlobalJsonAboveRepo.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should still succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Ensure global.json above repo root was NOT discovered
+        assert(
+            tr.stdout.indexOf('global.json not found') >= 0,
+            'should log that global.json was not found'
+        );
+
+        // Ensure the task did not detect the file outside the repo
+        assert(
+            tr.stdout.indexOf('Found global.json') === -1,
+            'should NOT discover global.json above repository root'
+        );
+    });
+
+    it('returns null when no global.json exists in repository', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutGlobalJson.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed even if global.json is not present');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // verify the correct code path was taken
+        assert(
+            tr.stdout.indexOf('global.json not found. Test run is VSTest') >= 0,
+            'should log that global.json was not found and fallback to VSTest'
+        );
+    });
+
+    it('finds global.json located at repository root', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithRepoRootGlobalJson.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert.strictEqual(tr.errorIssues.length, 0);
+    });
+
+    it('finds global.json when workingDirectory is outside Build.SourcesDirectory but inside Agent.BuildDirectory (issue #21989)', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithWorkingDirOutsideSourcesDir.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when global.json found via Agent.BuildDirectory boundary');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Verify Agent.BuildDirectory was used as boundary
+        assert(
+            tr.stdout.indexOf('Using Agent.BuildDirectory') >= 0,
+            'should log that Agent.BuildDirectory is used as search boundary'
+        );
+
+        // Verify global.json was found
+        assert(
+            tr.stdout.indexOf('Found global.json') >= 0,
+            'should discover global.json within Agent.BuildDirectory boundary'
+        );
+
+        // Verify --solution flag was added (MTP detected)
+        assert(
+            tr.stdout.indexOf('--solution') >= 0,
+            'should add --solution flag when MTP is detected'
+        );
+    });
+
+    it('finds global.json when workingDirectory is outside Agent.BuildDirectory but inside Agent.WorkFolder (AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES)', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithWorkingDirOutsideWorkDirectory.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when global.json found via Agent.WorkFolder boundary');
+        assert.strictEqual(tr.errorIssues.length, 0);
+
+        // Verify Agent.WorkFolder was used as boundary
+        assert(
+            tr.stdout.indexOf('AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled') >= 0,
+            'should log that AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled'
+        );
+
+        // Verify global.json was found
+        assert(
+            tr.stdout.indexOf('Found global.json') >= 0,
+            'should discover global.json within Agent.WorkFolder boundary'
+        );
+
+        // Verify --solution flag was added (MTP detected)
+        assert(
+            tr.stdout.indexOf('--solution') >= 0,
+            'should add --solution flag when MTP is detected via WorkFolder boundary'
+        );
+    });
+
 });

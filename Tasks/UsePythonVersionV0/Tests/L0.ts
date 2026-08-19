@@ -107,6 +107,8 @@ describe('UsePythonVersion L0 Suite', function () {
             '2.7.13 (x86)',
             '2.6.0 (x64)',
             '2.7.13 (x64)',
+            '2.6.0 (arm64)',
+            '2.7.13 (arm64)',
             'loc_mock_ToolNotFoundMicrosoftHosted Python https://aka.ms/hosted-agent-software',
             'loc_mock_ToolNotFoundSelfHosted Python https://go.microsoft.com/fwlink/?linkid=871498',
         ].join('\r\n');

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 270,
-    "Patch": 1
+    "Minor": 279,
+    "Patch": 0
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -721,6 +721,7 @@
     "InvalidConnectionType": "Invalid service connection type",
     "InvalidImageSourceType": "Invalid Image source Type",
     "InvalidPublishProfile": "Publish profile file is invalid.",
+    "InvalidPublishProfileValue": "The value for '%s' in the publish profile contains characters that are not allowed.",
     "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
     "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
     "DeployLogsURL": "Deploy logs can be viewed at %s",

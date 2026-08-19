@@ -301,6 +301,266 @@ function Execute-Command {
     }
 }
 
+# V2: Safe execution using quote-aware CLI argument splitting (no Invoke-Expression)
+# Called when both feature flags are enabled via Should-UseSanitizedArguments
+function Execute-CommandV2 {
+    param(
+        [String][Parameter(Mandatory = $true)] $FileName,
+        [String][Parameter(Mandatory = $true)] $Arguments
+    )
+
+    $ErrorActionPreference = 'Continue'
+    
+    # Split arguments using quote-aware splitter instead of PowerShell AST Parser.
+    # CLI tools like sqlpackage.exe use /Property:Value syntax with characters
+    # (;, $, parentheses) that a PowerShell parser would misinterpret.
+    $argArray = Split-CLIArguments $Arguments
+    
+    $errors = @()
+    & $FileName $argArray 2>&1 | ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            $errors += $_
+            Write-Error $_
+        }
+        else {
+            Write-Host $_
+        }
+    }
+
+    foreach ($errorMsg in $errors) {
+        Write-Error $errorMsg
+    }
+
+    $ErrorActionPreference = 'Stop'
+
+    if ($LASTEXITCODE -ne 0) {
+        throw (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
+    }
+
+    if ($errors.Count -gt 0) {
+        throw "Execution failed. See errors above."
+    }
+}
+
+# Quote-aware argument splitter for CLI tools.
+# Splits on whitespace, respects double and single quotes.
+# Does not apply any PowerShell grammar — ;, $, () are treated as literal characters.
+function Split-CLIArguments {
+    param([string]$ArgumentString)
+
+    $result = @()
+    $current = ''
+    $inQuote = $false
+    $quoteChar = ''
+
+    for ($i = 0; $i -lt $ArgumentString.Length; $i++) {
+        $c = $ArgumentString[$i]
+        if ($inQuote) {
+            if ($c -eq $quoteChar) {
+                $inQuote = $false
+            } else {
+                $current += $c
+            }
+        } elseif ($c -eq '"' -or $c -eq "'") {
+            $inQuote = $true
+            $quoteChar = $c
+        } elseif ($c -eq ' ') {
+            if ($current.Length -gt 0) {
+                $result += $current
+                $current = ''
+            }
+        } else {
+            $current += $c
+        }
+    }
+    if ($current.Length -gt 0) {
+        $result += $current
+    }
+    return ,$result
+}
+
+# Parses additional Invoke-SqlCmd arguments using PowerShell AST Parser
+# and merges them into an existing splat hashtable.
+# Handles -Param:$true colon-bound syntax and resolves $true/$false/$null to booleans.
+function Merge-AdditionalSqlArguments {
+    param(
+        [Parameter(Mandatory = $true)]
+        [hashtable]$SplatHashtable,
+
+        [string]$AdditionalArguments
+    )
+
+    if ([string]::IsNullOrWhiteSpace($AdditionalArguments)) {
+        return
+    }
+
+    $tokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseInput(
+        "cmd $AdditionalArguments",
+        [ref]$tokens,
+        [ref]$parseErrors
+    )
+
+    if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $errorMessages = $parseErrors | ForEach-Object { $_.Message }
+        Write-Error "Failed to parse additional SQL arguments: $($errorMessages -join '; ')"
+        throw "Invalid additional argument syntax. Arguments must be properly quoted."
+    }
+
+    $parsedTokens = @($tokens |
+        Where-Object { $_.Kind -ne 'EndOfInput' } |
+        Select-Object -Skip 1)
+
+    # Reserved parameter names that cannot be overridden via additional arguments
+    # to prevent redirection of queries to attacker-controlled servers or scripts.
+    $reservedParams = @('ServerInstance', 'Database', 'InputFile', 'Password', 'Username', 'AccessToken', 'ConnectionString', 'Query')
+
+    for ($i = 0; $i -lt $parsedTokens.Count; $i++) {
+        if ($parsedTokens[$i].Kind -eq 'Parameter') {
+            $paramName = $parsedTokens[$i].Text -replace '^-' -replace ':$', ''
+
+            # Block reserved parameters unconditionally to prevent injection
+            if ($reservedParams -contains $paramName) {
+                Write-Warning "Additional argument '-$paramName' is reserved and cannot be set via additional arguments. Skipping."
+                $j = $i + 1
+                while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') { $j++ }
+                $i = $j - 1
+                continue
+            }
+            $values = @()
+            $j = $i + 1
+            while ($j -lt $parsedTokens.Count -and $parsedTokens[$j].Kind -ne 'Parameter') {
+                if ($parsedTokens[$j].Kind -ne 'Comma') {
+                    if ($parsedTokens[$j].Kind -eq 'Variable') {
+                        $varName = $parsedTokens[$j].Text -replace '^\$', ''
+                        if ($varName -eq 'true') { $values += $true }
+                        elseif ($varName -eq 'false') { $values += $false }
+                        elseif ($varName -eq 'null') { $values += $null }
+                        else { $values += $parsedTokens[$j].Text }
+                    } else {
+                        $val = if ($null -ne $parsedTokens[$j].Value) { $parsedTokens[$j].Value } else { $parsedTokens[$j].Text }
+                        $values += $val
+                    }
+                }
+                $j++
+            }
+            if ($values.Count -eq 0) { $SplatHashtable[$paramName] = $true }
+            elseif ($values.Count -eq 1) { $SplatHashtable[$paramName] = $values[0] }
+            else { $SplatHashtable[$paramName] = $values }
+            $i = $j - 1
+        }
+    }
+}
+
+function Publish-FeatureFlagCheckTelemetry {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$CheckType,
+        
+        [Parameter(Mandatory=$false)]
+        [hashtable]$AdditionalData = @{}
+    )
+    
+    $telemetryData = @{
+        checkType = $CheckType
+        agentVersion = $env:AGENT_VERSION
+    }
+    
+    foreach ($key in $AdditionalData.Keys) {
+        $telemetryData[$key] = $AdditionalData[$key]
+    }
+    
+    $telemetryJson = $telemetryData | ConvertTo-Json -Compress
+    Write-Host "##vso[telemetry.publish area=TaskHub;feature=SqlArgumentSanitizationCheck]$telemetryJson"
+}
+
+$script:_shouldUseSanitizedArgsResult = $null
+
+function Should-UseSanitizedArguments {
+    if ($null -ne $script:_shouldUseSanitizedArgsResult) {
+        return $script:_shouldUseSanitizedArgsResult
+    }
+
+    $result = Get-ShouldUseSanitizedArgumentsInternal
+    $script:_shouldUseSanitizedArgsResult = $result
+    return $result
+}
+
+function Get-ShouldUseSanitizedArgumentsInternal {
+    try {
+        $orgLevelEnabled = Get-SanitizerCallStatus
+    }
+    catch {
+        Write-Warning "Failed to check org-level sanitizer status: $_. Proceeding without sanitization."
+        Publish-FeatureFlagCheckTelemetry -CheckType "OrgLevelFeatureFlag" -AdditionalData @{
+            checkFailed = $true
+            errorMessage = $_.Exception.Message
+        }
+        return $false
+    }
+    
+    if (-not $orgLevelEnabled) {
+        Write-Verbose "SQL argument sanitization disabled: 'Enable shell tasks arguments validation' is not enabled"
+        return $false
+    }
+    
+    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+    
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        
+        $vstsTaskSdkPath = Join-Path $PSScriptRoot "ps_modules\VstsTaskSdk"
+        try {
+            if (Test-Path $vstsTaskSdkPath) {
+                Import-Module $vstsTaskSdkPath -ErrorAction Stop
+                Write-Verbose "Successfully imported VstsTaskSdk from: $vstsTaskSdkPath"
+            }
+            else {
+                Import-Module VstsTaskSdk -ErrorAction Stop
+                Write-Verbose "Successfully imported VstsTaskSdk from module path"
+            }
+            
+            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+        
+        if (-not $hasFeatureFlagCmdlet) {
+            Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (old agent or missing module). Proceeding without sanitization."
+            Publish-FeatureFlagCheckTelemetry -CheckType "PipelineLevelFeatureFlag" -AdditionalData @{
+                cmdletMissing = $true
+                importAttempted = $true
+                errorMessage = if ($Error[0]) { $Error[0].Exception.Message } else { "Unknown" }
+                attemptedPath = $vstsTaskSdkPath
+                psModulePath = $env:PSModulePath
+            }
+            return $false
+        }
+    }
+    
+    try {
+        $pipelineLevelEnabled = Get-VstsPipelineFeature -FeatureName "EnableSqlAdditionalArgumentsSanitization" -ErrorAction Stop
+    }
+    catch {
+        Write-Warning "Pipeline-level feature flag check failed: $_. Proceeding without sanitization."
+        Publish-FeatureFlagCheckTelemetry -CheckType "PipelineLevelFeatureFlag" -AdditionalData @{
+            checkFailed = $true
+            errorMessage = $_.Exception.Message
+        }
+        return $false
+    }
+    
+    if (-not $pipelineLevelEnabled) {
+        Write-Verbose "SQL argument sanitization disabled: EnableSqlAdditionalArgumentsSanitization feature flag not enabled"
+        return $false
+    }
+    
+    Write-Verbose "SQL argument sanitization ENABLED (both feature flags are active)"
+    return $true
+}
+
 function Detect-AuthenticationType {
     param(
         [String]$serverName,

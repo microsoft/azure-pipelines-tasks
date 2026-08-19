@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "Ruta de acceso de JDK",
   "loc.input.help.jdkUserInputPath": "Establece JAVA_HOME en la ruta de acceso especificada.",
   "loc.input.label.jdkArchitecture": "Arquitectura JDK",
-  "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) del JDK.",
+  "loc.input.help.jdkArchitecture": "Opcionalmente, proporcione la arquitectura (x86, x64, arm64) del JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 y JDK 10 no tienen soporte técnico. Cambie a una versión posterior del proyecto y la canalización. Intentando compilar con JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Instalador de herramientas de Java](https://go.microsoft.com/fwlink/?linkid=875287) para instalar el JDK deseado.",

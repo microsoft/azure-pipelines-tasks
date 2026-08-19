@@ -10,6 +10,8 @@
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio generica da usare per selezionare l'URL e costruire l'intestazione dell'autorizzazione per la richiesta HTTP.",
   "loc.input.label.connectedServiceNameARM": "Sottoscrizione di Azure",
   "loc.input.help.connectedServiceNameARM": "Selezionare una sottoscrizione di Azure Resource Manager da usare per richiamare un'API di gestione. Come baseURL viene usato 'ManagementPortalUrl' del cloud",
+  "loc.input.label.connectedServiceNameAzureDevOps": "Azure DevOps service connection",
+  "loc.input.help.connectedServiceNameAzureDevOps": "Select an Azure DevOps service connection to use for invoking Azure DevOps REST APIs. The service connection URL is used as the baseURL.",
   "loc.input.label.method": "Metodo",
   "loc.input.help.method": "Consente di selezionare il metodo HTTP con cui deve essere richiamata l'API.",
   "loc.input.label.headers": "Intestazioni",

@@ -24,6 +24,8 @@
   "loc.input.help.appSettings": "Modifiez les paramètres d'application Web App qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> <b>Exemple</b> :-Port 5000 - RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Paramètres de configuration",
   "loc.input.help.configurationStrings": "Modifiez les paramètres de configuration Web App qui suivent la valeur -key de la syntaxe. La valeur contenant des espaces doit être comprise entre des guillemets. <br /> Exemple : - phpVersion 5.6 -linuxFXVersion : node|6.11",
+  "loc.input.label.siteContainersConfig": "Configuration des conteneurs de sites",
+  "loc.input.help.siteContainersConfig": "Fournissez le JSON siteContainers-config pour les déploiements SiteContainers.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Chemin de dossier ou package App Service fourni non valide : %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Obtention effectuée des détails de la connexion de service d'Azure App Service : '%s'",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Erreur : Aucune méthode de déploiement de ce type n'existe",
@@ -102,7 +104,7 @@
   "loc.messages.PollingForFileTimeOut": "Impossible de récupérer (fetch) l'état du script en raison du délai d'expiration. Vous pouvez augmenter la limite du délai d'expiration en affectant le nombre de minutes nécessaires à la variable 'appservicedeploy.retrytimeout'.",
   "loc.messages.InvalidPollOption": "Option d'interrogation non valide fournie : %s.",
   "loc.messages.MissingAppTypeWebConfigParameters": "Il manque l'attribut '-appType' dans les paramètres de Web.config. Les valeurs valides pour '-appType' sont : 'python_Bottle', 'python_Django', 'python_Flask', 'node' et 'Go'.<br />Exemple : '-appType python_Bottle' (sans guillemets) dans le cas d'un framework Python Bottle.",
-  "loc.messages.AutoDetectDjangoSettingsFailed": "Impossible de détecter le chemin du fichier 'settings.py' pour DJANGO_SETTINGS_MODULE. Vérifiez que le fichier 'settings.py' existe, ou indiquez le chemin approprié dans l'entrée de paramètre de Web.config au format suivant : '-DJANGO_SETTINGS_MODULE <nom_dossier>.settings'",
+  "loc.messages.AutoDetectDjangoSettingsFailed": "Impossible de détecter le chemin du fichier « settings.py » pour DJANGO_SETTINGS_MODULE. Vérifiez que le fichier « settings.py » existe, ou indiquez le chemin approprié dans l'entrée de paramètre de Web.config au format suivant : '-DJANGO_SETTINGS_MODULE <nom_dossier>.settings'",
   "loc.messages.FailedToApplyTransformation": "Impossible d'appliquer la transformation pour le package donné. Vérifiez ce qui suit.",
   "loc.messages.FailedToApplyTransformationReason1": "1. La transformation est-elle déjà appliquée pour le package MSBuild généré durant la build ? Si la réponse est oui, supprimez la balise <DependentUpon> pour chaque configuration dans le fichier csproj, puis effectuez une regénération. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Vérifiez que le fichier config et les fichiers de transformation sont présents dans le même dossier à l'intérieur du package.",
@@ -181,5 +183,8 @@
   "loc.messages.FailedToDeployToWebApp": "Échec du déploiement sur l'application web '%s'. Pour un seul conteneur, spécifiez simplement un nom d'image valide. Pour plusieurs conteneurs, la spécification d'un fichier Docker Compose est obligatoire alors que la spécification des noms d'images est facultative. Fournissez des noms d'images si les étiquettes du fichier Docker Compose doivent être substituées.",
   "loc.messages.SingleContainerDeployment": "Déploiement d'un seul conteneur sur l'application web '%s', car seul le détail de l'image a été spécifié.",
   "loc.messages.MultiContainerDeploymentWithTransformation": "Déploiement multiconteneur sur l'application web '%s' avec transformation du fichier Docker Compose, car le nom d'image et le fichier Docker Compose ont été spécifiés",
-  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Déploiement multiconteneur sur l'application web '%s' sans transformation du fichier Docker Compose, car seul le fichier Docker Compose a été spécifié."
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Déploiement multiconteneur sur l'application web '%s' sans transformation du fichier Docker Compose, car seul le fichier Docker Compose a été spécifié.",
+  "loc.messages.StartedUpdatingSiteContainers": "Début de la mise à jour des conteneurs de site.",
+  "loc.messages.UpdatingSiteContainer": "Mise à jour de SiteContainer : %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "Fin de la mise à jour des conteneurs de site."
 }

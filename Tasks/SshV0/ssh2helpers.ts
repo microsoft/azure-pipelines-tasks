@@ -3,9 +3,57 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as ssh2 from 'ssh2';
 import * as SftpClient from 'ssh2-sftp-client';
+import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
+}
+
+interface RemoteOutputHandler {
+    write(data: any): void;
+    flush(): void;
+}
+
+function createRemoteOutputHandler(allowVsoCommands: boolean): RemoteOutputHandler {
+    const redirectToStdout = tl.getPipelineFeature("redirectTaskOutputToProcessStdout");
+    const charsToBuffer = '##vso['.length - 1;
+    let pendingOutput = '';
+
+    const writeOutput = (output: string): void => {
+        if (!output) {
+            return;
+        }
+
+        if (redirectToStdout) {
+            process.stdout.write(Buffer.from(output, 'utf8'));
+        } else {
+            console.log(output);
+        }
+    };
+
+    return {
+        write: (data: any): void => {
+            const output = data.toString('utf8');
+            if (allowVsoCommands) {
+                writeOutput(output);
+                return;
+            }
+
+            if (!redirectToStdout) {
+                writeOutput(escapeVsoCommands(output));
+                return;
+            }
+
+            const escapedOutput = escapeVsoCommands(pendingOutput + output);
+            const outputLength = Math.max(0, escapedOutput.length - charsToBuffer);
+            writeOutput(escapedOutput.slice(0, outputLength));
+            pendingOutput = escapedOutput.slice(outputLength);
+        },
+        flush: (): void => {
+            writeOutput(pendingOutput);
+            pendingOutput = '';
+        }
+    };
 }
 
 /**
@@ -124,7 +172,8 @@ export function runCommandOnRemoteMachine(
     sshClient: ssh2.Client,
     options: RemoteCommandOptions,
     password: string = '',
-    interactiveSession: boolean = false
+    interactiveSession: boolean = false,
+    allowVsoCommands: boolean = false
 ): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
@@ -143,16 +192,13 @@ export function runCommandOnRemoteMachine(
             }
             let dataBuffer = '';
             let passwordSent = false;
+            const outputHandler = createRemoteOutputHandler(allowVsoCommands);
             stream.on('close', (code, signal) => {
+                outputHandler.flush();
                 handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
-                    // "data" can be a buffer. Format it here so it outputs as a string
-                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
-                        process.stdout.write(data);
-                    } else {
-                        console.log(data.toString('utf8'));
-                    }
+                    outputHandler.write(data);
                     if (!passwordSent) {
                         passwordSent = handlePasswordInput(data, stream, password, dataBuffer);
                         if (passwordSent) {
@@ -174,16 +220,13 @@ export function runCommandOnRemoteMachine(
             if (err) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr', err));
             }
+            const outputHandler = createRemoteOutputHandler(allowVsoCommands);
             stream.on('close', (code, signal) => {
+                outputHandler.flush();
                 handleStreamClose(command, stdErrWritten, defer, options, code, signal);
             }).on('data', (data) => {
                 if (data) {
-                    // "data" can be a buffer. Format it here so it outputs as a string
-                    if (tl.getPipelineFeature("redirectTaskOutputToProcessStdout")) {
-                        process.stdout.write(data);
-                    } else {
-                        console.log(data.toString('utf8'));
-                    }
+                    outputHandler.write(data);
                 }
             }).stderr.on('data', (data) => {
                 stdErrWritten = true;
@@ -225,7 +268,7 @@ export interface ScpConfig {
 */
 export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client, remoteCmdOptions: RemoteCommandOptions, remoteInputFilePath: string): Promise<string> {
     const remoteOutputFilePath = `${remoteInputFilePath}._unix`;
-    const removeLineEndingsCmd = `tr -d \'\\015\' <${remoteInputFilePath}> ${remoteOutputFilePath}`;
+    const removeLineEndingsCmd = `tr -d \'\\015\' <${shellQuote(remoteInputFilePath)}> ${shellQuote(remoteOutputFilePath)}`;
 
     console.log(removeLineEndingsCmd);
 
@@ -239,4 +282,12 @@ export async function clearFileFromWindowsCRLF(sshClientConnection: ssh2.Client,
     tl.debug(`Path to generated file = ${remoteOutputFilePath}`);
 
     return remoteOutputFilePath;
+}
+
+/**
+ * Escapes "##vso[" logging-command prefixes in remote machine output so the agent
+ * does not interpret them, while keeping the original text visible.
+ */
+export function escapeVsoCommands(data: string): string {
+    return data.replace(/##vso\[/gi, '##_vso[');
 }

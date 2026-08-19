@@ -1,10 +1,23 @@
 {
   "loc.friendlyName": "NuGet 身份验证",
-  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "配置 NuGet 工具以使用 Azure Artifacts 和其他 NuGet 存储库进行身份验证。要求 NuGet >= 4.8.5385、dotnet >= 2.1.400 或 MSBuild >= 15.8.166.59604",
+  "loc.helpMarkDown": "[了解有关此任务的详细信息](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "配置 NuGet 工具以使用 Azure Artifacts 和其他 NuGet 存储库进行身份验证。需要 NuGet >= 4.8.5385，dotnet >= 6，或 MSBuild >= 15.8.166.59604",
   "loc.instanceNameFormat": "NuGet 身份验证",
   "loc.input.label.nuGetServiceConnections": "此组织外部源的服务连接凭据",
-  "loc.input.help.nuGetServiceConnections": "此组织/集合外部源的 NuGet 服务连接名称的逗号分隔列表。对于此组织/集合中的源，请将此项留空；将自动使用内部版本的凭据。",
+  "loc.input.help.nuGetServiceConnections": "此组织/集合外部源的 NuGet 服务连接名称的逗号分隔列表。对于此组织/集合中的源，请将此项留空; 将自动使用内部版本的凭据。",
   "loc.input.label.forceReinstallCredentialProvider": "重新安装凭据提供程序(即使已安装)",
-  "loc.input.help.forceReinstallCredentialProvider": "如果已在用户配置文件中安装凭据提供程序，请确定它是否被任务提供的凭据提供程序覆盖。这可能会升级(或可能降级)凭据提供程序。"
+  "loc.input.help.forceReinstallCredentialProvider": "如果已在用户配置文件中安装凭据提供程序，请确定它是否被任务提供的凭据提供程序覆盖。这可能会升级(或可能降级)凭据提供程序。",
+  "loc.input.help.feedUrl": "如果设定了此设置，则需要 azureDevOpsServiceConnection。已忽略所有其他输入。与 nuGetServiceConnections 不兼容。源 URL 应为 NuGet 服务索引格式，例如 https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "如果进行了此设置，则需要 feedUrl。所有其他输入将忽略。",
+  "loc.input.label.workloadIdentityServiceConnection": "“Azure DevOps”服务连接",
+  "loc.messages.Error_ServiceConnectionExists": "终结点的现有服务连接已存在",
+  "loc.messages.Error_InvalidFeedUrl": "提供的源 URL“%s”不是有效的 Azure DevOps 源 URL。",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl 和 azureDevOpsServiceConnection 必须一起设置。",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "不能同时指定 nuGetServiceConnections 和 feedUrl 输入参数。",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "不能同时指定 nuGetServiceConnections 和 azureDevOpsServiceConnection (workloadIdentityServiceConnection)输入参数。",
+  "loc.messages.Info_AddingFederatedFeedAuth": "无法从服务连接获取联合凭据。",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "正在为源 %s 添加服务连接 %s 中的身份验证信息",
+  "loc.messages.FailedToGetServiceConnectionAuth": "已成功为源 %s 添加身份验证。",
+  "loc.messages.Warn_IgnoringFeedUrl": "忽略 feedUrl"
 }

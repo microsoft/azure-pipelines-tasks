@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Invoke-ScriptArgumentSanitization
 foreach ($path in @( "script`rpath", "script`npath" )) {
     Unregister-Mock Get-VstsInput
     Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require

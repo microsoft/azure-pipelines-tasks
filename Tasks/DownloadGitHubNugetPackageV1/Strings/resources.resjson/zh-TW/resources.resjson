@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "下載 GitHub Nuget 套件",
+  "loc.friendlyName": "[已棄用] 下載 GitHub NuGet",
   "loc.helpMarkDown": "[請參閱 .NET Core 文件](https://docs.microsoft.com/dotnet/core/)",
-  "loc.description": "使用 dotnet CLI 還原您的 nuget 套件",
-  "loc.instanceNameFormat": "dotnet restore",
+  "loc.description": "已棄用: 已不再維護此工作。請改用 NuGetCommand@2 或 DotNetCoreCLI@2 工作，並搭配 GitHub 服務連線。",
+  "loc.instanceNameFormat": "[已棄用] dotnet restore",
   "loc.group.displayName.restoreAuth": "摘要與驗證",
   "loc.group.displayName.restoreAdvanced": "進階",
   "loc.input.label.packageName": "套件名稱",

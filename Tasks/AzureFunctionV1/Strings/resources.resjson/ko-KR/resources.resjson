@@ -7,7 +7,7 @@
   "loc.input.label.function": "Azure 함수 URL",
   "loc.input.help.function": "호출해야 하는 Azure 함수의 URL입니다. 예: - https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
   "loc.input.label.key": "기능 키",
-  "loc.input.help.key": "이 함수에 액세스할 수 있는 함수 또는 호스트 키입니다. 키의 보안을 유지하려면 비밀 변수를 정의하여 여기서 사용하세요. 예: - $(myFunctionKey). 여기서 myFunctionKey는 비밀 키의 값을 사용하는 비밀 파이프라인 변수입니다(예: 'ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==').",
+  "loc.input.help.key": "이 함수에 액세스할 함수 키 또는 호스트 키입니다. 키를 안전하게 유지하려면 변수 그룹을 만들고 비밀 변수를 추가한 다음 여기에서 사용합니다. \"컨트롤 옵션\" 섹션에서 변수 그룹을 연결해야 합니다. 예: $(myFunctionKey), 여기서 myFunctionKey는 'ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=='와 같은 키를 포함하는 비밀 변수입니다.",
   "loc.input.label.method": "메서드",
   "loc.input.help.method": "함수를 호출하는 데 사용할 HTTP 메서드를 선택합니다.",
   "loc.input.label.headers": "헤더",

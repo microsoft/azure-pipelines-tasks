@@ -38,7 +38,7 @@
   "loc.input.label.data_api_location": "Расположение API данных",
   "loc.input.help.data_api_location": "Расположение каталога исходных файлов API данных относительно рабочего каталога",
   "loc.input.label.azure_access_token": "Маркер доступа Azure",
-  "loc.input.help.azure_access_token": "Маркер доступа, используемый для проверки подлинности и авторизации развертывания",
+  "loc.input.help.azure_access_token": "Маркер доступа, используемый для развертывания. Не требуется, если передается как переменная",
   "loc.input.label.default_hostname": "Имя узла по умолчанию",
-  "loc.input.help.default_hostname": "Имя узла приложения по умолчанию"
+  "loc.input.help.default_hostname": "Имя узла по умолчанию для развертывания. Не требуется, если передается как переменная среды"
 }

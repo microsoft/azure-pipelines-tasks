@@ -146,23 +146,82 @@ export class dotNetExe {
         }
     }
 
+    private findGlobalJsonFile(): string | null {
+        // Determine the search boundary mirroring the agent's own logic:
+        // - Default: Agent.BuildDirectory (_work/1)
+        // - If AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES=true: widen to Agent.WorkFolder (_work/)
+        // See: RepositoryPlugin.cs:156-166 and BuildDirectoryManager.cs:197-210
+        const allowWorkDirRepos = (tl.getVariable('AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES') || '').toLowerCase() === 'true';
+        let boundary: string;
+
+        if (allowWorkDirRepos) {
+            boundary = path.resolve(tl.getVariable('Agent.WorkFolder') || process.cwd());
+            tl.debug(`AZP_AGENT_ALLOW_WORK_DIRECTORY_REPOSITORIES is enabled. Using Agent.WorkFolder '${boundary}' as search boundary.`);
+        } else {
+            boundary = path.resolve(tl.getVariable('Agent.BuildDirectory') || process.cwd());
+            tl.debug(`Using Agent.BuildDirectory '${boundary}' as search boundary.`);
+        }
+
+        let searchDir = path.resolve(this.workingDirectory || process.cwd());
+
+        tl.debug(`Searching for global.json starting in '${searchDir}' up to boundary '${boundary}'.`);
+
+        const isInside = (dir: string, root: string): boolean => {
+            const rel = path.relative(root, dir);
+            return !rel.startsWith('..') && !path.isAbsolute(rel);
+        };
+
+        if (!isInside(searchDir, boundary)) {
+            console.log(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
+            return null;
+        }
+
+        while (true) {
+            const candidate = path.join(searchDir, 'global.json');
+            tl.debug(`Checking for global.json at: ${candidate}`);
+
+            if (tl.exist(candidate)) {
+                tl.debug(`Found global.json at: ${candidate}`);
+                return candidate;
+            }
+
+            const parentDir = path.dirname(searchDir);
+            if (parentDir === searchDir) {
+                break;
+            }
+
+            const rel = path.relative(boundary, parentDir);
+            if (rel.startsWith('..') || path.isAbsolute(rel)) {
+                break;
+            }
+
+            searchDir = parentDir;
+        }
+
+        return null;
+    }
+
     private getIsMicrosoftTestingPlatform(): boolean {
-        if (!tl.exist("global.json")) {
+        const globalJsonPath = this.findGlobalJsonFile();
+
+        if (!globalJsonPath) {
             tl.debug("global.json not found. Test run is VSTest");
             return false;
         }
 
-        let globalJsonContents = fs.readFileSync("global.json", 'utf8');
+        let globalJsonContents = fs.readFileSync(globalJsonPath, 'utf8');
         if (!globalJsonContents.length) {
+            tl.debug("global.json is empty. Test run is VSTest");
             return false;
         }
 
         try {
-            const testRunner = JSON5.parse(globalJsonContents)?.test?.runner;
-            tl.debug(`global.json is found. Test run is read as '${testRunner}'`);
+            const parsed = JSON5.parse(globalJsonContents);
+            const testRunner = parsed?.test?.runner;
+            tl.debug(`global.json found at ${globalJsonPath}. Test runner is: '${testRunner}'`);
             return testRunner === 'Microsoft.Testing.Platform';
         } catch (error) {
-            tl.warning(`Error occurred reading global.json: ${error}`);
+            tl.warning(`Error occurred reading global.json at ${globalJsonPath}: ${error}`);
             return false;
         }
     }

@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "이 조직에 있는, 인증할 피드를 선택합니다.",
   "loc.input.label.externalSources": "외부 조직의 피드",
   "loc.input.help.externalSources": "이 조직 외부에 있는, 인증할 엔드포인트를 선택합니다.",
+  "loc.messages.TaskDeprecationNotice": "PipAuthenticateV0 작업은 2026년 6월에 사용 중단될 예정입니다. PipAuthenticateV1로 전환해 주세요.",
   "loc.messages.Info_AddingInternalFeeds": "%s 내부 피드의 인증 정보를 추가하는 중입니다.",
   "loc.messages.Info_AddingExternalFeeds": "%s 외부 엔드포인트의 인증 정보를 추가하는 중입니다.",
   "loc.messages.Info_SuccessAddingAuth": "%s 내부 피드 및 %s 외부 엔드포인트의 인증을 추가했습니다.",

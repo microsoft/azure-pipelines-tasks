@@ -73,6 +73,8 @@
   "loc.input.help.dockerRegistryEndpoint": "选择 Docker 注册表服务连接。这对于需要执行注册表身份验证的命令是必需的。",
   "loc.input.label.rolloutStatusTimeout": "推出状态超时",
   "loc.input.help.rolloutStatusTimeout": "在结束监视推出状态前等待的时长(秒)",
+  "loc.input.label.resourceType": "资源类型",
+  "loc.input.help.resourceType": "资源的类型(舰队、托管群集)",
   "loc.messages.DownloadPathForStableTxt": "stable.txt 的下载路径: %s",
   "loc.messages.DownloadKubeCtlFailed": "无法下载版本 %s 的 kubectl 客户端。检查该版本是否正确 https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "无法从 %s 下载 kubernetes 稳定版本文件。正在回退到 %s",

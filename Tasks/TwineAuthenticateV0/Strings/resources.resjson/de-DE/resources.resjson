@@ -11,6 +11,7 @@
   "loc.input.help.externalSources": "Wählen Sie Endpunkte für die Authentifizierung außerhalb dieser Organisation aus. Stellen Sie sicher, dass die Endpunkte über Berechtigungen zum Paketupload verfügen.",
   "loc.input.label.publishPackageMetadata": "Pipelinemetadaten veröffentlichen",
   "loc.input.help.publishPackageMetadata": "Ordnen Sie die Metadaten dieser Build-/Releasepipeline (Ausführungsnummer, Quellcodeinformationen) dem Paket zu, wenn ein Upload in die Feeds durchgeführt wird.",
+  "loc.messages.TaskDeprecationNotice": "Die TwineAuthenticateV0-Aufgabe wird im Juni 2026 eingestellt. Wechseln Sie zur Verwendung von TwineAuthenticateV1.",
   "loc.messages.Info_AddingInternalFeeds": "Authentifizierungsinformationen für %s interne Feeds werden hinzugefügt.",
   "loc.messages.Info_AddingExternalFeeds": "Authentifizierungsinformationen für den externen Endpunkt \"%s\" werden hinzugefügt.",
   "loc.messages.Info_AddingAuthForRegistry": "Die Authentifizierung wird der Konfiguration für die Registrierung \"%s\" hinzugefügt.",

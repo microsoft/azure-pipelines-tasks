@@ -116,6 +116,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string, msBu
             "externalendpoint": externalendpoint,
             "externalendpoints": externalendpoints,
             "allowpackageconflicts": tl.getInput("allowpackageconflicts"),
+            "requesttimeout": tl.getInput("requesttimeout"),
             "includenugetorg": tl.getInput("includenugetorg"),
             "nocache": tl.getInput("nocache"),
             "disableparallelprocessing": tl.getInput("disableParallelProcessing"),

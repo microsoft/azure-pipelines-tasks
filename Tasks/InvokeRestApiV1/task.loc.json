@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 220,
-    "Patch": 0
+    "Minor": 274,
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -41,7 +41,8 @@
       "defaultValue": "connectedServiceName",
       "options": {
         "connectedServiceName": "Generic",
-        "connectedServiceNameARM": "Azure Resource Manager"
+        "connectedServiceNameARM": "Azure Resource Manager",
+        "connectedServiceNameAzureDevOps": "Azure DevOps"
       }
     },
     {
@@ -69,6 +70,18 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
       "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
+    },
+    {
+      "name": "connectedServiceNameAzureDevOps",
+      "aliases": [
+        "azureDevOpsServiceConnection"
+      ],
+      "type": "connectedService:WorkloadIdentityUser",
+      "label": "ms-resource:loc.input.label.connectedServiceNameAzureDevOps",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameAzureDevOps",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameAzureDevOps"
     },
     {
       "name": "method",

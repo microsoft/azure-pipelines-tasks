@@ -1,3 +1,4 @@
+using System.CommandLine;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -49,12 +50,13 @@ namespace BuildConfigGen
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
                 ["typescript"] = "^5.7.2",
-                ["azure-pipelines-task-lib"] = "^5.2.4",
+                ["azure-pipelines-task-lib"] = "^5.2.6",
                 ["azure-devops-node-api"] = "^15.1.3",
-                ["azure-pipelines-tasks-artifacts-common"] = "^2.270.0",
-                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.270.0",
+                ["azure-pipelines-tasks-artifacts-common"] = "^2.273.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.276.0",
                 ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
-                ["azure-pipelines-tasks-packaging-common"] = "^3.270.0",
+                ["azure-pipelines-tasks-kubernetes-common"] = "^2.270.1",
+                ["azure-pipelines-tasks-packaging-common"] = "^3.273.1",
                 ["azure-pipelines-tasks-securefiles-common"] = "^2.270.0",
                 ["azure-pipelines-tasks-utility-common"] = "^3.270.0",
                 ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
@@ -88,6 +90,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: true, nodeHandler: "Node24", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Wif",shouldUpdateLocalPkgs: false, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: false, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "LocalPackages", shouldUpdateLocalPkgs: true, useGlobalVersion: true, useAltGeneratedPath: true);
+            public static readonly ConfigRecord minified_278 = new ConfigRecord(name: nameof(minified_278), constMappingKey: "minified_278", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "MINIFIED", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Minified", shouldUpdateLocalPkgs: false, mergeToBase: false);
             public static readonly ConfigRecord Node24_1 = new ConfigRecord(name: nameof(Node24_1), constMappingKey: "Node24_1", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_2 = new ConfigRecord(name: nameof(Node24_2), constMappingKey: "Node24_2", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_3 = new ConfigRecord(name: nameof(Node24_3), constMappingKey: "Node24_3", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
@@ -99,7 +102,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node24_9 = new ConfigRecord(name: nameof(Node24_9), constMappingKey: "Node24_9", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_10 = new ConfigRecord(name: nameof(Node24_10), constMappingKey: "Node24_10", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_overwrite = new ConfigRecord(name: nameof(Node24_overwrite), constMappingKey: "Node24-265-overwrite", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: true, packageVersionOverrides: Node24PackageOverrides);
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, Node24_1, Node24_2, Node24_3, Node24_4, Node24_5, Node24_6, Node24_7, Node24_8, Node24_9, Node24_10, Node24_overwrite };
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, minified_278, Node24_1, Node24_2, Node24_3, Node24_4, Node24_5, Node24_6, Node24_7, Node24_8, Node24_9, Node24_10, Node24_overwrite };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -109,7 +112,7 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
-        /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
+        /// <param name="currentSprint">Override current sprint; omit to calculate it from the standard three-week cadence</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
@@ -117,41 +120,102 @@ namespace BuildConfigGen
         /// <param name="includeLocalPackagesBuildConfig">Include LocalPackagesBuildConfig</param>
         /// <param name="useSemverBuildConfig">If true, the semver "build" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3).</param>
         /// <param name="bumpBaseTask">If true, update the base task.json version independently of generated configs</param>
-        static void Main(
-            string? task = null,
-            string? configs = null,
-            int? currentSprint = null,
-            bool writeUpdates = false,
-            bool allTasks = false,
-            bool getTaskVersionTable = false,
-            string? debugAgentDir = null,
-            bool includeLocalPackagesBuildConfig = false,
-            bool useSemverBuildConfig = false,
-            bool bumpBaseTask = false)
+        static int Main(string[] args)
         {
-            try
+            Option<string> taskOption = new("--task")
             {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir, includeLocalPackagesBuildConfig, useSemverBuildConfig, bumpBaseTask);
-            }
-            catch (Exception e2)
+                Description = "The task to generate build configs for"
+            };
+            Option<string> configsOption = new("--configs")
             {
-                // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
-                // error handling strategy:
-                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
-                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
-                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                Description = "List of configs to generate seperated by |"
+            };
+            Option<int?> currentSprintOption = new("--current-sprint")
+            {
+                Description = "Override current sprint; omit to calculate it from the standard three-week cadence"
+            };
+            Option<bool> writeUpdatesOption = new("--write-updates")
+            {
+                Description = "Write updates if true, else validate that the output is up-to-date"
+            };
+            Option<bool> allTasksOption = new("--all-tasks")
+            {
+                Description = "Generate build configs for all tasks"
+            };
+            Option<bool> getTaskVersionTableOption = new("--get-task-version-table")
+            {
+                Description = "Print the config/task/version table and exit"
+            };
+            Option<string> debugAgentDirOption = new("--debug-agent-dir")
+            {
+                Description = "When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent"
+            };
+            Option<bool> includeLocalPackagesBuildConfigOption = new("--include-local-packages-build-config")
+            {
+                Description = "Include LocalPackagesBuildConfig"
+            };
+            Option<bool> useSemverBuildConfigOption = new("--use-semver-build-config")
+            {
+                Description = "If true, the semver \"build\" (suffix) will be generated for each task configuration produced, but all tasks configurations will have the same version (for example '1.2.3-node20' and 1.2.3-wif). The default configuration gets no build suffix (e.g. 1.2.3)."
+            };
+            Option<bool> bumpBaseTaskOption = new("--bump-base-task")
+            {
+                Description = "If true, update the base task.json version independently of generated configs"
+            };
 
-                var restore = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e2.ToString());
-                Console.ForegroundColor = restore;
-                Console.WriteLine();
-                Console.WriteLine("An exception occured generating configs.  [MSFT internal only: questions/problems please refer to https://aka.ms/ado/taskseng] Exception message below: (full callstack above)");
-                Console.WriteLine(e2.Message);
+            RootCommand rootCommand = new("Generates, validates, and versions build configurations for Azure Pipelines tasks.")
+            {
+                taskOption,
+                configsOption,
+                currentSprintOption,
+                writeUpdatesOption,
+                allTasksOption,
+                getTaskVersionTableOption,
+                debugAgentDirOption,
+                includeLocalPackagesBuildConfigOption,
+                useSemverBuildConfigOption,
+                bumpBaseTaskOption
+            };
 
-                Environment.Exit(1);
-            }
+            rootCommand.SetAction(parseResult =>
+            {
+                try
+                {
+                    bool writeUpdates = parseResult.GetValue(writeUpdatesOption);
+                    ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
+                    MainInner(
+                        parseResult.GetValue(taskOption),
+                        parseResult.GetValue(configsOption),
+                        parseResult.GetValue(currentSprintOption),
+                        writeUpdates,
+                        parseResult.GetValue(allTasksOption),
+                        parseResult.GetValue(getTaskVersionTableOption),
+                        parseResult.GetValue(debugAgentDirOption),
+                        parseResult.GetValue(includeLocalPackagesBuildConfigOption),
+                        parseResult.GetValue(useSemverBuildConfigOption),
+                        parseResult.GetValue(bumpBaseTaskOption));
+                    return 0;
+                }
+                catch (Exception e2)
+                {
+                    // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
+                    // error handling strategy:
+                    // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+                    // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+                    // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                    var restore = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e2.ToString());
+                    Console.ForegroundColor = restore;
+                    Console.WriteLine();
+                    Console.WriteLine("An exception occured generating configs.  [MSFT internal only: questions/problems please refer to https://aka.ms/ado/taskseng] Exception message below: (full callstack above)");
+                    Console.WriteLine(e2.Message);
+
+                    return 1;
+                }
+            });
+
+            return rootCommand.Parse(args).Invoke();
         }
 
         private static void MainInner(
@@ -222,7 +286,7 @@ namespace BuildConfigGen
 
             Console.WriteLine($"Current sprint: {currentSprint}");
 
-            if (bumpBaseTask) 
+            if (bumpBaseTask)
             {
                 // Split the task string and bump each task individually
                 var taskList = task!.Split(',', '|');
@@ -580,20 +644,11 @@ namespace BuildConfigGen
             // Scheduled time for Cortesy Push
             var cortesyPushScheduleDay = DayOfWeek.Tuesday;
             var cortesyPushUtcTime = new TimeOnly(8, 30); //UTC time
-
-            string url = "https://whatsprintis.it";
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            string json = httpClient.GetStringAsync(url).Result;
-            JsonDocument currentSprintData = JsonDocument.Parse(json);
-            int currentSprint = currentSprintData.RootElement.GetProperty("sprint").GetInt32();
-            int week = currentSprintData.RootElement.GetProperty("week").GetInt32();
+            var nowUtc = DateTimeOffset.UtcNow;
+            (int currentSprint, int week) = CalculateSprint(nowUtc);
 
             if (week == 3) // if it is the end of the current sprint
             {
-                var nowUtc = DateTime.UtcNow;
-
                 // Increase sprint number if scheduled pipeline was already triggered
                 if (nowUtc.DayOfWeek > cortesyPushScheduleDay)
                 {
@@ -601,7 +656,7 @@ namespace BuildConfigGen
                 }
                 else if (nowUtc.DayOfWeek == cortesyPushScheduleDay)
                 {
-                    if (TimeOnly.FromDateTime(nowUtc) >= cortesyPushUtcTime)
+                    if (TimeOnly.FromDateTime(nowUtc.UtcDateTime) >= cortesyPushUtcTime)
                     {
                         currentSprint++;
                     }
@@ -609,6 +664,20 @@ namespace BuildConfigGen
             }
 
             return currentSprint;
+        }
+
+        private static (int Sprint, int Week) CalculateSprint(DateTimeOffset date)
+        {
+            // Sprint 267 started at this UTC instant, establishing the fixed three-week cadence.
+            const int sprintEpochNumber = 267;
+            const int daysPerSprint = 21;
+            const int daysPerWeek = 7;
+            var sprintEpochStart = new DateTimeOffset(2025, 11, 29, 0, 0, 0, TimeSpan.Zero);
+            double elapsedDays = (date.ToUniversalTime() - sprintEpochStart).TotalDays;
+            int sprintOffset = (int)Math.Floor(elapsedDays / daysPerSprint);
+            int dayInSprint = (int)Math.Floor(elapsedDays - sprintOffset * daysPerSprint);
+
+            return (sprintEpochNumber + sprintOffset, dayInSprint / daysPerWeek + 1);
         }
 
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string? task, bool skipContentCheck)
@@ -673,7 +742,7 @@ namespace BuildConfigGen
 
                 if (targetConfigs.Any(x => x.isNode))
                 {
-                    // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+                    // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0)
                     if (!HasNodeHandler(taskHandlerContents))
                     {
                         Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
@@ -798,7 +867,7 @@ namespace BuildConfigGen
                                         {
                                             throw new Exception($"There is no default config for task {task}");
                                         }
-                                        
+
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                         WriteTaskJson(taskOutput, taskVersionState, config, "task.loc.json", existingLocalPackageVersion, useSemverBuildConfig: true, defaultConfig: defaultConfig);
                                     }
@@ -1135,7 +1204,7 @@ namespace BuildConfigGen
 
         /// <summary>
         /// Writes task.json with version information and build config mapping.
-        /// When useSemverBuildConfig is true, uses the same major.minor.patch for all build configuration tasks, 
+        /// When useSemverBuildConfig is true, uses the same major.minor.patch for all build configuration tasks,
         /// but the "build" suffix of semver is different and directly corresponds to the config name.
         /// </summary>
         private static void WriteTaskJson(string taskPath, TaskStateStruct taskState, Config.ConfigRecord config, string fileName, string? existingLocalPackageVersion, bool useSemverBuildConfig = false, Config.ConfigRecord? defaultConfig = null)
@@ -1686,7 +1755,7 @@ always-auth=true", false);
                 if (config.useGlobalVersion)
                 {
                     TaskVersion versionToUse = globalVersion;
-                    
+
                     if (config.abTaskReleases && useSemverBuildConfig)
                     {
                         // In the first stage of refactoring, we keep different version numbers to retain the ability to rollback.
@@ -2012,4 +2081,3 @@ always-auth=true", false);
         }
     }
 }
-

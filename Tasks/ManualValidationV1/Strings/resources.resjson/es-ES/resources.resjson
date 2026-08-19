@@ -12,5 +12,5 @@
   "loc.input.label.instructions": "Instrucciones",
   "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la validación manual. En función de ellas, el usuario tomará una decisión informada sobre esta validación manual.",
   "loc.input.label.onTimeout": "Al agotarse el tiempo de espera",
-  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
+  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
 }

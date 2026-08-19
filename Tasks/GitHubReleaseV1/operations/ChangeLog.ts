@@ -114,9 +114,10 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body?.errors;
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
@@ -124,7 +125,8 @@ export class ChangeLog {
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
                 let index = 0;
-                let issuesList = issuesListResponse.body.data.repository;
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 let labelsRankDictionary = this._getLabelsRankDictionary(labels);
                 tl.debug("labelsRankDictionary: " + JSON.stringify(labelsRankDictionary));
@@ -181,16 +183,18 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body?.errors;
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
                 let changeLog: string = "";
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
-                let issuesList = issuesListResponse.body.data.repository;
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
@@ -531,6 +535,66 @@ export class ChangeLog {
     }
 
     /**
+     * Returns true if there are no GraphQL errors, or if all errors are ignorable NOT_FOUND errors.
+     * NOT_FOUND errors can occur when a commit references a discussion number.
+     * Non-array values are treated as non-ignorable to preserve fail-fast behavior.
+     * @param errors GraphQL errors from getIssuesList response.
+     */
+    private _areIssueFetchErrorsIgnorable(errors: unknown): boolean {
+        if (!errors) {
+            return true;
+        }
+
+        if (!Array.isArray(errors)) {
+            return false;
+        }
+
+        if (errors.length === 0) {
+            return true;
+        }
+
+        let definedErrors = errors.filter(error => error !== null && error !== undefined);
+        if (definedErrors.length !== errors.length) {
+            tl.debug("GraphQL issue fetch errors contained null or undefined entries.");
+        }
+        return definedErrors.every(error => {
+            let errorType = error.type || error.extensions?.type || error.extensions?.code;
+            tl.debug("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"));
+            return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
+        });
+    }
+
+    private _logNonBlockingIssueFetchErrors(errors: unknown): void {
+        if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
+            tl.warning(tl.loc("NonBlockingIssuesFetchError", JSON.stringify(errors)));
+        }
+    }
+
+    /**
+     * Returns issues fetched from GraphQL response after removing null entries.
+     * Null entries are returned when issueOrPullRequest cannot be resolved.
+     * @param issuesListResponseBody GraphQL response body from getIssuesList.
+     */
+    private _getNonNullIssuesList(issuesListResponseBody: any): any {
+        let issuesList = issuesListResponseBody &&
+            issuesListResponseBody.data &&
+            issuesListResponseBody.data.repository;
+
+        if (!issuesList) {
+            return {};
+        }
+
+        let filteredIssues: { [key: string]: any } = {};
+        Object.keys(issuesList).forEach((issueKey: string) => {
+            if (issuesList[issueKey]) {
+                filteredIssues[issueKey] = issuesList[issueKey];
+            }
+        });
+
+        return filteredIssues;
+    }
+
+    /**
      * Filter tags by tag name.
      * Returns tag object.
      */
@@ -687,7 +751,7 @@ export class ChangeLog {
 
     // https://github.com/moby/moby/commit/df23a1e675c7e3cbad617374d85c48103541ee14?short_path=6206c94#diff-6206c94cde21ec0a5563c8369b71e609
     // Supported format for GitHub issues: #26 GH-26 repositoryName#26 repositoryNameGH-26, where GH is case in-sensitive.
-    private readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
+    private readonly _issueRegex = new RegExp("(?<!\/)(?:^|[^A-Za-z0-9_/])([a-z0-9_]+\/[a-zA-Z0-9\-_.]+)?(?:#|[Gg][Hh]-)([0-9]+)(?=[^A-Za-z0-9_]|$)", "gm");
     private readonly _changeLogTitle: string = tl.loc("ChangeLogTitle");
     private readonly _seeMoreText: string = tl.loc("SeeMoreText");
     private readonly _noStateSpecified: string = "none";

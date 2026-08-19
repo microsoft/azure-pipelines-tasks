@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Publicar resultados de la prueba",
+  "loc.friendlyName": "[En desuso] Publicar resultados de pruebas",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publicar resultados de pruebas en Azure Pipelines",
+  "loc.description": "[En desuso] Publicar resultados de pruebas en Azure Pipelines",
   "loc.instanceNameFormat": "Publicar resultados de pruebas $(testResultsFiles)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.testRunner": "Formato del resultado de la prueba",

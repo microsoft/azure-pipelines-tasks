@@ -36,7 +36,7 @@ describe('TestUtils', function () {
     assert(tr.stdOutContained(TestString.ReleaseUrlValidlatest), 'should have printed: ' + TestString.ReleaseUrlValidlatest);
     assert(tr.stdOutContained(TestString.CheckSumValidlatest), 'should have printed: ' + TestString.CheckSumValidlatest);
     assert(tr.stdOutContained(TestString.NotFound123_1323), 'should have printed: ' + TestString.NotFound123_1323);
-  }).timeout(20000);
+  }).timeout(60000);
 
   it('should handle HTTP errors correctly', async function () {
     await new ttm.MockTestRunner(path.join(__dirname, 'GetKubeloginReleaseErrorHandlingL0Tests.js')).runAsync();

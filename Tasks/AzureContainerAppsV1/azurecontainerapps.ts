@@ -5,9 +5,18 @@ import { AzureAuthenticationHelper } from './src/AzureAuthenticationHelper';
 import { ContainerAppHelper } from './src/ContainerAppHelper';
 import { ContainerRegistryHelper } from './src/ContainerRegistryHelper';
 import { TelemetryHelper } from './src/TelemetryHelper';
+import { emitArgInjectionRiskTelemetry } from './src/telemetry';
 import { Utility } from './src/Utility';
 
 const util = new Utility();
+
+// appSourcePath is documented as a filesystem path. As defense-in-depth against command injection
+// (CWE-78), reject values containing shell metacharacters that are highly unlikely to occur in a
+// legitimate path; the primary fix reads and deletes the runtime-stack file via the filesystem
+// instead of a shell (see determineRuntimeStackAsync). Characters that commonly appear in real
+// paths -- '$', '(', ')', and backslash (the Windows path separator) -- are intentionally allowed
+// (e.g. "C:\Program Files (x86)\app").
+const APP_SOURCE_PATH_INVALID_CHARS: RegExp = /[;&|`<>\r\n]/;
 
 export class azurecontainerapps {
 
@@ -61,6 +70,10 @@ export class azurecontainerapps {
             tl.setResult(tl.TaskResult.Failed, err.message);
             this.telemetryHelper.setFailedResult(err.message);
         } finally {
+            // Logout of any Azure Container Registry instances that were authenticated against so that
+            // registry credentials are not left behind in the Docker config on the agent.
+            this.registryHelper.logoutAcr();
+
             // Logout of Azure if logged in during this task session
             this.authHelper.logoutAzure();
 
@@ -134,6 +147,15 @@ export class azurecontainerapps {
 
         // Get the path to the application source to build and run, if provided
         this.appSourcePath = tl.getInput('appSourcePath', false);
+
+        // Emit arg-injection risk telemetry (metadata only) for the user-controlled appSourcePath.
+        emitArgInjectionRiskTelemetry('appSourcePath', this.appSourcePath);
+
+        // Reject appSourcePath values that contain shell metacharacters, as defense-in-depth against
+        // command injection (CWE-78).
+        if (!util.isNullOrEmpty(this.appSourcePath) && APP_SOURCE_PATH_INVALID_CHARS.test(this.appSourcePath)) {
+            throw Error(tl.loc('InvalidAppSourcePathMessage', this.appSourcePath));
+        }
 
         // Get the name of the ACR instance to push images to, if provided
         this.acrName = tl.getInput('acrName', false);

@@ -31,16 +31,14 @@ export class DeploymentFailsWhenBuilderNotExist {
         DeploymentFailsWhenBuilderNotExist.mockTaskInputParameters();
         let testPath = path.join(__dirname, 'DeploymentFailsWhenBuilderNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
-        try {
-            mockTestRunner.run();
+        mockTestRunner.runAsync().then(() => {
             let expectedError = "KPack builder does not exist";
             assert(mockTestRunner.errorIssues.length > 0 || mockTestRunner.stderr.length > 0, 'should have written to stderr');
             assert(mockTestRunner.stdErrContained(expectedError) || mockTestRunner.createdErrorIssue(expectedError), 'E should have said: ' + expectedError);
             done();
-        }
-        catch (error) {
+        }).catch((error) => {
             console.error(error);
             done(error);
-        }
+        });
     }
 }

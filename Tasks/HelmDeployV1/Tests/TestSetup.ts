@@ -82,7 +82,9 @@ process.env.SYSTEM_HOSTTYPE = "build";
 process.env.ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE = "Kubeconfig";
 process.env.ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG = `{"apiVersion":"v1", "clusters": [{"cluster": {"insecure-skip-tls-verify":"true", "server":"https://5.6.7.8", "name" : "scratch"}}], "contexts": [{"context" : {"cluster": "scratch", "namespace" : "default", "user": "experimenter", "name" : "exp-scratch"}], "current-context" : "exp-scratch", "kind": "Config", "users" : [{"user": {"password": "regpassword", "username" : "test"}]}`;
 process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = "testnamespace";
-
+// ACR endpoint auth parameters for RMTest (testAzureSubscriptionEndpointForACR)
+process.env.ENDPOINT_AUTH_PARAMETER_RMTest_SERVICEPRINCIPALID = "";
+process.env.ENDPOINT_AUTH_PARAMETER_RMTest_SERVICEPRINCIPALKEY = "";
 if (process.env.RemoveNamespaceFromEndpoint) {
     process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = "";
 }
@@ -248,6 +250,21 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
         "code": 0,
         "stdout": "Successfully packaged chart and saved it to: testDestinationPath/testChartName.tgz"
     }
+}
+
+if (process.env[shared.TestEnvVars.command] === shared.Commands.uninstall) {
+    let helmUninstallCommand = `helm uninstall${formatDebugFlag()} ${process.env[shared.TestEnvVars.releaseName]}`;
+
+    if (process.env[shared.TestEnvVars.namespace])
+        helmUninstallCommand = helmUninstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
+
+    if (process.env[shared.TestEnvVars.arguments])
+        helmUninstallCommand = helmUninstallCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
+
+    a.exec[helmUninstallCommand] = {
+        "code": 0,
+        "stdout": `release "${process.env[shared.TestEnvVars.releaseName]}" uninstalled`
+    };
 }
 
 // Mock BOTH helm version commands - the task will choose which one based on feature flag

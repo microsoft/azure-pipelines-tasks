@@ -31,6 +31,8 @@
   "loc.input.help.configurationStrings": "構文 -key value の後に続く Web App 構成の設定を編集します。スペースが含まれる値は、二重引用符で囲む必要があります。<br />例: -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.deploymentMethod": "デプロイ方法",
   "loc.input.help.deploymentMethod": "アプリの配置方法を選択します。",
+  "loc.input.label.siteContainersConfig": "サイト コンテナーの構成",
+  "loc.input.help.siteContainersConfig": "SiteContainers 展開用の siteContainers-config JSON を指定します。",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "無効な App Service パッケージまたはフォルダー パスが指定されました: %s",
   "loc.messages.SetParamFilenotfound0": "Set パラメーター ファイルが見つかりません: %s",
   "loc.messages.XDTTransformationsappliedsuccessfully": "XML 変換が正常に適用されました",
@@ -180,5 +182,9 @@
   "loc.messages.JarPathNotPresent": "Java jar パスが存在しません",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
   "loc.messages.InvalidDockerImageName": "無効な Docker Hub イメージ名が指定されました。",
-  "loc.messages.MsBuildPackageNotSupported": "MsBuild が生成したパッケージの配置はサポートされていません。パッケージ形式を変更するか、Azure App Service デプロイ タスクを使用してください。"
+  "loc.messages.MsBuildPackageNotSupported": "MsBuild が生成したパッケージの配置はサポートされていません。パッケージ形式を変更するか、Azure App Service デプロイ タスクを使用してください。",
+  "loc.messages.SiteContainersNotSupportedWithPublishProfileAuthentication": "サイト コンテナーは発行プロファイル認証ではサポートされていません。サービス接続認証を使用してください。",
+  "loc.messages.StartedUpdatingSiteContainers": "サイト コンテナーの更新を開始しました。",
+  "loc.messages.UpdatingSiteContainer": "サイト コンテナーを更新しています: %s",
+  "loc.messages.CompletedUpdatingSiteContainers": "サイト コンテナーの更新が完了しました。"
 }

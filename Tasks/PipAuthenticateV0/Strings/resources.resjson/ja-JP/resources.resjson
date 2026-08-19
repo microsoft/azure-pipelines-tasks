@@ -8,6 +8,7 @@
   "loc.input.help.feedList": "この組織内に存在する、認証対象のフィードを選択します",
   "loc.input.label.externalSources": "外部組織からのフィード",
   "loc.input.help.externalSources": "この組織の外部で認証するエンドポイントを選択します。",
+  "loc.messages.TaskDeprecationNotice": "PipAuthenticateV0 タスクは、2026 年 6 月に非推奨になる予定です。PipAuthenticateV1 の使用に切り替えてください。",
   "loc.messages.Info_AddingInternalFeeds": "%s 内部フィードの認証情報を追加しています。",
   "loc.messages.Info_AddingExternalFeeds": "%s 外部エンドポイントの認証情報を追加しています。",
   "loc.messages.Info_SuccessAddingAuth": "%s の内部フィードと %s の外部エンドポイントに認証が正常に追加されました。",

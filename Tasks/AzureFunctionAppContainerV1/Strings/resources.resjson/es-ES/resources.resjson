@@ -15,7 +15,7 @@
   "loc.input.label.slotName": "Ranura",
   "loc.input.help.slotName": "Escriba o seleccione un espacio que no sea el de producción.",
   "loc.input.label.imageName": "Nombre de la imagen",
-  "loc.input.help.imageName": "Nombre de dominio de nivel superior único global para su espacio de nombres o Registro específico.<br/> Nota: El nombre de imagen completo tiene el formato: \"<b><Registro o espacio de nombres></b>/<repositorio>:<etiqueta>\". Por ejemplo, \"<b>miRegistro.azurecr.io</b>/nginx:última\".",
+  "loc.input.help.imageName": "Un nombre de dominio de primer nivel único globalmente para el registro o espacio de nombres específico.<br/> Nota: el nombre completo de la imagen tendrá el formato: '<b>'<registro o espacio de nombres'></b>/'<repositorio'>:'<etiqueta'>'. Por ejemplo, \"<b>miRegistro.azurecr.io</b>/nginx:última\".",
   "loc.input.label.containerCommand": "Comando de inicio ",
   "loc.input.help.containerCommand": "Escriba el comando de inicio. Por ejemplo, <br/>dotnet exec filename.dll<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "Configuración de la aplicación",

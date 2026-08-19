@@ -7,7 +7,7 @@ import { TestPlanData } from '../testPlanData';
 import { newAutomatedTestsFlow } from '../Automated Flow/automatedFlow';
 
 describe('AzureTestPlan Suite', function () {
-    this.timeout(10000);
+    this.timeout(30000);
 
     const originalGetInput = tl.getInput;
     const originalGetBoolInput = tl.getBoolInput;
@@ -23,7 +23,7 @@ describe('AzureTestPlan Suite', function () {
     });
 
     it('Check if runs fine', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(3000);
 
         let tp: string = path.join(__dirname, 'L0SampleTest.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

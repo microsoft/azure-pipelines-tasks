@@ -18,18 +18,27 @@ function Get-WinRmConnectionToTargetMachine {
     try {
         $retryCount = 0;
         $isConnectionComplete = $false
-        $newPsSessionCommand = Get-NewPSSessionCommand -computerName $computerName `
-                                                       -port $port `
-                                                       -authentication $authentication `
-                                                       -sessionName $sessionName `
-                                                       -useSsl:$useSsl `
-                                                       -sessionConfigurationName $sessionConfigurationName `
-                                                       -NoCredential:($credential -eq $null)
+
+        # Splat the connection arguments so each value binds to its New-PSSession
+        # parameter as data, instead of being built into a command string.
+        $psSessionParams = @{
+            ComputerName      = $computerName
+            Port              = $port
+            Authentication    = $authentication
+            Name              = $sessionName
+            ConfigurationName = $sessionConfigurationName
+            ErrorAction       = 'SilentlyContinue'
+            ErrorVariable     = 'sessionErrors'
+        }
+        if ($null -ne $credential) { $psSessionParams.Credential = $credential }
+        if ($useSsl)               { $psSessionParams.UseSSL     = $true }
+
+        Write-Verbose "Establishing New-PSSession to '$computerName' on port '$port' (authentication: $authentication, useSsl: $useSsl, configurationName: $sessionConfigurationName, name: $sessionName)"
 
         while ($retryCount -lt $maxRetryLimit) {
             Write-Verbose "Trying to establish connection: Attempt #$($retryCount + 1)"
-            $session = (Invoke-Expression $newPsSessionCommand)
-            
+            $session = New-PSSession @psSessionParams
+
             foreach ($sessionError in $sessionErrors) {
                 Write-Verbose $("New-PSSession Error: " + $sessionError.Exception.Message)
             }
@@ -53,37 +62,6 @@ function Get-WinRmConnectionToTargetMachine {
             }
             throw (Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName, $port)
         }
-    } finally {
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
-function Get-NewPSSessionCommand {
-    [CmdletBinding()]
-    Param (
-        [string] $computerName,
-        [string] $port,
-        [string] $authentication,
-        [string] $sessionName,
-        [string] $sessionConfigurationName,
-        [switch] $useSsl,
-        [switch] $NoCredential
-    )
-    Trace-VstsEnteringInvocation $MyInvocation
-    try {
-        $newPsSessionCommandArgs = "-ComputerName '$computerName' -Port $port -Authentication $authentication -Name '$sessionName'"
-        if(!$NoCredential) {
-            $newPsSessionCommandArgs += " -Credential `$credential"    
-        }
-        if($useSsl) {
-            $newPsSessionCommandArgs += " -UseSSL"
-        }
-        $newPsSessionCommandArgs += " -ErrorAction 'SilentlyContinue' -ErrorVariable sessionErrors"
-        $newPsSessionCommandArgs += " -ConfigurationName '$sessionConfigurationName'"
-
-        $newPsSessionCommand = "New-PSSession $newPsSessionCommandArgs"
-        Write-Verbose "New-PSSessionCommand: $newPsSessionCommand"
-        return $newPsSessionCommand
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }

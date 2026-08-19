@@ -39,6 +39,8 @@
   "loc.input.help.deployScriptPath": "Spécifiez le chemin relatif du script PowerShell (pour Windows) ou du script d'interpréteur de commandes (pour Linux) qui déploie le package. Ce script doit être contenu dans le chemin de package sélectionné ci-dessus. Prend en charge le modèle minimatch. Exemple de chemin : deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "Arguments du script de déploiement",
   "loc.input.help.deployScriptArguments": "Spécifiez les arguments à passer au script de déploiement.",
+  "loc.input.label.canDeleteTempFolder": "Supprimez le dossier temporaire",
+  "loc.input.help.canDeleteTempFolder": "Cette option vous permet de supprimer le dossier temporaire",
   "loc.input.label.additionalBuilderParameters": "Paramètres supplémentaires du générateur",
   "loc.input.help.additionalBuilderParameters": "En mode de génération automatique du modèle Packer, la tâche crée un modèle Packer avec un générateur Azure. Ce générateur permet de générer une image de machine. Vous pouvez ajouter des clés au générateur Azure pour personnaliser le modèle Packer généré. Par exemple, définissez ssh_tty=true si vous utilisez une image de base CentOS et si vous devez avoir un tty pour exécuter sudo.<br/>Pour afficher/modifier les paramètres supplémentaires dans une grille, cliquez sur \"…\" à côté de la zone de texte.",
   "loc.input.label.skipTempFileCleanupDuringVMDeprovision": "Ignorer le nettoyage des fichiers temporaires durant le déprovisionnement",

@@ -251,6 +251,57 @@ describe("ContainerBuildV0 Suite", function () {
                 done();
             });
     });
+    // Connection cleanup tests - verify connection.close() is called after docker build/push
+    it('Docker build and push should close connection and cleanup Docker credentials', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        delete process.env['RUNNING_ON'];
+        process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.runAsync()
+            .then(() => {
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf("LoggingOutFromRegistry") != -1, "connection.close() should trigger logout from registry");
+                assert(tr.stdout.indexOf("set DOCKER_CONFIG=") != -1, "connection.close() should unset DOCKER_CONFIG environment variable");
+                console.log(tr.stderr);
+                done();
+            });
+    });
+
+    it('Docker build and push should close connection and cleanup credentials when using ACR', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        delete process.env['RUNNING_ON'];
+        process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
+        process.env[shared.TestEnvVars.repository] = "testrepo";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.runAsync()
+            .then(() => {
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf("LoggingOutFromRegistry") != -1, "connection.close() should trigger logout from ACR registry");
+                assert(tr.stdout.indexOf("set DOCKER_CONFIG=") != -1, "connection.close() should unset DOCKER_CONFIG environment variable for ACR");
+                console.log(tr.stderr);
+                done();
+            });
+    });
+
+    it('Buildctl build and push should close connection and cleanup Docker credentials', (done: Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env['RUNNING_ON'] = 'KUBERNETES';
+        process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
+        process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.runAsync()
+            .then(() => {
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf("LoggingOutFromRegistry") != -1, "connection.close() should trigger logout from registry for buildctl");
+                assert(tr.stdout.indexOf("set DOCKER_CONFIG=") != -1, "connection.close() should unset DOCKER_CONFIG environment variable for buildctl");
+                console.log(tr.stderr);
+                done();
+            });
+    });
+
     it('Consistent hash must be computed correctly', (done) => {
         var ring = new ConsistentHashing([]);
         ring.addNode("buildkitd-0");

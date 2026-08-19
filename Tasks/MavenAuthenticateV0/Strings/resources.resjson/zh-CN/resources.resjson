@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[了解有关此任务的详细信息](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "为 Azure Artifacts 源和外部 maven 存储库提供凭据",
   "loc.instanceNameFormat": "Maven 身份验证",
-  "loc.input.label.workloadIdentityServiceConnection": "“Entra Workload ID 支持的 Azure DevOps 用户”服务连接",
+  "loc.input.label.workloadIdentityServiceConnection": "\"Azure DevOps\" 服务连接",
   "loc.input.help.workloadIdentityServiceConnection": "这是 Entra Workload ID 支持的 Azure DevOps 用户服务连接。如果设置了此项，则将忽略输入 mavenServiceConnections。",
   "loc.input.label.artifactsFeeds": "源",
   "loc.input.label.mavenServiceConnections": "用于此组织/集合外部的存储库的凭据",

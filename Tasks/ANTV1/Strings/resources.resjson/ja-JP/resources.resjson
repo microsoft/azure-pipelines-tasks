@@ -37,7 +37,7 @@
   "loc.input.label.jdkUserInputPath": "JDK パス",
   "loc.input.help.jdkUserInputPath": "指定したパスに JAVA_HOME を設定します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。",
+  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64、arm64) を指定します。",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 および JDK 10 はサポートされていません。プロジェクトとパイプラインで新しいバージョンに切り替えてください。JDK 11 でのビルドを試行しています...",
   "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされており、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://go.microsoft.com/fwlink/?linkid=875287) タスクを使用して目的の JDK をインストールしてください。",

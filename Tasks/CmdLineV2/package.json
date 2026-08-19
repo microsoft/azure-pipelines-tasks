@@ -22,8 +22,11 @@
     "@types/mocha": "^8.0.3",
     "@types/node": "^24.10.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.279.0",
     "uuid": "^8.3.0"
+  },
+  "overrides": {
+    "picomatch": "2.3.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
