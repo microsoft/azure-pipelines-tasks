@@ -1,11 +1,36 @@
 import assert = require('assert');
-import { validateScriptArgs, ArgsSanitizingError } from '../src/argsSanitizer';
+import tl = require('azure-pipelines-task-lib/task');
+import { validateScriptArgs, ArgsSanitizingError, isPowerShellArgumentAstSafe, isAstProbeResultSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
 // PowerShell ArgumentsSanitizer. Bash scripts get $VAR / ${VAR} expansion
 // before sanitization; pscore/ps/batch sanitize the literal scriptArguments.
 
 export const runValidateScriptArgsTests = () => {
+    it('PowerShell AST validation allows pure data and rejects evaluated constructor expressions', () => {
+        // The benign-PASS case needs a real PowerShell to exit 0; skip it where no interpreter exists
+        // (e.g. a pwsh-less macOS agent). The fail-closed negatives below are interpreter-independent.
+        if (tl.which('pwsh', false) || tl.which('powershell', false)) {
+            assert(isPowerShellArgumentAstSafe('-Tags @{ env = "prod"; port = 8080 }'));
+        }
+        assert(!isPowerShellArgumentAstSafe('@{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }'));
+        assert(!isPowerShellArgumentAstSafe('@{ k = [System.Net.Dns]::MachineName }'));
+        // Fail closed: a missing interpreter must block a constructor expression, never silently allow it.
+        assert(!isPowerShellArgumentAstSafe('@{ k = New-Item C:\\evil }', 'pwsh-does-not-exist-xyz'));
+    });
+
+    it('AST probe result is interpreted fail-closed (timeout, missing interpreter, non-zero exit)', () => {
+        // Ivan review (#22428): "if the timeout has passed, what would happen?" A hung interpreter makes
+        // spawnSync set error=ETIMEDOUT (status null); a missing one sets ENOENT; a rejected payload exits
+        // non-zero. Only a clean exit 0 is safe. Deterministic - no spawned process, no timing dependency.
+        assert.strictEqual(isAstProbeResultSafe({ error: Object.assign(new Error('ETIMEDOUT'), { code: 'ETIMEDOUT' }), status: null }), false);
+        assert.strictEqual(isAstProbeResultSafe({ error: Object.assign(new Error('ENOENT'), { code: 'ENOENT' }), status: null }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 2 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 3 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 4 }), false);
+        assert.strictEqual(isAstProbeResultSafe({ status: 0 }), true);
+    });
+
     const setEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName, envValue] = envVariable.split('=');
@@ -57,10 +82,6 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: $false literal allowed (case-insensitive)',
             '-Flag $false', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // Regression #22173: arguments: > YAML folded scalars introduce \n.
-        ['pscore: newline whitespace from folded scalar allowed',
-            '-One 1\n-Two 2\n-Three 3', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
         // pscore allows backtick-escaped otherwise-disallowed characters.
         ['pscore: backtick-escaped @ allowed',
             '-Items `@items', 'pscore',
@@ -69,16 +90,12 @@ export const runValidateScriptArgsTests = () => {
         // hashtable, splatting, array literal, indexing, type accelerator —
         // are NOT execution primitives in a PowerShell argument list. They
         // must pass so customers can pass `-Tag @{...}` (the failing case in
-        // the issue) without redirecting through env vars.
+        // the issue) without redirecting through env vars. Single-line only:
+        // MSRC 129198 rejects a CR/LF anywhere in the args when enforce is on.
         //
         // Note: `;` and `( )` remain blocked because they are execution primitives.
-        // Hashtables can use newline separators (which
-        // is the customer's exact case — YAML folded scalar produces \n).
         // Array literals `@(...)` cannot be expressed without `( )` and stay
         // blocked; callers can pass arrays via env vars or splatting.
-        ['pscore: hashtable literal @{ K = "v" } allowed (newline-separated)',
-            '-Tag @{ Solution = "RunnerImagesGeneration"\n      ManagedBy = "Platform-Team" }', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
         ['pscore: splatting @params allowed',
             'Invoke-Build @params', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
@@ -91,12 +108,31 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: hashtable value containing @ (email) allowed',
             '-Tag @{ Owner = "team@contoso.com" }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // Closest reproduction of feliasson's case from issue #22173: a
-        // YAML folded-scalar hashtable with $env:* references for the values
-        // that would otherwise be ADO macros.
-        ['pscore: issue #22173 hashtable literal (folded scalar) passes',
-            '-Tag @{\n      Solution            = "RunnerImagesGeneration"\n      ManagedBy           = "Platform-Team"\n      RequestedFor        = $env:requestedFor\n    }', 'pscore',
-            ['requestedFor=someone@contoso.com', 'AZP_75787_ENABLE_NEW_LOGIC=true']]
+        // Mode matrix: audit (LOG) and collect only warn / emit telemetry — they must NOT throw,
+        // even for the newline, character and AST-constructor injection vectors that enforce blocks.
+        ['pscore: audit mode warns but does not throw on ; separator',
+            'test; whoami', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+        ['pscore: collect mode does not throw on ; separator',
+            'test; whoami', 'pscore', ['AZP_75787_ENABLE_COLLECT=true']],
+        ['pscore: audit mode does not throw on newline',
+            '-Foo bar\nWrite-Host x', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+        ['pscore: audit mode does not throw on command-valued hashtable (AST)',
+            '-Tag @{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+        ['pscore: collect mode does not throw on command-valued hashtable (AST)',
+            '-Tag @{ k = [System.Net.Dns]::MachineName }', 'pscore',
+            ['AZP_75787_ENABLE_COLLECT=true']],
+        // MSRC 129198 ring-by-ring gates: a new check is inert unless BOTH its own FF and the enforce
+        // toggle (AZP_75787_ENABLE_NEW_LOGIC) are on. None of these may throw.
+        ['pscore: AST injection inert when expression FF off (enforce on)',
+            '@{ k = New-Item C:\\x }', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: AST injection inert when enforce off (expression FF on, collect on)',
+            '@{ k = New-Item C:\\x }', 'pscore',
+            ['AZP_75787_ENABLE_COLLECT=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true']],
+        ['pscore: backtick-escaped newline inert when newline FF off (enforce on)',
+            '-Name `\nvalue', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: lone LF inert when newline FF off (enforce on) - deployed parity',
+            '-Foo bar\nWrite-Host x', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {
@@ -129,6 +165,21 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: && command chain',
             'test && whoami', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        // MSRC 129198: a lone LF is allow-listed by the char sanitizer (deployed parity) and is rejected
+        // only under the EnableScriptArgumentsNewlineValidation feature; CR / CRLF stay blocked by the
+        // char sanitizer (\r is not allow-listed) regardless of the newline feature.
+        ['pscore: lone LF injects a statement, blocked under the newline feature (MSRC 129198)',
+            '-Foo bar\nWrite-Host INJECTED', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
+        ['pscore: CRLF in args rejected by the char sanitizer (enforce only)',
+            '-One 1\r\n-Two 2', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: multi-line hashtable rejected under the newline feature (MSRC 129198; use single-line)',
+            '-Tag @{ a = 1\n b = 2 }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
+        ['pscore: $env: value containing a lone LF blocked under the newline feature (MSRC 129198)',
+            '-x $env:EVIL', 'pscore',
+            ['EVIL=a\nwhoami', 'AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
         ['pscore: bare $ that is not $true/$false/$env',
             '-Name $other', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
@@ -151,6 +202,15 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: hashtable with semicolon separator still blocked',
             '-Tag @{ a = 1; b = 2 }', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['pscore: command as hashtable value blocked by AST validation',
+            '-Tag @{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true']],
+        ['pscore: property access as hashtable value blocked by AST validation',
+            '-Tag @{ k = [System.Net.Dns]::MachineName }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true']],
+        ['pscore: backtick-escaped newline blocked when newline FF on (MSRC 129198)',
+            '-Name `\nvalue', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']]
@@ -183,14 +243,64 @@ export const runValidateScriptArgsTests = () => {
         }
     });
 
+    // Ivan review (#22428): scriptArguments may carry secrets, so a validation failure must never echo
+    // the argument values. validateScriptArgs reports only the offending characters (or a generic AST
+    // description), so a secret embedded in the arguments is not exposed in the build log.
+    describe('Failure messages never echo argument values (secret non-exposure)', () => {
+        const SECRET = 'SuperSecretValue123';
+
+        it('character rejection names only the offending character, not the value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Password ${SECRET}; whoami`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("';'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('newline rejection names only the newline escape, not the surrounding value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Token ${SECRET}\nWrite-Host x`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes("'\\n'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+
+        it('AST rejection uses a generic description, not the argument value', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`-Tag @{ k = New-Item -Path C:\\${SECRET} -ItemType File }`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+    });
+
     // Regression test for https://github.com/microsoft/azure-pipelines-tasks/issues/22173.
-    // Reconstructs the exact arguments string the task would see *after* ADO has
-    // already substituted ${{ parameters.* }} and $(varName), preserving the
-    // YAML folded-scalar \n characters that the user's telemetry reported as
-    // `removedSymbols: { "$": 4, "{": 1, "\n": 11, "}": 1 }`. Under pscore the
-    // four `$env:*` references must be resolved by expandPowerShellEnvVariables,
-    // `$True` must pass the (?!true|false) lookahead, and the embedded
-    // newlines must pass the PowerShell allowlist that includes `\n`.
+    // Reconstructs the arguments string the task would see *after* ADO has substituted
+    // ${{ parameters.* }} and $(varName). Under pscore the four `$env:*` references must be
+    // resolved by expandPowerShellEnvVariables and `$True` must pass the (?!true|false)
+    // lookahead. Single-line: MSRC 129198 now rejects a CR/LF in the args (the folded-scalar
+    // \n form is covered by the throw-suite), so the args are space-joined here.
     describe('Issue #22173 reproducer (AzureCLI@2 / @3 pscore with $env: and $True)', () => {
         const issue22173Args = [
             '-ImageType Ubuntu2204',
@@ -205,7 +315,7 @@ export const runValidateScriptArgsTests = () => {
             '-TempResourceGroupName rg-test-01',
             '-UseAzureCliAuth $True',
             '-Tag tag1'
-        ].join('\n');
+        ].join(' ');
 
         const repoEnv = [
             'AZP_75787_ENABLE_NEW_LOGIC=true',
@@ -214,7 +324,7 @@ export const runValidateScriptArgsTests = () => {
             'servicePrincipalKey=secret-clean'
         ];
 
-        it('pscore: original failing arguments pass after PowerShell expansion', () => {
+        it('pscore: single-line #22173 args pass after PowerShell expansion', () => {
             setEnv(repoEnv);
             try {
                 assert.doesNotThrow(() => validateScriptArgs(issue22173Args, 'pscore'));
