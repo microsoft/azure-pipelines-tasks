@@ -6,6 +6,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { assertNoScriptNewline, tryValidateScriptArgs } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
 function convertToNullIfUndefined<T>(arg: T): T|null {
@@ -42,6 +43,21 @@ async function run() {
         let scriptPath = convertToNullIfUndefined(tl.getPathInput('ScriptPath', false));
         let scriptInline: string = convertToNullIfUndefined(tl.getInput('Inline', false));
         let scriptArguments: string = convertToNullIfUndefined(tl.getInput('ScriptArguments', false));
+        // MSRC 129198: reject CR/LF in the script arguments and FilePath (a statement separator at the
+        // `. '<script>' <args>` dot-source sink), gated by the EnableScriptArgumentsNewlineValidation
+        // pipeline feature AND the org sanitization enforce toggle so it rolls out ring-by-ring.
+        if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC') && tl.getPipelineFeature('EnableScriptArgumentsNewlineValidation')) {
+            assertNoScriptNewline(scriptArguments, scriptPath, scriptType.toUpperCase() === 'FILEPATH');
+        }
+        // MSRC 129198: char + data-constructor AST validation for the Node (Linux) handler, gated by the new
+        // EnableScriptArgumentsExpressionValidation ring — NOT the on-everywhere EnableAzurePowerShellArgumentsSanitization
+        // master — so this surface rolls out ring-by-ring and never starts blocking on deploy. Enforce toggle applies inside.
+        if (scriptType.toUpperCase() === 'FILEPATH') {
+            tryValidateScriptArgs(scriptArguments || '', 'pscore', {
+                taskName: 'AzurePowerShellV5',
+                pipelineFeatureFlag: 'EnableScriptArgumentsExpressionValidation'
+            });
+        }
         let _vsts_input_failOnStandardError = convertToNullIfUndefined(tl.getBoolInput('FailOnStandardError', false));
         let targetAzurePs: string = convertToNullIfUndefined(tl.getInput('TargetAzurePs', false));
         let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));
