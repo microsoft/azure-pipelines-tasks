@@ -274,6 +274,7 @@ var buildNodeTask = function (taskPath, outDir, options) {
         console.timeEnd(tscTimerLabel);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        rm("-rf", path.join(taskPath, "node_modules", "@typescript"));
         // Clean up broken symlinks in .bin directory
         var binPath = path.join(taskPath, "node_modules", ".bin");
         if (test('-d', binPath)) {
