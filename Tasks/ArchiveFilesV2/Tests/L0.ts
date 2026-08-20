@@ -191,4 +191,46 @@ describe('ArchiveFiles L0 Suite', function () {
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
     }
+
+    if (process.platform !== 'win32') {
+        ['tar', 'zip'].forEach(function (archiveType) {
+            it(`Passes option-like file names as operands for ${archiveType}`, async function () {
+                this.timeout(10000);
+
+                const dashTestDir = path.join(__dirname, 'test_output', 'dash_test');
+                if (!fs.existsSync(dashTestDir)) {
+                    fs.mkdirSync(dashTestDir, { recursive: true });
+                }
+                const optionLikeName = '--checkpoint=1';
+                fs.writeFileSync(path.join(dashTestDir, 'normal.txt'), 'test data');
+                fs.writeFileSync(path.join(dashTestDir, optionLikeName), 'test data');
+
+                expectedArchivePath = path.join(__dirname, 'test_output', `dash.${archiveType}`);
+
+                try {
+                    process.env['rootFolderOrFile'] = dashTestDir;
+                    process.env['archiveType'] = archiveType;
+                    process.env['archiveFile'] = expectedArchivePath;
+
+                    const tp: string = path.join(__dirname, 'L0DashPrefixedFiles.js');
+                    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+                    await tr.runAsync();
+
+                    assert(tr.succeeded,
+                        `Task should succeed. stdout: ${tr.stdout}`);
+                    assert(/\[command\][^\n]*\s--\s/.test(tr.stdout),
+                        `Command line should contain the '--' end-of-options separator. stdout: ${tr.stdout}`);
+                    assert(fs.existsSync(expectedArchivePath),
+                        `Should have created ${expectedArchivePath}`);
+
+                    const listing = fs.readFileSync(expectedArchivePath).toString('latin1');
+                    assert(listing.indexOf(optionLikeName) > -1,
+                        `Archive should contain the option-like file name.`);
+                } finally {
+                    fs.rmSync(dashTestDir, { recursive: true, force: true });
+                }
+            });
+        });
+    }
 });

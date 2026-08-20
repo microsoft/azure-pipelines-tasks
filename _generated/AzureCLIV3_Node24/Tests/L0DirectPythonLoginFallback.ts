@@ -76,7 +76,7 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
 });
 
 // Mock argsSanitizer (V3-specific)
-tmr.registerMock('./src/argsSanitizer', {
+tmr.registerMock('azure-pipelines-tasks-args-sanitizer/argsSanitizer', {
     tryValidateScriptArgs: () => {},
     ArgsSanitizingError: class extends Error {}
 });

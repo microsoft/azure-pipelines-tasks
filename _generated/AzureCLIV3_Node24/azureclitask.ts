@@ -9,7 +9,7 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { tryValidateScriptArgs, ArgsSanitizingError } from "./src/argsSanitizer";
+import { tryValidateScriptArgs, ArgsSanitizingError } from "azure-pipelines-tasks-args-sanitizer/argsSanitizer";
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
@@ -42,7 +42,10 @@ export class azureclitask {
         }
 
         try{
-            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
+            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '', {
+                taskName: 'AzureCLIV3',
+                pipelineFeatureFlag: 'EnableAzureCliArgsValidation'
+            });
             var scriptType: ScriptType = ScriptTypeFactory.getScriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
