@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 277,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -34,6 +34,13 @@
       "defaultValue": "10.x",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionFilePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionFilePath"
     },
     {
       "name": "checkLatest",
@@ -103,6 +110,8 @@
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
     "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet",
-    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror"
+    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror",
+    "CannotSpecifyVersionAndVersionFilePath": "ms-resource:loc.messages.CannotSpecifyVersionAndVersionFilePath",
+    "InvalidVersionSpecification": "ms-resource:loc.messages.InvalidVersionSpecification"
   }
 }

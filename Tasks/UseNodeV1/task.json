@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 1
+    "Minor": 277,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -34,6 +34,13 @@
       "defaultValue": "10.x",
       "required": false,
       "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "Version File Path",
+      "required": false,
+      "helpMarkDown": "File path to get version.  Example: src/.nvmrc"
     },
     {
       "name": "checkLatest",
@@ -103,6 +110,8 @@
     "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
     "UnexpectedOS": "Unexpected OS %s",
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
-    "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'"
+    "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
+    "CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified.",
+    "InvalidVersionSpecification": "Version specification '%s' is invalid."
   }
 }
