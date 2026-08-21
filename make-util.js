@@ -26,7 +26,7 @@ var downloadPath = path.join(repoPath, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2'];
+var allowedTypescriptVersions = ['4.0.2', '4.9.5', '5.1.6', '^5.7.2', '7.0.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -266,11 +266,15 @@ var buildNodeTask = function (taskPath, outDir, options) {
     var tscSourceMapArgs = emitSourceMaps ? ' --sourceMap --inlineSources' : '';
 
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
+    var tscTimerLabel = `tsc:${path.basename(taskPath)}`;
+    console.time(tscTimerLabel);
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
+        console.timeEnd(tscTimerLabel);
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
+        rm("-rf", path.join(taskPath, "node_modules", "@typescript"));
         // Clean up broken symlinks in .bin directory
         var binPath = path.join(taskPath, "node_modules", ".bin");
         if (test('-d', binPath)) {
@@ -286,6 +290,7 @@ var buildNodeTask = function (taskPath, outDir, options) {
         }
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + tscSourceMapArgs);
+        console.timeEnd(tscTimerLabel);
     }
 
     cd(originalDir);

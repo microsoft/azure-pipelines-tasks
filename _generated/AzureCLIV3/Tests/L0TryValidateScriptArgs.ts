@@ -12,7 +12,7 @@ export const runTryValidateScriptArgsTests = () => {
     const startCapture = () => {
         captured = '';
         originalWrite = process.stdout.write.bind(process.stdout);
-        (process.stdout.write as any) = (chunk: string | Buffer, ...args: any[]): boolean => {
+        (process.stdout.write as any) = (chunk: string | Uint8Array, ...args: any[]): boolean => {
             captured += chunk.toString();
             return originalWrite(chunk, ...args);
         };

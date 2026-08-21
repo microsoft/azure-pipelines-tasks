@@ -30,6 +30,6 @@
     "azure-pipelines-tasks-utility-common": "^3.270.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "7.0.2"
   }
 }
