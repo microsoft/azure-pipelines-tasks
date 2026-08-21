@@ -533,6 +533,7 @@
     "Warning_InvalidRequestTimeoutIgnored": "ms-resource:loc.messages.Warning_InvalidRequestTimeoutIgnored",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
+    "Error_ApiKeyRequiresNuGet76": "ms-resource:loc.messages.Error_ApiKeyRequiresNuGet76",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
     "Error_NoMatchingFilesFoundForPattern": "ms-resource:loc.messages.Error_NoMatchingFilesFoundForPattern",
     "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",

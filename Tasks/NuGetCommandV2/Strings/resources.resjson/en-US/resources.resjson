@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "Ignoring invalid requestTimeout value '%s'. Provide a non-negative integer (seconds). NuGet's default timeout of 300 seconds will be used.",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "External service connections that use API key authentication require NuGet 7.6 or later. The selected NuGet version is %s.",
   "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
