@@ -245,6 +245,14 @@ export async function run(nuGetPath: string): Promise<void> {
             }
             else {
                 tl.debug("Using NuGet.exe to push the packages");
+                if (useApiKeyEnvironment) {
+                    const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
+                    const minimumApiKeyEnvironmentVersion = new VersionInfoVersion(7, 6, 0, 0);
+                    if (!nuGetVersion.fileVersion || VersionInfoVersion.compare(nuGetVersion.fileVersion, minimumApiKeyEnvironmentVersion) < 0) {
+                        throw new Error(tl.loc("Error_ApiKeyRequiresNuGet76", nuGetVersion.fileVersion || "unknown"));
+                    }
+                }
+
                 const publishOptions = new PublishOptions(
                     nuGetPath,
                     feedUri,
@@ -284,14 +292,6 @@ async function publishPackageNuGet(
     authInfo: auth.NuGetExtendedAuthInfo,
     continueOnConflict: boolean)
     : Promise<number> {
-    if (options.useApiKeyEnvironment) {
-        const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(options.nuGetPath);
-        const minimumApiKeyEnvironmentVersion = new VersionInfoVersion(7, 6, 0, 0);
-        if (!nuGetVersion.fileVersion || VersionInfoVersion.compare(nuGetVersion.fileVersion, minimumApiKeyEnvironmentVersion) < 0) {
-            throw new Error(tl.loc("Error_ApiKeyRequiresNuGet76", nuGetVersion.fileVersion || "unknown"));
-        }
-    }
-
     const nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
 
     nugetTool.arg("push");
