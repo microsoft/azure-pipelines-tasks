@@ -1,0 +1,188 @@
+{
+  "id": "5c9e8b59-2c3f-4a1e-9d7b-4e3f2a1c0b9a",
+  "name": "MicrosoftSqlDeployment",
+  "friendlyName": "Microsoft SQL Deployment",
+  "description": "Deploy SQL Server, Azure SQL Database, or Azure SQL Managed Instance using DACPAC, SQL scripts, or SQL projects",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/microsoft-sql-deployment",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/microsoftsqldeployment)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 279,
+    "Patch": 8
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Microsoft SQL Deployment: $(action)",
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "Action",
+      "required": true,
+      "defaultValue": "publish",
+      "helpMarkDown": "The SqlPackage action to run, or sqlScript to execute a .sql file against the target database.",
+      "options": {
+        "publish": "Publish",
+        "script": "Script",
+        "deployReport": "Deploy Report",
+        "sqlScript": "Execute SQL Script"
+      }
+    },
+    {
+      "name": "path",
+      "type": "filePath",
+      "label": "Path",
+      "required": true,
+      "helpMarkDown": "Path to a .dacpac, .sqlproj, or .sql file. The file type is detected automatically from the extension."
+    },
+    {
+      "name": "connectionString",
+      "type": "string",
+      "label": "Connection String",
+      "required": true,
+      "helpMarkDown": "Connection string for the target database. Store it as a secret pipeline variable and reference it here (e.g. $(ConnectionString)) to avoid exposing credentials in plain text."
+    },
+    {
+      "name": "azureSubscription",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Subscription",
+      "required": false,
+      "helpMarkDown": "Azure Resource Manager service connection used for firewall rule management and Entra ID authentication."
+    },
+    {
+      "name": "publishProfile",
+      "type": "filePath",
+      "label": "Publish Profile",
+      "required": false,
+      "helpMarkDown": "Path to a SqlPackage publish profile (.xml file). Any values set in additionalArguments take precedence over the profile."
+    },
+    {
+      "name": "additionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "required": false,
+      "helpMarkDown": "Additional arguments appended to the SqlPackage or sqlcmd command."
+    },
+    {
+      "name": "buildArguments",
+      "type": "string",
+      "label": "Build Arguments",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to dotnet build when the path points to a .sqlproj file."
+    },
+    {
+      "name": "sqlpackagePath",
+      "type": "filePath",
+      "label": "SqlPackage Path",
+      "required": false,
+      "helpMarkDown": "Path to the SqlPackage executable. When not specified, the task searches via dotnet tool install, DacFramework MSI (Windows only), then PATH."
+    },
+    {
+      "name": "sqlcmdPath",
+      "type": "filePath",
+      "label": "Sqlcmd Path",
+      "required": false,
+      "helpMarkDown": "Path to the sqlcmd executable. When not specified, the task uses sqlcmd from PATH or auto-installs go-sqlcmd."
+    },
+    {
+      "name": "firewallRuleManagement",
+      "type": "boolean",
+      "label": "Firewall Rule Management",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "When enabled, the task temporarily adds a firewall rule for the agent IP and removes it after deployment. Defaults to true when azureSubscription is provided and the target is an Azure SQL Database logical server. Managed instances, Fabric SQL and SQL Server on a virtual machine or on premises have no Azure SQL firewall rules, so it stays off for them. Disable this for private VNet or on-premises deployments."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Path to the generated output file for the script and deployReport actions"
+    }
+  ],
+  "execution": {
+    "Node20_1": {
+        "target": "microsoftsqldeployment.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingDeployment": "Starting Microsoft SQL Deployment",
+    "ActionDetected": "Action: %s, File type: %s",
+    "ConnectionStringProvided": "Connection string provided",
+    "UsingAzureSubscription": "Using Azure subscription: %s",
+    "DetectingSqlPackage": "Detecting SqlPackage location",
+    "SqlPackageFound": "SqlPackage found at: %s",
+    "SqlPackageNotFound": "SqlPackage not found. Install via: dotnet tool install -g microsoft.sqlpackage",
+    "SqlPackageNotFoundAtPath": "SqlPackage not found at specified path: %s. Ensure the path points to a valid SqlPackage executable.",
+    "SettingUpSqlCmd": "Setting up sqlcmd",
+    "SqlCmdFound": "sqlcmd found at: %s",
+    "SqlCmdInstalling": "sqlcmd not found on PATH. Installing go-sqlcmd...",
+    "SqlCmdInstalled": "go-sqlcmd installed successfully at: %s",
+    "SqlcmdNotFoundAtPath": "sqlcmd not found at specified path: %s. Ensure the path points to a valid sqlcmd executable.",
+    "SqlcmdAutoInstallFailed": "Failed to auto-install go-sqlcmd: %s. Install sqlcmd manually or specify the sqlcmdPath input.",
+    "SqlcmdUnsupportedPlatform": "Unsupported platform for sqlcmd auto-install: %s. Supported platforms: win32, linux, darwin.",
+    "SqlcmdExecutableNotFoundAfterExtract": "sqlcmd executable not found after extraction at: %s.",
+    "DetectingIPAddress": "Testing connectivity to SQL Server",
+    "ConnectionSuccessful": "Connection successful - no firewall rule needed",
+    "IPAddressDetected": "Client IP address detected: %s",
+    "AddingFirewallRule": "Adding temporary firewall rule for IP: %s",
+    "FirewallRuleAdded": "Firewall rule added: %s",
+    "RemovingFirewallRule": "Removing firewall rule: %s",
+    "FirewallRuleRemoved": "Firewall rule removed successfully",
+    "FirewallManagementDisabled": "Firewall rule management disabled",
+    "FirewallManagementRequiresAzureSubscription": "Firewall rule management requires azureSubscription input",
+    "ServiceConnectionCredentialsUnavailable": "The '%s' service connection does not carry credentials that sqlcmd can use. The deployment was stopped rather than continued, because without them sqlcmd authenticates with whatever ambient identity the agent provides - a managed identity, an Azure CLI session or AZURE_* environment variables - instead of the service connection you selected.",
+    "IntegratedAuthNotImplementedBySqlcmd": "sqlcmd does not implement Active Directory Integrated authentication and falls back to Active Directory Default, so the script may run under a different identity than the signed-in domain account. Use Active Directory Service Principal or Active Directory Managed Identity to state the identity explicitly.",
+    "FirewallManagementRequiresAzureSqlDatabase": "Firewall rule management is only supported for Azure SQL Database, and '%s' is not an Azure SQL Database logical server. Managed instances, Fabric SQL and SQL Server on a virtual machine or on premises do not have Azure SQL firewall rules. Set firewallRuleManagement to false and allow the agent through the network yourself.",
+    "ClientHasAccessToServer": "Client has access to SQL server. Skip adding firewall exception.",
+    "FailedToAddFirewallRule": "Failed to add firewall rule: %s",
+    "FailedToRemoveFirewallRule": "Failed to remove firewall rule '%s': %s",
+    "FailedToDetectIPAddress": "Failed to detect client IP address. Connection error: %s",
+    "ConnectionFailedFirewallDisabled": "Connection failed. If deploying to Azure SQL, ensure your agent has network access or set firewallRuleManagement to true.",
+    "SQLServerNotFound": "SQL Server details not populated",
+    "NoSQLServersFound": "No SQL servers found in subscription: %s",
+    "SQLServerNotFoundInSubscription": "SQL Server '%s' not found in subscription: %s",
+    "FailedToGetSQLServerDetails": "Failed to get SQL Server '%s' details: %s",
+    "ParsingConnectionString": "Parsing connection string",
+    "InvalidConnectionString": "Invalid connection string. A valid connection string is a series of keyword/value pairs separated by semi-colons. If there are any special characters like quotes or semi-colons in the keyword value, enclose the value within quotes. Refer to https://aka.ms/sqlconnectionstring for more info.",
+    "InvalidConnectionStringPropertyValue": "The connection string property '%s' has the value '%s', which is not valid. Accepted values: %s. The value was rejected rather than ignored, because continuing would deploy with a different setting than the one requested.",
+    "UnsupportedAuthentication": "Unsupported Authentication type: '%s'. Supported values: SQL auth (no Authentication keyword), Active Directory Default, Active Directory Password, Active Directory Service Principal, Active Directory Integrated, Active Directory Managed Identity.",
+    "ConnectionStringMissingServer": "Invalid connection string. Please ensure 'Server' or 'Data Source' is provided in the connection string.",
+    "ConnectionStringMissingDatabase": "Invalid connection string. Please ensure 'Database' or 'Initial Catalog' is provided in the connection string.",
+    "ConnectionStringMissingUserId": "Invalid connection string. Please ensure 'User' or 'User ID' is provided in the connection string.",
+    "ConnectionStringMissingPassword": "Invalid connection string. Please ensure 'Password' is provided in the connection string.",
+    "ConnectionStringMissingClientId": "Invalid connection string. Please ensure client ID is provided in the 'User' or 'User ID' field of the connection string.",
+    "ConnectionStringMissingClientSecret": "Invalid connection string. Please ensure client secret is provided in the 'Password' field of the connection string.",
+    "BuildingSqlProject": "Building SQL project: %s",
+    "DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
+    "DacpacNotFoundAfterBuild": "Built .dacpac not found at expected path: %s",
+    "SqlProjectBuiltSuccessfully": "SQL project built successfully. DACPAC: %s",
+    "SqlProjectBuildFailed": "SQL project build failed. Exit code: %s. Error: %s",
+    "AccessTokenAcquired": "Access token acquired from service connection for database authentication.",
+    "AccessTokenAcquisitionFailed": "Could not acquire a database access token from the '%s' service connection: %s. The deployment was stopped rather than continued, because without this token the connection string falls back to ambient credentials and would authenticate as a different identity than the one selected.",
+    "FilePathInputIsDirectory": "The '%s' input points to a directory: %s. Provide the path to a file instead.",
+    "ScriptPathContainsComma": "The script path contains a comma: %s. sqlcmd reads commas in -i as file separators, so the file cannot be passed unambiguously. Rename the file or move it to a directory whose path has no comma.",
+    "SqlcmdConnectionPropertiesNotApplied": "These connection string properties have no sqlcmd equivalent and were not applied to the script run: %s. They take effect when a DACPAC is deployed, because SqlPackage receives the connection string directly.",
+    "ExecutingSqlPackage": "Executing SqlPackage action: %s",
+    "SqlPackageExecutionFailed": "SqlPackage execution failed with exit code: %s",
+    "OutputFileGenerated": "Output file generated: %s",
+    "OutputFileNotProduced": "SqlPackage succeeded but the expected output file was not produced: %s",
+    "InvalidAction": "Invalid action: %s. Supported actions: publish, script, deployReport, sqlScript.",
+    "ExecutingSqlScript": "Executing SQL script: %s",
+    "SqlcmdExecutionFailed": "sqlcmd execution failed with exit code: %s",
+    "SpAuthRequiresTenantId": "Service Principal auth for .sql scripts requires either an azureSubscription (tenant ID is injected automatically) or a User ID in the format clientId@tenantId in the connection string.",
+    "WifSqlcmdFallbackToAgentIdentity": "Could not resolve the workload identity federation credentials for the service connection. sqlcmd will authenticate using the agent's own identity, which may not have access to the database.",
+    "DeploymentSuccessful": "Deployment completed successfully",
+    "DeploymentFailed": "Deployment failed: %s",
+    "InvalidFileExtension": "Invalid file extension: %s. Expected .dacpac, .sqlproj, or .sql"
+  }
+}
