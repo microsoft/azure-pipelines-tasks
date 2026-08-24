@@ -14,7 +14,7 @@ jobs:
     name: Assign to ABTT Project
     steps:
     - name: "Assign issues with 'Area: ABTT' label to project board"
-      uses: actions/add-to-project@v0.4.1
+      uses: actions/add-to-project@4756e6330fe1e0a736690d3cfd9f11c9399c2ed4 # v0.4.1
       with:
         project-url: https://github.com/orgs/microsoft/projects/755
         github-token: ${{ secrets.ABTT_TOKEN }}
