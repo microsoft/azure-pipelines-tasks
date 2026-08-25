@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 278,
+    "Minor": 279,
     "Patch": 1
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -134,7 +134,8 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "3.278.0",
-    "minified_278": "3.278.1"
+    "Default": "3.279.0",
+    "LocalPackages": "3.249.4",
+    "minified_278": "3.279.1"
   }
 }
