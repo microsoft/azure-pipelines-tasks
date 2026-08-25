@@ -7,6 +7,7 @@ import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
+    this.timeout(timeout);
 
     before(() => {
     });
