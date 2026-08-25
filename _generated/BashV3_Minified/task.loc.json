@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 278,
+    "Minor": 279,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -134,7 +134,8 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.278.0",
-    "minified_278": "3.278.1"
+    "Default": "3.279.0",
+    "LocalPackages": "3.249.4",
+    "minified_278": "3.279.1"
   }
 }
