@@ -151,6 +151,12 @@ export class SshToolRunner {
         // Expected output sample:
         // SSH_AUTH_SOCK=/tmp/ssh-XVblDhTvcbC3/agent.24196; export SSH_AUTH_SOCK;
         // SSH_AGENT_PID=4644; export SSH_AGENT_PID; echo Agent pid 4644;
+        if (this.isWindows()) {
+            const agentTempDirectory: string = tl.getVariable('Agent.TempDirectory');
+            if (agentTempDirectory) {
+                process.env['HOME'] = agentTempDirectory;
+            }
+        }
         let agentResults: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-agent'), null);
 
         let elements: string[] = agentResults.stdout.split(';');

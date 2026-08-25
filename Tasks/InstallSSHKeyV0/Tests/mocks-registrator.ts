@@ -2,7 +2,7 @@ import os = require('os');
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 
 export class MocksRegistrator {
-    public static register(taskRunner: TaskMockRunner) {
+    public static register(taskRunner: TaskMockRunner, osType?: string) {
         let secureFileHelperMock = require('./secure-files-mock.js');
         taskRunner.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
 
@@ -36,7 +36,7 @@ export class MocksRegistrator {
                 return user;
             },
             type: function () {
-                return os.type();
+                return osType || os.type();
             },
             homedir: function () {
                 return os.homedir();

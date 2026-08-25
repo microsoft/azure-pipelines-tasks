@@ -23,6 +23,18 @@ describe('InstallSSHKey Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
+    it('Start ssh-agent on Windows with agent temporary directory as HOME', async () => {
+        this.timeout(1000);
+
+        const testPath: string = path.join(__dirname, 'L0StartAgentWindows.js');
+        const testRunner: MockTestRunner = new MockTestRunner(testPath);
+
+        await testRunner.runAsync();
+
+        assert.equal(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
     it('Start ssh-agent (no public key specified)', async () => {
         this.timeout(1000);
 
