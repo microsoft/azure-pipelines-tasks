@@ -1,5 +1,9 @@
 import tl = require("azure-pipelines-task-lib/task");
 
+export function isValidDatabaseName(databaseName: string): boolean {
+	return databaseName.length > 0 && !/[^a-zA-Z0-9_\-$\u0080-\uD7FF\uE000-\uFFFF]/.test(databaseName);
+}
+
 export class MysqlTaskParameter {
 	
 	private taskNameSelector: string;
@@ -18,6 +22,9 @@ export class MysqlTaskParameter {
 			this.sqlInline = tl.getInput('SqlInline', false);
 			this.serverName = tl.getInput('ServerName', true);
 			this.databaseName = tl.getInput('DatabaseName', false);
+			if (this.databaseName && !isValidDatabaseName(this.databaseName)) {
+				throw new Error(tl.loc("InvalidDatabaseName", this.databaseName));
+			}
 			this.sqlUserName = tl.getInput('SqlUsername', true);
 			this.sqlPassword = tl.getInput('SqlPassword', true);
 			this.sqlAdditionalArguments = tl.getInput('SqlAdditionalArguments', false);

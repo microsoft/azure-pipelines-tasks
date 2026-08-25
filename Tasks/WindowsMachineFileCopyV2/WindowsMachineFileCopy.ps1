@@ -29,7 +29,7 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments -join " "
+    $additionalArguments = Join-SanitizedArguments -arguments $sanitizedArguments
 }
 
 try 
@@ -65,7 +65,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
         } 
     }
     else
@@ -77,7 +77,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
 
             $Jobs.Add($job.Id, $machine)
         }        

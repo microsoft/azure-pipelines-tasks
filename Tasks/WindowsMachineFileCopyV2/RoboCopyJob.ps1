@@ -11,8 +11,7 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
-    [string]$scriptRoot,
-    [string]$useSanitizerActivate
+    [string]$scriptRoot
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
@@ -115,7 +114,8 @@ param (
         $guid = [GUID]::NewGuid()
         $tempDirectory = "$scriptRoot\temp$guid" 
         New-Item -ItemType Directory -Force -Path $tempDirectory         
-        Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+        $cleanupArguments = @($tempDirectory, $destinationNetworkPath, "*.*") + (Get-RoboCopyArgumentArray -arguments $cleanupArgument)
+        & robocopy @cleanupArguments
         Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
     }
 
@@ -156,6 +156,18 @@ param (
         }
 
         return $robocopyParameters.Trim()
+    }
+
+    function Get-RoboCopyArgumentArray(
+        [string]$arguments
+        )
+    {
+        if([string]::IsNullOrWhiteSpace($arguments))
+        {
+            return @()
+        }
+
+        return [regex]::Split($arguments.Trim(), '\s+(?=(?:[^"]|"[^"]*")*$)')
     }
 
     function Get-MachineShare(
@@ -253,14 +265,8 @@ param (
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-        if ($useSanitizerActivate -eq "true") {
-            # Splitting arguments on space, but not on space inside quotes
-            $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
-        } else {
-            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-            Invoke-Expression $command
-        }
+        $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + (Get-RoboCopyArgumentArray -arguments $robocopyParameters)
+        & robocopy @robocopyArguments
 
         if ($LASTEXITCODE -ge 8)
         {
