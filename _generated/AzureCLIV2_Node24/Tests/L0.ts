@@ -314,8 +314,8 @@ describe('AzureCLIV2 Suite', function () {
         assert(!tr.succeeded, 'task should have failed due to stderr with failOnStandardError=true');
     });
 
-    it('Az function alias injection: injects function when FF on + az found + python.exe exists', async () => {
-        let tp = path.join(__dirname, 'L0AzFunctionAliasInjection.js');
+    it('Az module injection: injects dynamic module when FF on + az found + python.exe exists', async () => {
+        let tp = path.join(__dirname, 'L0AzModuleInjection.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
 
@@ -325,14 +325,17 @@ describe('AzureCLIV2 Suite', function () {
         }
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('Injected PowerShell az function alias to bypass az.cmd.') >= 0, 'should log az function alias injection');
-        assert(tr.stdout.indexOf('function az {') >= 0, 'generated script should contain az function alias');
-        assert(tr.stdout.indexOf('python.exe') >= 0, 'generated script should reference python.exe');
-        assert(tr.stdout.indexOf('-IBm azure.cli') >= 0, 'generated script should invoke azure.cli module');
+        assert(tr.stdout.indexOf('MKDTEMP_CALLED:') >= 0, 'should create a temp directory via mkdtempSync');
+        assert(tr.stdout.indexOf('New-Module') >= 0, 'wrapper should contain New-Module');
+        assert(tr.stdout.indexOf('Import-Module -ModuleInfo') >= 0, 'wrapper should contain Import-Module -ModuleInfo');
+        assert(tr.stdout.indexOf('-Global -Force') >= 0, 'wrapper should contain -Global -Force');
+        assert(tr.stdout.indexOf('Add-Member -NotePropertyName Path') >= 0, 'wrapper should contain Add-Member -NotePropertyName Path');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection, {"status":"injected"}') >= 0, 'should emit AzModuleInjection telemetry with status=injected');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzShimCreated, {"status":"created"}') >= 0, 'should emit AzShimCreated telemetry');
     });
 
-    it('Az function alias injection: does NOT inject when FF is off', async () => {
-        let tp = path.join(__dirname, 'L0AzFunctionAliasNoInjection.js');
+    it('Az module injection: FF off uses legacy getPowerShellScriptPath without module', async () => {
+        let tp = path.join(__dirname, 'L0AzModuleFlagOff.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
 
@@ -342,7 +345,37 @@ describe('AzureCLIV2 Suite', function () {
         }
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('function az {') === -1, 'generated script should NOT contain az function alias when FF is off');
+        assert(tr.stdout.indexOf('New-Module') === -1, 'generated script should NOT contain New-Module when FF is off');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection') === -1, 'should NOT emit AzModuleInjection telemetry');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzShimCreated') === -1, 'should NOT emit AzShimCreated telemetry');
+    });
+
+    it('Az module injection: skipped when az not found on PATH', async () => {
+        let tp = path.join(__dirname, 'L0AzModuleSkippedNoAz.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection, {"status":"skipped","reason":"az not found on PATH"}') >= 0, 'should emit skipped telemetry with reason');
+    });
+
+    it('Az module injection: skipped when python.exe not found', async () => {
+        let tp = path.join(__dirname, 'L0AzModuleSkippedNoPython.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection, {"status":"skipped","reason":"python.exe not found"}') >= 0, 'should emit skipped telemetry with reason');
     });
 
     it('File invocation: Task succeeds with % and ^ in password (pscore, FF on)', async function() {
