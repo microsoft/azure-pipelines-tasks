@@ -28,6 +28,10 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: signNodeModules
+  displayName: Sign binaries inside node_modules
+  type: boolean
+  default: true
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
@@ -141,6 +145,7 @@ extends:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
             signTasks: true
+            signNodeModules: ${{ parameters.signNodeModules }}
 
       # Courtesy Push
       - job: courtesy_push

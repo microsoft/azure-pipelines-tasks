@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
-    "Patch": 1
+    "Minor": 279,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -230,6 +230,8 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UploadingToStorageBlobsAuthenticationFailed": "ms-resource:loc.messages.UploadingToStorageBlobsAuthenticationFailed",
-    "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication"
+    "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash"
   }
 }
