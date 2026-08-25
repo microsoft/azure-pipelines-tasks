@@ -1,4 +1,7 @@
 {
+    "buildConfigGen": {
+        "preserveTypescriptVersion": true
+    },
     "common": [
         {
             "module": "../Common/ArgsSanitizer",
